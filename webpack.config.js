@@ -7,4 +7,13 @@ module.exports = {
     landing: path.resolve(process.cwd(), "src", "landing", "index.js"),
     users: path.resolve(process.cwd(), "src", "users", "index.js"),
   },
+  module: {
+    rules: [
+      ...defaultConfig.module.rules,
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
+    ],
+  },
 };
