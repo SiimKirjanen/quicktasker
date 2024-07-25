@@ -1,3 +1,3 @@
 <div>
-    <div id="users-react-app">landing_page</div>
+    <div id="users-react-app">users_page</div>
 </div>
