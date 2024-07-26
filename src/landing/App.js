@@ -1,5 +1,6 @@
-const { useState, useCallback } = wp.element;
+const { useState, useCallback, useEffect } = wp.element;
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import apiFetch from "@wordpress/api-fetch";
 
 // fake data generator
 const getItems = (count, offset = 0) =>
@@ -70,6 +71,15 @@ const App = () => {
     },
     [items, selected]
   );
+
+  useEffect(() => {
+    apiFetch({ path: "/wpqt/v1/project/1" }).then((posts) => {
+      console.log(posts);
+    });
+    apiFetch({ path: "/wpqt/v1/projects" }).then((posts) => {
+      console.log(posts);
+    });
+  }, []);
 
   const onDragEnd = useCallback(
     (result) => {
