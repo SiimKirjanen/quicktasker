@@ -8,16 +8,8 @@ function wpqt_set_up_db() {
     $charset_collate = $wpdb->get_charset_collate() . ' ENGINE = innoDB';
 
 	if ( WP_QUICK_TASKS_DB_VERSION != $wp_quick_taks_db_current_version ) {
-		$sql = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_PROJECTS . " (
-			id int(11) NOT NULL AUTO_INCREMENT,
-            name varchar(255) NOT NULL,
-            description text,
-			PRIMARY KEY  (id)
-		  ) $charset_collate;";
-	  
-		dbDelta( $sql );
 
-        $sql2 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_PIPELINES . " (
+        $sql = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_PIPELINES . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             project_id int(11) NOT NULL,
             name varchar(255) NOT NULL,
@@ -25,9 +17,9 @@ function wpqt_set_up_db() {
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 	  
-		dbDelta( $sql2 );  
+		dbDelta( $sql );  
 
-        $sql3 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_STAGES . " (
+        $sql2 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             pipeline_id int(11) NOT NULL,
             name varchar(255) NOT NULL,
@@ -35,9 +27,9 @@ function wpqt_set_up_db() {
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 	  
-		dbDelta( $sql3 );
+		dbDelta( $sql2 );
           
-        $sql4 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_TASKS . " (
+        $sql3 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_TASKS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             project_id int(11) NOT NULL,
             stage_id int(11) NOT NULL,
@@ -46,16 +38,16 @@ function wpqt_set_up_db() {
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 	  
-		dbDelta( $sql4 ); 
+		dbDelta( $sql3 ); 
 
-        $sql5 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USERS . " (
+        $sql4 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USERS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             name varchar(255) NOT NULL,
             description text,
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 	  
-		dbDelta( $sql5 ); 
+		dbDelta( $sql4 ); 
 
 		update_option( "wp_quick_taks_db_current_version", WP_QUICK_TASKS_DB_VERSION );
 	}

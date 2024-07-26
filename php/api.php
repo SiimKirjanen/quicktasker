@@ -10,14 +10,14 @@ function wpqt_register_api_routes() {
 
     register_rest_route(
         'wpqt/v1',
-        'project/(?P<id>\d+)',
+        'pipeline/(?P<id>\d+)',
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
-                $projectRepo = new ProjectRepository();
+                $pipelineRepo = new PipelineRepository();
                 $test = $data['id'];
 
-                return $projectRepo->getProjectById( $data['id'] );
+                return $pipelineRepo->getPipelineById( $data['id'] );
             },
             'permission_callback' => function() {
                 return PermissionsRepository::hasRequiredPermissionsForPrivateAPI();
@@ -27,13 +27,13 @@ function wpqt_register_api_routes() {
 
     register_rest_route(
         'wpqt/v1',
-        'projects',
+        'pipelines',
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
-                $projectRepo = new ProjectRepository();
+                $pipelineRepo = new PipelineRepository();
 
-                return $projectRepo->getProjects();
+                return $pipelineRepo->getPipelines();
             },
             'permission_callback' => function() {
                 return PermissionsRepository::hasRequiredPermissionsForPrivateAPI();

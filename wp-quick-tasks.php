@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require( 'php/constants.php' );
 require( 'php/db.php' );
-require( 'php/repositories/ProjectRepository.php' );
-require( 'php/services/ProjectService.php' );
+require( 'php/repositories/PipelineRepository.php' );
+require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionsService.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
