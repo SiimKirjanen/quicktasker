@@ -1,3 +1,1 @@
-<div>
-    <div id="landing-react-app">landing_page</div>
-</div>
+<div id="landing-react-app" class="wpqt-flex wpqt-space-between">landing_page</div>
