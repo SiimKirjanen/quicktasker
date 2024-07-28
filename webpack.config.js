@@ -4,8 +4,7 @@ const path = require("path");
 module.exports = {
   ...defaultConfig,
   entry: {
-    landing: path.resolve(process.cwd(), "src", "landing", "index.js"),
-    users: path.resolve(process.cwd(), "src", "users", "index.js"),
+    app: path.resolve(process.cwd(), "src", "index.js"),
   },
   module: {
     rules: [

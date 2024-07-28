@@ -1,1 +1,0 @@
-(()=>{"use strict";const e=window.ReactJSXRuntime,t=()=>(0,e.jsxs)("div",{children:[(0,e.jsx)("h1",{children:"React Users Page"}),(0,e.jsx)("p",{children:"Our react settings page is now ready."})]}),{render:s}=wp.element;document.getElementById("users-react-app")&&s((0,e.jsx)(t,{}),document.getElementById("users-react-app"))})();

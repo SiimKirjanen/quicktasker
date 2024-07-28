@@ -16,7 +16,7 @@ class PipelineService {
   
     }
 
-    public function deletePipeline($id) {
-      
-    }
+   public function deletePipeline() {
+
+   }
 }
