@@ -19,11 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 require( 'php/constants.php' );
 require( 'php/db.php' );
 require( 'php/repositories/PipelineRepository.php' );
-require( 'php/repositories/TasksRepository.php' );
+require( 'php/repositories/TaskRepository.php' );
+require( 'php/repositories/StageRepository.php' );
 require( 'php/services/PipelineService.php' );
-require( 'php/services/PermissionsService.php' );
+require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
-require( 'php/services/TasksService.php' );
+require( 'php/services/TaskService.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/api.php' );

@@ -73,7 +73,7 @@ const App = () => {
   );
 
   useEffect(() => {
-    apiFetch({ path: "/wpqt/v1/pipelines" }).then((posts) => {
+    apiFetch({ path: "/wpqt/v1/pipeline/2" }).then((posts) => {
       console.log(posts);
     });
   }, []);

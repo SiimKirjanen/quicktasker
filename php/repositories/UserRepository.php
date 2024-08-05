@@ -1,6 +1,6 @@
 <?php
 
-class UsersRepository {
+class UserRepository {
 
     /**
      * Retrieves all users from the database.

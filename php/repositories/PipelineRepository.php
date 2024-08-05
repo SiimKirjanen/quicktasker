@@ -20,14 +20,39 @@ class PipelineRepository {
      * @param int $id The ID of the pipeline.
      * @return object|null The pipeline object if found, null otherwise.
      */
-    public static function getPipelineById($id) {
+    public function getPipelineById($id) {
         global $wpdb;
 
         return $wpdb->get_row( $wpdb->prepare(
-            "SELECT * FROM %s
+            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_PIPELINES . "
             WHERE id = %d",
-            TABLE_WP_QUICK_TASKS_PIPELINES,
             $id
         ) );
+    }
+
+    /**
+     * Retrieves the full pipeline with stages and tasks by pipeline ID.
+     *
+     * @param int $pipelineId The ID of the pipeline.
+     * @return Pipeline The full pipeline object with stages and tasks.
+     */
+    public function getFullPipeline($pipelineId) {
+        $stageRepository = new StageRepository();
+        $taskRepository = new TaskRepository();
+        $pipeline = $this->getPipelineById($pipelineId);
+        $pipelineStages = $stageRepository->getStagesByPipelineId($pipelineId);
+
+        foreach ($pipelineStages as $stage) {
+            $tasks = $taskRepository->getTasksByStageId($stage->id);
+            $stage->tasks = $tasks;
+
+            foreach ($stage->tasks as $task) {
+                $task->order = $taskRepository->getTaskOrder($task->id, $stage->id);
+            }
+        }
+
+        $pipeline->stages = $pipelineStages;
+
+        return $pipeline;
     }
 }

@@ -17,10 +17,12 @@ function wpqt_register_api_routes() {
                 $pipelineRepo = new PipelineRepository();
                 $test = $data['id'];
 
-                return $pipelineRepo->getPipelineById( $data['id'] );
+                $pipeline = $pipelineRepo->getFullPipeline( $data['id'] );
+
+                return $pipeline;
             },
             'permission_callback' => function() {
-                return PermissionsRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -36,7 +38,7 @@ function wpqt_register_api_routes() {
                 return $pipelineRepo->getPipelines();
             },
             'permission_callback' => function() {
-                return PermissionsRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -56,7 +58,7 @@ function wpqt_register_api_routes() {
                 return ['s'];
             },
             'permission_callback' => function() {
-                return PermissionsRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -70,7 +72,7 @@ function wpqt_register_api_routes() {
                 return ['s'];
             },
             'permission_callback' => function() {
-                return PermissionsRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
