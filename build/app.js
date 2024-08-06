@@ -7525,46 +7525,192 @@ var ConnectedDroppable$1 = ConnectedDroppable;
 
 /***/ }),
 
-/***/ "./src/App.js":
-/*!********************!*\
-  !*** ./src/App.js ***!
-  \********************/
+/***/ "./src/App.tsx":
+/*!*********************!*\
+  !*** ./src/App.tsx ***!
+  \*********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
-const {
-  useState,
-  useCallback,
-  useEffect
-} = wp.element;
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _pages_PipelinePage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pages/PipelinePage */ "./src/pages/PipelinePage.tsx");
+
+
+function App() {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage__WEBPACK_IMPORTED_MODULE_1__.PipelinePage, {})
+  });
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
+
+/***/ }),
+
+/***/ "./src/components/Pipeline/Pipeline.tsx":
+/*!**********************************************!*\
+  !*** ./src/components/Pipeline/Pipeline.tsx ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _utils_list__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/list */ "./src/utils/list.tsx");
+
+
 
 
 
 // fake data generator
-
 const getItems = (count, offset = 0) => Array.from({
   length: count
 }, (v, k) => k).map(k => ({
   id: `item-${k + offset}`,
   content: `item ${k + offset}`
 }));
+const grid = 8;
+const getItemStyle = (isDragging, draggableStyle) => Object.assign({
+  // some basic styles to make the items look a bit nicer
+  userSelect: "none",
+  padding: grid * 2,
+  margin: `0 0 ${grid}px 0`,
+  // change background colour if dragging
+  background: isDragging ? "lightgreen" : "grey"
+}, draggableStyle);
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "lightblue" : "lightgrey",
+  padding: grid,
+  width: 250
+});
+const Pipeline = () => {
+  const [items, setItems] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(getItems(10));
+  const [selected, setSelected] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(getItems(5, 10));
+  // Maps droppable IDs to state variables
+  const id2List = {
+    droppable: "items",
+    droppable2: "selected"
+  };
+  // Get list from id
+  const getList = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(id => {
+    return id2List[id] === "items" ? items : selected;
+  }, [items, selected]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: "/wpqt/v1/pipeline/2"
+    }).then(posts => {
+      console.log(posts);
+    });
+  }, []);
+  const onDragEnd = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(result => {
+    const {
+      source,
+      destination
+    } = result;
+    // dropped outside the list
+    if (!destination) {
+      return;
+    }
+    if (source.droppableId === destination.droppableId) {
+      const reorderedItems = (0,_utils_list__WEBPACK_IMPORTED_MODULE_3__.reorder)(getList(source.droppableId), source.index, destination.index);
+      if (source.droppableId === "droppable") {
+        setItems(reorderedItems);
+      } else {
+        setSelected(reorderedItems);
+      }
+    } else {
+      const result = (0,_utils_list__WEBPACK_IMPORTED_MODULE_3__.move)(getList(source.droppableId), getList(destination.droppableId), source, destination);
+      setItems(result.droppable);
+      setSelected(result.droppable2);
+    }
+  }, [getList]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-flex",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.DragDropContext, {
+      onDragEnd: onDragEnd,
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
+        droppableId: "droppable",
+        children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          ref: provided.innerRef,
+          style: getListStyle(snapshot.isDraggingOver),
+          children: [items.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
+            draggableId: item.id,
+            index: index,
+            children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
+              ref: provided.innerRef
+            }, provided.draggableProps, provided.dragHandleProps, {
+              children: item.content
+            }))
+          }, item.id)), provided.placeholder]
+        })
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
+        droppableId: "droppable2",
+        children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          ref: provided.innerRef,
+          style: getListStyle(snapshot.isDraggingOver),
+          children: [selected.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
+            draggableId: item.id,
+            index: index,
+            children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
+              ref: provided.innerRef
+            }, provided.draggableProps, provided.dragHandleProps, {
+              children: item.content
+            }))
+          }, item.id)), provided.placeholder]
+        })
+      })]
+    })
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Pipeline);
 
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  return result;
+/***/ }),
+
+/***/ "./src/pages/PipelinePage.tsx":
+/*!************************************!*\
+  !*** ./src/pages/PipelinePage.tsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PipelinePage: () => (/* binding */ PipelinePage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_Pipeline_Pipeline__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Pipeline/Pipeline */ "./src/components/Pipeline/Pipeline.tsx");
+
+
+const PipelinePage = () => {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline_Pipeline__WEBPACK_IMPORTED_MODULE_1__["default"], {})
+  });
 };
 
+
+/***/ }),
+
+/***/ "./src/utils/list.tsx":
+/*!****************************!*\
+  !*** ./src/utils/list.tsx ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   move: () => (/* binding */ move),
+/* harmony export */   reorder: () => (/* binding */ reorder)
+/* harmony export */ });
 // Moves an item from one list to another list.
 const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source);
@@ -7576,106 +7722,14 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   result[droppableDestination.droppableId] = destClone;
   return result;
 };
-const grid = 8;
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
-  // change background colour if dragging
-  background: isDragging ? "lightgreen" : "grey",
-  // styles we need to apply on draggables
-  ...draggableStyle
-});
-const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid,
-  width: 250
-});
-const App = () => {
-  const [items, setItems] = useState(getItems(10));
-  const [selected, setSelected] = useState(getItems(5, 10));
-
-  // Maps droppable IDs to state variables
-  const id2List = {
-    droppable: "items",
-    droppable2: "selected"
-  };
-
-  // Get list from id
-  const getList = useCallback(id => {
-    return id2List[id] === "items" ? items : selected;
-  }, [items, selected]);
-  useEffect(() => {
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
-      path: "/wpqt/v1/pipeline/2"
-    }).then(posts => {
-      console.log(posts);
-    });
-  }, []);
-  const onDragEnd = useCallback(result => {
-    const {
-      source,
-      destination
-    } = result;
-
-    // dropped outside the list
-    if (!destination) {
-      return;
-    }
-    if (source.droppableId === destination.droppableId) {
-      const reorderedItems = reorder(getList(source.droppableId), source.index, destination.index);
-      if (source.droppableId === "droppable") {
-        setItems(reorderedItems);
-      } else {
-        setSelected(reorderedItems);
-      }
-    } else {
-      const result = move(getList(source.droppableId), getList(destination.droppableId), source, destination);
-      setItems(result.droppable);
-      setSelected(result.droppable2);
-    }
-  }, [getList]);
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_2__.DragDropContext, {
-    onDragEnd: onDragEnd,
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_2__.Droppable, {
-      droppableId: "droppable",
-      children: (provided, snapshot) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-        ref: provided.innerRef,
-        style: getListStyle(snapshot.isDraggingOver),
-        children: [items.map((item, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_2__.Draggable, {
-          draggableId: item.id,
-          index: index,
-          children: (provided, snapshot) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-            ref: provided.innerRef,
-            ...provided.draggableProps,
-            ...provided.dragHandleProps,
-            style: getItemStyle(snapshot.isDragging, provided.draggableProps.style),
-            children: item.content
-          })
-        }, item.id)), provided.placeholder]
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_2__.Droppable, {
-      droppableId: "droppable2",
-      children: (provided, snapshot) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-        ref: provided.innerRef,
-        style: getListStyle(snapshot.isDraggingOver),
-        children: [selected.map((item, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_2__.Draggable, {
-          draggableId: item.id,
-          index: index,
-          children: (provided, snapshot) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-            ref: provided.innerRef,
-            ...provided.draggableProps,
-            ...provided.dragHandleProps,
-            style: getItemStyle(snapshot.isDragging, provided.draggableProps.style),
-            children: item.content
-          })
-        }, item.id)), provided.placeholder]
-      })
-    })]
-  });
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
+
 
 /***/ }),
 
@@ -11532,6 +11586,16 @@ module.exports = window["wp"]["apiFetch"];
 
 /***/ }),
 
+/***/ "@wordpress/element":
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["element"];
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
 /*!*******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
@@ -11812,16 +11876,16 @@ var __webpack_exports__ = {};
   !*** ./src/index.js ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./App */ "./src/App.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
-const {
-  render
-} = wp.element;
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App */ "./src/App.tsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 if (document.getElementById("wpqt-app")) {
-  render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_App__WEBPACK_IMPORTED_MODULE_0__["default"], {}), document.getElementById("wpqt-app"));
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_App__WEBPACK_IMPORTED_MODULE_1__["default"], {}), document.getElementById("wpqt-app"));
 }
 /******/ })()
 ;

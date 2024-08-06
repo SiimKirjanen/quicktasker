@@ -17,6 +17,8 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@hello-pangea/dnd": "^16.6.0"
+    "@hello-pangea/dnd": "^16.6.0",
+    "@wordpress/api-fetch": "^7.4.0",
+    "@wordpress/element": "^6.4.0"
   }
 }
