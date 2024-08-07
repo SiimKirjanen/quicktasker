@@ -1,6 +1,7 @@
 type Pipeline = {
   id: string;
-  content: string;
+  name: string;
+  description?: string;
 };
 
 export type { Pipeline };
