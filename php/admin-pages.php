@@ -9,6 +9,33 @@ function wp_quick_taks_add_admin_menu() {
         'wp-quick-tasks',
         'wp_quick_taks_generate_app_page'
     );
+
+    add_submenu_page(
+        'wp-quick-tasks',
+        'Overview',
+        'Overview',
+        'manage_options',
+        'wp-quick-tasks',
+        'wp_quick_taks_generate_app_page'
+    );
+
+    add_submenu_page(
+        'wp-quick-tasks',
+        'Boards',
+        'Boards',
+        'manage_options',
+        'wp-quick-tasks#/boards',
+        'wp_quick_taks_generate_app_page'
+    );
+
+    add_submenu_page(
+        'wp-quick-tasks',
+        'Users',
+        'Users',
+        'manage_options',
+        'wp-quick-tasks#/users',
+        'wp_quick_taks_generate_app_page'
+    );
 }
 
 function wp_quick_taks_generate_app_page() {
