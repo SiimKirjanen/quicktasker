@@ -40,7 +40,7 @@ const moveTask = (
  * @returns The updated list of tasks after reordering.
  */
 const reorderTask = (list: Task[], startIndex: number, endIndex: number) => {
-  const result = Array.from(list);
+  const result = [...list];
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
 
