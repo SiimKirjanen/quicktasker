@@ -7666,29 +7666,13 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-// fake data generator
-const getItems = (count, offset = 0) => Array.from({
-  length: count
-}, (v, k) => k).map(k => ({
-  id: `item-${k + offset}`,
-  name: `item ${k + offset}`
-}));
 const Pipeline = () => {
-  const [items, setItems] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(getItems(10));
-  const [selected, setSelected] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(getItems(5, 10));
-  // Maps droppable IDs to state variables
-  const id2List = {
-    droppable: "items",
-    droppable2: "selected"
-  };
-  // Get list from id
-  const getList = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(id => {
-    return id2List[id] === "items" ? items : selected;
-  }, [items, selected]);
+  const [pipelineData, setPipelineData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
       const pipelineData = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getPipelineData)("2");
-      console.log(pipelineData);
+      console.log();
+      setPipelineData(pipelineData);
     }))();
   }, []);
   const onDragEnd = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(result => {
@@ -7701,29 +7685,34 @@ const Pipeline = () => {
       return;
     }
     if (source.droppableId === destination.droppableId) {
-      const reorderedItems = (0,_utils_list__WEBPACK_IMPORTED_MODULE_2__.reorder)(getList(source.droppableId), source.index, destination.index);
-      if (source.droppableId === "droppable") {
-        setItems(reorderedItems);
-      } else {
-        setSelected(reorderedItems);
-      }
+      const targetStage = pipelineData === null || pipelineData === void 0 ? void 0 : pipelineData.stages.find(stage => stage.id === destination.droppableId);
+      const targetStageClone = targetStage ? Object.assign({}, targetStage) : null;
+      const reorderedTasks = (0,_utils_list__WEBPACK_IMPORTED_MODULE_2__.reorderTask)(targetStageClone.tasks, source.index, destination.index);
+      setPipelineData(Object.assign(Object.assign({}, pipelineData), {
+        stages: pipelineData.stages.map(stage => stage.id === destination.droppableId ? Object.assign(Object.assign({}, stage), {
+          tasks: reorderedTasks
+        }) : stage)
+      }));
     } else {
-      const result = (0,_utils_list__WEBPACK_IMPORTED_MODULE_2__.move)(getList(source.droppableId), getList(destination.droppableId), source, destination);
-      setItems(result.droppable);
-      setSelected(result.droppable2);
+      const stages = (0,_utils_list__WEBPACK_IMPORTED_MODULE_2__.moveTask)(pipelineData.stages, source, destination);
+      setPipelineData(Object.assign(Object.assign({}, pipelineData), {
+        stages
+      }));
     }
-  }, [getList]);
+  }, [pipelineData]);
+  if (!pipelineData) {
+    return "Loading...";
+  }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-flex",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_5__.DragDropContext, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_5__.DragDropContext, {
       onDragEnd: onDragEnd,
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_4__.Stage, {
-        droppableId: "droppable",
-        items: items
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_4__.Stage, {
-        droppableId: "droppable2",
-        items: selected
-      })]
+      children: pipelineData.stages.map(stage => {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_4__.Stage, {
+          droppableId: stage.id,
+          tasks: stage.tasks
+        });
+      })
     })
   });
 };
@@ -7756,14 +7745,14 @@ const getListStyle = isDraggingOver => ({
 });
 function Stage({
   droppableId,
-  items
+  tasks
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_2__.Droppable, {
     droppableId: droppableId,
     children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       ref: provided.innerRef,
       style: getListStyle(snapshot.isDraggingOver),
-      children: [items.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
+      children: [tasks.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
         item: item,
         index: index
       })), provided.placeholder]
@@ -7997,22 +7986,36 @@ const UserContextProvider = ({
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   move: () => (/* binding */ move),
-/* harmony export */   reorder: () => (/* binding */ reorder)
+/* harmony export */   moveTask: () => (/* binding */ moveTask),
+/* harmony export */   reorderTask: () => (/* binding */ reorderTask)
 /* harmony export */ });
-// Moves an item from one list to another list.
-const move = (source, destination, droppableSource, droppableDestination) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
-  destClone.splice(droppableDestination.index, 0, removed);
-  const result = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
-  return result;
+/**
+ * Moves a task from one stage to another within a list of stages.
+ *
+ * @param stages - The list of stages.
+ * @param droppableSource - The source stage and index of the task being moved.
+ * @param droppableDestination - The destination stage and index where the task will be moved to.
+ * @returns The updated list of stages after moving the task.
+ */
+const moveTask = (stages, droppableSource, droppableDestination) => {
+  const stagesClone = [...stages];
+  const sourceStage = stagesClone.find(stage => stage.id === droppableSource.droppableId);
+  const destinationStage = stagesClone.find(stage => stage.id === droppableDestination.droppableId);
+  if (sourceStage && destinationStage) {
+    const [removed] = sourceStage.tasks.splice(droppableSource.index, 1);
+    destinationStage.tasks.splice(droppableDestination.index, 0, removed);
+  }
+  return stagesClone;
 };
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
+/**
+ * Reorders a list of tasks after a task has been moved.
+ *
+ * @param list - The list of tasks.
+ * @param startIndex - The index of the task being moved.
+ * @param endIndex - The index where the task will be moved to.
+ * @returns The updated list of tasks after reordering.
+ */
+const reorderTask = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);

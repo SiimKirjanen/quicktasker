@@ -1,27 +1,45 @@
-import { Pipeline } from "../types/pipeline";
+import { Stage } from "../types/stage";
+import { Task } from "../types/task";
 
-// Moves an item from one list to another list.
-const move = (
-  source: Pipeline[],
-  destination: Pipeline[],
+/**
+ * Moves a task from one stage to another within a list of stages.
+ *
+ * @param stages - The list of stages.
+ * @param droppableSource - The source stage and index of the task being moved.
+ * @param droppableDestination - The destination stage and index where the task will be moved to.
+ * @returns The updated list of stages after moving the task.
+ */
+const moveTask = (
+  stages: Stage[],
   droppableSource: { index: number; droppableId: string },
   droppableDestination: { index: number; droppableId: string }
-) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
+): Stage[] => {
+  const stagesClone = [...stages];
 
-  destClone.splice(droppableDestination.index, 0, removed);
+  const sourceStage = stagesClone.find(
+    (stage) => stage.id === droppableSource.droppableId
+  );
+  const destinationStage = stagesClone.find(
+    (stage) => stage.id === droppableDestination.droppableId
+  );
+  if (sourceStage && destinationStage) {
+    const [removed] = sourceStage.tasks.splice(droppableSource.index, 1);
 
-  const result: { [key: string]: Pipeline[] } = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
+    destinationStage.tasks.splice(droppableDestination.index, 0, removed);
+  }
 
-  return result;
+  return stagesClone;
 };
 
-// a little function to help us with reordering the result
-const reorder = (list: Pipeline[], startIndex: number, endIndex: number) => {
+/**
+ * Reorders a list of tasks after a task has been moved.
+ *
+ * @param list - The list of tasks.
+ * @param startIndex - The index of the task being moved.
+ * @param endIndex - The index where the task will be moved to.
+ * @returns The updated list of tasks after reordering.
+ */
+const reorderTask = (list: Task[], startIndex: number, endIndex: number) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -29,4 +47,4 @@ const reorder = (list: Pipeline[], startIndex: number, endIndex: number) => {
   return result;
 };
 
-export { move, reorder };
+export { moveTask, reorderTask };

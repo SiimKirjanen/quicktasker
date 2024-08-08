@@ -1,9 +1,10 @@
 import { Droppable } from "@hello-pangea/dnd";
-import { Task } from "./Tast";
+import { Task as TaskComponent } from "./Tast";
+import { Task } from "../../types/task";
 
 type Props = {
   droppableId: string;
-  items: any[];
+  tasks: Task[];
 };
 
 const grid = 8;
@@ -14,7 +15,7 @@ const getListStyle = (isDraggingOver: boolean) => ({
   width: 250,
 });
 
-function Stage({ droppableId, items }: Props) {
+function Stage({ droppableId, tasks }: Props) {
   return (
     <Droppable droppableId={droppableId}>
       {(provided, snapshot) => (
@@ -22,8 +23,8 @@ function Stage({ droppableId, items }: Props) {
           ref={provided.innerRef}
           style={getListStyle(snapshot.isDraggingOver)}
         >
-          {items.map((item: any, index: number) => (
-            <Task item={item} index={index} />
+          {tasks.map((item: any, index: number) => (
+            <TaskComponent item={item} index={index} />
           ))}
           {provided.placeholder}
         </div>
