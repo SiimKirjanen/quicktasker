@@ -1,10 +1,10 @@
 <?php
 
-class TasksService {
-    protected $tasksRepository;
+class TaskService {
+    protected $taskRepository;
 
     public function __construct() {
-        $this->tasksRepository = new TasksRepository();
+        $this->taskRepository = new TaskRepository();
     }
 
     /**
@@ -21,42 +21,27 @@ class TasksService {
     public function createTask($stageId, $args) {
         global $wpdb;
 
-        $defaults = array(
-            'name' => null
-        );
+        $defaults = array();
 
         $args = wp_parse_args($args, $defaults);
 
+        if ( empty($args['name']) || empty($args['taskOrder']) ) {
+            throw new Exception('Required fields are missing');
+        }
+
         $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS, array(
-            'name' => $args['name'],
-            'stage_id' => $stageId
+            'name' => $args['name']
         ));
 
-        if ($result !== false) {
-            return $wpdb->insert_id;
-        } else {
+        if( $result === false ) {
             throw new Exception('Failed to create task');
         }
-    }
 
+        $taskId = $wpdb->insert_id;
 
-    /**
-     * Retrieves a task by its ID.
-     *
-     * @param int $taskId The ID of the task to retrieve.
-     * @return object The task object if found.
-     * @throws Exception If the task retrieval fails.
-     */
-    public function getTask($taskId) {
-        global $wpdb;
+        $this->addTaskLocation($taskId, $stageId, $args['taskOrder']);
 
-        $sql = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . TABLE_WP_QUICK_TASKS_TASKS . " WHERE id = %d", $taskId) );
-
-        if ($sql) {
-            return $sql;
-        } else {
-            throw new Exception('Failed to get task');
-        }
+        return $taskId;
     }
 
     /**
@@ -68,10 +53,10 @@ class TasksService {
      * @return int The ID of the inserted task order.
      * @throws Exception If failed to add task order.
      */
-    public function addTaskOrder($taskId, $stageId, $taskOrder) {
+    public function addTaskLocation($taskId, $stageId, $taskOrder) {
         global $wpdb;
 
-        $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS_ORDER, array(
+        $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array(
             'task_id' => $taskId,
             'stage_id' => $stageId,
             'task_order' => $taskOrder
@@ -82,5 +67,30 @@ class TasksService {
         } else {
             throw new Exception('Failed to add task order');
         }
+    }
+
+    public function moveTask($taskId, $stageId, $order) {
+        global $wpdb;
+
+        $rowsUpdated = $wpdb->update(
+            TABLE_WP_QUICK_TASKS_TASKS_LOCATION,
+            array(
+                'stage_id' => $stageId,
+                'task_order' => $order,
+            ),
+            array(
+                'task_id' => $taskId
+            ),
+            array(
+                '%d',
+                '%d'
+            ),
+        ); 
+
+        if ($rowsUpdated === false) {
+            throw new Exception('Failed to move task');
+        }
+        
+        return $rowsUpdated;
     }
 }

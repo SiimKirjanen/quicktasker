@@ -1,12 +1,12 @@
 <?php
 
-
-/**
- * Class StageRepository
- *
- * This class represents a repository for retrieving stages by pipeline ID.
- */
 class StageRepository {
+    /**
+     * Retrieves stages by pipeline ID.
+     *
+     * @param int $pipelineId The ID of the pipeline.
+     * @return array|null The stages associated with the pipeline, or null if none found.
+     */
     public function getStagesByPipelineId($pipelineId) {
         global $wpdb;
 

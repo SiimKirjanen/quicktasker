@@ -6,7 +6,7 @@ import {
 } from "@wordpress/element";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { Pipeline } from "../../types/pipeline";
-import { getPipelineData } from "../../api/api";
+import { getPipelineData, moveTaskRequest } from "../../api/api";
 import { Stage } from "./Stage";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
 
@@ -18,7 +18,7 @@ const Pipeline = () => {
 
   useEffect(() => {
     (async () => {
-      const pipelineData = await getPipelineData("2");
+      const pipelineData = await getPipelineData("1");
 
       dispatch({ type: "SET_PIPELINE", payload: pipelineData });
     })();
@@ -26,7 +26,8 @@ const Pipeline = () => {
 
   const onDragEnd = useCallback(
     (result: DropResult) => {
-      const { source, destination } = result;
+      const { source, destination, draggableId } = result;
+      console.log(result);
 
       if (!destination) {
         return;
@@ -49,6 +50,8 @@ const Pipeline = () => {
           },
         });
       }
+
+      moveTaskRequest(draggableId, destination.droppableId, destination.index);
     },
     [pipeline]
   );
