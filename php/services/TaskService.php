@@ -44,6 +44,7 @@ class TaskService {
         return $taskId;
     }
 
+
     /**
      * Adds a task order to the database.
      *
@@ -69,14 +70,75 @@ class TaskService {
         }
     }
 
-    public function moveTask($taskId, $stageId, $order) {
+    public function moveTask($taskId, $newStageId, $newOrder) {
         global $wpdb;
-
+    
+        $currentTask = $this->taskRepository->getTaskById($taskId);
+    
+        if (!$currentTask) {
+            throw new Exception('Task not found');
+        }
+        $currentStageId = $currentTask->stage_id;
+        $currentOrder = $currentTask->task_order;
+    
+        if ($currentStageId == $newStageId) {
+            // Moving within the same stage
+            if ($currentOrder < $newOrder) {
+                // Moving down within the same stage
+                $wpdb->query(
+                    $wpdb->prepare(
+                        "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                        SET task_order = task_order - 1
+                        WHERE stage_id = %d AND task_order > %d AND task_order <= %d",
+                        $currentStageId,
+                        $currentOrder,
+                        $newOrder
+                    )
+                );
+            } else {
+                // Moving up within the same stage
+                $wpdb->query(
+                    $wpdb->prepare(
+                        "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                        SET task_order = task_order + 1
+                        WHERE stage_id = %d AND task_order < %d AND task_order >= %d",
+                        $currentStageId,
+                        $currentOrder,
+                        $newOrder
+                    )
+                );
+            }
+        } else {
+            // Moving to a different stage
+            // Decrement the task order of tasks in the current stage
+            $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                    SET task_order = task_order - 1
+                    WHERE stage_id = %d AND task_order > %d",
+                    $currentStageId,
+                    $currentOrder
+                )
+            );
+    
+            // Increment the task order of tasks in the new stage
+            $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                    SET task_order = task_order + 1
+                    WHERE stage_id = %d AND task_order >= %d",
+                    $newStageId,
+                    $newOrder
+                )
+            );
+        }
+    
+        // Update the stage_id and task_order of the moved task
         $rowsUpdated = $wpdb->update(
             TABLE_WP_QUICK_TASKS_TASKS_LOCATION,
             array(
-                'stage_id' => $stageId,
-                'task_order' => $order,
+                'stage_id' => $newStageId,
+                'task_order' => $newOrder,
             ),
             array(
                 'task_id' => $taskId
@@ -84,13 +146,13 @@ class TaskService {
             array(
                 '%d',
                 '%d'
-            ),
-        ); 
-
+            )
+        );
+    
         if ($rowsUpdated === false) {
             throw new Exception('Failed to move task');
         }
-        
+    
         return $rowsUpdated;
     }
 }

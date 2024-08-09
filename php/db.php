@@ -13,6 +13,7 @@ function wpqt_set_up_db() {
 			id int(11) NOT NULL AUTO_INCREMENT,
             name varchar(255) NOT NULL,
             description text,
+			is_primary tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 	  
@@ -73,15 +74,16 @@ function wpqt_insert_initial_data() {
 	if( !count($pipelines) ) {
 		try {
 			$newPipeId = $pipeService->createPipeline("Pipeline");
+			$pipeService->markPipelineAsPrimary($newPipeId);
 			$firstStageId = $stageService->creatStage($newPipeId, array('name' => 'Stage 1'));
 			$secondStageId = $stageService->creatStage($newPipeId, array('name' => 'Stage 2'));
 			$stageService->creatStage($newPipeId, array('name' => 'Stage 3'));
 			$stageService->creatStage($newPipeId, array('name' => 'Stage 4'));
 
-			$taskService->createTask($firstStageId, array('name' => 'Task 1', 'taskOrder' => 1));
-			$taskService->createTask($firstStageId, array('name' => 'Task 2', 'taskOrder' => 2));
-			$taskService->createTask($secondStageId, array('name' => 'Task 3', 'taskOrder' => 1));
-			$taskService->createTask($secondStageId, array('name' => 'Task 4', 'taskOrder' => 2));
+			$taskService->createTask($firstStageId, array('name' => 'Task 1', 'taskOrder' => 0));
+			$taskService->createTask($firstStageId, array('name' => 'Task 2', 'taskOrder' => 1));
+			$taskService->createTask($secondStageId, array('name' => 'Task 3', 'taskOrder' => 0));
+			$taskService->createTask($secondStageId, array('name' => 'Task 4', 'taskOrder' => 1));
 		}catch(Exception $e) {
 			echo $e->getMessage();
 		}

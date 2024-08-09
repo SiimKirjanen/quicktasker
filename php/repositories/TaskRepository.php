@@ -25,9 +25,10 @@ class TaskRepository {
         global $wpdb;
 
         return $wpdb->get_row( $wpdb->prepare(
-            "SELECT * FROM %s
-            WHERE id = %d",
-            TABLE_WP_QUICK_TASKS_TASKS,
+            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS_LOCATION ." AS b
+            ON a.id = b.task_id
+            WHERE a.id = %d",
             $id
         ) );
     }
@@ -36,7 +37,7 @@ class TaskRepository {
      * Retrieves tasks by stage ID.
      *
      * @param int $stageId The ID of the stage.
-     * @return array|null The tasks associated with the stage ID, or null if no tasks found.
+     * @return array The array of tasks retrieved from the database.
      */
     public function getTasksByStageId($stageId) {
         global $wpdb;
@@ -45,7 +46,8 @@ class TaskRepository {
             "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
             LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS_LOCATION ." AS b
             ON a.id = b.task_id
-            WHERE b.stage_id = %d",
+            WHERE b.stage_id = %d
+            ORDER BY b.task_order",
             $stageId
         ) );
     }

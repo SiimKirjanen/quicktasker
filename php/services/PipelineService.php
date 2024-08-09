@@ -22,6 +22,27 @@ class PipelineService {
         }
     }
 
+    public function markPipelineAsPrimary($pipelineId) {
+        global $wpdb;
+
+        $result = $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE " . TABLE_WP_QUICK_TASKS_PIPELINES . "
+                 SET is_primary = CASE
+                     WHEN id = %d THEN 1
+                     ELSE 0
+                 END",
+                $pipelineId
+            )
+        );
+
+        if ($result === false) {
+            throw new Exception('Failed to mark pipeline as primary');
+        }
+
+        return $result;
+    }
+
     public function updatePipeline($id, $data) {
   
     }

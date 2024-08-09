@@ -45,10 +45,6 @@ class PipelineRepository {
         foreach ($pipelineStages as $stage) {
             $tasks = $taskRepository->getTasksByStageId($stage->id);
             $stage->tasks = $tasks;
-
-            foreach ($stage->tasks as $task) {
-                $task->order = $taskRepository->getTaskOrder($task->id, $stage->id);
-            }
         }
 
         $pipeline->stages = $pipelineStages;
