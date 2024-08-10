@@ -1,6 +1,6 @@
-import { createContext, useReducer } from "@wordpress/element";
+import { createContext, useReducer, useEffect } from "@wordpress/element";
 import { Pipeline } from "../types/pipeline";
-import { moveTask, reorderTask } from "../utils/list";
+import { moveTask, reorderTask } from "../utils/task";
 import {
   PIPELINE_SET_LOADING,
   PIPELINE_MOVE_TASK,
@@ -98,6 +98,12 @@ const PipelineContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const initialFullPipeline = window.wpqt.initialFullPipeline;
+
+    dispatch({ type: PIPELINE_SET_PIPELINE, payload: initialFullPipeline });
+  }, []);
 
   return (
     <PipelineContext.Provider value={{ state, dispatch }}>

@@ -31,6 +31,19 @@ class PipelineRepository {
     }
 
     /**
+     * Retrieves the active pipeline from the database.
+     *
+     * @return object|null The active pipeline object if found, null otherwise.
+     */
+    public function getActivePipeline() {
+        global $wpdb;
+
+        return $wpdb->get_row(
+            "SELECT * FROM ". TABLE_WP_QUICK_TASKS_PIPELINES . " WHERE is_primary = 1"
+        );
+    }
+
+    /**
      * Retrieves the full pipeline with stages and tasks by pipeline ID.
      *
      * @param int $pipelineId The ID of the pipeline.

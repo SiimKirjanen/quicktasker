@@ -1,9 +1,4 @@
-import {
-  useState,
-  useCallback,
-  useEffect,
-  useContext,
-} from "@wordpress/element";
+import { useCallback, useContext } from "@wordpress/element";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { Pipeline } from "../../types/pipeline";
 import { getPipelineData, moveTaskRequest } from "../../api/api";
@@ -16,18 +11,9 @@ const Pipeline = () => {
     dispatch,
   } = useContext(PipelineContext);
 
-  useEffect(() => {
-    (async () => {
-      const pipelineData = await getPipelineData("1");
-
-      dispatch({ type: "SET_PIPELINE", payload: pipelineData });
-    })();
-  }, []);
-
   const onDragEnd = useCallback(
     (result: DropResult) => {
       const { source, destination, draggableId } = result;
-      console.log(result);
 
       if (!destination) {
         return;

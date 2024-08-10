@@ -7,9 +7,21 @@ function wpqt_enqueue_app_assets(){
 	if( 'toplevel_page_wp-quick-tasks' !== $page->id ) {
 		return;
 	}
+
+	$pipelineRepo = new PipelineRepository();
+	$activePipeline = $pipelineRepo->getActivePipeline();
+	$activeFullPipeline = $pipelineRepo->getFullPipeline( $activePipeline->id );
+
 	$build_asset = require(WP_QUICK_TASKS_PLUGIN_FOLDER_DIR . '/build/app.asset.php');
 	$dependencies = array_merge(array('wp-element', 'wp-api-fetch'), $build_asset['dependencies']);
 
-	wp_enqueue_style( 'my-plugin-tailwind', WP_QUICK_TASKS_PLUGIN_FOLDER_URL . '/build/tailwind.css');
-    wp_enqueue_script('wp-quick-landing-scrips', WP_QUICK_TASKS_PLUGIN_FOLDER_URL . '/build/app.js', $dependencies, $build_asset['version'], true);
+	wp_enqueue_style( 'wpqt-tailwind', WP_QUICK_TASKS_PLUGIN_FOLDER_URL . '/build/tailwind.css');
+    wp_enqueue_script('wpqt-script', WP_QUICK_TASKS_PLUGIN_FOLDER_URL . '/build/app.js', $dependencies, $build_asset['version'], true);
+
+	wp_localize_script('wpqt-script', 'wpqt', array(
+		'nonce' => wp_create_nonce( 'wpqt_rest' ),
+		'siteURL' => site_url(),
+		'pluginURL' => WP_QUICK_TASKS_PLUGIN_FOLDER_URL,
+		'initialFullPipeline' => $activeFullPipeline
+	));
 }
