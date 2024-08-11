@@ -14,7 +14,7 @@ function Stage({ droppableId, tasks }: Props) {
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
-          className={`wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-max-h-full wpqt-relative wpqt-p-2 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${
+          className={`wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-p-2 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${
             snapshot.isDraggingOver ? "wpqt-bg-blue-400" : ""
           }`}
         >

@@ -4,6 +4,7 @@ import { Pipeline } from "../../types/pipeline";
 import { getPipelineData, moveTaskRequest } from "../../api/api";
 import { Stage } from "./Stage";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
+import { AddStage } from "./AddStage";
 
 const Pipeline = () => {
   const {
@@ -47,12 +48,13 @@ const Pipeline = () => {
   }
 
   return (
-    <div className="wpqt-flex wpqt-gap-[24px]">
+    <div className="wpqt-flex wpqt-gap-[24px] wpqt-items-start wpqt-overflow-x-auto wpqt-pipeline-height">
       <DragDropContext onDragEnd={onDragEnd}>
         {pipeline.stages.map((stage) => {
           return <Stage droppableId={stage.id} tasks={stage.tasks} />;
         })}
       </DragDropContext>
+      <AddStage pipelineId={pipeline.id} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import {
   PIPELINE_SET_PIPELINE,
 } from "../constants";
 import { Action, State } from "../providers/PipelineContextProvider";
+import { Stage } from "../types/stage";
 import { Task } from "../types/task";
 import { moveTask, reorderTask } from "../utils/task";
 
@@ -85,6 +86,16 @@ const pipelineReducer = (state: State, action: Action) => {
                 }
               : stage
           ),
+        },
+      };
+    case "ADD_STAGE":
+      const newStage: Stage = action.payload;
+
+      return {
+        ...state,
+        pipeline: {
+          ...state.pipeline,
+          stages: [...state.pipeline!.stages, newStage],
         },
       };
     default:

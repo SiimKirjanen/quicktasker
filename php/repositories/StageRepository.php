@@ -16,4 +16,20 @@ class StageRepository {
             $pipelineId
         ) );
     }
+
+    /**
+     * Retrieves a stage by its ID.
+     *
+     * @param int $stageId The ID of the stage to retrieve.
+     * @return object|null The stage object if found, null otherwise.
+     */
+    public function getStageById($stageId) {
+        global $wpdb;
+
+        return $wpdb->get_row( $wpdb->prepare(
+            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . "
+            WHERE id = %d",
+            $stageId
+        ) );
+    }
 }

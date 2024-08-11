@@ -74,10 +74,10 @@ function wpqt_insert_initial_data() {
 	if( !count($pipelines) ) {
 		$newPipeId = $pipeService->createPipeline("Pipeline");
 		$pipeService->markPipelineAsPrimary($newPipeId);
-		$firstStageId = $stageService->creatStage($newPipeId, array('name' => 'Stage 1'));
-		$secondStageId = $stageService->creatStage($newPipeId, array('name' => 'Stage 2'));
-		$stageService->creatStage($newPipeId, array('name' => 'Stage 3'));
-		$stageService->creatStage($newPipeId, array('name' => 'Stage 4'));
+		$firstStageId = $stageService->createStage($newPipeId, array('name' => 'Stage 1'))->id;
+		$secondStageId = $stageService->createStage($newPipeId, array('name' => 'Stage 2'))->id;
+		$stageService->createStage($newPipeId, array('name' => 'Stage 3'));
+		$stageService->createStage($newPipeId, array('name' => 'Stage 4'));
 
 		$taskService->createTask($firstStageId, array('name' => 'Task 1'));
 		$taskService->createTask($firstStageId, array('name' => 'Task 2'));

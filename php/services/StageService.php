@@ -1,14 +1,21 @@
 <?php
 class StageService {
+    protected $stageRepository;
+
+    public function __construct() {
+        $this->stageRepository = new StageRepository();
+    }
+
+
     /**
-     * Inserts a new stage into the pipeline.
+     * Creates a stage for a pipeline.
      *
      * @param int $pipelineId The ID of the pipeline.
-     * @param array $args The arguments for the stage.
-     * @return int The ID of the newly inserted stage.
+     * @param array $args The arguments for creating the stage.
+     * @return Stage The created stage.
      * @throws Exception If required fields are missing or if the stage creation fails.
      */
-    public function creatStage($pipelineId, $args) {
+    public function createStage($pipelineId, $args) {
         global $wpdb;
 
         $defaults = array(
@@ -25,10 +32,11 @@ class StageService {
             'pipeline_id' => $pipelineId,
             'name' => $args['name']
         ));
-        if ($result !== false) {
-            return $wpdb->insert_id;
-        } else {
-            throw new Exception('Failed to create stage');
+
+        if( $result === false ) {
+            throw new Exception('Failed to create a stage');
         }
+
+        return $this->stageRepository->getStageById($wpdb->insert_id);
     }
 }

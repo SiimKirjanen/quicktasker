@@ -1,1 +1,12450 @@
-(()=>{"use strict";var e={146:(e,t,r)=>{var n=r(404),o={childContextTypes:!0,contextType:!0,contextTypes:!0,defaultProps:!0,displayName:!0,getDefaultProps:!0,getDerivedStateFromError:!0,getDerivedStateFromProps:!0,mixins:!0,propTypes:!0,type:!0},i={name:!0,length:!0,prototype:!0,caller:!0,callee:!0,arguments:!0,arity:!0},a={$$typeof:!0,compare:!0,defaultProps:!0,displayName:!0,propTypes:!0,type:!0},s={};function l(e){return n.isMemo(e)?a:s[e.$$typeof]||o}s[n.ForwardRef]={$$typeof:!0,render:!0,defaultProps:!0,displayName:!0,propTypes:!0},s[n.Memo]=a;var c=Object.defineProperty,d=Object.getOwnPropertyNames,u=Object.getOwnPropertySymbols,p=Object.getOwnPropertyDescriptor,g=Object.getPrototypeOf,f=Object.prototype;e.exports=function e(t,r,n){if("string"!=typeof r){if(f){var o=g(r);o&&o!==f&&e(t,o,n)}var a=d(r);u&&(a=a.concat(u(r)));for(var s=l(t),m=l(r),b=0;b<a.length;++b){var h=a[b];if(!(i[h]||n&&n[h]||m&&m[h]||s&&s[h])){var y=p(r,h);try{c(t,h,y)}catch(e){}}}}return t}},72:(e,t)=>{var r="function"==typeof Symbol&&Symbol.for,n=r?Symbol.for("react.element"):60103,o=r?Symbol.for("react.portal"):60106,i=r?Symbol.for("react.fragment"):60107,a=r?Symbol.for("react.strict_mode"):60108,s=r?Symbol.for("react.profiler"):60114,l=r?Symbol.for("react.provider"):60109,c=r?Symbol.for("react.context"):60110,d=r?Symbol.for("react.async_mode"):60111,u=r?Symbol.for("react.concurrent_mode"):60111,p=r?Symbol.for("react.forward_ref"):60112,g=r?Symbol.for("react.suspense"):60113,f=r?Symbol.for("react.suspense_list"):60120,m=r?Symbol.for("react.memo"):60115,b=r?Symbol.for("react.lazy"):60116,h=r?Symbol.for("react.block"):60121,y=r?Symbol.for("react.fundamental"):60117,v=r?Symbol.for("react.responder"):60118,x=r?Symbol.for("react.scope"):60119;function I(e){if("object"==typeof e&&null!==e){var t=e.$$typeof;switch(t){case n:switch(e=e.type){case d:case u:case i:case s:case a:case g:return e;default:switch(e=e&&e.$$typeof){case c:case p:case b:case m:case l:return e;default:return t}}case o:return t}}}function D(e){return I(e)===u}t.AsyncMode=d,t.ConcurrentMode=u,t.ContextConsumer=c,t.ContextProvider=l,t.Element=n,t.ForwardRef=p,t.Fragment=i,t.Lazy=b,t.Memo=m,t.Portal=o,t.Profiler=s,t.StrictMode=a,t.Suspense=g,t.isAsyncMode=function(e){return D(e)||I(e)===d},t.isConcurrentMode=D,t.isContextConsumer=function(e){return I(e)===c},t.isContextProvider=function(e){return I(e)===l},t.isElement=function(e){return"object"==typeof e&&null!==e&&e.$$typeof===n},t.isForwardRef=function(e){return I(e)===p},t.isFragment=function(e){return I(e)===i},t.isLazy=function(e){return I(e)===b},t.isMemo=function(e){return I(e)===m},t.isPortal=function(e){return I(e)===o},t.isProfiler=function(e){return I(e)===s},t.isStrictMode=function(e){return I(e)===a},t.isSuspense=function(e){return I(e)===g},t.isValidElementType=function(e){return"string"==typeof e||"function"==typeof e||e===i||e===u||e===s||e===a||e===g||e===f||"object"==typeof e&&null!==e&&(e.$$typeof===b||e.$$typeof===m||e.$$typeof===l||e.$$typeof===c||e.$$typeof===p||e.$$typeof===y||e.$$typeof===v||e.$$typeof===x||e.$$typeof===h)},t.typeOf=I},404:(e,t,r)=>{e.exports=r(72)},799:(e,t)=>{var r=Symbol.for("react.element"),n=Symbol.for("react.portal"),o=Symbol.for("react.fragment"),i=Symbol.for("react.strict_mode"),a=Symbol.for("react.profiler"),s=Symbol.for("react.provider"),l=Symbol.for("react.context"),c=Symbol.for("react.server_context"),d=Symbol.for("react.forward_ref"),u=Symbol.for("react.suspense"),p=Symbol.for("react.suspense_list"),g=Symbol.for("react.memo"),f=Symbol.for("react.lazy");Symbol.for("react.offscreen");Symbol.for("react.module.reference"),t.isContextConsumer=function(e){return function(e){if("object"==typeof e&&null!==e){var t=e.$$typeof;switch(t){case r:switch(e=e.type){case o:case a:case i:case u:case p:return e;default:switch(e=e&&e.$$typeof){case c:case l:case d:case f:case g:case s:return e;default:return t}}case n:return t}}}(e)===l}},363:(e,t,r)=>{e.exports=r(799)},63:(e,t,r)=>{var n=r(609),o="function"==typeof Object.is?Object.is:function(e,t){return e===t&&(0!==e||1/e==1/t)||e!=e&&t!=t},i=n.useState,a=n.useEffect,s=n.useLayoutEffect,l=n.useDebugValue;function c(e){var t=e.getSnapshot;e=e.value;try{var r=t();return!o(e,r)}catch(e){return!0}}var d="undefined"==typeof window||void 0===window.document||void 0===window.document.createElement?function(e,t){return t()}:function(e,t){var r=t(),n=i({inst:{value:r,getSnapshot:t}}),o=n[0].inst,d=n[1];return s((function(){o.value=r,o.getSnapshot=t,c(o)&&d({inst:o})}),[e,r,t]),a((function(){return c(o)&&d({inst:o}),e((function(){c(o)&&d({inst:o})}))}),[e]),l(r),r};t.useSyncExternalStore=void 0!==n.useSyncExternalStore?n.useSyncExternalStore:d},940:(e,t,r)=>{var n=r(609),o=r(888),i="function"==typeof Object.is?Object.is:function(e,t){return e===t&&(0!==e||1/e==1/t)||e!=e&&t!=t},a=o.useSyncExternalStore,s=n.useRef,l=n.useEffect,c=n.useMemo,d=n.useDebugValue;t.useSyncExternalStoreWithSelector=function(e,t,r,n,o){var u=s(null);if(null===u.current){var p={hasValue:!1,value:null};u.current=p}else p=u.current;u=c((function(){function e(e){if(!l){if(l=!0,a=e,e=n(e),void 0!==o&&p.hasValue){var t=p.value;if(o(t,e))return s=t}return s=e}if(t=s,i(a,e))return t;var r=n(e);return void 0!==o&&o(t,r)?t:(a=e,s=r)}var a,s,l=!1,c=void 0===r?null:r;return[function(){return e(t())},null===c?void 0:function(){return e(c())}]}),[t,r,n,o]);var g=a(e,u[0],u[1]);return l((function(){p.hasValue=!0,p.value=g}),[g]),d(g),g}},888:(e,t,r)=>{e.exports=r(63)},242:(e,t,r)=>{e.exports=r(940)},609:e=>{e.exports=window.React}},t={};function r(n){var o=t[n];if(void 0!==o)return o.exports;var i=t[n]={exports:{}};return e[n](i,i.exports,r),i.exports}r.n=e=>{var t=e&&e.__esModule?()=>e.default:()=>e;return r.d(t,{a:t}),t},r.d=(e,t)=>{for(var n in t)r.o(t,n)&&!r.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:t[n]})},r.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t);const n=window.wp.element,o=window.ReactJSXRuntime,i=()=>(0,o.jsx)("div",{children:(0,o.jsxs)("ul",{children:[(0,o.jsx)("li",{children:"Pipelines"}),(0,o.jsx)("li",{children:"Users"})]})});var a=r(609),s=r.n(a);const l=window.ReactDOM;var c=r.n(l);function d(e){return d="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},d(e)}function u(e,t,r){return(t=function(e){var t=function(e){if("object"!=d(e)||!e)return e;var t=e[Symbol.toPrimitive];if(void 0!==t){var r=t.call(e,"string");if("object"!=d(r))return r;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(e)}(e);return"symbol"==d(t)?t:t+""}(t))in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function p(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),r.push.apply(r,n)}return r}function g(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{};t%2?p(Object(r),!0).forEach((function(t){u(e,t,r[t])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):p(Object(r)).forEach((function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))}))}return e}function f(e){return"Minified Redux error #"+e+"; visit https://redux.js.org/Errors?code="+e+" for the full message or use the non-minified dev environment for full errors. "}var m="function"==typeof Symbol&&Symbol.observable||"@@observable",b=function(){return Math.random().toString(36).substring(7).split("").join(".")},h={INIT:"@@redux/INIT"+b(),REPLACE:"@@redux/REPLACE"+b(),PROBE_UNKNOWN_ACTION:function(){return"@@redux/PROBE_UNKNOWN_ACTION"+b()}};function y(e,t,r){var n;if("function"==typeof t&&"function"==typeof r||"function"==typeof r&&"function"==typeof arguments[3])throw new Error(f(0));if("function"==typeof t&&void 0===r&&(r=t,t=void 0),void 0!==r){if("function"!=typeof r)throw new Error(f(1));return r(y)(e,t)}if("function"!=typeof e)throw new Error(f(2));var o=e,i=t,a=[],s=a,l=!1;function c(){s===a&&(s=a.slice())}function d(){if(l)throw new Error(f(3));return i}function u(e){if("function"!=typeof e)throw new Error(f(4));if(l)throw new Error(f(5));var t=!0;return c(),s.push(e),function(){if(t){if(l)throw new Error(f(6));t=!1,c();var r=s.indexOf(e);s.splice(r,1),a=null}}}function p(e){if(!function(e){if("object"!=typeof e||null===e)return!1;for(var t=e;null!==Object.getPrototypeOf(t);)t=Object.getPrototypeOf(t);return Object.getPrototypeOf(e)===t}(e))throw new Error(f(7));if(void 0===e.type)throw new Error(f(8));if(l)throw new Error(f(9));try{l=!0,i=o(i,e)}finally{l=!1}for(var t=a=s,r=0;r<t.length;r++)(0,t[r])();return e}return p({type:h.INIT}),(n={dispatch:p,subscribe:u,getState:d,replaceReducer:function(e){if("function"!=typeof e)throw new Error(f(10));o=e,p({type:h.REPLACE})}})[m]=function(){var e,t=u;return(e={subscribe:function(e){if("object"!=typeof e||null===e)throw new Error(f(11));function r(){e.next&&e.next(d())}return r(),{unsubscribe:t(r)}}})[m]=function(){return this},e},n}function v(e,t){return function(){return t(e.apply(this,arguments))}}function x(e,t){if("function"==typeof e)return v(e,t);if("object"!=typeof e||null===e)throw new Error(f(16));var r={};for(var n in e){var o=e[n];"function"==typeof o&&(r[n]=v(o,t))}return r}function I(){for(var e=arguments.length,t=new Array(e),r=0;r<e;r++)t[r]=arguments[r];return 0===t.length?function(e){return e}:1===t.length?t[0]:t.reduce((function(e,t){return function(){return e(t.apply(void 0,arguments))}}))}var D=r(888),w=r(242);let S=function(e){e()};const E=()=>S,O=Symbol.for("react-redux-context"),C="undefined"!=typeof globalThis?globalThis:{};function A(){var e;if(!a.createContext)return{};const t=null!=(e=C[O])?e:C[O]=new Map;let r=t.get(a.createContext);return r||(r=a.createContext(null),t.set(a.createContext,r)),r}const P=A();let R=null;function N(){return N=Object.assign?Object.assign.bind():function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var n in r)({}).hasOwnProperty.call(r,n)&&(e[n]=r[n])}return e},N.apply(null,arguments)}function B(e,t){if(null==e)return{};var r={};for(var n in e)if({}.hasOwnProperty.call(e,n)){if(t.includes(n))continue;r[n]=e[n]}return r}var T=r(146),L=r.n(T),M=r(363);const G=["initMapStateToProps","initMapDispatchToProps","initMergeProps"];function j(e,t,r,n,{areStatesEqual:o,areOwnPropsEqual:i,areStatePropsEqual:a}){let s,l,c,d,u,p=!1;return function(g,f){return p?function(p,g){const f=!i(g,l),m=!o(p,s,g,l);return s=p,l=g,f&&m?(c=e(s,l),t.dependsOnOwnProps&&(d=t(n,l)),u=r(c,d,l),u):f?(e.dependsOnOwnProps&&(c=e(s,l)),t.dependsOnOwnProps&&(d=t(n,l)),u=r(c,d,l),u):m?function(){const t=e(s,l),n=!a(t,c);return c=t,n&&(u=r(c,d,l)),u}():u}(g,f):(s=g,l=f,c=e(s,l),d=t(n,l),u=r(c,d,l),p=!0,u)}}function _(e){return function(t){const r=e(t);function n(){return r}return n.dependsOnOwnProps=!1,n}}function F(e){return e.dependsOnOwnProps?Boolean(e.dependsOnOwnProps):1!==e.length}function $(e,t){return function(t,{displayName:r}){const n=function(e,t){return n.dependsOnOwnProps?n.mapToProps(e,t):n.mapToProps(e,void 0)};return n.dependsOnOwnProps=!0,n.mapToProps=function(t,r){n.mapToProps=e,n.dependsOnOwnProps=F(e);let o=n(t,r);return"function"==typeof o&&(n.mapToProps=o,n.dependsOnOwnProps=F(o),o=n(t,r)),o},n}}function k(e,t){return(r,n)=>{throw new Error(`Invalid value of type ${typeof e} for ${t} argument when connecting component ${n.wrappedComponentName}.`)}}function W(e,t,r){return N({},r,e,t)}const U={notify(){},get:()=>[]};function q(e,t){let r,n=U,o=0,i=!1;function a(){c.onStateChange&&c.onStateChange()}function s(){o++,r||(r=t?t.addNestedSub(a):e.subscribe(a),n=function(){const e=E();let t=null,r=null;return{clear(){t=null,r=null},notify(){e((()=>{let e=t;for(;e;)e.callback(),e=e.next}))},get(){let e=[],r=t;for(;r;)e.push(r),r=r.next;return e},subscribe(e){let n=!0,o=r={callback:e,next:null,prev:r};return o.prev?o.prev.next=o:t=o,function(){n&&null!==t&&(n=!1,o.next?o.next.prev=o.prev:r=o.prev,o.prev?o.prev.next=o.next:t=o.next)}}}}())}function l(){o--,r&&0===o&&(r(),r=void 0,n.clear(),n=U)}const c={addNestedSub:function(e){s();const t=n.subscribe(e);let r=!1;return()=>{r||(r=!0,t(),l())}},notifyNestedSubs:function(){n.notify()},handleChangeWrapper:a,isSubscribed:function(){return i},trySubscribe:function(){i||(i=!0,s())},tryUnsubscribe:function(){i&&(i=!1,l())},getListeners:()=>n};return c}const H="undefined"!=typeof window&&void 0!==window.document&&void 0!==window.document.createElement?a.useLayoutEffect:a.useEffect;function V(e,t){return e===t?0!==e||0!==t||1/e==1/t:e!=e&&t!=t}function z(e,t){if(V(e,t))return!0;if("object"!=typeof e||null===e||"object"!=typeof t||null===t)return!1;const r=Object.keys(e),n=Object.keys(t);if(r.length!==n.length)return!1;for(let n=0;n<r.length;n++)if(!Object.prototype.hasOwnProperty.call(t,r[n])||!V(e[r[n]],t[r[n]]))return!1;return!0}const Y=["reactReduxForwardedRef"];let J=()=>{throw new Error("uSES not initialized!")};const X=[null,null];function K(e,t,r,n,o,i){e.current=n,r.current=!1,o.current&&(o.current=null,i())}function Q(e,t){return e===t}const Z=function(e,t,r,{pure:n,areStatesEqual:o=Q,areOwnPropsEqual:i=z,areStatePropsEqual:s=z,areMergedPropsEqual:l=z,forwardRef:c=!1,context:d=P}={}){const u=d,p=function(e){return e?"function"==typeof e?$(e):k(e,"mapStateToProps"):_((()=>({})))}(e),g=function(e){return e&&"object"==typeof e?_((t=>function(e,t){const r={};for(const n in e){const o=e[n];"function"==typeof o&&(r[n]=(...e)=>t(o(...e)))}return r}(e,t))):e?"function"==typeof e?$(e):k(e,"mapDispatchToProps"):_((e=>({dispatch:e})))}(t),f=function(e){return e?"function"==typeof e?function(e){return function(t,{displayName:r,areMergedPropsEqual:n}){let o,i=!1;return function(t,r,a){const s=e(t,r,a);return i?n(s,o)||(o=s):(i=!0,o=s),o}}}(e):k(e,"mergeProps"):()=>W}(r),m=Boolean(e);return e=>{const t=e.displayName||e.name||"Component",r=`Connect(${t})`,n={shouldHandleStateChanges:m,displayName:r,wrappedComponentName:t,WrappedComponent:e,initMapStateToProps:p,initMapDispatchToProps:g,initMergeProps:f,areStatesEqual:o,areStatePropsEqual:s,areOwnPropsEqual:i,areMergedPropsEqual:l};function d(t){const[r,o,i]=a.useMemo((()=>{const{reactReduxForwardedRef:e}=t,r=B(t,Y);return[t.context,e,r]}),[t]),s=a.useMemo((()=>r&&r.Consumer&&(0,M.isContextConsumer)(a.createElement(r.Consumer,null))?r:u),[r,u]),l=a.useContext(s),c=Boolean(t.store)&&Boolean(t.store.getState)&&Boolean(t.store.dispatch),d=Boolean(l)&&Boolean(l.store),p=c?t.store:l.store,g=d?l.getServerState:p.getState,f=a.useMemo((()=>function(e,t){let{initMapStateToProps:r,initMapDispatchToProps:n,initMergeProps:o}=t,i=B(t,G);return j(r(e,i),n(e,i),o(e,i),e,i)}(p.dispatch,n)),[p]),[b,h]=a.useMemo((()=>{if(!m)return X;const e=q(p,c?void 0:l.subscription),t=e.notifyNestedSubs.bind(e);return[e,t]}),[p,c,l]),y=a.useMemo((()=>c?l:N({},l,{subscription:b})),[c,l,b]),v=a.useRef(),x=a.useRef(i),I=a.useRef(),D=a.useRef(!1),w=(a.useRef(!1),a.useRef(!1)),S=a.useRef();H((()=>(w.current=!0,()=>{w.current=!1})),[]);const E=a.useMemo((()=>()=>I.current&&i===x.current?I.current:f(p.getState(),i)),[p,i]),O=a.useMemo((()=>e=>b?function(e,t,r,n,o,i,a,s,l,c,d){if(!e)return()=>{};let u=!1,p=null;const g=()=>{if(u||!s.current)return;const e=t.getState();let r,g;try{r=n(e,o.current)}catch(e){g=e,p=e}g||(p=null),r===i.current?a.current||c():(i.current=r,l.current=r,a.current=!0,d())};return r.onStateChange=g,r.trySubscribe(),g(),()=>{if(u=!0,r.tryUnsubscribe(),r.onStateChange=null,p)throw p}}(m,p,b,f,x,v,D,w,I,h,e):()=>{}),[b]);var C,A;let P;C=K,A=[x,v,D,i,I,h],H((()=>C(...A)),undefined);try{P=J(O,E,g?()=>f(g(),i):E)}catch(e){throw S.current&&(e.message+=`\nThe error may be correlated with this previous error:\n${S.current.stack}\n\n`),e}H((()=>{S.current=void 0,I.current=void 0,v.current=P}));const R=a.useMemo((()=>a.createElement(e,N({},P,{ref:o}))),[o,e,P]);return a.useMemo((()=>m?a.createElement(s.Provider,{value:y},R):R),[s,R,y])}const b=a.memo(d);if(b.WrappedComponent=e,b.displayName=d.displayName=r,c){const t=a.forwardRef((function(e,t){return a.createElement(b,N({},e,{reactReduxForwardedRef:t}))}));return t.displayName=r,t.WrappedComponent=e,L()(t,e)}return L()(b,e)}},ee=function({store:e,context:t,children:r,serverState:n,stabilityCheck:o="once",noopCheck:i="once"}){const s=a.useMemo((()=>{const t=q(e);return{store:e,subscription:t,getServerState:n?()=>n:void 0,stabilityCheck:o,noopCheck:i}}),[e,n,o,i]),l=a.useMemo((()=>e.getState()),[e]);H((()=>{const{subscription:t}=s;return t.onStateChange=t.notifyNestedSubs,t.trySubscribe(),l!==e.getState()&&t.notifyNestedSubs(),()=>{t.tryUnsubscribe(),t.onStateChange=void 0}}),[s,l]);const c=t||P;return a.createElement(c.Provider,{value:s},r)};var te;function re(e,t){var r=(0,a.useState)((function(){return{inputs:t,result:e()}}))[0],n=(0,a.useRef)(!0),o=(0,a.useRef)(r),i=n.current||Boolean(t&&o.current.inputs&&function(e,t){if(e.length!==t.length)return!1;for(var r=0;r<e.length;r++)if(e[r]!==t[r])return!1;return!0}(t,o.current.inputs))?o.current:{inputs:t,result:e()};return(0,a.useEffect)((function(){n.current=!1,o.current=i}),[i]),i.result}R=w.useSyncExternalStoreWithSelector,(e=>{J=e})(D.useSyncExternalStore),te=l.unstable_batchedUpdates,S=te;var ne=re,oe=function(e,t){return re((function(){return e}),t)},ie=function(e){var t=e.top,r=e.right,n=e.bottom,o=e.left;return{top:t,right:r,bottom:n,left:o,width:r-o,height:n-t,x:o,y:t,center:{x:(r+o)/2,y:(n+t)/2}}},ae=function(e,t){return{top:e.top-t.top,left:e.left-t.left,bottom:e.bottom+t.bottom,right:e.right+t.right}},se=function(e,t){return{top:e.top+t.top,left:e.left+t.left,bottom:e.bottom-t.bottom,right:e.right-t.right}},le={top:0,right:0,bottom:0,left:0},ce=function(e){var t=e.borderBox,r=e.margin,n=void 0===r?le:r,o=e.border,i=void 0===o?le:o,a=e.padding,s=void 0===a?le:a,l=ie(ae(t,n)),c=ie(se(t,i)),d=ie(se(c,s));return{marginBox:l,borderBox:ie(t),paddingBox:c,contentBox:d,margin:n,border:i,padding:s}},de=function(e){var t=e.slice(0,-2);if("px"!==e.slice(-2))return 0;var r=Number(t);return isNaN(r)&&function(){throw new Error("Invariant failed")}(),r},ue=function(e,t){var r,n,o=e.borderBox,i=e.border,a=e.margin,s=e.padding,l=(n=t,{top:(r=o).top+n.y,left:r.left+n.x,bottom:r.bottom+n.y,right:r.right+n.x});return ce({borderBox:l,border:i,margin:a,padding:s})},pe=function(e,t){return void 0===t&&(t={x:window.pageXOffset,y:window.pageYOffset}),ue(e,t)},ge=function(e,t){var r={top:de(t.marginTop),right:de(t.marginRight),bottom:de(t.marginBottom),left:de(t.marginLeft)},n={top:de(t.paddingTop),right:de(t.paddingRight),bottom:de(t.paddingBottom),left:de(t.paddingLeft)},o={top:de(t.borderTopWidth),right:de(t.borderRightWidth),bottom:de(t.borderBottomWidth),left:de(t.borderLeftWidth)};return ce({borderBox:e,margin:r,padding:n,border:o})},fe=function(e){var t=e.getBoundingClientRect(),r=window.getComputedStyle(e);return ge(t,r)},me=Number.isNaN||function(e){return"number"==typeof e&&e!=e};function be(e,t){if(e.length!==t.length)return!1;for(var r=0;r<e.length;r++)if(!((n=e[r])===(o=t[r])||me(n)&&me(o)))return!1;var n,o;return!0}function he(e,t){void 0===t&&(t=be);var r=null;function n(){for(var n=[],o=0;o<arguments.length;o++)n[o]=arguments[o];if(r&&r.lastThis===this&&t(n,r.lastArgs))return r.lastResult;var i=e.apply(this,n);return r={lastResult:i,lastArgs:n,lastThis:this},i}return n.clear=function(){r=null},n}const ye=function(e){var t=[],r=null,n=function(){for(var n=arguments.length,o=new Array(n),i=0;i<n;i++)o[i]=arguments[i];t=o,r||(r=requestAnimationFrame((function(){r=null,e.apply(void 0,t)})))};return n.cancel=function(){r&&(cancelAnimationFrame(r),r=null)},n};function ve(e,t){}function xe(){}function Ie(e,t,r){const n=t.map((t=>{const n=(o=r,i=t.options,{...o,...i});var o,i;return e.addEventListener(t.eventName,t.fn,n),function(){e.removeEventListener(t.eventName,t.fn,n)}}));return function(){n.forEach((e=>{e()}))}}ve.bind(null,"warn"),ve.bind(null,"error");const De=!0,we="Invariant failed";class Se extends Error{}function Ee(e,t){if(!e)throw new Se(De?we:`${we}: ${t||""}`)}Se.prototype.toString=function(){return this.message};class Oe extends s().Component{constructor(...e){super(...e),this.callbacks=null,this.unbind=xe,this.onWindowError=e=>{const t=this.getCallbacks();t.isDragging()&&t.tryAbort(),e.error instanceof Se&&e.preventDefault()},this.getCallbacks=()=>{if(!this.callbacks)throw new Error("Unable to find AppCallbacks in <ErrorBoundary/>");return this.callbacks},this.setCallbacks=e=>{this.callbacks=e}}componentDidMount(){this.unbind=Ie(window,[{eventName:"error",fn:this.onWindowError}])}componentDidCatch(e){if(!(e instanceof Se))throw e;this.setState({})}componentWillUnmount(){this.unbind()}render(){return this.props.children(this.setCallbacks)}}const Ce=e=>e+1,Ae=(e,t)=>{const r=e.droppableId===t.droppableId,n=Ce(e.index),o=Ce(t.index);return r?`\n      You have moved the item from position ${n}\n      to position ${o}\n    `:`\n    You have moved the item from position ${n}\n    in list ${e.droppableId}\n    to list ${t.droppableId}\n    in position ${o}\n  `},Pe=(e,t,r)=>t.droppableId===r.droppableId?`\n      The item ${e}\n      has been combined with ${r.draggableId}`:`\n      The item ${e}\n      in list ${t.droppableId}\n      has been combined with ${r.draggableId}\n      in list ${r.droppableId}\n    `,Re=e=>`\n  The item has returned to its starting position\n  of ${Ce(e.index)}\n`,Ne={dragHandleUsageInstructions:"\n  Press space bar to start a drag.\n  When dragging you can use the arrow keys to move the item around and escape to cancel.\n  Some screen readers may require you to be in focus mode or to use your pass through key\n",onDragStart:e=>`\n  You have lifted an item in position ${Ce(e.source.index)}\n`,onDragUpdate:e=>{const t=e.destination;if(t)return Ae(e.source,t);const r=e.combine;return r?Pe(e.draggableId,e.source,r):"You are over an area that cannot be dropped on"},onDragEnd:e=>{if("CANCEL"===e.reason)return`\n      Movement cancelled.\n      ${Re(e.source)}\n    `;const t=e.destination,r=e.combine;return t?`\n      You have dropped the item.\n      ${Ae(e.source,t)}\n    `:r?`\n      You have dropped the item.\n      ${Pe(e.draggableId,e.source,r)}\n    `:`\n    The item has been dropped while not over a drop area.\n    ${Re(e.source)}\n  `}};var Be=Ne;const Te={x:0,y:0},Le=(e,t)=>({x:e.x+t.x,y:e.y+t.y}),Me=(e,t)=>({x:e.x-t.x,y:e.y-t.y}),Ge=(e,t)=>e.x===t.x&&e.y===t.y,je=e=>({x:0!==e.x?-e.x:0,y:0!==e.y?-e.y:0}),_e=(e,t,r=0)=>"x"===e?{x:t,y:r}:{x:r,y:t},Fe=(e,t)=>Math.sqrt((t.x-e.x)**2+(t.y-e.y)**2),$e=(e,t)=>Math.min(...t.map((t=>Fe(e,t)))),ke=e=>t=>({x:e(t.x),y:e(t.y)}),We=(e,t)=>({top:e.top+t.y,left:e.left+t.x,bottom:e.bottom+t.y,right:e.right+t.x}),Ue=e=>[{x:e.left,y:e.top},{x:e.right,y:e.top},{x:e.left,y:e.bottom},{x:e.right,y:e.bottom}],qe=(e,t)=>t&&t.shouldClipSubject?((e,t)=>{const r=ie({top:Math.max(t.top,e.top),right:Math.min(t.right,e.right),bottom:Math.min(t.bottom,e.bottom),left:Math.max(t.left,e.left)});return r.width<=0||r.height<=0?null:r})(t.pageMarginBox,e):ie(e);var He=({page:e,withPlaceholder:t,axis:r,frame:n})=>{const o=((e,t)=>t?We(e,t.scroll.diff.displacement):e)(e.marginBox,n),i=((e,t,r)=>r&&r.increasedBy?{...e,[t.end]:e[t.end]+r.increasedBy[t.line]}:e)(o,r,t);return{page:e,withPlaceholder:t,active:qe(i,n)}},Ve=(e,t)=>{e.frame||Ee(!1);const r=e.frame,n=Me(t,r.scroll.initial),o=je(n),i={...r,scroll:{initial:r.scroll.initial,current:t,diff:{value:n,displacement:o},max:r.scroll.max}},a=He({page:e.subject.page,withPlaceholder:e.subject.withPlaceholder,axis:e.axis,frame:i});return{...e,frame:i,subject:a}};const ze=he((e=>e.reduce(((e,t)=>(e[t.descriptor.id]=t,e)),{}))),Ye=he((e=>e.reduce(((e,t)=>(e[t.descriptor.id]=t,e)),{}))),Je=he((e=>Object.values(e))),Xe=he((e=>Object.values(e)));var Ke=he(((e,t)=>{const r=Xe(t).filter((t=>e===t.descriptor.droppableId)).sort(((e,t)=>e.descriptor.index-t.descriptor.index));return r}));function Qe(e){return e.at&&"REORDER"===e.at.type?e.at.destination:null}function Ze(e){return e.at&&"COMBINE"===e.at.type?e.at.combine:null}var et=he(((e,t)=>t.filter((t=>t.descriptor.id!==e.descriptor.id)))),tt=(e,t)=>e.descriptor.droppableId===t.descriptor.id;const rt={point:Te,value:0},nt={invisible:{},visible:{},all:[]};var ot={displaced:nt,displacedBy:rt,at:null},it=(e,t)=>r=>e<=r&&r<=t,at=e=>{const t=it(e.top,e.bottom),r=it(e.left,e.right);return n=>{if(t(n.top)&&t(n.bottom)&&r(n.left)&&r(n.right))return!0;const o=t(n.top)||t(n.bottom),i=r(n.left)||r(n.right);if(o&&i)return!0;const a=n.top<e.top&&n.bottom>e.bottom,s=n.left<e.left&&n.right>e.right;return!(!a||!s)||(a&&i||s&&o)}},st=e=>{const t=it(e.top,e.bottom),r=it(e.left,e.right);return e=>t(e.top)&&t(e.bottom)&&r(e.left)&&r(e.right)};const lt={direction:"vertical",line:"y",crossAxisLine:"x",start:"top",end:"bottom",size:"height",crossAxisStart:"left",crossAxisEnd:"right",crossAxisSize:"width"},ct={direction:"horizontal",line:"x",crossAxisLine:"y",start:"left",end:"right",size:"width",crossAxisStart:"top",crossAxisEnd:"bottom",crossAxisSize:"height"},dt=({target:e,destination:t,viewport:r,withDroppableDisplacement:n,isVisibleThroughFrameFn:o})=>{const i=n?((e,t)=>{const r=t.frame?t.frame.scroll.diff.displacement:Te;return We(e,r)})(e,t):e;return((e,t,r)=>!!t.subject.active&&r(t.subject.active)(e))(i,t,o)&&((e,t,r)=>r(t)(e))(i,r,o)},ut=e=>dt({...e,isVisibleThroughFrameFn:at}),pt=e=>dt({...e,isVisibleThroughFrameFn:st}),gt=(e,t,r)=>{if("boolean"==typeof r)return r;if(!t)return!0;const{invisible:n,visible:o}=t;if(n[e])return!1;const i=o[e];return!i||i.shouldAnimate};function ft({afterDragging:e,destination:t,displacedBy:r,viewport:n,forceShouldAnimate:o,last:i}){return e.reduce((function(e,a){const s=function(e,t){const r=e.page.marginBox,n={top:t.point.y,right:0,bottom:0,left:t.point.x};return ie(ae(r,n))}(a,r),l=a.descriptor.id;if(e.all.push(l),!ut({target:s,destination:t,viewport:n,withDroppableDisplacement:!0}))return e.invisible[a.descriptor.id]=!0,e;const c={draggableId:l,shouldAnimate:gt(l,i,o)};return e.visible[l]=c,e}),{all:[],visible:{},invisible:{}})}function mt({insideDestination:e,inHomeList:t,displacedBy:r,destination:n}){const o=function(e,t){if(!e.length)return 0;const r=e[e.length-1].descriptor.index;return t.inHomeList?r:r+1}(e,{inHomeList:t});return{displaced:nt,displacedBy:r,at:{type:"REORDER",destination:{droppableId:n.descriptor.id,index:o}}}}function bt({draggable:e,insideDestination:t,destination:r,viewport:n,displacedBy:o,last:i,index:a,forceShouldAnimate:s}){const l=tt(e,r);if(null==a)return mt({insideDestination:t,inHomeList:l,displacedBy:o,destination:r});const c=t.find((e=>e.descriptor.index===a));if(!c)return mt({insideDestination:t,inHomeList:l,displacedBy:o,destination:r});const d=et(e,t),u=t.indexOf(c);return{displaced:ft({afterDragging:d.slice(u),destination:r,displacedBy:o,last:i,viewport:n.frame,forceShouldAnimate:s}),displacedBy:o,at:{type:"REORDER",destination:{droppableId:r.descriptor.id,index:a}}}}function ht(e,t){return Boolean(t.effected[e])}const yt=(e,t)=>t.margin[e.start]+t.borderBox[e.size]/2,vt=(e,t,r)=>t[e.crossAxisStart]+r.margin[e.crossAxisStart]+r.borderBox[e.crossAxisSize]/2,xt=({axis:e,moveRelativeTo:t,isMoving:r})=>_e(e.line,t.marginBox[e.end]+yt(e,r),vt(e,t.marginBox,r)),It=({axis:e,moveRelativeTo:t,isMoving:r})=>_e(e.line,t.marginBox[e.start]-((e,t)=>t.margin[e.end]+t.borderBox[e.size]/2)(e,r),vt(e,t.marginBox,r));var Dt=(e,t)=>{const r=e.frame;return r?Le(t,r.scroll.diff.displacement):t},wt=e=>{const t=(({impact:e,draggable:t,droppable:r,draggables:n,afterCritical:o})=>{const i=t.page.borderBox.center,a=e.at;return r&&a?"REORDER"===a.type?(({impact:e,draggable:t,draggables:r,droppable:n,afterCritical:o})=>{const i=Ke(n.descriptor.id,r),a=t.page,s=n.axis;if(!i.length)return(({axis:e,moveInto:t,isMoving:r})=>_e(e.line,t.contentBox[e.start]+yt(e,r),vt(e,t.contentBox,r)))({axis:s,moveInto:n.page,isMoving:a});const{displaced:l,displacedBy:c}=e,d=l.all[0];if(d){const e=r[d];if(ht(d,o))return It({axis:s,moveRelativeTo:e.page,isMoving:a});const t=ue(e.page,c.point);return It({axis:s,moveRelativeTo:t,isMoving:a})}const u=i[i.length-1];if(u.descriptor.id===t.descriptor.id)return a.borderBox.center;if(ht(u.descriptor.id,o)){const e=ue(u.page,je(o.displacedBy.point));return xt({axis:s,moveRelativeTo:e,isMoving:a})}return xt({axis:s,moveRelativeTo:u.page,isMoving:a})})({impact:e,draggable:t,draggables:n,droppable:r,afterCritical:o}):(({afterCritical:e,impact:t,draggables:r})=>{const n=Ze(t);n||Ee(!1);const o=n.draggableId,i=r[o].page.borderBox.center,a=(({displaced:e,afterCritical:t,combineWith:r,displacedBy:n})=>{const o=Boolean(e.visible[r]||e.invisible[r]);return ht(r,t)?o?Te:je(n.point):o?n.point:Te})({displaced:t.displaced,afterCritical:e,combineWith:o,displacedBy:t.displacedBy});return Le(i,a)})({impact:e,draggables:n,afterCritical:o}):i})(e),r=e.droppable;return r?Dt(r,t):t},St=(e,t)=>{const r=Me(t,e.scroll.initial),n=je(r);return{frame:ie({top:t.y,bottom:t.y+e.frame.height,left:t.x,right:t.x+e.frame.width}),scroll:{initial:e.scroll.initial,max:e.scroll.max,current:t,diff:{value:r,displacement:n}}}};function Et(e,t){return e.map((e=>t[e]))}var Ot=({pageBorderBoxCenter:e,draggable:t,viewport:r})=>{const n=((e,t)=>Le(e.scroll.diff.displacement,t))(r,e),o=Me(n,t.page.borderBox.center);return Le(t.client.borderBox.center,o)},Ct=({draggable:e,destination:t,newPageBorderBoxCenter:r,viewport:n,withDroppableDisplacement:o,onlyOnMainAxis:i=!1})=>{const a=Me(r,e.page.borderBox.center),s={target:We(e.page.borderBox,a),destination:t,withDroppableDisplacement:o,viewport:n};return i?(e=>{return dt({...e,isVisibleThroughFrameFn:(t=e.destination.axis,e=>{const r=it(e.top,e.bottom),n=it(e.left,e.right);return e=>t===lt?r(e.top)&&r(e.bottom):n(e.left)&&n(e.right)})});var t})(s):pt(s)},At=({isMovingForward:e,draggable:t,destination:r,draggables:n,previousImpact:o,viewport:i,previousPageBorderBoxCenter:a,previousClientSelection:s,afterCritical:l})=>{if(!r.isEnabled)return null;const c=Ke(r.descriptor.id,n),d=tt(t,r),u=(({isMovingForward:e,draggable:t,destination:r,insideDestination:n,previousImpact:o})=>{if(!r.isCombineEnabled)return null;if(!Qe(o))return null;function i(e){const t={type:"COMBINE",combine:{draggableId:e,droppableId:r.descriptor.id}};return{...o,at:t}}const a=o.displaced.all,s=a.length?a[0]:null;if(e)return s?i(s):null;const l=et(t,n);if(!s)return l.length?i(l[l.length-1].descriptor.id):null;const c=l.findIndex((e=>e.descriptor.id===s));-1===c&&Ee(!1);const d=c-1;return d<0?null:i(l[d].descriptor.id)})({isMovingForward:e,draggable:t,destination:r,insideDestination:c,previousImpact:o})||(({isMovingForward:e,isInHomeList:t,draggable:r,draggables:n,destination:o,insideDestination:i,previousImpact:a,viewport:s,afterCritical:l})=>{const c=a.at;if(c||Ee(!1),"REORDER"===c.type){const n=(({isMovingForward:e,isInHomeList:t,insideDestination:r,location:n})=>{if(!r.length)return null;const o=n.index,i=e?o+1:o-1,a=r[0].descriptor.index,s=r[r.length-1].descriptor.index;return i<a||i>(t?s:s+1)?null:i})({isMovingForward:e,isInHomeList:t,location:c.destination,insideDestination:i});return null==n?null:bt({draggable:r,insideDestination:i,destination:o,viewport:s,last:a.displaced,displacedBy:a.displacedBy,index:n})}const d=(({isMovingForward:e,destination:t,draggables:r,combine:n,afterCritical:o})=>{if(!t.isCombineEnabled)return null;const i=n.draggableId,a=r[i].descriptor.index;return ht(i,o)?e?a:a-1:e?a+1:a})({isMovingForward:e,destination:o,displaced:a.displaced,draggables:n,combine:c.combine,afterCritical:l});return null==d?null:bt({draggable:r,insideDestination:i,destination:o,viewport:s,last:a.displaced,displacedBy:a.displacedBy,index:d})})({isMovingForward:e,isInHomeList:d,draggable:t,draggables:n,destination:r,insideDestination:c,previousImpact:o,viewport:i,afterCritical:l});if(!u)return null;const p=wt({impact:u,draggable:t,droppable:r,draggables:n,afterCritical:l});if(Ct({draggable:t,destination:r,newPageBorderBoxCenter:p,viewport:i.frame,withDroppableDisplacement:!1,onlyOnMainAxis:!0}))return{clientSelection:Ot({pageBorderBoxCenter:p,draggable:t,viewport:i}),impact:u,scrollJumpRequest:null};const g=Me(p,a),f=(({impact:e,viewport:t,destination:r,draggables:n,maxScrollChange:o})=>{const i=St(t,Le(t.scroll.current,o)),a=r.frame?Ve(r,Le(r.frame.scroll.current,o)):r,s=e.displaced,l=ft({afterDragging:Et(s.all,n),destination:r,displacedBy:e.displacedBy,viewport:i.frame,last:s,forceShouldAnimate:!1}),c=ft({afterDragging:Et(s.all,n),destination:a,displacedBy:e.displacedBy,viewport:t.frame,last:s,forceShouldAnimate:!1}),d={},u={},p=[s,l,c];return s.all.forEach((e=>{const t=function(e,t){for(let r=0;r<t.length;r++){const n=t[r].visible[e];if(n)return n}return null}(e,p);t?u[e]=t:d[e]=!0})),{...e,displaced:{all:s.all,invisible:d,visible:u}}})({impact:u,viewport:i,destination:r,draggables:n,maxScrollChange:g});return{clientSelection:s,impact:f,scrollJumpRequest:g}};const Pt=e=>{const t=e.subject.active;return t||Ee(!1),t},Rt=(e,t)=>{const r=e.page.borderBox.center;return ht(e.descriptor.id,t)?Me(r,t.displacedBy.point):r},Nt=(e,t)=>{const r=e.page.borderBox;return ht(e.descriptor.id,t)?We(r,je(t.displacedBy.point)):r};var Bt=he((function(e,t){const r=t[e.line];return{value:r,point:_e(e.line,r)}}));const Tt=(e,t)=>({...e,scroll:{...e.scroll,max:t}}),Lt=(e,t,r)=>{const n=e.frame;tt(t,e)&&Ee(!1),e.subject.withPlaceholder&&Ee(!1);const o=Bt(e.axis,t.displaceBy).point,i=((e,t,r)=>{const n=e.axis;if("virtual"===e.descriptor.mode)return _e(n.line,t[n.line]);const o=e.subject.page.contentBox[n.size],i=Ke(e.descriptor.id,r).reduce(((e,t)=>e+t.client.marginBox[n.size]),0)+t[n.line]-o;return i<=0?null:_e(n.line,i)})(e,o,r),a={placeholderSize:o,increasedBy:i,oldFrameMaxScroll:e.frame?e.frame.scroll.max:null};if(!n){const t=He({page:e.subject.page,withPlaceholder:a,axis:e.axis,frame:e.frame});return{...e,subject:t}}const s=i?Le(n.scroll.max,i):n.scroll.max,l=Tt(n,s),c=He({page:e.subject.page,withPlaceholder:a,axis:e.axis,frame:l});return{...e,subject:c,frame:l}};var Mt=e=>{const t=e.at;return t?"REORDER"===t.type?t.destination.droppableId:t.combine.droppableId:null},Gt=({state:e,type:t})=>{const r=((e,t)=>{const r=Mt(e);return r?t[r]:null})(e.impact,e.dimensions.droppables),n=Boolean(r),o=e.dimensions.droppables[e.critical.droppable.id],i=r||o,a=i.axis.direction,s="vertical"===a&&("MOVE_UP"===t||"MOVE_DOWN"===t)||"horizontal"===a&&("MOVE_LEFT"===t||"MOVE_RIGHT"===t);if(s&&!n)return null;const l="MOVE_DOWN"===t||"MOVE_RIGHT"===t,c=e.dimensions.draggables[e.critical.draggable.id],d=e.current.page.borderBoxCenter,{draggables:u,droppables:p}=e.dimensions;return s?At({isMovingForward:l,previousPageBorderBoxCenter:d,draggable:c,destination:i,draggables:u,viewport:e.viewport,previousClientSelection:e.current.client.selection,previousImpact:e.impact,afterCritical:e.afterCritical}):(({isMovingForward:e,previousPageBorderBoxCenter:t,draggable:r,isOver:n,draggables:o,droppables:i,viewport:a,afterCritical:s})=>{const l=(({isMovingForward:e,pageBorderBoxCenter:t,source:r,droppables:n,viewport:o})=>{const i=r.subject.active;if(!i)return null;const a=r.axis,s=it(i[a.start],i[a.end]),l=Je(n).filter((e=>e!==r)).filter((e=>e.isEnabled)).filter((e=>Boolean(e.subject.active))).filter((e=>at(o.frame)(Pt(e)))).filter((t=>{const r=Pt(t);return e?i[a.crossAxisEnd]<r[a.crossAxisEnd]:r[a.crossAxisStart]<i[a.crossAxisStart]})).filter((e=>{const t=Pt(e),r=it(t[a.start],t[a.end]);return s(t[a.start])||s(t[a.end])||r(i[a.start])||r(i[a.end])})).sort(((t,r)=>{const n=Pt(t)[a.crossAxisStart],o=Pt(r)[a.crossAxisStart];return e?n-o:o-n})).filter(((e,t,r)=>Pt(e)[a.crossAxisStart]===Pt(r[0])[a.crossAxisStart]));if(!l.length)return null;if(1===l.length)return l[0];const c=l.filter((e=>it(Pt(e)[a.start],Pt(e)[a.end])(t[a.line])));return 1===c.length?c[0]:c.length>1?c.sort(((e,t)=>Pt(e)[a.start]-Pt(t)[a.start]))[0]:l.sort(((e,r)=>{const n=$e(t,Ue(Pt(e))),o=$e(t,Ue(Pt(r)));return n!==o?n-o:Pt(e)[a.start]-Pt(r)[a.start]}))[0]})({isMovingForward:e,pageBorderBoxCenter:t,source:n,droppables:i,viewport:a});if(!l)return null;const c=Ke(l.descriptor.id,o),d=(({pageBorderBoxCenter:e,viewport:t,destination:r,insideDestination:n,afterCritical:o})=>{const i=n.filter((e=>pt({target:Nt(e,o),destination:r,viewport:t.frame,withDroppableDisplacement:!0}))).sort(((t,n)=>{const i=Fe(e,Dt(r,Rt(t,o))),a=Fe(e,Dt(r,Rt(n,o)));return i<a?-1:a<i?1:t.descriptor.index-n.descriptor.index}));return i[0]||null})({pageBorderBoxCenter:t,viewport:a,destination:l,insideDestination:c,afterCritical:s}),u=(({previousPageBorderBoxCenter:e,moveRelativeTo:t,insideDestination:r,draggable:n,draggables:o,destination:i,viewport:a,afterCritical:s})=>{if(!t){if(r.length)return null;const e={displaced:nt,displacedBy:rt,at:{type:"REORDER",destination:{droppableId:i.descriptor.id,index:0}}},t=wt({impact:e,draggable:n,droppable:i,draggables:o,afterCritical:s}),l=tt(n,i)?i:Lt(i,n,o);return Ct({draggable:n,destination:l,newPageBorderBoxCenter:t,viewport:a.frame,withDroppableDisplacement:!1,onlyOnMainAxis:!0})?e:null}const l=Boolean(e[i.axis.line]<=t.page.borderBox.center[i.axis.line]),c=(()=>{const e=t.descriptor.index;return t.descriptor.id===n.descriptor.id||l?e:e+1})(),d=Bt(i.axis,n.displaceBy);return bt({draggable:n,insideDestination:r,destination:i,viewport:a,displacedBy:d,last:nt,index:c})})({previousPageBorderBoxCenter:t,destination:l,draggable:r,draggables:o,moveRelativeTo:d,insideDestination:c,viewport:a,afterCritical:s});if(!u)return null;const p=wt({impact:u,draggable:r,droppable:l,draggables:o,afterCritical:s});return{clientSelection:Ot({pageBorderBoxCenter:p,draggable:r,viewport:a}),impact:u,scrollJumpRequest:null}})({isMovingForward:l,previousPageBorderBoxCenter:d,draggable:c,isOver:i,draggables:u,droppables:p,viewport:e.viewport,afterCritical:e.afterCritical})};function jt(e){return"DRAGGING"===e.phase||"COLLECTING"===e.phase}function _t(e){const t=it(e.top,e.bottom),r=it(e.left,e.right);return function(e){return t(e.y)&&r(e.x)}}const Ft=(e,t)=>ie(We(e,t));function $t({displaced:e,id:t}){return Boolean(e.visible[t]||e.invisible[t])}var kt=({pageOffset:e,draggable:t,draggables:r,droppables:n,previousImpact:o,viewport:i,afterCritical:a})=>{const s=Ft(t.page.borderBox,e),l=function({pageBorderBox:e,draggable:t,droppables:r}){const n=Je(r).filter((t=>{if(!t.isEnabled)return!1;const r=t.subject.active;if(!r)return!1;if(o=r,!((n=e).left<o.right&&n.right>o.left&&n.top<o.bottom&&n.bottom>o.top))return!1;var n,o;if(_t(r)(e.center))return!0;const i=t.axis,a=r.center[i.crossAxisLine],s=e[i.crossAxisStart],l=e[i.crossAxisEnd],c=it(r[i.crossAxisStart],r[i.crossAxisEnd]),d=c(s),u=c(l);return!d&&!u||(d?s<a:l>a)}));return n.length?1===n.length?n[0].descriptor.id:function({pageBorderBox:e,draggable:t,candidates:r}){const n=t.page.borderBox.center,o=r.map((t=>{const r=t.axis,o=_e(t.axis.line,e.center[r.line],t.page.borderBox.center[r.crossAxisLine]);return{id:t.descriptor.id,distance:Fe(n,o)}})).sort(((e,t)=>t.distance-e.distance));return o[0]?o[0].id:null}({pageBorderBox:e,draggable:t,candidates:n}):null}({pageBorderBox:s,draggable:t,droppables:n});if(!l)return ot;const c=n[l],d=Ke(c.descriptor.id,r),u=((e,t)=>{const r=e.frame;return r?Ft(t,r.scroll.diff.value):t})(c,s);return(({draggable:e,pageBorderBoxWithDroppableScroll:t,previousImpact:r,destination:n,insideDestination:o,afterCritical:i})=>{if(!n.isCombineEnabled)return null;const a=n.axis,s=Bt(n.axis,e.displaceBy),l=s.value,c=t[a.start],d=t[a.end],u=et(e,o).find((e=>{const t=e.descriptor.id,n=e.page.borderBox,o=n[a.size]/4,s=ht(t,i),u=$t({displaced:r.displaced,id:t});return s?u?d>n[a.start]+o&&d<n[a.end]-o:c>n[a.start]-l+o&&c<n[a.end]-l-o:u?d>n[a.start]+l+o&&d<n[a.end]+l-o:c>n[a.start]+o&&c<n[a.end]-o}));return u?{displacedBy:s,displaced:r.displaced,at:{type:"COMBINE",combine:{draggableId:u.descriptor.id,droppableId:n.descriptor.id}}}:null})({pageBorderBoxWithDroppableScroll:u,draggable:t,previousImpact:o,destination:c,insideDestination:d,afterCritical:a})||(({pageBorderBoxWithDroppableScroll:e,draggable:t,destination:r,insideDestination:n,last:o,viewport:i,afterCritical:a})=>{const s=r.axis,l=Bt(r.axis,t.displaceBy),c=l.value,d=e[s.start],u=e[s.end],p=function({draggable:e,closest:t,inHomeList:r}){return t?r&&t.descriptor.index>e.descriptor.index?t.descriptor.index-1:t.descriptor.index:null}({draggable:t,closest:et(t,n).find((e=>{const t=e.descriptor.id,r=e.page.borderBox.center[s.line],n=ht(t,a),i=$t({displaced:o,id:t});return n?i?u<=r:d<r-c:i?u<=r+c:d<r}))||null,inHomeList:tt(t,r)});return bt({draggable:t,insideDestination:n,destination:r,viewport:i,last:o,displacedBy:l,index:p})})({pageBorderBoxWithDroppableScroll:u,draggable:t,destination:c,insideDestination:d,last:o.displaced,viewport:i,afterCritical:a})},Wt=(e,t)=>({...e,[t.descriptor.id]:t});var Ut=({state:e,clientSelection:t,dimensions:r,viewport:n,impact:o,scrollJumpRequest:i})=>{const a=n||e.viewport,s=r||e.dimensions,l=t||e.current.client.selection,c=Me(l,e.initial.client.selection),d={offset:c,selection:l,borderBoxCenter:Le(e.initial.client.borderBoxCenter,c)},u={selection:Le(d.selection,a.scroll.current),borderBoxCenter:Le(d.borderBoxCenter,a.scroll.current),offset:Le(d.offset,a.scroll.diff.value)},p={client:d,page:u};if("COLLECTING"===e.phase)return{...e,dimensions:s,viewport:a,current:p};const g=s.draggables[e.critical.draggable.id],f=o||kt({pageOffset:u.offset,draggable:g,draggables:s.draggables,droppables:s.droppables,previousImpact:e.impact,viewport:a,afterCritical:e.afterCritical}),m=(({draggable:e,draggables:t,droppables:r,previousImpact:n,impact:o})=>{const i=(({previousImpact:e,impact:t,droppables:r})=>{const n=Mt(e),o=Mt(t);if(!n)return r;if(n===o)return r;const i=r[n];if(!i.subject.withPlaceholder)return r;const a=(e=>{const t=e.subject.withPlaceholder;t||Ee(!1);const r=e.frame;if(!r){const t=He({page:e.subject.page,axis:e.axis,frame:null,withPlaceholder:null});return{...e,subject:t}}const n=t.oldFrameMaxScroll;n||Ee(!1);const o=Tt(r,n),i=He({page:e.subject.page,axis:e.axis,frame:o,withPlaceholder:null});return{...e,subject:i,frame:o}})(i);return Wt(r,a)})({previousImpact:n,impact:o,droppables:r}),a=Mt(o);if(!a)return i;const s=r[a];if(tt(e,s))return i;if(s.subject.withPlaceholder)return i;const l=Lt(s,e,t);return Wt(i,l)})({draggable:g,impact:f,previousImpact:e.impact,draggables:s.draggables,droppables:s.droppables});return{...e,current:p,dimensions:{draggables:s.draggables,droppables:m},impact:f,viewport:a,scrollJumpRequest:i||null,forceShouldAnimate:!i&&null}},qt=({impact:e,viewport:t,draggables:r,destination:n,forceShouldAnimate:o})=>{const i=e.displaced,a=function(e,t){return e.map((e=>t[e]))}(i.all,r),s=ft({afterDragging:a,destination:n,displacedBy:e.displacedBy,viewport:t.frame,forceShouldAnimate:o,last:i});return{...e,displaced:s}},Ht=({impact:e,draggable:t,droppable:r,draggables:n,viewport:o,afterCritical:i})=>{const a=wt({impact:e,draggable:t,draggables:n,droppable:r,afterCritical:i});return Ot({pageBorderBoxCenter:a,draggable:t,viewport:o})},Vt=({state:e,dimensions:t,viewport:r})=>{"SNAP"!==e.movementMode&&Ee(!1);const n=e.impact,o=r||e.viewport,i=t||e.dimensions,{draggables:a,droppables:s}=i,l=a[e.critical.draggable.id],c=Mt(n);c||Ee(!1);const d=s[c],u=qt({impact:n,viewport:o,destination:d,draggables:a}),p=Ht({impact:u,draggable:l,droppable:d,draggables:a,viewport:o,afterCritical:e.afterCritical});return Ut({impact:u,clientSelection:p,state:e,dimensions:i,viewport:o})},zt=({draggable:e,home:t,draggables:r,viewport:n})=>{const o=Bt(t.axis,e.displaceBy),i=Ke(t.descriptor.id,r),a=i.indexOf(e);-1===a&&Ee(!1);const s=i.slice(a+1),l=s.reduce(((e,t)=>(e[t.descriptor.id]=!0,e)),{}),c={inVirtualList:"virtual"===t.descriptor.mode,displacedBy:o,effected:l};var d;return{impact:{displaced:ft({afterDragging:s,destination:t,displacedBy:o,last:null,viewport:n.frame,forceShouldAnimate:!1}),displacedBy:o,at:{type:"REORDER",destination:(d=e.descriptor,{index:d.index,droppableId:d.droppableId})}},afterCritical:c}};const Yt=e=>"SNAP"===e.movementMode,Jt=(e,t,r)=>{const n=((e,t)=>({draggables:e.draggables,droppables:Wt(e.droppables,t)}))(e.dimensions,t);return!Yt(e)||r?Ut({state:e,dimensions:n}):Vt({state:e,dimensions:n})};function Xt(e){return e.isDragging&&"SNAP"===e.movementMode?{...e,scrollJumpRequest:null}:e}const Kt={phase:"IDLE",completed:null,shouldFlush:!1};var Qt=(e=Kt,t)=>{if("FLUSH"===t.type)return{...Kt,shouldFlush:!0};if("INITIAL_PUBLISH"===t.type){"IDLE"!==e.phase&&Ee(!1);const{critical:r,clientSelection:n,viewport:o,dimensions:i,movementMode:a}=t.payload,s=i.draggables[r.draggable.id],l=i.droppables[r.droppable.id],c={selection:n,borderBoxCenter:s.client.borderBox.center,offset:Te},d={client:c,page:{selection:Le(c.selection,o.scroll.initial),borderBoxCenter:Le(c.selection,o.scroll.initial),offset:Le(c.selection,o.scroll.diff.value)}},u=Je(i.droppables).every((e=>!e.isFixedOnPage)),{impact:p,afterCritical:g}=zt({draggable:s,home:l,draggables:i.draggables,viewport:o});return{phase:"DRAGGING",isDragging:!0,critical:r,movementMode:a,dimensions:i,initial:d,current:d,isWindowScrollAllowed:u,impact:p,afterCritical:g,onLiftImpact:p,viewport:o,scrollJumpRequest:null,forceShouldAnimate:null}}if("COLLECTION_STARTING"===t.type)return"COLLECTING"===e.phase||"DROP_PENDING"===e.phase?e:("DRAGGING"!==e.phase&&Ee(!1),{...e,phase:"COLLECTING"});if("PUBLISH_WHILE_DRAGGING"===t.type)return"COLLECTING"!==e.phase&&"DROP_PENDING"!==e.phase&&Ee(!1),(({state:e,published:t})=>{const r=t.modified.map((t=>{const r=e.dimensions.droppables[t.droppableId];return Ve(r,t.scroll)})),n={...e.dimensions.droppables,...ze(r)},o=Ye((({additions:e,updatedDroppables:t,viewport:r})=>{const n=r.scroll.diff.value;return e.map((e=>{const o=e.descriptor.droppableId,i=(e=>{const t=e.frame;return t||Ee(!1),t})(t[o]),a=i.scroll.diff.value,s=(({draggable:e,offset:t,initialWindowScroll:r})=>{const n=ue(e.client,t),o=pe(n,r);return{...e,placeholder:{...e.placeholder,client:n},client:n,page:o}})({draggable:e,offset:Le(n,a),initialWindowScroll:r.scroll.initial});return s}))})({additions:t.additions,updatedDroppables:n,viewport:e.viewport})),i={...e.dimensions.draggables,...o};t.removals.forEach((e=>{delete i[e]}));const a={droppables:n,draggables:i},s=Mt(e.impact),l=s?a.droppables[s]:null,c=a.draggables[e.critical.draggable.id],d=a.droppables[e.critical.droppable.id],{impact:u,afterCritical:p}=zt({draggable:c,home:d,draggables:i,viewport:e.viewport}),g=l&&l.isCombineEnabled?e.impact:u,f=kt({pageOffset:e.current.page.offset,draggable:a.draggables[e.critical.draggable.id],draggables:a.draggables,droppables:a.droppables,previousImpact:g,viewport:e.viewport,afterCritical:p}),m={...e,phase:"DRAGGING",impact:f,onLiftImpact:u,dimensions:a,afterCritical:p,forceShouldAnimate:!1};return"COLLECTING"===e.phase?m:{...m,phase:"DROP_PENDING",reason:e.reason,isWaiting:!1}})({state:e,published:t.payload});if("MOVE"===t.type){if("DROP_PENDING"===e.phase)return e;jt(e)||Ee(!1);const{client:r}=t.payload;return Ge(r,e.current.client.selection)?e:Ut({state:e,clientSelection:r,impact:Yt(e)?e.impact:null})}if("UPDATE_DROPPABLE_SCROLL"===t.type){if("DROP_PENDING"===e.phase)return Xt(e);if("COLLECTING"===e.phase)return Xt(e);jt(e)||Ee(!1);const{id:r,newScroll:n}=t.payload,o=e.dimensions.droppables[r];if(!o)return e;const i=Ve(o,n);return Jt(e,i,!1)}if("UPDATE_DROPPABLE_IS_ENABLED"===t.type){if("DROP_PENDING"===e.phase)return e;jt(e)||Ee(!1);const{id:r,isEnabled:n}=t.payload,o=e.dimensions.droppables[r];o||Ee(!1),o.isEnabled===n&&Ee(!1);const i={...o,isEnabled:n};return Jt(e,i,!0)}if("UPDATE_DROPPABLE_IS_COMBINE_ENABLED"===t.type){if("DROP_PENDING"===e.phase)return e;jt(e)||Ee(!1);const{id:r,isCombineEnabled:n}=t.payload,o=e.dimensions.droppables[r];o||Ee(!1),o.isCombineEnabled===n&&Ee(!1);const i={...o,isCombineEnabled:n};return Jt(e,i,!0)}if("MOVE_BY_WINDOW_SCROLL"===t.type){if("DROP_PENDING"===e.phase||"DROP_ANIMATING"===e.phase)return e;jt(e)||Ee(!1),e.isWindowScrollAllowed||Ee(!1);const r=t.payload.newScroll;if(Ge(e.viewport.scroll.current,r))return Xt(e);const n=St(e.viewport,r);return Yt(e)?Vt({state:e,viewport:n}):Ut({state:e,viewport:n})}if("UPDATE_VIEWPORT_MAX_SCROLL"===t.type){if(!jt(e))return e;const r=t.payload.maxScroll;if(Ge(r,e.viewport.scroll.max))return e;const n={...e.viewport,scroll:{...e.viewport.scroll,max:r}};return{...e,viewport:n}}if("MOVE_UP"===t.type||"MOVE_DOWN"===t.type||"MOVE_LEFT"===t.type||"MOVE_RIGHT"===t.type){if("COLLECTING"===e.phase||"DROP_PENDING"===e.phase)return e;"DRAGGING"!==e.phase&&Ee(!1);const r=Gt({state:e,type:t.type});return r?Ut({state:e,impact:r.impact,clientSelection:r.clientSelection,scrollJumpRequest:r.scrollJumpRequest}):e}if("DROP_PENDING"===t.type){const r=t.payload.reason;return"COLLECTING"!==e.phase&&Ee(!1),{...e,phase:"DROP_PENDING",isWaiting:!0,reason:r}}if("DROP_ANIMATE"===t.type){const{completed:r,dropDuration:n,newHomeClientOffset:o}=t.payload;return"DRAGGING"!==e.phase&&"DROP_PENDING"!==e.phase&&Ee(!1),{phase:"DROP_ANIMATING",completed:r,dropDuration:n,newHomeClientOffset:o,dimensions:e.dimensions}}if("DROP_COMPLETE"===t.type){const{completed:e}=t.payload;return{phase:"IDLE",completed:e,shouldFlush:!1}}return e};const Zt=e=>({type:"LIFT",payload:e}),er=e=>({type:"PUBLISH_WHILE_DRAGGING",payload:e}),tr=()=>({type:"COLLECTION_STARTING",payload:null}),rr=e=>({type:"UPDATE_DROPPABLE_SCROLL",payload:e}),nr=e=>({type:"UPDATE_DROPPABLE_IS_ENABLED",payload:e}),or=e=>({type:"UPDATE_DROPPABLE_IS_COMBINE_ENABLED",payload:e}),ir=e=>({type:"MOVE",payload:e}),ar=()=>({type:"MOVE_UP",payload:null}),sr=()=>({type:"MOVE_DOWN",payload:null}),lr=()=>({type:"MOVE_RIGHT",payload:null}),cr=()=>({type:"MOVE_LEFT",payload:null}),dr=()=>({type:"FLUSH",payload:null}),ur=e=>({type:"DROP_COMPLETE",payload:e}),pr=e=>({type:"DROP",payload:e}),gr="cubic-bezier(.2,1,.1,1)",fr=0,mr=.7,br=.75,hr={outOfTheWay:.2,minDropTime:.33,maxDropTime:.55},yr=`${hr.outOfTheWay}s cubic-bezier(0.2, 0, 0, 1)`,vr={fluid:`opacity ${yr}`,snap:`transform ${yr}, opacity ${yr}`,drop:e=>{const t=`${e}s ${gr}`;return`transform ${t}, opacity ${t}`},outOfTheWay:`transform ${yr}`,placeholder:`height ${yr}, width ${yr}, margin ${yr}`},xr=e=>Ge(e,Te)?void 0:`translate(${e.x}px, ${e.y}px)`,Ir=xr,Dr=(e,t)=>{const r=xr(e);if(r)return t?`${r} scale(${br})`:r},{minDropTime:wr,maxDropTime:Sr}=hr,Er=Sr-wr;var Or=({getState:e,dispatch:t})=>r=>n=>{if("DROP"!==n.type)return void r(n);const o=e(),i=n.payload.reason;if("COLLECTING"===o.phase)return void t((a={reason:i},{type:"DROP_PENDING",payload:a}));var a;if("IDLE"===o.phase)return;"DROP_PENDING"===o.phase&&o.isWaiting&&Ee(!1),"DRAGGING"!==o.phase&&"DROP_PENDING"!==o.phase&&Ee(!1);const s=o.critical,l=o.dimensions,c=l.draggables[o.critical.draggable.id],{impact:d,didDropInsideDroppable:u}=(({draggables:e,reason:t,lastImpact:r,home:n,viewport:o,onLiftImpact:i})=>r.at&&"DROP"===t?"REORDER"===r.at.type?{impact:r,didDropInsideDroppable:!0}:{impact:{...r,displaced:nt},didDropInsideDroppable:!0}:{impact:qt({draggables:e,impact:i,destination:n,viewport:o,forceShouldAnimate:!0}),didDropInsideDroppable:!1})({reason:i,lastImpact:o.impact,afterCritical:o.afterCritical,onLiftImpact:o.onLiftImpact,home:o.dimensions.droppables[o.critical.droppable.id],viewport:o.viewport,draggables:o.dimensions.draggables}),p=u?Qe(d):null,g=u?Ze(d):null,f={index:s.draggable.index,droppableId:s.droppable.id},m={draggableId:c.descriptor.id,type:c.descriptor.type,source:f,reason:i,mode:o.movementMode,destination:p,combine:g},b=(({impact:e,draggable:t,dimensions:r,viewport:n,afterCritical:o})=>{const{draggables:i,droppables:a}=r,s=Mt(e),l=s?a[s]:null,c=a[t.descriptor.droppableId],d=Ht({impact:e,draggable:t,draggables:i,afterCritical:o,droppable:l||c,viewport:n});return Me(d,t.client.borderBox.center)})({impact:d,draggable:c,dimensions:l,viewport:o.viewport,afterCritical:o.afterCritical}),h={critical:o.critical,afterCritical:o.afterCritical,result:m,impact:d};if(Ge(o.current.client.offset,b)&&!Boolean(m.combine))return void t(ur({completed:h}));const y=(({current:e,destination:t,reason:r})=>{const n=Fe(e,t);if(n<=0)return wr;if(n>=1500)return Sr;const o=wr+Er*(n/1500);return Number(("CANCEL"===r?.6*o:o).toFixed(2))})({current:o.current.client.offset,destination:b,reason:i});t((e=>({type:"DROP_ANIMATE",payload:e}))({newHomeClientOffset:b,dropDuration:y,completed:h}))},Cr=()=>({x:window.pageXOffset,y:window.pageYOffset});var Ar=e=>{const t=function({onWindowScroll:e}){const t=ye((function(){e(Cr())})),r=function(e){return{eventName:"scroll",options:{passive:!0,capture:!1},fn:t=>{t.target!==window&&t.target!==window.document||e()}}}(t);let n=xe;function o(){return n!==xe}return{start:function(){o()&&Ee(!1),n=Ie(window,[r])},stop:function(){o()||Ee(!1),t.cancel(),n(),n=xe},isActive:o}}({onWindowScroll:t=>{e.dispatch({type:"MOVE_BY_WINDOW_SCROLL",payload:{newScroll:t}})}});return e=>r=>{t.isActive()||"INITIAL_PUBLISH"!==r.type||t.start(),t.isActive()&&(e=>"DROP_COMPLETE"===e.type||"DROP_ANIMATE"===e.type||"FLUSH"===e.type)(r)&&t.stop(),e(r)}};const Pr=(e,t)=>{t()},Rr=(e,t)=>({draggableId:e.draggable.id,type:e.droppable.type,source:{droppableId:e.droppable.id,index:e.draggable.index},mode:t});function Nr(e,t,r,n){if(!e)return void r(n(t));const o=(e=>{let t=!1,r=!1;const n=setTimeout((()=>{r=!0})),o=o=>{t||r||(t=!0,e(o),clearTimeout(n))};return o.wasCalled=()=>t,o})(r);e(t,{announce:o}),o.wasCalled()||r(n(t))}var Br=(e,t)=>{const r=((e,t)=>{const r=(()=>{const e=[];return{add:t=>{const r=setTimeout((()=>(t=>{const r=e.findIndex((e=>e.timerId===t));-1===r&&Ee(!1);const[n]=e.splice(r,1);n.callback()})(r))),n={timerId:r,callback:t};e.push(n)},flush:()=>{if(!e.length)return;const t=[...e];e.length=0,t.forEach((e=>{clearTimeout(e.timerId),e.callback()}))}}})();let n=null;const o=r=>{n||Ee(!1),n=null,Pr(0,(()=>Nr(e().onDragEnd,r,t,Be.onDragEnd)))};return{beforeCapture:(t,r)=>{n&&Ee(!1),Pr(0,(()=>{const n=e().onBeforeCapture;n&&n({draggableId:t,mode:r})}))},beforeStart:(t,r)=>{n&&Ee(!1),Pr(0,(()=>{const n=e().onBeforeDragStart;n&&n(Rr(t,r))}))},start:(o,i)=>{n&&Ee(!1);const a=Rr(o,i);n={mode:i,lastCritical:o,lastLocation:a.source,lastCombine:null},r.add((()=>{Pr(0,(()=>Nr(e().onDragStart,a,t,Be.onDragStart)))}))},update:(o,i)=>{const a=Qe(i),s=Ze(i);n||Ee(!1);const l=!((e,t)=>{if(e===t)return!0;const r=e.draggable.id===t.draggable.id&&e.draggable.droppableId===t.draggable.droppableId&&e.draggable.type===t.draggable.type&&e.draggable.index===t.draggable.index,n=e.droppable.id===t.droppable.id&&e.droppable.type===t.droppable.type;return r&&n})(o,n.lastCritical);l&&(n.lastCritical=o);const c=(u=a,!(null==(d=n.lastLocation)&&null==u||null!=d&&null!=u&&d.droppableId===u.droppableId&&d.index===u.index));var d,u;c&&(n.lastLocation=a);const p=!((e,t)=>null==e&&null==t||null!=e&&null!=t&&e.draggableId===t.draggableId&&e.droppableId===t.droppableId)(n.lastCombine,s);if(p&&(n.lastCombine=s),!l&&!c&&!p)return;const g={...Rr(o,n.mode),combine:s,destination:a};r.add((()=>{Pr(0,(()=>Nr(e().onDragUpdate,g,t,Be.onDragUpdate)))}))},flush:()=>{n||Ee(!1),r.flush()},drop:o,abort:()=>{if(!n)return;const e={...Rr(n.lastCritical,n.mode),combine:null,destination:null,reason:"CANCEL"};o(e)}}})(e,t);return e=>t=>n=>{if("BEFORE_INITIAL_CAPTURE"===n.type)return void r.beforeCapture(n.payload.draggableId,n.payload.movementMode);if("INITIAL_PUBLISH"===n.type){const e=n.payload.critical;return r.beforeStart(e,n.payload.movementMode),t(n),void r.start(e,n.payload.movementMode)}if("DROP_COMPLETE"===n.type){const e=n.payload.completed.result;return r.flush(),t(n),void r.drop(e)}if(t(n),"FLUSH"===n.type)return void r.abort();const o=e.getState();"DRAGGING"===o.phase&&r.update(o.critical,o.impact)}},Tr=e=>t=>r=>{if("DROP_ANIMATION_FINISHED"!==r.type)return void t(r);const n=e.getState();"DROP_ANIMATING"!==n.phase&&Ee(!1),e.dispatch(ur({completed:n.completed}))},Lr=e=>{let t=null,r=null;return n=>o=>{if("FLUSH"!==o.type&&"DROP_COMPLETE"!==o.type&&"DROP_ANIMATION_FINISHED"!==o.type||(r&&(cancelAnimationFrame(r),r=null),t&&(t(),t=null)),n(o),"DROP_ANIMATE"!==o.type)return;const i={eventName:"scroll",options:{capture:!0,passive:!1,once:!0},fn:function(){"DROP_ANIMATING"===e.getState().phase&&e.dispatch({type:"DROP_ANIMATION_FINISHED",payload:null})}};r=requestAnimationFrame((()=>{r=null,t=Ie(window,[i])}))}},Mr=e=>t=>r=>{if(t(r),"PUBLISH_WHILE_DRAGGING"!==r.type)return;const n=e.getState();"DROP_PENDING"===n.phase&&(n.isWaiting||e.dispatch(pr({reason:n.reason})))};const Gr=I;var jr=({dimensionMarshal:e,focusMarshal:t,styleMarshal:r,getResponders:n,announce:o,autoScroller:i})=>{return y(Qt,Gr(function(){for(var e=arguments.length,t=new Array(e),r=0;r<e;r++)t[r]=arguments[r];return function(e){return function(){var r=e.apply(void 0,arguments),n=function(){throw new Error(f(15))},o={getState:r.getState,dispatch:function(){return n.apply(void 0,arguments)}},i=t.map((function(e){return e(o)}));return n=I.apply(void 0,i)(r.dispatch),g(g({},r),{},{dispatch:n})}}}((a=r,()=>e=>t=>{"INITIAL_PUBLISH"===t.type&&a.dragging(),"DROP_ANIMATE"===t.type&&a.dropping(t.payload.completed.result.reason),"FLUSH"!==t.type&&"DROP_COMPLETE"!==t.type||a.resting(),e(t)}),(e=>()=>t=>r=>{"DROP_COMPLETE"!==r.type&&"FLUSH"!==r.type&&"DROP_ANIMATE"!==r.type||e.stopPublishing(),t(r)})(e),(e=>({getState:t,dispatch:r})=>n=>o=>{if("LIFT"!==o.type)return void n(o);const{id:i,clientSelection:a,movementMode:s}=o.payload,l=t();"DROP_ANIMATING"===l.phase&&r(ur({completed:l.completed})),"IDLE"!==t().phase&&Ee(!1),r(dr()),r({type:"BEFORE_INITIAL_CAPTURE",payload:{draggableId:i,movementMode:s}});const c={draggableId:i,scrollOptions:{shouldPublishImmediately:"SNAP"===s}},{critical:d,dimensions:u,viewport:p}=e.startPublishing(c);r({type:"INITIAL_PUBLISH",payload:{critical:d,dimensions:u,clientSelection:a,movementMode:s,viewport:p}})})(e),Or,Tr,Lr,Mr,(e=>t=>r=>n=>{if((e=>"DROP_COMPLETE"===e.type||"DROP_ANIMATE"===e.type||"FLUSH"===e.type)(n))return e.stop(),void r(n);if("INITIAL_PUBLISH"===n.type){r(n);const o=t.getState();return"DRAGGING"!==o.phase&&Ee(!1),void e.start(o)}r(n),e.scroll(t.getState())})(i),Ar,(e=>{let t=!1;return()=>r=>n=>{if("INITIAL_PUBLISH"===n.type)return t=!0,e.tryRecordFocus(n.payload.critical.draggable.id),r(n),void e.tryRestoreFocusRecorded();if(r(n),t){if("FLUSH"===n.type)return t=!1,void e.tryRestoreFocusRecorded();if("DROP_COMPLETE"===n.type){t=!1;const r=n.payload.completed.result;r.combine&&e.tryShiftRecord(r.draggableId,r.combine.draggableId),e.tryRestoreFocusRecorded()}}}})(t),Br(n,o))));var a},_r=({scrollHeight:e,scrollWidth:t,height:r,width:n})=>{const o=Me({x:t,y:e},{x:n,y:r});return{x:Math.max(0,o.x),y:Math.max(0,o.y)}},Fr=()=>{const e=document.documentElement;return e||Ee(!1),e},$r=()=>{const e=Fr();return _r({scrollHeight:e.scrollHeight,scrollWidth:e.scrollWidth,width:e.clientWidth,height:e.clientHeight})};function kr(e,t,r){return r.descriptor.id!==t.id&&(r.descriptor.type===t.type&&"virtual"===e.droppable.getById(r.descriptor.droppableId).descriptor.mode)}var Wr=(e,t)=>{let r=null;const n=function({registry:e,callbacks:t}){let r={additions:{},removals:{},modified:{}},n=null;const o=()=>{n||(t.collectionStarting(),n=requestAnimationFrame((()=>{n=null;const{additions:o,removals:i,modified:a}=r,s=Object.keys(o).map((t=>e.draggable.getById(t).getDimension(Te))).sort(((e,t)=>e.descriptor.index-t.descriptor.index)),l=Object.keys(a).map((t=>({droppableId:t,scroll:e.droppable.getById(t).callbacks.getScrollWhileDragging()}))),c={additions:s,removals:Object.keys(i),modified:l};r={additions:{},removals:{},modified:{}},t.publish(c)})))};return{add:e=>{const t=e.descriptor.id;r.additions[t]=e,r.modified[e.descriptor.droppableId]=!0,r.removals[t]&&delete r.removals[t],o()},remove:e=>{const t=e.descriptor;r.removals[t.id]=!0,r.modified[t.droppableId]=!0,r.additions[t.id]&&delete r.additions[t.id],o()},stop:()=>{n&&(cancelAnimationFrame(n),n=null,r={additions:{},removals:{},modified:{}})}}}({callbacks:{publish:t.publishWhileDragging,collectionStarting:t.collectionStarting},registry:e}),o=t=>{r||Ee(!1);const o=r.critical.draggable;"ADDITION"===t.type&&kr(e,o,t.value)&&n.add(t.value),"REMOVAL"===t.type&&kr(e,o,t.value)&&n.remove(t.value)},i={updateDroppableIsEnabled:(n,o)=>{e.droppable.exists(n)||Ee(!1),r&&t.updateDroppableIsEnabled({id:n,isEnabled:o})},updateDroppableIsCombineEnabled:(n,o)=>{r&&(e.droppable.exists(n)||Ee(!1),t.updateDroppableIsCombineEnabled({id:n,isCombineEnabled:o}))},scrollDroppable:(t,n)=>{r&&e.droppable.getById(t).callbacks.scroll(n)},updateDroppableScroll:(n,o)=>{r&&(e.droppable.exists(n)||Ee(!1),t.updateDroppableScroll({id:n,newScroll:o}))},startPublishing:t=>{r&&Ee(!1);const n=e.draggable.getById(t.draggableId),i=e.droppable.getById(n.descriptor.droppableId),a={draggable:n.descriptor,droppable:i.descriptor},s=e.subscribe(o);return r={critical:a,unsubscribe:s},(({critical:e,scrollOptions:t,registry:r})=>{const n=(()=>{const e=Cr(),t=$r(),r=e.y,n=e.x,o=Fr(),i=o.clientWidth,a=o.clientHeight;return{frame:ie({top:r,left:n,right:n+i,bottom:r+a}),scroll:{initial:e,current:e,max:t,diff:{value:Te,displacement:Te}}}})(),o=n.scroll.current,i=e.droppable,a=r.droppable.getAllByType(i.type).map((e=>e.callbacks.getDimensionAndWatchScroll(o,t))),s=r.draggable.getAllByType(e.draggable.type).map((e=>e.getDimension(o)));return{dimensions:{draggables:Ye(s),droppables:ze(a)},critical:e,viewport:n}})({critical:a,registry:e,scrollOptions:t.scrollOptions})},stopPublishing:()=>{if(!r)return;n.stop();const t=r.critical.droppable;e.droppable.getAllByType(t.type).forEach((e=>e.callbacks.dragStopped())),r.unsubscribe(),r=null}};return i},Ur=(e,t)=>"IDLE"===e.phase||"DROP_ANIMATING"===e.phase&&e.completed.result.draggableId!==t&&"DROP"===e.completed.result.reason,qr=e=>{window.scrollBy(e.x,e.y)};const Hr=he((e=>Je(e).filter((e=>!!e.isEnabled&&!!e.frame))));const Vr={startFromPercentage:.25,maxScrollAtPercentage:.05,maxPixelScroll:28,ease:e=>e**2,durationDampening:{stopDampeningAt:1200,accelerateAt:360},disabled:!1};var zr=({startOfRange:e,endOfRange:t,current:r})=>{const n=t-e;return 0===n?0:(r-e)/n},Yr=({distanceToEdge:e,thresholds:t,dragStartTime:r,shouldUseTimeDampening:n,getAutoScrollerOptions:o})=>{const i=((e,t,r=()=>Vr)=>{const n=r();if(e>t.startScrollingFrom)return 0;if(e<=t.maxScrollValueAt)return n.maxPixelScroll;if(e===t.startScrollingFrom)return 1;const o=1-zr({startOfRange:t.maxScrollValueAt,endOfRange:t.startScrollingFrom,current:e}),i=n.maxPixelScroll*n.ease(o);return Math.ceil(i)})(e,t,o);return 0===i?0:n?Math.max(((e,t,r)=>{const n=r(),o=n.durationDampening.accelerateAt,i=n.durationDampening.stopDampeningAt,a=t,s=i,l=Date.now()-a;if(l>=i)return e;if(l<o)return 1;const c=zr({startOfRange:o,endOfRange:s,current:l}),d=e*n.ease(c);return Math.ceil(d)})(i,r,o),1):i},Jr=({container:e,distanceToEdges:t,dragStartTime:r,axis:n,shouldUseTimeDampening:o,getAutoScrollerOptions:i})=>{const a=((e,t,r=()=>Vr)=>{const n=r();return{startScrollingFrom:e[t.size]*n.startFromPercentage,maxScrollValueAt:e[t.size]*n.maxScrollAtPercentage}})(e,n,i);return t[n.end]<t[n.start]?Yr({distanceToEdge:t[n.end],thresholds:a,dragStartTime:r,shouldUseTimeDampening:o,getAutoScrollerOptions:i}):-1*Yr({distanceToEdge:t[n.start],thresholds:a,dragStartTime:r,shouldUseTimeDampening:o,getAutoScrollerOptions:i})};const Xr=ke((e=>0===e?0:e));var Kr=({dragStartTime:e,container:t,subject:r,center:n,shouldUseTimeDampening:o,getAutoScrollerOptions:i})=>{const a={top:n.y-t.top,right:t.right-n.x,bottom:t.bottom-n.y,left:n.x-t.left},s=Jr({container:t,distanceToEdges:a,dragStartTime:e,axis:lt,shouldUseTimeDampening:o,getAutoScrollerOptions:i}),l=Jr({container:t,distanceToEdges:a,dragStartTime:e,axis:ct,shouldUseTimeDampening:o,getAutoScrollerOptions:i}),c=Xr({x:l,y:s});if(Ge(c,Te))return null;const d=(({container:e,subject:t,proposedScroll:r})=>{const n=t.height>e.height,o=t.width>e.width;return o||n?o&&n?null:{x:o?0:r.x,y:n?0:r.y}:r})({container:t,subject:r,proposedScroll:c});return d?Ge(d,Te)?null:d:null};const Qr=ke((e=>0===e?0:e>0?1:-1)),Zr=(()=>{const e=(e,t)=>e<0?e:e>t?e-t:0;return({current:t,max:r,change:n})=>{const o=Le(t,n),i={x:e(o.x,r.x),y:e(o.y,r.y)};return Ge(i,Te)?null:i}})(),en=({max:e,current:t,change:r})=>{const n={x:Math.max(t.x,e.x),y:Math.max(t.y,e.y)},o=Qr(r),i=Zr({max:n,current:t,change:o});return!i||0!==o.x&&0===i.x||0!==o.y&&0===i.y},tn=(e,t)=>en({current:e.scroll.current,max:e.scroll.max,change:t}),rn=(e,t)=>{const r=e.frame;return!!r&&en({current:r.scroll.current,max:r.scroll.max,change:t})};var nn=({state:e,dragStartTime:t,shouldUseTimeDampening:r,scrollWindow:n,scrollDroppable:o,getAutoScrollerOptions:i})=>{const a=e.current.page.borderBoxCenter,s=e.dimensions.draggables[e.critical.draggable.id].page.marginBox;if(e.isWindowScrollAllowed){const o=(({viewport:e,subject:t,center:r,dragStartTime:n,shouldUseTimeDampening:o,getAutoScrollerOptions:i})=>{const a=Kr({dragStartTime:n,container:e.frame,subject:t,center:r,shouldUseTimeDampening:o,getAutoScrollerOptions:i});return a&&tn(e,a)?a:null})({dragStartTime:t,viewport:e.viewport,subject:s,center:a,shouldUseTimeDampening:r,getAutoScrollerOptions:i});if(o)return void n(o)}const l=(({center:e,destination:t,droppables:r})=>{if(t){const e=r[t];return e.frame?e:null}const n=((e,t)=>{const r=Hr(t).find((t=>(t.frame||Ee(!1),_t(t.frame.pageMarginBox)(e))))||null;return r})(e,r);return n})({center:a,destination:Mt(e.impact),droppables:e.dimensions.droppables});if(!l)return;const c=(({droppable:e,subject:t,center:r,dragStartTime:n,shouldUseTimeDampening:o,getAutoScrollerOptions:i})=>{const a=e.frame;if(!a)return null;const s=Kr({dragStartTime:n,container:a.pageMarginBox,subject:t,center:r,shouldUseTimeDampening:o,getAutoScrollerOptions:i});return s&&rn(e,s)?s:null})({dragStartTime:t,droppable:l,subject:s,center:a,shouldUseTimeDampening:r,getAutoScrollerOptions:i});c&&o(l.descriptor.id,c)},on=({move:e,scrollDroppable:t,scrollWindow:r})=>n=>{const o=n.scrollJumpRequest;if(!o)return;const i=Mt(n.impact);i||Ee(!1);const a=((e,r)=>{if(!rn(e,r))return r;const n=((e,t)=>{const r=e.frame;return r&&rn(e,t)?Zr({current:r.scroll.current,max:r.scroll.max,change:t}):null})(e,r);if(!n)return t(e.descriptor.id,r),null;const o=Me(r,n);return t(e.descriptor.id,o),Me(r,o)})(n.dimensions.droppables[i],o);if(!a)return;const s=n.viewport,l=((e,t,n)=>{if(!e)return n;if(!tn(t,n))return n;const o=((e,t)=>{if(!tn(e,t))return null;const r=e.scroll.max,n=e.scroll.current;return Zr({current:n,max:r,change:t})})(t,n);if(!o)return r(n),null;const i=Me(n,o);return r(i),Me(n,i)})(n.isWindowScrollAllowed,s,a);l&&((t,r)=>{const n=Le(t.current.client.selection,r);e({client:n})})(n,l)},an=({scrollDroppable:e,scrollWindow:t,move:r,getAutoScrollerOptions:n})=>{const o=(({scrollWindow:e,scrollDroppable:t,getAutoScrollerOptions:r=()=>Vr})=>{const n=ye(e),o=ye(t);let i=null;const a=e=>{i||Ee(!1);const{shouldUseTimeDampening:t,dragStartTime:a}=i;nn({state:e,scrollWindow:n,scrollDroppable:o,dragStartTime:a,shouldUseTimeDampening:t,getAutoScrollerOptions:r})};return{start:e=>{i&&Ee(!1);const t=Date.now();let n=!1;const o=()=>{n=!0};nn({state:e,dragStartTime:0,shouldUseTimeDampening:!1,scrollWindow:o,scrollDroppable:o,getAutoScrollerOptions:r}),i={dragStartTime:t,shouldUseTimeDampening:n},n&&a(e)},stop:()=>{i&&(n.cancel(),o.cancel(),i=null)},scroll:a}})({scrollWindow:t,scrollDroppable:e,getAutoScrollerOptions:n}),i=on({move:r,scrollWindow:t,scrollDroppable:e});return{scroll:e=>{n().disabled||"DRAGGING"!==e.phase||("FLUID"!==e.movementMode?e.scrollJumpRequest&&i(e):o.scroll(e))},start:o.start,stop:o.stop}};const sn="data-rfd",ln=(()=>{const e=`${sn}-drag-handle`;return{base:e,draggableId:`${e}-draggable-id`,contextId:`${e}-context-id`}})(),cn=(()=>{const e=`${sn}-draggable`;return{base:e,contextId:`${e}-context-id`,id:`${e}-id`}})(),dn=(()=>{const e=`${sn}-droppable`;return{base:e,contextId:`${e}-context-id`,id:`${e}-id`}})(),un={contextId:`${sn}-scroll-container-context-id`},pn=(e,t)=>e.map((e=>{const r=e.styles[t];return r?`${e.selector} { ${r} }`:""})).join(" ");var gn=e=>{const t=(r=e,e=>`[${e}="${r}"]`);var r;const n=(()=>{const e="\n      cursor: -webkit-grab;\n      cursor: grab;\n    ";return{selector:t(ln.contextId),styles:{always:"\n          -webkit-touch-callout: none;\n          -webkit-tap-highlight-color: rgba(0,0,0,0);\n          touch-action: manipulation;\n        ",resting:e,dragging:"pointer-events: none;",dropAnimating:e}}})(),o=[(()=>{const e=`\n      transition: ${vr.outOfTheWay};\n    `;return{selector:t(cn.contextId),styles:{dragging:e,dropAnimating:e,userCancel:e}}})(),n,{selector:t(dn.contextId),styles:{always:"overflow-anchor: none;"}},{selector:"body",styles:{dragging:"\n        cursor: grabbing;\n        cursor: -webkit-grabbing;\n        user-select: none;\n        -webkit-user-select: none;\n        -moz-user-select: none;\n        -ms-user-select: none;\n        overflow-anchor: none;\n      "}}];return{always:pn(o,"always"),resting:pn(o,"resting"),dragging:pn(o,"dragging"),dropAnimating:pn(o,"dropAnimating"),userCancel:pn(o,"userCancel")}},fn="undefined"!=typeof window&&void 0!==window.document&&void 0!==window.document.createElement?a.useLayoutEffect:a.useEffect;const mn=()=>{const e=document.querySelector("head");return e||Ee(!1),e},bn=e=>{const t=document.createElement("style");return e&&t.setAttribute("nonce",e),t.type="text/css",t};function hn(e,t){return Array.from(e.querySelectorAll(t))}var yn=e=>e&&e.ownerDocument&&e.ownerDocument.defaultView?e.ownerDocument.defaultView:window;function vn(e){return e instanceof yn(e).HTMLElement}function xn(){const e={draggables:{},droppables:{}},t=[];function r(e){t.length&&t.forEach((t=>t(e)))}function n(t){return e.draggables[t]||null}function o(t){return e.droppables[t]||null}return{draggable:{register:t=>{e.draggables[t.descriptor.id]=t,r({type:"ADDITION",value:t})},update:(t,r)=>{const n=e.draggables[r.descriptor.id];n&&n.uniqueId===t.uniqueId&&(delete e.draggables[r.descriptor.id],e.draggables[t.descriptor.id]=t)},unregister:t=>{const o=t.descriptor.id,i=n(o);i&&t.uniqueId===i.uniqueId&&(delete e.draggables[o],e.droppables[t.descriptor.droppableId]&&r({type:"REMOVAL",value:t}))},getById:function(e){const t=n(e);return t||Ee(!1),t},findById:n,exists:e=>Boolean(n(e)),getAllByType:t=>Object.values(e.draggables).filter((e=>e.descriptor.type===t))},droppable:{register:t=>{e.droppables[t.descriptor.id]=t},unregister:t=>{const r=o(t.descriptor.id);r&&t.uniqueId===r.uniqueId&&delete e.droppables[t.descriptor.id]},getById:function(e){const t=o(e);return t||Ee(!1),t},findById:o,exists:e=>Boolean(o(e)),getAllByType:t=>Object.values(e.droppables).filter((e=>e.descriptor.type===t))},subscribe:function(e){return t.push(e),function(){const r=t.indexOf(e);-1!==r&&t.splice(r,1)}},clean:function(){e.draggables={},e.droppables={},t.length=0}}}var In=s().createContext(null),Dn=()=>{const e=document.body;return e||Ee(!1),e},wn={position:"absolute",width:"1px",height:"1px",margin:"-1px",border:"0",padding:"0",overflow:"hidden",clip:"rect(0 0 0 0)","clip-path":"inset(100%)"};const Sn=e=>`rfd-announcement-${e}`;let En=0;const On={separator:"::"};var Cn="useId"in s()?function(e,t=On){const r=s().useId();return ne((()=>`${e}${t.separator}${r}`),[t.separator,e,r])}:function(e,t=On){return ne((()=>`${e}${t.separator}${En++}`),[t.separator,e])},An=s().createContext(null);function Pn(e){const t=(0,a.useRef)(e);return(0,a.useEffect)((()=>{t.current=e})),t}function Rn(e){return"IDLE"!==e.phase&&"DROP_ANIMATING"!==e.phase&&e.isDragging}const Nn=9,Bn=13,Tn=33,Ln=34,Mn=35,Gn=36,jn={[Bn]:!0,[Nn]:!0};var Fn=e=>{jn[e.keyCode]&&e.preventDefault()},$n=(()=>{const e="visibilitychange";return"undefined"==typeof document?e:[e,`ms${e}`,`webkit${e}`,`moz${e}`,`o${e}`].find((e=>`on${e}`in document))||e})();const kn={type:"IDLE"};function Wn(){}const Un={[Ln]:!0,[Tn]:!0,[Gn]:!0,[Mn]:!0};const qn={type:"IDLE"},Hn=["input","button","textarea","select","option","optgroup","video","audio"];function Vn(e,t){if(null==t)return!1;if(Hn.includes(t.tagName.toLowerCase()))return!0;const r=t.getAttribute("contenteditable");return"true"===r||""===r||t!==e&&Vn(e,t.parentElement)}function zn(e,t){const r=t.target;return!!vn(r)&&Vn(e,r)}var Yn=e=>ie(e.getBoundingClientRect()).center;const Jn=(()=>{const e="matches";return"undefined"==typeof document?e:[e,"msMatchesSelector","webkitMatchesSelector"].find((e=>e in Element.prototype))||e})();function Xn(e,t){return null==e?null:e[Jn](t)?e:Xn(e.parentElement,t)}function Kn(e,t){return e.closest?e.closest(t):Xn(e,t)}function Qn(e){e.preventDefault()}function Zn({expected:e,phase:t,isLockActive:r,shouldWarn:n}){return!!r()&&e===t}function eo({lockAPI:e,store:t,registry:r,draggableId:n}){if(e.isClaimed())return!1;const o=r.draggable.findById(n);return!!o&&!!o.options.isEnabled&&!!Ur(t.getState(),n)}const to=[function(e){const t=(0,a.useRef)(kn),r=(0,a.useRef)(xe),n=ne((()=>({eventName:"mousedown",fn:function(t){if(t.defaultPrevented)return;if(0!==t.button)return;if(t.ctrlKey||t.metaKey||t.shiftKey||t.altKey)return;const n=e.findClosestDraggableId(t);if(!n)return;const o=e.tryGetLock(n,s,{sourceEvent:t});if(!o)return;t.preventDefault();const i={x:t.clientX,y:t.clientY};r.current(),d(o,i)}})),[e]),o=ne((()=>({eventName:"webkitmouseforcewillbegin",fn:t=>{if(t.defaultPrevented)return;const r=e.findClosestDraggableId(t);if(!r)return;const n=e.findOptionsForDraggable(r);n&&(n.shouldRespectForcePress||e.canGetLock(r)&&t.preventDefault())}})),[e]),i=oe((function(){r.current=Ie(window,[o,n],{passive:!1,capture:!0})}),[o,n]),s=oe((()=>{"IDLE"!==t.current.type&&(t.current=kn,r.current(),i())}),[i]),l=oe((()=>{const e=t.current;s(),"DRAGGING"===e.type&&e.actions.cancel({shouldBlockNextClick:!0}),"PENDING"===e.type&&e.actions.abort()}),[s]),c=oe((function(){const e=function({cancel:e,completed:t,getPhase:r,setPhase:n}){return[{eventName:"mousemove",fn:e=>{const{button:t,clientX:o,clientY:i}=e;if(0!==t)return;const a={x:o,y:i},s=r();if("DRAGGING"===s.type)return e.preventDefault(),void s.actions.move(a);if("PENDING"!==s.type&&Ee(!1),l=s.point,c=a,!(Math.abs(c.x-l.x)>=5||Math.abs(c.y-l.y)>=5))return;var l,c;e.preventDefault();const d=s.actions.fluidLift(a);n({type:"DRAGGING",actions:d})}},{eventName:"mouseup",fn:n=>{const o=r();"DRAGGING"===o.type?(n.preventDefault(),o.actions.drop({shouldBlockNextClick:!0}),t()):e()}},{eventName:"mousedown",fn:t=>{"DRAGGING"===r().type&&t.preventDefault(),e()}},{eventName:"keydown",fn:t=>{if("PENDING"!==r().type)return 27===t.keyCode?(t.preventDefault(),void e()):void Fn(t);e()}},{eventName:"resize",fn:e},{eventName:"scroll",options:{passive:!0,capture:!1},fn:()=>{"PENDING"===r().type&&e()}},{eventName:"webkitmouseforcedown",fn:t=>{const n=r();"IDLE"===n.type&&Ee(!1),n.actions.shouldRespectForcePress()?e():t.preventDefault()}},{eventName:$n,fn:e}]}({cancel:l,completed:s,getPhase:()=>t.current,setPhase:e=>{t.current=e}});r.current=Ie(window,e,{capture:!0,passive:!1})}),[l,s]),d=oe((function(e,r){"IDLE"!==t.current.type&&Ee(!1),t.current={type:"PENDING",point:r,actions:e},c()}),[c]);fn((function(){return i(),function(){r.current()}}),[i])},function(e){const t=(0,a.useRef)(Wn),r=ne((()=>({eventName:"keydown",fn:function(r){if(r.defaultPrevented)return;if(32!==r.keyCode)return;const o=e.findClosestDraggableId(r);if(!o)return;const i=e.tryGetLock(o,l,{sourceEvent:r});if(!i)return;r.preventDefault();let a=!0;const s=i.snapLift();function l(){a||Ee(!1),a=!1,t.current(),n()}t.current(),t.current=Ie(window,function(e,t){function r(){t(),e.cancel()}return[{eventName:"keydown",fn:n=>27===n.keyCode?(n.preventDefault(),void r()):32===n.keyCode?(n.preventDefault(),t(),void e.drop()):40===n.keyCode?(n.preventDefault(),void e.moveDown()):38===n.keyCode?(n.preventDefault(),void e.moveUp()):39===n.keyCode?(n.preventDefault(),void e.moveRight()):37===n.keyCode?(n.preventDefault(),void e.moveLeft()):void(Un[n.keyCode]?n.preventDefault():Fn(n))},{eventName:"mousedown",fn:r},{eventName:"mouseup",fn:r},{eventName:"click",fn:r},{eventName:"touchstart",fn:r},{eventName:"resize",fn:r},{eventName:"wheel",fn:r,options:{passive:!0}},{eventName:$n,fn:r}]}(s,l),{capture:!0,passive:!1})}})),[e]),n=oe((function(){t.current=Ie(window,[r],{passive:!1,capture:!0})}),[r]);fn((function(){return n(),function(){t.current()}}),[n])},function(e){const t=(0,a.useRef)(qn),r=(0,a.useRef)(xe),n=oe((function(){return t.current}),[]),o=oe((function(e){t.current=e}),[]),i=ne((()=>({eventName:"touchstart",fn:function(t){if(t.defaultPrevented)return;const n=e.findClosestDraggableId(t);if(!n)return;const o=e.tryGetLock(n,l,{sourceEvent:t});if(!o)return;const i=t.touches[0],{clientX:a,clientY:s}=i,c={x:a,y:s};r.current(),p(o,c)}})),[e]),s=oe((function(){r.current=Ie(window,[i],{capture:!0,passive:!1})}),[i]),l=oe((()=>{const e=t.current;"IDLE"!==e.type&&("PENDING"===e.type&&clearTimeout(e.longPressTimerId),o(qn),r.current(),s())}),[s,o]),c=oe((()=>{const e=t.current;l(),"DRAGGING"===e.type&&e.actions.cancel({shouldBlockNextClick:!0}),"PENDING"===e.type&&e.actions.abort()}),[l]),d=oe((function(){const e={capture:!0,passive:!1},t={cancel:c,completed:l,getPhase:n},o=Ie(window,function({cancel:e,completed:t,getPhase:r}){return[{eventName:"touchmove",options:{capture:!1},fn:t=>{const n=r();if("DRAGGING"!==n.type)return void e();n.hasMoved=!0;const{clientX:o,clientY:i}=t.touches[0],a={x:o,y:i};t.preventDefault(),n.actions.move(a)}},{eventName:"touchend",fn:n=>{const o=r();"DRAGGING"===o.type?(n.preventDefault(),o.actions.drop({shouldBlockNextClick:!0}),t()):e()}},{eventName:"touchcancel",fn:t=>{"DRAGGING"===r().type?(t.preventDefault(),e()):e()}},{eventName:"touchforcechange",fn:t=>{const n=r();"IDLE"===n.type&&Ee(!1);const o=t.touches[0];if(!o)return;if(!(o.force>=.15))return;const i=n.actions.shouldRespectForcePress();if("PENDING"!==n.type)return i?n.hasMoved?void t.preventDefault():void e():void t.preventDefault();i&&e()}},{eventName:$n,fn:e}]}(t),e),i=Ie(window,function({cancel:e,getPhase:t}){return[{eventName:"orientationchange",fn:e},{eventName:"resize",fn:e},{eventName:"contextmenu",fn:e=>{e.preventDefault()}},{eventName:"keydown",fn:r=>{"DRAGGING"===t().type?(27===r.keyCode&&r.preventDefault(),e()):e()}},{eventName:$n,fn:e}]}(t),e);r.current=function(){o(),i()}}),[c,n,l]),u=oe((function(){const e=n();"PENDING"!==e.type&&Ee(!1);const t=e.actions.fluidLift(e.point);o({type:"DRAGGING",actions:t,hasMoved:!1})}),[n,o]),p=oe((function(e,t){"IDLE"!==n().type&&Ee(!1);const r=setTimeout(u,120);o({type:"PENDING",point:t,actions:e,longPressTimerId:r}),d()}),[d,n,o,u]);fn((function(){return s(),function(){r.current();const e=n();"PENDING"===e.type&&(clearTimeout(e.longPressTimerId),o(qn))}}),[n,s,o]),fn((function(){return Ie(window,[{eventName:"touchmove",fn:()=>{},options:{capture:!1,passive:!1}}])}),[])}];function ro({contextId:e,store:t,registry:r,customSensors:n,enableDefaultSensors:o}){const i=[...o?to:[],...n||[]],s=(0,a.useState)((()=>function(){let e=null;function t(){e||Ee(!1),e=null}return{isClaimed:function(){return Boolean(e)},isActive:function(t){return t===e},claim:function(t){e&&Ee(!1);const r={abandon:t};return e=r,r},release:t,tryAbandon:function(){e&&(e.abandon(),t())}}}()))[0],l=oe((function(e,t){Rn(e)&&!Rn(t)&&s.tryAbandon()}),[s]);fn((function(){let e=t.getState();return t.subscribe((()=>{const r=t.getState();l(e,r),e=r}))}),[s,t,l]),fn((()=>s.tryAbandon),[s.tryAbandon]);const c=oe((e=>eo({lockAPI:s,registry:r,store:t,draggableId:e})),[s,r,t]),d=oe(((n,o,i)=>function({lockAPI:e,contextId:t,store:r,registry:n,draggableId:o,forceSensorStop:i,sourceEvent:a}){if(!eo({lockAPI:e,store:r,registry:n,draggableId:o}))return null;const s=n.draggable.getById(o),l=function(e,t){const r=`[${cn.contextId}="${e}"]`,n=hn(document,r).find((e=>e.getAttribute(cn.id)===t));return n&&vn(n)?n:null}(t,s.descriptor.id);if(!l)return null;if(a&&!s.options.canDragInteractiveElements&&zn(l,a))return null;const c=e.claim(i||xe);let d="PRE_DRAG";function u(){return s.options.shouldRespectForcePress}function p(){return e.isActive(c)}const g=function(e,t){Zn({expected:e,phase:d,isLockActive:p,shouldWarn:!0})&&r.dispatch(t())}.bind(null,"DRAGGING");function f(t){function n(){e.release(),d="COMPLETED"}function o(e,o={shouldBlockNextClick:!1}){if(t.cleanup(),o.shouldBlockNextClick){const e=Ie(window,[{eventName:"click",fn:Qn,options:{once:!0,passive:!1,capture:!0}}]);setTimeout(e)}n(),r.dispatch(pr({reason:e}))}return"PRE_DRAG"!==d&&(n(),Ee(!1)),r.dispatch(Zt(t.liftActionArgs)),d="DRAGGING",{isActive:()=>Zn({expected:"DRAGGING",phase:d,isLockActive:p,shouldWarn:!1}),shouldRespectForcePress:u,drop:e=>o("DROP",e),cancel:e=>o("CANCEL",e),...t.actions}}return{isActive:()=>Zn({expected:"PRE_DRAG",phase:d,isLockActive:p,shouldWarn:!1}),shouldRespectForcePress:u,fluidLift:function(e){const t=ye((e=>{g((()=>ir({client:e})))}));return{...f({liftActionArgs:{id:o,clientSelection:e,movementMode:"FLUID"},cleanup:()=>t.cancel(),actions:{move:t}}),move:t}},snapLift:function(){const e={moveUp:()=>g(ar),moveRight:()=>g(lr),moveDown:()=>g(sr),moveLeft:()=>g(cr)};return f({liftActionArgs:{id:o,clientSelection:Yn(l),movementMode:"SNAP"},cleanup:xe,actions:e})},abort:function(){Zn({expected:"PRE_DRAG",phase:d,isLockActive:p,shouldWarn:!0})&&e.release()}}}({lockAPI:s,registry:r,contextId:e,store:t,draggableId:n,forceSensorStop:o||null,sourceEvent:i&&i.sourceEvent?i.sourceEvent:null})),[e,s,r,t]),u=oe((t=>function(e,t){const r=function(e,t){const r=t.target;if(!((n=r)instanceof yn(n).Element))return null;var n;const o=function(e){return`[${ln.contextId}="${e}"]`}(e),i=Kn(r,o);return i&&vn(i)?i:null}(e,t);return r?r.getAttribute(ln.draggableId):null}(e,t)),[e]),p=oe((e=>{const t=r.draggable.findById(e);return t?t.options:null}),[r.draggable]),g=oe((function(){s.isClaimed()&&(s.tryAbandon(),"IDLE"!==t.getState().phase&&t.dispatch(dr()))}),[s,t]),f=oe((()=>s.isClaimed()),[s]),m=ne((()=>({canGetLock:c,tryGetLock:d,findClosestDraggableId:u,findOptionsForDraggable:p,tryReleaseLock:g,isLockClaimed:f})),[c,d,u,p,g,f]);for(let e=0;e<i.length;e++)i[e](m)}const no=e=>({onBeforeCapture:t=>{const r=()=>{e.onBeforeCapture&&e.onBeforeCapture(t)};s().version.startsWith("16")||s().version.startsWith("17")?r():(0,l.flushSync)(r)},onBeforeDragStart:e.onBeforeDragStart,onDragStart:e.onDragStart,onDragEnd:e.onDragEnd,onDragUpdate:e.onDragUpdate}),oo=e=>({...Vr,...e.autoScrollerOptions,durationDampening:{...Vr.durationDampening,...e.autoScrollerOptions}});function io(e){return e.current||Ee(!1),e.current}function ao(e){const{contextId:t,setCallbacks:r,sensors:n,nonce:o,dragHandleUsageInstructions:i}=e,l=(0,a.useRef)(null),c=Pn(e),d=oe((()=>no(c.current)),[c]),u=oe((()=>oo(c.current)),[c]),p=function(e){const t=ne((()=>Sn(e)),[e]),r=(0,a.useRef)(null);return(0,a.useEffect)((function(){const e=document.createElement("div");return r.current=e,e.id=t,e.setAttribute("aria-live","assertive"),e.setAttribute("aria-atomic","true"),N(e.style,wn),Dn().appendChild(e),function(){setTimeout((function(){const t=Dn();t.contains(e)&&t.removeChild(e),e===r.current&&(r.current=null)}))}}),[t]),oe((e=>{const t=r.current;t&&(t.textContent=e)}),[])}(t),g=function({contextId:e,text:t}){const r=Cn("hidden-text",{separator:"-"}),n=ne((()=>function({contextId:e,uniqueId:t}){return`rfd-hidden-text-${e}-${t}`}({contextId:e,uniqueId:r})),[r,e]);return(0,a.useEffect)((function(){const e=document.createElement("div");return e.id=n,e.textContent=t,e.style.display="none",Dn().appendChild(e),function(){const t=Dn();t.contains(e)&&t.removeChild(e)}}),[n,t]),n}({contextId:t,text:i}),f=function(e,t){const r=ne((()=>gn(e)),[e]),n=(0,a.useRef)(null),o=(0,a.useRef)(null),i=oe(he((e=>{const t=o.current;t||Ee(!1),t.textContent=e})),[]),s=oe((e=>{const t=n.current;t||Ee(!1),t.textContent=e}),[]);fn((()=>{(n.current||o.current)&&Ee(!1);const a=bn(t),l=bn(t);return n.current=a,o.current=l,a.setAttribute(`${sn}-always`,e),l.setAttribute(`${sn}-dynamic`,e),mn().appendChild(a),mn().appendChild(l),s(r.always),i(r.resting),()=>{const e=e=>{const t=e.current;t||Ee(!1),mn().removeChild(t),e.current=null};e(n),e(o)}}),[t,s,i,r.always,r.resting,e]);const l=oe((()=>i(r.dragging)),[i,r.dragging]),c=oe((e=>{i("DROP"!==e?r.userCancel:r.dropAnimating)}),[i,r.dropAnimating,r.userCancel]),d=oe((()=>{o.current&&i(r.resting)}),[i,r.resting]);return ne((()=>({dragging:l,dropping:c,resting:d})),[l,c,d])}(t,o),m=oe((e=>{io(l).dispatch(e)}),[]),b=ne((()=>x({publishWhileDragging:er,updateDroppableScroll:rr,updateDroppableIsEnabled:nr,updateDroppableIsCombineEnabled:or,collectionStarting:tr},m)),[m]),h=function(){const e=ne(xn,[]);return(0,a.useEffect)((()=>function(){s().version.startsWith("16")||s().version.startsWith("17")?requestAnimationFrame(e.clean):e.clean()}),[e]),e}(),y=ne((()=>Wr(h,b)),[h,b]),v=ne((()=>an({scrollWindow:qr,scrollDroppable:y.scrollDroppable,getAutoScrollerOptions:u,...x({move:ir},m)})),[y.scrollDroppable,m,u]),I=function(e){const t=(0,a.useRef)({}),r=(0,a.useRef)(null),n=(0,a.useRef)(null),o=(0,a.useRef)(!1),i=oe((function(e,r){const n={id:e,focus:r};return t.current[e]=n,function(){const r=t.current;r[e]!==n&&delete r[e]}}),[]),s=oe((function(t){const r=function(e,t){const r=`[${ln.contextId}="${e}"]`,n=hn(document,r);if(!n.length)return null;const o=n.find((e=>e.getAttribute(ln.draggableId)===t));return o&&vn(o)?o:null}(e,t);r&&r!==document.activeElement&&r.focus()}),[e]),l=oe((function(e,t){r.current===e&&(r.current=t)}),[]),c=oe((function(){n.current||o.current&&(n.current=requestAnimationFrame((()=>{n.current=null;const e=r.current;e&&s(e)})))}),[s]),d=oe((function(e){r.current=null;const t=document.activeElement;t&&t.getAttribute(ln.draggableId)===e&&(r.current=e)}),[]);return fn((()=>(o.current=!0,function(){o.current=!1;const e=n.current;e&&cancelAnimationFrame(e)})),[]),ne((()=>({register:i,tryRecordFocus:d,tryRestoreFocusRecorded:c,tryShiftRecord:l})),[i,d,c,l])}(t),D=ne((()=>jr({announce:p,autoScroller:v,dimensionMarshal:y,focusMarshal:I,getResponders:d,styleMarshal:f})),[p,v,y,I,d,f]);l.current=D;const w=oe((()=>{const e=io(l);"IDLE"!==e.getState().phase&&e.dispatch(dr())}),[]),S=oe((()=>{const e=io(l).getState();return"DROP_ANIMATING"===e.phase||"IDLE"!==e.phase&&e.isDragging}),[]);r(ne((()=>({isDragging:S,tryAbort:w})),[S,w]));const E=oe((e=>Ur(io(l).getState(),e)),[]),O=oe((()=>jt(io(l).getState())),[]),C=ne((()=>({marshal:y,focus:I,contextId:t,canLift:E,isMovementAllowed:O,dragHandleUsageInstructionsId:g,registry:h})),[t,y,g,I,E,O,h]);return ro({contextId:t,store:D,registry:h,customSensors:n||null,enableDefaultSensors:!1!==e.enableDefaultSensors}),(0,a.useEffect)((()=>w),[w]),s().createElement(An.Provider,{value:C},s().createElement(ee,{context:In,store:D},e.children))}let so=0;var lo="useId"in s()?function(){return s().useId()}:function(){return ne((()=>""+so++),[])};function co(e){const t=lo(),r=e.dragHandleUsageInstructions||Be.dragHandleUsageInstructions;return s().createElement(Oe,null,(n=>s().createElement(ao,{nonce:e.nonce,contextId:t,setCallbacks:n,dragHandleUsageInstructions:r,enableDefaultSensors:e.enableDefaultSensors,sensors:e.sensors,onBeforeCapture:e.onBeforeCapture,onBeforeDragStart:e.onBeforeDragStart,onDragStart:e.onDragStart,onDragUpdate:e.onDragUpdate,onDragEnd:e.onDragEnd,autoScrollerOptions:e.autoScrollerOptions},e.children)))}const uo=5e3,po=4500,go=(e,t)=>t?vr.drop(t.duration):e?vr.snap:vr.fluid,fo=(e,t)=>{if(e)return t?fr:mr};var mo=s().createContext(null);function bo(e){const t=(0,a.useContext)(e);return t||Ee(!1),t}function ho(e){e.preventDefault()}var yo=(e,t)=>e===t,vo=e=>{const{combine:t,destination:r}=e;return r?r.droppableId:t?t.droppableId:null};function xo(e=null){return{isDragging:!1,isDropAnimating:!1,isClone:!1,dropAnimation:null,mode:null,draggingOver:null,combineTargetFor:e,combineWith:null}}const Io={mapped:{type:"SECONDARY",offset:Te,combineTargetFor:null,shouldAnimateDisplacement:!0,snapshot:xo(null)}},Do=Z((()=>{const e=function(){const e=he(((e,t)=>({x:e,y:t}))),t=he(((e,t,r=null,n=null,o=null)=>({isDragging:!0,isClone:t,isDropAnimating:Boolean(o),dropAnimation:o,mode:e,draggingOver:r,combineWith:n,combineTargetFor:null}))),r=he(((e,r,n,o,i=null,a=null,s=null)=>({mapped:{type:"DRAGGING",dropping:null,draggingOver:i,combineWith:a,mode:r,offset:e,dimension:n,forceShouldAnimate:s,snapshot:t(r,o,i,a,null)}})));return(n,o)=>{if(Rn(n)){if(n.critical.draggable.id!==o.draggableId)return null;const t=n.current.client.offset,a=n.dimensions.draggables[o.draggableId],s=Mt(n.impact),l=(i=n.impact).at&&"COMBINE"===i.at.type?i.at.combine.draggableId:null,c=n.forceShouldAnimate;return r(e(t.x,t.y),n.movementMode,a,o.isClone,s,l,c)}var i;if("DROP_ANIMATING"===n.phase){const e=n.completed;if(e.result.draggableId!==o.draggableId)return null;const r=o.isClone,i=n.dimensions.draggables[o.draggableId],a=e.result,s=a.mode,l=vo(a),c=(e=>e.combine?e.combine.draggableId:null)(a),d={duration:n.dropDuration,curve:gr,moveTo:n.newHomeClientOffset,opacity:c?fr:null,scale:c?br:null};return{mapped:{type:"DRAGGING",offset:n.newHomeClientOffset,dimension:i,dropping:d,draggingOver:l,combineWith:c,mode:s,forceShouldAnimate:null,snapshot:t(s,r,l,c,d)}}}return null}}(),t=function(){const e=he(((e,t)=>({x:e,y:t}))),t=he(xo),r=he(((e,r=null,n)=>({mapped:{type:"SECONDARY",offset:e,combineTargetFor:r,shouldAnimateDisplacement:n,snapshot:t(r)}}))),n=e=>e?r(Te,e,!0):null,o=(t,o,i,a)=>{const s=i.displaced.visible[t],l=Boolean(a.inVirtualList&&a.effected[t]),c=Ze(i),d=c&&c.draggableId===t?o:null;if(!s){if(!l)return n(d);if(i.displaced.invisible[t])return null;const o=je(a.displacedBy.point),s=e(o.x,o.y);return r(s,d,!0)}if(l)return n(d);const u=i.displacedBy.point,p=e(u.x,u.y);return r(p,d,s.shouldAnimate)};return(e,t)=>{if(Rn(e))return e.critical.draggable.id===t.draggableId?null:o(t.draggableId,e.critical.draggable.id,e.impact,e.afterCritical);if("DROP_ANIMATING"===e.phase){const r=e.completed;return r.result.draggableId===t.draggableId?null:o(t.draggableId,r.result.draggableId,r.impact,r.afterCritical)}return null}}();return(r,n)=>e(r,n)||t(r,n)||Io}),{dropAnimationFinished:()=>({type:"DROP_ANIMATION_FINISHED",payload:null})},null,{context:In,areStatePropsEqual:yo})((e=>{const t=(0,a.useRef)(null),r=oe(((e=null)=>{t.current=e}),[]),n=oe((()=>t.current),[]),{contextId:o,dragHandleUsageInstructionsId:i,registry:c}=bo(An),{type:d,droppableId:u}=bo(mo),p=ne((()=>({id:e.draggableId,index:e.index,type:d,droppableId:u})),[e.draggableId,e.index,d,u]),{children:g,draggableId:f,isEnabled:m,shouldRespectForcePress:b,canDragInteractiveElements:h,isClone:y,mapped:v,dropAnimationFinished:x}=e;y||function(e){const t=Cn("draggable"),{descriptor:r,registry:n,getDraggableRef:o,canDragInteractiveElements:i,shouldRespectForcePress:s,isEnabled:l}=e,c=ne((()=>({canDragInteractiveElements:i,shouldRespectForcePress:s,isEnabled:l})),[i,l,s]),d=oe((e=>{const t=o();return t||Ee(!1),function(e,t,r=Te){const n=window.getComputedStyle(t),o=t.getBoundingClientRect(),i=ge(o,n),a=pe(i,r);return{descriptor:e,placeholder:{client:i,tagName:t.tagName.toLowerCase(),display:n.display},displaceBy:{x:i.marginBox.width,y:i.marginBox.height},client:i,page:a}}(r,t,e)}),[r,o]),u=ne((()=>({uniqueId:t,descriptor:r,options:c,getDimension:d})),[r,d,c,t]),p=(0,a.useRef)(u),g=(0,a.useRef)(!0);fn((()=>(n.draggable.register(p.current),()=>n.draggable.unregister(p.current))),[n.draggable]),fn((()=>{if(g.current)return void(g.current=!1);const e=p.current;p.current=u,n.draggable.update(u,e)}),[u,n.draggable])}(ne((()=>({descriptor:p,registry:c,getDraggableRef:n,canDragInteractiveElements:h,shouldRespectForcePress:b,isEnabled:m})),[p,c,n,h,b,m]));const I=ne((()=>m?{tabIndex:0,role:"button","aria-describedby":i,"data-rfd-drag-handle-draggable-id":f,"data-rfd-drag-handle-context-id":o,draggable:!1,onDragStart:ho}:null),[o,i,f,m]),D=oe((e=>{"DRAGGING"===v.type&&v.dropping&&"transform"===e.propertyName&&(s().version.startsWith("16")||s().version.startsWith("17")?x():(0,l.flushSync)(x))}),[x,v]),w=ne((()=>{const e=function(e){return"DRAGGING"===e.type?function(e){const t=e.dimension.client,{offset:r,combineWith:n,dropping:o}=e,i=Boolean(n),a=(e=>null!=e.forceShouldAnimate?e.forceShouldAnimate:"SNAP"===e.mode)(e),s=Boolean(o),l=s?Dr(r,i):Ir(r);return{position:"fixed",top:t.marginBox.top,left:t.marginBox.left,boxSizing:"border-box",width:t.borderBox.width,height:t.borderBox.height,transition:go(a,o),transform:l,opacity:fo(i,s),zIndex:s?po:uo,pointerEvents:"none"}}(e):{transform:Ir((t=e).offset),transition:t.shouldAnimateDisplacement?void 0:"none"};var t}(v),t="DRAGGING"===v.type&&v.dropping?D:void 0;return{innerRef:r,draggableProps:{"data-rfd-draggable-context-id":o,"data-rfd-draggable-id":f,style:e,onTransitionEnd:t},dragHandleProps:I}}),[o,I,f,v,D,r]),S=ne((()=>({draggableId:p.id,type:p.type,source:{index:p.index,droppableId:p.droppableId}})),[p.droppableId,p.id,p.index,p.type]);return s().createElement(s().Fragment,null,g(w,v.snapshot,S))}));var wo=Do;function So(e){return bo(mo).isUsingCloneFor!==e.draggableId||e.isClone?s().createElement(wo,e):null}function Eo(e){const t="boolean"!=typeof e.isDragDisabled||!e.isDragDisabled,r=Boolean(e.disableInteractiveElementBlocking),n=Boolean(e.shouldRespectForcePress);return s().createElement(So,N({},e,{isClone:!1,isEnabled:t,canDragInteractiveElements:r,shouldRespectForcePress:n}))}const Oo=e=>t=>e===t,Co=Oo("scroll"),Ao=Oo("auto"),Po=(Oo("visible"),(e,t)=>t(e.overflowX)||t(e.overflowY)),Ro=e=>null==e||e===document.body||e===document.documentElement?null:(e=>{const t=window.getComputedStyle(e),r={overflowX:t.overflowX,overflowY:t.overflowY};return Po(r,Co)||Po(r,Ao)})(e)?e:Ro(e.parentElement);var No=e=>({x:e.scrollLeft,y:e.scrollTop});const Bo=e=>!!e&&("fixed"===window.getComputedStyle(e).position||Bo(e.parentElement));const To={passive:!1},Lo={passive:!0};var Mo=e=>e.shouldPublishImmediately?To:Lo;const Go=e=>e&&e.env.closestScrollable||null;function jo(e){const t=(0,a.useRef)(null),r=bo(An),n=Cn("droppable"),{registry:o,marshal:i}=r,s=Pn(e),l=ne((()=>({id:e.droppableId,type:e.type,mode:e.mode})),[e.droppableId,e.mode,e.type]),c=(0,a.useRef)(l),d=ne((()=>he(((e,r)=>{t.current||Ee(!1);const n={x:e,y:r};i.updateDroppableScroll(l.id,n)}))),[l.id,i]),u=oe((()=>{const e=t.current;return e&&e.env.closestScrollable?No(e.env.closestScrollable):Te}),[]),p=oe((()=>{const e=u();d(e.x,e.y)}),[u,d]),g=ne((()=>ye(p)),[p]),f=oe((()=>{const e=t.current,r=Go(e);e&&r||Ee(!1),e.scrollOptions.shouldPublishImmediately?p():g()}),[g,p]),m=oe(((e,n)=>{t.current&&Ee(!1);const o=s.current,i=o.getDroppableRef();i||Ee(!1);const a=(e=>({closestScrollable:Ro(e),isFixedOnPage:Bo(e)}))(i),c={ref:i,descriptor:l,env:a,scrollOptions:n};t.current=c;const d=(({ref:e,descriptor:t,env:r,windowScroll:n,direction:o,isDropDisabled:i,isCombineEnabled:a,shouldClipSubject:s})=>{const l=r.closestScrollable,c=((e,t)=>{const r=fe(e);if(!t)return r;if(e!==t)return r;const n=r.paddingBox.top-t.scrollTop,o=r.paddingBox.left-t.scrollLeft,i=n+t.scrollHeight,a=o+t.scrollWidth,s=ae({top:n,right:a,bottom:i,left:o},r.border);return ce({borderBox:s,margin:r.margin,border:r.border,padding:r.padding})})(e,l),d=pe(c,n),u=(()=>{if(!l)return null;const e=fe(l),t={scrollHeight:l.scrollHeight,scrollWidth:l.scrollWidth};return{client:e,page:pe(e,n),scroll:No(l),scrollSize:t,shouldClipSubject:s}})(),p=(({descriptor:e,isEnabled:t,isCombineEnabled:r,isFixedOnPage:n,direction:o,client:i,page:a,closest:s})=>{const l=(()=>{if(!s)return null;const{scrollSize:e,client:t}=s,r=_r({scrollHeight:e.scrollHeight,scrollWidth:e.scrollWidth,height:t.paddingBox.height,width:t.paddingBox.width});return{pageMarginBox:s.page.marginBox,frameClient:t,scrollSize:e,shouldClipSubject:s.shouldClipSubject,scroll:{initial:s.scroll,current:s.scroll,max:r,diff:{value:Te,displacement:Te}}}})(),c="vertical"===o?lt:ct;return{descriptor:e,isCombineEnabled:r,isFixedOnPage:n,axis:c,isEnabled:t,client:i,page:a,frame:l,subject:He({page:a,withPlaceholder:null,axis:c,frame:l})}})({descriptor:t,isEnabled:!i,isCombineEnabled:a,isFixedOnPage:r.isFixedOnPage,direction:o,client:c,page:d,closest:u});return p})({ref:i,descriptor:l,env:a,windowScroll:e,direction:o.direction,isDropDisabled:o.isDropDisabled,isCombineEnabled:o.isCombineEnabled,shouldClipSubject:!o.ignoreContainerClipping}),u=a.closestScrollable;return u&&(u.setAttribute(un.contextId,r.contextId),u.addEventListener("scroll",f,Mo(c.scrollOptions))),d}),[r.contextId,l,f,s]),b=oe((()=>{const e=t.current,r=Go(e);return e&&r||Ee(!1),No(r)}),[]),h=oe((()=>{const e=t.current;e||Ee(!1);const r=Go(e);t.current=null,r&&(g.cancel(),r.removeAttribute(un.contextId),r.removeEventListener("scroll",f,Mo(e.scrollOptions)))}),[f,g]),y=oe((e=>{const r=t.current;r||Ee(!1);const n=Go(r);n||Ee(!1),n.scrollTop+=e.y,n.scrollLeft+=e.x}),[]),v=ne((()=>({getDimensionAndWatchScroll:m,getScrollWhileDragging:b,dragStopped:h,scroll:y})),[h,m,b,y]),x=ne((()=>({uniqueId:n,descriptor:l,callbacks:v})),[v,l,n]);fn((()=>(c.current=x.descriptor,o.droppable.register(x),()=>{t.current&&h(),o.droppable.unregister(x)})),[v,l,h,x,i,o.droppable]),fn((()=>{t.current&&i.updateDroppableIsEnabled(c.current.id,!e.isDropDisabled)}),[e.isDropDisabled,i]),fn((()=>{t.current&&i.updateDroppableIsCombineEnabled(c.current.id,e.isCombineEnabled)}),[e.isCombineEnabled,i])}function _o(){}const Fo={width:0,height:0,margin:{top:0,right:0,bottom:0,left:0}};var $o=s().memo((e=>{const t=(0,a.useRef)(null),r=oe((()=>{t.current&&(clearTimeout(t.current),t.current=null)}),[]),{animate:n,onTransitionEnd:o,onClose:i,contextId:l}=e,[c,d]=(0,a.useState)("open"===e.animate);(0,a.useEffect)((()=>c?"open"!==n?(r(),d(!1),_o):t.current?_o:(t.current=setTimeout((()=>{t.current=null,d(!1)})),r):_o),[n,c,r]);const u=oe((e=>{"height"===e.propertyName&&(o(),"close"===n&&i())}),[n,i,o]),p=(({isAnimatingOpenOnMount:e,placeholder:t,animate:r})=>{const n=(({isAnimatingOpenOnMount:e,placeholder:t,animate:r})=>e||"close"===r?Fo:{height:t.client.borderBox.height,width:t.client.borderBox.width,margin:t.client.margin})({isAnimatingOpenOnMount:e,placeholder:t,animate:r});return{display:t.display,boxSizing:"border-box",width:n.width,height:n.height,marginTop:n.margin.top,marginRight:n.margin.right,marginBottom:n.margin.bottom,marginLeft:n.margin.left,flexShrink:"0",flexGrow:"0",pointerEvents:"none",transition:"none"!==r?vr.placeholder:null}})({isAnimatingOpenOnMount:c,animate:e.animate,placeholder:e.placeholder});return s().createElement(e.placeholder.tagName,{style:p,"data-rfd-placeholder-context-id":l,onTransitionEnd:u,ref:e.innerRef})}));class ko extends s().PureComponent{constructor(...e){super(...e),this.state={isVisible:Boolean(this.props.on),data:this.props.on,animate:this.props.shouldAnimate&&this.props.on?"open":"none"},this.onClose=()=>{"close"===this.state.animate&&this.setState({isVisible:!1})}}static getDerivedStateFromProps(e,t){return e.shouldAnimate?e.on?{isVisible:!0,data:e.on,animate:"open"}:t.isVisible?{isVisible:!0,data:t.data,animate:"close"}:{isVisible:!1,animate:"close",data:null}:{isVisible:Boolean(e.on),data:e.on,animate:"none"}}render(){if(!this.state.isVisible)return null;const e={onClose:this.onClose,data:this.state.data,animate:this.state.animate};return this.props.children(e)}}const Wo={mode:"standard",type:"DEFAULT",direction:"vertical",isDropDisabled:!1,isCombineEnabled:!1,ignoreContainerClipping:!1,renderClone:null,getContainerForClone:function(){return document.body||Ee(!1),document.body}},Uo=e=>{let t,r={...e};for(t in Wo)void 0===e[t]&&(r={...r,[t]:Wo[t]});return r},qo=(e,t)=>e===t.droppable.type,Ho=(e,t)=>t.draggables[e.draggable.id];var Vo=Z((()=>{const e={placeholder:null,shouldAnimatePlaceholder:!0,snapshot:{isDraggingOver:!1,draggingOverWith:null,draggingFromThisWith:null,isUsingPlaceholder:!1},useClone:null},t={...e,shouldAnimatePlaceholder:!1},r=he((e=>({draggableId:e.id,type:e.type,source:{index:e.index,droppableId:e.droppableId}}))),n=he(((n,o,i,a,s,l)=>{const c=s.descriptor.id;if(s.descriptor.droppableId===n){const e=l?{render:l,dragging:r(s.descriptor)}:null,t={isDraggingOver:i,draggingOverWith:i?c:null,draggingFromThisWith:c,isUsingPlaceholder:!0};return{placeholder:s.placeholder,shouldAnimatePlaceholder:!1,snapshot:t,useClone:e}}if(!o)return t;if(!a)return e;const d={isDraggingOver:i,draggingOverWith:c,draggingFromThisWith:null,isUsingPlaceholder:!0};return{placeholder:s.placeholder,shouldAnimatePlaceholder:!0,snapshot:d,useClone:null}}));return(r,o)=>{const i=Uo(o),a=i.droppableId,s=i.type,l=!i.isDropDisabled,c=i.renderClone;if(Rn(r)){const e=r.critical;if(!qo(s,e))return t;const o=Ho(e,r.dimensions),i=Mt(r.impact)===a;return n(a,l,i,i,o,c)}if("DROP_ANIMATING"===r.phase){const e=r.completed;if(!qo(s,e.critical))return t;const o=Ho(e.critical,r.dimensions);return n(a,l,vo(e.result)===a,Mt(e.impact)===a,o,c)}if("IDLE"===r.phase&&r.completed&&!r.shouldFlush){const n=r.completed;if(!qo(s,n.critical))return t;const o=Mt(n.impact)===a,i=Boolean(n.impact.at&&"COMBINE"===n.impact.at.type),l=n.critical.droppable.id===a;return o?i?e:t:l?e:t}return t}}),{updateViewportMaxScroll:e=>({type:"UPDATE_VIEWPORT_MAX_SCROLL",payload:e})},((e,t,r)=>({...Uo(r),...e,...t})),{context:In,areStatePropsEqual:yo})((e=>{const t=(0,a.useContext)(An);t||Ee(!1);const{contextId:r,isMovementAllowed:n}=t,o=(0,a.useRef)(null),i=(0,a.useRef)(null),{children:l,droppableId:d,type:u,mode:p,direction:g,ignoreContainerClipping:f,isDropDisabled:m,isCombineEnabled:b,snapshot:h,useClone:y,updateViewportMaxScroll:v,getContainerForClone:x}=e,I=oe((()=>o.current),[]),D=oe(((e=null)=>{o.current=e}),[]),w=(oe((()=>i.current),[]),oe(((e=null)=>{i.current=e}),[])),S=oe((()=>{n()&&v({maxScroll:$r()})}),[n,v]);jo({droppableId:d,type:u,mode:p,direction:g,isDropDisabled:m,isCombineEnabled:b,ignoreContainerClipping:f,getDroppableRef:I});const E=ne((()=>s().createElement(ko,{on:e.placeholder,shouldAnimate:e.shouldAnimatePlaceholder},(({onClose:e,data:t,animate:n})=>s().createElement($o,{placeholder:t,onClose:e,innerRef:w,animate:n,contextId:r,onTransitionEnd:S})))),[r,S,e.placeholder,e.shouldAnimatePlaceholder,w]),O=ne((()=>({innerRef:D,placeholder:E,droppableProps:{"data-rfd-droppable-id":d,"data-rfd-droppable-context-id":r}})),[r,d,E,D]),C=y?y.dragging.draggableId:null,A=ne((()=>({droppableId:d,type:u,isUsingCloneFor:C})),[d,C,u]);return s().createElement(mo.Provider,{value:A},l(O,h),function(){if(!y)return null;const{dragging:e,render:t}=y,r=s().createElement(So,{draggableId:e.draggableId,index:e.source.index,isClone:!0,isEnabled:!0,shouldRespectForcePress:!1,canDragInteractiveElements:!0},((r,n)=>t(r,n,e)));return c().createPortal(r,x())}())}));const zo=window.wp.apiFetch;var Yo=r.n(zo);function Jo({item:e,index:t}){return(0,o.jsx)(Eo,{draggableId:e.id,index:t,children:(t,r)=>(0,o.jsx)("div",Object.assign({ref:t.innerRef},t.draggableProps,t.dragHandleProps,{children:e.name}))},e.id)}const Xo="SET_PIPELINE",Ko="ADD_TASK",Qo=(e,t)=>{var r;switch(t.type){case"SET_LOADING":return Object.assign(Object.assign({},e),{loading:t.payload});case Xo:return Object.assign(Object.assign({},e),{pipeline:t.payload});case"MOVE_TASK":const n=((e,t,r)=>{const n=[...e],o=n.find((e=>e.id===t.droppableId)),i=n.find((e=>e.id===r.droppableId));if(o&&i){const[e]=o.tasks.splice(t.index,1);i.tasks.splice(r.index,0,e)}return n})(e.pipeline.stages,t.payload.source,t.payload.destination);return Object.assign(Object.assign({},e),{pipeline:Object.assign(Object.assign({},e.pipeline),{stages:n})});case"REORDER_TASK":const{source:o,destination:i}=t.payload,a=i.droppableId,s=i.index,l=((e,t,r)=>{const n=[...e],[o]=n.splice(t,1);return n.splice(r,0,o),n})((null===(r=e.pipeline)||void 0===r?void 0:r.stages.find((e=>e.id===a))).tasks,o.index,s),c=e.pipeline.stages.map((e=>e.id===a?Object.assign(Object.assign({},e),{tasks:l}):e));return Object.assign(Object.assign({},e),{pipeline:Object.assign(Object.assign({},e.pipeline),{stages:c})});case Ko:const{stageId:d,task:{id:u,name:p}}=t.payload;return Object.assign(Object.assign({},e),{pipeline:Object.assign(Object.assign({},e.pipeline),{stages:e.pipeline.stages.map((e=>e.id===d?Object.assign(Object.assign({},e),{tasks:[...e.tasks,{id:u,name:p}]}):e))})});default:return e}},Zo={loading:!0,pipeline:null},ei=(0,n.createContext)({state:Zo,dispatch:()=>{}}),ti=({children:e})=>{const[t,r]=(0,n.useReducer)(Qo,Zo);return(0,n.useEffect)((()=>{const e=window.wpqt.initialFullPipeline;r({type:Xo,payload:e})}),[]),(0,o.jsx)(ei.Provider,{value:{state:t,dispatch:r},children:e})};var ri=function(e,t,r,n){return new(r||(r=Promise))((function(o,i){function a(e){try{l(n.next(e))}catch(e){i(e)}}function s(e){try{l(n.throw(e))}catch(e){i(e)}}function l(e){var t;e.done?o(e.value):(t=e.value,t instanceof r?t:new r((function(e){e(t)}))).then(a,s)}l((n=n.apply(e,t||[])).next())}))};function ni({stageId:e}){const{dispatch:t}=(0,n.useContext)(ei);return(0,o.jsx)("div",{className:"wpqt-cursor-pointer wpqt-text-center wpqt-absolute wpqt-bottom-0 wpqt-left-0 wpqt-right-0",onClick:()=>ri(this,void 0,void 0,(function*(){try{const r="New task",n=yield function(e,t){return Yo()({path:"/wpqt/v1/tasks",method:"POST",data:{stageId:e,name:t}})}(e,r);t({type:Ko,payload:{stageId:e,task:{id:n.id,name:n.name}}})}catch(e){console.error(e)}})),children:"Add task"})}function oi({droppableId:e,tasks:t}){return(0,o.jsx)(Vo,{droppableId:e,children:(r,n)=>(0,o.jsxs)("div",{ref:r.innerRef,className:"wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-max-h-full wpqt-relative wpqt-p-2 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md "+(n.isDraggingOver?"wpqt-bg-blue-400":""),children:[(0,o.jsx)("div",{className:"wpqt-flex wpqt-flex-col wpqt-gap-[8px] wpqt-pb-[12px]",children:t.map(((e,t)=>(0,o.jsx)(Jo,{item:e,index:t})))}),(0,o.jsx)(ni,{stageId:e}),r.placeholder]})})}const ii=()=>{const{state:{pipeline:e,loading:t},dispatch:r}=(0,n.useContext)(ei),i=(0,n.useCallback)((e=>{const{source:t,destination:n,draggableId:o}=e;var i,a,s;n&&(t.droppableId===n.droppableId?r({type:"REORDER_TASK",payload:{source:t,destination:n}}):r({type:"MOVE_TASK",payload:{source:t,destination:n}}),i=o,a=n.droppableId,s=n.index,Yo()({path:`/wpqt/v1/task/${i}/move`,method:"PATCH",data:{stageId:a,order:s}}))}),[e]);return e?(0,o.jsx)("div",{className:"wpqt-flex wpqt-gap-[24px]",children:(0,o.jsx)(co,{onDragEnd:i,children:e.stages.map((e=>(0,o.jsx)(oi,{droppableId:e.id,tasks:e.tasks})))})}):"Loading..."},ai=()=>(0,o.jsx)("div",{children:(0,o.jsx)(ii,{})}),si={loading:!0},li=(e,t)=>(t.type,e),ci=(0,n.createContext)({state:si,dispatch:()=>{}}),di=({children:e})=>{const[t,r]=(0,n.useReducer)(li,si);return(0,o.jsx)(ci.Provider,{value:{state:t,dispatch:r},children:e})},ui={loading:!0},pi=(e,t)=>(t.type,e),gi=(0,n.createContext)({state:ui,dispatch:()=>{}}),fi=({children:e})=>{const[t,r]=(0,n.useReducer)(pi,ui);return(0,o.jsx)(gi.Provider,{value:{state:t,dispatch:r},children:e})},mi=function(){return(0,o.jsx)("div",{children:(0,o.jsx)(di,{children:(0,o.jsx)(ti,{children:(0,o.jsxs)(fi,{children:[(0,o.jsx)("div",{children:(0,o.jsx)(i,{})}),(0,o.jsx)(ai,{})]})})})})};(0,n.render)((0,o.jsx)(mi,{}),document.getElementById("wpqt-app"))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@hello-pangea/dnd/dist/dnd.esm.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DragDropContext: () => (/* binding */ DragDropContext),
+/* harmony export */   Draggable: () => (/* binding */ PublicDraggable),
+/* harmony export */   Droppable: () => (/* binding */ ConnectedDroppable$1),
+/* harmony export */   resetServerContext: () => (/* binding */ resetServerContext),
+/* harmony export */   useKeyboardSensor: () => (/* binding */ useKeyboardSensor),
+/* harmony export */   useMouseSensor: () => (/* binding */ useMouseSensor),
+/* harmony export */   useTouchSensor: () => (/* binding */ useTouchSensor)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var use_memo_one__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! use-memo-one */ "./node_modules/use-memo-one/dist/use-memo-one.esm.js");
+/* harmony import */ var css_box_model__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! css-box-model */ "./node_modules/css-box-model/dist/css-box-model.esm.js");
+/* harmony import */ var memoize_one__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! memoize-one */ "./node_modules/memoize-one/dist/memoize-one.esm.js");
+/* harmony import */ var raf_schd__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! raf-schd */ "./node_modules/raf-schd/dist/raf-schd.esm.js");
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+
+
+
+
+
+
+
+
+
+
+const isProduction$1 = "development" === 'production';
+const spacesAndTabs = /[ \t]{2,}/g;
+const lineStartWithSpaces = /^[ \t]*/gm;
+const clean$2 = value => value.replace(spacesAndTabs, ' ').replace(lineStartWithSpaces, '').trim();
+const getDevMessage = message => clean$2(`
+  %c@hello-pangea/dnd
+
+  %c${clean$2(message)}
+
+  %c👷‍ This is a development only message. It will be removed in production builds.
+`);
+const getFormattedMessage = message => [getDevMessage(message), 'color: #00C584; font-size: 1.2em; font-weight: bold;', 'line-height: 1.5', 'color: #723874;'];
+const isDisabledFlag = '__@hello-pangea/dnd-disable-dev-warnings';
+function log(type, message) {
+  if (isProduction$1) {
+    return;
+  }
+  if (typeof window !== 'undefined' && window[isDisabledFlag]) {
+    return;
+  }
+  console[type](...getFormattedMessage(message));
+}
+const warning = log.bind(null, 'warn');
+const error = log.bind(null, 'error');
+
+function noop$2() {}
+
+function getOptions(shared, fromBinding) {
+  return {
+    ...shared,
+    ...fromBinding
+  };
+}
+function bindEvents(el, bindings, sharedOptions) {
+  const unbindings = bindings.map(binding => {
+    const options = getOptions(sharedOptions, binding.options);
+    el.addEventListener(binding.eventName, binding.fn, options);
+    return function unbind() {
+      el.removeEventListener(binding.eventName, binding.fn, options);
+    };
+  });
+  return function unbindAll() {
+    unbindings.forEach(unbind => {
+      unbind();
+    });
+  };
+}
+
+const isProduction = "development" === 'production';
+const prefix$1 = 'Invariant failed';
+class RbdInvariant extends Error {}
+RbdInvariant.prototype.toString = function toString() {
+  return this.message;
+};
+function invariant(condition, message) {
+  if (condition) {
+    return;
+  }
+  if (isProduction) {
+    throw new RbdInvariant(prefix$1);
+  } else {
+    throw new RbdInvariant(`${prefix$1}: ${message || ''}`);
+  }
+}
+
+class ErrorBoundary extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+  constructor(...args) {
+    super(...args);
+    this.callbacks = null;
+    this.unbind = noop$2;
+    this.onWindowError = event => {
+      const callbacks = this.getCallbacks();
+      if (callbacks.isDragging()) {
+        callbacks.tryAbort();
+         true ? warning(`
+        An error was caught by our window 'error' event listener while a drag was occurring.
+        The active drag has been aborted.
+      `) : 0;
+      }
+      const err = event.error;
+      if (err instanceof RbdInvariant) {
+        event.preventDefault();
+        if (true) {
+          error(err.message);
+        }
+      }
+    };
+    this.getCallbacks = () => {
+      if (!this.callbacks) {
+        throw new Error('Unable to find AppCallbacks in <ErrorBoundary/>');
+      }
+      return this.callbacks;
+    };
+    this.setCallbacks = callbacks => {
+      this.callbacks = callbacks;
+    };
+  }
+  componentDidMount() {
+    this.unbind = bindEvents(window, [{
+      eventName: 'error',
+      fn: this.onWindowError
+    }]);
+  }
+  componentDidCatch(err) {
+    if (err instanceof RbdInvariant) {
+      if (true) {
+        error(err.message);
+      }
+      this.setState({});
+      return;
+    }
+    throw err;
+  }
+  componentWillUnmount() {
+    this.unbind();
+  }
+  render() {
+    return this.props.children(this.setCallbacks);
+  }
+}
+
+const dragHandleUsageInstructions = `
+  Press space bar to start a drag.
+  When dragging you can use the arrow keys to move the item around and escape to cancel.
+  Some screen readers may require you to be in focus mode or to use your pass through key
+`;
+const position = index => index + 1;
+const onDragStart = start => `
+  You have lifted an item in position ${position(start.source.index)}
+`;
+const withLocation = (source, destination) => {
+  const isInHomeList = source.droppableId === destination.droppableId;
+  const startPosition = position(source.index);
+  const endPosition = position(destination.index);
+  if (isInHomeList) {
+    return `
+      You have moved the item from position ${startPosition}
+      to position ${endPosition}
+    `;
+  }
+  return `
+    You have moved the item from position ${startPosition}
+    in list ${source.droppableId}
+    to list ${destination.droppableId}
+    in position ${endPosition}
+  `;
+};
+const withCombine = (id, source, combine) => {
+  const inHomeList = source.droppableId === combine.droppableId;
+  if (inHomeList) {
+    return `
+      The item ${id}
+      has been combined with ${combine.draggableId}`;
+  }
+  return `
+      The item ${id}
+      in list ${source.droppableId}
+      has been combined with ${combine.draggableId}
+      in list ${combine.droppableId}
+    `;
+};
+const onDragUpdate = update => {
+  const location = update.destination;
+  if (location) {
+    return withLocation(update.source, location);
+  }
+  const combine = update.combine;
+  if (combine) {
+    return withCombine(update.draggableId, update.source, combine);
+  }
+  return 'You are over an area that cannot be dropped on';
+};
+const returnedToStart = source => `
+  The item has returned to its starting position
+  of ${position(source.index)}
+`;
+const onDragEnd = result => {
+  if (result.reason === 'CANCEL') {
+    return `
+      Movement cancelled.
+      ${returnedToStart(result.source)}
+    `;
+  }
+  const location = result.destination;
+  const combine = result.combine;
+  if (location) {
+    return `
+      You have dropped the item.
+      ${withLocation(result.source, location)}
+    `;
+  }
+  if (combine) {
+    return `
+      You have dropped the item.
+      ${withCombine(result.draggableId, result.source, combine)}
+    `;
+  }
+  return `
+    The item has been dropped while not over a drop area.
+    ${returnedToStart(result.source)}
+  `;
+};
+const preset = {
+  dragHandleUsageInstructions,
+  onDragStart,
+  onDragUpdate,
+  onDragEnd
+};
+var preset$1 = preset;
+
+const origin = {
+  x: 0,
+  y: 0
+};
+const add = (point1, point2) => ({
+  x: point1.x + point2.x,
+  y: point1.y + point2.y
+});
+const subtract = (point1, point2) => ({
+  x: point1.x - point2.x,
+  y: point1.y - point2.y
+});
+const isEqual$1 = (point1, point2) => point1.x === point2.x && point1.y === point2.y;
+const negate = point => ({
+  x: point.x !== 0 ? -point.x : 0,
+  y: point.y !== 0 ? -point.y : 0
+});
+const patch = (line, value, otherValue = 0) => {
+  if (line === 'x') {
+    return {
+      x: value,
+      y: otherValue
+    };
+  }
+  return {
+    x: otherValue,
+    y: value
+  };
+};
+const distance = (point1, point2) => Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
+const closest$1 = (target, points) => Math.min(...points.map(point => distance(target, point)));
+const apply = fn => point => ({
+  x: fn(point.x),
+  y: fn(point.y)
+});
+
+var executeClip = ((frame, subject) => {
+  const result = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)({
+    top: Math.max(subject.top, frame.top),
+    right: Math.min(subject.right, frame.right),
+    bottom: Math.min(subject.bottom, frame.bottom),
+    left: Math.max(subject.left, frame.left)
+  });
+  if (result.width <= 0 || result.height <= 0) {
+    return null;
+  }
+  return result;
+});
+
+const offsetByPosition = (spacing, point) => ({
+  top: spacing.top + point.y,
+  left: spacing.left + point.x,
+  bottom: spacing.bottom + point.y,
+  right: spacing.right + point.x
+});
+const getCorners = spacing => [{
+  x: spacing.left,
+  y: spacing.top
+}, {
+  x: spacing.right,
+  y: spacing.top
+}, {
+  x: spacing.left,
+  y: spacing.bottom
+}, {
+  x: spacing.right,
+  y: spacing.bottom
+}];
+const noSpacing = {
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0
+};
+
+const scroll$1 = (target, frame) => {
+  if (!frame) {
+    return target;
+  }
+  return offsetByPosition(target, frame.scroll.diff.displacement);
+};
+const increase = (target, axis, withPlaceholder) => {
+  if (withPlaceholder && withPlaceholder.increasedBy) {
+    return {
+      ...target,
+      [axis.end]: target[axis.end] + withPlaceholder.increasedBy[axis.line]
+    };
+  }
+  return target;
+};
+const clip = (target, frame) => {
+  if (frame && frame.shouldClipSubject) {
+    return executeClip(frame.pageMarginBox, target);
+  }
+  return (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)(target);
+};
+var getSubject = (({
+  page,
+  withPlaceholder,
+  axis,
+  frame
+}) => {
+  const scrolled = scroll$1(page.marginBox, frame);
+  const increased = increase(scrolled, axis, withPlaceholder);
+  const clipped = clip(increased, frame);
+  return {
+    page,
+    withPlaceholder,
+    active: clipped
+  };
+});
+
+var scrollDroppable = ((droppable, newScroll) => {
+  !droppable.frame ?  true ? invariant(false) : 0 : void 0;
+  const scrollable = droppable.frame;
+  const scrollDiff = subtract(newScroll, scrollable.scroll.initial);
+  const scrollDisplacement = negate(scrollDiff);
+  const frame = {
+    ...scrollable,
+    scroll: {
+      initial: scrollable.scroll.initial,
+      current: newScroll,
+      diff: {
+        value: scrollDiff,
+        displacement: scrollDisplacement
+      },
+      max: scrollable.scroll.max
+    }
+  };
+  const subject = getSubject({
+    page: droppable.subject.page,
+    withPlaceholder: droppable.subject.withPlaceholder,
+    axis: droppable.axis,
+    frame
+  });
+  const result = {
+    ...droppable,
+    frame,
+    subject
+  };
+  return result;
+});
+
+const toDroppableMap = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(droppables => droppables.reduce((previous, current) => {
+  previous[current.descriptor.id] = current;
+  return previous;
+}, {}));
+const toDraggableMap = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(draggables => draggables.reduce((previous, current) => {
+  previous[current.descriptor.id] = current;
+  return previous;
+}, {}));
+const toDroppableList = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(droppables => Object.values(droppables));
+const toDraggableList = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(draggables => Object.values(draggables));
+
+var getDraggablesInsideDroppable = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((droppableId, draggables) => {
+  const result = toDraggableList(draggables).filter(draggable => droppableId === draggable.descriptor.droppableId).sort((a, b) => a.descriptor.index - b.descriptor.index);
+  return result;
+});
+
+function tryGetDestination(impact) {
+  if (impact.at && impact.at.type === 'REORDER') {
+    return impact.at.destination;
+  }
+  return null;
+}
+function tryGetCombine(impact) {
+  if (impact.at && impact.at.type === 'COMBINE') {
+    return impact.at.combine;
+  }
+  return null;
+}
+
+var removeDraggableFromList = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((remove, list) => list.filter(item => item.descriptor.id !== remove.descriptor.id));
+
+var moveToNextCombine = (({
+  isMovingForward,
+  draggable,
+  destination,
+  insideDestination,
+  previousImpact
+}) => {
+  if (!destination.isCombineEnabled) {
+    return null;
+  }
+  const location = tryGetDestination(previousImpact);
+  if (!location) {
+    return null;
+  }
+  function getImpact(target) {
+    const at = {
+      type: 'COMBINE',
+      combine: {
+        draggableId: target,
+        droppableId: destination.descriptor.id
+      }
+    };
+    return {
+      ...previousImpact,
+      at
+    };
+  }
+  const all = previousImpact.displaced.all;
+  const closestId = all.length ? all[0] : null;
+  if (isMovingForward) {
+    return closestId ? getImpact(closestId) : null;
+  }
+  const withoutDraggable = removeDraggableFromList(draggable, insideDestination);
+  if (!closestId) {
+    if (!withoutDraggable.length) {
+      return null;
+    }
+    const last = withoutDraggable[withoutDraggable.length - 1];
+    return getImpact(last.descriptor.id);
+  }
+  const indexOfClosest = withoutDraggable.findIndex(d => d.descriptor.id === closestId);
+  !(indexOfClosest !== -1) ?  true ? invariant(false, 'Could not find displaced item in set') : 0 : void 0;
+  const proposedIndex = indexOfClosest - 1;
+  if (proposedIndex < 0) {
+    return null;
+  }
+  const before = withoutDraggable[proposedIndex];
+  return getImpact(before.descriptor.id);
+});
+
+var isHomeOf = ((draggable, destination) => draggable.descriptor.droppableId === destination.descriptor.id);
+
+const noDisplacedBy = {
+  point: origin,
+  value: 0
+};
+const emptyGroups = {
+  invisible: {},
+  visible: {},
+  all: []
+};
+const noImpact = {
+  displaced: emptyGroups,
+  displacedBy: noDisplacedBy,
+  at: null
+};
+var noImpact$1 = noImpact;
+
+var isWithin = ((lowerBound, upperBound) => value => lowerBound <= value && value <= upperBound);
+
+var isPartiallyVisibleThroughFrame = (frame => {
+  const isWithinVertical = isWithin(frame.top, frame.bottom);
+  const isWithinHorizontal = isWithin(frame.left, frame.right);
+  return subject => {
+    const isContained = isWithinVertical(subject.top) && isWithinVertical(subject.bottom) && isWithinHorizontal(subject.left) && isWithinHorizontal(subject.right);
+    if (isContained) {
+      return true;
+    }
+    const isPartiallyVisibleVertically = isWithinVertical(subject.top) || isWithinVertical(subject.bottom);
+    const isPartiallyVisibleHorizontally = isWithinHorizontal(subject.left) || isWithinHorizontal(subject.right);
+    const isPartiallyContained = isPartiallyVisibleVertically && isPartiallyVisibleHorizontally;
+    if (isPartiallyContained) {
+      return true;
+    }
+    const isBiggerVertically = subject.top < frame.top && subject.bottom > frame.bottom;
+    const isBiggerHorizontally = subject.left < frame.left && subject.right > frame.right;
+    const isTargetBiggerThanFrame = isBiggerVertically && isBiggerHorizontally;
+    if (isTargetBiggerThanFrame) {
+      return true;
+    }
+    const isTargetBiggerOnOneAxis = isBiggerVertically && isPartiallyVisibleHorizontally || isBiggerHorizontally && isPartiallyVisibleVertically;
+    return isTargetBiggerOnOneAxis;
+  };
+});
+
+var isTotallyVisibleThroughFrame = (frame => {
+  const isWithinVertical = isWithin(frame.top, frame.bottom);
+  const isWithinHorizontal = isWithin(frame.left, frame.right);
+  return subject => {
+    const isContained = isWithinVertical(subject.top) && isWithinVertical(subject.bottom) && isWithinHorizontal(subject.left) && isWithinHorizontal(subject.right);
+    return isContained;
+  };
+});
+
+const vertical = {
+  direction: 'vertical',
+  line: 'y',
+  crossAxisLine: 'x',
+  start: 'top',
+  end: 'bottom',
+  size: 'height',
+  crossAxisStart: 'left',
+  crossAxisEnd: 'right',
+  crossAxisSize: 'width'
+};
+const horizontal = {
+  direction: 'horizontal',
+  line: 'x',
+  crossAxisLine: 'y',
+  start: 'left',
+  end: 'right',
+  size: 'width',
+  crossAxisStart: 'top',
+  crossAxisEnd: 'bottom',
+  crossAxisSize: 'height'
+};
+
+var isTotallyVisibleThroughFrameOnAxis = (axis => frame => {
+  const isWithinVertical = isWithin(frame.top, frame.bottom);
+  const isWithinHorizontal = isWithin(frame.left, frame.right);
+  return subject => {
+    if (axis === vertical) {
+      return isWithinVertical(subject.top) && isWithinVertical(subject.bottom);
+    }
+    return isWithinHorizontal(subject.left) && isWithinHorizontal(subject.right);
+  };
+});
+
+const getDroppableDisplaced = (target, destination) => {
+  const displacement = destination.frame ? destination.frame.scroll.diff.displacement : origin;
+  return offsetByPosition(target, displacement);
+};
+const isVisibleInDroppable = (target, destination, isVisibleThroughFrameFn) => {
+  if (!destination.subject.active) {
+    return false;
+  }
+  return isVisibleThroughFrameFn(destination.subject.active)(target);
+};
+const isVisibleInViewport = (target, viewport, isVisibleThroughFrameFn) => isVisibleThroughFrameFn(viewport)(target);
+const isVisible$1 = ({
+  target: toBeDisplaced,
+  destination,
+  viewport,
+  withDroppableDisplacement,
+  isVisibleThroughFrameFn
+}) => {
+  const displacedTarget = withDroppableDisplacement ? getDroppableDisplaced(toBeDisplaced, destination) : toBeDisplaced;
+  return isVisibleInDroppable(displacedTarget, destination, isVisibleThroughFrameFn) && isVisibleInViewport(displacedTarget, viewport, isVisibleThroughFrameFn);
+};
+const isPartiallyVisible = args => isVisible$1({
+  ...args,
+  isVisibleThroughFrameFn: isPartiallyVisibleThroughFrame
+});
+const isTotallyVisible = args => isVisible$1({
+  ...args,
+  isVisibleThroughFrameFn: isTotallyVisibleThroughFrame
+});
+const isTotallyVisibleOnAxis = args => isVisible$1({
+  ...args,
+  isVisibleThroughFrameFn: isTotallyVisibleThroughFrameOnAxis(args.destination.axis)
+});
+
+const getShouldAnimate = (id, last, forceShouldAnimate) => {
+  if (typeof forceShouldAnimate === 'boolean') {
+    return forceShouldAnimate;
+  }
+  if (!last) {
+    return true;
+  }
+  const {
+    invisible,
+    visible
+  } = last;
+  if (invisible[id]) {
+    return false;
+  }
+  const previous = visible[id];
+  return previous ? previous.shouldAnimate : true;
+};
+function getTarget(draggable, displacedBy) {
+  const marginBox = draggable.page.marginBox;
+  const expandBy = {
+    top: displacedBy.point.y,
+    right: 0,
+    bottom: 0,
+    left: displacedBy.point.x
+  };
+  return (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)((0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.expand)(marginBox, expandBy));
+}
+function getDisplacementGroups({
+  afterDragging,
+  destination,
+  displacedBy,
+  viewport,
+  forceShouldAnimate,
+  last
+}) {
+  return afterDragging.reduce(function process(groups, draggable) {
+    const target = getTarget(draggable, displacedBy);
+    const id = draggable.descriptor.id;
+    groups.all.push(id);
+    const isVisible = isPartiallyVisible({
+      target,
+      destination,
+      viewport,
+      withDroppableDisplacement: true
+    });
+    if (!isVisible) {
+      groups.invisible[draggable.descriptor.id] = true;
+      return groups;
+    }
+    const shouldAnimate = getShouldAnimate(id, last, forceShouldAnimate);
+    const displacement = {
+      draggableId: id,
+      shouldAnimate
+    };
+    groups.visible[id] = displacement;
+    return groups;
+  }, {
+    all: [],
+    visible: {},
+    invisible: {}
+  });
+}
+
+function getIndexOfLastItem(draggables, options) {
+  if (!draggables.length) {
+    return 0;
+  }
+  const indexOfLastItem = draggables[draggables.length - 1].descriptor.index;
+  return options.inHomeList ? indexOfLastItem : indexOfLastItem + 1;
+}
+function goAtEnd({
+  insideDestination,
+  inHomeList,
+  displacedBy,
+  destination
+}) {
+  const newIndex = getIndexOfLastItem(insideDestination, {
+    inHomeList
+  });
+  return {
+    displaced: emptyGroups,
+    displacedBy,
+    at: {
+      type: 'REORDER',
+      destination: {
+        droppableId: destination.descriptor.id,
+        index: newIndex
+      }
+    }
+  };
+}
+function calculateReorderImpact({
+  draggable,
+  insideDestination,
+  destination,
+  viewport,
+  displacedBy,
+  last,
+  index,
+  forceShouldAnimate
+}) {
+  const inHomeList = isHomeOf(draggable, destination);
+  if (index == null) {
+    return goAtEnd({
+      insideDestination,
+      inHomeList,
+      displacedBy,
+      destination
+    });
+  }
+  const match = insideDestination.find(item => item.descriptor.index === index);
+  if (!match) {
+    return goAtEnd({
+      insideDestination,
+      inHomeList,
+      displacedBy,
+      destination
+    });
+  }
+  const withoutDragging = removeDraggableFromList(draggable, insideDestination);
+  const sliceFrom = insideDestination.indexOf(match);
+  const impacted = withoutDragging.slice(sliceFrom);
+  const displaced = getDisplacementGroups({
+    afterDragging: impacted,
+    destination,
+    displacedBy,
+    last,
+    viewport: viewport.frame,
+    forceShouldAnimate
+  });
+  return {
+    displaced,
+    displacedBy,
+    at: {
+      type: 'REORDER',
+      destination: {
+        droppableId: destination.descriptor.id,
+        index
+      }
+    }
+  };
+}
+
+function didStartAfterCritical(draggableId, afterCritical) {
+  return Boolean(afterCritical.effected[draggableId]);
+}
+
+var fromCombine = (({
+  isMovingForward,
+  destination,
+  draggables,
+  combine,
+  afterCritical
+}) => {
+  if (!destination.isCombineEnabled) {
+    return null;
+  }
+  const combineId = combine.draggableId;
+  const combineWith = draggables[combineId];
+  const combineWithIndex = combineWith.descriptor.index;
+  const didCombineWithStartAfterCritical = didStartAfterCritical(combineId, afterCritical);
+  if (didCombineWithStartAfterCritical) {
+    if (isMovingForward) {
+      return combineWithIndex;
+    }
+    return combineWithIndex - 1;
+  }
+  if (isMovingForward) {
+    return combineWithIndex + 1;
+  }
+  return combineWithIndex;
+});
+
+var fromReorder = (({
+  isMovingForward,
+  isInHomeList,
+  insideDestination,
+  location
+}) => {
+  if (!insideDestination.length) {
+    return null;
+  }
+  const currentIndex = location.index;
+  const proposedIndex = isMovingForward ? currentIndex + 1 : currentIndex - 1;
+  const firstIndex = insideDestination[0].descriptor.index;
+  const lastIndex = insideDestination[insideDestination.length - 1].descriptor.index;
+  const upperBound = isInHomeList ? lastIndex : lastIndex + 1;
+  if (proposedIndex < firstIndex) {
+    return null;
+  }
+  if (proposedIndex > upperBound) {
+    return null;
+  }
+  return proposedIndex;
+});
+
+var moveToNextIndex = (({
+  isMovingForward,
+  isInHomeList,
+  draggable,
+  draggables,
+  destination,
+  insideDestination,
+  previousImpact,
+  viewport,
+  afterCritical
+}) => {
+  const wasAt = previousImpact.at;
+  !wasAt ?  true ? invariant(false, 'Cannot move in direction without previous impact location') : 0 : void 0;
+  if (wasAt.type === 'REORDER') {
+    const newIndex = fromReorder({
+      isMovingForward,
+      isInHomeList,
+      location: wasAt.destination,
+      insideDestination
+    });
+    if (newIndex == null) {
+      return null;
+    }
+    return calculateReorderImpact({
+      draggable,
+      insideDestination,
+      destination,
+      viewport,
+      last: previousImpact.displaced,
+      displacedBy: previousImpact.displacedBy,
+      index: newIndex
+    });
+  }
+  const newIndex = fromCombine({
+    isMovingForward,
+    destination,
+    displaced: previousImpact.displaced,
+    draggables,
+    combine: wasAt.combine,
+    afterCritical
+  });
+  if (newIndex == null) {
+    return null;
+  }
+  return calculateReorderImpact({
+    draggable,
+    insideDestination,
+    destination,
+    viewport,
+    last: previousImpact.displaced,
+    displacedBy: previousImpact.displacedBy,
+    index: newIndex
+  });
+});
+
+var getCombinedItemDisplacement = (({
+  displaced,
+  afterCritical,
+  combineWith,
+  displacedBy
+}) => {
+  const isDisplaced = Boolean(displaced.visible[combineWith] || displaced.invisible[combineWith]);
+  if (didStartAfterCritical(combineWith, afterCritical)) {
+    return isDisplaced ? origin : negate(displacedBy.point);
+  }
+  return isDisplaced ? displacedBy.point : origin;
+});
+
+var whenCombining = (({
+  afterCritical,
+  impact,
+  draggables
+}) => {
+  const combine = tryGetCombine(impact);
+  !combine ?  true ? invariant(false) : 0 : void 0;
+  const combineWith = combine.draggableId;
+  const center = draggables[combineWith].page.borderBox.center;
+  const displaceBy = getCombinedItemDisplacement({
+    displaced: impact.displaced,
+    afterCritical,
+    combineWith,
+    displacedBy: impact.displacedBy
+  });
+  return add(center, displaceBy);
+});
+
+const distanceFromStartToBorderBoxCenter = (axis, box) => box.margin[axis.start] + box.borderBox[axis.size] / 2;
+const distanceFromEndToBorderBoxCenter = (axis, box) => box.margin[axis.end] + box.borderBox[axis.size] / 2;
+const getCrossAxisBorderBoxCenter = (axis, target, isMoving) => target[axis.crossAxisStart] + isMoving.margin[axis.crossAxisStart] + isMoving.borderBox[axis.crossAxisSize] / 2;
+const goAfter = ({
+  axis,
+  moveRelativeTo,
+  isMoving
+}) => patch(axis.line, moveRelativeTo.marginBox[axis.end] + distanceFromStartToBorderBoxCenter(axis, isMoving), getCrossAxisBorderBoxCenter(axis, moveRelativeTo.marginBox, isMoving));
+const goBefore = ({
+  axis,
+  moveRelativeTo,
+  isMoving
+}) => patch(axis.line, moveRelativeTo.marginBox[axis.start] - distanceFromEndToBorderBoxCenter(axis, isMoving), getCrossAxisBorderBoxCenter(axis, moveRelativeTo.marginBox, isMoving));
+const goIntoStart = ({
+  axis,
+  moveInto,
+  isMoving
+}) => patch(axis.line, moveInto.contentBox[axis.start] + distanceFromStartToBorderBoxCenter(axis, isMoving), getCrossAxisBorderBoxCenter(axis, moveInto.contentBox, isMoving));
+
+var whenReordering = (({
+  impact,
+  draggable,
+  draggables,
+  droppable,
+  afterCritical
+}) => {
+  const insideDestination = getDraggablesInsideDroppable(droppable.descriptor.id, draggables);
+  const draggablePage = draggable.page;
+  const axis = droppable.axis;
+  if (!insideDestination.length) {
+    return goIntoStart({
+      axis,
+      moveInto: droppable.page,
+      isMoving: draggablePage
+    });
+  }
+  const {
+    displaced,
+    displacedBy
+  } = impact;
+  const closestAfter = displaced.all[0];
+  if (closestAfter) {
+    const closest = draggables[closestAfter];
+    if (didStartAfterCritical(closestAfter, afterCritical)) {
+      return goBefore({
+        axis,
+        moveRelativeTo: closest.page,
+        isMoving: draggablePage
+      });
+    }
+    const withDisplacement = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.offset)(closest.page, displacedBy.point);
+    return goBefore({
+      axis,
+      moveRelativeTo: withDisplacement,
+      isMoving: draggablePage
+    });
+  }
+  const last = insideDestination[insideDestination.length - 1];
+  if (last.descriptor.id === draggable.descriptor.id) {
+    return draggablePage.borderBox.center;
+  }
+  if (didStartAfterCritical(last.descriptor.id, afterCritical)) {
+    const page = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.offset)(last.page, negate(afterCritical.displacedBy.point));
+    return goAfter({
+      axis,
+      moveRelativeTo: page,
+      isMoving: draggablePage
+    });
+  }
+  return goAfter({
+    axis,
+    moveRelativeTo: last.page,
+    isMoving: draggablePage
+  });
+});
+
+var withDroppableDisplacement = ((droppable, point) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return point;
+  }
+  return add(point, frame.scroll.diff.displacement);
+});
+
+const getResultWithoutDroppableDisplacement = ({
+  impact,
+  draggable,
+  droppable,
+  draggables,
+  afterCritical
+}) => {
+  const original = draggable.page.borderBox.center;
+  const at = impact.at;
+  if (!droppable) {
+    return original;
+  }
+  if (!at) {
+    return original;
+  }
+  if (at.type === 'REORDER') {
+    return whenReordering({
+      impact,
+      draggable,
+      draggables,
+      droppable,
+      afterCritical
+    });
+  }
+  return whenCombining({
+    impact,
+    draggables,
+    afterCritical
+  });
+};
+var getPageBorderBoxCenterFromImpact = (args => {
+  const withoutDisplacement = getResultWithoutDroppableDisplacement(args);
+  const droppable = args.droppable;
+  const withDisplacement = droppable ? withDroppableDisplacement(droppable, withoutDisplacement) : withoutDisplacement;
+  return withDisplacement;
+});
+
+var scrollViewport = ((viewport, newScroll) => {
+  const diff = subtract(newScroll, viewport.scroll.initial);
+  const displacement = negate(diff);
+  const frame = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)({
+    top: newScroll.y,
+    bottom: newScroll.y + viewport.frame.height,
+    left: newScroll.x,
+    right: newScroll.x + viewport.frame.width
+  });
+  const updated = {
+    frame,
+    scroll: {
+      initial: viewport.scroll.initial,
+      max: viewport.scroll.max,
+      current: newScroll,
+      diff: {
+        value: diff,
+        displacement
+      }
+    }
+  };
+  return updated;
+});
+
+function getDraggables$1(ids, draggables) {
+  return ids.map(id => draggables[id]);
+}
+function tryGetVisible(id, groups) {
+  for (let i = 0; i < groups.length; i++) {
+    const displacement = groups[i].visible[id];
+    if (displacement) {
+      return displacement;
+    }
+  }
+  return null;
+}
+var speculativelyIncrease = (({
+  impact,
+  viewport,
+  destination,
+  draggables,
+  maxScrollChange
+}) => {
+  const scrolledViewport = scrollViewport(viewport, add(viewport.scroll.current, maxScrollChange));
+  const scrolledDroppable = destination.frame ? scrollDroppable(destination, add(destination.frame.scroll.current, maxScrollChange)) : destination;
+  const last = impact.displaced;
+  const withViewportScroll = getDisplacementGroups({
+    afterDragging: getDraggables$1(last.all, draggables),
+    destination,
+    displacedBy: impact.displacedBy,
+    viewport: scrolledViewport.frame,
+    last,
+    forceShouldAnimate: false
+  });
+  const withDroppableScroll = getDisplacementGroups({
+    afterDragging: getDraggables$1(last.all, draggables),
+    destination: scrolledDroppable,
+    displacedBy: impact.displacedBy,
+    viewport: viewport.frame,
+    last,
+    forceShouldAnimate: false
+  });
+  const invisible = {};
+  const visible = {};
+  const groups = [last, withViewportScroll, withDroppableScroll];
+  last.all.forEach(id => {
+    const displacement = tryGetVisible(id, groups);
+    if (displacement) {
+      visible[id] = displacement;
+      return;
+    }
+    invisible[id] = true;
+  });
+  const newImpact = {
+    ...impact,
+    displaced: {
+      all: last.all,
+      invisible,
+      visible
+    }
+  };
+  return newImpact;
+});
+
+var withViewportDisplacement = ((viewport, point) => add(viewport.scroll.diff.displacement, point));
+
+var getClientFromPageBorderBoxCenter = (({
+  pageBorderBoxCenter,
+  draggable,
+  viewport
+}) => {
+  const withoutPageScrollChange = withViewportDisplacement(viewport, pageBorderBoxCenter);
+  const offset = subtract(withoutPageScrollChange, draggable.page.borderBox.center);
+  return add(draggable.client.borderBox.center, offset);
+});
+
+var isTotallyVisibleInNewLocation = (({
+  draggable,
+  destination,
+  newPageBorderBoxCenter,
+  viewport,
+  withDroppableDisplacement,
+  onlyOnMainAxis = false
+}) => {
+  const changeNeeded = subtract(newPageBorderBoxCenter, draggable.page.borderBox.center);
+  const shifted = offsetByPosition(draggable.page.borderBox, changeNeeded);
+  const args = {
+    target: shifted,
+    destination,
+    withDroppableDisplacement,
+    viewport
+  };
+  return onlyOnMainAxis ? isTotallyVisibleOnAxis(args) : isTotallyVisible(args);
+});
+
+var moveToNextPlace = (({
+  isMovingForward,
+  draggable,
+  destination,
+  draggables,
+  previousImpact,
+  viewport,
+  previousPageBorderBoxCenter,
+  previousClientSelection,
+  afterCritical
+}) => {
+  if (!destination.isEnabled) {
+    return null;
+  }
+  const insideDestination = getDraggablesInsideDroppable(destination.descriptor.id, draggables);
+  const isInHomeList = isHomeOf(draggable, destination);
+  const impact = moveToNextCombine({
+    isMovingForward,
+    draggable,
+    destination,
+    insideDestination,
+    previousImpact
+  }) || moveToNextIndex({
+    isMovingForward,
+    isInHomeList,
+    draggable,
+    draggables,
+    destination,
+    insideDestination,
+    previousImpact,
+    viewport,
+    afterCritical
+  });
+  if (!impact) {
+    return null;
+  }
+  const pageBorderBoxCenter = getPageBorderBoxCenterFromImpact({
+    impact,
+    draggable,
+    droppable: destination,
+    draggables,
+    afterCritical
+  });
+  const isVisibleInNewLocation = isTotallyVisibleInNewLocation({
+    draggable,
+    destination,
+    newPageBorderBoxCenter: pageBorderBoxCenter,
+    viewport: viewport.frame,
+    withDroppableDisplacement: false,
+    onlyOnMainAxis: true
+  });
+  if (isVisibleInNewLocation) {
+    const clientSelection = getClientFromPageBorderBoxCenter({
+      pageBorderBoxCenter,
+      draggable,
+      viewport
+    });
+    return {
+      clientSelection,
+      impact,
+      scrollJumpRequest: null
+    };
+  }
+  const distance = subtract(pageBorderBoxCenter, previousPageBorderBoxCenter);
+  const cautious = speculativelyIncrease({
+    impact,
+    viewport,
+    destination,
+    draggables,
+    maxScrollChange: distance
+  });
+  return {
+    clientSelection: previousClientSelection,
+    impact: cautious,
+    scrollJumpRequest: distance
+  };
+});
+
+const getKnownActive = droppable => {
+  const rect = droppable.subject.active;
+  !rect ?  true ? invariant(false, 'Cannot get clipped area from droppable') : 0 : void 0;
+  return rect;
+};
+var getBestCrossAxisDroppable = (({
+  isMovingForward,
+  pageBorderBoxCenter,
+  source,
+  droppables,
+  viewport
+}) => {
+  const active = source.subject.active;
+  if (!active) {
+    return null;
+  }
+  const axis = source.axis;
+  const isBetweenSourceClipped = isWithin(active[axis.start], active[axis.end]);
+  const candidates = toDroppableList(droppables).filter(droppable => droppable !== source).filter(droppable => droppable.isEnabled).filter(droppable => Boolean(droppable.subject.active)).filter(droppable => isPartiallyVisibleThroughFrame(viewport.frame)(getKnownActive(droppable))).filter(droppable => {
+    const activeOfTarget = getKnownActive(droppable);
+    if (isMovingForward) {
+      return active[axis.crossAxisEnd] < activeOfTarget[axis.crossAxisEnd];
+    }
+    return activeOfTarget[axis.crossAxisStart] < active[axis.crossAxisStart];
+  }).filter(droppable => {
+    const activeOfTarget = getKnownActive(droppable);
+    const isBetweenDestinationClipped = isWithin(activeOfTarget[axis.start], activeOfTarget[axis.end]);
+    return isBetweenSourceClipped(activeOfTarget[axis.start]) || isBetweenSourceClipped(activeOfTarget[axis.end]) || isBetweenDestinationClipped(active[axis.start]) || isBetweenDestinationClipped(active[axis.end]);
+  }).sort((a, b) => {
+    const first = getKnownActive(a)[axis.crossAxisStart];
+    const second = getKnownActive(b)[axis.crossAxisStart];
+    if (isMovingForward) {
+      return first - second;
+    }
+    return second - first;
+  }).filter((droppable, index, array) => getKnownActive(droppable)[axis.crossAxisStart] === getKnownActive(array[0])[axis.crossAxisStart]);
+  if (!candidates.length) {
+    return null;
+  }
+  if (candidates.length === 1) {
+    return candidates[0];
+  }
+  const contains = candidates.filter(droppable => {
+    const isWithinDroppable = isWithin(getKnownActive(droppable)[axis.start], getKnownActive(droppable)[axis.end]);
+    return isWithinDroppable(pageBorderBoxCenter[axis.line]);
+  });
+  if (contains.length === 1) {
+    return contains[0];
+  }
+  if (contains.length > 1) {
+    return contains.sort((a, b) => getKnownActive(a)[axis.start] - getKnownActive(b)[axis.start])[0];
+  }
+  return candidates.sort((a, b) => {
+    const first = closest$1(pageBorderBoxCenter, getCorners(getKnownActive(a)));
+    const second = closest$1(pageBorderBoxCenter, getCorners(getKnownActive(b)));
+    if (first !== second) {
+      return first - second;
+    }
+    return getKnownActive(a)[axis.start] - getKnownActive(b)[axis.start];
+  })[0];
+});
+
+const getCurrentPageBorderBoxCenter = (draggable, afterCritical) => {
+  const original = draggable.page.borderBox.center;
+  return didStartAfterCritical(draggable.descriptor.id, afterCritical) ? subtract(original, afterCritical.displacedBy.point) : original;
+};
+const getCurrentPageBorderBox = (draggable, afterCritical) => {
+  const original = draggable.page.borderBox;
+  return didStartAfterCritical(draggable.descriptor.id, afterCritical) ? offsetByPosition(original, negate(afterCritical.displacedBy.point)) : original;
+};
+
+var getClosestDraggable = (({
+  pageBorderBoxCenter,
+  viewport,
+  destination,
+  insideDestination,
+  afterCritical
+}) => {
+  const sorted = insideDestination.filter(draggable => isTotallyVisible({
+    target: getCurrentPageBorderBox(draggable, afterCritical),
+    destination,
+    viewport: viewport.frame,
+    withDroppableDisplacement: true
+  })).sort((a, b) => {
+    const distanceToA = distance(pageBorderBoxCenter, withDroppableDisplacement(destination, getCurrentPageBorderBoxCenter(a, afterCritical)));
+    const distanceToB = distance(pageBorderBoxCenter, withDroppableDisplacement(destination, getCurrentPageBorderBoxCenter(b, afterCritical)));
+    if (distanceToA < distanceToB) {
+      return -1;
+    }
+    if (distanceToB < distanceToA) {
+      return 1;
+    }
+    return a.descriptor.index - b.descriptor.index;
+  });
+  return sorted[0] || null;
+});
+
+var getDisplacedBy = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(function getDisplacedBy(axis, displaceBy) {
+  const displacement = displaceBy[axis.line];
+  return {
+    value: displacement,
+    point: patch(axis.line, displacement)
+  };
+});
+
+const getRequiredGrowthForPlaceholder = (droppable, placeholderSize, draggables) => {
+  const axis = droppable.axis;
+  if (droppable.descriptor.mode === 'virtual') {
+    return patch(axis.line, placeholderSize[axis.line]);
+  }
+  const availableSpace = droppable.subject.page.contentBox[axis.size];
+  const insideDroppable = getDraggablesInsideDroppable(droppable.descriptor.id, draggables);
+  const spaceUsed = insideDroppable.reduce((sum, dimension) => sum + dimension.client.marginBox[axis.size], 0);
+  const requiredSpace = spaceUsed + placeholderSize[axis.line];
+  const needsToGrowBy = requiredSpace - availableSpace;
+  if (needsToGrowBy <= 0) {
+    return null;
+  }
+  return patch(axis.line, needsToGrowBy);
+};
+const withMaxScroll = (frame, max) => ({
+  ...frame,
+  scroll: {
+    ...frame.scroll,
+    max
+  }
+});
+const addPlaceholder = (droppable, draggable, draggables) => {
+  const frame = droppable.frame;
+  !!isHomeOf(draggable, droppable) ?  true ? invariant(false, 'Should not add placeholder space to home list') : 0 : void 0;
+  !!droppable.subject.withPlaceholder ?  true ? invariant(false, 'Cannot add placeholder size to a subject when it already has one') : 0 : void 0;
+  const placeholderSize = getDisplacedBy(droppable.axis, draggable.displaceBy).point;
+  const requiredGrowth = getRequiredGrowthForPlaceholder(droppable, placeholderSize, draggables);
+  const added = {
+    placeholderSize,
+    increasedBy: requiredGrowth,
+    oldFrameMaxScroll: droppable.frame ? droppable.frame.scroll.max : null
+  };
+  if (!frame) {
+    const subject = getSubject({
+      page: droppable.subject.page,
+      withPlaceholder: added,
+      axis: droppable.axis,
+      frame: droppable.frame
+    });
+    return {
+      ...droppable,
+      subject
+    };
+  }
+  const maxScroll = requiredGrowth ? add(frame.scroll.max, requiredGrowth) : frame.scroll.max;
+  const newFrame = withMaxScroll(frame, maxScroll);
+  const subject = getSubject({
+    page: droppable.subject.page,
+    withPlaceholder: added,
+    axis: droppable.axis,
+    frame: newFrame
+  });
+  return {
+    ...droppable,
+    subject,
+    frame: newFrame
+  };
+};
+const removePlaceholder = droppable => {
+  const added = droppable.subject.withPlaceholder;
+  !added ?  true ? invariant(false, 'Cannot remove placeholder form subject when there was none') : 0 : void 0;
+  const frame = droppable.frame;
+  if (!frame) {
+    const subject = getSubject({
+      page: droppable.subject.page,
+      axis: droppable.axis,
+      frame: null,
+      withPlaceholder: null
+    });
+    return {
+      ...droppable,
+      subject
+    };
+  }
+  const oldMaxScroll = added.oldFrameMaxScroll;
+  !oldMaxScroll ?  true ? invariant(false, 'Expected droppable with frame to have old max frame scroll when removing placeholder') : 0 : void 0;
+  const newFrame = withMaxScroll(frame, oldMaxScroll);
+  const subject = getSubject({
+    page: droppable.subject.page,
+    axis: droppable.axis,
+    frame: newFrame,
+    withPlaceholder: null
+  });
+  return {
+    ...droppable,
+    subject,
+    frame: newFrame
+  };
+};
+
+var moveToNewDroppable = (({
+  previousPageBorderBoxCenter,
+  moveRelativeTo,
+  insideDestination,
+  draggable,
+  draggables,
+  destination,
+  viewport,
+  afterCritical
+}) => {
+  if (!moveRelativeTo) {
+    if (insideDestination.length) {
+      return null;
+    }
+    const proposed = {
+      displaced: emptyGroups,
+      displacedBy: noDisplacedBy,
+      at: {
+        type: 'REORDER',
+        destination: {
+          droppableId: destination.descriptor.id,
+          index: 0
+        }
+      }
+    };
+    const proposedPageBorderBoxCenter = getPageBorderBoxCenterFromImpact({
+      impact: proposed,
+      draggable,
+      droppable: destination,
+      draggables,
+      afterCritical
+    });
+    const withPlaceholder = isHomeOf(draggable, destination) ? destination : addPlaceholder(destination, draggable, draggables);
+    const isVisibleInNewLocation = isTotallyVisibleInNewLocation({
+      draggable,
+      destination: withPlaceholder,
+      newPageBorderBoxCenter: proposedPageBorderBoxCenter,
+      viewport: viewport.frame,
+      withDroppableDisplacement: false,
+      onlyOnMainAxis: true
+    });
+    return isVisibleInNewLocation ? proposed : null;
+  }
+  const isGoingBeforeTarget = Boolean(previousPageBorderBoxCenter[destination.axis.line] <= moveRelativeTo.page.borderBox.center[destination.axis.line]);
+  const proposedIndex = (() => {
+    const relativeTo = moveRelativeTo.descriptor.index;
+    if (moveRelativeTo.descriptor.id === draggable.descriptor.id) {
+      return relativeTo;
+    }
+    if (isGoingBeforeTarget) {
+      return relativeTo;
+    }
+    return relativeTo + 1;
+  })();
+  const displacedBy = getDisplacedBy(destination.axis, draggable.displaceBy);
+  return calculateReorderImpact({
+    draggable,
+    insideDestination,
+    destination,
+    viewport,
+    displacedBy,
+    last: emptyGroups,
+    index: proposedIndex
+  });
+});
+
+var moveCrossAxis = (({
+  isMovingForward,
+  previousPageBorderBoxCenter,
+  draggable,
+  isOver,
+  draggables,
+  droppables,
+  viewport,
+  afterCritical
+}) => {
+  const destination = getBestCrossAxisDroppable({
+    isMovingForward,
+    pageBorderBoxCenter: previousPageBorderBoxCenter,
+    source: isOver,
+    droppables,
+    viewport
+  });
+  if (!destination) {
+    return null;
+  }
+  const insideDestination = getDraggablesInsideDroppable(destination.descriptor.id, draggables);
+  const moveRelativeTo = getClosestDraggable({
+    pageBorderBoxCenter: previousPageBorderBoxCenter,
+    viewport,
+    destination,
+    insideDestination,
+    afterCritical
+  });
+  const impact = moveToNewDroppable({
+    previousPageBorderBoxCenter,
+    destination,
+    draggable,
+    draggables,
+    moveRelativeTo,
+    insideDestination,
+    viewport,
+    afterCritical
+  });
+  if (!impact) {
+    return null;
+  }
+  const pageBorderBoxCenter = getPageBorderBoxCenterFromImpact({
+    impact,
+    draggable,
+    droppable: destination,
+    draggables,
+    afterCritical
+  });
+  const clientSelection = getClientFromPageBorderBoxCenter({
+    pageBorderBoxCenter,
+    draggable,
+    viewport
+  });
+  return {
+    clientSelection,
+    impact,
+    scrollJumpRequest: null
+  };
+});
+
+var whatIsDraggedOver = (impact => {
+  const at = impact.at;
+  if (!at) {
+    return null;
+  }
+  if (at.type === 'REORDER') {
+    return at.destination.droppableId;
+  }
+  return at.combine.droppableId;
+});
+
+const getDroppableOver$1 = (impact, droppables) => {
+  const id = whatIsDraggedOver(impact);
+  return id ? droppables[id] : null;
+};
+var moveInDirection = (({
+  state,
+  type
+}) => {
+  const isActuallyOver = getDroppableOver$1(state.impact, state.dimensions.droppables);
+  const isMainAxisMovementAllowed = Boolean(isActuallyOver);
+  const home = state.dimensions.droppables[state.critical.droppable.id];
+  const isOver = isActuallyOver || home;
+  const direction = isOver.axis.direction;
+  const isMovingOnMainAxis = direction === 'vertical' && (type === 'MOVE_UP' || type === 'MOVE_DOWN') || direction === 'horizontal' && (type === 'MOVE_LEFT' || type === 'MOVE_RIGHT');
+  if (isMovingOnMainAxis && !isMainAxisMovementAllowed) {
+    return null;
+  }
+  const isMovingForward = type === 'MOVE_DOWN' || type === 'MOVE_RIGHT';
+  const draggable = state.dimensions.draggables[state.critical.draggable.id];
+  const previousPageBorderBoxCenter = state.current.page.borderBoxCenter;
+  const {
+    draggables,
+    droppables
+  } = state.dimensions;
+  return isMovingOnMainAxis ? moveToNextPlace({
+    isMovingForward,
+    previousPageBorderBoxCenter,
+    draggable,
+    destination: isOver,
+    draggables,
+    viewport: state.viewport,
+    previousClientSelection: state.current.client.selection,
+    previousImpact: state.impact,
+    afterCritical: state.afterCritical
+  }) : moveCrossAxis({
+    isMovingForward,
+    previousPageBorderBoxCenter,
+    draggable,
+    isOver,
+    draggables,
+    droppables,
+    viewport: state.viewport,
+    afterCritical: state.afterCritical
+  });
+});
+
+function isMovementAllowed(state) {
+  return state.phase === 'DRAGGING' || state.phase === 'COLLECTING';
+}
+
+function isPositionInFrame(frame) {
+  const isWithinVertical = isWithin(frame.top, frame.bottom);
+  const isWithinHorizontal = isWithin(frame.left, frame.right);
+  return function run(point) {
+    return isWithinVertical(point.y) && isWithinHorizontal(point.x);
+  };
+}
+
+function getHasOverlap(first, second) {
+  return first.left < second.right && first.right > second.left && first.top < second.bottom && first.bottom > second.top;
+}
+function getFurthestAway({
+  pageBorderBox,
+  draggable,
+  candidates
+}) {
+  const startCenter = draggable.page.borderBox.center;
+  const sorted = candidates.map(candidate => {
+    const axis = candidate.axis;
+    const target = patch(candidate.axis.line, pageBorderBox.center[axis.line], candidate.page.borderBox.center[axis.crossAxisLine]);
+    return {
+      id: candidate.descriptor.id,
+      distance: distance(startCenter, target)
+    };
+  }).sort((a, b) => b.distance - a.distance);
+  return sorted[0] ? sorted[0].id : null;
+}
+function getDroppableOver({
+  pageBorderBox,
+  draggable,
+  droppables
+}) {
+  const candidates = toDroppableList(droppables).filter(item => {
+    if (!item.isEnabled) {
+      return false;
+    }
+    const active = item.subject.active;
+    if (!active) {
+      return false;
+    }
+    if (!getHasOverlap(pageBorderBox, active)) {
+      return false;
+    }
+    if (isPositionInFrame(active)(pageBorderBox.center)) {
+      return true;
+    }
+    const axis = item.axis;
+    const childCenter = active.center[axis.crossAxisLine];
+    const crossAxisStart = pageBorderBox[axis.crossAxisStart];
+    const crossAxisEnd = pageBorderBox[axis.crossAxisEnd];
+    const isContained = isWithin(active[axis.crossAxisStart], active[axis.crossAxisEnd]);
+    const isStartContained = isContained(crossAxisStart);
+    const isEndContained = isContained(crossAxisEnd);
+    if (!isStartContained && !isEndContained) {
+      return true;
+    }
+    if (isStartContained) {
+      return crossAxisStart < childCenter;
+    }
+    return crossAxisEnd > childCenter;
+  });
+  if (!candidates.length) {
+    return null;
+  }
+  if (candidates.length === 1) {
+    return candidates[0].descriptor.id;
+  }
+  return getFurthestAway({
+    pageBorderBox,
+    draggable,
+    candidates
+  });
+}
+
+const offsetRectByPosition = (rect, point) => (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)(offsetByPosition(rect, point));
+
+var withDroppableScroll = ((droppable, area) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return area;
+  }
+  return offsetRectByPosition(area, frame.scroll.diff.value);
+});
+
+function getIsDisplaced({
+  displaced,
+  id
+}) {
+  return Boolean(displaced.visible[id] || displaced.invisible[id]);
+}
+
+function atIndex({
+  draggable,
+  closest,
+  inHomeList
+}) {
+  if (!closest) {
+    return null;
+  }
+  if (!inHomeList) {
+    return closest.descriptor.index;
+  }
+  if (closest.descriptor.index > draggable.descriptor.index) {
+    return closest.descriptor.index - 1;
+  }
+  return closest.descriptor.index;
+}
+var getReorderImpact = (({
+  pageBorderBoxWithDroppableScroll: targetRect,
+  draggable,
+  destination,
+  insideDestination,
+  last,
+  viewport,
+  afterCritical
+}) => {
+  const axis = destination.axis;
+  const displacedBy = getDisplacedBy(destination.axis, draggable.displaceBy);
+  const displacement = displacedBy.value;
+  const targetStart = targetRect[axis.start];
+  const targetEnd = targetRect[axis.end];
+  const withoutDragging = removeDraggableFromList(draggable, insideDestination);
+  const closest = withoutDragging.find(child => {
+    const id = child.descriptor.id;
+    const childCenter = child.page.borderBox.center[axis.line];
+    const didStartAfterCritical$1 = didStartAfterCritical(id, afterCritical);
+    const isDisplaced = getIsDisplaced({
+      displaced: last,
+      id
+    });
+    if (didStartAfterCritical$1) {
+      if (isDisplaced) {
+        return targetEnd <= childCenter;
+      }
+      return targetStart < childCenter - displacement;
+    }
+    if (isDisplaced) {
+      return targetEnd <= childCenter + displacement;
+    }
+    return targetStart < childCenter;
+  }) || null;
+  const newIndex = atIndex({
+    draggable,
+    closest,
+    inHomeList: isHomeOf(draggable, destination)
+  });
+  return calculateReorderImpact({
+    draggable,
+    insideDestination,
+    destination,
+    viewport,
+    last,
+    displacedBy,
+    index: newIndex
+  });
+});
+
+const combineThresholdDivisor = 4;
+var getCombineImpact = (({
+  draggable,
+  pageBorderBoxWithDroppableScroll: targetRect,
+  previousImpact,
+  destination,
+  insideDestination,
+  afterCritical
+}) => {
+  if (!destination.isCombineEnabled) {
+    return null;
+  }
+  const axis = destination.axis;
+  const displacedBy = getDisplacedBy(destination.axis, draggable.displaceBy);
+  const displacement = displacedBy.value;
+  const targetStart = targetRect[axis.start];
+  const targetEnd = targetRect[axis.end];
+  const withoutDragging = removeDraggableFromList(draggable, insideDestination);
+  const combineWith = withoutDragging.find(child => {
+    const id = child.descriptor.id;
+    const childRect = child.page.borderBox;
+    const childSize = childRect[axis.size];
+    const threshold = childSize / combineThresholdDivisor;
+    const didStartAfterCritical$1 = didStartAfterCritical(id, afterCritical);
+    const isDisplaced = getIsDisplaced({
+      displaced: previousImpact.displaced,
+      id
+    });
+    if (didStartAfterCritical$1) {
+      if (isDisplaced) {
+        return targetEnd > childRect[axis.start] + threshold && targetEnd < childRect[axis.end] - threshold;
+      }
+      return targetStart > childRect[axis.start] - displacement + threshold && targetStart < childRect[axis.end] - displacement - threshold;
+    }
+    if (isDisplaced) {
+      return targetEnd > childRect[axis.start] + displacement + threshold && targetEnd < childRect[axis.end] + displacement - threshold;
+    }
+    return targetStart > childRect[axis.start] + threshold && targetStart < childRect[axis.end] - threshold;
+  });
+  if (!combineWith) {
+    return null;
+  }
+  const impact = {
+    displacedBy,
+    displaced: previousImpact.displaced,
+    at: {
+      type: 'COMBINE',
+      combine: {
+        draggableId: combineWith.descriptor.id,
+        droppableId: destination.descriptor.id
+      }
+    }
+  };
+  return impact;
+});
+
+var getDragImpact = (({
+  pageOffset,
+  draggable,
+  draggables,
+  droppables,
+  previousImpact,
+  viewport,
+  afterCritical
+}) => {
+  const pageBorderBox = offsetRectByPosition(draggable.page.borderBox, pageOffset);
+  const destinationId = getDroppableOver({
+    pageBorderBox,
+    draggable,
+    droppables
+  });
+  if (!destinationId) {
+    return noImpact$1;
+  }
+  const destination = droppables[destinationId];
+  const insideDestination = getDraggablesInsideDroppable(destination.descriptor.id, draggables);
+  const pageBorderBoxWithDroppableScroll = withDroppableScroll(destination, pageBorderBox);
+  return getCombineImpact({
+    pageBorderBoxWithDroppableScroll,
+    draggable,
+    previousImpact,
+    destination,
+    insideDestination,
+    afterCritical
+  }) || getReorderImpact({
+    pageBorderBoxWithDroppableScroll,
+    draggable,
+    destination,
+    insideDestination,
+    last: previousImpact.displaced,
+    viewport,
+    afterCritical
+  });
+});
+
+var patchDroppableMap = ((droppables, updated) => ({
+  ...droppables,
+  [updated.descriptor.id]: updated
+}));
+
+const clearUnusedPlaceholder = ({
+  previousImpact,
+  impact,
+  droppables
+}) => {
+  const last = whatIsDraggedOver(previousImpact);
+  const now = whatIsDraggedOver(impact);
+  if (!last) {
+    return droppables;
+  }
+  if (last === now) {
+    return droppables;
+  }
+  const lastDroppable = droppables[last];
+  if (!lastDroppable.subject.withPlaceholder) {
+    return droppables;
+  }
+  const updated = removePlaceholder(lastDroppable);
+  return patchDroppableMap(droppables, updated);
+};
+var recomputePlaceholders = (({
+  draggable,
+  draggables,
+  droppables,
+  previousImpact,
+  impact
+}) => {
+  const cleaned = clearUnusedPlaceholder({
+    previousImpact,
+    impact,
+    droppables
+  });
+  const isOver = whatIsDraggedOver(impact);
+  if (!isOver) {
+    return cleaned;
+  }
+  const droppable = droppables[isOver];
+  if (isHomeOf(draggable, droppable)) {
+    return cleaned;
+  }
+  if (droppable.subject.withPlaceholder) {
+    return cleaned;
+  }
+  const patched = addPlaceholder(droppable, draggable, draggables);
+  return patchDroppableMap(cleaned, patched);
+});
+
+var update = (({
+  state,
+  clientSelection: forcedClientSelection,
+  dimensions: forcedDimensions,
+  viewport: forcedViewport,
+  impact: forcedImpact,
+  scrollJumpRequest
+}) => {
+  const viewport = forcedViewport || state.viewport;
+  const dimensions = forcedDimensions || state.dimensions;
+  const clientSelection = forcedClientSelection || state.current.client.selection;
+  const offset = subtract(clientSelection, state.initial.client.selection);
+  const client = {
+    offset,
+    selection: clientSelection,
+    borderBoxCenter: add(state.initial.client.borderBoxCenter, offset)
+  };
+  const page = {
+    selection: add(client.selection, viewport.scroll.current),
+    borderBoxCenter: add(client.borderBoxCenter, viewport.scroll.current),
+    offset: add(client.offset, viewport.scroll.diff.value)
+  };
+  const current = {
+    client,
+    page
+  };
+  if (state.phase === 'COLLECTING') {
+    return {
+      ...state,
+      dimensions,
+      viewport,
+      current
+    };
+  }
+  const draggable = dimensions.draggables[state.critical.draggable.id];
+  const newImpact = forcedImpact || getDragImpact({
+    pageOffset: page.offset,
+    draggable,
+    draggables: dimensions.draggables,
+    droppables: dimensions.droppables,
+    previousImpact: state.impact,
+    viewport,
+    afterCritical: state.afterCritical
+  });
+  const withUpdatedPlaceholders = recomputePlaceholders({
+    draggable,
+    impact: newImpact,
+    previousImpact: state.impact,
+    draggables: dimensions.draggables,
+    droppables: dimensions.droppables
+  });
+  const result = {
+    ...state,
+    current,
+    dimensions: {
+      draggables: dimensions.draggables,
+      droppables: withUpdatedPlaceholders
+    },
+    impact: newImpact,
+    viewport,
+    scrollJumpRequest: scrollJumpRequest || null,
+    forceShouldAnimate: scrollJumpRequest ? false : null
+  };
+  return result;
+});
+
+function getDraggables(ids, draggables) {
+  return ids.map(id => draggables[id]);
+}
+var recompute = (({
+  impact,
+  viewport,
+  draggables,
+  destination,
+  forceShouldAnimate
+}) => {
+  const last = impact.displaced;
+  const afterDragging = getDraggables(last.all, draggables);
+  const displaced = getDisplacementGroups({
+    afterDragging,
+    destination,
+    displacedBy: impact.displacedBy,
+    viewport: viewport.frame,
+    forceShouldAnimate,
+    last
+  });
+  return {
+    ...impact,
+    displaced
+  };
+});
+
+var getClientBorderBoxCenter = (({
+  impact,
+  draggable,
+  droppable,
+  draggables,
+  viewport,
+  afterCritical
+}) => {
+  const pageBorderBoxCenter = getPageBorderBoxCenterFromImpact({
+    impact,
+    draggable,
+    draggables,
+    droppable,
+    afterCritical
+  });
+  return getClientFromPageBorderBoxCenter({
+    pageBorderBoxCenter,
+    draggable,
+    viewport
+  });
+});
+
+var refreshSnap = (({
+  state,
+  dimensions: forcedDimensions,
+  viewport: forcedViewport
+}) => {
+  !(state.movementMode === 'SNAP') ?  true ? invariant(false) : 0 : void 0;
+  const needsVisibilityCheck = state.impact;
+  const viewport = forcedViewport || state.viewport;
+  const dimensions = forcedDimensions || state.dimensions;
+  const {
+    draggables,
+    droppables
+  } = dimensions;
+  const draggable = draggables[state.critical.draggable.id];
+  const isOver = whatIsDraggedOver(needsVisibilityCheck);
+  !isOver ?  true ? invariant(false, 'Must be over a destination in SNAP movement mode') : 0 : void 0;
+  const destination = droppables[isOver];
+  const impact = recompute({
+    impact: needsVisibilityCheck,
+    viewport,
+    destination,
+    draggables
+  });
+  const clientSelection = getClientBorderBoxCenter({
+    impact,
+    draggable,
+    droppable: destination,
+    draggables,
+    viewport,
+    afterCritical: state.afterCritical
+  });
+  return update({
+    impact,
+    clientSelection,
+    state,
+    dimensions,
+    viewport
+  });
+});
+
+var getHomeLocation = (descriptor => ({
+  index: descriptor.index,
+  droppableId: descriptor.droppableId
+}));
+
+var getLiftEffect = (({
+  draggable,
+  home,
+  draggables,
+  viewport
+}) => {
+  const displacedBy = getDisplacedBy(home.axis, draggable.displaceBy);
+  const insideHome = getDraggablesInsideDroppable(home.descriptor.id, draggables);
+  const rawIndex = insideHome.indexOf(draggable);
+  !(rawIndex !== -1) ?  true ? invariant(false, 'Expected draggable to be inside home list') : 0 : void 0;
+  const afterDragging = insideHome.slice(rawIndex + 1);
+  const effected = afterDragging.reduce((previous, item) => {
+    previous[item.descriptor.id] = true;
+    return previous;
+  }, {});
+  const afterCritical = {
+    inVirtualList: home.descriptor.mode === 'virtual',
+    displacedBy,
+    effected
+  };
+  const displaced = getDisplacementGroups({
+    afterDragging,
+    destination: home,
+    displacedBy,
+    last: null,
+    viewport: viewport.frame,
+    forceShouldAnimate: false
+  });
+  const impact = {
+    displaced,
+    displacedBy,
+    at: {
+      type: 'REORDER',
+      destination: getHomeLocation(draggable.descriptor)
+    }
+  };
+  return {
+    impact,
+    afterCritical
+  };
+});
+
+var patchDimensionMap = ((dimensions, updated) => ({
+  draggables: dimensions.draggables,
+  droppables: patchDroppableMap(dimensions.droppables, updated)
+}));
+
+const start = key => {
+  if (true) {
+    {
+      return;
+    }
+  }
+};
+const finish = key => {
+  if (true) {
+    {
+      return;
+    }
+  }
+};
+
+var offsetDraggable = (({
+  draggable,
+  offset: offset$1,
+  initialWindowScroll
+}) => {
+  const client = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.offset)(draggable.client, offset$1);
+  const page = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.withScroll)(client, initialWindowScroll);
+  const moved = {
+    ...draggable,
+    placeholder: {
+      ...draggable.placeholder,
+      client
+    },
+    client,
+    page
+  };
+  return moved;
+});
+
+var getFrame = (droppable => {
+  const frame = droppable.frame;
+  !frame ?  true ? invariant(false, 'Expected Droppable to have a frame') : 0 : void 0;
+  return frame;
+});
+
+var adjustAdditionsForScrollChanges = (({
+  additions,
+  updatedDroppables,
+  viewport
+}) => {
+  const windowScrollChange = viewport.scroll.diff.value;
+  return additions.map(draggable => {
+    const droppableId = draggable.descriptor.droppableId;
+    const modified = updatedDroppables[droppableId];
+    const frame = getFrame(modified);
+    const droppableScrollChange = frame.scroll.diff.value;
+    const totalChange = add(windowScrollChange, droppableScrollChange);
+    const moved = offsetDraggable({
+      draggable,
+      offset: totalChange,
+      initialWindowScroll: viewport.scroll.initial
+    });
+    return moved;
+  });
+});
+
+const timingsKey = 'Processing dynamic changes';
+var publishWhileDraggingInVirtual = (({
+  state,
+  published
+}) => {
+  start();
+  const withScrollChange = published.modified.map(update => {
+    const existing = state.dimensions.droppables[update.droppableId];
+    const scrolled = scrollDroppable(existing, update.scroll);
+    return scrolled;
+  });
+  const droppables = {
+    ...state.dimensions.droppables,
+    ...toDroppableMap(withScrollChange)
+  };
+  const updatedAdditions = toDraggableMap(adjustAdditionsForScrollChanges({
+    additions: published.additions,
+    updatedDroppables: droppables,
+    viewport: state.viewport
+  }));
+  const draggables = {
+    ...state.dimensions.draggables,
+    ...updatedAdditions
+  };
+  published.removals.forEach(id => {
+    delete draggables[id];
+  });
+  const dimensions = {
+    droppables,
+    draggables
+  };
+  const wasOverId = whatIsDraggedOver(state.impact);
+  const wasOver = wasOverId ? dimensions.droppables[wasOverId] : null;
+  const draggable = dimensions.draggables[state.critical.draggable.id];
+  const home = dimensions.droppables[state.critical.droppable.id];
+  const {
+    impact: onLiftImpact,
+    afterCritical
+  } = getLiftEffect({
+    draggable,
+    home,
+    draggables,
+    viewport: state.viewport
+  });
+  const previousImpact = wasOver && wasOver.isCombineEnabled ? state.impact : onLiftImpact;
+  const impact = getDragImpact({
+    pageOffset: state.current.page.offset,
+    draggable: dimensions.draggables[state.critical.draggable.id],
+    draggables: dimensions.draggables,
+    droppables: dimensions.droppables,
+    previousImpact,
+    viewport: state.viewport,
+    afterCritical
+  });
+  finish(timingsKey);
+  const draggingState = {
+    ...state,
+    phase: 'DRAGGING',
+    impact,
+    onLiftImpact,
+    dimensions,
+    afterCritical,
+    forceShouldAnimate: false
+  };
+  if (state.phase === 'COLLECTING') {
+    return draggingState;
+  }
+  const dropPending = {
+    ...draggingState,
+    phase: 'DROP_PENDING',
+    reason: state.reason,
+    isWaiting: false
+  };
+  return dropPending;
+});
+
+const isSnapping = state => state.movementMode === 'SNAP';
+const postDroppableChange = (state, updated, isEnabledChanging) => {
+  const dimensions = patchDimensionMap(state.dimensions, updated);
+  if (!isSnapping(state) || isEnabledChanging) {
+    return update({
+      state,
+      dimensions
+    });
+  }
+  return refreshSnap({
+    state,
+    dimensions
+  });
+};
+function removeScrollJumpRequest(state) {
+  if (state.isDragging && state.movementMode === 'SNAP') {
+    return {
+      ...state,
+      scrollJumpRequest: null
+    };
+  }
+  return state;
+}
+const idle$2 = {
+  phase: 'IDLE',
+  completed: null,
+  shouldFlush: false
+};
+var reducer = ((state = idle$2, action) => {
+  if (action.type === 'FLUSH') {
+    return {
+      ...idle$2,
+      shouldFlush: true
+    };
+  }
+  if (action.type === 'INITIAL_PUBLISH') {
+    !(state.phase === 'IDLE') ?  true ? invariant(false, 'INITIAL_PUBLISH must come after a IDLE phase') : 0 : void 0;
+    const {
+      critical,
+      clientSelection,
+      viewport,
+      dimensions,
+      movementMode
+    } = action.payload;
+    const draggable = dimensions.draggables[critical.draggable.id];
+    const home = dimensions.droppables[critical.droppable.id];
+    const client = {
+      selection: clientSelection,
+      borderBoxCenter: draggable.client.borderBox.center,
+      offset: origin
+    };
+    const initial = {
+      client,
+      page: {
+        selection: add(client.selection, viewport.scroll.initial),
+        borderBoxCenter: add(client.selection, viewport.scroll.initial),
+        offset: add(client.selection, viewport.scroll.diff.value)
+      }
+    };
+    const isWindowScrollAllowed = toDroppableList(dimensions.droppables).every(item => !item.isFixedOnPage);
+    const {
+      impact,
+      afterCritical
+    } = getLiftEffect({
+      draggable,
+      home,
+      draggables: dimensions.draggables,
+      viewport
+    });
+    const result = {
+      phase: 'DRAGGING',
+      isDragging: true,
+      critical,
+      movementMode,
+      dimensions,
+      initial,
+      current: initial,
+      isWindowScrollAllowed,
+      impact,
+      afterCritical,
+      onLiftImpact: impact,
+      viewport,
+      scrollJumpRequest: null,
+      forceShouldAnimate: null
+    };
+    return result;
+  }
+  if (action.type === 'COLLECTION_STARTING') {
+    if (state.phase === 'COLLECTING' || state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !(state.phase === 'DRAGGING') ?  true ? invariant(false, `Collection cannot start from phase ${state.phase}`) : 0 : void 0;
+    const result = {
+      ...state,
+      phase: 'COLLECTING'
+    };
+    return result;
+  }
+  if (action.type === 'PUBLISH_WHILE_DRAGGING') {
+    !(state.phase === 'COLLECTING' || state.phase === 'DROP_PENDING') ?  true ? invariant(false, `Unexpected ${action.type} received in phase ${state.phase}`) : 0 : void 0;
+    return publishWhileDraggingInVirtual({
+      state,
+      published: action.payload
+    });
+  }
+  if (action.type === 'MOVE') {
+    if (state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `${action.type} not permitted in phase ${state.phase}`) : 0 : void 0;
+    const {
+      client: clientSelection
+    } = action.payload;
+    if (isEqual$1(clientSelection, state.current.client.selection)) {
+      return state;
+    }
+    return update({
+      state,
+      clientSelection,
+      impact: isSnapping(state) ? state.impact : null
+    });
+  }
+  if (action.type === 'UPDATE_DROPPABLE_SCROLL') {
+    if (state.phase === 'DROP_PENDING') {
+      return removeScrollJumpRequest(state);
+    }
+    if (state.phase === 'COLLECTING') {
+      return removeScrollJumpRequest(state);
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `${action.type} not permitted in phase ${state.phase}`) : 0 : void 0;
+    const {
+      id,
+      newScroll
+    } = action.payload;
+    const target = state.dimensions.droppables[id];
+    if (!target) {
+      return state;
+    }
+    const scrolled = scrollDroppable(target, newScroll);
+    return postDroppableChange(state, scrolled, false);
+  }
+  if (action.type === 'UPDATE_DROPPABLE_IS_ENABLED') {
+    if (state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `Attempting to move in an unsupported phase ${state.phase}`) : 0 : void 0;
+    const {
+      id,
+      isEnabled
+    } = action.payload;
+    const target = state.dimensions.droppables[id];
+    !target ?  true ? invariant(false, `Cannot find Droppable[id: ${id}] to toggle its enabled state`) : 0 : void 0;
+    !(target.isEnabled !== isEnabled) ?  true ? invariant(false, `Trying to set droppable isEnabled to ${String(isEnabled)}
+      but it is already ${String(target.isEnabled)}`) : 0 : void 0;
+    const updated = {
+      ...target,
+      isEnabled
+    };
+    return postDroppableChange(state, updated, true);
+  }
+  if (action.type === 'UPDATE_DROPPABLE_IS_COMBINE_ENABLED') {
+    if (state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `Attempting to move in an unsupported phase ${state.phase}`) : 0 : void 0;
+    const {
+      id,
+      isCombineEnabled
+    } = action.payload;
+    const target = state.dimensions.droppables[id];
+    !target ?  true ? invariant(false, `Cannot find Droppable[id: ${id}] to toggle its isCombineEnabled state`) : 0 : void 0;
+    !(target.isCombineEnabled !== isCombineEnabled) ?  true ? invariant(false, `Trying to set droppable isCombineEnabled to ${String(isCombineEnabled)}
+      but it is already ${String(target.isCombineEnabled)}`) : 0 : void 0;
+    const updated = {
+      ...target,
+      isCombineEnabled
+    };
+    return postDroppableChange(state, updated, true);
+  }
+  if (action.type === 'MOVE_BY_WINDOW_SCROLL') {
+    if (state.phase === 'DROP_PENDING' || state.phase === 'DROP_ANIMATING') {
+      return state;
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `Cannot move by window in phase ${state.phase}`) : 0 : void 0;
+    !state.isWindowScrollAllowed ?  true ? invariant(false, 'Window scrolling is currently not supported for fixed lists') : 0 : void 0;
+    const newScroll = action.payload.newScroll;
+    if (isEqual$1(state.viewport.scroll.current, newScroll)) {
+      return removeScrollJumpRequest(state);
+    }
+    const viewport = scrollViewport(state.viewport, newScroll);
+    if (isSnapping(state)) {
+      return refreshSnap({
+        state,
+        viewport
+      });
+    }
+    return update({
+      state,
+      viewport
+    });
+  }
+  if (action.type === 'UPDATE_VIEWPORT_MAX_SCROLL') {
+    if (!isMovementAllowed(state)) {
+      return state;
+    }
+    const maxScroll = action.payload.maxScroll;
+    if (isEqual$1(maxScroll, state.viewport.scroll.max)) {
+      return state;
+    }
+    const withMaxScroll = {
+      ...state.viewport,
+      scroll: {
+        ...state.viewport.scroll,
+        max: maxScroll
+      }
+    };
+    return {
+      ...state,
+      viewport: withMaxScroll
+    };
+  }
+  if (action.type === 'MOVE_UP' || action.type === 'MOVE_DOWN' || action.type === 'MOVE_LEFT' || action.type === 'MOVE_RIGHT') {
+    if (state.phase === 'COLLECTING' || state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !(state.phase === 'DRAGGING') ?  true ? invariant(false, `${action.type} received while not in DRAGGING phase`) : 0 : void 0;
+    const result = moveInDirection({
+      state,
+      type: action.type
+    });
+    if (!result) {
+      return state;
+    }
+    return update({
+      state,
+      impact: result.impact,
+      clientSelection: result.clientSelection,
+      scrollJumpRequest: result.scrollJumpRequest
+    });
+  }
+  if (action.type === 'DROP_PENDING') {
+    const reason = action.payload.reason;
+    !(state.phase === 'COLLECTING') ?  true ? invariant(false, 'Can only move into the DROP_PENDING phase from the COLLECTING phase') : 0 : void 0;
+    const newState = {
+      ...state,
+      phase: 'DROP_PENDING',
+      isWaiting: true,
+      reason
+    };
+    return newState;
+  }
+  if (action.type === 'DROP_ANIMATE') {
+    const {
+      completed,
+      dropDuration,
+      newHomeClientOffset
+    } = action.payload;
+    !(state.phase === 'DRAGGING' || state.phase === 'DROP_PENDING') ?  true ? invariant(false, `Cannot animate drop from phase ${state.phase}`) : 0 : void 0;
+    const result = {
+      phase: 'DROP_ANIMATING',
+      completed,
+      dropDuration,
+      newHomeClientOffset,
+      dimensions: state.dimensions
+    };
+    return result;
+  }
+  if (action.type === 'DROP_COMPLETE') {
+    const {
+      completed
+    } = action.payload;
+    return {
+      phase: 'IDLE',
+      completed,
+      shouldFlush: false
+    };
+  }
+  return state;
+});
+
+const beforeInitialCapture = args => ({
+  type: 'BEFORE_INITIAL_CAPTURE',
+  payload: args
+});
+const lift$1 = args => ({
+  type: 'LIFT',
+  payload: args
+});
+const initialPublish = args => ({
+  type: 'INITIAL_PUBLISH',
+  payload: args
+});
+const publishWhileDragging = args => ({
+  type: 'PUBLISH_WHILE_DRAGGING',
+  payload: args
+});
+const collectionStarting = () => ({
+  type: 'COLLECTION_STARTING',
+  payload: null
+});
+const updateDroppableScroll = args => ({
+  type: 'UPDATE_DROPPABLE_SCROLL',
+  payload: args
+});
+const updateDroppableIsEnabled = args => ({
+  type: 'UPDATE_DROPPABLE_IS_ENABLED',
+  payload: args
+});
+const updateDroppableIsCombineEnabled = args => ({
+  type: 'UPDATE_DROPPABLE_IS_COMBINE_ENABLED',
+  payload: args
+});
+const move = args => ({
+  type: 'MOVE',
+  payload: args
+});
+const moveByWindowScroll = args => ({
+  type: 'MOVE_BY_WINDOW_SCROLL',
+  payload: args
+});
+const updateViewportMaxScroll = args => ({
+  type: 'UPDATE_VIEWPORT_MAX_SCROLL',
+  payload: args
+});
+const moveUp = () => ({
+  type: 'MOVE_UP',
+  payload: null
+});
+const moveDown = () => ({
+  type: 'MOVE_DOWN',
+  payload: null
+});
+const moveRight = () => ({
+  type: 'MOVE_RIGHT',
+  payload: null
+});
+const moveLeft = () => ({
+  type: 'MOVE_LEFT',
+  payload: null
+});
+const flush = () => ({
+  type: 'FLUSH',
+  payload: null
+});
+const animateDrop = args => ({
+  type: 'DROP_ANIMATE',
+  payload: args
+});
+const completeDrop = args => ({
+  type: 'DROP_COMPLETE',
+  payload: args
+});
+const drop$1 = args => ({
+  type: 'DROP',
+  payload: args
+});
+const dropPending = args => ({
+  type: 'DROP_PENDING',
+  payload: args
+});
+const dropAnimationFinished = () => ({
+  type: 'DROP_ANIMATION_FINISHED',
+  payload: null
+});
+
+function checkIndexes(insideDestination) {
+  if (insideDestination.length <= 1) {
+    return;
+  }
+  const indexes = insideDestination.map(d => d.descriptor.index);
+  const errors = {};
+  for (let i = 1; i < indexes.length; i++) {
+    const current = indexes[i];
+    const previous = indexes[i - 1];
+    if (current !== previous + 1) {
+      errors[current] = true;
+    }
+  }
+  if (!Object.keys(errors).length) {
+    return;
+  }
+  const formatted = indexes.map(index => {
+    const hasError = Boolean(errors[index]);
+    return hasError ? `[🔥${index}]` : `${index}`;
+  }).join(', ');
+   true ? warning(`
+    Detected non-consecutive <Draggable /> indexes.
+
+    (This can cause unexpected bugs)
+
+    ${formatted}
+  `) : 0;
+}
+function validateDimensions(critical, dimensions) {
+  if (true) {
+    const insideDestination = getDraggablesInsideDroppable(critical.droppable.id, dimensions.draggables);
+    checkIndexes(insideDestination);
+  }
+}
+
+var lift = (marshal => ({
+  getState,
+  dispatch
+}) => next => action => {
+  if (action.type !== 'LIFT') {
+    next(action);
+    return;
+  }
+  const {
+    id,
+    clientSelection,
+    movementMode
+  } = action.payload;
+  const initial = getState();
+  if (initial.phase === 'DROP_ANIMATING') {
+    dispatch(completeDrop({
+      completed: initial.completed
+    }));
+  }
+  !(getState().phase === 'IDLE') ?  true ? invariant(false, 'Unexpected phase to start a drag') : 0 : void 0;
+  dispatch(flush());
+  dispatch(beforeInitialCapture({
+    draggableId: id,
+    movementMode
+  }));
+  const scrollOptions = {
+    shouldPublishImmediately: movementMode === 'SNAP'
+  };
+  const request = {
+    draggableId: id,
+    scrollOptions
+  };
+  const {
+    critical,
+    dimensions,
+    viewport
+  } = marshal.startPublishing(request);
+  validateDimensions(critical, dimensions);
+  dispatch(initialPublish({
+    critical,
+    dimensions,
+    clientSelection,
+    movementMode,
+    viewport
+  }));
+});
+
+var style = (marshal => () => next => action => {
+  if (action.type === 'INITIAL_PUBLISH') {
+    marshal.dragging();
+  }
+  if (action.type === 'DROP_ANIMATE') {
+    marshal.dropping(action.payload.completed.result.reason);
+  }
+  if (action.type === 'FLUSH' || action.type === 'DROP_COMPLETE') {
+    marshal.resting();
+  }
+  next(action);
+});
+
+const curves = {
+  outOfTheWay: 'cubic-bezier(0.2, 0, 0, 1)',
+  drop: 'cubic-bezier(.2,1,.1,1)'
+};
+const combine = {
+  opacity: {
+    drop: 0,
+    combining: 0.7
+  },
+  scale: {
+    drop: 0.75
+  }
+};
+const timings = {
+  outOfTheWay: 0.2,
+  minDropTime: 0.33,
+  maxDropTime: 0.55
+};
+const outOfTheWayTiming = `${timings.outOfTheWay}s ${curves.outOfTheWay}`;
+const transitions = {
+  fluid: `opacity ${outOfTheWayTiming}`,
+  snap: `transform ${outOfTheWayTiming}, opacity ${outOfTheWayTiming}`,
+  drop: duration => {
+    const timing = `${duration}s ${curves.drop}`;
+    return `transform ${timing}, opacity ${timing}`;
+  },
+  outOfTheWay: `transform ${outOfTheWayTiming}`,
+  placeholder: `height ${outOfTheWayTiming}, width ${outOfTheWayTiming}, margin ${outOfTheWayTiming}`
+};
+const moveTo = offset => isEqual$1(offset, origin) ? undefined : `translate(${offset.x}px, ${offset.y}px)`;
+const transforms = {
+  moveTo,
+  drop: (offset, isCombining) => {
+    const translate = moveTo(offset);
+    if (!translate) {
+      return undefined;
+    }
+    if (!isCombining) {
+      return translate;
+    }
+    return `${translate} scale(${combine.scale.drop})`;
+  }
+};
+
+const {
+  minDropTime,
+  maxDropTime
+} = timings;
+const dropTimeRange = maxDropTime - minDropTime;
+const maxDropTimeAtDistance = 1500;
+const cancelDropModifier = 0.6;
+var getDropDuration = (({
+  current,
+  destination,
+  reason
+}) => {
+  const distance$1 = distance(current, destination);
+  if (distance$1 <= 0) {
+    return minDropTime;
+  }
+  if (distance$1 >= maxDropTimeAtDistance) {
+    return maxDropTime;
+  }
+  const percentage = distance$1 / maxDropTimeAtDistance;
+  const duration = minDropTime + dropTimeRange * percentage;
+  const withDuration = reason === 'CANCEL' ? duration * cancelDropModifier : duration;
+  return Number(withDuration.toFixed(2));
+});
+
+var getNewHomeClientOffset = (({
+  impact,
+  draggable,
+  dimensions,
+  viewport,
+  afterCritical
+}) => {
+  const {
+    draggables,
+    droppables
+  } = dimensions;
+  const droppableId = whatIsDraggedOver(impact);
+  const destination = droppableId ? droppables[droppableId] : null;
+  const home = droppables[draggable.descriptor.droppableId];
+  const newClientCenter = getClientBorderBoxCenter({
+    impact,
+    draggable,
+    draggables,
+    afterCritical,
+    droppable: destination || home,
+    viewport
+  });
+  const offset = subtract(newClientCenter, draggable.client.borderBox.center);
+  return offset;
+});
+
+var getDropImpact = (({
+  draggables,
+  reason,
+  lastImpact,
+  home,
+  viewport,
+  onLiftImpact
+}) => {
+  if (!lastImpact.at || reason !== 'DROP') {
+    const recomputedHomeImpact = recompute({
+      draggables,
+      impact: onLiftImpact,
+      destination: home,
+      viewport,
+      forceShouldAnimate: true
+    });
+    return {
+      impact: recomputedHomeImpact,
+      didDropInsideDroppable: false
+    };
+  }
+  if (lastImpact.at.type === 'REORDER') {
+    return {
+      impact: lastImpact,
+      didDropInsideDroppable: true
+    };
+  }
+  const withoutMovement = {
+    ...lastImpact,
+    displaced: emptyGroups
+  };
+  return {
+    impact: withoutMovement,
+    didDropInsideDroppable: true
+  };
+});
+
+const dropMiddleware = ({
+  getState,
+  dispatch
+}) => next => action => {
+  if (action.type !== 'DROP') {
+    next(action);
+    return;
+  }
+  const state = getState();
+  const reason = action.payload.reason;
+  if (state.phase === 'COLLECTING') {
+    dispatch(dropPending({
+      reason
+    }));
+    return;
+  }
+  if (state.phase === 'IDLE') {
+    return;
+  }
+  const isWaitingForDrop = state.phase === 'DROP_PENDING' && state.isWaiting;
+  !!isWaitingForDrop ?  true ? invariant(false, 'A DROP action occurred while DROP_PENDING and still waiting') : 0 : void 0;
+  !(state.phase === 'DRAGGING' || state.phase === 'DROP_PENDING') ?  true ? invariant(false, `Cannot drop in phase: ${state.phase}`) : 0 : void 0;
+  const critical = state.critical;
+  const dimensions = state.dimensions;
+  const draggable = dimensions.draggables[state.critical.draggable.id];
+  const {
+    impact,
+    didDropInsideDroppable
+  } = getDropImpact({
+    reason,
+    lastImpact: state.impact,
+    afterCritical: state.afterCritical,
+    onLiftImpact: state.onLiftImpact,
+    home: state.dimensions.droppables[state.critical.droppable.id],
+    viewport: state.viewport,
+    draggables: state.dimensions.draggables
+  });
+  const destination = didDropInsideDroppable ? tryGetDestination(impact) : null;
+  const combine = didDropInsideDroppable ? tryGetCombine(impact) : null;
+  const source = {
+    index: critical.draggable.index,
+    droppableId: critical.droppable.id
+  };
+  const result = {
+    draggableId: draggable.descriptor.id,
+    type: draggable.descriptor.type,
+    source,
+    reason,
+    mode: state.movementMode,
+    destination,
+    combine
+  };
+  const newHomeClientOffset = getNewHomeClientOffset({
+    impact,
+    draggable,
+    dimensions,
+    viewport: state.viewport,
+    afterCritical: state.afterCritical
+  });
+  const completed = {
+    critical: state.critical,
+    afterCritical: state.afterCritical,
+    result,
+    impact
+  };
+  const isAnimationRequired = !isEqual$1(state.current.client.offset, newHomeClientOffset) || Boolean(result.combine);
+  if (!isAnimationRequired) {
+    dispatch(completeDrop({
+      completed
+    }));
+    return;
+  }
+  const dropDuration = getDropDuration({
+    current: state.current.client.offset,
+    destination: newHomeClientOffset,
+    reason
+  });
+  const args = {
+    newHomeClientOffset,
+    dropDuration,
+    completed
+  };
+  dispatch(animateDrop(args));
+};
+var drop = dropMiddleware;
+
+var getWindowScroll = (() => ({
+  x: window.pageXOffset,
+  y: window.pageYOffset
+}));
+
+function getWindowScrollBinding(update) {
+  return {
+    eventName: 'scroll',
+    options: {
+      passive: true,
+      capture: false
+    },
+    fn: event => {
+      if (event.target !== window && event.target !== window.document) {
+        return;
+      }
+      update();
+    }
+  };
+}
+function getScrollListener({
+  onWindowScroll
+}) {
+  function updateScroll() {
+    onWindowScroll(getWindowScroll());
+  }
+  const scheduled = (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(updateScroll);
+  const binding = getWindowScrollBinding(scheduled);
+  let unbind = noop$2;
+  function isActive() {
+    return unbind !== noop$2;
+  }
+  function start() {
+    !!isActive() ?  true ? invariant(false, 'Cannot start scroll listener when already active') : 0 : void 0;
+    unbind = bindEvents(window, [binding]);
+  }
+  function stop() {
+    !isActive() ?  true ? invariant(false, 'Cannot stop scroll listener when not active') : 0 : void 0;
+    scheduled.cancel();
+    unbind();
+    unbind = noop$2;
+  }
+  return {
+    start,
+    stop,
+    isActive
+  };
+}
+
+const shouldEnd = action => action.type === 'DROP_COMPLETE' || action.type === 'DROP_ANIMATE' || action.type === 'FLUSH';
+const scrollListener = store => {
+  const listener = getScrollListener({
+    onWindowScroll: newScroll => {
+      store.dispatch(moveByWindowScroll({
+        newScroll
+      }));
+    }
+  });
+  return next => action => {
+    if (!listener.isActive() && action.type === 'INITIAL_PUBLISH') {
+      listener.start();
+    }
+    if (listener.isActive() && shouldEnd(action)) {
+      listener.stop();
+    }
+    next(action);
+  };
+};
+var scrollListener$1 = scrollListener;
+
+var getExpiringAnnounce = (announce => {
+  let wasCalled = false;
+  let isExpired = false;
+  const timeoutId = setTimeout(() => {
+    isExpired = true;
+  });
+  const result = message => {
+    if (wasCalled) {
+       true ? warning('Announcement already made. Not making a second announcement') : 0;
+      return;
+    }
+    if (isExpired) {
+       true ? warning(`
+        Announcements cannot be made asynchronously.
+        Default message has already been announced.
+      `) : 0;
+      return;
+    }
+    wasCalled = true;
+    announce(message);
+    clearTimeout(timeoutId);
+  };
+  result.wasCalled = () => wasCalled;
+  return result;
+});
+
+var getAsyncMarshal = (() => {
+  const entries = [];
+  const execute = timerId => {
+    const index = entries.findIndex(item => item.timerId === timerId);
+    !(index !== -1) ?  true ? invariant(false, 'Could not find timer') : 0 : void 0;
+    const [entry] = entries.splice(index, 1);
+    entry.callback();
+  };
+  const add = fn => {
+    const timerId = setTimeout(() => execute(timerId));
+    const entry = {
+      timerId,
+      callback: fn
+    };
+    entries.push(entry);
+  };
+  const flush = () => {
+    if (!entries.length) {
+      return;
+    }
+    const shallow = [...entries];
+    entries.length = 0;
+    shallow.forEach(entry => {
+      clearTimeout(entry.timerId);
+      entry.callback();
+    });
+  };
+  return {
+    add,
+    flush
+  };
+});
+
+const areLocationsEqual = (first, second) => {
+  if (first == null && second == null) {
+    return true;
+  }
+  if (first == null || second == null) {
+    return false;
+  }
+  return first.droppableId === second.droppableId && first.index === second.index;
+};
+const isCombineEqual = (first, second) => {
+  if (first == null && second == null) {
+    return true;
+  }
+  if (first == null || second == null) {
+    return false;
+  }
+  return first.draggableId === second.draggableId && first.droppableId === second.droppableId;
+};
+const isCriticalEqual = (first, second) => {
+  if (first === second) {
+    return true;
+  }
+  const isDraggableEqual = first.draggable.id === second.draggable.id && first.draggable.droppableId === second.draggable.droppableId && first.draggable.type === second.draggable.type && first.draggable.index === second.draggable.index;
+  const isDroppableEqual = first.droppable.id === second.droppable.id && first.droppable.type === second.droppable.type;
+  return isDraggableEqual && isDroppableEqual;
+};
+
+const withTimings = (key, fn) => {
+  start();
+  fn();
+  finish();
+};
+const getDragStart = (critical, mode) => ({
+  draggableId: critical.draggable.id,
+  type: critical.droppable.type,
+  source: {
+    droppableId: critical.droppable.id,
+    index: critical.draggable.index
+  },
+  mode
+});
+function execute(responder, data, announce, getDefaultMessage) {
+  if (!responder) {
+    announce(getDefaultMessage(data));
+    return;
+  }
+  const willExpire = getExpiringAnnounce(announce);
+  const provided = {
+    announce: willExpire
+  };
+  responder(data, provided);
+  if (!willExpire.wasCalled()) {
+    announce(getDefaultMessage(data));
+  }
+}
+var getPublisher = ((getResponders, announce) => {
+  const asyncMarshal = getAsyncMarshal();
+  let dragging = null;
+  const beforeCapture = (draggableId, mode) => {
+    !!dragging ?  true ? invariant(false, 'Cannot fire onBeforeCapture as a drag start has already been published') : 0 : void 0;
+    withTimings('onBeforeCapture', () => {
+      const fn = getResponders().onBeforeCapture;
+      if (fn) {
+        const before = {
+          draggableId,
+          mode
+        };
+        fn(before);
+      }
+    });
+  };
+  const beforeStart = (critical, mode) => {
+    !!dragging ?  true ? invariant(false, 'Cannot fire onBeforeDragStart as a drag start has already been published') : 0 : void 0;
+    withTimings('onBeforeDragStart', () => {
+      const fn = getResponders().onBeforeDragStart;
+      if (fn) {
+        fn(getDragStart(critical, mode));
+      }
+    });
+  };
+  const start = (critical, mode) => {
+    !!dragging ?  true ? invariant(false, 'Cannot fire onBeforeDragStart as a drag start has already been published') : 0 : void 0;
+    const data = getDragStart(critical, mode);
+    dragging = {
+      mode,
+      lastCritical: critical,
+      lastLocation: data.source,
+      lastCombine: null
+    };
+    asyncMarshal.add(() => {
+      withTimings('onDragStart', () => execute(getResponders().onDragStart, data, announce, preset$1.onDragStart));
+    });
+  };
+  const update = (critical, impact) => {
+    const location = tryGetDestination(impact);
+    const combine = tryGetCombine(impact);
+    !dragging ?  true ? invariant(false, 'Cannot fire onDragMove when onDragStart has not been called') : 0 : void 0;
+    const hasCriticalChanged = !isCriticalEqual(critical, dragging.lastCritical);
+    if (hasCriticalChanged) {
+      dragging.lastCritical = critical;
+    }
+    const hasLocationChanged = !areLocationsEqual(dragging.lastLocation, location);
+    if (hasLocationChanged) {
+      dragging.lastLocation = location;
+    }
+    const hasGroupingChanged = !isCombineEqual(dragging.lastCombine, combine);
+    if (hasGroupingChanged) {
+      dragging.lastCombine = combine;
+    }
+    if (!hasCriticalChanged && !hasLocationChanged && !hasGroupingChanged) {
+      return;
+    }
+    const data = {
+      ...getDragStart(critical, dragging.mode),
+      combine,
+      destination: location
+    };
+    asyncMarshal.add(() => {
+      withTimings('onDragUpdate', () => execute(getResponders().onDragUpdate, data, announce, preset$1.onDragUpdate));
+    });
+  };
+  const flush = () => {
+    !dragging ?  true ? invariant(false, 'Can only flush responders while dragging') : 0 : void 0;
+    asyncMarshal.flush();
+  };
+  const drop = result => {
+    !dragging ?  true ? invariant(false, 'Cannot fire onDragEnd when there is no matching onDragStart') : 0 : void 0;
+    dragging = null;
+    withTimings('onDragEnd', () => execute(getResponders().onDragEnd, result, announce, preset$1.onDragEnd));
+  };
+  const abort = () => {
+    if (!dragging) {
+      return;
+    }
+    const result = {
+      ...getDragStart(dragging.lastCritical, dragging.mode),
+      combine: null,
+      destination: null,
+      reason: 'CANCEL'
+    };
+    drop(result);
+  };
+  return {
+    beforeCapture,
+    beforeStart,
+    start,
+    update,
+    flush,
+    drop,
+    abort
+  };
+});
+
+var responders = ((getResponders, announce) => {
+  const publisher = getPublisher(getResponders, announce);
+  return store => next => action => {
+    if (action.type === 'BEFORE_INITIAL_CAPTURE') {
+      publisher.beforeCapture(action.payload.draggableId, action.payload.movementMode);
+      return;
+    }
+    if (action.type === 'INITIAL_PUBLISH') {
+      const critical = action.payload.critical;
+      publisher.beforeStart(critical, action.payload.movementMode);
+      next(action);
+      publisher.start(critical, action.payload.movementMode);
+      return;
+    }
+    if (action.type === 'DROP_COMPLETE') {
+      const result = action.payload.completed.result;
+      publisher.flush();
+      next(action);
+      publisher.drop(result);
+      return;
+    }
+    next(action);
+    if (action.type === 'FLUSH') {
+      publisher.abort();
+      return;
+    }
+    const state = store.getState();
+    if (state.phase === 'DRAGGING') {
+      publisher.update(state.critical, state.impact);
+    }
+  };
+});
+
+const dropAnimationFinishMiddleware = store => next => action => {
+  if (action.type !== 'DROP_ANIMATION_FINISHED') {
+    next(action);
+    return;
+  }
+  const state = store.getState();
+  !(state.phase === 'DROP_ANIMATING') ?  true ? invariant(false, 'Cannot finish a drop animating when no drop is occurring') : 0 : void 0;
+  store.dispatch(completeDrop({
+    completed: state.completed
+  }));
+};
+var dropAnimationFinish = dropAnimationFinishMiddleware;
+
+const dropAnimationFlushOnScrollMiddleware = store => {
+  let unbind = null;
+  let frameId = null;
+  function clear() {
+    if (frameId) {
+      cancelAnimationFrame(frameId);
+      frameId = null;
+    }
+    if (unbind) {
+      unbind();
+      unbind = null;
+    }
+  }
+  return next => action => {
+    if (action.type === 'FLUSH' || action.type === 'DROP_COMPLETE' || action.type === 'DROP_ANIMATION_FINISHED') {
+      clear();
+    }
+    next(action);
+    if (action.type !== 'DROP_ANIMATE') {
+      return;
+    }
+    const binding = {
+      eventName: 'scroll',
+      options: {
+        capture: true,
+        passive: false,
+        once: true
+      },
+      fn: function flushDropAnimation() {
+        const state = store.getState();
+        if (state.phase === 'DROP_ANIMATING') {
+          store.dispatch(dropAnimationFinished());
+        }
+      }
+    };
+    frameId = requestAnimationFrame(() => {
+      frameId = null;
+      unbind = bindEvents(window, [binding]);
+    });
+  };
+};
+var dropAnimationFlushOnScroll = dropAnimationFlushOnScrollMiddleware;
+
+var dimensionMarshalStopper = (marshal => () => next => action => {
+  if (action.type === 'DROP_COMPLETE' || action.type === 'FLUSH' || action.type === 'DROP_ANIMATE') {
+    marshal.stopPublishing();
+  }
+  next(action);
+});
+
+var focus = (marshal => {
+  let isWatching = false;
+  return () => next => action => {
+    if (action.type === 'INITIAL_PUBLISH') {
+      isWatching = true;
+      marshal.tryRecordFocus(action.payload.critical.draggable.id);
+      next(action);
+      marshal.tryRestoreFocusRecorded();
+      return;
+    }
+    next(action);
+    if (!isWatching) {
+      return;
+    }
+    if (action.type === 'FLUSH') {
+      isWatching = false;
+      marshal.tryRestoreFocusRecorded();
+      return;
+    }
+    if (action.type === 'DROP_COMPLETE') {
+      isWatching = false;
+      const result = action.payload.completed.result;
+      if (result.combine) {
+        marshal.tryShiftRecord(result.draggableId, result.combine.draggableId);
+      }
+      marshal.tryRestoreFocusRecorded();
+    }
+  };
+});
+
+const shouldStop = action => action.type === 'DROP_COMPLETE' || action.type === 'DROP_ANIMATE' || action.type === 'FLUSH';
+var autoScroll = (autoScroller => store => next => action => {
+  if (shouldStop(action)) {
+    autoScroller.stop();
+    next(action);
+    return;
+  }
+  if (action.type === 'INITIAL_PUBLISH') {
+    next(action);
+    const state = store.getState();
+    !(state.phase === 'DRAGGING') ?  true ? invariant(false, 'Expected phase to be DRAGGING after INITIAL_PUBLISH') : 0 : void 0;
+    autoScroller.start(state);
+    return;
+  }
+  next(action);
+  autoScroller.scroll(store.getState());
+});
+
+const pendingDrop = store => next => action => {
+  next(action);
+  if (action.type !== 'PUBLISH_WHILE_DRAGGING') {
+    return;
+  }
+  const postActionState = store.getState();
+  if (postActionState.phase !== 'DROP_PENDING') {
+    return;
+  }
+  if (postActionState.isWaiting) {
+    return;
+  }
+  store.dispatch(drop$1({
+    reason: postActionState.reason
+  }));
+};
+var pendingDrop$1 = pendingDrop;
+
+const composeEnhancers =  true && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+  name: '@hello-pangea/dnd'
+}) : redux__WEBPACK_IMPORTED_MODULE_7__.compose;
+var createStore = (({
+  dimensionMarshal,
+  focusMarshal,
+  styleMarshal,
+  getResponders,
+  announce,
+  autoScroller
+}) => (0,redux__WEBPACK_IMPORTED_MODULE_7__.createStore)(reducer, composeEnhancers((0,redux__WEBPACK_IMPORTED_MODULE_7__.applyMiddleware)(style(styleMarshal), dimensionMarshalStopper(dimensionMarshal), lift(dimensionMarshal), drop, dropAnimationFinish, dropAnimationFlushOnScroll, pendingDrop$1, autoScroll(autoScroller), scrollListener$1, focus(focusMarshal), responders(getResponders, announce)))));
+
+const clean$1 = () => ({
+  additions: {},
+  removals: {},
+  modified: {}
+});
+function createPublisher({
+  registry,
+  callbacks
+}) {
+  let staging = clean$1();
+  let frameId = null;
+  const collect = () => {
+    if (frameId) {
+      return;
+    }
+    callbacks.collectionStarting();
+    frameId = requestAnimationFrame(() => {
+      frameId = null;
+      start();
+      const {
+        additions,
+        removals,
+        modified
+      } = staging;
+      const added = Object.keys(additions).map(id => registry.draggable.getById(id).getDimension(origin)).sort((a, b) => a.descriptor.index - b.descriptor.index);
+      const updated = Object.keys(modified).map(id => {
+        const entry = registry.droppable.getById(id);
+        const scroll = entry.callbacks.getScrollWhileDragging();
+        return {
+          droppableId: id,
+          scroll
+        };
+      });
+      const result = {
+        additions: added,
+        removals: Object.keys(removals),
+        modified: updated
+      };
+      staging = clean$1();
+      finish();
+      callbacks.publish(result);
+    });
+  };
+  const add = entry => {
+    const id = entry.descriptor.id;
+    staging.additions[id] = entry;
+    staging.modified[entry.descriptor.droppableId] = true;
+    if (staging.removals[id]) {
+      delete staging.removals[id];
+    }
+    collect();
+  };
+  const remove = entry => {
+    const descriptor = entry.descriptor;
+    staging.removals[descriptor.id] = true;
+    staging.modified[descriptor.droppableId] = true;
+    if (staging.additions[descriptor.id]) {
+      delete staging.additions[descriptor.id];
+    }
+    collect();
+  };
+  const stop = () => {
+    if (!frameId) {
+      return;
+    }
+    cancelAnimationFrame(frameId);
+    frameId = null;
+    staging = clean$1();
+  };
+  return {
+    add,
+    remove,
+    stop
+  };
+}
+
+var getMaxScroll = (({
+  scrollHeight,
+  scrollWidth,
+  height,
+  width
+}) => {
+  const maxScroll = subtract({
+    x: scrollWidth,
+    y: scrollHeight
+  }, {
+    x: width,
+    y: height
+  });
+  const adjustedMaxScroll = {
+    x: Math.max(0, maxScroll.x),
+    y: Math.max(0, maxScroll.y)
+  };
+  return adjustedMaxScroll;
+});
+
+var getDocumentElement = (() => {
+  const doc = document.documentElement;
+  !doc ?  true ? invariant(false, 'Cannot find document.documentElement') : 0 : void 0;
+  return doc;
+});
+
+var getMaxWindowScroll = (() => {
+  const doc = getDocumentElement();
+  const maxScroll = getMaxScroll({
+    scrollHeight: doc.scrollHeight,
+    scrollWidth: doc.scrollWidth,
+    width: doc.clientWidth,
+    height: doc.clientHeight
+  });
+  return maxScroll;
+});
+
+var getViewport = (() => {
+  const scroll = getWindowScroll();
+  const maxScroll = getMaxWindowScroll();
+  const top = scroll.y;
+  const left = scroll.x;
+  const doc = getDocumentElement();
+  const width = doc.clientWidth;
+  const height = doc.clientHeight;
+  const right = left + width;
+  const bottom = top + height;
+  const frame = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)({
+    top,
+    left,
+    right,
+    bottom
+  });
+  const viewport = {
+    frame,
+    scroll: {
+      initial: scroll,
+      current: scroll,
+      max: maxScroll,
+      diff: {
+        value: origin,
+        displacement: origin
+      }
+    }
+  };
+  return viewport;
+});
+
+var getInitialPublish = (({
+  critical,
+  scrollOptions,
+  registry
+}) => {
+  start();
+  const viewport = getViewport();
+  const windowScroll = viewport.scroll.current;
+  const home = critical.droppable;
+  const droppables = registry.droppable.getAllByType(home.type).map(entry => entry.callbacks.getDimensionAndWatchScroll(windowScroll, scrollOptions));
+  const draggables = registry.draggable.getAllByType(critical.draggable.type).map(entry => entry.getDimension(windowScroll));
+  const dimensions = {
+    draggables: toDraggableMap(draggables),
+    droppables: toDroppableMap(droppables)
+  };
+  finish();
+  const result = {
+    dimensions,
+    critical,
+    viewport
+  };
+  return result;
+});
+
+function shouldPublishUpdate(registry, dragging, entry) {
+  if (entry.descriptor.id === dragging.id) {
+    return false;
+  }
+  if (entry.descriptor.type !== dragging.type) {
+    return false;
+  }
+  const home = registry.droppable.getById(entry.descriptor.droppableId);
+  if (home.descriptor.mode !== 'virtual') {
+     true ? warning(`
+      You are attempting to add or remove a Draggable [id: ${entry.descriptor.id}]
+      while a drag is occurring. This is only supported for virtual lists.
+
+      See https://github.com/hello-pangea/dnd/blob/main/docs/patterns/virtual-lists.md
+    `) : 0;
+    return false;
+  }
+  return true;
+}
+var createDimensionMarshal = ((registry, callbacks) => {
+  let collection = null;
+  const publisher = createPublisher({
+    callbacks: {
+      publish: callbacks.publishWhileDragging,
+      collectionStarting: callbacks.collectionStarting
+    },
+    registry
+  });
+  const updateDroppableIsEnabled = (id, isEnabled) => {
+    !registry.droppable.exists(id) ?  true ? invariant(false, `Cannot update is enabled flag of Droppable ${id} as it is not registered`) : 0 : void 0;
+    if (!collection) {
+      return;
+    }
+    callbacks.updateDroppableIsEnabled({
+      id,
+      isEnabled
+    });
+  };
+  const updateDroppableIsCombineEnabled = (id, isCombineEnabled) => {
+    if (!collection) {
+      return;
+    }
+    !registry.droppable.exists(id) ?  true ? invariant(false, `Cannot update isCombineEnabled flag of Droppable ${id} as it is not registered`) : 0 : void 0;
+    callbacks.updateDroppableIsCombineEnabled({
+      id,
+      isCombineEnabled
+    });
+  };
+  const updateDroppableScroll = (id, newScroll) => {
+    if (!collection) {
+      return;
+    }
+    !registry.droppable.exists(id) ?  true ? invariant(false, `Cannot update the scroll on Droppable ${id} as it is not registered`) : 0 : void 0;
+    callbacks.updateDroppableScroll({
+      id,
+      newScroll
+    });
+  };
+  const scrollDroppable = (id, change) => {
+    if (!collection) {
+      return;
+    }
+    registry.droppable.getById(id).callbacks.scroll(change);
+  };
+  const stopPublishing = () => {
+    if (!collection) {
+      return;
+    }
+    publisher.stop();
+    const home = collection.critical.droppable;
+    registry.droppable.getAllByType(home.type).forEach(entry => entry.callbacks.dragStopped());
+    collection.unsubscribe();
+    collection = null;
+  };
+  const subscriber = event => {
+    !collection ?  true ? invariant(false, 'Should only be subscribed when a collection is occurring') : 0 : void 0;
+    const dragging = collection.critical.draggable;
+    if (event.type === 'ADDITION') {
+      if (shouldPublishUpdate(registry, dragging, event.value)) {
+        publisher.add(event.value);
+      }
+    }
+    if (event.type === 'REMOVAL') {
+      if (shouldPublishUpdate(registry, dragging, event.value)) {
+        publisher.remove(event.value);
+      }
+    }
+  };
+  const startPublishing = request => {
+    !!collection ?  true ? invariant(false, 'Cannot start capturing critical dimensions as there is already a collection') : 0 : void 0;
+    const entry = registry.draggable.getById(request.draggableId);
+    const home = registry.droppable.getById(entry.descriptor.droppableId);
+    const critical = {
+      draggable: entry.descriptor,
+      droppable: home.descriptor
+    };
+    const unsubscribe = registry.subscribe(subscriber);
+    collection = {
+      critical,
+      unsubscribe
+    };
+    return getInitialPublish({
+      critical,
+      registry,
+      scrollOptions: request.scrollOptions
+    });
+  };
+  const marshal = {
+    updateDroppableIsEnabled,
+    updateDroppableIsCombineEnabled,
+    scrollDroppable,
+    updateDroppableScroll,
+    startPublishing,
+    stopPublishing
+  };
+  return marshal;
+});
+
+var canStartDrag = ((state, id) => {
+  if (state.phase === 'IDLE') {
+    return true;
+  }
+  if (state.phase !== 'DROP_ANIMATING') {
+    return false;
+  }
+  if (state.completed.result.draggableId === id) {
+    return false;
+  }
+  return state.completed.result.reason === 'DROP';
+});
+
+var scrollWindow = (change => {
+  window.scrollBy(change.x, change.y);
+});
+
+const getScrollableDroppables = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(droppables => toDroppableList(droppables).filter(droppable => {
+  if (!droppable.isEnabled) {
+    return false;
+  }
+  if (!droppable.frame) {
+    return false;
+  }
+  return true;
+}));
+const getScrollableDroppableOver = (target, droppables) => {
+  const maybe = getScrollableDroppables(droppables).find(droppable => {
+    !droppable.frame ?  true ? invariant(false, 'Invalid result') : 0 : void 0;
+    return isPositionInFrame(droppable.frame.pageMarginBox)(target);
+  }) || null;
+  return maybe;
+};
+var getBestScrollableDroppable = (({
+  center,
+  destination,
+  droppables
+}) => {
+  if (destination) {
+    const dimension = droppables[destination];
+    if (!dimension.frame) {
+      return null;
+    }
+    return dimension;
+  }
+  const dimension = getScrollableDroppableOver(center, droppables);
+  return dimension;
+});
+
+const defaultAutoScrollerOptions = {
+  startFromPercentage: 0.25,
+  maxScrollAtPercentage: 0.05,
+  maxPixelScroll: 28,
+  ease: percentage => percentage ** 2,
+  durationDampening: {
+    stopDampeningAt: 1200,
+    accelerateAt: 360
+  },
+  disabled: false
+};
+
+var getDistanceThresholds = ((container, axis, getAutoScrollerOptions = () => defaultAutoScrollerOptions) => {
+  const autoScrollerOptions = getAutoScrollerOptions();
+  const startScrollingFrom = container[axis.size] * autoScrollerOptions.startFromPercentage;
+  const maxScrollValueAt = container[axis.size] * autoScrollerOptions.maxScrollAtPercentage;
+  const thresholds = {
+    startScrollingFrom,
+    maxScrollValueAt
+  };
+  return thresholds;
+});
+
+var getPercentage = (({
+  startOfRange,
+  endOfRange,
+  current
+}) => {
+  const range = endOfRange - startOfRange;
+  if (range === 0) {
+     true ? warning(`
+      Detected distance range of 0 in the fluid auto scroller
+      This is unexpected and would cause a divide by 0 issue.
+      Not allowing an auto scroll
+    `) : 0;
+    return 0;
+  }
+  const currentInRange = current - startOfRange;
+  const percentage = currentInRange / range;
+  return percentage;
+});
+
+var minScroll = 1;
+
+var getValueFromDistance = ((distanceToEdge, thresholds, getAutoScrollerOptions = () => defaultAutoScrollerOptions) => {
+  const autoScrollerOptions = getAutoScrollerOptions();
+  if (distanceToEdge > thresholds.startScrollingFrom) {
+    return 0;
+  }
+  if (distanceToEdge <= thresholds.maxScrollValueAt) {
+    return autoScrollerOptions.maxPixelScroll;
+  }
+  if (distanceToEdge === thresholds.startScrollingFrom) {
+    return minScroll;
+  }
+  const percentageFromMaxScrollValueAt = getPercentage({
+    startOfRange: thresholds.maxScrollValueAt,
+    endOfRange: thresholds.startScrollingFrom,
+    current: distanceToEdge
+  });
+  const percentageFromStartScrollingFrom = 1 - percentageFromMaxScrollValueAt;
+  const scroll = autoScrollerOptions.maxPixelScroll * autoScrollerOptions.ease(percentageFromStartScrollingFrom);
+  return Math.ceil(scroll);
+});
+
+var dampenValueByTime = ((proposedScroll, dragStartTime, getAutoScrollerOptions) => {
+  const autoScrollerOptions = getAutoScrollerOptions();
+  const accelerateAt = autoScrollerOptions.durationDampening.accelerateAt;
+  const stopAt = autoScrollerOptions.durationDampening.stopDampeningAt;
+  const startOfRange = dragStartTime;
+  const endOfRange = stopAt;
+  const now = Date.now();
+  const runTime = now - startOfRange;
+  if (runTime >= stopAt) {
+    return proposedScroll;
+  }
+  if (runTime < accelerateAt) {
+    return minScroll;
+  }
+  const betweenAccelerateAtAndStopAtPercentage = getPercentage({
+    startOfRange: accelerateAt,
+    endOfRange,
+    current: runTime
+  });
+  const scroll = proposedScroll * autoScrollerOptions.ease(betweenAccelerateAtAndStopAtPercentage);
+  return Math.ceil(scroll);
+});
+
+var getValue = (({
+  distanceToEdge,
+  thresholds,
+  dragStartTime,
+  shouldUseTimeDampening,
+  getAutoScrollerOptions
+}) => {
+  const scroll = getValueFromDistance(distanceToEdge, thresholds, getAutoScrollerOptions);
+  if (scroll === 0) {
+    return 0;
+  }
+  if (!shouldUseTimeDampening) {
+    return scroll;
+  }
+  return Math.max(dampenValueByTime(scroll, dragStartTime, getAutoScrollerOptions), minScroll);
+});
+
+var getScrollOnAxis = (({
+  container,
+  distanceToEdges,
+  dragStartTime,
+  axis,
+  shouldUseTimeDampening,
+  getAutoScrollerOptions
+}) => {
+  const thresholds = getDistanceThresholds(container, axis, getAutoScrollerOptions);
+  const isCloserToEnd = distanceToEdges[axis.end] < distanceToEdges[axis.start];
+  if (isCloserToEnd) {
+    return getValue({
+      distanceToEdge: distanceToEdges[axis.end],
+      thresholds,
+      dragStartTime,
+      shouldUseTimeDampening,
+      getAutoScrollerOptions
+    });
+  }
+  return -1 * getValue({
+    distanceToEdge: distanceToEdges[axis.start],
+    thresholds,
+    dragStartTime,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+});
+
+var adjustForSizeLimits = (({
+  container,
+  subject,
+  proposedScroll
+}) => {
+  const isTooBigVertically = subject.height > container.height;
+  const isTooBigHorizontally = subject.width > container.width;
+  if (!isTooBigHorizontally && !isTooBigVertically) {
+    return proposedScroll;
+  }
+  if (isTooBigHorizontally && isTooBigVertically) {
+    return null;
+  }
+  return {
+    x: isTooBigHorizontally ? 0 : proposedScroll.x,
+    y: isTooBigVertically ? 0 : proposedScroll.y
+  };
+});
+
+const clean = apply(value => value === 0 ? 0 : value);
+var getScroll$1 = (({
+  dragStartTime,
+  container,
+  subject,
+  center,
+  shouldUseTimeDampening,
+  getAutoScrollerOptions
+}) => {
+  const distanceToEdges = {
+    top: center.y - container.top,
+    right: container.right - center.x,
+    bottom: container.bottom - center.y,
+    left: center.x - container.left
+  };
+  const y = getScrollOnAxis({
+    container,
+    distanceToEdges,
+    dragStartTime,
+    axis: vertical,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  const x = getScrollOnAxis({
+    container,
+    distanceToEdges,
+    dragStartTime,
+    axis: horizontal,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  const required = clean({
+    x,
+    y
+  });
+  if (isEqual$1(required, origin)) {
+    return null;
+  }
+  const limited = adjustForSizeLimits({
+    container,
+    subject,
+    proposedScroll: required
+  });
+  if (!limited) {
+    return null;
+  }
+  return isEqual$1(limited, origin) ? null : limited;
+});
+
+const smallestSigned = apply(value => {
+  if (value === 0) {
+    return 0;
+  }
+  return value > 0 ? 1 : -1;
+});
+const getOverlap = (() => {
+  const getRemainder = (target, max) => {
+    if (target < 0) {
+      return target;
+    }
+    if (target > max) {
+      return target - max;
+    }
+    return 0;
+  };
+  return ({
+    current,
+    max,
+    change
+  }) => {
+    const targetScroll = add(current, change);
+    const overlap = {
+      x: getRemainder(targetScroll.x, max.x),
+      y: getRemainder(targetScroll.y, max.y)
+    };
+    if (isEqual$1(overlap, origin)) {
+      return null;
+    }
+    return overlap;
+  };
+})();
+const canPartiallyScroll = ({
+  max: rawMax,
+  current,
+  change
+}) => {
+  const max = {
+    x: Math.max(current.x, rawMax.x),
+    y: Math.max(current.y, rawMax.y)
+  };
+  const smallestChange = smallestSigned(change);
+  const overlap = getOverlap({
+    max,
+    current,
+    change: smallestChange
+  });
+  if (!overlap) {
+    return true;
+  }
+  if (smallestChange.x !== 0 && overlap.x === 0) {
+    return true;
+  }
+  if (smallestChange.y !== 0 && overlap.y === 0) {
+    return true;
+  }
+  return false;
+};
+const canScrollWindow = (viewport, change) => canPartiallyScroll({
+  current: viewport.scroll.current,
+  max: viewport.scroll.max,
+  change
+});
+const getWindowOverlap = (viewport, change) => {
+  if (!canScrollWindow(viewport, change)) {
+    return null;
+  }
+  const max = viewport.scroll.max;
+  const current = viewport.scroll.current;
+  return getOverlap({
+    current,
+    max,
+    change
+  });
+};
+const canScrollDroppable = (droppable, change) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return false;
+  }
+  return canPartiallyScroll({
+    current: frame.scroll.current,
+    max: frame.scroll.max,
+    change
+  });
+};
+const getDroppableOverlap = (droppable, change) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return null;
+  }
+  if (!canScrollDroppable(droppable, change)) {
+    return null;
+  }
+  return getOverlap({
+    current: frame.scroll.current,
+    max: frame.scroll.max,
+    change
+  });
+};
+
+var getWindowScrollChange = (({
+  viewport,
+  subject,
+  center,
+  dragStartTime,
+  shouldUseTimeDampening,
+  getAutoScrollerOptions
+}) => {
+  const scroll = getScroll$1({
+    dragStartTime,
+    container: viewport.frame,
+    subject,
+    center,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  return scroll && canScrollWindow(viewport, scroll) ? scroll : null;
+});
+
+var getDroppableScrollChange = (({
+  droppable,
+  subject,
+  center,
+  dragStartTime,
+  shouldUseTimeDampening,
+  getAutoScrollerOptions
+}) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return null;
+  }
+  const scroll = getScroll$1({
+    dragStartTime,
+    container: frame.pageMarginBox,
+    subject,
+    center,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  return scroll && canScrollDroppable(droppable, scroll) ? scroll : null;
+});
+
+var scroll = (({
+  state,
+  dragStartTime,
+  shouldUseTimeDampening,
+  scrollWindow,
+  scrollDroppable,
+  getAutoScrollerOptions
+}) => {
+  const center = state.current.page.borderBoxCenter;
+  const draggable = state.dimensions.draggables[state.critical.draggable.id];
+  const subject = draggable.page.marginBox;
+  if (state.isWindowScrollAllowed) {
+    const viewport = state.viewport;
+    const change = getWindowScrollChange({
+      dragStartTime,
+      viewport,
+      subject,
+      center,
+      shouldUseTimeDampening,
+      getAutoScrollerOptions
+    });
+    if (change) {
+      scrollWindow(change);
+      return;
+    }
+  }
+  const droppable = getBestScrollableDroppable({
+    center,
+    destination: whatIsDraggedOver(state.impact),
+    droppables: state.dimensions.droppables
+  });
+  if (!droppable) {
+    return;
+  }
+  const change = getDroppableScrollChange({
+    dragStartTime,
+    droppable,
+    subject,
+    center,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  if (change) {
+    scrollDroppable(droppable.descriptor.id, change);
+  }
+});
+
+var createFluidScroller = (({
+  scrollWindow,
+  scrollDroppable,
+  getAutoScrollerOptions = () => defaultAutoScrollerOptions
+}) => {
+  const scheduleWindowScroll = (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(scrollWindow);
+  const scheduleDroppableScroll = (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(scrollDroppable);
+  let dragging = null;
+  const tryScroll = state => {
+    !dragging ?  true ? invariant(false, 'Cannot fluid scroll if not dragging') : 0 : void 0;
+    const {
+      shouldUseTimeDampening,
+      dragStartTime
+    } = dragging;
+    scroll({
+      state,
+      scrollWindow: scheduleWindowScroll,
+      scrollDroppable: scheduleDroppableScroll,
+      dragStartTime,
+      shouldUseTimeDampening,
+      getAutoScrollerOptions
+    });
+  };
+  const start$1 = state => {
+    start();
+    !!dragging ?  true ? invariant(false, 'Cannot start auto scrolling when already started') : 0 : void 0;
+    const dragStartTime = Date.now();
+    let wasScrollNeeded = false;
+    const fakeScrollCallback = () => {
+      wasScrollNeeded = true;
+    };
+    scroll({
+      state,
+      dragStartTime: 0,
+      shouldUseTimeDampening: false,
+      scrollWindow: fakeScrollCallback,
+      scrollDroppable: fakeScrollCallback,
+      getAutoScrollerOptions
+    });
+    dragging = {
+      dragStartTime,
+      shouldUseTimeDampening: wasScrollNeeded
+    };
+    finish();
+    if (wasScrollNeeded) {
+      tryScroll(state);
+    }
+  };
+  const stop = () => {
+    if (!dragging) {
+      return;
+    }
+    scheduleWindowScroll.cancel();
+    scheduleDroppableScroll.cancel();
+    dragging = null;
+  };
+  return {
+    start: start$1,
+    stop,
+    scroll: tryScroll
+  };
+});
+
+var createJumpScroller = (({
+  move,
+  scrollDroppable,
+  scrollWindow
+}) => {
+  const moveByOffset = (state, offset) => {
+    const client = add(state.current.client.selection, offset);
+    move({
+      client
+    });
+  };
+  const scrollDroppableAsMuchAsItCan = (droppable, change) => {
+    if (!canScrollDroppable(droppable, change)) {
+      return change;
+    }
+    const overlap = getDroppableOverlap(droppable, change);
+    if (!overlap) {
+      scrollDroppable(droppable.descriptor.id, change);
+      return null;
+    }
+    const whatTheDroppableCanScroll = subtract(change, overlap);
+    scrollDroppable(droppable.descriptor.id, whatTheDroppableCanScroll);
+    const remainder = subtract(change, whatTheDroppableCanScroll);
+    return remainder;
+  };
+  const scrollWindowAsMuchAsItCan = (isWindowScrollAllowed, viewport, change) => {
+    if (!isWindowScrollAllowed) {
+      return change;
+    }
+    if (!canScrollWindow(viewport, change)) {
+      return change;
+    }
+    const overlap = getWindowOverlap(viewport, change);
+    if (!overlap) {
+      scrollWindow(change);
+      return null;
+    }
+    const whatTheWindowCanScroll = subtract(change, overlap);
+    scrollWindow(whatTheWindowCanScroll);
+    const remainder = subtract(change, whatTheWindowCanScroll);
+    return remainder;
+  };
+  const jumpScroller = state => {
+    const request = state.scrollJumpRequest;
+    if (!request) {
+      return;
+    }
+    const destination = whatIsDraggedOver(state.impact);
+    !destination ?  true ? invariant(false, 'Cannot perform a jump scroll when there is no destination') : 0 : void 0;
+    const droppableRemainder = scrollDroppableAsMuchAsItCan(state.dimensions.droppables[destination], request);
+    if (!droppableRemainder) {
+      return;
+    }
+    const viewport = state.viewport;
+    const windowRemainder = scrollWindowAsMuchAsItCan(state.isWindowScrollAllowed, viewport, droppableRemainder);
+    if (!windowRemainder) {
+      return;
+    }
+    moveByOffset(state, windowRemainder);
+  };
+  return jumpScroller;
+});
+
+var createAutoScroller = (({
+  scrollDroppable,
+  scrollWindow,
+  move,
+  getAutoScrollerOptions
+}) => {
+  const fluidScroller = createFluidScroller({
+    scrollWindow,
+    scrollDroppable,
+    getAutoScrollerOptions
+  });
+  const jumpScroll = createJumpScroller({
+    move,
+    scrollWindow,
+    scrollDroppable
+  });
+  const scroll = state => {
+    const autoScrollerOptions = getAutoScrollerOptions();
+    if (autoScrollerOptions.disabled || state.phase !== 'DRAGGING') {
+      return;
+    }
+    if (state.movementMode === 'FLUID') {
+      fluidScroller.scroll(state);
+      return;
+    }
+    if (!state.scrollJumpRequest) {
+      return;
+    }
+    jumpScroll(state);
+  };
+  const scroller = {
+    scroll,
+    start: fluidScroller.start,
+    stop: fluidScroller.stop
+  };
+  return scroller;
+});
+
+const prefix = 'data-rfd';
+const dragHandle = (() => {
+  const base = `${prefix}-drag-handle`;
+  return {
+    base,
+    draggableId: `${base}-draggable-id`,
+    contextId: `${base}-context-id`
+  };
+})();
+const draggable = (() => {
+  const base = `${prefix}-draggable`;
+  return {
+    base,
+    contextId: `${base}-context-id`,
+    id: `${base}-id`
+  };
+})();
+const droppable = (() => {
+  const base = `${prefix}-droppable`;
+  return {
+    base,
+    contextId: `${base}-context-id`,
+    id: `${base}-id`
+  };
+})();
+const scrollContainer = {
+  contextId: `${prefix}-scroll-container-context-id`
+};
+
+const makeGetSelector = context => attribute => `[${attribute}="${context}"]`;
+const getStyles = (rules, property) => rules.map(rule => {
+  const value = rule.styles[property];
+  if (!value) {
+    return '';
+  }
+  return `${rule.selector} { ${value} }`;
+}).join(' ');
+const noPointerEvents = 'pointer-events: none;';
+var getStyles$1 = (contextId => {
+  const getSelector = makeGetSelector(contextId);
+  const dragHandle$1 = (() => {
+    const grabCursor = `
+      cursor: -webkit-grab;
+      cursor: grab;
+    `;
+    return {
+      selector: getSelector(dragHandle.contextId),
+      styles: {
+        always: `
+          -webkit-touch-callout: none;
+          -webkit-tap-highlight-color: rgba(0,0,0,0);
+          touch-action: manipulation;
+        `,
+        resting: grabCursor,
+        dragging: noPointerEvents,
+        dropAnimating: grabCursor
+      }
+    };
+  })();
+  const draggable$1 = (() => {
+    const transition = `
+      transition: ${transitions.outOfTheWay};
+    `;
+    return {
+      selector: getSelector(draggable.contextId),
+      styles: {
+        dragging: transition,
+        dropAnimating: transition,
+        userCancel: transition
+      }
+    };
+  })();
+  const droppable$1 = {
+    selector: getSelector(droppable.contextId),
+    styles: {
+      always: `overflow-anchor: none;`
+    }
+  };
+  const body = {
+    selector: 'body',
+    styles: {
+      dragging: `
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        overflow-anchor: none;
+      `
+    }
+  };
+  const rules = [draggable$1, dragHandle$1, droppable$1, body];
+  return {
+    always: getStyles(rules, 'always'),
+    resting: getStyles(rules, 'resting'),
+    dragging: getStyles(rules, 'dragging'),
+    dropAnimating: getStyles(rules, 'dropAnimating'),
+    userCancel: getStyles(rules, 'userCancel')
+  };
+});
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined' ? react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect : react__WEBPACK_IMPORTED_MODULE_0__.useEffect;
+var useLayoutEffect = useIsomorphicLayoutEffect;
+
+const getHead = () => {
+  const head = document.querySelector('head');
+  !head ?  true ? invariant(false, 'Cannot find the head to append a style to') : 0 : void 0;
+  return head;
+};
+const createStyleEl = nonce => {
+  const el = document.createElement('style');
+  if (nonce) {
+    el.setAttribute('nonce', nonce);
+  }
+  el.type = 'text/css';
+  return el;
+};
+function useStyleMarshal(contextId, nonce) {
+  const styles = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => getStyles$1(contextId), [contextId]);
+  const alwaysRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const dynamicRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const setDynamicStyle = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(proposed => {
+    const el = dynamicRef.current;
+    !el ?  true ? invariant(false, 'Cannot set dynamic style element if it is not set') : 0 : void 0;
+    el.textContent = proposed;
+  }), []);
+  const setAlwaysStyle = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(proposed => {
+    const el = alwaysRef.current;
+    !el ?  true ? invariant(false, 'Cannot set dynamic style element if it is not set') : 0 : void 0;
+    el.textContent = proposed;
+  }, []);
+  useLayoutEffect(() => {
+    !(!alwaysRef.current && !dynamicRef.current) ?  true ? invariant(false, 'style elements already mounted') : 0 : void 0;
+    const always = createStyleEl(nonce);
+    const dynamic = createStyleEl(nonce);
+    alwaysRef.current = always;
+    dynamicRef.current = dynamic;
+    always.setAttribute(`${prefix}-always`, contextId);
+    dynamic.setAttribute(`${prefix}-dynamic`, contextId);
+    getHead().appendChild(always);
+    getHead().appendChild(dynamic);
+    setAlwaysStyle(styles.always);
+    setDynamicStyle(styles.resting);
+    return () => {
+      const remove = ref => {
+        const current = ref.current;
+        !current ?  true ? invariant(false, 'Cannot unmount ref as it is not set') : 0 : void 0;
+        getHead().removeChild(current);
+        ref.current = null;
+      };
+      remove(alwaysRef);
+      remove(dynamicRef);
+    };
+  }, [nonce, setAlwaysStyle, setDynamicStyle, styles.always, styles.resting, contextId]);
+  const dragging = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => setDynamicStyle(styles.dragging), [setDynamicStyle, styles.dragging]);
+  const dropping = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(reason => {
+    if (reason === 'DROP') {
+      setDynamicStyle(styles.dropAnimating);
+      return;
+    }
+    setDynamicStyle(styles.userCancel);
+  }, [setDynamicStyle, styles.dropAnimating, styles.userCancel]);
+  const resting = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    if (!dynamicRef.current) {
+      return;
+    }
+    setDynamicStyle(styles.resting);
+  }, [setDynamicStyle, styles.resting]);
+  const marshal = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    dragging,
+    dropping,
+    resting
+  }), [dragging, dropping, resting]);
+  return marshal;
+}
+
+function querySelectorAll(parentNode, selector) {
+  return Array.from(parentNode.querySelectorAll(selector));
+}
+
+var getWindowFromEl = (el => {
+  if (el && el.ownerDocument && el.ownerDocument.defaultView) {
+    return el.ownerDocument.defaultView;
+  }
+  return window;
+});
+
+function isHtmlElement(el) {
+  return el instanceof getWindowFromEl(el).HTMLElement;
+}
+
+function findDragHandle(contextId, draggableId) {
+  const selector = `[${dragHandle.contextId}="${contextId}"]`;
+  const possible = querySelectorAll(document, selector);
+  if (!possible.length) {
+     true ? warning(`Unable to find any drag handles in the context "${contextId}"`) : 0;
+    return null;
+  }
+  const handle = possible.find(el => {
+    return el.getAttribute(dragHandle.draggableId) === draggableId;
+  });
+  if (!handle) {
+     true ? warning(`Unable to find drag handle with id "${draggableId}" as no handle with a matching id was found`) : 0;
+    return null;
+  }
+  if (!isHtmlElement(handle)) {
+     true ? warning('drag handle needs to be a HTMLElement') : 0;
+    return null;
+  }
+  return handle;
+}
+
+function useFocusMarshal(contextId) {
+  const entriesRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({});
+  const recordRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const restoreFocusFrameRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const isMountedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+  const register = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function register(id, focus) {
+    const entry = {
+      id,
+      focus
+    };
+    entriesRef.current[id] = entry;
+    return function unregister() {
+      const entries = entriesRef.current;
+      const current = entries[id];
+      if (current !== entry) {
+        delete entries[id];
+      }
+    };
+  }, []);
+  const tryGiveFocus = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryGiveFocus(tryGiveFocusTo) {
+    const handle = findDragHandle(contextId, tryGiveFocusTo);
+    if (handle && handle !== document.activeElement) {
+      handle.focus();
+    }
+  }, [contextId]);
+  const tryShiftRecord = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryShiftRecord(previous, redirectTo) {
+    if (recordRef.current === previous) {
+      recordRef.current = redirectTo;
+    }
+  }, []);
+  const tryRestoreFocusRecorded = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryRestoreFocusRecorded() {
+    if (restoreFocusFrameRef.current) {
+      return;
+    }
+    if (!isMountedRef.current) {
+      return;
+    }
+    restoreFocusFrameRef.current = requestAnimationFrame(() => {
+      restoreFocusFrameRef.current = null;
+      const record = recordRef.current;
+      if (record) {
+        tryGiveFocus(record);
+      }
+    });
+  }, [tryGiveFocus]);
+  const tryRecordFocus = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryRecordFocus(id) {
+    recordRef.current = null;
+    const focused = document.activeElement;
+    if (!focused) {
+      return;
+    }
+    if (focused.getAttribute(dragHandle.draggableId) !== id) {
+      return;
+    }
+    recordRef.current = id;
+  }, []);
+  useLayoutEffect(() => {
+    isMountedRef.current = true;
+    return function clearFrameOnUnmount() {
+      isMountedRef.current = false;
+      const frameId = restoreFocusFrameRef.current;
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, []);
+  const marshal = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    register,
+    tryRecordFocus,
+    tryRestoreFocusRecorded,
+    tryShiftRecord
+  }), [register, tryRecordFocus, tryRestoreFocusRecorded, tryShiftRecord]);
+  return marshal;
+}
+
+function createRegistry() {
+  const entries = {
+    draggables: {},
+    droppables: {}
+  };
+  const subscribers = [];
+  function subscribe(cb) {
+    subscribers.push(cb);
+    return function unsubscribe() {
+      const index = subscribers.indexOf(cb);
+      if (index === -1) {
+        return;
+      }
+      subscribers.splice(index, 1);
+    };
+  }
+  function notify(event) {
+    if (subscribers.length) {
+      subscribers.forEach(cb => cb(event));
+    }
+  }
+  function findDraggableById(id) {
+    return entries.draggables[id] || null;
+  }
+  function getDraggableById(id) {
+    const entry = findDraggableById(id);
+    !entry ?  true ? invariant(false, `Cannot find draggable entry with id [${id}]`) : 0 : void 0;
+    return entry;
+  }
+  const draggableAPI = {
+    register: entry => {
+      entries.draggables[entry.descriptor.id] = entry;
+      notify({
+        type: 'ADDITION',
+        value: entry
+      });
+    },
+    update: (entry, last) => {
+      const current = entries.draggables[last.descriptor.id];
+      if (!current) {
+        return;
+      }
+      if (current.uniqueId !== entry.uniqueId) {
+        return;
+      }
+      delete entries.draggables[last.descriptor.id];
+      entries.draggables[entry.descriptor.id] = entry;
+    },
+    unregister: entry => {
+      const draggableId = entry.descriptor.id;
+      const current = findDraggableById(draggableId);
+      if (!current) {
+        return;
+      }
+      if (entry.uniqueId !== current.uniqueId) {
+        return;
+      }
+      delete entries.draggables[draggableId];
+      if (entries.droppables[entry.descriptor.droppableId]) {
+        notify({
+          type: 'REMOVAL',
+          value: entry
+        });
+      }
+    },
+    getById: getDraggableById,
+    findById: findDraggableById,
+    exists: id => Boolean(findDraggableById(id)),
+    getAllByType: type => Object.values(entries.draggables).filter(entry => entry.descriptor.type === type)
+  };
+  function findDroppableById(id) {
+    return entries.droppables[id] || null;
+  }
+  function getDroppableById(id) {
+    const entry = findDroppableById(id);
+    !entry ?  true ? invariant(false, `Cannot find droppable entry with id [${id}]`) : 0 : void 0;
+    return entry;
+  }
+  const droppableAPI = {
+    register: entry => {
+      entries.droppables[entry.descriptor.id] = entry;
+    },
+    unregister: entry => {
+      const current = findDroppableById(entry.descriptor.id);
+      if (!current) {
+        return;
+      }
+      if (entry.uniqueId !== current.uniqueId) {
+        return;
+      }
+      delete entries.droppables[entry.descriptor.id];
+    },
+    getById: getDroppableById,
+    findById: findDroppableById,
+    exists: id => Boolean(findDroppableById(id)),
+    getAllByType: type => Object.values(entries.droppables).filter(entry => entry.descriptor.type === type)
+  };
+  function clean() {
+    entries.draggables = {};
+    entries.droppables = {};
+    subscribers.length = 0;
+  }
+  return {
+    draggable: draggableAPI,
+    droppable: droppableAPI,
+    subscribe,
+    clean
+  };
+}
+
+function useRegistry() {
+  const registry = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(createRegistry, []);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    return function unmount() {
+      if (react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('16') || react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('17')) {
+        requestAnimationFrame(registry.clean);
+      } else {
+        registry.clean();
+      }
+    };
+  }, [registry]);
+  return registry;
+}
+
+var StoreContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext(null);
+
+var getBodyElement = (() => {
+  const body = document.body;
+  !body ?  true ? invariant(false, 'Cannot find document.body') : 0 : void 0;
+  return body;
+});
+
+const visuallyHidden = {
+  position: 'absolute',
+  width: '1px',
+  height: '1px',
+  margin: '-1px',
+  border: '0',
+  padding: '0',
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  'clip-path': 'inset(100%)'
+};
+var visuallyHidden$1 = visuallyHidden;
+
+const getId = contextId => `rfd-announcement-${contextId}`;
+function useAnnouncer(contextId) {
+  const id = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => getId(contextId), [contextId]);
+  const ref = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function setup() {
+    const el = document.createElement('div');
+    ref.current = el;
+    el.id = id;
+    el.setAttribute('aria-live', 'assertive');
+    el.setAttribute('aria-atomic', 'true');
+    (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_3__["default"])(el.style, visuallyHidden$1);
+    getBodyElement().appendChild(el);
+    return function cleanup() {
+      setTimeout(function remove() {
+        const body = getBodyElement();
+        if (body.contains(el)) {
+          body.removeChild(el);
+        }
+        if (el === ref.current) {
+          ref.current = null;
+        }
+      });
+    };
+  }, [id]);
+  const announce = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(message => {
+    const el = ref.current;
+    if (el) {
+      el.textContent = message;
+      return;
+    }
+     true ? warning(`
+      A screen reader message was trying to be announced but it was unable to do so.
+      This can occur if you unmount your <DragDropContext /> in your onDragEnd.
+      Consider calling provided.announce() before the unmount so that the instruction will
+      not be lost for users relying on a screen reader.
+
+      Message not passed to screen reader:
+
+      "${message}"
+    `) : 0;
+  }, []);
+  return announce;
+}
+
+let count$1 = 0;
+const defaults = {
+  separator: '::'
+};
+function resetDeprecatedUniqueId() {
+  count$1 = 0;
+}
+function useDeprecatedUniqueId(prefix, options = defaults) {
+  return (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => `${prefix}${options.separator}${count$1++}`, [options.separator, prefix]);
+}
+function useUniqueId(prefix, options = defaults) {
+  const id = react__WEBPACK_IMPORTED_MODULE_0___default().useId();
+  return (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => `${prefix}${options.separator}${id}`, [options.separator, prefix, id]);
+}
+var useUniqueId$1 = "useId" in (react__WEBPACK_IMPORTED_MODULE_0___default()) ? useUniqueId : useDeprecatedUniqueId;
+
+function getElementId({
+  contextId,
+  uniqueId
+}) {
+  return `rfd-hidden-text-${contextId}-${uniqueId}`;
+}
+function useHiddenTextElement({
+  contextId,
+  text
+}) {
+  const uniqueId = useUniqueId$1('hidden-text', {
+    separator: '-'
+  });
+  const id = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => getElementId({
+    contextId,
+    uniqueId
+  }), [uniqueId, contextId]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function mount() {
+    const el = document.createElement('div');
+    el.id = id;
+    el.textContent = text;
+    el.style.display = 'none';
+    getBodyElement().appendChild(el);
+    return function unmount() {
+      const body = getBodyElement();
+      if (body.contains(el)) {
+        body.removeChild(el);
+      }
+    };
+  }, [id, text]);
+  return id;
+}
+
+var AppContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext(null);
+
+var peerDependencies = {
+	react: "^16.8.5 || ^17.0.0 || ^18.0.0",
+	"react-dom": "^16.8.5 || ^17.0.0 || ^18.0.0"
+};
+
+const semver = /(\d+)\.(\d+)\.(\d+)/;
+const getVersion = value => {
+  const result = semver.exec(value);
+  !(result != null) ?  true ? invariant(false, `Unable to parse React version ${value}`) : 0 : void 0;
+  const major = Number(result[1]);
+  const minor = Number(result[2]);
+  const patch = Number(result[3]);
+  return {
+    major,
+    minor,
+    patch,
+    raw: value
+  };
+};
+const isSatisfied = (expected, actual) => {
+  if (actual.major > expected.major) {
+    return true;
+  }
+  if (actual.major < expected.major) {
+    return false;
+  }
+  if (actual.minor > expected.minor) {
+    return true;
+  }
+  if (actual.minor < expected.minor) {
+    return false;
+  }
+  return actual.patch >= expected.patch;
+};
+var checkReactVersion = ((peerDepValue, actualValue) => {
+  const peerDep = getVersion(peerDepValue);
+  const actual = getVersion(actualValue);
+  if (isSatisfied(peerDep, actual)) {
+    return;
+  }
+   true ? warning(`
+    React version: [${actual.raw}]
+    does not satisfy expected peer dependency version: [${peerDep.raw}]
+
+    This can result in run time bugs, and even fatal crashes
+  `) : 0;
+});
+
+const suffix = `
+  We expect a html5 doctype: <!doctype html>
+  This is to ensure consistent browser layout and measurement
+
+  More information: https://github.com/hello-pangea/dnd/blob/main/docs/guides/doctype.md
+`;
+var checkDoctype = (doc => {
+  const doctype = doc.doctype;
+  if (!doctype) {
+     true ? warning(`
+      No <!doctype html> found.
+
+      ${suffix}
+    `) : 0;
+    return;
+  }
+  if (doctype.name.toLowerCase() !== 'html') {
+     true ? warning(`
+      Unexpected <!doctype> found: (${doctype.name})
+
+      ${suffix}
+    `) : 0;
+  }
+  if (doctype.publicId !== '') {
+     true ? warning(`
+      Unexpected <!doctype> publicId found: (${doctype.publicId})
+      A html5 doctype does not have a publicId
+
+      ${suffix}
+    `) : 0;
+  }
+});
+
+function useDev(useHook) {
+  if (true) {
+    useHook();
+  }
+}
+
+function useDevSetupWarning(fn, inputs) {
+  useDev(() => {
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+      try {
+        fn();
+      } catch (e) {
+        error(`
+          A setup problem was encountered.
+
+          > ${e.message}
+        `);
+      }
+    }, inputs);
+  });
+}
+
+function useStartupValidation() {
+  useDevSetupWarning(() => {
+    checkReactVersion(peerDependencies.react, (react__WEBPACK_IMPORTED_MODULE_0___default().version));
+    checkDoctype(document);
+  }, []);
+}
+
+function usePrevious(current) {
+  const ref = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(current);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    ref.current = current;
+  });
+  return ref;
+}
+
+function create() {
+  let lock = null;
+  function isClaimed() {
+    return Boolean(lock);
+  }
+  function isActive(value) {
+    return value === lock;
+  }
+  function claim(abandon) {
+    !!lock ?  true ? invariant(false, 'Cannot claim lock as it is already claimed') : 0 : void 0;
+    const newLock = {
+      abandon
+    };
+    lock = newLock;
+    return newLock;
+  }
+  function release() {
+    !lock ?  true ? invariant(false, 'Cannot release lock when there is no lock') : 0 : void 0;
+    lock = null;
+  }
+  function tryAbandon() {
+    if (lock) {
+      lock.abandon();
+      release();
+    }
+  }
+  return {
+    isClaimed,
+    isActive,
+    claim,
+    release,
+    tryAbandon
+  };
+}
+
+function isDragging(state) {
+  if (state.phase === 'IDLE' || state.phase === 'DROP_ANIMATING') {
+    return false;
+  }
+  return state.isDragging;
+}
+
+const tab = 9;
+const enter = 13;
+const escape = 27;
+const space = 32;
+const pageUp = 33;
+const pageDown = 34;
+const end = 35;
+const home = 36;
+const arrowLeft = 37;
+const arrowUp = 38;
+const arrowRight = 39;
+const arrowDown = 40;
+
+const preventedKeys = {
+  [enter]: true,
+  [tab]: true
+};
+var preventStandardKeyEvents = (event => {
+  if (preventedKeys[event.keyCode]) {
+    event.preventDefault();
+  }
+});
+
+const supportedEventName = (() => {
+  const base = 'visibilitychange';
+  if (typeof document === 'undefined') {
+    return base;
+  }
+  const candidates = [base, `ms${base}`, `webkit${base}`, `moz${base}`, `o${base}`];
+  const supported = candidates.find(eventName => `on${eventName}` in document);
+  return supported || base;
+})();
+var supportedPageVisibilityEventName = supportedEventName;
+
+const primaryButton = 0;
+const sloppyClickThreshold = 5;
+function isSloppyClickThresholdExceeded(original, current) {
+  return Math.abs(current.x - original.x) >= sloppyClickThreshold || Math.abs(current.y - original.y) >= sloppyClickThreshold;
+}
+const idle$1 = {
+  type: 'IDLE'
+};
+function getCaptureBindings({
+  cancel,
+  completed,
+  getPhase,
+  setPhase
+}) {
+  return [{
+    eventName: 'mousemove',
+    fn: event => {
+      const {
+        button,
+        clientX,
+        clientY
+      } = event;
+      if (button !== primaryButton) {
+        return;
+      }
+      const point = {
+        x: clientX,
+        y: clientY
+      };
+      const phase = getPhase();
+      if (phase.type === 'DRAGGING') {
+        event.preventDefault();
+        phase.actions.move(point);
+        return;
+      }
+      !(phase.type === 'PENDING') ?  true ? invariant(false, 'Cannot be IDLE') : 0 : void 0;
+      const pending = phase.point;
+      if (!isSloppyClickThresholdExceeded(pending, point)) {
+        return;
+      }
+      event.preventDefault();
+      const actions = phase.actions.fluidLift(point);
+      setPhase({
+        type: 'DRAGGING',
+        actions
+      });
+    }
+  }, {
+    eventName: 'mouseup',
+    fn: event => {
+      const phase = getPhase();
+      if (phase.type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      event.preventDefault();
+      phase.actions.drop({
+        shouldBlockNextClick: true
+      });
+      completed();
+    }
+  }, {
+    eventName: 'mousedown',
+    fn: event => {
+      if (getPhase().type === 'DRAGGING') {
+        event.preventDefault();
+      }
+      cancel();
+    }
+  }, {
+    eventName: 'keydown',
+    fn: event => {
+      const phase = getPhase();
+      if (phase.type === 'PENDING') {
+        cancel();
+        return;
+      }
+      if (event.keyCode === escape) {
+        event.preventDefault();
+        cancel();
+        return;
+      }
+      preventStandardKeyEvents(event);
+    }
+  }, {
+    eventName: 'resize',
+    fn: cancel
+  }, {
+    eventName: 'scroll',
+    options: {
+      passive: true,
+      capture: false
+    },
+    fn: () => {
+      if (getPhase().type === 'PENDING') {
+        cancel();
+      }
+    }
+  }, {
+    eventName: 'webkitmouseforcedown',
+    fn: event => {
+      const phase = getPhase();
+      !(phase.type !== 'IDLE') ?  true ? invariant(false, 'Unexpected phase') : 0 : void 0;
+      if (phase.actions.shouldRespectForcePress()) {
+        cancel();
+        return;
+      }
+      event.preventDefault();
+    }
+  }, {
+    eventName: supportedPageVisibilityEventName,
+    fn: cancel
+  }];
+}
+function useMouseSensor(api) {
+  const phaseRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(idle$1);
+  const unbindEventsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(noop$2);
+  const startCaptureBinding = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    eventName: 'mousedown',
+    fn: function onMouseDown(event) {
+      if (event.defaultPrevented) {
+        return;
+      }
+      if (event.button !== primaryButton) {
+        return;
+      }
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      const draggableId = api.findClosestDraggableId(event);
+      if (!draggableId) {
+        return;
+      }
+      const actions = api.tryGetLock(draggableId, stop, {
+        sourceEvent: event
+      });
+      if (!actions) {
+        return;
+      }
+      event.preventDefault();
+      const point = {
+        x: event.clientX,
+        y: event.clientY
+      };
+      unbindEventsRef.current();
+      startPendingDrag(actions, point);
+    }
+  }), [api]);
+  const preventForcePressBinding = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    eventName: 'webkitmouseforcewillbegin',
+    fn: event => {
+      if (event.defaultPrevented) {
+        return;
+      }
+      const id = api.findClosestDraggableId(event);
+      if (!id) {
+        return;
+      }
+      const options = api.findOptionsForDraggable(id);
+      if (!options) {
+        return;
+      }
+      if (options.shouldRespectForcePress) {
+        return;
+      }
+      if (!api.canGetLock(id)) {
+        return;
+      }
+      event.preventDefault();
+    }
+  }), [api]);
+  const listenForCapture = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function listenForCapture() {
+    const options = {
+      passive: false,
+      capture: true
+    };
+    unbindEventsRef.current = bindEvents(window, [preventForcePressBinding, startCaptureBinding], options);
+  }, [preventForcePressBinding, startCaptureBinding]);
+  const stop = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const current = phaseRef.current;
+    if (current.type === 'IDLE') {
+      return;
+    }
+    phaseRef.current = idle$1;
+    unbindEventsRef.current();
+    listenForCapture();
+  }, [listenForCapture]);
+  const cancel = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const phase = phaseRef.current;
+    stop();
+    if (phase.type === 'DRAGGING') {
+      phase.actions.cancel({
+        shouldBlockNextClick: true
+      });
+    }
+    if (phase.type === 'PENDING') {
+      phase.actions.abort();
+    }
+  }, [stop]);
+  const bindCapturingEvents = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function bindCapturingEvents() {
+    const options = {
+      capture: true,
+      passive: false
+    };
+    const bindings = getCaptureBindings({
+      cancel,
+      completed: stop,
+      getPhase: () => phaseRef.current,
+      setPhase: phase => {
+        phaseRef.current = phase;
+      }
+    });
+    unbindEventsRef.current = bindEvents(window, bindings, options);
+  }, [cancel, stop]);
+  const startPendingDrag = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function startPendingDrag(actions, point) {
+    !(phaseRef.current.type === 'IDLE') ?  true ? invariant(false, 'Expected to move from IDLE to PENDING drag') : 0 : void 0;
+    phaseRef.current = {
+      type: 'PENDING',
+      point,
+      actions
+    };
+    bindCapturingEvents();
+  }, [bindCapturingEvents]);
+  useLayoutEffect(function mount() {
+    listenForCapture();
+    return function unmount() {
+      unbindEventsRef.current();
+    };
+  }, [listenForCapture]);
+}
+
+function noop$1() {}
+const scrollJumpKeys = {
+  [pageDown]: true,
+  [pageUp]: true,
+  [home]: true,
+  [end]: true
+};
+function getDraggingBindings(actions, stop) {
+  function cancel() {
+    stop();
+    actions.cancel();
+  }
+  function drop() {
+    stop();
+    actions.drop();
+  }
+  return [{
+    eventName: 'keydown',
+    fn: event => {
+      if (event.keyCode === escape) {
+        event.preventDefault();
+        cancel();
+        return;
+      }
+      if (event.keyCode === space) {
+        event.preventDefault();
+        drop();
+        return;
+      }
+      if (event.keyCode === arrowDown) {
+        event.preventDefault();
+        actions.moveDown();
+        return;
+      }
+      if (event.keyCode === arrowUp) {
+        event.preventDefault();
+        actions.moveUp();
+        return;
+      }
+      if (event.keyCode === arrowRight) {
+        event.preventDefault();
+        actions.moveRight();
+        return;
+      }
+      if (event.keyCode === arrowLeft) {
+        event.preventDefault();
+        actions.moveLeft();
+        return;
+      }
+      if (scrollJumpKeys[event.keyCode]) {
+        event.preventDefault();
+        return;
+      }
+      preventStandardKeyEvents(event);
+    }
+  }, {
+    eventName: 'mousedown',
+    fn: cancel
+  }, {
+    eventName: 'mouseup',
+    fn: cancel
+  }, {
+    eventName: 'click',
+    fn: cancel
+  }, {
+    eventName: 'touchstart',
+    fn: cancel
+  }, {
+    eventName: 'resize',
+    fn: cancel
+  }, {
+    eventName: 'wheel',
+    fn: cancel,
+    options: {
+      passive: true
+    }
+  }, {
+    eventName: supportedPageVisibilityEventName,
+    fn: cancel
+  }];
+}
+function useKeyboardSensor(api) {
+  const unbindEventsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(noop$1);
+  const startCaptureBinding = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    eventName: 'keydown',
+    fn: function onKeyDown(event) {
+      if (event.defaultPrevented) {
+        return;
+      }
+      if (event.keyCode !== space) {
+        return;
+      }
+      const draggableId = api.findClosestDraggableId(event);
+      if (!draggableId) {
+        return;
+      }
+      const preDrag = api.tryGetLock(draggableId, stop, {
+        sourceEvent: event
+      });
+      if (!preDrag) {
+        return;
+      }
+      event.preventDefault();
+      let isCapturing = true;
+      const actions = preDrag.snapLift();
+      unbindEventsRef.current();
+      function stop() {
+        !isCapturing ?  true ? invariant(false, 'Cannot stop capturing a keyboard drag when not capturing') : 0 : void 0;
+        isCapturing = false;
+        unbindEventsRef.current();
+        listenForCapture();
+      }
+      unbindEventsRef.current = bindEvents(window, getDraggingBindings(actions, stop), {
+        capture: true,
+        passive: false
+      });
+    }
+  }), [api]);
+  const listenForCapture = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryStartCapture() {
+    const options = {
+      passive: false,
+      capture: true
+    };
+    unbindEventsRef.current = bindEvents(window, [startCaptureBinding], options);
+  }, [startCaptureBinding]);
+  useLayoutEffect(function mount() {
+    listenForCapture();
+    return function unmount() {
+      unbindEventsRef.current();
+    };
+  }, [listenForCapture]);
+}
+
+const idle = {
+  type: 'IDLE'
+};
+const timeForLongPress = 120;
+const forcePressThreshold = 0.15;
+function getWindowBindings({
+  cancel,
+  getPhase
+}) {
+  return [{
+    eventName: 'orientationchange',
+    fn: cancel
+  }, {
+    eventName: 'resize',
+    fn: cancel
+  }, {
+    eventName: 'contextmenu',
+    fn: event => {
+      event.preventDefault();
+    }
+  }, {
+    eventName: 'keydown',
+    fn: event => {
+      if (getPhase().type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      if (event.keyCode === escape) {
+        event.preventDefault();
+      }
+      cancel();
+    }
+  }, {
+    eventName: supportedPageVisibilityEventName,
+    fn: cancel
+  }];
+}
+function getHandleBindings({
+  cancel,
+  completed,
+  getPhase
+}) {
+  return [{
+    eventName: 'touchmove',
+    options: {
+      capture: false
+    },
+    fn: event => {
+      const phase = getPhase();
+      if (phase.type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      phase.hasMoved = true;
+      const {
+        clientX,
+        clientY
+      } = event.touches[0];
+      const point = {
+        x: clientX,
+        y: clientY
+      };
+      event.preventDefault();
+      phase.actions.move(point);
+    }
+  }, {
+    eventName: 'touchend',
+    fn: event => {
+      const phase = getPhase();
+      if (phase.type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      event.preventDefault();
+      phase.actions.drop({
+        shouldBlockNextClick: true
+      });
+      completed();
+    }
+  }, {
+    eventName: 'touchcancel',
+    fn: event => {
+      if (getPhase().type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      event.preventDefault();
+      cancel();
+    }
+  }, {
+    eventName: 'touchforcechange',
+    fn: event => {
+      const phase = getPhase();
+      !(phase.type !== 'IDLE') ?  true ? invariant(false) : 0 : void 0;
+      const touch = event.touches[0];
+      if (!touch) {
+        return;
+      }
+      const isForcePress = touch.force >= forcePressThreshold;
+      if (!isForcePress) {
+        return;
+      }
+      const shouldRespect = phase.actions.shouldRespectForcePress();
+      if (phase.type === 'PENDING') {
+        if (shouldRespect) {
+          cancel();
+        }
+        return;
+      }
+      if (shouldRespect) {
+        if (phase.hasMoved) {
+          event.preventDefault();
+          return;
+        }
+        cancel();
+        return;
+      }
+      event.preventDefault();
+    }
+  }, {
+    eventName: supportedPageVisibilityEventName,
+    fn: cancel
+  }];
+}
+function useTouchSensor(api) {
+  const phaseRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(idle);
+  const unbindEventsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(noop$2);
+  const getPhase = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function getPhase() {
+    return phaseRef.current;
+  }, []);
+  const setPhase = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function setPhase(phase) {
+    phaseRef.current = phase;
+  }, []);
+  const startCaptureBinding = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    eventName: 'touchstart',
+    fn: function onTouchStart(event) {
+      if (event.defaultPrevented) {
+        return;
+      }
+      const draggableId = api.findClosestDraggableId(event);
+      if (!draggableId) {
+        return;
+      }
+      const actions = api.tryGetLock(draggableId, stop, {
+        sourceEvent: event
+      });
+      if (!actions) {
+        return;
+      }
+      const touch = event.touches[0];
+      const {
+        clientX,
+        clientY
+      } = touch;
+      const point = {
+        x: clientX,
+        y: clientY
+      };
+      unbindEventsRef.current();
+      startPendingDrag(actions, point);
+    }
+  }), [api]);
+  const listenForCapture = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function listenForCapture() {
+    const options = {
+      capture: true,
+      passive: false
+    };
+    unbindEventsRef.current = bindEvents(window, [startCaptureBinding], options);
+  }, [startCaptureBinding]);
+  const stop = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const current = phaseRef.current;
+    if (current.type === 'IDLE') {
+      return;
+    }
+    if (current.type === 'PENDING') {
+      clearTimeout(current.longPressTimerId);
+    }
+    setPhase(idle);
+    unbindEventsRef.current();
+    listenForCapture();
+  }, [listenForCapture, setPhase]);
+  const cancel = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const phase = phaseRef.current;
+    stop();
+    if (phase.type === 'DRAGGING') {
+      phase.actions.cancel({
+        shouldBlockNextClick: true
+      });
+    }
+    if (phase.type === 'PENDING') {
+      phase.actions.abort();
+    }
+  }, [stop]);
+  const bindCapturingEvents = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function bindCapturingEvents() {
+    const options = {
+      capture: true,
+      passive: false
+    };
+    const args = {
+      cancel,
+      completed: stop,
+      getPhase
+    };
+    const unbindTarget = bindEvents(window, getHandleBindings(args), options);
+    const unbindWindow = bindEvents(window, getWindowBindings(args), options);
+    unbindEventsRef.current = function unbindAll() {
+      unbindTarget();
+      unbindWindow();
+    };
+  }, [cancel, getPhase, stop]);
+  const startDragging = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function startDragging() {
+    const phase = getPhase();
+    !(phase.type === 'PENDING') ?  true ? invariant(false, `Cannot start dragging from phase ${phase.type}`) : 0 : void 0;
+    const actions = phase.actions.fluidLift(phase.point);
+    setPhase({
+      type: 'DRAGGING',
+      actions,
+      hasMoved: false
+    });
+  }, [getPhase, setPhase]);
+  const startPendingDrag = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function startPendingDrag(actions, point) {
+    !(getPhase().type === 'IDLE') ?  true ? invariant(false, 'Expected to move from IDLE to PENDING drag') : 0 : void 0;
+    const longPressTimerId = setTimeout(startDragging, timeForLongPress);
+    setPhase({
+      type: 'PENDING',
+      point,
+      actions,
+      longPressTimerId
+    });
+    bindCapturingEvents();
+  }, [bindCapturingEvents, getPhase, setPhase, startDragging]);
+  useLayoutEffect(function mount() {
+    listenForCapture();
+    return function unmount() {
+      unbindEventsRef.current();
+      const phase = getPhase();
+      if (phase.type === 'PENDING') {
+        clearTimeout(phase.longPressTimerId);
+        setPhase(idle);
+      }
+    };
+  }, [getPhase, listenForCapture, setPhase]);
+  useLayoutEffect(function webkitHack() {
+    const unbind = bindEvents(window, [{
+      eventName: 'touchmove',
+      fn: () => {},
+      options: {
+        capture: false,
+        passive: false
+      }
+    }]);
+    return unbind;
+  }, []);
+}
+
+function useValidateSensorHooks(sensorHooks) {
+  useDev(() => {
+    const previousRef = usePrevious(sensorHooks);
+    useDevSetupWarning(() => {
+      !(previousRef.current.length === sensorHooks.length) ?  true ? invariant(false, 'Cannot change the amount of sensor hooks after mounting') : 0 : void 0;
+    });
+  });
+}
+
+const interactiveTagNames = ['input', 'button', 'textarea', 'select', 'option', 'optgroup', 'video', 'audio'];
+function isAnInteractiveElement(parent, current) {
+  if (current == null) {
+    return false;
+  }
+  const hasAnInteractiveTag = interactiveTagNames.includes(current.tagName.toLowerCase());
+  if (hasAnInteractiveTag) {
+    return true;
+  }
+  const attribute = current.getAttribute('contenteditable');
+  if (attribute === 'true' || attribute === '') {
+    return true;
+  }
+  if (current === parent) {
+    return false;
+  }
+  return isAnInteractiveElement(parent, current.parentElement);
+}
+function isEventInInteractiveElement(draggable, event) {
+  const target = event.target;
+  if (!isHtmlElement(target)) {
+    return false;
+  }
+  return isAnInteractiveElement(draggable, target);
+}
+
+var getBorderBoxCenterPosition = (el => (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)(el.getBoundingClientRect()).center);
+
+function isElement(el) {
+  return el instanceof getWindowFromEl(el).Element;
+}
+
+const supportedMatchesName = (() => {
+  const base = 'matches';
+  if (typeof document === 'undefined') {
+    return base;
+  }
+  const candidates = [base, 'msMatchesSelector', 'webkitMatchesSelector'];
+  const value = candidates.find(name => name in Element.prototype);
+  return value || base;
+})();
+function closestPonyfill(el, selector) {
+  if (el == null) {
+    return null;
+  }
+  if (el[supportedMatchesName](selector)) {
+    return el;
+  }
+  return closestPonyfill(el.parentElement, selector);
+}
+function closest(el, selector) {
+  if (el.closest) {
+    return el.closest(selector);
+  }
+  return closestPonyfill(el, selector);
+}
+
+function getSelector(contextId) {
+  return `[${dragHandle.contextId}="${contextId}"]`;
+}
+function findClosestDragHandleFromEvent(contextId, event) {
+  const target = event.target;
+  if (!isElement(target)) {
+     true ? warning('event.target must be a Element') : 0;
+    return null;
+  }
+  const selector = getSelector(contextId);
+  const handle = closest(target, selector);
+  if (!handle) {
+    return null;
+  }
+  if (!isHtmlElement(handle)) {
+     true ? warning('drag handle must be a HTMLElement') : 0;
+    return null;
+  }
+  return handle;
+}
+function tryGetClosestDraggableIdFromEvent(contextId, event) {
+  const handle = findClosestDragHandleFromEvent(contextId, event);
+  if (!handle) {
+    return null;
+  }
+  return handle.getAttribute(dragHandle.draggableId);
+}
+
+function findDraggable(contextId, draggableId) {
+  const selector = `[${draggable.contextId}="${contextId}"]`;
+  const possible = querySelectorAll(document, selector);
+  const draggable$1 = possible.find(el => {
+    return el.getAttribute(draggable.id) === draggableId;
+  });
+  if (!draggable$1) {
+    return null;
+  }
+  if (!isHtmlElement(draggable$1)) {
+     true ? warning('Draggable element is not a HTMLElement') : 0;
+    return null;
+  }
+  return draggable$1;
+}
+
+function preventDefault(event) {
+  event.preventDefault();
+}
+function isActive({
+  expected,
+  phase,
+  isLockActive,
+  shouldWarn
+}) {
+  if (!isLockActive()) {
+    if (shouldWarn) {
+       true ? warning(`
+        Cannot perform action.
+        The sensor no longer has an action lock.
+
+        Tips:
+
+        - Throw away your action handlers when forceStop() is called
+        - Check actions.isActive() if you really need to
+      `) : 0;
+    }
+    return false;
+  }
+  if (expected !== phase) {
+    if (shouldWarn) {
+       true ? warning(`
+        Cannot perform action.
+        The actions you used belong to an outdated phase
+
+        Current phase: ${expected}
+        You called an action from outdated phase: ${phase}
+
+        Tips:
+
+        - Do not use preDragActions actions after calling preDragActions.lift()
+      `) : 0;
+    }
+    return false;
+  }
+  return true;
+}
+function canStart({
+  lockAPI,
+  store,
+  registry,
+  draggableId
+}) {
+  if (lockAPI.isClaimed()) {
+    return false;
+  }
+  const entry = registry.draggable.findById(draggableId);
+  if (!entry) {
+     true ? warning(`Unable to find draggable with id: ${draggableId}`) : 0;
+    return false;
+  }
+  if (!entry.options.isEnabled) {
+    return false;
+  }
+  if (!canStartDrag(store.getState(), draggableId)) {
+    return false;
+  }
+  return true;
+}
+function tryStart({
+  lockAPI,
+  contextId,
+  store,
+  registry,
+  draggableId,
+  forceSensorStop,
+  sourceEvent
+}) {
+  const shouldStart = canStart({
+    lockAPI,
+    store,
+    registry,
+    draggableId
+  });
+  if (!shouldStart) {
+    return null;
+  }
+  const entry = registry.draggable.getById(draggableId);
+  const el = findDraggable(contextId, entry.descriptor.id);
+  if (!el) {
+     true ? warning(`Unable to find draggable element with id: ${draggableId}`) : 0;
+    return null;
+  }
+  if (sourceEvent && !entry.options.canDragInteractiveElements && isEventInInteractiveElement(el, sourceEvent)) {
+    return null;
+  }
+  const lock = lockAPI.claim(forceSensorStop || noop$2);
+  let phase = 'PRE_DRAG';
+  function getShouldRespectForcePress() {
+    return entry.options.shouldRespectForcePress;
+  }
+  function isLockActive() {
+    return lockAPI.isActive(lock);
+  }
+  function tryDispatch(expected, getAction) {
+    if (isActive({
+      expected,
+      phase,
+      isLockActive,
+      shouldWarn: true
+    })) {
+      store.dispatch(getAction());
+    }
+  }
+  const tryDispatchWhenDragging = tryDispatch.bind(null, 'DRAGGING');
+  function lift(args) {
+    function completed() {
+      lockAPI.release();
+      phase = 'COMPLETED';
+    }
+    if (phase !== 'PRE_DRAG') {
+      completed();
+       true ? invariant(false, `Cannot lift in phase ${phase}`) : 0 ;
+    }
+    store.dispatch(lift$1(args.liftActionArgs));
+    phase = 'DRAGGING';
+    function finish(reason, options = {
+      shouldBlockNextClick: false
+    }) {
+      args.cleanup();
+      if (options.shouldBlockNextClick) {
+        const unbind = bindEvents(window, [{
+          eventName: 'click',
+          fn: preventDefault,
+          options: {
+            once: true,
+            passive: false,
+            capture: true
+          }
+        }]);
+        setTimeout(unbind);
+      }
+      completed();
+      store.dispatch(drop$1({
+        reason
+      }));
+    }
+    return {
+      isActive: () => isActive({
+        expected: 'DRAGGING',
+        phase,
+        isLockActive,
+        shouldWarn: false
+      }),
+      shouldRespectForcePress: getShouldRespectForcePress,
+      drop: options => finish('DROP', options),
+      cancel: options => finish('CANCEL', options),
+      ...args.actions
+    };
+  }
+  function fluidLift(clientSelection) {
+    const move$1 = (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(client => {
+      tryDispatchWhenDragging(() => move({
+        client
+      }));
+    });
+    const api = lift({
+      liftActionArgs: {
+        id: draggableId,
+        clientSelection,
+        movementMode: 'FLUID'
+      },
+      cleanup: () => move$1.cancel(),
+      actions: {
+        move: move$1
+      }
+    });
+    return {
+      ...api,
+      move: move$1
+    };
+  }
+  function snapLift() {
+    const actions = {
+      moveUp: () => tryDispatchWhenDragging(moveUp),
+      moveRight: () => tryDispatchWhenDragging(moveRight),
+      moveDown: () => tryDispatchWhenDragging(moveDown),
+      moveLeft: () => tryDispatchWhenDragging(moveLeft)
+    };
+    return lift({
+      liftActionArgs: {
+        id: draggableId,
+        clientSelection: getBorderBoxCenterPosition(el),
+        movementMode: 'SNAP'
+      },
+      cleanup: noop$2,
+      actions
+    });
+  }
+  function abortPreDrag() {
+    const shouldRelease = isActive({
+      expected: 'PRE_DRAG',
+      phase,
+      isLockActive,
+      shouldWarn: true
+    });
+    if (shouldRelease) {
+      lockAPI.release();
+    }
+  }
+  const preDrag = {
+    isActive: () => isActive({
+      expected: 'PRE_DRAG',
+      phase,
+      isLockActive,
+      shouldWarn: false
+    }),
+    shouldRespectForcePress: getShouldRespectForcePress,
+    fluidLift,
+    snapLift,
+    abort: abortPreDrag
+  };
+  return preDrag;
+}
+const defaultSensors = [useMouseSensor, useKeyboardSensor, useTouchSensor];
+function useSensorMarshal({
+  contextId,
+  store,
+  registry,
+  customSensors,
+  enableDefaultSensors
+}) {
+  const useSensors = [...(enableDefaultSensors ? defaultSensors : []), ...(customSensors || [])];
+  const lockAPI = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(() => create())[0];
+  const tryAbandonLock = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryAbandonLock(previous, current) {
+    if (isDragging(previous) && !isDragging(current)) {
+      lockAPI.tryAbandon();
+    }
+  }, [lockAPI]);
+  useLayoutEffect(function listenToStore() {
+    let previous = store.getState();
+    const unsubscribe = store.subscribe(() => {
+      const current = store.getState();
+      tryAbandonLock(previous, current);
+      previous = current;
+    });
+    return unsubscribe;
+  }, [lockAPI, store, tryAbandonLock]);
+  useLayoutEffect(() => {
+    return lockAPI.tryAbandon;
+  }, [lockAPI.tryAbandon]);
+  const canGetLock = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(draggableId => {
+    return canStart({
+      lockAPI,
+      registry,
+      store,
+      draggableId
+    });
+  }, [lockAPI, registry, store]);
+  const tryGetLock = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((draggableId, forceStop, options) => tryStart({
+    lockAPI,
+    registry,
+    contextId,
+    store,
+    draggableId,
+    forceSensorStop: forceStop || null,
+    sourceEvent: options && options.sourceEvent ? options.sourceEvent : null
+  }), [contextId, lockAPI, registry, store]);
+  const findClosestDraggableId = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(event => tryGetClosestDraggableIdFromEvent(contextId, event), [contextId]);
+  const findOptionsForDraggable = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(id => {
+    const entry = registry.draggable.findById(id);
+    return entry ? entry.options : null;
+  }, [registry.draggable]);
+  const tryReleaseLock = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryReleaseLock() {
+    if (!lockAPI.isClaimed()) {
+      return;
+    }
+    lockAPI.tryAbandon();
+    if (store.getState().phase !== 'IDLE') {
+      store.dispatch(flush());
+    }
+  }, [lockAPI, store]);
+  const isLockClaimed = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => lockAPI.isClaimed(), [lockAPI]);
+  const api = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    canGetLock,
+    tryGetLock,
+    findClosestDraggableId,
+    findOptionsForDraggable,
+    tryReleaseLock,
+    isLockClaimed
+  }), [canGetLock, tryGetLock, findClosestDraggableId, findOptionsForDraggable, tryReleaseLock, isLockClaimed]);
+  useValidateSensorHooks(useSensors);
+  for (let i = 0; i < useSensors.length; i++) {
+    useSensors[i](api);
+  }
+}
+
+const createResponders = props => ({
+  onBeforeCapture: t => {
+    const onBeforeCapureCallback = () => {
+      if (props.onBeforeCapture) {
+        props.onBeforeCapture(t);
+      }
+    };
+    if (react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('16') || react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('17')) {
+      onBeforeCapureCallback();
+    } else {
+      (0,react_dom__WEBPACK_IMPORTED_MODULE_1__.flushSync)(onBeforeCapureCallback);
+    }
+  },
+  onBeforeDragStart: props.onBeforeDragStart,
+  onDragStart: props.onDragStart,
+  onDragEnd: props.onDragEnd,
+  onDragUpdate: props.onDragUpdate
+});
+const createAutoScrollerOptions = props => ({
+  ...defaultAutoScrollerOptions,
+  ...props.autoScrollerOptions,
+  durationDampening: {
+    ...defaultAutoScrollerOptions.durationDampening,
+    ...props.autoScrollerOptions
+  }
+});
+function getStore(lazyRef) {
+  !lazyRef.current ?  true ? invariant(false, 'Could not find store from lazy ref') : 0 : void 0;
+  return lazyRef.current;
+}
+function App(props) {
+  const {
+    contextId,
+    setCallbacks,
+    sensors,
+    nonce,
+    dragHandleUsageInstructions
+  } = props;
+  const lazyStoreRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  useStartupValidation();
+  const lastPropsRef = usePrevious(props);
+  const getResponders = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    return createResponders(lastPropsRef.current);
+  }, [lastPropsRef]);
+  const getAutoScrollerOptions = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    return createAutoScrollerOptions(lastPropsRef.current);
+  }, [lastPropsRef]);
+  const announce = useAnnouncer(contextId);
+  const dragHandleUsageInstructionsId = useHiddenTextElement({
+    contextId,
+    text: dragHandleUsageInstructions
+  });
+  const styleMarshal = useStyleMarshal(contextId, nonce);
+  const lazyDispatch = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(action => {
+    getStore(lazyStoreRef).dispatch(action);
+  }, []);
+  const marshalCallbacks = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => (0,redux__WEBPACK_IMPORTED_MODULE_7__.bindActionCreators)({
+    publishWhileDragging,
+    updateDroppableScroll,
+    updateDroppableIsEnabled,
+    updateDroppableIsCombineEnabled,
+    collectionStarting
+  }, lazyDispatch), [lazyDispatch]);
+  const registry = useRegistry();
+  const dimensionMarshal = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => {
+    return createDimensionMarshal(registry, marshalCallbacks);
+  }, [registry, marshalCallbacks]);
+  const autoScroller = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => createAutoScroller({
+    scrollWindow,
+    scrollDroppable: dimensionMarshal.scrollDroppable,
+    getAutoScrollerOptions,
+    ...(0,redux__WEBPACK_IMPORTED_MODULE_7__.bindActionCreators)({
+      move
+    }, lazyDispatch)
+  }), [dimensionMarshal.scrollDroppable, lazyDispatch, getAutoScrollerOptions]);
+  const focusMarshal = useFocusMarshal(contextId);
+  const store = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => createStore({
+    announce,
+    autoScroller,
+    dimensionMarshal,
+    focusMarshal,
+    getResponders,
+    styleMarshal
+  }), [announce, autoScroller, dimensionMarshal, focusMarshal, getResponders, styleMarshal]);
+  if (true) {
+    if (lazyStoreRef.current && lazyStoreRef.current !== store) {
+       true ? warning('unexpected store change') : 0;
+    }
+  }
+  lazyStoreRef.current = store;
+  const tryResetStore = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const current = getStore(lazyStoreRef);
+    const state = current.getState();
+    if (state.phase !== 'IDLE') {
+      current.dispatch(flush());
+    }
+  }, []);
+  const isDragging = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const state = getStore(lazyStoreRef).getState();
+    if (state.phase === 'DROP_ANIMATING') {
+      return true;
+    }
+    if (state.phase === 'IDLE') {
+      return false;
+    }
+    return state.isDragging;
+  }, []);
+  const appCallbacks = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    isDragging,
+    tryAbort: tryResetStore
+  }), [isDragging, tryResetStore]);
+  setCallbacks(appCallbacks);
+  const getCanLift = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(id => canStartDrag(getStore(lazyStoreRef).getState(), id), []);
+  const getIsMovementAllowed = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => isMovementAllowed(getStore(lazyStoreRef).getState()), []);
+  const appContext = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    marshal: dimensionMarshal,
+    focus: focusMarshal,
+    contextId,
+    canLift: getCanLift,
+    isMovementAllowed: getIsMovementAllowed,
+    dragHandleUsageInstructionsId,
+    registry
+  }), [contextId, dimensionMarshal, dragHandleUsageInstructionsId, focusMarshal, getCanLift, getIsMovementAllowed, registry]);
+  useSensorMarshal({
+    contextId,
+    store,
+    registry,
+    customSensors: sensors || null,
+    enableDefaultSensors: props.enableDefaultSensors !== false
+  });
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    return tryResetStore;
+  }, [tryResetStore]);
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AppContext.Provider, {
+    value: appContext
+  }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__.Provider, {
+    context: StoreContext,
+    store: store
+  }, props.children));
+}
+
+let count = 0;
+function resetDeprecatedUniqueContextId() {
+  count = 0;
+}
+function useDeprecatedUniqueContextId() {
+  return (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => `${count++}`, []);
+}
+function useUniqueContextId() {
+  return react__WEBPACK_IMPORTED_MODULE_0___default().useId();
+}
+var useUniqueContextId$1 = "useId" in (react__WEBPACK_IMPORTED_MODULE_0___default()) ? useUniqueContextId : useDeprecatedUniqueContextId;
+
+function resetServerContext() {
+  if ("useId" in (react__WEBPACK_IMPORTED_MODULE_0___default())) {
+     true ? warning(`It is not necessary to call resetServerContext when using React 18+`) : 0;
+    return;
+  }
+  resetDeprecatedUniqueContextId();
+  resetDeprecatedUniqueId();
+}
+function DragDropContext(props) {
+  const contextId = useUniqueContextId$1();
+  const dragHandleUsageInstructions = props.dragHandleUsageInstructions || preset$1.dragHandleUsageInstructions;
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(ErrorBoundary, null, setCallbacks => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(App, {
+    nonce: props.nonce,
+    contextId: contextId,
+    setCallbacks: setCallbacks,
+    dragHandleUsageInstructions: dragHandleUsageInstructions,
+    enableDefaultSensors: props.enableDefaultSensors,
+    sensors: props.sensors,
+    onBeforeCapture: props.onBeforeCapture,
+    onBeforeDragStart: props.onBeforeDragStart,
+    onDragStart: props.onDragStart,
+    onDragUpdate: props.onDragUpdate,
+    onDragEnd: props.onDragEnd,
+    autoScrollerOptions: props.autoScrollerOptions
+  }, props.children));
+}
+
+const zIndexOptions = {
+  dragging: 5000,
+  dropAnimating: 4500
+};
+const getDraggingTransition = (shouldAnimateDragMovement, dropping) => {
+  if (dropping) {
+    return transitions.drop(dropping.duration);
+  }
+  if (shouldAnimateDragMovement) {
+    return transitions.snap;
+  }
+  return transitions.fluid;
+};
+const getDraggingOpacity = (isCombining, isDropAnimating) => {
+  if (!isCombining) {
+    return undefined;
+  }
+  return isDropAnimating ? combine.opacity.drop : combine.opacity.combining;
+};
+const getShouldDraggingAnimate = dragging => {
+  if (dragging.forceShouldAnimate != null) {
+    return dragging.forceShouldAnimate;
+  }
+  return dragging.mode === 'SNAP';
+};
+function getDraggingStyle(dragging) {
+  const dimension = dragging.dimension;
+  const box = dimension.client;
+  const {
+    offset,
+    combineWith,
+    dropping
+  } = dragging;
+  const isCombining = Boolean(combineWith);
+  const shouldAnimate = getShouldDraggingAnimate(dragging);
+  const isDropAnimating = Boolean(dropping);
+  const transform = isDropAnimating ? transforms.drop(offset, isCombining) : transforms.moveTo(offset);
+  const style = {
+    position: 'fixed',
+    top: box.marginBox.top,
+    left: box.marginBox.left,
+    boxSizing: 'border-box',
+    width: box.borderBox.width,
+    height: box.borderBox.height,
+    transition: getDraggingTransition(shouldAnimate, dropping),
+    transform,
+    opacity: getDraggingOpacity(isCombining, isDropAnimating),
+    zIndex: isDropAnimating ? zIndexOptions.dropAnimating : zIndexOptions.dragging,
+    pointerEvents: 'none'
+  };
+  return style;
+}
+function getSecondaryStyle(secondary) {
+  return {
+    transform: transforms.moveTo(secondary.offset),
+    transition: secondary.shouldAnimateDisplacement ? undefined : 'none'
+  };
+}
+function getStyle$1(mapped) {
+  return mapped.type === 'DRAGGING' ? getDraggingStyle(mapped) : getSecondaryStyle(mapped);
+}
+
+function getDimension$1(descriptor, el, windowScroll = origin) {
+  const computedStyles = window.getComputedStyle(el);
+  const borderBox = el.getBoundingClientRect();
+  const client = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.calculateBox)(borderBox, computedStyles);
+  const page = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.withScroll)(client, windowScroll);
+  const placeholder = {
+    client,
+    tagName: el.tagName.toLowerCase(),
+    display: computedStyles.display
+  };
+  const displaceBy = {
+    x: client.marginBox.width,
+    y: client.marginBox.height
+  };
+  const dimension = {
+    descriptor,
+    placeholder,
+    displaceBy,
+    client,
+    page
+  };
+  return dimension;
+}
+
+function useDraggablePublisher(args) {
+  const uniqueId = useUniqueId$1('draggable');
+  const {
+    descriptor,
+    registry,
+    getDraggableRef,
+    canDragInteractiveElements,
+    shouldRespectForcePress,
+    isEnabled
+  } = args;
+  const options = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    canDragInteractiveElements,
+    shouldRespectForcePress,
+    isEnabled
+  }), [canDragInteractiveElements, isEnabled, shouldRespectForcePress]);
+  const getDimension = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(windowScroll => {
+    const el = getDraggableRef();
+    !el ?  true ? invariant(false, 'Cannot get dimension when no ref is set') : 0 : void 0;
+    return getDimension$1(descriptor, el, windowScroll);
+  }, [descriptor, getDraggableRef]);
+  const entry = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    uniqueId,
+    descriptor,
+    options,
+    getDimension
+  }), [descriptor, getDimension, options, uniqueId]);
+  const publishedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(entry);
+  const isFirstPublishRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
+  useLayoutEffect(() => {
+    registry.draggable.register(publishedRef.current);
+    return () => registry.draggable.unregister(publishedRef.current);
+  }, [registry.draggable]);
+  useLayoutEffect(() => {
+    if (isFirstPublishRef.current) {
+      isFirstPublishRef.current = false;
+      return;
+    }
+    const last = publishedRef.current;
+    publishedRef.current = entry;
+    registry.draggable.update(entry, last);
+  }, [entry, registry.draggable]);
+}
+
+var DroppableContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext(null);
+
+function checkIsValidInnerRef(el) {
+  !(el && isHtmlElement(el)) ?  true ? invariant(false, `
+    provided.innerRef has not been provided with a HTMLElement.
+
+    You can find a guide on using the innerRef callback functions at:
+    https://github.com/hello-pangea/dnd/blob/main/docs/guides/using-inner-ref.md
+  `) : 0 : void 0;
+}
+
+function useValidation$1(props, contextId, getRef) {
+  useDevSetupWarning(() => {
+    function prefix(id) {
+      return `Draggable[id: ${id}]: `;
+    }
+    const id = props.draggableId;
+    !id ?  true ? invariant(false, 'Draggable requires a draggableId') : 0 : void 0;
+    !(typeof id === 'string') ?  true ? invariant(false, `Draggable requires a [string] draggableId.
+      Provided: [type: ${typeof id}] (value: ${id})`) : 0 : void 0;
+    !Number.isInteger(props.index) ?  true ? invariant(false, `${prefix(id)} requires an integer index prop`) : 0 : void 0;
+    if (props.mapped.type === 'DRAGGING') {
+      return;
+    }
+    checkIsValidInnerRef(getRef());
+    if (props.isEnabled) {
+      !findDragHandle(contextId, id) ?  true ? invariant(false, `${prefix(id)} Unable to find drag handle`) : 0 : void 0;
+    }
+  });
+}
+function useClonePropValidation(isClone) {
+  useDev(() => {
+    const initialRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(isClone);
+    useDevSetupWarning(() => {
+      !(isClone === initialRef.current) ?  true ? invariant(false, 'Draggable isClone prop value changed during component life') : 0 : void 0;
+    }, [isClone]);
+  });
+}
+
+function useRequiredContext(Context) {
+  const result = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(Context);
+  !result ?  true ? invariant(false, 'Could not find required context') : 0 : void 0;
+  return result;
+}
+
+function preventHtml5Dnd(event) {
+  event.preventDefault();
+}
+const Draggable = props => {
+  const ref = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const setRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((el = null) => {
+    ref.current = el;
+  }, []);
+  const getRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => ref.current, []);
+  const {
+    contextId,
+    dragHandleUsageInstructionsId,
+    registry
+  } = useRequiredContext(AppContext);
+  const {
+    type,
+    droppableId
+  } = useRequiredContext(DroppableContext);
+  const descriptor = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    id: props.draggableId,
+    index: props.index,
+    type,
+    droppableId
+  }), [props.draggableId, props.index, type, droppableId]);
+  const {
+    children,
+    draggableId,
+    isEnabled,
+    shouldRespectForcePress,
+    canDragInteractiveElements,
+    isClone,
+    mapped,
+    dropAnimationFinished: dropAnimationFinishedAction
+  } = props;
+  useValidation$1(props, contextId, getRef);
+  useClonePropValidation(isClone);
+  if (!isClone) {
+    const forPublisher = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+      descriptor,
+      registry,
+      getDraggableRef: getRef,
+      canDragInteractiveElements,
+      shouldRespectForcePress,
+      isEnabled
+    }), [descriptor, registry, getRef, canDragInteractiveElements, shouldRespectForcePress, isEnabled]);
+    useDraggablePublisher(forPublisher);
+  }
+  const dragHandleProps = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => isEnabled ? {
+    tabIndex: 0,
+    role: 'button',
+    'aria-describedby': dragHandleUsageInstructionsId,
+    'data-rfd-drag-handle-draggable-id': draggableId,
+    'data-rfd-drag-handle-context-id': contextId,
+    draggable: false,
+    onDragStart: preventHtml5Dnd
+  } : null, [contextId, dragHandleUsageInstructionsId, draggableId, isEnabled]);
+  const onMoveEnd = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(event => {
+    if (mapped.type !== 'DRAGGING') {
+      return;
+    }
+    if (!mapped.dropping) {
+      return;
+    }
+    if (event.propertyName !== 'transform') {
+      return;
+    }
+    if (react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('16') || react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('17')) {
+      dropAnimationFinishedAction();
+    } else {
+      (0,react_dom__WEBPACK_IMPORTED_MODULE_1__.flushSync)(dropAnimationFinishedAction);
+    }
+  }, [dropAnimationFinishedAction, mapped]);
+  const provided = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => {
+    const style = getStyle$1(mapped);
+    const onTransitionEnd = mapped.type === 'DRAGGING' && mapped.dropping ? onMoveEnd : undefined;
+    const result = {
+      innerRef: setRef,
+      draggableProps: {
+        'data-rfd-draggable-context-id': contextId,
+        'data-rfd-draggable-id': draggableId,
+        style,
+        onTransitionEnd
+      },
+      dragHandleProps
+    };
+    return result;
+  }, [contextId, dragHandleProps, draggableId, mapped, onMoveEnd, setRef]);
+  const rubric = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    draggableId: descriptor.id,
+    type: descriptor.type,
+    source: {
+      index: descriptor.index,
+      droppableId: descriptor.droppableId
+    }
+  }), [descriptor.droppableId, descriptor.id, descriptor.index, descriptor.type]);
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, children(provided, mapped.snapshot, rubric));
+};
+var Draggable$1 = Draggable;
+
+var isStrictEqual = ((a, b) => a === b);
+
+var whatIsDraggedOverFromResult = (result => {
+  const {
+    combine,
+    destination
+  } = result;
+  if (destination) {
+    return destination.droppableId;
+  }
+  if (combine) {
+    return combine.droppableId;
+  }
+  return null;
+});
+
+const getCombineWithFromResult = result => {
+  return result.combine ? result.combine.draggableId : null;
+};
+const getCombineWithFromImpact = impact => {
+  return impact.at && impact.at.type === 'COMBINE' ? impact.at.combine.draggableId : null;
+};
+function getDraggableSelector() {
+  const memoizedOffset = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((x, y) => ({
+    x,
+    y
+  }));
+  const getMemoizedSnapshot = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((mode, isClone, draggingOver = null, combineWith = null, dropping = null) => ({
+    isDragging: true,
+    isClone,
+    isDropAnimating: Boolean(dropping),
+    dropAnimation: dropping,
+    mode,
+    draggingOver,
+    combineWith,
+    combineTargetFor: null
+  }));
+  const getMemoizedProps = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((offset, mode, dimension, isClone, draggingOver = null, combineWith = null, forceShouldAnimate = null) => ({
+    mapped: {
+      type: 'DRAGGING',
+      dropping: null,
+      draggingOver,
+      combineWith,
+      mode,
+      offset,
+      dimension,
+      forceShouldAnimate,
+      snapshot: getMemoizedSnapshot(mode, isClone, draggingOver, combineWith, null)
+    }
+  }));
+  const selector = (state, ownProps) => {
+    if (isDragging(state)) {
+      if (state.critical.draggable.id !== ownProps.draggableId) {
+        return null;
+      }
+      const offset = state.current.client.offset;
+      const dimension = state.dimensions.draggables[ownProps.draggableId];
+      const draggingOver = whatIsDraggedOver(state.impact);
+      const combineWith = getCombineWithFromImpact(state.impact);
+      const forceShouldAnimate = state.forceShouldAnimate;
+      return getMemoizedProps(memoizedOffset(offset.x, offset.y), state.movementMode, dimension, ownProps.isClone, draggingOver, combineWith, forceShouldAnimate);
+    }
+    if (state.phase === 'DROP_ANIMATING') {
+      const completed = state.completed;
+      if (completed.result.draggableId !== ownProps.draggableId) {
+        return null;
+      }
+      const isClone = ownProps.isClone;
+      const dimension = state.dimensions.draggables[ownProps.draggableId];
+      const result = completed.result;
+      const mode = result.mode;
+      const draggingOver = whatIsDraggedOverFromResult(result);
+      const combineWith = getCombineWithFromResult(result);
+      const duration = state.dropDuration;
+      const dropping = {
+        duration,
+        curve: curves.drop,
+        moveTo: state.newHomeClientOffset,
+        opacity: combineWith ? combine.opacity.drop : null,
+        scale: combineWith ? combine.scale.drop : null
+      };
+      return {
+        mapped: {
+          type: 'DRAGGING',
+          offset: state.newHomeClientOffset,
+          dimension,
+          dropping,
+          draggingOver,
+          combineWith,
+          mode,
+          forceShouldAnimate: null,
+          snapshot: getMemoizedSnapshot(mode, isClone, draggingOver, combineWith, dropping)
+        }
+      };
+    }
+    return null;
+  };
+  return selector;
+}
+function getSecondarySnapshot(combineTargetFor = null) {
+  return {
+    isDragging: false,
+    isDropAnimating: false,
+    isClone: false,
+    dropAnimation: null,
+    mode: null,
+    draggingOver: null,
+    combineTargetFor,
+    combineWith: null
+  };
+}
+const atRest = {
+  mapped: {
+    type: 'SECONDARY',
+    offset: origin,
+    combineTargetFor: null,
+    shouldAnimateDisplacement: true,
+    snapshot: getSecondarySnapshot(null)
+  }
+};
+function getSecondarySelector() {
+  const memoizedOffset = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((x, y) => ({
+    x,
+    y
+  }));
+  const getMemoizedSnapshot = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(getSecondarySnapshot);
+  const getMemoizedProps = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((offset, combineTargetFor = null, shouldAnimateDisplacement) => ({
+    mapped: {
+      type: 'SECONDARY',
+      offset,
+      combineTargetFor,
+      shouldAnimateDisplacement,
+      snapshot: getMemoizedSnapshot(combineTargetFor)
+    }
+  }));
+  const getFallback = combineTargetFor => {
+    return combineTargetFor ? getMemoizedProps(origin, combineTargetFor, true) : null;
+  };
+  const getProps = (ownId, draggingId, impact, afterCritical) => {
+    const visualDisplacement = impact.displaced.visible[ownId];
+    const isAfterCriticalInVirtualList = Boolean(afterCritical.inVirtualList && afterCritical.effected[ownId]);
+    const combine = tryGetCombine(impact);
+    const combineTargetFor = combine && combine.draggableId === ownId ? draggingId : null;
+    if (!visualDisplacement) {
+      if (!isAfterCriticalInVirtualList) {
+        return getFallback(combineTargetFor);
+      }
+      if (impact.displaced.invisible[ownId]) {
+        return null;
+      }
+      const change = negate(afterCritical.displacedBy.point);
+      const offset = memoizedOffset(change.x, change.y);
+      return getMemoizedProps(offset, combineTargetFor, true);
+    }
+    if (isAfterCriticalInVirtualList) {
+      return getFallback(combineTargetFor);
+    }
+    const displaceBy = impact.displacedBy.point;
+    const offset = memoizedOffset(displaceBy.x, displaceBy.y);
+    return getMemoizedProps(offset, combineTargetFor, visualDisplacement.shouldAnimate);
+  };
+  const selector = (state, ownProps) => {
+    if (isDragging(state)) {
+      if (state.critical.draggable.id === ownProps.draggableId) {
+        return null;
+      }
+      return getProps(ownProps.draggableId, state.critical.draggable.id, state.impact, state.afterCritical);
+    }
+    if (state.phase === 'DROP_ANIMATING') {
+      const completed = state.completed;
+      if (completed.result.draggableId === ownProps.draggableId) {
+        return null;
+      }
+      return getProps(ownProps.draggableId, completed.result.draggableId, completed.impact, completed.afterCritical);
+    }
+    return null;
+  };
+  return selector;
+}
+const makeMapStateToProps$1 = () => {
+  const draggingSelector = getDraggableSelector();
+  const secondarySelector = getSecondarySelector();
+  const selector = (state, ownProps) => draggingSelector(state, ownProps) || secondarySelector(state, ownProps) || atRest;
+  return selector;
+};
+const mapDispatchToProps$1 = {
+  dropAnimationFinished: dropAnimationFinished
+};
+const ConnectedDraggable = (0,react_redux__WEBPACK_IMPORTED_MODULE_2__.connect)(makeMapStateToProps$1, mapDispatchToProps$1, null, {
+  context: StoreContext,
+  areStatePropsEqual: isStrictEqual
+})(Draggable$1);
+var ConnectedDraggable$1 = ConnectedDraggable;
+
+function PrivateDraggable(props) {
+  const droppableContext = useRequiredContext(DroppableContext);
+  const isUsingCloneFor = droppableContext.isUsingCloneFor;
+  if (isUsingCloneFor === props.draggableId && !props.isClone) {
+    return null;
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(ConnectedDraggable$1, props);
+}
+function PublicDraggable(props) {
+  const isEnabled = typeof props.isDragDisabled === 'boolean' ? !props.isDragDisabled : true;
+  const canDragInteractiveElements = Boolean(props.disableInteractiveElementBlocking);
+  const shouldRespectForcePress = Boolean(props.shouldRespectForcePress);
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PrivateDraggable, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_3__["default"])({}, props, {
+    isClone: false,
+    isEnabled: isEnabled,
+    canDragInteractiveElements: canDragInteractiveElements,
+    shouldRespectForcePress: shouldRespectForcePress
+  }));
+}
+
+const isEqual = base => value => base === value;
+const isScroll = isEqual('scroll');
+const isAuto = isEqual('auto');
+const isVisible = isEqual('visible');
+const isEither = (overflow, fn) => fn(overflow.overflowX) || fn(overflow.overflowY);
+const isBoth = (overflow, fn) => fn(overflow.overflowX) && fn(overflow.overflowY);
+const isElementScrollable = el => {
+  const style = window.getComputedStyle(el);
+  const overflow = {
+    overflowX: style.overflowX,
+    overflowY: style.overflowY
+  };
+  return isEither(overflow, isScroll) || isEither(overflow, isAuto);
+};
+const isBodyScrollable = () => {
+  if (false) {}
+  const body = getBodyElement();
+  const html = document.documentElement;
+  !html ?  true ? invariant(false) : 0 : void 0;
+  if (!isElementScrollable(body)) {
+    return false;
+  }
+  const htmlStyle = window.getComputedStyle(html);
+  const htmlOverflow = {
+    overflowX: htmlStyle.overflowX,
+    overflowY: htmlStyle.overflowY
+  };
+  if (isBoth(htmlOverflow, isVisible)) {
+    return false;
+  }
+   true ? warning(`
+    We have detected that your <body> element might be a scroll container.
+    We have found no reliable way of detecting whether the <body> element is a scroll container.
+    Under most circumstances a <body> scroll bar will be on the <html> element (document.documentElement)
+
+    Because we cannot determine if the <body> is a scroll container, and generally it is not one,
+    we will be treating the <body> as *not* a scroll container
+
+    More information: https://github.com/hello-pangea/dnd/blob/main/docs/guides/how-we-detect-scroll-containers.md
+  `) : 0;
+  return false;
+};
+const getClosestScrollable = el => {
+  if (el == null) {
+    return null;
+  }
+  if (el === document.body) {
+    return isBodyScrollable() ? el : null;
+  }
+  if (el === document.documentElement) {
+    return null;
+  }
+  if (!isElementScrollable(el)) {
+    return getClosestScrollable(el.parentElement);
+  }
+  return el;
+};
+
+var checkForNestedScrollContainers = (scrollable => {
+  if (!scrollable) {
+    return;
+  }
+  const anotherScrollParent = getClosestScrollable(scrollable.parentElement);
+  if (!anotherScrollParent) {
+    return;
+  }
+   true ? warning(`
+    Droppable: unsupported nested scroll container detected.
+    A Droppable can only have one scroll parent (which can be itself)
+    Nested scroll containers are currently not supported.
+
+    We hope to support nested scroll containers soon: https://github.com/atlassian/react-beautiful-dnd/issues/131
+  `) : 0;
+});
+
+var getScroll = (el => ({
+  x: el.scrollLeft,
+  y: el.scrollTop
+}));
+
+const getIsFixed = el => {
+  if (!el) {
+    return false;
+  }
+  const style = window.getComputedStyle(el);
+  if (style.position === 'fixed') {
+    return true;
+  }
+  return getIsFixed(el.parentElement);
+};
+var getEnv = (start => {
+  const closestScrollable = getClosestScrollable(start);
+  const isFixedOnPage = getIsFixed(start);
+  return {
+    closestScrollable,
+    isFixedOnPage
+  };
+});
+
+var getDroppableDimension = (({
+  descriptor,
+  isEnabled,
+  isCombineEnabled,
+  isFixedOnPage,
+  direction,
+  client,
+  page,
+  closest
+}) => {
+  const frame = (() => {
+    if (!closest) {
+      return null;
+    }
+    const {
+      scrollSize,
+      client: frameClient
+    } = closest;
+    const maxScroll = getMaxScroll({
+      scrollHeight: scrollSize.scrollHeight,
+      scrollWidth: scrollSize.scrollWidth,
+      height: frameClient.paddingBox.height,
+      width: frameClient.paddingBox.width
+    });
+    return {
+      pageMarginBox: closest.page.marginBox,
+      frameClient,
+      scrollSize,
+      shouldClipSubject: closest.shouldClipSubject,
+      scroll: {
+        initial: closest.scroll,
+        current: closest.scroll,
+        max: maxScroll,
+        diff: {
+          value: origin,
+          displacement: origin
+        }
+      }
+    };
+  })();
+  const axis = direction === 'vertical' ? vertical : horizontal;
+  const subject = getSubject({
+    page,
+    withPlaceholder: null,
+    axis,
+    frame
+  });
+  const dimension = {
+    descriptor,
+    isCombineEnabled,
+    isFixedOnPage,
+    axis,
+    isEnabled,
+    client,
+    page,
+    frame,
+    subject
+  };
+  return dimension;
+});
+
+const getClient = (targetRef, closestScrollable) => {
+  const base = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getBox)(targetRef);
+  if (!closestScrollable) {
+    return base;
+  }
+  if (targetRef !== closestScrollable) {
+    return base;
+  }
+  const top = base.paddingBox.top - closestScrollable.scrollTop;
+  const left = base.paddingBox.left - closestScrollable.scrollLeft;
+  const bottom = top + closestScrollable.scrollHeight;
+  const right = left + closestScrollable.scrollWidth;
+  const paddingBox = {
+    top,
+    right,
+    bottom,
+    left
+  };
+  const borderBox = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.expand)(paddingBox, base.border);
+  const client = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.createBox)({
+    borderBox,
+    margin: base.margin,
+    border: base.border,
+    padding: base.padding
+  });
+  return client;
+};
+var getDimension = (({
+  ref,
+  descriptor,
+  env,
+  windowScroll,
+  direction,
+  isDropDisabled,
+  isCombineEnabled,
+  shouldClipSubject
+}) => {
+  const closestScrollable = env.closestScrollable;
+  const client = getClient(ref, closestScrollable);
+  const page = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.withScroll)(client, windowScroll);
+  const closest = (() => {
+    if (!closestScrollable) {
+      return null;
+    }
+    const frameClient = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getBox)(closestScrollable);
+    const scrollSize = {
+      scrollHeight: closestScrollable.scrollHeight,
+      scrollWidth: closestScrollable.scrollWidth
+    };
+    return {
+      client: frameClient,
+      page: (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.withScroll)(frameClient, windowScroll),
+      scroll: getScroll(closestScrollable),
+      scrollSize,
+      shouldClipSubject
+    };
+  })();
+  const dimension = getDroppableDimension({
+    descriptor,
+    isEnabled: !isDropDisabled,
+    isCombineEnabled,
+    isFixedOnPage: env.isFixedOnPage,
+    direction,
+    client,
+    page,
+    closest
+  });
+  return dimension;
+});
+
+const immediate = {
+  passive: false
+};
+const delayed = {
+  passive: true
+};
+var getListenerOptions = (options => options.shouldPublishImmediately ? immediate : delayed);
+
+const getClosestScrollableFromDrag = dragging => dragging && dragging.env.closestScrollable || null;
+function useDroppablePublisher(args) {
+  const whileDraggingRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const appContext = useRequiredContext(AppContext);
+  const uniqueId = useUniqueId$1('droppable');
+  const {
+    registry,
+    marshal
+  } = appContext;
+  const previousRef = usePrevious(args);
+  const descriptor = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    id: args.droppableId,
+    type: args.type,
+    mode: args.mode
+  }), [args.droppableId, args.mode, args.type]);
+  const publishedDescriptorRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(descriptor);
+  const memoizedUpdateScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((x, y) => {
+    !whileDraggingRef.current ?  true ? invariant(false, 'Can only update scroll when dragging') : 0 : void 0;
+    const scroll = {
+      x,
+      y
+    };
+    marshal.updateDroppableScroll(descriptor.id, scroll);
+  }), [descriptor.id, marshal]);
+  const getClosestScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const dragging = whileDraggingRef.current;
+    if (!dragging || !dragging.env.closestScrollable) {
+      return origin;
+    }
+    return getScroll(dragging.env.closestScrollable);
+  }, []);
+  const updateScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const scroll = getClosestScroll();
+    memoizedUpdateScroll(scroll.x, scroll.y);
+  }, [getClosestScroll, memoizedUpdateScroll]);
+  const scheduleScrollUpdate = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(updateScroll), [updateScroll]);
+  const onClosestScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const dragging = whileDraggingRef.current;
+    const closest = getClosestScrollableFromDrag(dragging);
+    !(dragging && closest) ?  true ? invariant(false, 'Could not find scroll options while scrolling') : 0 : void 0;
+    const options = dragging.scrollOptions;
+    if (options.shouldPublishImmediately) {
+      updateScroll();
+      return;
+    }
+    scheduleScrollUpdate();
+  }, [scheduleScrollUpdate, updateScroll]);
+  const getDimensionAndWatchScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((windowScroll, options) => {
+    !!whileDraggingRef.current ?  true ? invariant(false, 'Cannot collect a droppable while a drag is occurring') : 0 : void 0;
+    const previous = previousRef.current;
+    const ref = previous.getDroppableRef();
+    !ref ?  true ? invariant(false, 'Cannot collect without a droppable ref') : 0 : void 0;
+    const env = getEnv(ref);
+    const dragging = {
+      ref,
+      descriptor,
+      env,
+      scrollOptions: options
+    };
+    whileDraggingRef.current = dragging;
+    const dimension = getDimension({
+      ref,
+      descriptor,
+      env,
+      windowScroll,
+      direction: previous.direction,
+      isDropDisabled: previous.isDropDisabled,
+      isCombineEnabled: previous.isCombineEnabled,
+      shouldClipSubject: !previous.ignoreContainerClipping
+    });
+    const scrollable = env.closestScrollable;
+    if (scrollable) {
+      scrollable.setAttribute(scrollContainer.contextId, appContext.contextId);
+      scrollable.addEventListener('scroll', onClosestScroll, getListenerOptions(dragging.scrollOptions));
+      if (true) {
+        checkForNestedScrollContainers(scrollable);
+      }
+    }
+    return dimension;
+  }, [appContext.contextId, descriptor, onClosestScroll, previousRef]);
+  const getScrollWhileDragging = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const dragging = whileDraggingRef.current;
+    const closest = getClosestScrollableFromDrag(dragging);
+    !(dragging && closest) ?  true ? invariant(false, 'Can only recollect Droppable client for Droppables that have a scroll container') : 0 : void 0;
+    return getScroll(closest);
+  }, []);
+  const dragStopped = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const dragging = whileDraggingRef.current;
+    !dragging ?  true ? invariant(false, 'Cannot stop drag when no active drag') : 0 : void 0;
+    const closest = getClosestScrollableFromDrag(dragging);
+    whileDraggingRef.current = null;
+    if (!closest) {
+      return;
+    }
+    scheduleScrollUpdate.cancel();
+    closest.removeAttribute(scrollContainer.contextId);
+    closest.removeEventListener('scroll', onClosestScroll, getListenerOptions(dragging.scrollOptions));
+  }, [onClosestScroll, scheduleScrollUpdate]);
+  const scroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(change => {
+    const dragging = whileDraggingRef.current;
+    !dragging ?  true ? invariant(false, 'Cannot scroll when there is no drag') : 0 : void 0;
+    const closest = getClosestScrollableFromDrag(dragging);
+    !closest ?  true ? invariant(false, 'Cannot scroll a droppable with no closest scrollable') : 0 : void 0;
+    closest.scrollTop += change.y;
+    closest.scrollLeft += change.x;
+  }, []);
+  const callbacks = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => {
+    return {
+      getDimensionAndWatchScroll,
+      getScrollWhileDragging,
+      dragStopped,
+      scroll
+    };
+  }, [dragStopped, getDimensionAndWatchScroll, getScrollWhileDragging, scroll]);
+  const entry = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    uniqueId,
+    descriptor,
+    callbacks
+  }), [callbacks, descriptor, uniqueId]);
+  useLayoutEffect(() => {
+    publishedDescriptorRef.current = entry.descriptor;
+    registry.droppable.register(entry);
+    return () => {
+      if (whileDraggingRef.current) {
+         true ? warning('Unsupported: changing the droppableId or type of a Droppable during a drag') : 0;
+        dragStopped();
+      }
+      registry.droppable.unregister(entry);
+    };
+  }, [callbacks, descriptor, dragStopped, entry, marshal, registry.droppable]);
+  useLayoutEffect(() => {
+    if (!whileDraggingRef.current) {
+      return;
+    }
+    marshal.updateDroppableIsEnabled(publishedDescriptorRef.current.id, !args.isDropDisabled);
+  }, [args.isDropDisabled, marshal]);
+  useLayoutEffect(() => {
+    if (!whileDraggingRef.current) {
+      return;
+    }
+    marshal.updateDroppableIsCombineEnabled(publishedDescriptorRef.current.id, args.isCombineEnabled);
+  }, [args.isCombineEnabled, marshal]);
+}
+
+function noop() {}
+const empty = {
+  width: 0,
+  height: 0,
+  margin: noSpacing
+};
+const getSize = ({
+  isAnimatingOpenOnMount,
+  placeholder,
+  animate
+}) => {
+  if (isAnimatingOpenOnMount) {
+    return empty;
+  }
+  if (animate === 'close') {
+    return empty;
+  }
+  return {
+    height: placeholder.client.borderBox.height,
+    width: placeholder.client.borderBox.width,
+    margin: placeholder.client.margin
+  };
+};
+const getStyle = ({
+  isAnimatingOpenOnMount,
+  placeholder,
+  animate
+}) => {
+  const size = getSize({
+    isAnimatingOpenOnMount,
+    placeholder,
+    animate
+  });
+  return {
+    display: placeholder.display,
+    boxSizing: 'border-box',
+    width: size.width,
+    height: size.height,
+    marginTop: size.margin.top,
+    marginRight: size.margin.right,
+    marginBottom: size.margin.bottom,
+    marginLeft: size.margin.left,
+    flexShrink: '0',
+    flexGrow: '0',
+    pointerEvents: 'none',
+    transition: animate !== 'none' ? transitions.placeholder : null
+  };
+};
+const Placeholder = props => {
+  const animateOpenTimerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const tryClearAnimateOpenTimer = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    if (!animateOpenTimerRef.current) {
+      return;
+    }
+    clearTimeout(animateOpenTimerRef.current);
+    animateOpenTimerRef.current = null;
+  }, []);
+  const {
+    animate,
+    onTransitionEnd,
+    onClose,
+    contextId
+  } = props;
+  const [isAnimatingOpenOnMount, setIsAnimatingOpenOnMount] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(props.animate === 'open');
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!isAnimatingOpenOnMount) {
+      return noop;
+    }
+    if (animate !== 'open') {
+      tryClearAnimateOpenTimer();
+      setIsAnimatingOpenOnMount(false);
+      return noop;
+    }
+    if (animateOpenTimerRef.current) {
+      return noop;
+    }
+    animateOpenTimerRef.current = setTimeout(() => {
+      animateOpenTimerRef.current = null;
+      setIsAnimatingOpenOnMount(false);
+    });
+    return tryClearAnimateOpenTimer;
+  }, [animate, isAnimatingOpenOnMount, tryClearAnimateOpenTimer]);
+  const onSizeChangeEnd = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(event => {
+    if (event.propertyName !== 'height') {
+      return;
+    }
+    onTransitionEnd();
+    if (animate === 'close') {
+      onClose();
+    }
+  }, [animate, onClose, onTransitionEnd]);
+  const style = getStyle({
+    isAnimatingOpenOnMount,
+    animate: props.animate,
+    placeholder: props.placeholder
+  });
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(props.placeholder.tagName, {
+    style,
+    'data-rfd-placeholder-context-id': contextId,
+    onTransitionEnd: onSizeChangeEnd,
+    ref: props.innerRef
+  });
+};
+var Placeholder$1 = react__WEBPACK_IMPORTED_MODULE_0___default().memo(Placeholder);
+
+function isBoolean(value) {
+  return typeof value === 'boolean';
+}
+function runChecks(args, checks) {
+  checks.forEach(check => check(args));
+}
+const shared = [function required({
+  props
+}) {
+  !props.droppableId ?  true ? invariant(false, 'A Droppable requires a droppableId prop') : 0 : void 0;
+  !(typeof props.droppableId === 'string') ?  true ? invariant(false, `A Droppable requires a [string] droppableId. Provided: [${typeof props.droppableId}]`) : 0 : void 0;
+}, function boolean({
+  props
+}) {
+  !isBoolean(props.isDropDisabled) ?  true ? invariant(false, 'isDropDisabled must be a boolean') : 0 : void 0;
+  !isBoolean(props.isCombineEnabled) ?  true ? invariant(false, 'isCombineEnabled must be a boolean') : 0 : void 0;
+  !isBoolean(props.ignoreContainerClipping) ?  true ? invariant(false, 'ignoreContainerClipping must be a boolean') : 0 : void 0;
+}, function ref({
+  getDroppableRef
+}) {
+  checkIsValidInnerRef(getDroppableRef());
+}];
+const standard = [function placeholder({
+  props,
+  getPlaceholderRef
+}) {
+  if (!props.placeholder) {
+    return;
+  }
+  const ref = getPlaceholderRef();
+  if (ref) {
+    return;
+  }
+   true ? warning(`
+      Droppable setup issue [droppableId: "${props.droppableId}"]:
+      DroppableProvided > placeholder could not be found.
+
+      Please be sure to add the {provided.placeholder} React Node as a child of your Droppable.
+      More information: https://github.com/hello-pangea/dnd/blob/main/docs/api/droppable.md
+    `) : 0;
+}];
+const virtual = [function hasClone({
+  props
+}) {
+  !props.renderClone ?  true ? invariant(false, 'Must provide a clone render function (renderClone) for virtual lists') : 0 : void 0;
+}, function hasNoPlaceholder({
+  getPlaceholderRef
+}) {
+  !!getPlaceholderRef() ?  true ? invariant(false, 'Expected virtual list to not have a placeholder') : 0 : void 0;
+}];
+function useValidation(args) {
+  useDevSetupWarning(() => {
+    runChecks(args, shared);
+    if (args.props.mode === 'standard') {
+      runChecks(args, standard);
+    }
+    if (args.props.mode === 'virtual') {
+      runChecks(args, virtual);
+    }
+  });
+}
+
+class AnimateInOut extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(...args) {
+    super(...args);
+    this.state = {
+      isVisible: Boolean(this.props.on),
+      data: this.props.on,
+      animate: this.props.shouldAnimate && this.props.on ? 'open' : 'none'
+    };
+    this.onClose = () => {
+      if (this.state.animate !== 'close') {
+        return;
+      }
+      this.setState({
+        isVisible: false
+      });
+    };
+  }
+  static getDerivedStateFromProps(props, state) {
+    if (!props.shouldAnimate) {
+      return {
+        isVisible: Boolean(props.on),
+        data: props.on,
+        animate: 'none'
+      };
+    }
+    if (props.on) {
+      return {
+        isVisible: true,
+        data: props.on,
+        animate: 'open'
+      };
+    }
+    if (state.isVisible) {
+      return {
+        isVisible: true,
+        data: state.data,
+        animate: 'close'
+      };
+    }
+    return {
+      isVisible: false,
+      animate: 'close',
+      data: null
+    };
+  }
+  render() {
+    if (!this.state.isVisible) {
+      return null;
+    }
+    const provided = {
+      onClose: this.onClose,
+      data: this.state.data,
+      animate: this.state.animate
+    };
+    return this.props.children(provided);
+  }
+}
+
+const Droppable = props => {
+  const appContext = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(AppContext);
+  !appContext ?  true ? invariant(false, 'Could not find app context') : 0 : void 0;
+  const {
+    contextId,
+    isMovementAllowed
+  } = appContext;
+  const droppableRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const placeholderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const {
+    children,
+    droppableId,
+    type,
+    mode,
+    direction,
+    ignoreContainerClipping,
+    isDropDisabled,
+    isCombineEnabled,
+    snapshot,
+    useClone,
+    updateViewportMaxScroll,
+    getContainerForClone
+  } = props;
+  const getDroppableRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => droppableRef.current, []);
+  const setDroppableRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((value = null) => {
+    droppableRef.current = value;
+  }, []);
+  const getPlaceholderRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => placeholderRef.current, []);
+  const setPlaceholderRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((value = null) => {
+    placeholderRef.current = value;
+  }, []);
+  useValidation({
+    props,
+    getDroppableRef,
+    getPlaceholderRef
+  });
+  const onPlaceholderTransitionEnd = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    if (isMovementAllowed()) {
+      updateViewportMaxScroll({
+        maxScroll: getMaxWindowScroll()
+      });
+    }
+  }, [isMovementAllowed, updateViewportMaxScroll]);
+  useDroppablePublisher({
+    droppableId,
+    type,
+    mode,
+    direction,
+    isDropDisabled,
+    isCombineEnabled,
+    ignoreContainerClipping,
+    getDroppableRef
+  });
+  const placeholder = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AnimateInOut, {
+    on: props.placeholder,
+    shouldAnimate: props.shouldAnimatePlaceholder
+  }, ({
+    onClose,
+    data,
+    animate
+  }) => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Placeholder$1, {
+    placeholder: data,
+    onClose: onClose,
+    innerRef: setPlaceholderRef,
+    animate: animate,
+    contextId: contextId,
+    onTransitionEnd: onPlaceholderTransitionEnd
+  })), [contextId, onPlaceholderTransitionEnd, props.placeholder, props.shouldAnimatePlaceholder, setPlaceholderRef]);
+  const provided = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    innerRef: setDroppableRef,
+    placeholder,
+    droppableProps: {
+      'data-rfd-droppable-id': droppableId,
+      'data-rfd-droppable-context-id': contextId
+    }
+  }), [contextId, droppableId, placeholder, setDroppableRef]);
+  const isUsingCloneFor = useClone ? useClone.dragging.draggableId : null;
+  const droppableContext = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    droppableId,
+    type,
+    isUsingCloneFor
+  }), [droppableId, isUsingCloneFor, type]);
+  function getClone() {
+    if (!useClone) {
+      return null;
+    }
+    const {
+      dragging,
+      render
+    } = useClone;
+    const node = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PrivateDraggable, {
+      draggableId: dragging.draggableId,
+      index: dragging.source.index,
+      isClone: true,
+      isEnabled: true,
+      shouldRespectForcePress: false,
+      canDragInteractiveElements: true
+    }, (draggableProvided, draggableSnapshot) => render(draggableProvided, draggableSnapshot, dragging));
+    return react_dom__WEBPACK_IMPORTED_MODULE_1___default().createPortal(node, getContainerForClone());
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(DroppableContext.Provider, {
+    value: droppableContext
+  }, children(provided, snapshot), getClone());
+};
+var Droppable$1 = Droppable;
+
+function getBody() {
+  !document.body ?  true ? invariant(false, 'document.body is not ready') : 0 : void 0;
+  return document.body;
+}
+const defaultProps = {
+  mode: 'standard',
+  type: 'DEFAULT',
+  direction: 'vertical',
+  isDropDisabled: false,
+  isCombineEnabled: false,
+  ignoreContainerClipping: false,
+  renderClone: null,
+  getContainerForClone: getBody
+};
+const attachDefaultPropsToOwnProps = ownProps => {
+  let mergedProps = {
+    ...ownProps
+  };
+  let defaultPropKey;
+  for (defaultPropKey in defaultProps) {
+    if (ownProps[defaultPropKey] === undefined) {
+      mergedProps = {
+        ...mergedProps,
+        [defaultPropKey]: defaultProps[defaultPropKey]
+      };
+    }
+  }
+  return mergedProps;
+};
+const isMatchingType = (type, critical) => type === critical.droppable.type;
+const getDraggable = (critical, dimensions) => dimensions.draggables[critical.draggable.id];
+const makeMapStateToProps = () => {
+  const idleWithAnimation = {
+    placeholder: null,
+    shouldAnimatePlaceholder: true,
+    snapshot: {
+      isDraggingOver: false,
+      draggingOverWith: null,
+      draggingFromThisWith: null,
+      isUsingPlaceholder: false
+    },
+    useClone: null
+  };
+  const idleWithoutAnimation = {
+    ...idleWithAnimation,
+    shouldAnimatePlaceholder: false
+  };
+  const getDraggableRubric = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(descriptor => ({
+    draggableId: descriptor.id,
+    type: descriptor.type,
+    source: {
+      index: descriptor.index,
+      droppableId: descriptor.droppableId
+    }
+  }));
+  const getMapProps = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((id, isEnabled, isDraggingOverForConsumer, isDraggingOverForImpact, dragging, renderClone) => {
+    const draggableId = dragging.descriptor.id;
+    const isHome = dragging.descriptor.droppableId === id;
+    if (isHome) {
+      const useClone = renderClone ? {
+        render: renderClone,
+        dragging: getDraggableRubric(dragging.descriptor)
+      } : null;
+      const snapshot = {
+        isDraggingOver: isDraggingOverForConsumer,
+        draggingOverWith: isDraggingOverForConsumer ? draggableId : null,
+        draggingFromThisWith: draggableId,
+        isUsingPlaceholder: true
+      };
+      return {
+        placeholder: dragging.placeholder,
+        shouldAnimatePlaceholder: false,
+        snapshot,
+        useClone
+      };
+    }
+    if (!isEnabled) {
+      return idleWithoutAnimation;
+    }
+    if (!isDraggingOverForImpact) {
+      return idleWithAnimation;
+    }
+    const snapshot = {
+      isDraggingOver: isDraggingOverForConsumer,
+      draggingOverWith: draggableId,
+      draggingFromThisWith: null,
+      isUsingPlaceholder: true
+    };
+    return {
+      placeholder: dragging.placeholder,
+      shouldAnimatePlaceholder: true,
+      snapshot,
+      useClone: null
+    };
+  });
+  const selector = (state, ownProps) => {
+    const ownPropsWithDefaultProps = attachDefaultPropsToOwnProps(ownProps);
+    const id = ownPropsWithDefaultProps.droppableId;
+    const type = ownPropsWithDefaultProps.type;
+    const isEnabled = !ownPropsWithDefaultProps.isDropDisabled;
+    const renderClone = ownPropsWithDefaultProps.renderClone;
+    if (isDragging(state)) {
+      const critical = state.critical;
+      if (!isMatchingType(type, critical)) {
+        return idleWithoutAnimation;
+      }
+      const dragging = getDraggable(critical, state.dimensions);
+      const isDraggingOver = whatIsDraggedOver(state.impact) === id;
+      return getMapProps(id, isEnabled, isDraggingOver, isDraggingOver, dragging, renderClone);
+    }
+    if (state.phase === 'DROP_ANIMATING') {
+      const completed = state.completed;
+      if (!isMatchingType(type, completed.critical)) {
+        return idleWithoutAnimation;
+      }
+      const dragging = getDraggable(completed.critical, state.dimensions);
+      return getMapProps(id, isEnabled, whatIsDraggedOverFromResult(completed.result) === id, whatIsDraggedOver(completed.impact) === id, dragging, renderClone);
+    }
+    if (state.phase === 'IDLE' && state.completed && !state.shouldFlush) {
+      const completed = state.completed;
+      if (!isMatchingType(type, completed.critical)) {
+        return idleWithoutAnimation;
+      }
+      const wasOver = whatIsDraggedOver(completed.impact) === id;
+      const wasCombining = Boolean(completed.impact.at && completed.impact.at.type === 'COMBINE');
+      const isHome = completed.critical.droppable.id === id;
+      if (wasOver) {
+        return wasCombining ? idleWithAnimation : idleWithoutAnimation;
+      }
+      if (isHome) {
+        return idleWithAnimation;
+      }
+      return idleWithoutAnimation;
+    }
+    return idleWithoutAnimation;
+  };
+  return selector;
+};
+const mapDispatchToProps = {
+  updateViewportMaxScroll: updateViewportMaxScroll
+};
+const ConnectedDroppable = (0,react_redux__WEBPACK_IMPORTED_MODULE_2__.connect)(makeMapStateToProps, mapDispatchToProps, (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...attachDefaultPropsToOwnProps(ownProps),
+    ...stateProps,
+    ...dispatchProps
+  };
+}, {
+  context: StoreContext,
+  areStatePropsEqual: isStrictEqual
+})(Droppable$1);
+var ConnectedDroppable$1 = ConnectedDroppable;
+
+
+
+
+/***/ }),
+
+/***/ "./src/App.tsx":
+/*!*********************!*\
+  !*** ./src/App.tsx ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_MainNav_MainNav__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/MainNav/MainNav */ "./src/components/MainNav/MainNav.tsx");
+/* harmony import */ var _pages_PipelinePage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/PipelinePage */ "./src/pages/PipelinePage.tsx");
+/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
+/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
+
+
+
+
+
+
+function App() {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_3__.AppContextProvider, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__.PipelineContextProvider, {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserContextProvider, {
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_MainNav_MainNav__WEBPACK_IMPORTED_MODULE_1__.MainNav, {})
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage__WEBPACK_IMPORTED_MODULE_2__.PipelinePage, {})]
+        })
+      })
+    })
+  });
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
+
+/***/ }),
+
+/***/ "./src/api/api.ts":
+/*!************************!*\
+  !*** ./src/api/api.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
+/* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
+/* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
+/* harmony export */   moveTaskRequest: () => (/* binding */ moveTaskRequest)
+/* harmony export */ });
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
+
+function getPipelineData(pipelineId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipeline/${pipelineId}`
+  });
+}
+function moveTaskRequest(taskId, stageId, order) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/task/${taskId}/move`,
+    method: "PATCH",
+    data: {
+      stageId,
+      order
+    }
+  });
+}
+function createTaskRequest(stageId, name) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/tasks`,
+    method: "POST",
+    data: {
+      stageId,
+      name
+    }
+  });
+}
+function createNewStageRequest(pipelineId, name) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/stages`,
+    method: "POST",
+    data: {
+      pipelineId,
+      name
+    }
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/MainNav/MainNav.tsx":
+/*!********************************************!*\
+  !*** ./src/components/MainNav/MainNav.tsx ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MainNav: () => (/* binding */ MainNav)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+const MainNav = () => {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("ul", {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("li", {
+        children: "Pipelines"
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("li", {
+        children: "Users"
+      })]
+    })
+  });
+};
+
+
+/***/ }),
+
+/***/ "./src/components/Pipeline/AddStage.tsx":
+/*!**********************************************!*\
+  !*** ./src/components/Pipeline/AddStage.tsx ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AddStage: () => (/* binding */ AddStage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+function AddStage({
+  pipelineId
+}) {
+  const {
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__.PipelineContext);
+  const addStage = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.createNewStageRequest)(pipelineId, `New stage`);
+      dispatch({
+        type: "ADD_STAGE",
+        payload: {
+          id: response.id,
+          name: response.name,
+          tasks: []
+        }
+      });
+    } catch (error) {}
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+      onClick: addStage,
+      children: "Add Stage"
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Pipeline/AddTask.tsx":
+/*!*********************************************!*\
+  !*** ./src/components/Pipeline/AddTask.tsx ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AddTask: () => (/* binding */ AddTask)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+function AddTask({
+  stageId
+}) {
+  const {
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__.PipelineContext);
+  const addTask = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const taskName = `New task`;
+      const createdTask = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.createTaskRequest)(stageId, taskName);
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_ADD_TASK,
+        payload: {
+          stageId,
+          task: {
+            id: createdTask.id,
+            name: createdTask.name
+          }
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-cursor-pointer wpqt-text-center wpqt-absolute wpqt-bottom-0 wpqt-left-0 wpqt-right-0",
+    onClick: addTask,
+    children: "Add task"
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Pipeline/Pipeline.tsx":
+/*!**********************************************!*\
+  !*** ./src/components/Pipeline/Pipeline.tsx ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _Stage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Stage */ "./src/components/Pipeline/Stage.tsx");
+/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+/* harmony import */ var _AddStage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./AddStage */ "./src/components/Pipeline/AddStage.tsx");
+
+
+
+
+
+
+
+const Pipeline = () => {
+  const {
+    state: {
+      pipeline,
+      loading
+    },
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__.PipelineContext);
+  const onDragEnd = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(result => {
+    const {
+      source,
+      destination,
+      draggableId
+    } = result;
+    if (!destination) {
+      return;
+    }
+    if (source.droppableId === destination.droppableId) {
+      dispatch({
+        type: "REORDER_TASK",
+        payload: {
+          source,
+          destination
+        }
+      });
+    } else {
+      dispatch({
+        type: "MOVE_TASK",
+        payload: {
+          source,
+          destination
+        }
+      });
+    }
+    (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.moveTaskRequest)(draggableId, destination.droppableId, destination.index);
+  }, [pipeline]);
+  if (!pipeline) {
+    return "Loading...";
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-gap-[24px] wpqt-items-start wpqt-overflow-x-auto wpqt-pipeline-height",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_6__.DragDropContext, {
+      onDragEnd: onDragEnd,
+      children: pipeline.stages.map(stage => {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_3__.Stage, {
+          droppableId: stage.id,
+          tasks: stage.tasks
+        });
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddStage__WEBPACK_IMPORTED_MODULE_5__.AddStage, {
+      pipelineId: pipeline.id
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Pipeline);
+
+/***/ }),
+
+/***/ "./src/components/Pipeline/Stage.tsx":
+/*!*******************************************!*\
+  !*** ./src/components/Pipeline/Stage.tsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Stage: () => (/* binding */ Stage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _Tast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Tast */ "./src/components/Pipeline/Tast.tsx");
+/* harmony import */ var _AddTask__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AddTask */ "./src/components/Pipeline/AddTask.tsx");
+
+
+
+
+function Stage({
+  droppableId,
+  tasks
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__.Droppable, {
+    droppableId: droppableId,
+    children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      ref: provided.innerRef,
+      className: `wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-p-2 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${snapshot.isDraggingOver ? "wpqt-bg-blue-400" : ""}`,
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-flex wpqt-flex-col wpqt-gap-[8px] wpqt-pb-[12px]",
+        children: tasks.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
+          item: item,
+          index: index
+        }))
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
+        stageId: droppableId
+      }), provided.placeholder]
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Pipeline/Tast.tsx":
+/*!******************************************!*\
+  !*** ./src/components/Pipeline/Tast.tsx ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Task: () => (/* binding */ Task)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+
+
+function Task({
+  item,
+  index
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_1__.Draggable, {
+    draggableId: item.id,
+    index: index,
+    children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
+      ref: provided.innerRef
+    }, provided.draggableProps, provided.dragHandleProps, {
+      children: item.name
+    }))
+  }, item.id);
+}
+
+
+/***/ }),
+
+/***/ "./src/constants.ts":
+/*!**************************!*\
+  !*** ./src/constants.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PIPELINE_ADD_STAGE: () => (/* binding */ PIPELINE_ADD_STAGE),
+/* harmony export */   PIPELINE_ADD_TASK: () => (/* binding */ PIPELINE_ADD_TASK),
+/* harmony export */   PIPELINE_MOVE_TASK: () => (/* binding */ PIPELINE_MOVE_TASK),
+/* harmony export */   PIPELINE_REORDER_TASK: () => (/* binding */ PIPELINE_REORDER_TASK),
+/* harmony export */   PIPELINE_SET_LOADING: () => (/* binding */ PIPELINE_SET_LOADING),
+/* harmony export */   PIPELINE_SET_PIPELINE: () => (/* binding */ PIPELINE_SET_PIPELINE)
+/* harmony export */ });
+const PIPELINE_SET_LOADING = "SET_LOADING";
+const PIPELINE_SET_PIPELINE = "SET_PIPELINE";
+const PIPELINE_MOVE_TASK = "MOVE_TASK";
+const PIPELINE_REORDER_TASK = "REORDER_TASK";
+const PIPELINE_ADD_TASK = "ADD_TASK";
+const PIPELINE_ADD_STAGE = "ADD_STAGE";
+
+
+/***/ }),
+
+/***/ "./src/pages/PipelinePage.tsx":
+/*!************************************!*\
+  !*** ./src/pages/PipelinePage.tsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PipelinePage: () => (/* binding */ PipelinePage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_Pipeline_Pipeline__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Pipeline/Pipeline */ "./src/components/Pipeline/Pipeline.tsx");
+
+
+const PipelinePage = () => {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline_Pipeline__WEBPACK_IMPORTED_MODULE_1__["default"], {})
+  });
+};
+
+
+/***/ }),
+
+/***/ "./src/providers/AppContextProvider.tsx":
+/*!**********************************************!*\
+  !*** ./src/providers/AppContextProvider.tsx ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AppContext: () => (/* binding */ AppContext),
+/* harmony export */   AppContextProvider: () => (/* binding */ AppContextProvider)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const initialState = {
+  loading: true
+};
+const reducer = (state, action) => {
+  switch (action.type) {
+    // Add your different action types and corresponding logic here
+    default:
+      return state;
+  }
+};
+const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
+  state: initialState,
+  dispatch: () => {}
+});
+const AppContextProvider = ({
+  children
+}) => {
+  const [state, dispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(reducer, initialState);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(AppContext.Provider, {
+    value: {
+      state,
+      dispatch
+    },
+    children: children
+  });
+};
+
+
+/***/ }),
+
+/***/ "./src/providers/PipelineContextProvider.tsx":
+/*!***************************************************!*\
+  !*** ./src/providers/PipelineContextProvider.tsx ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PipelineContext: () => (/* binding */ PipelineContext),
+/* harmony export */   PipelineContextProvider: () => (/* binding */ PipelineContextProvider)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+/* harmony import */ var _reducers_pipeline_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducers/pipeline-reducer */ "./src/reducers/pipeline-reducer.ts");
+
+
+
+
+const initialState = {
+  loading: true,
+  pipeline: null
+};
+const PipelineContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
+  state: initialState,
+  dispatch: () => {}
+});
+const PipelineContextProvider = ({
+  children
+}) => {
+  const [state, dispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_pipeline_reducer__WEBPACK_IMPORTED_MODULE_3__.pipelineReducer, initialState);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const initialFullPipeline = window.wpqt.initialFullPipeline;
+    dispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_2__.PIPELINE_SET_PIPELINE,
+      payload: initialFullPipeline
+    });
+  }, []);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(PipelineContext.Provider, {
+    value: {
+      state,
+      dispatch
+    },
+    children: children
+  });
+};
+
+
+/***/ }),
+
+/***/ "./src/providers/UserContextProvider.tsx":
+/*!***********************************************!*\
+  !*** ./src/providers/UserContextProvider.tsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserContext: () => (/* binding */ UserContext),
+/* harmony export */   UserContextProvider: () => (/* binding */ UserContextProvider)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const initialState = {
+  loading: true
+};
+const reducer = (state, action) => {
+  switch (action.type) {
+    // Add your different action types and corresponding logic here
+    default:
+      return state;
+  }
+};
+const UserContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
+  state: initialState,
+  dispatch: () => {}
+});
+const UserContextProvider = ({
+  children
+}) => {
+  const [state, dispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(reducer, initialState);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserContext.Provider, {
+    value: {
+      state,
+      dispatch
+    },
+    children: children
+  });
+};
+
+
+/***/ }),
+
+/***/ "./src/reducers/pipeline-reducer.ts":
+/*!******************************************!*\
+  !*** ./src/reducers/pipeline-reducer.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   pipelineReducer: () => (/* binding */ pipelineReducer)
+/* harmony export */ });
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/task */ "./src/utils/task.tsx");
+
+
+const pipelineReducer = (state, action) => {
+  var _a;
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_LOADING:
+      return Object.assign(Object.assign({}, state), {
+        loading: action.payload
+      });
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_PIPELINE:
+      return Object.assign(Object.assign({}, state), {
+        pipeline: action.payload
+      });
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_MOVE_TASK:
+      const stages = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.moveTask)(state.pipeline.stages, action.payload.source, action.payload.destination);
+      return Object.assign(Object.assign({}, state), {
+        pipeline: Object.assign(Object.assign({}, state.pipeline), {
+          stages
+        })
+      });
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_REORDER_TASK:
+      const {
+        source,
+        destination
+      } = action.payload;
+      const targetStageId = destination.droppableId;
+      const targetIndex = destination.index;
+      const targetStage = (_a = state.pipeline) === null || _a === void 0 ? void 0 : _a.stages.find(stage => stage.id === targetStageId);
+      const reorderedTasks = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.reorderTask)(targetStage.tasks, source.index, targetIndex);
+      const updatedStages = state.pipeline.stages.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
+        tasks: reorderedTasks
+      }) : stage);
+      return Object.assign(Object.assign({}, state), {
+        pipeline: Object.assign(Object.assign({}, state.pipeline), {
+          stages: updatedStages
+        })
+      });
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_TASK:
+      const {
+        stageId,
+        task: {
+          id,
+          name
+        }
+      } = action.payload;
+      return Object.assign(Object.assign({}, state), {
+        pipeline: Object.assign(Object.assign({}, state.pipeline), {
+          stages: state.pipeline.stages.map(stage => stage.id === stageId ? Object.assign(Object.assign({}, stage), {
+            tasks: [...stage.tasks, {
+              id,
+              name
+            }]
+          }) : stage)
+        })
+      });
+    case "ADD_STAGE":
+      const newStage = action.payload;
+      return Object.assign(Object.assign({}, state), {
+        pipeline: Object.assign(Object.assign({}, state.pipeline), {
+          stages: [...state.pipeline.stages, newStage]
+        })
+      });
+    default:
+      return state;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./src/utils/task.tsx":
+/*!****************************!*\
+  !*** ./src/utils/task.tsx ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   moveTask: () => (/* binding */ moveTask),
+/* harmony export */   reorderTask: () => (/* binding */ reorderTask)
+/* harmony export */ });
+/**
+ * Moves a task from one stage to another within a list of stages.
+ *
+ * @param stages - The list of stages.
+ * @param droppableSource - The source stage and index of the task being moved.
+ * @param droppableDestination - The destination stage and index where the task will be moved to.
+ * @returns The updated list of stages after moving the task.
+ */
+const moveTask = (stages, droppableSource, droppableDestination) => {
+  const stagesClone = [...stages];
+  const sourceStage = stagesClone.find(stage => stage.id === droppableSource.droppableId);
+  const destinationStage = stagesClone.find(stage => stage.id === droppableDestination.droppableId);
+  if (sourceStage && destinationStage) {
+    const [removed] = sourceStage.tasks.splice(droppableSource.index, 1);
+    destinationStage.tasks.splice(droppableDestination.index, 0, removed);
+  }
+  return stagesClone;
+};
+/**
+ * Reorders a list of tasks after a task has been moved.
+ *
+ * @param list - The list of tasks.
+ * @param startIndex - The index of the task being moved.
+ * @param endIndex - The index where the task will be moved to.
+ * @returns The updated list of tasks after reordering.
+ */
+const reorderTask = (list, startIndex, endIndex) => {
+  const result = [...list];
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/css-box-model/dist/css-box-model.esm.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/css-box-model/dist/css-box-model.esm.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   calculateBox: () => (/* binding */ calculateBox),
+/* harmony export */   createBox: () => (/* binding */ createBox),
+/* harmony export */   expand: () => (/* binding */ expand),
+/* harmony export */   getBox: () => (/* binding */ getBox),
+/* harmony export */   getRect: () => (/* binding */ getRect),
+/* harmony export */   offset: () => (/* binding */ offset),
+/* harmony export */   shrink: () => (/* binding */ shrink),
+/* harmony export */   withScroll: () => (/* binding */ withScroll)
+/* harmony export */ });
+/* harmony import */ var tiny_invariant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tiny-invariant */ "./node_modules/tiny-invariant/dist/esm/tiny-invariant.js");
+
+
+var getRect = function getRect(_ref) {
+  var top = _ref.top,
+      right = _ref.right,
+      bottom = _ref.bottom,
+      left = _ref.left;
+  var width = right - left;
+  var height = bottom - top;
+  var rect = {
+    top: top,
+    right: right,
+    bottom: bottom,
+    left: left,
+    width: width,
+    height: height,
+    x: left,
+    y: top,
+    center: {
+      x: (right + left) / 2,
+      y: (bottom + top) / 2
+    }
+  };
+  return rect;
+};
+var expand = function expand(target, expandBy) {
+  return {
+    top: target.top - expandBy.top,
+    left: target.left - expandBy.left,
+    bottom: target.bottom + expandBy.bottom,
+    right: target.right + expandBy.right
+  };
+};
+var shrink = function shrink(target, shrinkBy) {
+  return {
+    top: target.top + shrinkBy.top,
+    left: target.left + shrinkBy.left,
+    bottom: target.bottom - shrinkBy.bottom,
+    right: target.right - shrinkBy.right
+  };
+};
+
+var shift = function shift(target, shiftBy) {
+  return {
+    top: target.top + shiftBy.y,
+    left: target.left + shiftBy.x,
+    bottom: target.bottom + shiftBy.y,
+    right: target.right + shiftBy.x
+  };
+};
+
+var noSpacing = {
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0
+};
+var createBox = function createBox(_ref2) {
+  var borderBox = _ref2.borderBox,
+      _ref2$margin = _ref2.margin,
+      margin = _ref2$margin === void 0 ? noSpacing : _ref2$margin,
+      _ref2$border = _ref2.border,
+      border = _ref2$border === void 0 ? noSpacing : _ref2$border,
+      _ref2$padding = _ref2.padding,
+      padding = _ref2$padding === void 0 ? noSpacing : _ref2$padding;
+  var marginBox = getRect(expand(borderBox, margin));
+  var paddingBox = getRect(shrink(borderBox, border));
+  var contentBox = getRect(shrink(paddingBox, padding));
+  return {
+    marginBox: marginBox,
+    borderBox: getRect(borderBox),
+    paddingBox: paddingBox,
+    contentBox: contentBox,
+    margin: margin,
+    border: border,
+    padding: padding
+  };
+};
+
+var parse = function parse(raw) {
+  var value = raw.slice(0, -2);
+  var suffix = raw.slice(-2);
+
+  if (suffix !== 'px') {
+    return 0;
+  }
+
+  var result = Number(value);
+  !!isNaN(result) ?  true ? (0,tiny_invariant__WEBPACK_IMPORTED_MODULE_0__["default"])(false, "Could not parse value [raw: " + raw + ", without suffix: " + value + "]") : 0 : void 0;
+  return result;
+};
+
+var getWindowScroll = function getWindowScroll() {
+  return {
+    x: window.pageXOffset,
+    y: window.pageYOffset
+  };
+};
+
+var offset = function offset(original, change) {
+  var borderBox = original.borderBox,
+      border = original.border,
+      margin = original.margin,
+      padding = original.padding;
+  var shifted = shift(borderBox, change);
+  return createBox({
+    borderBox: shifted,
+    border: border,
+    margin: margin,
+    padding: padding
+  });
+};
+var withScroll = function withScroll(original, scroll) {
+  if (scroll === void 0) {
+    scroll = getWindowScroll();
+  }
+
+  return offset(original, scroll);
+};
+var calculateBox = function calculateBox(borderBox, styles) {
+  var margin = {
+    top: parse(styles.marginTop),
+    right: parse(styles.marginRight),
+    bottom: parse(styles.marginBottom),
+    left: parse(styles.marginLeft)
+  };
+  var padding = {
+    top: parse(styles.paddingTop),
+    right: parse(styles.paddingRight),
+    bottom: parse(styles.paddingBottom),
+    left: parse(styles.paddingLeft)
+  };
+  var border = {
+    top: parse(styles.borderTopWidth),
+    right: parse(styles.borderRightWidth),
+    bottom: parse(styles.borderBottomWidth),
+    left: parse(styles.borderLeftWidth)
+  };
+  return createBox({
+    borderBox: borderBox,
+    margin: margin,
+    padding: padding,
+    border: border
+  });
+};
+var getBox = function getBox(el) {
+  var borderBox = el.getBoundingClientRect();
+  var styles = window.getComputedStyle(el);
+  return calculateBox(borderBox, styles);
+};
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js ***!
+  \**********************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+var reactIs = __webpack_require__(/*! react-is */ "./node_modules/hoist-non-react-statics/node_modules/react-is/index.js");
+
+/**
+ * Copyright 2015, Yahoo! Inc.
+ * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+ */
+var REACT_STATICS = {
+  childContextTypes: true,
+  contextType: true,
+  contextTypes: true,
+  defaultProps: true,
+  displayName: true,
+  getDefaultProps: true,
+  getDerivedStateFromError: true,
+  getDerivedStateFromProps: true,
+  mixins: true,
+  propTypes: true,
+  type: true
+};
+var KNOWN_STATICS = {
+  name: true,
+  length: true,
+  prototype: true,
+  caller: true,
+  callee: true,
+  arguments: true,
+  arity: true
+};
+var FORWARD_REF_STATICS = {
+  '$$typeof': true,
+  render: true,
+  defaultProps: true,
+  displayName: true,
+  propTypes: true
+};
+var MEMO_STATICS = {
+  '$$typeof': true,
+  compare: true,
+  defaultProps: true,
+  displayName: true,
+  propTypes: true,
+  type: true
+};
+var TYPE_STATICS = {};
+TYPE_STATICS[reactIs.ForwardRef] = FORWARD_REF_STATICS;
+TYPE_STATICS[reactIs.Memo] = MEMO_STATICS;
+
+function getStatics(component) {
+  // React v16.11 and below
+  if (reactIs.isMemo(component)) {
+    return MEMO_STATICS;
+  } // React v16.12 and above
+
+
+  return TYPE_STATICS[component['$$typeof']] || REACT_STATICS;
+}
+
+var defineProperty = Object.defineProperty;
+var getOwnPropertyNames = Object.getOwnPropertyNames;
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+var getPrototypeOf = Object.getPrototypeOf;
+var objectPrototype = Object.prototype;
+function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
+  if (typeof sourceComponent !== 'string') {
+    // don't hoist over string (html) components
+    if (objectPrototype) {
+      var inheritedComponent = getPrototypeOf(sourceComponent);
+
+      if (inheritedComponent && inheritedComponent !== objectPrototype) {
+        hoistNonReactStatics(targetComponent, inheritedComponent, blacklist);
+      }
+    }
+
+    var keys = getOwnPropertyNames(sourceComponent);
+
+    if (getOwnPropertySymbols) {
+      keys = keys.concat(getOwnPropertySymbols(sourceComponent));
+    }
+
+    var targetStatics = getStatics(targetComponent);
+    var sourceStatics = getStatics(sourceComponent);
+
+    for (var i = 0; i < keys.length; ++i) {
+      var key = keys[i];
+
+      if (!KNOWN_STATICS[key] && !(blacklist && blacklist[key]) && !(sourceStatics && sourceStatics[key]) && !(targetStatics && targetStatics[key])) {
+        var descriptor = getOwnPropertyDescriptor(sourceComponent, key);
+
+        try {
+          // Avoid failures from read-only properties
+          defineProperty(targetComponent, key, descriptor);
+        } catch (e) {}
+      }
+    }
+  }
+
+  return targetComponent;
+}
+
+module.exports = hoistNonReactStatics;
+
+
+/***/ }),
+
+/***/ "./node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js":
+/*!************************************************************************************************!*\
+  !*** ./node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+/** @license React v16.13.1
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+// nor polyfill, then a plain number is used for performance.
+var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+// (unstable) APIs that have been removed. Can we remove the symbols?
+
+var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
+var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+
+function isValidElementType(type) {
+  return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+}
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_ASYNC_MODE_TYPE:
+          case REACT_CONCURRENT_MODE_TYPE:
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+          case REACT_SUSPENSE_TYPE:
+            return type;
+
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_LAZY_TYPE:
+              case REACT_MEMO_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+
+              default:
+                return $$typeof;
+            }
+
+        }
+
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+} // AsyncMode is deprecated along with isAsyncMode
+
+var AsyncMode = REACT_ASYNC_MODE_TYPE;
+var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Lazy = REACT_LAZY_TYPE;
+var Memo = REACT_MEMO_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+var Suspense = REACT_SUSPENSE_TYPE;
+var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+
+function isAsyncMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+    }
+  }
+
+  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+}
+function isConcurrentMode(object) {
+  return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isLazy(object) {
+  return typeOf(object) === REACT_LAZY_TYPE;
+}
+function isMemo(object) {
+  return typeOf(object) === REACT_MEMO_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+function isSuspense(object) {
+  return typeOf(object) === REACT_SUSPENSE_TYPE;
+}
+
+exports.AsyncMode = AsyncMode;
+exports.ConcurrentMode = ConcurrentMode;
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Lazy = Lazy;
+exports.Memo = Memo;
+exports.Portal = Portal;
+exports.Profiler = Profiler;
+exports.StrictMode = StrictMode;
+exports.Suspense = Suspense;
+exports.isAsyncMode = isAsyncMode;
+exports.isConcurrentMode = isConcurrentMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isLazy = isLazy;
+exports.isMemo = isMemo;
+exports.isPortal = isPortal;
+exports.isProfiler = isProfiler;
+exports.isStrictMode = isStrictMode;
+exports.isSuspense = isSuspense;
+exports.isValidElementType = isValidElementType;
+exports.typeOf = typeOf;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/hoist-non-react-statics/node_modules/react-is/index.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/hoist-non-react-statics/node_modules/react-is/index.js ***!
+  \*****************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/memoize-one/dist/memoize-one.esm.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/memoize-one/dist/memoize-one.esm.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ memoizeOne)
+/* harmony export */ });
+var safeIsNaN = Number.isNaN ||
+    function ponyfill(value) {
+        return typeof value === 'number' && value !== value;
+    };
+function isEqual(first, second) {
+    if (first === second) {
+        return true;
+    }
+    if (safeIsNaN(first) && safeIsNaN(second)) {
+        return true;
+    }
+    return false;
+}
+function areInputsEqual(newInputs, lastInputs) {
+    if (newInputs.length !== lastInputs.length) {
+        return false;
+    }
+    for (var i = 0; i < newInputs.length; i++) {
+        if (!isEqual(newInputs[i], lastInputs[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function memoizeOne(resultFn, isEqual) {
+    if (isEqual === void 0) { isEqual = areInputsEqual; }
+    var cache = null;
+    function memoized() {
+        var newArgs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            newArgs[_i] = arguments[_i];
+        }
+        if (cache && cache.lastThis === this && isEqual(newArgs, cache.lastArgs)) {
+            return cache.lastResult;
+        }
+        var lastResult = resultFn.apply(this, newArgs);
+        cache = {
+            lastResult: lastResult,
+            lastArgs: newArgs,
+            lastThis: this,
+        };
+        return lastResult;
+    }
+    memoized.clear = function clear() {
+        cache = null;
+    };
+    return memoized;
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/raf-schd/dist/raf-schd.esm.js":
+/*!****************************************************!*\
+  !*** ./node_modules/raf-schd/dist/raf-schd.esm.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var rafSchd = function rafSchd(fn) {
+  var lastArgs = [];
+  var frameId = null;
+
+  var wrapperFn = function wrapperFn() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    lastArgs = args;
+
+    if (frameId) {
+      return;
+    }
+
+    frameId = requestAnimationFrame(function () {
+      frameId = null;
+      fn.apply(void 0, lastArgs);
+    });
+  };
+
+  wrapperFn.cancel = function () {
+    if (!frameId) {
+      return;
+    }
+
+    cancelAnimationFrame(frameId);
+    frameId = null;
+  };
+
+  return wrapperFn;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (rafSchd);
+
+
+/***/ }),
+
+/***/ "./node_modules/react-is/cjs/react-is.development.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-is/cjs/react-is.development.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+/**
+ * @license React
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+// ATTENTION
+// When adding new symbols to this file,
+// Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
+// The Symbol used to tag the ReactElement-like types.
+var REACT_ELEMENT_TYPE = Symbol.for('react.element');
+var REACT_PORTAL_TYPE = Symbol.for('react.portal');
+var REACT_FRAGMENT_TYPE = Symbol.for('react.fragment');
+var REACT_STRICT_MODE_TYPE = Symbol.for('react.strict_mode');
+var REACT_PROFILER_TYPE = Symbol.for('react.profiler');
+var REACT_PROVIDER_TYPE = Symbol.for('react.provider');
+var REACT_CONTEXT_TYPE = Symbol.for('react.context');
+var REACT_SERVER_CONTEXT_TYPE = Symbol.for('react.server_context');
+var REACT_FORWARD_REF_TYPE = Symbol.for('react.forward_ref');
+var REACT_SUSPENSE_TYPE = Symbol.for('react.suspense');
+var REACT_SUSPENSE_LIST_TYPE = Symbol.for('react.suspense_list');
+var REACT_MEMO_TYPE = Symbol.for('react.memo');
+var REACT_LAZY_TYPE = Symbol.for('react.lazy');
+var REACT_OFFSCREEN_TYPE = Symbol.for('react.offscreen');
+
+// -----------------------------------------------------------------------------
+
+var enableScopeAPI = false; // Experimental Create Event Handle API.
+var enableCacheElement = false;
+var enableTransitionTracing = false; // No known bugs, but needs performance testing
+
+var enableLegacyHidden = false; // Enables unstable_avoidThisFallback feature in Fiber
+// stuff. Intended to enable React core members to more easily debug scheduling
+// issues in DEV builds.
+
+var enableDebugTracing = false; // Track which Fiber(s) schedule render work.
+
+var REACT_MODULE_REFERENCE;
+
+{
+  REACT_MODULE_REFERENCE = Symbol.for('react.module.reference');
+}
+
+function isValidElementType(type) {
+  if (typeof type === 'string' || typeof type === 'function') {
+    return true;
+  } // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
+
+
+  if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing  || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden  || type === REACT_OFFSCREEN_TYPE || enableScopeAPI  || enableCacheElement  || enableTransitionTracing ) {
+    return true;
+  }
+
+  if (typeof type === 'object' && type !== null) {
+    if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || // This needs to include all possible module reference object
+    // types supported by any Flight configuration anywhere since
+    // we don't know which Flight build this will end up being used
+    // with.
+    type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== undefined) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+          case REACT_SUSPENSE_TYPE:
+          case REACT_SUSPENSE_LIST_TYPE:
+            return type;
+
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_SERVER_CONTEXT_TYPE:
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_LAZY_TYPE:
+              case REACT_MEMO_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+
+              default:
+                return $$typeof;
+            }
+
+        }
+
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+}
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Lazy = REACT_LAZY_TYPE;
+var Memo = REACT_MEMO_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+var Suspense = REACT_SUSPENSE_TYPE;
+var SuspenseList = REACT_SUSPENSE_LIST_TYPE;
+var hasWarnedAboutDeprecatedIsAsyncMode = false;
+var hasWarnedAboutDeprecatedIsConcurrentMode = false; // AsyncMode should be deprecated
+
+function isAsyncMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 18+.');
+    }
+  }
+
+  return false;
+}
+function isConcurrentMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsConcurrentMode) {
+      hasWarnedAboutDeprecatedIsConcurrentMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isConcurrentMode() alias has been deprecated, ' + 'and will be removed in React 18+.');
+    }
+  }
+
+  return false;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isLazy(object) {
+  return typeOf(object) === REACT_LAZY_TYPE;
+}
+function isMemo(object) {
+  return typeOf(object) === REACT_MEMO_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+function isSuspense(object) {
+  return typeOf(object) === REACT_SUSPENSE_TYPE;
+}
+function isSuspenseList(object) {
+  return typeOf(object) === REACT_SUSPENSE_LIST_TYPE;
+}
+
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Lazy = Lazy;
+exports.Memo = Memo;
+exports.Portal = Portal;
+exports.Profiler = Profiler;
+exports.StrictMode = StrictMode;
+exports.Suspense = Suspense;
+exports.SuspenseList = SuspenseList;
+exports.isAsyncMode = isAsyncMode;
+exports.isConcurrentMode = isConcurrentMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isLazy = isLazy;
+exports.isMemo = isMemo;
+exports.isPortal = isPortal;
+exports.isProfiler = isProfiler;
+exports.isStrictMode = isStrictMode;
+exports.isSuspense = isSuspense;
+exports.isSuspenseList = isSuspenseList;
+exports.isValidElementType = isValidElementType;
+exports.typeOf = typeOf;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-is/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/react-is/index.js ***!
+  \****************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/react-is/cjs/react-is.development.js");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/components/Context.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/components/Context.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ReactReduxContext: () => (/* binding */ ReactReduxContext),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const ContextKey = Symbol.for(`react-redux-context`);
+const gT = typeof globalThis !== "undefined" ? globalThis :
+/* fall back to a per-module scope (pre-8.1 behaviour) if `globalThis` is not available */
+{};
+
+function getContext() {
+  var _gT$ContextKey;
+
+  if (!react__WEBPACK_IMPORTED_MODULE_0__.createContext) return {};
+  const contextMap = (_gT$ContextKey = gT[ContextKey]) != null ? _gT$ContextKey : gT[ContextKey] = new Map();
+  let realContext = contextMap.get(react__WEBPACK_IMPORTED_MODULE_0__.createContext);
+
+  if (!realContext) {
+    realContext = react__WEBPACK_IMPORTED_MODULE_0__.createContext(null);
+
+    if (true) {
+      realContext.displayName = 'ReactRedux';
+    }
+
+    contextMap.set(react__WEBPACK_IMPORTED_MODULE_0__.createContext, realContext);
+  }
+
+  return realContext;
+}
+
+const ReactReduxContext = /*#__PURE__*/getContext();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ReactReduxContext);
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/components/Provider.js":
+/*!************************************************************!*\
+  !*** ./node_modules/react-redux/es/components/Provider.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Context__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _utils_Subscription__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/Subscription */ "./node_modules/react-redux/es/utils/Subscription.js");
+/* harmony import */ var _utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/useIsomorphicLayoutEffect */ "./node_modules/react-redux/es/utils/useIsomorphicLayoutEffect.js");
+
+
+
+
+
+function Provider({
+  store,
+  context,
+  children,
+  serverState,
+  stabilityCheck = 'once',
+  noopCheck = 'once'
+}) {
+  const contextValue = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(() => {
+    const subscription = (0,_utils_Subscription__WEBPACK_IMPORTED_MODULE_2__.createSubscription)(store);
+    return {
+      store,
+      subscription,
+      getServerState: serverState ? () => serverState : undefined,
+      stabilityCheck,
+      noopCheck
+    };
+  }, [store, serverState, stabilityCheck, noopCheck]);
+  const previousState = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(() => store.getState(), [store]);
+  (0,_utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_3__.useIsomorphicLayoutEffect)(() => {
+    const {
+      subscription
+    } = contextValue;
+    subscription.onStateChange = subscription.notifyNestedSubs;
+    subscription.trySubscribe();
+
+    if (previousState !== store.getState()) {
+      subscription.notifyNestedSubs();
+    }
+
+    return () => {
+      subscription.tryUnsubscribe();
+      subscription.onStateChange = undefined;
+    };
+  }, [contextValue, previousState]);
+  const Context = context || _Context__WEBPACK_IMPORTED_MODULE_1__.ReactReduxContext; // @ts-ignore 'AnyAction' is assignable to the constraint of type 'A', but 'A' could be instantiated with a different subtype
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Context.Provider, {
+    value: contextValue
+  }, children);
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Provider);
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/components/connect.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/components/connect.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   initializeConnect: () => (/* binding */ initializeConnect)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+/* harmony import */ var hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! hoist-non-react-statics */ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js");
+/* harmony import */ var hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_is__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+/* harmony import */ var _connect_selectorFactory__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../connect/selectorFactory */ "./node_modules/react-redux/es/connect/selectorFactory.js");
+/* harmony import */ var _connect_mapDispatchToProps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../connect/mapDispatchToProps */ "./node_modules/react-redux/es/connect/mapDispatchToProps.js");
+/* harmony import */ var _connect_mapStateToProps__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../connect/mapStateToProps */ "./node_modules/react-redux/es/connect/mapStateToProps.js");
+/* harmony import */ var _connect_mergeProps__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../connect/mergeProps */ "./node_modules/react-redux/es/connect/mergeProps.js");
+/* harmony import */ var _utils_Subscription__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/Subscription */ "./node_modules/react-redux/es/utils/Subscription.js");
+/* harmony import */ var _utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../utils/useIsomorphicLayoutEffect */ "./node_modules/react-redux/es/utils/useIsomorphicLayoutEffect.js");
+/* harmony import */ var _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../utils/shallowEqual */ "./node_modules/react-redux/es/utils/shallowEqual.js");
+/* harmony import */ var _utils_warning__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../utils/warning */ "./node_modules/react-redux/es/utils/warning.js");
+/* harmony import */ var _Context__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _utils_useSyncExternalStore__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../utils/useSyncExternalStore */ "./node_modules/react-redux/es/utils/useSyncExternalStore.js");
+
+
+const _excluded = ["reactReduxForwardedRef"];
+
+/* eslint-disable valid-jsdoc, @typescript-eslint/no-unused-vars */
+
+
+
+
+
+
+
+
+
+
+
+
+
+let useSyncExternalStore = _utils_useSyncExternalStore__WEBPACK_IMPORTED_MODULE_14__.notInitialized;
+const initializeConnect = fn => {
+  useSyncExternalStore = fn;
+}; // Define some constant arrays just to avoid re-creating these
+
+const EMPTY_ARRAY = [null, 0];
+const NO_SUBSCRIPTION_ARRAY = [null, null]; // Attempts to stringify whatever not-really-a-component value we were given
+// for logging in an error message
+
+const stringifyComponent = Comp => {
+  try {
+    return JSON.stringify(Comp);
+  } catch (err) {
+    return String(Comp);
+  }
+};
+
+// This is "just" a `useLayoutEffect`, but with two modifications:
+// - we need to fall back to `useEffect` in SSR to avoid annoying warnings
+// - we extract this to a separate function to avoid closing over values
+//   and causing memory leaks
+function useIsomorphicLayoutEffectWithArgs(effectFunc, effectArgs, dependencies) {
+  (0,_utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_10__.useIsomorphicLayoutEffect)(() => effectFunc(...effectArgs), dependencies);
+} // Effect callback, extracted: assign the latest props values to refs for later usage
+
+
+function captureWrapperProps(lastWrapperProps, lastChildProps, renderIsScheduled, wrapperProps, // actualChildProps: unknown,
+childPropsFromStoreUpdate, notifyNestedSubs) {
+  // We want to capture the wrapper props and child props we used for later comparisons
+  lastWrapperProps.current = wrapperProps;
+  renderIsScheduled.current = false; // If the render was from a store update, clear out that reference and cascade the subscriber update
+
+  if (childPropsFromStoreUpdate.current) {
+    childPropsFromStoreUpdate.current = null;
+    notifyNestedSubs();
+  }
+} // Effect callback, extracted: subscribe to the Redux store or nearest connected ancestor,
+// check for updates after dispatched actions, and trigger re-renders.
+
+
+function subscribeUpdates(shouldHandleStateChanges, store, subscription, childPropsSelector, lastWrapperProps, lastChildProps, renderIsScheduled, isMounted, childPropsFromStoreUpdate, notifyNestedSubs, // forceComponentUpdateDispatch: React.Dispatch<any>,
+additionalSubscribeListener) {
+  // If we're not subscribed to the store, nothing to do here
+  if (!shouldHandleStateChanges) return () => {}; // Capture values for checking if and when this component unmounts
+
+  let didUnsubscribe = false;
+  let lastThrownError = null; // We'll run this callback every time a store subscription update propagates to this component
+
+  const checkForUpdates = () => {
+    if (didUnsubscribe || !isMounted.current) {
+      // Don't run stale listeners.
+      // Redux doesn't guarantee unsubscriptions happen until next dispatch.
+      return;
+    } // TODO We're currently calling getState ourselves here, rather than letting `uSES` do it
+
+
+    const latestStoreState = store.getState();
+    let newChildProps, error;
+
+    try {
+      // Actually run the selector with the most recent store state and wrapper props
+      // to determine what the child props should be
+      newChildProps = childPropsSelector(latestStoreState, lastWrapperProps.current);
+    } catch (e) {
+      error = e;
+      lastThrownError = e;
+    }
+
+    if (!error) {
+      lastThrownError = null;
+    } // If the child props haven't changed, nothing to do here - cascade the subscription update
+
+
+    if (newChildProps === lastChildProps.current) {
+      if (!renderIsScheduled.current) {
+        notifyNestedSubs();
+      }
+    } else {
+      // Save references to the new child props.  Note that we track the "child props from store update"
+      // as a ref instead of a useState/useReducer because we need a way to determine if that value has
+      // been processed.  If this went into useState/useReducer, we couldn't clear out the value without
+      // forcing another re-render, which we don't want.
+      lastChildProps.current = newChildProps;
+      childPropsFromStoreUpdate.current = newChildProps;
+      renderIsScheduled.current = true; // TODO This is hacky and not how `uSES` is meant to be used
+      // Trigger the React `useSyncExternalStore` subscriber
+
+      additionalSubscribeListener();
+    }
+  }; // Actually subscribe to the nearest connected ancestor (or store)
+
+
+  subscription.onStateChange = checkForUpdates;
+  subscription.trySubscribe(); // Pull data from the store after first render in case the store has
+  // changed since we began.
+
+  checkForUpdates();
+
+  const unsubscribeWrapper = () => {
+    didUnsubscribe = true;
+    subscription.tryUnsubscribe();
+    subscription.onStateChange = null;
+
+    if (lastThrownError) {
+      // It's possible that we caught an error due to a bad mapState function, but the
+      // parent re-rendered without this component and we're about to unmount.
+      // This shouldn't happen as long as we do top-down subscriptions correctly, but
+      // if we ever do those wrong, this throw will surface the error in our tests.
+      // In that case, throw the error from here so it doesn't get lost.
+      throw lastThrownError;
+    }
+  };
+
+  return unsubscribeWrapper;
+} // Reducer initial state creation for our update reducer
+
+
+const initStateUpdates = () => EMPTY_ARRAY;
+
+function strictEqual(a, b) {
+  return a === b;
+}
+/**
+ * Infers the type of props that a connector will inject into a component.
+ */
+
+
+let hasWarnedAboutDeprecatedPureOption = false;
+/**
+ * Connects a React component to a Redux store.
+ *
+ * - Without arguments, just wraps the component, without changing the behavior / props
+ *
+ * - If 2 params are passed (3rd param, mergeProps, is skipped), default behavior
+ * is to override ownProps (as stated in the docs), so what remains is everything that's
+ * not a state or dispatch prop
+ *
+ * - When 3rd param is passed, we don't know if ownProps propagate and whether they
+ * should be valid component props, because it depends on mergeProps implementation.
+ * As such, it is the user's responsibility to extend ownProps interface from state or
+ * dispatch props or both when applicable
+ *
+ * @param mapStateToProps A function that extracts values from state
+ * @param mapDispatchToProps Setup for dispatching actions
+ * @param mergeProps Optional callback to merge state and dispatch props together
+ * @param options Options for configuring the connection
+ *
+ */
+
+function connect(mapStateToProps, mapDispatchToProps, mergeProps, {
+  // The `pure` option has been removed, so TS doesn't like us destructuring this to check its existence.
+  // @ts-ignore
+  pure,
+  areStatesEqual = strictEqual,
+  areOwnPropsEqual = _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_11__["default"],
+  areStatePropsEqual = _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_11__["default"],
+  areMergedPropsEqual = _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_11__["default"],
+  // use React's forwardRef to expose a ref of the wrapped component
+  forwardRef = false,
+  // the context consumer to use
+  context = _Context__WEBPACK_IMPORTED_MODULE_13__.ReactReduxContext
+} = {}) {
+  if (true) {
+    if (pure !== undefined && !hasWarnedAboutDeprecatedPureOption) {
+      hasWarnedAboutDeprecatedPureOption = true;
+      (0,_utils_warning__WEBPACK_IMPORTED_MODULE_12__["default"])('The `pure` option has been removed. `connect` is now always a "pure/memoized" component');
+    }
+  }
+
+  const Context = context;
+  const initMapStateToProps = (0,_connect_mapStateToProps__WEBPACK_IMPORTED_MODULE_7__.mapStateToPropsFactory)(mapStateToProps);
+  const initMapDispatchToProps = (0,_connect_mapDispatchToProps__WEBPACK_IMPORTED_MODULE_6__.mapDispatchToPropsFactory)(mapDispatchToProps);
+  const initMergeProps = (0,_connect_mergeProps__WEBPACK_IMPORTED_MODULE_8__.mergePropsFactory)(mergeProps);
+  const shouldHandleStateChanges = Boolean(mapStateToProps);
+
+  const wrapWithConnect = WrappedComponent => {
+    if ( true && !(0,react_is__WEBPACK_IMPORTED_MODULE_4__.isValidElementType)(WrappedComponent)) {
+      throw new Error(`You must pass a component to the function returned by connect. Instead received ${stringifyComponent(WrappedComponent)}`);
+    }
+
+    const wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
+    const displayName = `Connect(${wrappedComponentName})`;
+    const selectorFactoryOptions = {
+      shouldHandleStateChanges,
+      displayName,
+      wrappedComponentName,
+      WrappedComponent,
+      // @ts-ignore
+      initMapStateToProps,
+      // @ts-ignore
+      initMapDispatchToProps,
+      initMergeProps,
+      areStatesEqual,
+      areStatePropsEqual,
+      areOwnPropsEqual,
+      areMergedPropsEqual
+    };
+
+    function ConnectFunction(props) {
+      const [propsContext, reactReduxForwardedRef, wrapperProps] = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        // Distinguish between actual "data" props that were passed to the wrapper component,
+        // and values needed to control behavior (forwarded refs, alternate context instances).
+        // To maintain the wrapperProps object reference, memoize this destructuring.
+        const {
+          reactReduxForwardedRef
+        } = props,
+              wrapperProps = (0,_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__["default"])(props, _excluded);
+
+        return [props.context, reactReduxForwardedRef, wrapperProps];
+      }, [props]);
+      const ContextToUse = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        // Users may optionally pass in a custom context instance to use instead of our ReactReduxContext.
+        // Memoize the check that determines which context instance we should use.
+        return propsContext && propsContext.Consumer && // @ts-ignore
+        (0,react_is__WEBPACK_IMPORTED_MODULE_4__.isContextConsumer)( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(propsContext.Consumer, null)) ? propsContext : Context;
+      }, [propsContext, Context]); // Retrieve the store and ancestor subscription via context, if available
+
+      const contextValue = react__WEBPACK_IMPORTED_MODULE_3__.useContext(ContextToUse); // The store _must_ exist as either a prop or in context.
+      // We'll check to see if it _looks_ like a Redux store first.
+      // This allows us to pass through a `store` prop that is just a plain value.
+
+      const didStoreComeFromProps = Boolean(props.store) && Boolean(props.store.getState) && Boolean(props.store.dispatch);
+      const didStoreComeFromContext = Boolean(contextValue) && Boolean(contextValue.store);
+
+      if ( true && !didStoreComeFromProps && !didStoreComeFromContext) {
+        throw new Error(`Could not find "store" in the context of ` + `"${displayName}". Either wrap the root component in a <Provider>, ` + `or pass a custom React context provider to <Provider> and the corresponding ` + `React context consumer to ${displayName} in connect options.`);
+      } // Based on the previous check, one of these must be true
+
+
+      const store = didStoreComeFromProps ? props.store : contextValue.store;
+      const getServerState = didStoreComeFromContext ? contextValue.getServerState : store.getState;
+      const childPropsSelector = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        // The child props selector needs the store reference as an input.
+        // Re-create this selector whenever the store changes.
+        return (0,_connect_selectorFactory__WEBPACK_IMPORTED_MODULE_5__["default"])(store.dispatch, selectorFactoryOptions);
+      }, [store]);
+      const [subscription, notifyNestedSubs] = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        if (!shouldHandleStateChanges) return NO_SUBSCRIPTION_ARRAY; // This Subscription's source should match where store came from: props vs. context. A component
+        // connected to the store via props shouldn't use subscription from context, or vice versa.
+
+        const subscription = (0,_utils_Subscription__WEBPACK_IMPORTED_MODULE_9__.createSubscription)(store, didStoreComeFromProps ? undefined : contextValue.subscription); // `notifyNestedSubs` is duplicated to handle the case where the component is unmounted in
+        // the middle of the notification loop, where `subscription` will then be null. This can
+        // probably be avoided if Subscription's listeners logic is changed to not call listeners
+        // that have been unsubscribed in the  middle of the notification loop.
+
+        const notifyNestedSubs = subscription.notifyNestedSubs.bind(subscription);
+        return [subscription, notifyNestedSubs];
+      }, [store, didStoreComeFromProps, contextValue]); // Determine what {store, subscription} value should be put into nested context, if necessary,
+      // and memoize that value to avoid unnecessary context updates.
+
+      const overriddenContextValue = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        if (didStoreComeFromProps) {
+          // This component is directly subscribed to a store from props.
+          // We don't want descendants reading from this store - pass down whatever
+          // the existing context value is from the nearest connected ancestor.
+          return contextValue;
+        } // Otherwise, put this component's subscription instance into context, so that
+        // connected descendants won't update until after this component is done
+
+
+        return (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, contextValue, {
+          subscription
+        });
+      }, [didStoreComeFromProps, contextValue, subscription]); // Set up refs to coordinate values between the subscription effect and the render logic
+
+      const lastChildProps = react__WEBPACK_IMPORTED_MODULE_3__.useRef();
+      const lastWrapperProps = react__WEBPACK_IMPORTED_MODULE_3__.useRef(wrapperProps);
+      const childPropsFromStoreUpdate = react__WEBPACK_IMPORTED_MODULE_3__.useRef();
+      const renderIsScheduled = react__WEBPACK_IMPORTED_MODULE_3__.useRef(false);
+      const isProcessingDispatch = react__WEBPACK_IMPORTED_MODULE_3__.useRef(false);
+      const isMounted = react__WEBPACK_IMPORTED_MODULE_3__.useRef(false);
+      const latestSubscriptionCallbackError = react__WEBPACK_IMPORTED_MODULE_3__.useRef();
+      (0,_utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_10__.useIsomorphicLayoutEffect)(() => {
+        isMounted.current = true;
+        return () => {
+          isMounted.current = false;
+        };
+      }, []);
+      const actualChildPropsSelector = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        const selector = () => {
+          // Tricky logic here:
+          // - This render may have been triggered by a Redux store update that produced new child props
+          // - However, we may have gotten new wrapper props after that
+          // If we have new child props, and the same wrapper props, we know we should use the new child props as-is.
+          // But, if we have new wrapper props, those might change the child props, so we have to recalculate things.
+          // So, we'll use the child props from store update only if the wrapper props are the same as last time.
+          if (childPropsFromStoreUpdate.current && wrapperProps === lastWrapperProps.current) {
+            return childPropsFromStoreUpdate.current;
+          } // TODO We're reading the store directly in render() here. Bad idea?
+          // This will likely cause Bad Things (TM) to happen in Concurrent Mode.
+          // Note that we do this because on renders _not_ caused by store updates, we need the latest store state
+          // to determine what the child props should be.
+
+
+          return childPropsSelector(store.getState(), wrapperProps);
+        };
+
+        return selector;
+      }, [store, wrapperProps]); // We need this to execute synchronously every time we re-render. However, React warns
+      // about useLayoutEffect in SSR, so we try to detect environment and fall back to
+      // just useEffect instead to avoid the warning, since neither will run anyway.
+
+      const subscribeForReact = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        const subscribe = reactListener => {
+          if (!subscription) {
+            return () => {};
+          }
+
+          return subscribeUpdates(shouldHandleStateChanges, store, subscription, // @ts-ignore
+          childPropsSelector, lastWrapperProps, lastChildProps, renderIsScheduled, isMounted, childPropsFromStoreUpdate, notifyNestedSubs, reactListener);
+        };
+
+        return subscribe;
+      }, [subscription]);
+      useIsomorphicLayoutEffectWithArgs(captureWrapperProps, [lastWrapperProps, lastChildProps, renderIsScheduled, wrapperProps, childPropsFromStoreUpdate, notifyNestedSubs]);
+      let actualChildProps;
+
+      try {
+        actualChildProps = useSyncExternalStore( // TODO We're passing through a big wrapper that does a bunch of extra side effects besides subscribing
+        subscribeForReact, // TODO This is incredibly hacky. We've already processed the store update and calculated new child props,
+        // TODO and we're just passing that through so it triggers a re-render for us rather than relying on `uSES`.
+        actualChildPropsSelector, getServerState ? () => childPropsSelector(getServerState(), wrapperProps) : actualChildPropsSelector);
+      } catch (err) {
+        if (latestSubscriptionCallbackError.current) {
+          ;
+          err.message += `\nThe error may be correlated with this previous error:\n${latestSubscriptionCallbackError.current.stack}\n\n`;
+        }
+
+        throw err;
+      }
+
+      (0,_utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_10__.useIsomorphicLayoutEffect)(() => {
+        latestSubscriptionCallbackError.current = undefined;
+        childPropsFromStoreUpdate.current = undefined;
+        lastChildProps.current = actualChildProps;
+      }); // Now that all that's done, we can finally try to actually render the child component.
+      // We memoize the elements for the rendered child component as an optimization.
+
+      const renderedWrappedComponent = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        return (
+          /*#__PURE__*/
+          // @ts-ignore
+          react__WEBPACK_IMPORTED_MODULE_3__.createElement(WrappedComponent, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, actualChildProps, {
+            ref: reactReduxForwardedRef
+          }))
+        );
+      }, [reactReduxForwardedRef, WrappedComponent, actualChildProps]); // If React sees the exact same element reference as last time, it bails out of re-rendering
+      // that child, same as if it was wrapped in React.memo() or returned false from shouldComponentUpdate.
+
+      const renderedChild = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        if (shouldHandleStateChanges) {
+          // If this component is subscribed to store updates, we need to pass its own
+          // subscription instance down to our descendants. That means rendering the same
+          // Context instance, and putting a different value into the context.
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(ContextToUse.Provider, {
+            value: overriddenContextValue
+          }, renderedWrappedComponent);
+        }
+
+        return renderedWrappedComponent;
+      }, [ContextToUse, renderedWrappedComponent, overriddenContextValue]);
+      return renderedChild;
+    }
+
+    const _Connect = react__WEBPACK_IMPORTED_MODULE_3__.memo(ConnectFunction);
+
+    // Add a hacky cast to get the right output type
+    const Connect = _Connect;
+    Connect.WrappedComponent = WrappedComponent;
+    Connect.displayName = ConnectFunction.displayName = displayName;
+
+    if (forwardRef) {
+      const _forwarded = react__WEBPACK_IMPORTED_MODULE_3__.forwardRef(function forwardConnectRef(props, ref) {
+        // @ts-ignore
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(Connect, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, props, {
+          reactReduxForwardedRef: ref
+        }));
+      });
+
+      const forwarded = _forwarded;
+      forwarded.displayName = displayName;
+      forwarded.WrappedComponent = WrappedComponent;
+      return hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2___default()(forwarded, WrappedComponent);
+    }
+
+    return hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2___default()(Connect, WrappedComponent);
+  };
+
+  return wrapWithConnect;
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (connect);
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/invalidArgFactory.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/invalidArgFactory.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createInvalidArgFactory: () => (/* binding */ createInvalidArgFactory)
+/* harmony export */ });
+function createInvalidArgFactory(arg, name) {
+  return (dispatch, options) => {
+    throw new Error(`Invalid value of type ${typeof arg} for ${name} argument when connecting component ${options.wrappedComponentName}.`);
+  };
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/mapDispatchToProps.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/mapDispatchToProps.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mapDispatchToPropsFactory: () => (/* binding */ mapDispatchToPropsFactory)
+/* harmony export */ });
+/* harmony import */ var _utils_bindActionCreators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/bindActionCreators */ "./node_modules/react-redux/es/utils/bindActionCreators.js");
+/* harmony import */ var _wrapMapToProps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./wrapMapToProps */ "./node_modules/react-redux/es/connect/wrapMapToProps.js");
+/* harmony import */ var _invalidArgFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./invalidArgFactory */ "./node_modules/react-redux/es/connect/invalidArgFactory.js");
+
+
+
+function mapDispatchToPropsFactory(mapDispatchToProps) {
+  return mapDispatchToProps && typeof mapDispatchToProps === 'object' ? (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_1__.wrapMapToPropsConstant)(dispatch => // @ts-ignore
+  (0,_utils_bindActionCreators__WEBPACK_IMPORTED_MODULE_0__["default"])(mapDispatchToProps, dispatch)) : !mapDispatchToProps ? (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_1__.wrapMapToPropsConstant)(dispatch => ({
+    dispatch
+  })) : typeof mapDispatchToProps === 'function' ? // @ts-ignore
+  (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_1__.wrapMapToPropsFunc)(mapDispatchToProps, 'mapDispatchToProps') : (0,_invalidArgFactory__WEBPACK_IMPORTED_MODULE_2__.createInvalidArgFactory)(mapDispatchToProps, 'mapDispatchToProps');
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/mapStateToProps.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/mapStateToProps.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mapStateToPropsFactory: () => (/* binding */ mapStateToPropsFactory)
+/* harmony export */ });
+/* harmony import */ var _wrapMapToProps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrapMapToProps */ "./node_modules/react-redux/es/connect/wrapMapToProps.js");
+/* harmony import */ var _invalidArgFactory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invalidArgFactory */ "./node_modules/react-redux/es/connect/invalidArgFactory.js");
+
+
+function mapStateToPropsFactory(mapStateToProps) {
+  return !mapStateToProps ? (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_0__.wrapMapToPropsConstant)(() => ({})) : typeof mapStateToProps === 'function' ? // @ts-ignore
+  (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_0__.wrapMapToPropsFunc)(mapStateToProps, 'mapStateToProps') : (0,_invalidArgFactory__WEBPACK_IMPORTED_MODULE_1__.createInvalidArgFactory)(mapStateToProps, 'mapStateToProps');
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/mergeProps.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/mergeProps.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   defaultMergeProps: () => (/* binding */ defaultMergeProps),
+/* harmony export */   mergePropsFactory: () => (/* binding */ mergePropsFactory),
+/* harmony export */   wrapMergePropsFunc: () => (/* binding */ wrapMergePropsFunc)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var _utils_verifyPlainObject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/verifyPlainObject */ "./node_modules/react-redux/es/utils/verifyPlainObject.js");
+/* harmony import */ var _invalidArgFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./invalidArgFactory */ "./node_modules/react-redux/es/connect/invalidArgFactory.js");
+
+
+
+function defaultMergeProps(stateProps, dispatchProps, ownProps) {
+  // @ts-ignore
+  return (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, ownProps, stateProps, dispatchProps);
+}
+function wrapMergePropsFunc(mergeProps) {
+  return function initMergePropsProxy(dispatch, {
+    displayName,
+    areMergedPropsEqual
+  }) {
+    let hasRunOnce = false;
+    let mergedProps;
+    return function mergePropsProxy(stateProps, dispatchProps, ownProps) {
+      const nextMergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+
+      if (hasRunOnce) {
+        if (!areMergedPropsEqual(nextMergedProps, mergedProps)) mergedProps = nextMergedProps;
+      } else {
+        hasRunOnce = true;
+        mergedProps = nextMergedProps;
+        if (true) (0,_utils_verifyPlainObject__WEBPACK_IMPORTED_MODULE_1__["default"])(mergedProps, displayName, 'mergeProps');
+      }
+
+      return mergedProps;
+    };
+  };
+}
+function mergePropsFactory(mergeProps) {
+  return !mergeProps ? () => defaultMergeProps : typeof mergeProps === 'function' ? wrapMergePropsFunc(mergeProps) : (0,_invalidArgFactory__WEBPACK_IMPORTED_MODULE_2__.createInvalidArgFactory)(mergeProps, 'mergeProps');
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/selectorFactory.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/selectorFactory.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ finalPropsSelectorFactory),
+/* harmony export */   pureFinalPropsSelectorFactory: () => (/* binding */ pureFinalPropsSelectorFactory)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+/* harmony import */ var _verifySubselectors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./verifySubselectors */ "./node_modules/react-redux/es/connect/verifySubselectors.js");
+
+const _excluded = ["initMapStateToProps", "initMapDispatchToProps", "initMergeProps"];
+
+function pureFinalPropsSelectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, {
+  areStatesEqual,
+  areOwnPropsEqual,
+  areStatePropsEqual
+}) {
+  let hasRunAtLeastOnce = false;
+  let state;
+  let ownProps;
+  let stateProps;
+  let dispatchProps;
+  let mergedProps;
+
+  function handleFirstCall(firstState, firstOwnProps) {
+    state = firstState;
+    ownProps = firstOwnProps;
+    stateProps = mapStateToProps(state, ownProps);
+    dispatchProps = mapDispatchToProps(dispatch, ownProps);
+    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+    hasRunAtLeastOnce = true;
+    return mergedProps;
+  }
+
+  function handleNewPropsAndNewState() {
+    stateProps = mapStateToProps(state, ownProps);
+    if (mapDispatchToProps.dependsOnOwnProps) dispatchProps = mapDispatchToProps(dispatch, ownProps);
+    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+    return mergedProps;
+  }
+
+  function handleNewProps() {
+    if (mapStateToProps.dependsOnOwnProps) stateProps = mapStateToProps(state, ownProps);
+    if (mapDispatchToProps.dependsOnOwnProps) dispatchProps = mapDispatchToProps(dispatch, ownProps);
+    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+    return mergedProps;
+  }
+
+  function handleNewState() {
+    const nextStateProps = mapStateToProps(state, ownProps);
+    const statePropsChanged = !areStatePropsEqual(nextStateProps, stateProps);
+    stateProps = nextStateProps;
+    if (statePropsChanged) mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+    return mergedProps;
+  }
+
+  function handleSubsequentCalls(nextState, nextOwnProps) {
+    const propsChanged = !areOwnPropsEqual(nextOwnProps, ownProps);
+    const stateChanged = !areStatesEqual(nextState, state, nextOwnProps, ownProps);
+    state = nextState;
+    ownProps = nextOwnProps;
+    if (propsChanged && stateChanged) return handleNewPropsAndNewState();
+    if (propsChanged) return handleNewProps();
+    if (stateChanged) return handleNewState();
+    return mergedProps;
+  }
+
+  return function pureFinalPropsSelector(nextState, nextOwnProps) {
+    return hasRunAtLeastOnce ? handleSubsequentCalls(nextState, nextOwnProps) : handleFirstCall(nextState, nextOwnProps);
+  };
+}
+// TODO: Add more comments
+// The selector returned by selectorFactory will memoize its results,
+// allowing connect's shouldComponentUpdate to return false if final
+// props have not changed.
+function finalPropsSelectorFactory(dispatch, _ref) {
+  let {
+    initMapStateToProps,
+    initMapDispatchToProps,
+    initMergeProps
+  } = _ref,
+      options = (0,_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(_ref, _excluded);
+
+  const mapStateToProps = initMapStateToProps(dispatch, options);
+  const mapDispatchToProps = initMapDispatchToProps(dispatch, options);
+  const mergeProps = initMergeProps(dispatch, options);
+
+  if (true) {
+    (0,_verifySubselectors__WEBPACK_IMPORTED_MODULE_1__["default"])(mapStateToProps, mapDispatchToProps, mergeProps);
+  }
+
+  return pureFinalPropsSelectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, options);
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/verifySubselectors.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/verifySubselectors.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ verifySubselectors)
+/* harmony export */ });
+/* harmony import */ var _utils_warning__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/warning */ "./node_modules/react-redux/es/utils/warning.js");
+
+
+function verify(selector, methodName) {
+  if (!selector) {
+    throw new Error(`Unexpected value for ${methodName} in connect.`);
+  } else if (methodName === 'mapStateToProps' || methodName === 'mapDispatchToProps') {
+    if (!Object.prototype.hasOwnProperty.call(selector, 'dependsOnOwnProps')) {
+      (0,_utils_warning__WEBPACK_IMPORTED_MODULE_0__["default"])(`The selector for ${methodName} of connect did not specify a value for dependsOnOwnProps.`);
+    }
+  }
+}
+
+function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps) {
+  verify(mapStateToProps, 'mapStateToProps');
+  verify(mapDispatchToProps, 'mapDispatchToProps');
+  verify(mergeProps, 'mergeProps');
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/wrapMapToProps.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/wrapMapToProps.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getDependsOnOwnProps: () => (/* binding */ getDependsOnOwnProps),
+/* harmony export */   wrapMapToPropsConstant: () => (/* binding */ wrapMapToPropsConstant),
+/* harmony export */   wrapMapToPropsFunc: () => (/* binding */ wrapMapToPropsFunc)
+/* harmony export */ });
+/* harmony import */ var _utils_verifyPlainObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/verifyPlainObject */ "./node_modules/react-redux/es/utils/verifyPlainObject.js");
+
+function wrapMapToPropsConstant( // * Note:
+//  It seems that the dispatch argument
+//  could be a dispatch function in some cases (ex: whenMapDispatchToPropsIsMissing)
+//  and a state object in some others (ex: whenMapStateToPropsIsMissing)
+// eslint-disable-next-line no-unused-vars
+getConstant) {
+  return function initConstantSelector(dispatch) {
+    const constant = getConstant(dispatch);
+
+    function constantSelector() {
+      return constant;
+    }
+
+    constantSelector.dependsOnOwnProps = false;
+    return constantSelector;
+  };
+} // dependsOnOwnProps is used by createMapToPropsProxy to determine whether to pass props as args
+// to the mapToProps function being wrapped. It is also used by makePurePropsSelector to determine
+// whether mapToProps needs to be invoked when props have changed.
+//
+// A length of one signals that mapToProps does not depend on props from the parent component.
+// A length of zero is assumed to mean mapToProps is getting args via arguments or ...args and
+// therefore not reporting its length accurately..
+// TODO Can this get pulled out so that we can subscribe directly to the store if we don't need ownProps?
+
+function getDependsOnOwnProps(mapToProps) {
+  return mapToProps.dependsOnOwnProps ? Boolean(mapToProps.dependsOnOwnProps) : mapToProps.length !== 1;
+} // Used by whenMapStateToPropsIsFunction and whenMapDispatchToPropsIsFunction,
+// this function wraps mapToProps in a proxy function which does several things:
+//
+//  * Detects whether the mapToProps function being called depends on props, which
+//    is used by selectorFactory to decide if it should reinvoke on props changes.
+//
+//  * On first call, handles mapToProps if returns another function, and treats that
+//    new function as the true mapToProps for subsequent calls.
+//
+//  * On first call, verifies the first result is a plain object, in order to warn
+//    the developer that their mapToProps function is not returning a valid result.
+//
+
+function wrapMapToPropsFunc(mapToProps, methodName) {
+  return function initProxySelector(dispatch, {
+    displayName
+  }) {
+    const proxy = function mapToPropsProxy(stateOrDispatch, ownProps) {
+      return proxy.dependsOnOwnProps ? proxy.mapToProps(stateOrDispatch, ownProps) : proxy.mapToProps(stateOrDispatch, undefined);
+    }; // allow detectFactoryAndVerify to get ownProps
+
+
+    proxy.dependsOnOwnProps = true;
+
+    proxy.mapToProps = function detectFactoryAndVerify(stateOrDispatch, ownProps) {
+      proxy.mapToProps = mapToProps;
+      proxy.dependsOnOwnProps = getDependsOnOwnProps(mapToProps);
+      let props = proxy(stateOrDispatch, ownProps);
+
+      if (typeof props === 'function') {
+        proxy.mapToProps = props;
+        proxy.dependsOnOwnProps = getDependsOnOwnProps(props);
+        props = proxy(stateOrDispatch, ownProps);
+      }
+
+      if (true) (0,_utils_verifyPlainObject__WEBPACK_IMPORTED_MODULE_0__["default"])(props, displayName, methodName);
+      return props;
+    };
+
+    return proxy;
+  };
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/exports.js":
+/*!************************************************!*\
+  !*** ./node_modules/react-redux/es/exports.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Provider: () => (/* reexport safe */ _components_Provider__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* harmony export */   ReactReduxContext: () => (/* reexport safe */ _components_Context__WEBPACK_IMPORTED_MODULE_2__.ReactReduxContext),
+/* harmony export */   connect: () => (/* reexport safe */ _components_connect__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   createDispatchHook: () => (/* reexport safe */ _hooks_useDispatch__WEBPACK_IMPORTED_MODULE_3__.createDispatchHook),
+/* harmony export */   createSelectorHook: () => (/* reexport safe */ _hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__.createSelectorHook),
+/* harmony export */   createStoreHook: () => (/* reexport safe */ _hooks_useStore__WEBPACK_IMPORTED_MODULE_5__.createStoreHook),
+/* harmony export */   shallowEqual: () => (/* reexport safe */ _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_6__["default"]),
+/* harmony export */   useDispatch: () => (/* reexport safe */ _hooks_useDispatch__WEBPACK_IMPORTED_MODULE_3__.useDispatch),
+/* harmony export */   useSelector: () => (/* reexport safe */ _hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__.useSelector),
+/* harmony export */   useStore: () => (/* reexport safe */ _hooks_useStore__WEBPACK_IMPORTED_MODULE_5__.useStore)
+/* harmony export */ });
+/* harmony import */ var _components_Provider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Provider */ "./node_modules/react-redux/es/components/Provider.js");
+/* harmony import */ var _components_connect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/connect */ "./node_modules/react-redux/es/components/connect.js");
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _hooks_useDispatch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./hooks/useDispatch */ "./node_modules/react-redux/es/hooks/useDispatch.js");
+/* harmony import */ var _hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hooks/useSelector */ "./node_modules/react-redux/es/hooks/useSelector.js");
+/* harmony import */ var _hooks_useStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hooks/useStore */ "./node_modules/react-redux/es/hooks/useStore.js");
+/* harmony import */ var _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/shallowEqual */ "./node_modules/react-redux/es/utils/shallowEqual.js");
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./types */ "./node_modules/react-redux/es/types.js");
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/hooks/useDispatch.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/react-redux/es/hooks/useDispatch.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createDispatchHook: () => (/* binding */ createDispatchHook),
+/* harmony export */   useDispatch: () => (/* binding */ useDispatch)
+/* harmony export */ });
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./node_modules/react-redux/es/hooks/useStore.js");
+
+
+/**
+ * Hook factory, which creates a `useDispatch` hook bound to a given context.
+ *
+ * @param {React.Context} [context=ReactReduxContext] Context passed to your `<Provider>`.
+ * @returns {Function} A `useDispatch` hook bound to the specified context.
+ */
+
+function createDispatchHook(context = _components_Context__WEBPACK_IMPORTED_MODULE_0__.ReactReduxContext) {
+  const useStore = // @ts-ignore
+  context === _components_Context__WEBPACK_IMPORTED_MODULE_0__.ReactReduxContext ? _useStore__WEBPACK_IMPORTED_MODULE_1__.useStore : (0,_useStore__WEBPACK_IMPORTED_MODULE_1__.createStoreHook)(context);
+  return function useDispatch() {
+    const store = useStore(); // @ts-ignore
+
+    return store.dispatch;
+  };
+}
+/**
+ * A hook to access the redux `dispatch` function.
+ *
+ * @returns {any|function} redux store's `dispatch` function
+ *
+ * @example
+ *
+ * import React, { useCallback } from 'react'
+ * import { useDispatch } from 'react-redux'
+ *
+ * export const CounterComponent = ({ value }) => {
+ *   const dispatch = useDispatch()
+ *   const increaseCounter = useCallback(() => dispatch({ type: 'increase-counter' }), [])
+ *   return (
+ *     <div>
+ *       <span>{value}</span>
+ *       <button onClick={increaseCounter}>Increase counter</button>
+ *     </div>
+ *   )
+ * }
+ */
+
+const useDispatch = /*#__PURE__*/createDispatchHook();
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/hooks/useReduxContext.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/react-redux/es/hooks/useReduxContext.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createReduxContextHook: () => (/* binding */ createReduxContextHook),
+/* harmony export */   useReduxContext: () => (/* binding */ useReduxContext)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Context */ "./node_modules/react-redux/es/components/Context.js");
+
+
+
+/**
+ * Hook factory, which creates a `useReduxContext` hook bound to a given context. This is a low-level
+ * hook that you should usually not need to call directly.
+ *
+ * @param {React.Context} [context=ReactReduxContext] Context passed to your `<Provider>`.
+ * @returns {Function} A `useReduxContext` hook bound to the specified context.
+ */
+function createReduxContextHook(context = _components_Context__WEBPACK_IMPORTED_MODULE_1__.ReactReduxContext) {
+  return function useReduxContext() {
+    const contextValue = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(context);
+
+    if ( true && !contextValue) {
+      throw new Error('could not find react-redux context value; please ensure the component is wrapped in a <Provider>');
+    }
+
+    return contextValue;
+  };
+}
+/**
+ * A hook to access the value of the `ReactReduxContext`. This is a low-level
+ * hook that you should usually not need to call directly.
+ *
+ * @returns {any} the value of the `ReactReduxContext`
+ *
+ * @example
+ *
+ * import React from 'react'
+ * import { useReduxContext } from 'react-redux'
+ *
+ * export const CounterComponent = () => {
+ *   const { store } = useReduxContext()
+ *   return <div>{store.getState()}</div>
+ * }
+ */
+
+const useReduxContext = /*#__PURE__*/createReduxContextHook();
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/hooks/useSelector.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/react-redux/es/hooks/useSelector.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createSelectorHook: () => (/* binding */ createSelectorHook),
+/* harmony export */   initializeUseSelector: () => (/* binding */ initializeUseSelector),
+/* harmony export */   useSelector: () => (/* binding */ useSelector)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _useReduxContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useReduxContext */ "./node_modules/react-redux/es/hooks/useReduxContext.js");
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _utils_useSyncExternalStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/useSyncExternalStore */ "./node_modules/react-redux/es/utils/useSyncExternalStore.js");
+
+
+
+
+let useSyncExternalStoreWithSelector = _utils_useSyncExternalStore__WEBPACK_IMPORTED_MODULE_3__.notInitialized;
+const initializeUseSelector = fn => {
+  useSyncExternalStoreWithSelector = fn;
+};
+
+const refEquality = (a, b) => a === b;
+/**
+ * Hook factory, which creates a `useSelector` hook bound to a given context.
+ *
+ * @param {React.Context} [context=ReactReduxContext] Context passed to your `<Provider>`.
+ * @returns {Function} A `useSelector` hook bound to the specified context.
+ */
+
+
+function createSelectorHook(context = _components_Context__WEBPACK_IMPORTED_MODULE_2__.ReactReduxContext) {
+  const useReduxContext = context === _components_Context__WEBPACK_IMPORTED_MODULE_2__.ReactReduxContext ? _useReduxContext__WEBPACK_IMPORTED_MODULE_1__.useReduxContext : (0,_useReduxContext__WEBPACK_IMPORTED_MODULE_1__.createReduxContextHook)(context);
+  return function useSelector(selector, equalityFnOrOptions = {}) {
+    const {
+      equalityFn = refEquality,
+      stabilityCheck = undefined,
+      noopCheck = undefined
+    } = typeof equalityFnOrOptions === 'function' ? {
+      equalityFn: equalityFnOrOptions
+    } : equalityFnOrOptions;
+
+    if (true) {
+      if (!selector) {
+        throw new Error(`You must pass a selector to useSelector`);
+      }
+
+      if (typeof selector !== 'function') {
+        throw new Error(`You must pass a function as a selector to useSelector`);
+      }
+
+      if (typeof equalityFn !== 'function') {
+        throw new Error(`You must pass a function as an equality function to useSelector`);
+      }
+    }
+
+    const {
+      store,
+      subscription,
+      getServerState,
+      stabilityCheck: globalStabilityCheck,
+      noopCheck: globalNoopCheck
+    } = useReduxContext();
+    const firstRun = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
+    const wrappedSelector = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)({
+      [selector.name](state) {
+        const selected = selector(state);
+
+        if (true) {
+          const finalStabilityCheck = typeof stabilityCheck === 'undefined' ? globalStabilityCheck : stabilityCheck;
+
+          if (finalStabilityCheck === 'always' || finalStabilityCheck === 'once' && firstRun.current) {
+            const toCompare = selector(state);
+
+            if (!equalityFn(selected, toCompare)) {
+              let stack = undefined;
+
+              try {
+                throw new Error();
+              } catch (e) {
+                ;
+                ({
+                  stack
+                } = e);
+              }
+
+              console.warn('Selector ' + (selector.name || 'unknown') + ' returned a different result when called with the same parameters. This can lead to unnecessary rerenders.' + '\nSelectors that return a new reference (such as an object or an array) should be memoized: https://redux.js.org/usage/deriving-data-selectors#optimizing-selectors-with-memoization', {
+                state,
+                selected,
+                selected2: toCompare,
+                stack
+              });
+            }
+          }
+
+          const finalNoopCheck = typeof noopCheck === 'undefined' ? globalNoopCheck : noopCheck;
+
+          if (finalNoopCheck === 'always' || finalNoopCheck === 'once' && firstRun.current) {
+            // @ts-ignore
+            if (selected === state) {
+              let stack = undefined;
+
+              try {
+                throw new Error();
+              } catch (e) {
+                ;
+                ({
+                  stack
+                } = e);
+              }
+
+              console.warn('Selector ' + (selector.name || 'unknown') + ' returned the root state when called. This can lead to unnecessary rerenders.' + '\nSelectors that return the entire state are almost certainly a mistake, as they will cause a rerender whenever *anything* in state changes.', {
+                stack
+              });
+            }
+          }
+
+          if (firstRun.current) firstRun.current = false;
+        }
+
+        return selected;
+      }
+
+    }[selector.name], [selector, globalStabilityCheck, stabilityCheck]);
+    const selectedState = useSyncExternalStoreWithSelector(subscription.addNestedSub, store.getState, getServerState || store.getState, wrappedSelector, equalityFn);
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useDebugValue)(selectedState);
+    return selectedState;
+  };
+}
+/**
+ * A hook to access the redux store's state. This hook takes a selector function
+ * as an argument. The selector is called with the store state.
+ *
+ * This hook takes an optional equality comparison function as the second parameter
+ * that allows you to customize the way the selected state is compared to determine
+ * whether the component needs to be re-rendered.
+ *
+ * @param {Function} selector the selector function
+ * @param {Function=} equalityFn the function that will be used to determine equality
+ *
+ * @returns {any} the selected state
+ *
+ * @example
+ *
+ * import React from 'react'
+ * import { useSelector } from 'react-redux'
+ *
+ * export const CounterComponent = () => {
+ *   const counter = useSelector(state => state.counter)
+ *   return <div>{counter}</div>
+ * }
+ */
+
+const useSelector = /*#__PURE__*/createSelectorHook();
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/hooks/useStore.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/react-redux/es/hooks/useStore.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createStoreHook: () => (/* binding */ createStoreHook),
+/* harmony export */   useStore: () => (/* binding */ useStore)
+/* harmony export */ });
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _useReduxContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useReduxContext */ "./node_modules/react-redux/es/hooks/useReduxContext.js");
+
+
+/**
+ * Hook factory, which creates a `useStore` hook bound to a given context.
+ *
+ * @param {React.Context} [context=ReactReduxContext] Context passed to your `<Provider>`.
+ * @returns {Function} A `useStore` hook bound to the specified context.
+ */
+
+function createStoreHook(context = _components_Context__WEBPACK_IMPORTED_MODULE_0__.ReactReduxContext) {
+  const useReduxContext = // @ts-ignore
+  context === _components_Context__WEBPACK_IMPORTED_MODULE_0__.ReactReduxContext ? _useReduxContext__WEBPACK_IMPORTED_MODULE_1__.useReduxContext : // @ts-ignore
+  (0,_useReduxContext__WEBPACK_IMPORTED_MODULE_1__.createReduxContextHook)(context);
+  return function useStore() {
+    const {
+      store
+    } = useReduxContext(); // @ts-ignore
+
+    return store;
+  };
+}
+/**
+ * A hook to access the redux store.
+ *
+ * @returns {any} the redux store
+ *
+ * @example
+ *
+ * import React from 'react'
+ * import { useStore } from 'react-redux'
+ *
+ * export const ExampleComponent = () => {
+ *   const store = useStore()
+ *   return <div>{store.getState()}</div>
+ * }
+ */
+
+const useStore = /*#__PURE__*/createStoreHook();
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/react-redux/es/index.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Provider: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.Provider),
+/* harmony export */   ReactReduxContext: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.ReactReduxContext),
+/* harmony export */   batch: () => (/* reexport safe */ _utils_reactBatchedUpdates__WEBPACK_IMPORTED_MODULE_2__.unstable_batchedUpdates),
+/* harmony export */   connect: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.connect),
+/* harmony export */   createDispatchHook: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.createDispatchHook),
+/* harmony export */   createSelectorHook: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.createSelectorHook),
+/* harmony export */   createStoreHook: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.createStoreHook),
+/* harmony export */   shallowEqual: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.shallowEqual),
+/* harmony export */   useDispatch: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.useDispatch),
+/* harmony export */   useSelector: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.useSelector),
+/* harmony export */   useStore: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.useStore)
+/* harmony export */ });
+/* harmony import */ var use_sync_external_store_shim__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! use-sync-external-store/shim */ "./node_modules/use-sync-external-store/shim/index.js");
+/* harmony import */ var use_sync_external_store_shim_with_selector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! use-sync-external-store/shim/with-selector */ "./node_modules/use-sync-external-store/shim/with-selector.js");
+/* harmony import */ var _utils_reactBatchedUpdates__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/reactBatchedUpdates */ "./node_modules/react-redux/es/utils/reactBatchedUpdates.js");
+/* harmony import */ var _utils_batch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/batch */ "./node_modules/react-redux/es/utils/batch.js");
+/* harmony import */ var _hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hooks/useSelector */ "./node_modules/react-redux/es/hooks/useSelector.js");
+/* harmony import */ var _components_connect__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/connect */ "./node_modules/react-redux/es/components/connect.js");
+/* harmony import */ var _exports__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./exports */ "./node_modules/react-redux/es/exports.js");
+// The primary entry point assumes we're working with standard ReactDOM/RN, but
+// older versions that do not include `useSyncExternalStore` (React 16.9 - 17.x).
+// Because of that, the useSyncExternalStore compat shim is needed.
+
+
+
+
+
+
+(0,_hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__.initializeUseSelector)(use_sync_external_store_shim_with_selector__WEBPACK_IMPORTED_MODULE_1__.useSyncExternalStoreWithSelector);
+(0,_components_connect__WEBPACK_IMPORTED_MODULE_5__.initializeConnect)(use_sync_external_store_shim__WEBPACK_IMPORTED_MODULE_0__.useSyncExternalStore); // Enable batched updates in our subscriptions for use
+// with standard React renderers (ReactDOM, React Native)
+
+(0,_utils_batch__WEBPACK_IMPORTED_MODULE_3__.setBatch)(_utils_reactBatchedUpdates__WEBPACK_IMPORTED_MODULE_2__.unstable_batchedUpdates);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/types.js":
+/*!**********************************************!*\
+  !*** ./node_modules/react-redux/es/types.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/Subscription.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/Subscription.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createSubscription: () => (/* binding */ createSubscription)
+/* harmony export */ });
+/* harmony import */ var _batch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./batch */ "./node_modules/react-redux/es/utils/batch.js");
+ // encapsulates the subscription logic for connecting a component to the redux store, as
+// well as nesting subscriptions of descendant components, so that we can ensure the
+// ancestor components re-render before descendants
+
+function createListenerCollection() {
+  const batch = (0,_batch__WEBPACK_IMPORTED_MODULE_0__.getBatch)();
+  let first = null;
+  let last = null;
+  return {
+    clear() {
+      first = null;
+      last = null;
+    },
+
+    notify() {
+      batch(() => {
+        let listener = first;
+
+        while (listener) {
+          listener.callback();
+          listener = listener.next;
+        }
+      });
+    },
+
+    get() {
+      let listeners = [];
+      let listener = first;
+
+      while (listener) {
+        listeners.push(listener);
+        listener = listener.next;
+      }
+
+      return listeners;
+    },
+
+    subscribe(callback) {
+      let isSubscribed = true;
+      let listener = last = {
+        callback,
+        next: null,
+        prev: last
+      };
+
+      if (listener.prev) {
+        listener.prev.next = listener;
+      } else {
+        first = listener;
+      }
+
+      return function unsubscribe() {
+        if (!isSubscribed || first === null) return;
+        isSubscribed = false;
+
+        if (listener.next) {
+          listener.next.prev = listener.prev;
+        } else {
+          last = listener.prev;
+        }
+
+        if (listener.prev) {
+          listener.prev.next = listener.next;
+        } else {
+          first = listener.next;
+        }
+      };
+    }
+
+  };
+}
+
+const nullListeners = {
+  notify() {},
+
+  get: () => []
+};
+function createSubscription(store, parentSub) {
+  let unsubscribe;
+  let listeners = nullListeners; // Reasons to keep the subscription active
+
+  let subscriptionsAmount = 0; // Is this specific subscription subscribed (or only nested ones?)
+
+  let selfSubscribed = false;
+
+  function addNestedSub(listener) {
+    trySubscribe();
+    const cleanupListener = listeners.subscribe(listener); // cleanup nested sub
+
+    let removed = false;
+    return () => {
+      if (!removed) {
+        removed = true;
+        cleanupListener();
+        tryUnsubscribe();
+      }
+    };
+  }
+
+  function notifyNestedSubs() {
+    listeners.notify();
+  }
+
+  function handleChangeWrapper() {
+    if (subscription.onStateChange) {
+      subscription.onStateChange();
+    }
+  }
+
+  function isSubscribed() {
+    return selfSubscribed;
+  }
+
+  function trySubscribe() {
+    subscriptionsAmount++;
+
+    if (!unsubscribe) {
+      unsubscribe = parentSub ? parentSub.addNestedSub(handleChangeWrapper) : store.subscribe(handleChangeWrapper);
+      listeners = createListenerCollection();
+    }
+  }
+
+  function tryUnsubscribe() {
+    subscriptionsAmount--;
+
+    if (unsubscribe && subscriptionsAmount === 0) {
+      unsubscribe();
+      unsubscribe = undefined;
+      listeners.clear();
+      listeners = nullListeners;
+    }
+  }
+
+  function trySubscribeSelf() {
+    if (!selfSubscribed) {
+      selfSubscribed = true;
+      trySubscribe();
+    }
+  }
+
+  function tryUnsubscribeSelf() {
+    if (selfSubscribed) {
+      selfSubscribed = false;
+      tryUnsubscribe();
+    }
+  }
+
+  const subscription = {
+    addNestedSub,
+    notifyNestedSubs,
+    handleChangeWrapper,
+    isSubscribed,
+    trySubscribe: trySubscribeSelf,
+    tryUnsubscribe: tryUnsubscribeSelf,
+    getListeners: () => listeners
+  };
+  return subscription;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/batch.js":
+/*!****************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/batch.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getBatch: () => (/* binding */ getBatch),
+/* harmony export */   setBatch: () => (/* binding */ setBatch)
+/* harmony export */ });
+// Default to a dummy "batch" implementation that just runs the callback
+function defaultNoopBatch(callback) {
+  callback();
+}
+
+let batch = defaultNoopBatch; // Allow injecting another batching function later
+
+const setBatch = newBatch => batch = newBatch; // Supply a getter just to skip dealing with ESM bindings
+
+const getBatch = () => batch;
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/bindActionCreators.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/bindActionCreators.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ bindActionCreators)
+/* harmony export */ });
+function bindActionCreators(actionCreators, dispatch) {
+  const boundActionCreators = {};
+
+  for (const key in actionCreators) {
+    const actionCreator = actionCreators[key];
+
+    if (typeof actionCreator === 'function') {
+      boundActionCreators[key] = (...args) => dispatch(actionCreator(...args));
+    }
+  }
+
+  return boundActionCreators;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/isPlainObject.js":
+/*!************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/isPlainObject.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ isPlainObject)
+/* harmony export */ });
+/**
+ * @param {any} obj The object to inspect.
+ * @returns {boolean} True if the argument appears to be a plain object.
+ */
+function isPlainObject(obj) {
+  if (typeof obj !== 'object' || obj === null) return false;
+  let proto = Object.getPrototypeOf(obj);
+  if (proto === null) return true;
+  let baseProto = proto;
+
+  while (Object.getPrototypeOf(baseProto) !== null) {
+    baseProto = Object.getPrototypeOf(baseProto);
+  }
+
+  return proto === baseProto;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/reactBatchedUpdates.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/reactBatchedUpdates.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   unstable_batchedUpdates: () => (/* reexport safe */ react_dom__WEBPACK_IMPORTED_MODULE_0__.unstable_batchedUpdates)
+/* harmony export */ });
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-dom */ "react-dom");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/shallowEqual.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/shallowEqual.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ shallowEqual)
+/* harmony export */ });
+function is(x, y) {
+  if (x === y) {
+    return x !== 0 || y !== 0 || 1 / x === 1 / y;
+  } else {
+    return x !== x && y !== y;
+  }
+}
+
+function shallowEqual(objA, objB) {
+  if (is(objA, objB)) return true;
+
+  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+    return false;
+  }
+
+  const keysA = Object.keys(objA);
+  const keysB = Object.keys(objB);
+  if (keysA.length !== keysB.length) return false;
+
+  for (let i = 0; i < keysA.length; i++) {
+    if (!Object.prototype.hasOwnProperty.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/useIsomorphicLayoutEffect.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/useIsomorphicLayoutEffect.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   canUseDOM: () => (/* binding */ canUseDOM),
+/* harmony export */   useIsomorphicLayoutEffect: () => (/* binding */ useIsomorphicLayoutEffect)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+ // React currently throws a warning when using useLayoutEffect on the server.
+// To get around it, we can conditionally useEffect on the server (no-op) and
+// useLayoutEffect in the browser. We need useLayoutEffect to ensure the store
+// subscription callback always has the selector from the latest render commit
+// available, otherwise a store update may happen between render and the effect,
+// which may cause missed updates; we also must ensure the store subscription
+// is created synchronously, otherwise a store update may occur before the
+// subscription is created and an inconsistent state may be observed
+// Matches logic in React's `shared/ExecutionEnvironment` file
+
+const canUseDOM = !!(typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined');
+const useIsomorphicLayoutEffect = canUseDOM ? react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect : react__WEBPACK_IMPORTED_MODULE_0__.useEffect;
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/useSyncExternalStore.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/useSyncExternalStore.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   notInitialized: () => (/* binding */ notInitialized)
+/* harmony export */ });
+const notInitialized = () => {
+  throw new Error('uSES not initialized!');
+};
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/verifyPlainObject.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/verifyPlainObject.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ verifyPlainObject)
+/* harmony export */ });
+/* harmony import */ var _isPlainObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isPlainObject */ "./node_modules/react-redux/es/utils/isPlainObject.js");
+/* harmony import */ var _warning__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./warning */ "./node_modules/react-redux/es/utils/warning.js");
+
+
+function verifyPlainObject(value, displayName, methodName) {
+  if (!(0,_isPlainObject__WEBPACK_IMPORTED_MODULE_0__["default"])(value)) {
+    (0,_warning__WEBPACK_IMPORTED_MODULE_1__["default"])(`${methodName}() in ${displayName} must return a plain object. Instead received ${value}.`);
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/warning.js":
+/*!******************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/warning.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ warning)
+/* harmony export */ });
+/**
+ * Prints a warning in the console if it exists.
+ *
+ * @param {String} message The warning message.
+ * @returns {void}
+ */
+function warning(message) {
+  /* eslint-disable no-console */
+  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+    console.error(message);
+  }
+  /* eslint-enable no-console */
+
+
+  try {
+    // This error was thrown as a convenience so that if you enable
+    // "break on all exceptions" in your console,
+    // it would pause the execution at this line.
+    throw new Error(message);
+    /* eslint-disable no-empty */
+  } catch (e) {}
+  /* eslint-enable no-empty */
+
+}
+
+/***/ }),
+
+/***/ "./node_modules/redux/es/redux.js":
+/*!****************************************!*\
+  !*** ./node_modules/redux/es/redux.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   __DO_NOT_USE__ActionTypes: () => (/* binding */ ActionTypes),
+/* harmony export */   applyMiddleware: () => (/* binding */ applyMiddleware),
+/* harmony export */   bindActionCreators: () => (/* binding */ bindActionCreators),
+/* harmony export */   combineReducers: () => (/* binding */ combineReducers),
+/* harmony export */   compose: () => (/* binding */ compose),
+/* harmony export */   createStore: () => (/* binding */ createStore),
+/* harmony export */   legacy_createStore: () => (/* binding */ legacy_createStore)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_objectSpread2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectSpread2 */ "./node_modules/@babel/runtime/helpers/esm/objectSpread2.js");
+
+
+/**
+ * Adapted from React: https://github.com/facebook/react/blob/master/packages/shared/formatProdErrorMessage.js
+ *
+ * Do not require this module directly! Use normal throw error calls. These messages will be replaced with error codes
+ * during build.
+ * @param {number} code
+ */
+function formatProdErrorMessage(code) {
+  return "Minified Redux error #" + code + "; visit https://redux.js.org/Errors?code=" + code + " for the full message or " + 'use the non-minified dev environment for full errors. ';
+}
+
+// Inlined version of the `symbol-observable` polyfill
+var $$observable = (function () {
+  return typeof Symbol === 'function' && Symbol.observable || '@@observable';
+})();
+
+/**
+ * These are private action types reserved by Redux.
+ * For any unknown actions, you must return the current state.
+ * If the current state is undefined, you must return the initial state.
+ * Do not reference these action types directly in your code.
+ */
+var randomString = function randomString() {
+  return Math.random().toString(36).substring(7).split('').join('.');
+};
+
+var ActionTypes = {
+  INIT: "@@redux/INIT" + randomString(),
+  REPLACE: "@@redux/REPLACE" + randomString(),
+  PROBE_UNKNOWN_ACTION: function PROBE_UNKNOWN_ACTION() {
+    return "@@redux/PROBE_UNKNOWN_ACTION" + randomString();
+  }
+};
+
+/**
+ * @param {any} obj The object to inspect.
+ * @returns {boolean} True if the argument appears to be a plain object.
+ */
+function isPlainObject(obj) {
+  if (typeof obj !== 'object' || obj === null) return false;
+  var proto = obj;
+
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  return Object.getPrototypeOf(obj) === proto;
+}
+
+// Inlined / shortened version of `kindOf` from https://github.com/jonschlinkert/kind-of
+function miniKindOf(val) {
+  if (val === void 0) return 'undefined';
+  if (val === null) return 'null';
+  var type = typeof val;
+
+  switch (type) {
+    case 'boolean':
+    case 'string':
+    case 'number':
+    case 'symbol':
+    case 'function':
+      {
+        return type;
+      }
+  }
+
+  if (Array.isArray(val)) return 'array';
+  if (isDate(val)) return 'date';
+  if (isError(val)) return 'error';
+  var constructorName = ctorName(val);
+
+  switch (constructorName) {
+    case 'Symbol':
+    case 'Promise':
+    case 'WeakMap':
+    case 'WeakSet':
+    case 'Map':
+    case 'Set':
+      return constructorName;
+  } // other
+
+
+  return type.slice(8, -1).toLowerCase().replace(/\s/g, '');
+}
+
+function ctorName(val) {
+  return typeof val.constructor === 'function' ? val.constructor.name : null;
+}
+
+function isError(val) {
+  return val instanceof Error || typeof val.message === 'string' && val.constructor && typeof val.constructor.stackTraceLimit === 'number';
+}
+
+function isDate(val) {
+  if (val instanceof Date) return true;
+  return typeof val.toDateString === 'function' && typeof val.getDate === 'function' && typeof val.setDate === 'function';
+}
+
+function kindOf(val) {
+  var typeOfVal = typeof val;
+
+  if (true) {
+    typeOfVal = miniKindOf(val);
+  }
+
+  return typeOfVal;
+}
+
+/**
+ * @deprecated
+ *
+ * **We recommend using the `configureStore` method
+ * of the `@reduxjs/toolkit` package**, which replaces `createStore`.
+ *
+ * Redux Toolkit is our recommended approach for writing Redux logic today,
+ * including store setup, reducers, data fetching, and more.
+ *
+ * **For more details, please read this Redux docs page:**
+ * **https://redux.js.org/introduction/why-rtk-is-redux-today**
+ *
+ * `configureStore` from Redux Toolkit is an improved version of `createStore` that
+ * simplifies setup and helps avoid common bugs.
+ *
+ * You should not be using the `redux` core package by itself today, except for learning purposes.
+ * The `createStore` method from the core `redux` package will not be removed, but we encourage
+ * all users to migrate to using Redux Toolkit for all Redux code.
+ *
+ * If you want to use `createStore` without this visual deprecation warning, use
+ * the `legacy_createStore` import instead:
+ *
+ * `import { legacy_createStore as createStore} from 'redux'`
+ *
+ */
+
+function createStore(reducer, preloadedState, enhancer) {
+  var _ref2;
+
+  if (typeof preloadedState === 'function' && typeof enhancer === 'function' || typeof enhancer === 'function' && typeof arguments[3] === 'function') {
+    throw new Error( false ? 0 : 'It looks like you are passing several store enhancers to ' + 'createStore(). This is not supported. Instead, compose them ' + 'together to a single function. See https://redux.js.org/tutorials/fundamentals/part-4-store#creating-a-store-with-enhancers for an example.');
+  }
+
+  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
+    enhancer = preloadedState;
+    preloadedState = undefined;
+  }
+
+  if (typeof enhancer !== 'undefined') {
+    if (typeof enhancer !== 'function') {
+      throw new Error( false ? 0 : "Expected the enhancer to be a function. Instead, received: '" + kindOf(enhancer) + "'");
+    }
+
+    return enhancer(createStore)(reducer, preloadedState);
+  }
+
+  if (typeof reducer !== 'function') {
+    throw new Error( false ? 0 : "Expected the root reducer to be a function. Instead, received: '" + kindOf(reducer) + "'");
+  }
+
+  var currentReducer = reducer;
+  var currentState = preloadedState;
+  var currentListeners = [];
+  var nextListeners = currentListeners;
+  var isDispatching = false;
+  /**
+   * This makes a shallow copy of currentListeners so we can use
+   * nextListeners as a temporary list while dispatching.
+   *
+   * This prevents any bugs around consumers calling
+   * subscribe/unsubscribe in the middle of a dispatch.
+   */
+
+  function ensureCanMutateNextListeners() {
+    if (nextListeners === currentListeners) {
+      nextListeners = currentListeners.slice();
+    }
+  }
+  /**
+   * Reads the state tree managed by the store.
+   *
+   * @returns {any} The current state tree of your application.
+   */
+
+
+  function getState() {
+    if (isDispatching) {
+      throw new Error( false ? 0 : 'You may not call store.getState() while the reducer is executing. ' + 'The reducer has already received the state as an argument. ' + 'Pass it down from the top reducer instead of reading it from the store.');
+    }
+
+    return currentState;
+  }
+  /**
+   * Adds a change listener. It will be called any time an action is dispatched,
+   * and some part of the state tree may potentially have changed. You may then
+   * call `getState()` to read the current state tree inside the callback.
+   *
+   * You may call `dispatch()` from a change listener, with the following
+   * caveats:
+   *
+   * 1. The subscriptions are snapshotted just before every `dispatch()` call.
+   * If you subscribe or unsubscribe while the listeners are being invoked, this
+   * will not have any effect on the `dispatch()` that is currently in progress.
+   * However, the next `dispatch()` call, whether nested or not, will use a more
+   * recent snapshot of the subscription list.
+   *
+   * 2. The listener should not expect to see all state changes, as the state
+   * might have been updated multiple times during a nested `dispatch()` before
+   * the listener is called. It is, however, guaranteed that all subscribers
+   * registered before the `dispatch()` started will be called with the latest
+   * state by the time it exits.
+   *
+   * @param {Function} listener A callback to be invoked on every dispatch.
+   * @returns {Function} A function to remove this change listener.
+   */
+
+
+  function subscribe(listener) {
+    if (typeof listener !== 'function') {
+      throw new Error( false ? 0 : "Expected the listener to be a function. Instead, received: '" + kindOf(listener) + "'");
+    }
+
+    if (isDispatching) {
+      throw new Error( false ? 0 : 'You may not call store.subscribe() while the reducer is executing. ' + 'If you would like to be notified after the store has been updated, subscribe from a ' + 'component and invoke store.getState() in the callback to access the latest state. ' + 'See https://redux.js.org/api/store#subscribelistener for more details.');
+    }
+
+    var isSubscribed = true;
+    ensureCanMutateNextListeners();
+    nextListeners.push(listener);
+    return function unsubscribe() {
+      if (!isSubscribed) {
+        return;
+      }
+
+      if (isDispatching) {
+        throw new Error( false ? 0 : 'You may not unsubscribe from a store listener while the reducer is executing. ' + 'See https://redux.js.org/api/store#subscribelistener for more details.');
+      }
+
+      isSubscribed = false;
+      ensureCanMutateNextListeners();
+      var index = nextListeners.indexOf(listener);
+      nextListeners.splice(index, 1);
+      currentListeners = null;
+    };
+  }
+  /**
+   * Dispatches an action. It is the only way to trigger a state change.
+   *
+   * The `reducer` function, used to create the store, will be called with the
+   * current state tree and the given `action`. Its return value will
+   * be considered the **next** state of the tree, and the change listeners
+   * will be notified.
+   *
+   * The base implementation only supports plain object actions. If you want to
+   * dispatch a Promise, an Observable, a thunk, or something else, you need to
+   * wrap your store creating function into the corresponding middleware. For
+   * example, see the documentation for the `redux-thunk` package. Even the
+   * middleware will eventually dispatch plain object actions using this method.
+   *
+   * @param {Object} action A plain object representing “what changed”. It is
+   * a good idea to keep actions serializable so you can record and replay user
+   * sessions, or use the time travelling `redux-devtools`. An action must have
+   * a `type` property which may not be `undefined`. It is a good idea to use
+   * string constants for action types.
+   *
+   * @returns {Object} For convenience, the same action object you dispatched.
+   *
+   * Note that, if you use a custom middleware, it may wrap `dispatch()` to
+   * return something else (for example, a Promise you can await).
+   */
+
+
+  function dispatch(action) {
+    if (!isPlainObject(action)) {
+      throw new Error( false ? 0 : "Actions must be plain objects. Instead, the actual type was: '" + kindOf(action) + "'. You may need to add middleware to your store setup to handle dispatching other values, such as 'redux-thunk' to handle dispatching functions. See https://redux.js.org/tutorials/fundamentals/part-4-store#middleware and https://redux.js.org/tutorials/fundamentals/part-6-async-logic#using-the-redux-thunk-middleware for examples.");
+    }
+
+    if (typeof action.type === 'undefined') {
+      throw new Error( false ? 0 : 'Actions may not have an undefined "type" property. You may have misspelled an action type string constant.');
+    }
+
+    if (isDispatching) {
+      throw new Error( false ? 0 : 'Reducers may not dispatch actions.');
+    }
+
+    try {
+      isDispatching = true;
+      currentState = currentReducer(currentState, action);
+    } finally {
+      isDispatching = false;
+    }
+
+    var listeners = currentListeners = nextListeners;
+
+    for (var i = 0; i < listeners.length; i++) {
+      var listener = listeners[i];
+      listener();
+    }
+
+    return action;
+  }
+  /**
+   * Replaces the reducer currently used by the store to calculate the state.
+   *
+   * You might need this if your app implements code splitting and you want to
+   * load some of the reducers dynamically. You might also need this if you
+   * implement a hot reloading mechanism for Redux.
+   *
+   * @param {Function} nextReducer The reducer for the store to use instead.
+   * @returns {void}
+   */
+
+
+  function replaceReducer(nextReducer) {
+    if (typeof nextReducer !== 'function') {
+      throw new Error( false ? 0 : "Expected the nextReducer to be a function. Instead, received: '" + kindOf(nextReducer));
+    }
+
+    currentReducer = nextReducer; // This action has a similiar effect to ActionTypes.INIT.
+    // Any reducers that existed in both the new and old rootReducer
+    // will receive the previous state. This effectively populates
+    // the new state tree with any relevant data from the old one.
+
+    dispatch({
+      type: ActionTypes.REPLACE
+    });
+  }
+  /**
+   * Interoperability point for observable/reactive libraries.
+   * @returns {observable} A minimal observable of state changes.
+   * For more information, see the observable proposal:
+   * https://github.com/tc39/proposal-observable
+   */
+
+
+  function observable() {
+    var _ref;
+
+    var outerSubscribe = subscribe;
+    return _ref = {
+      /**
+       * The minimal observable subscription method.
+       * @param {Object} observer Any object that can be used as an observer.
+       * The observer object should have a `next` method.
+       * @returns {subscription} An object with an `unsubscribe` method that can
+       * be used to unsubscribe the observable from the store, and prevent further
+       * emission of values from the observable.
+       */
+      subscribe: function subscribe(observer) {
+        if (typeof observer !== 'object' || observer === null) {
+          throw new Error( false ? 0 : "Expected the observer to be an object. Instead, received: '" + kindOf(observer) + "'");
+        }
+
+        function observeState() {
+          if (observer.next) {
+            observer.next(getState());
+          }
+        }
+
+        observeState();
+        var unsubscribe = outerSubscribe(observeState);
+        return {
+          unsubscribe: unsubscribe
+        };
+      }
+    }, _ref[$$observable] = function () {
+      return this;
+    }, _ref;
+  } // When a store is created, an "INIT" action is dispatched so that every
+  // reducer returns their initial state. This effectively populates
+  // the initial state tree.
+
+
+  dispatch({
+    type: ActionTypes.INIT
+  });
+  return _ref2 = {
+    dispatch: dispatch,
+    subscribe: subscribe,
+    getState: getState,
+    replaceReducer: replaceReducer
+  }, _ref2[$$observable] = observable, _ref2;
+}
+/**
+ * Creates a Redux store that holds the state tree.
+ *
+ * **We recommend using `configureStore` from the
+ * `@reduxjs/toolkit` package**, which replaces `createStore`:
+ * **https://redux.js.org/introduction/why-rtk-is-redux-today**
+ *
+ * The only way to change the data in the store is to call `dispatch()` on it.
+ *
+ * There should only be a single store in your app. To specify how different
+ * parts of the state tree respond to actions, you may combine several reducers
+ * into a single reducer function by using `combineReducers`.
+ *
+ * @param {Function} reducer A function that returns the next state tree, given
+ * the current state tree and the action to handle.
+ *
+ * @param {any} [preloadedState] The initial state. You may optionally specify it
+ * to hydrate the state from the server in universal apps, or to restore a
+ * previously serialized user session.
+ * If you use `combineReducers` to produce the root reducer function, this must be
+ * an object with the same shape as `combineReducers` keys.
+ *
+ * @param {Function} [enhancer] The store enhancer. You may optionally specify it
+ * to enhance the store with third-party capabilities such as middleware,
+ * time travel, persistence, etc. The only store enhancer that ships with Redux
+ * is `applyMiddleware()`.
+ *
+ * @returns {Store} A Redux store that lets you read the state, dispatch actions
+ * and subscribe to changes.
+ */
+
+var legacy_createStore = createStore;
+
+/**
+ * Prints a warning in the console if it exists.
+ *
+ * @param {String} message The warning message.
+ * @returns {void}
+ */
+function warning(message) {
+  /* eslint-disable no-console */
+  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+    console.error(message);
+  }
+  /* eslint-enable no-console */
+
+
+  try {
+    // This error was thrown as a convenience so that if you enable
+    // "break on all exceptions" in your console,
+    // it would pause the execution at this line.
+    throw new Error(message);
+  } catch (e) {} // eslint-disable-line no-empty
+
+}
+
+function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, unexpectedKeyCache) {
+  var reducerKeys = Object.keys(reducers);
+  var argumentName = action && action.type === ActionTypes.INIT ? 'preloadedState argument passed to createStore' : 'previous state received by the reducer';
+
+  if (reducerKeys.length === 0) {
+    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
+  }
+
+  if (!isPlainObject(inputState)) {
+    return "The " + argumentName + " has unexpected type of \"" + kindOf(inputState) + "\". Expected argument to be an object with the following " + ("keys: \"" + reducerKeys.join('", "') + "\"");
+  }
+
+  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
+    return !reducers.hasOwnProperty(key) && !unexpectedKeyCache[key];
+  });
+  unexpectedKeys.forEach(function (key) {
+    unexpectedKeyCache[key] = true;
+  });
+  if (action && action.type === ActionTypes.REPLACE) return;
+
+  if (unexpectedKeys.length > 0) {
+    return "Unexpected " + (unexpectedKeys.length > 1 ? 'keys' : 'key') + " " + ("\"" + unexpectedKeys.join('", "') + "\" found in " + argumentName + ". ") + "Expected to find one of the known reducer keys instead: " + ("\"" + reducerKeys.join('", "') + "\". Unexpected keys will be ignored.");
+  }
+}
+
+function assertReducerShape(reducers) {
+  Object.keys(reducers).forEach(function (key) {
+    var reducer = reducers[key];
+    var initialState = reducer(undefined, {
+      type: ActionTypes.INIT
+    });
+
+    if (typeof initialState === 'undefined') {
+      throw new Error( false ? 0 : "The slice reducer for key \"" + key + "\" returned undefined during initialization. " + "If the state passed to the reducer is undefined, you must " + "explicitly return the initial state. The initial state may " + "not be undefined. If you don't want to set a value for this reducer, " + "you can use null instead of undefined.");
+    }
+
+    if (typeof reducer(undefined, {
+      type: ActionTypes.PROBE_UNKNOWN_ACTION()
+    }) === 'undefined') {
+      throw new Error( false ? 0 : "The slice reducer for key \"" + key + "\" returned undefined when probed with a random type. " + ("Don't try to handle '" + ActionTypes.INIT + "' or other actions in \"redux/*\" ") + "namespace. They are considered private. Instead, you must return the " + "current state for any unknown actions, unless it is undefined, " + "in which case you must return the initial state, regardless of the " + "action type. The initial state may not be undefined, but can be null.");
+    }
+  });
+}
+/**
+ * Turns an object whose values are different reducer functions, into a single
+ * reducer function. It will call every child reducer, and gather their results
+ * into a single state object, whose keys correspond to the keys of the passed
+ * reducer functions.
+ *
+ * @param {Object} reducers An object whose values correspond to different
+ * reducer functions that need to be combined into one. One handy way to obtain
+ * it is to use ES6 `import * as reducers` syntax. The reducers may never return
+ * undefined for any action. Instead, they should return their initial state
+ * if the state passed to them was undefined, and the current state for any
+ * unrecognized action.
+ *
+ * @returns {Function} A reducer function that invokes every reducer inside the
+ * passed object, and builds a state object with the same shape.
+ */
+
+
+function combineReducers(reducers) {
+  var reducerKeys = Object.keys(reducers);
+  var finalReducers = {};
+
+  for (var i = 0; i < reducerKeys.length; i++) {
+    var key = reducerKeys[i];
+
+    if (true) {
+      if (typeof reducers[key] === 'undefined') {
+        warning("No reducer provided for key \"" + key + "\"");
+      }
+    }
+
+    if (typeof reducers[key] === 'function') {
+      finalReducers[key] = reducers[key];
+    }
+  }
+
+  var finalReducerKeys = Object.keys(finalReducers); // This is used to make sure we don't warn about the same
+  // keys multiple times.
+
+  var unexpectedKeyCache;
+
+  if (true) {
+    unexpectedKeyCache = {};
+  }
+
+  var shapeAssertionError;
+
+  try {
+    assertReducerShape(finalReducers);
+  } catch (e) {
+    shapeAssertionError = e;
+  }
+
+  return function combination(state, action) {
+    if (state === void 0) {
+      state = {};
+    }
+
+    if (shapeAssertionError) {
+      throw shapeAssertionError;
+    }
+
+    if (true) {
+      var warningMessage = getUnexpectedStateShapeWarningMessage(state, finalReducers, action, unexpectedKeyCache);
+
+      if (warningMessage) {
+        warning(warningMessage);
+      }
+    }
+
+    var hasChanged = false;
+    var nextState = {};
+
+    for (var _i = 0; _i < finalReducerKeys.length; _i++) {
+      var _key = finalReducerKeys[_i];
+      var reducer = finalReducers[_key];
+      var previousStateForKey = state[_key];
+      var nextStateForKey = reducer(previousStateForKey, action);
+
+      if (typeof nextStateForKey === 'undefined') {
+        var actionType = action && action.type;
+        throw new Error( false ? 0 : "When called with an action of type " + (actionType ? "\"" + String(actionType) + "\"" : '(unknown type)') + ", the slice reducer for key \"" + _key + "\" returned undefined. " + "To ignore an action, you must explicitly return the previous state. " + "If you want this reducer to hold no value, you can return null instead of undefined.");
+      }
+
+      nextState[_key] = nextStateForKey;
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
+    }
+
+    hasChanged = hasChanged || finalReducerKeys.length !== Object.keys(state).length;
+    return hasChanged ? nextState : state;
+  };
+}
+
+function bindActionCreator(actionCreator, dispatch) {
+  return function () {
+    return dispatch(actionCreator.apply(this, arguments));
+  };
+}
+/**
+ * Turns an object whose values are action creators, into an object with the
+ * same keys, but with every function wrapped into a `dispatch` call so they
+ * may be invoked directly. This is just a convenience method, as you can call
+ * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
+ *
+ * For convenience, you can also pass an action creator as the first argument,
+ * and get a dispatch wrapped function in return.
+ *
+ * @param {Function|Object} actionCreators An object whose values are action
+ * creator functions. One handy way to obtain it is to use ES6 `import * as`
+ * syntax. You may also pass a single function.
+ *
+ * @param {Function} dispatch The `dispatch` function available on your Redux
+ * store.
+ *
+ * @returns {Function|Object} The object mimicking the original object, but with
+ * every action creator wrapped into the `dispatch` call. If you passed a
+ * function as `actionCreators`, the return value will also be a single
+ * function.
+ */
+
+
+function bindActionCreators(actionCreators, dispatch) {
+  if (typeof actionCreators === 'function') {
+    return bindActionCreator(actionCreators, dispatch);
+  }
+
+  if (typeof actionCreators !== 'object' || actionCreators === null) {
+    throw new Error( false ? 0 : "bindActionCreators expected an object or a function, but instead received: '" + kindOf(actionCreators) + "'. " + "Did you write \"import ActionCreators from\" instead of \"import * as ActionCreators from\"?");
+  }
+
+  var boundActionCreators = {};
+
+  for (var key in actionCreators) {
+    var actionCreator = actionCreators[key];
+
+    if (typeof actionCreator === 'function') {
+      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch);
+    }
+  }
+
+  return boundActionCreators;
+}
+
+/**
+ * Composes single-argument functions from right to left. The rightmost
+ * function can take multiple arguments as it provides the signature for
+ * the resulting composite function.
+ *
+ * @param {...Function} funcs The functions to compose.
+ * @returns {Function} A function obtained by composing the argument functions
+ * from right to left. For example, compose(f, g, h) is identical to doing
+ * (...args) => f(g(h(...args))).
+ */
+function compose() {
+  for (var _len = arguments.length, funcs = new Array(_len), _key = 0; _key < _len; _key++) {
+    funcs[_key] = arguments[_key];
+  }
+
+  if (funcs.length === 0) {
+    return function (arg) {
+      return arg;
+    };
+  }
+
+  if (funcs.length === 1) {
+    return funcs[0];
+  }
+
+  return funcs.reduce(function (a, b) {
+    return function () {
+      return a(b.apply(void 0, arguments));
+    };
+  });
+}
+
+/**
+ * Creates a store enhancer that applies middleware to the dispatch method
+ * of the Redux store. This is handy for a variety of tasks, such as expressing
+ * asynchronous actions in a concise manner, or logging every action payload.
+ *
+ * See `redux-thunk` package as an example of the Redux middleware.
+ *
+ * Because middleware is potentially asynchronous, this should be the first
+ * store enhancer in the composition chain.
+ *
+ * Note that each middleware will be given the `dispatch` and `getState` functions
+ * as named arguments.
+ *
+ * @param {...Function} middlewares The middleware chain to be applied.
+ * @returns {Function} A store enhancer applying the middleware.
+ */
+
+function applyMiddleware() {
+  for (var _len = arguments.length, middlewares = new Array(_len), _key = 0; _key < _len; _key++) {
+    middlewares[_key] = arguments[_key];
+  }
+
+  return function (createStore) {
+    return function () {
+      var store = createStore.apply(void 0, arguments);
+
+      var _dispatch = function dispatch() {
+        throw new Error( false ? 0 : 'Dispatching while constructing your middleware is not allowed. ' + 'Other middleware would not be applied to this dispatch.');
+      };
+
+      var middlewareAPI = {
+        getState: store.getState,
+        dispatch: function dispatch() {
+          return _dispatch.apply(void 0, arguments);
+        }
+      };
+      var chain = middlewares.map(function (middleware) {
+        return middleware(middlewareAPI);
+      });
+      _dispatch = compose.apply(void 0, chain)(store.dispatch);
+      return (0,_babel_runtime_helpers_esm_objectSpread2__WEBPACK_IMPORTED_MODULE_0__["default"])((0,_babel_runtime_helpers_esm_objectSpread2__WEBPACK_IMPORTED_MODULE_0__["default"])({}, store), {}, {
+        dispatch: _dispatch
+      });
+    };
+  };
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/use-memo-one/dist/use-memo-one.esm.js":
+/*!************************************************************!*\
+  !*** ./node_modules/use-memo-one/dist/use-memo-one.esm.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useCallback: () => (/* binding */ useCallback),
+/* harmony export */   useCallbackOne: () => (/* binding */ useCallbackOne),
+/* harmony export */   useMemo: () => (/* binding */ useMemo),
+/* harmony export */   useMemoOne: () => (/* binding */ useMemoOne)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function areInputsEqual(newInputs, lastInputs) {
+  if (newInputs.length !== lastInputs.length) {
+    return false;
+  }
+
+  for (var i = 0; i < newInputs.length; i++) {
+    if (newInputs[i] !== lastInputs[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function useMemoOne(getResult, inputs) {
+  var initial = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(function () {
+    return {
+      inputs: inputs,
+      result: getResult()
+    };
+  })[0];
+  var isFirstRun = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
+  var committed = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(initial);
+  var useCache = isFirstRun.current || Boolean(inputs && committed.current.inputs && areInputsEqual(inputs, committed.current.inputs));
+  var cache = useCache ? committed.current : {
+    inputs: inputs,
+    result: getResult()
+  };
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    isFirstRun.current = false;
+    committed.current = cache;
+  }, [cache]);
+  return cache.result;
+}
+function useCallbackOne(callback, inputs) {
+  return useMemoOne(function () {
+    return callback;
+  }, inputs);
+}
+var useMemo = useMemoOne;
+var useCallback = useCallbackOne;
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js":
+/*!**********************************************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+/**
+ * @license React
+ * use-sync-external-store-shim.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+
+          'use strict';
+
+/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
+}
+          var React = __webpack_require__(/*! react */ "react");
+
+var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+function error(format) {
+  {
+    {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      printWarning('error', format, args);
+    }
+  }
+}
+
+function printWarning(level, format, args) {
+  // When changing this logic, you might want to also
+  // update consoleWithStackDev.www.js as well.
+  {
+    var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+    var stack = ReactDebugCurrentFrame.getStackAddendum();
+
+    if (stack !== '') {
+      format += '%s';
+      args = args.concat([stack]);
+    } // eslint-disable-next-line react-internal/safe-string-coercion
+
+
+    var argsWithFormat = args.map(function (item) {
+      return String(item);
+    }); // Careful: RN currently depends on this prefix
+
+    argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
+    // breaks IE9: https://github.com/facebook/react/issues/13610
+    // eslint-disable-next-line react-internal/no-production-logging
+
+    Function.prototype.apply.call(console[level], console, argsWithFormat);
+  }
+}
+
+/**
+ * inlined Object.is polyfill to avoid requiring consumers ship their own
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+function is(x, y) {
+  return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y // eslint-disable-line no-self-compare
+  ;
+}
+
+var objectIs = typeof Object.is === 'function' ? Object.is : is;
+
+// dispatch for CommonJS interop named imports.
+
+var useState = React.useState,
+    useEffect = React.useEffect,
+    useLayoutEffect = React.useLayoutEffect,
+    useDebugValue = React.useDebugValue;
+var didWarnOld18Alpha = false;
+var didWarnUncachedGetSnapshot = false; // Disclaimer: This shim breaks many of the rules of React, and only works
+// because of a very particular set of implementation details and assumptions
+// -- change any one of them and it will break. The most important assumption
+// is that updates are always synchronous, because concurrent rendering is
+// only available in versions of React that also have a built-in
+// useSyncExternalStore API. And we only use this shim when the built-in API
+// does not exist.
+//
+// Do not assume that the clever hacks used by this hook also work in general.
+// The point of this shim is to replace the need for hacks by other libraries.
+
+function useSyncExternalStore(subscribe, getSnapshot, // Note: The shim does not use getServerSnapshot, because pre-18 versions of
+// React do not expose a way to check if we're hydrating. So users of the shim
+// will need to track that themselves and return the correct value
+// from `getSnapshot`.
+getServerSnapshot) {
+  {
+    if (!didWarnOld18Alpha) {
+      if (React.startTransition !== undefined) {
+        didWarnOld18Alpha = true;
+
+        error('You are using an outdated, pre-release alpha of React 18 that ' + 'does not support useSyncExternalStore. The ' + 'use-sync-external-store shim will not work correctly. Upgrade ' + 'to a newer pre-release.');
+      }
+    }
+  } // Read the current snapshot from the store on every render. Again, this
+  // breaks the rules of React, and only works here because of specific
+  // implementation details, most importantly that updates are
+  // always synchronous.
+
+
+  var value = getSnapshot();
+
+  {
+    if (!didWarnUncachedGetSnapshot) {
+      var cachedValue = getSnapshot();
+
+      if (!objectIs(value, cachedValue)) {
+        error('The result of getSnapshot should be cached to avoid an infinite loop');
+
+        didWarnUncachedGetSnapshot = true;
+      }
+    }
+  } // Because updates are synchronous, we don't queue them. Instead we force a
+  // re-render whenever the subscribed state changes by updating an some
+  // arbitrary useState hook. Then, during render, we call getSnapshot to read
+  // the current value.
+  //
+  // Because we don't actually use the state returned by the useState hook, we
+  // can save a bit of memory by storing other stuff in that slot.
+  //
+  // To implement the early bailout, we need to track some things on a mutable
+  // object. Usually, we would put that in a useRef hook, but we can stash it in
+  // our useState hook instead.
+  //
+  // To force a re-render, we call forceUpdate({inst}). That works because the
+  // new object always fails an equality check.
+
+
+  var _useState = useState({
+    inst: {
+      value: value,
+      getSnapshot: getSnapshot
+    }
+  }),
+      inst = _useState[0].inst,
+      forceUpdate = _useState[1]; // Track the latest getSnapshot function with a ref. This needs to be updated
+  // in the layout phase so we can access it during the tearing check that
+  // happens on subscribe.
+
+
+  useLayoutEffect(function () {
+    inst.value = value;
+    inst.getSnapshot = getSnapshot; // Whenever getSnapshot or subscribe changes, we need to check in the
+    // commit phase if there was an interleaved mutation. In concurrent mode
+    // this can happen all the time, but even in synchronous mode, an earlier
+    // effect may have mutated the store.
+
+    if (checkIfSnapshotChanged(inst)) {
+      // Force a re-render.
+      forceUpdate({
+        inst: inst
+      });
+    }
+  }, [subscribe, value, getSnapshot]);
+  useEffect(function () {
+    // Check for changes right before subscribing. Subsequent changes will be
+    // detected in the subscription handler.
+    if (checkIfSnapshotChanged(inst)) {
+      // Force a re-render.
+      forceUpdate({
+        inst: inst
+      });
+    }
+
+    var handleStoreChange = function () {
+      // TODO: Because there is no cross-renderer API for batching updates, it's
+      // up to the consumer of this library to wrap their subscription event
+      // with unstable_batchedUpdates. Should we try to detect when this isn't
+      // the case and print a warning in development?
+      // The store changed. Check if the snapshot changed since the last time we
+      // read from the store.
+      if (checkIfSnapshotChanged(inst)) {
+        // Force a re-render.
+        forceUpdate({
+          inst: inst
+        });
+      }
+    }; // Subscribe to the store and return a clean-up function.
+
+
+    return subscribe(handleStoreChange);
+  }, [subscribe]);
+  useDebugValue(value);
+  return value;
+}
+
+function checkIfSnapshotChanged(inst) {
+  var latestGetSnapshot = inst.getSnapshot;
+  var prevValue = inst.value;
+
+  try {
+    var nextValue = latestGetSnapshot();
+    return !objectIs(prevValue, nextValue);
+  } catch (error) {
+    return true;
+  }
+}
+
+function useSyncExternalStore$1(subscribe, getSnapshot, getServerSnapshot) {
+  // Note: The shim does not use getServerSnapshot, because pre-18 versions of
+  // React do not expose a way to check if we're hydrating. So users of the shim
+  // will need to track that themselves and return the correct value
+  // from `getSnapshot`.
+  return getSnapshot();
+}
+
+var canUseDOM = !!(typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined');
+
+var isServerEnvironment = !canUseDOM;
+
+var shim = isServerEnvironment ? useSyncExternalStore$1 : useSyncExternalStore;
+var useSyncExternalStore$2 = React.useSyncExternalStore !== undefined ? React.useSyncExternalStore : shim;
+
+exports.useSyncExternalStore = useSyncExternalStore$2;
+          /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
+}
+        
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js":
+/*!************************************************************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js ***!
+  \************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+/**
+ * @license React
+ * use-sync-external-store-shim/with-selector.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+
+          'use strict';
+
+/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
+}
+          var React = __webpack_require__(/*! react */ "react");
+var shim = __webpack_require__(/*! use-sync-external-store/shim */ "./node_modules/use-sync-external-store/shim/index.js");
+
+/**
+ * inlined Object.is polyfill to avoid requiring consumers ship their own
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+function is(x, y) {
+  return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y // eslint-disable-line no-self-compare
+  ;
+}
+
+var objectIs = typeof Object.is === 'function' ? Object.is : is;
+
+var useSyncExternalStore = shim.useSyncExternalStore;
+
+// for CommonJS interop.
+
+var useRef = React.useRef,
+    useEffect = React.useEffect,
+    useMemo = React.useMemo,
+    useDebugValue = React.useDebugValue; // Same as useSyncExternalStore, but supports selector and isEqual arguments.
+
+function useSyncExternalStoreWithSelector(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
+  // Use this to track the rendered snapshot.
+  var instRef = useRef(null);
+  var inst;
+
+  if (instRef.current === null) {
+    inst = {
+      hasValue: false,
+      value: null
+    };
+    instRef.current = inst;
+  } else {
+    inst = instRef.current;
+  }
+
+  var _useMemo = useMemo(function () {
+    // Track the memoized state using closure variables that are local to this
+    // memoized instance of a getSnapshot function. Intentionally not using a
+    // useRef hook, because that state would be shared across all concurrent
+    // copies of the hook/component.
+    var hasMemo = false;
+    var memoizedSnapshot;
+    var memoizedSelection;
+
+    var memoizedSelector = function (nextSnapshot) {
+      if (!hasMemo) {
+        // The first time the hook is called, there is no memoized result.
+        hasMemo = true;
+        memoizedSnapshot = nextSnapshot;
+
+        var _nextSelection = selector(nextSnapshot);
+
+        if (isEqual !== undefined) {
+          // Even if the selector has changed, the currently rendered selection
+          // may be equal to the new selection. We should attempt to reuse the
+          // current value if possible, to preserve downstream memoizations.
+          if (inst.hasValue) {
+            var currentSelection = inst.value;
+
+            if (isEqual(currentSelection, _nextSelection)) {
+              memoizedSelection = currentSelection;
+              return currentSelection;
+            }
+          }
+        }
+
+        memoizedSelection = _nextSelection;
+        return _nextSelection;
+      } // We may be able to reuse the previous invocation's result.
+
+
+      // We may be able to reuse the previous invocation's result.
+      var prevSnapshot = memoizedSnapshot;
+      var prevSelection = memoizedSelection;
+
+      if (objectIs(prevSnapshot, nextSnapshot)) {
+        // The snapshot is the same as last time. Reuse the previous selection.
+        return prevSelection;
+      } // The snapshot has changed, so we need to compute a new selection.
+
+
+      // The snapshot has changed, so we need to compute a new selection.
+      var nextSelection = selector(nextSnapshot); // If a custom isEqual function is provided, use that to check if the data
+      // has changed. If it hasn't, return the previous selection. That signals
+      // to React that the selections are conceptually equal, and we can bail
+      // out of rendering.
+
+      // If a custom isEqual function is provided, use that to check if the data
+      // has changed. If it hasn't, return the previous selection. That signals
+      // to React that the selections are conceptually equal, and we can bail
+      // out of rendering.
+      if (isEqual !== undefined && isEqual(prevSelection, nextSelection)) {
+        return prevSelection;
+      }
+
+      memoizedSnapshot = nextSnapshot;
+      memoizedSelection = nextSelection;
+      return nextSelection;
+    }; // Assigning this to a constant so that Flow knows it can't change.
+
+
+    // Assigning this to a constant so that Flow knows it can't change.
+    var maybeGetServerSnapshot = getServerSnapshot === undefined ? null : getServerSnapshot;
+
+    var getSnapshotWithSelector = function () {
+      return memoizedSelector(getSnapshot());
+    };
+
+    var getServerSnapshotWithSelector = maybeGetServerSnapshot === null ? undefined : function () {
+      return memoizedSelector(maybeGetServerSnapshot());
+    };
+    return [getSnapshotWithSelector, getServerSnapshotWithSelector];
+  }, [getSnapshot, getServerSnapshot, selector, isEqual]),
+      getSelection = _useMemo[0],
+      getServerSelection = _useMemo[1];
+
+  var value = useSyncExternalStore(subscribe, getSelection, getServerSelection);
+  useEffect(function () {
+    inst.hasValue = true;
+    inst.value = value;
+  }, [value]);
+  useDebugValue(value);
+  return value;
+}
+
+exports.useSyncExternalStoreWithSelector = useSyncExternalStoreWithSelector;
+          /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
+}
+        
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/shim/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/shim/index.js ***!
+  \************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ../cjs/use-sync-external-store-shim.development.js */ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/shim/with-selector.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/shim/with-selector.js ***!
+  \********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ../cjs/use-sync-external-store-shim/with-selector.development.js */ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js");
+}
+
+
+/***/ }),
+
+/***/ "react":
+/*!************************!*\
+  !*** external "React" ***!
+  \************************/
+/***/ ((module) => {
+
+module.exports = window["React"];
+
+/***/ }),
+
+/***/ "react-dom":
+/*!***************************!*\
+  !*** external "ReactDOM" ***!
+  \***************************/
+/***/ ((module) => {
+
+module.exports = window["ReactDOM"];
+
+/***/ }),
+
+/***/ "react/jsx-runtime":
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = window["ReactJSXRuntime"];
+
+/***/ }),
+
+/***/ "@wordpress/api-fetch":
+/*!**********************************!*\
+  !*** external ["wp","apiFetch"] ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["apiFetch"];
+
+/***/ }),
+
+/***/ "@wordpress/element":
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["element"];
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _defineProperty)
+/* harmony export */ });
+/* harmony import */ var _toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js");
+
+function _defineProperty(e, r, t) {
+  return (r = (0,_toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _extends)
+/* harmony export */ });
+function _extends() {
+  return _extends = Object.assign ? Object.assign.bind() : function (n) {
+    for (var e = 1; e < arguments.length; e++) {
+      var t = arguments[e];
+      for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
+    }
+    return n;
+  }, _extends.apply(null, arguments);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectSpread2.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectSpread2.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectSpread2)
+/* harmony export */ });
+/* harmony import */ var _defineProperty_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./defineProperty.js */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+
+function ownKeys(e, r) {
+  var t = Object.keys(e);
+  if (Object.getOwnPropertySymbols) {
+    var o = Object.getOwnPropertySymbols(e);
+    r && (o = o.filter(function (r) {
+      return Object.getOwnPropertyDescriptor(e, r).enumerable;
+    })), t.push.apply(t, o);
+  }
+  return t;
+}
+function _objectSpread2(e) {
+  for (var r = 1; r < arguments.length; r++) {
+    var t = null != arguments[r] ? arguments[r] : {};
+    r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
+      (0,_defineProperty_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+    });
+  }
+  return e;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectWithoutPropertiesLoose)
+/* harmony export */ });
+function _objectWithoutPropertiesLoose(r, e) {
+  if (null == r) return {};
+  var t = {};
+  for (var n in r) if ({}.hasOwnProperty.call(r, n)) {
+    if (e.includes(n)) continue;
+    t[n] = r[n];
+  }
+  return t;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ toPrimitive)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+
+function toPrimitive(t, r) {
+  if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ toPropertyKey)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toPrimitive.js */ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js");
+
+
+function toPropertyKey(t) {
+  var i = (0,_toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__["default"])(t, "string");
+  return "symbol" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i) ? i : i + "";
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/typeof.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _typeof)
+/* harmony export */ });
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/tiny-invariant/dist/esm/tiny-invariant.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/tiny-invariant/dist/esm/tiny-invariant.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ invariant)
+/* harmony export */ });
+var isProduction = "development" === 'production';
+var prefix = 'Invariant failed';
+function invariant(condition, message) {
+    if (condition) {
+        return;
+    }
+    if (isProduction) {
+        throw new Error(prefix);
+    }
+    var provided = typeof message === 'function' ? message() : message;
+    var value = provided ? "".concat(prefix, ": ").concat(provided) : prefix;
+    throw new Error(value);
+}
+
+
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App */ "./src/App.tsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_App__WEBPACK_IMPORTED_MODULE_1__["default"], {}), document.getElementById("wpqt-app"));
+/******/ })()
+;
+//# sourceMappingURL=app.js.map

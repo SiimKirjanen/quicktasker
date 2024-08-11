@@ -1,6 +1,7 @@
 import apiFetch from "@wordpress/api-fetch";
 import { Pipeline } from "../types/pipeline";
 import { Task } from "../types/task";
+import { Stage } from "../types/stage";
 
 function getPipelineData(pipelineId: string): Promise<Pipeline> {
   return apiFetch({ path: `/wpqt/v1/pipeline/${pipelineId}` });
@@ -26,4 +27,20 @@ function createTaskRequest(stageId: string, name: string): Promise<Task> {
   });
 }
 
-export { getPipelineData, moveTaskRequest, createTaskRequest };
+function createNewStageRequest(
+  pipelineId: string,
+  name: string
+): Promise<Stage> {
+  return apiFetch({
+    path: `/wpqt/v1/stages`,
+    method: "POST",
+    data: { pipelineId, name },
+  });
+}
+
+export {
+  getPipelineData,
+  moveTaskRequest,
+  createTaskRequest,
+  createNewStageRequest,
+};
