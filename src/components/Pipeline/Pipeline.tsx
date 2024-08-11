@@ -47,7 +47,7 @@ const Pipeline = () => {
   }
 
   return (
-    <div className="wpqt-flex">
+    <div className="wpqt-flex wpqt-gap-[24px]">
       <DragDropContext onDragEnd={onDragEnd}>
         {pipeline.stages.map((stage) => {
           return <Stage droppableId={stage.id} tasks={stage.tasks} />;

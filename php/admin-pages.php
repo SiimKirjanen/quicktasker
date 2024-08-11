@@ -36,6 +36,15 @@ function wp_quick_taks_add_admin_menu() {
         'wp-quick-tasks#/users',
         'wp_quick_taks_generate_app_page'
     );
+
+    add_submenu_page(
+        'wp-quick-tasks',
+        'Archive',
+        'Archive',
+        'manage_options',
+        'wp-quick-tasks#/archive',
+        'wp_quick_taks_generate_app_page'
+    );
 }
 
 function wp_quick_taks_generate_app_page() {

@@ -1,1 +1,2 @@
-<div id="wpqt-app" class="wpqt-flex wpqt-space-between">landing_page</div>
+
+<div id="wpqt-app">landing_page</div>

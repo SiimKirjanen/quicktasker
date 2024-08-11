@@ -8,15 +8,12 @@ class TaskService {
     }
 
     /**
-     * Creates a new task.
+     * Creates a task.
      *
-     * @param int $stageId The ID of the stage to which the task belongs.
-     * @param array $args An array of arguments for creating the task.
-     *                    - name: (string) The name of the task.
-     *
-     * @return int The ID of the newly created task.
-     *
-     * @throws Exception If the task creation fails.
+     * @param int $stageId The ID of the stage to add the task to.
+     * @param array $args The task data.
+     * @return object The created task.
+     * @throws Exception If required fields are missing or if failed to create task.
      */
     public function createTask($stageId, $args) {
         global $wpdb;
@@ -25,8 +22,8 @@ class TaskService {
 
         $args = wp_parse_args($args, $defaults);
 
-        if ( empty($args['name']) || empty($args['taskOrder']) ) {
-            throw new Exception('Required fields are missing');
+        if ( !isset($args['name']) || !isset($args['taskOrder']) ) {
+            throw new Exception('createTask required fields are missing');
         }
 
         $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS, array(
@@ -41,9 +38,8 @@ class TaskService {
 
         $this->addTaskLocation($taskId, $stageId, $args['taskOrder']);
 
-        return $taskId;
+        return $this->taskRepository->getTaskById($taskId);
     }
-
 
     /**
      * Adds a task order to the database.

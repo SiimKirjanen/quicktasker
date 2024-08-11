@@ -6,7 +6,9 @@ import {
   PIPELINE_MOVE_TASK,
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_PIPELINE,
+  PIPELINE_ADD_TASK,
 } from "../constants";
+import { Stage } from "../types/stage";
 
 const initialState = {
   loading: true,
@@ -28,6 +30,7 @@ type Dispatch = (action: Action) => void;
 type PipelineContextType = {
   state: State;
   dispatch: Dispatch;
+  getStageLastIndex: (stageId: string) => number;
 };
 
 const reducer = (state: State, action: Action) => {
@@ -82,6 +85,33 @@ const reducer = (state: State, action: Action) => {
           stages: updatedStages,
         },
       };
+    case PIPELINE_ADD_TASK:
+      const {
+        stageId,
+        task: { id, name, order },
+      } = action.payload;
+
+      return {
+        ...state,
+        pipeline: {
+          ...state.pipeline!,
+          stages: state.pipeline!.stages.map((stage) =>
+            stage.id === stageId
+              ? {
+                  ...stage,
+                  tasks: [
+                    ...stage.tasks,
+                    {
+                      id,
+                      name,
+                      order,
+                    },
+                  ],
+                }
+              : stage
+          ),
+        },
+      };
     default:
       return state;
   }
@@ -90,6 +120,7 @@ const reducer = (state: State, action: Action) => {
 const PipelineContext = createContext<PipelineContextType>({
   state: initialState,
   dispatch: () => {},
+  getStageLastIndex: () => 0,
 });
 
 const PipelineContextProvider = ({
@@ -105,8 +136,16 @@ const PipelineContextProvider = ({
     dispatch({ type: PIPELINE_SET_PIPELINE, payload: initialFullPipeline });
   }, []);
 
+  const getStageLastIndex = (stageId: string) => {
+    const stage = state.pipeline?.stages.find(
+      (stage: Stage) => stage.id === stageId
+    );
+
+    return stage ? stage.tasks.length : 0;
+  };
+
   return (
-    <PipelineContext.Provider value={{ state, dispatch }}>
+    <PipelineContext.Provider value={{ state, dispatch, getStageLastIndex }}>
       {children}
     </PipelineContext.Provider>
   );

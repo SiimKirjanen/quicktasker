@@ -1,5 +1,115 @@
 /* @tailwind base; */
 
+.wpqt-absolute {
+  position: absolute
+}
+
+.wpqt-relative {
+  position: relative
+}
+
+.wpqt-sticky {
+  position: sticky
+}
+
+.wpqt-bottom-0 {
+  bottom: 0px
+}
+
+.wpqt-left-0 {
+  left: 0px
+}
+
+.wpqt-right-0 {
+  right: 0px
+}
+
+.wpqt-mt-auto {
+  margin-top: auto
+}
+
 .wpqt-flex {
   display: flex
+}
+
+.wpqt-h-screen {
+  height: 100vh
+}
+
+.wpqt-max-h-full {
+  max-height: 100%
+}
+
+.wpqt-w-\[280px\] {
+  width: 280px
+}
+
+.wpqt-cursor-pointer {
+  cursor: pointer
+}
+
+.wpqt-flex-col {
+  flex-direction: column
+}
+
+.wpqt-gap-\[24px\] {
+  gap: 24px
+}
+
+.wpqt-gap-\[8px\] {
+  gap: 8px
+}
+
+.wpqt-overflow-hidden {
+  overflow: hidden
+}
+
+.wpqt-rounded-lg {
+  border-radius: 0.5rem
+}
+
+.wpqt-rounded-md {
+  border-radius: 0.375rem
+}
+
+.wpqt-bg-lime-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(77 124 15 / var(--tw-bg-opacity))
+}
+
+.wpqt-bg-blue-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(96 165 250 / var(--tw-bg-opacity))
+}
+
+.wpqt-bg-emerald-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(167 243 208 / var(--tw-bg-opacity))
+}
+
+.wpqt-bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity))
+}
+
+.wpqt-bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity))
+}
+
+.wpqt-bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity))
+}
+
+.wpqt-p-2 {
+  padding: 0.5rem
+}
+
+.wpqt-pb-\[12px\] {
+  padding-bottom: 12px
+}
+
+.wpqt-text-center {
+  text-align: center
 }

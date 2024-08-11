@@ -64,6 +64,25 @@ function wpqt_register_api_routes() {
         ),
     );
 
+    register_rest_route(
+        'wpqt/v1',
+        'tasks',
+        array(
+            'methods' => 'POST',
+            'callback' => function( $data ) {
+                $taskService = new TaskService();
+
+                return $taskService->createTask( $data['stageId'], array(
+                    "name" => $data['name'],
+                    "taskOrder" => $data['order']
+                ) );
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
     /*
     ==================================================================================================================================================================================================================
     User endpoints

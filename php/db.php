@@ -72,20 +72,16 @@ function wpqt_insert_initial_data() {
 	$pipelines = $pipeRepo->getPipelines();
 
 	if( !count($pipelines) ) {
-		try {
-			$newPipeId = $pipeService->createPipeline("Pipeline");
-			$pipeService->markPipelineAsPrimary($newPipeId);
-			$firstStageId = $stageService->creatStage($newPipeId, array('name' => 'Stage 1'));
-			$secondStageId = $stageService->creatStage($newPipeId, array('name' => 'Stage 2'));
-			$stageService->creatStage($newPipeId, array('name' => 'Stage 3'));
-			$stageService->creatStage($newPipeId, array('name' => 'Stage 4'));
+		$newPipeId = $pipeService->createPipeline("Pipeline");
+		$pipeService->markPipelineAsPrimary($newPipeId);
+		$firstStageId = $stageService->creatStage($newPipeId, array('name' => 'Stage 1'));
+		$secondStageId = $stageService->creatStage($newPipeId, array('name' => 'Stage 2'));
+		$stageService->creatStage($newPipeId, array('name' => 'Stage 3'));
+		$stageService->creatStage($newPipeId, array('name' => 'Stage 4'));
 
-			$taskService->createTask($firstStageId, array('name' => 'Task 1', 'taskOrder' => 0));
-			$taskService->createTask($firstStageId, array('name' => 'Task 2', 'taskOrder' => 1));
-			$taskService->createTask($secondStageId, array('name' => 'Task 3', 'taskOrder' => 0));
-			$taskService->createTask($secondStageId, array('name' => 'Task 4', 'taskOrder' => 1));
-		}catch(Exception $e) {
-			echo $e->getMessage();
-		}
+		$taskService->createTask($firstStageId, array('name' => 'Task 1', 'taskOrder' => 0));
+		$taskService->createTask($firstStageId, array('name' => 'Task 2', 'taskOrder' => 1));
+		$taskService->createTask($secondStageId, array('name' => 'Task 3', 'taskOrder' => 0));
+		$taskService->createTask($secondStageId, array('name' => 'Task 4', 'taskOrder' => 1));
 	}
 }
