@@ -8,6 +8,24 @@ class TaskService {
     }
 
     /**
+     * Gets the next task order for a stage.
+     *
+     * @param int $stageId The ID of the stage.
+     * @return int The next task order.
+     */
+    public function getNextTaskOrder($stageId) {
+        global $wpdb;
+
+        $result = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT MAX(task_order) FROM " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " WHERE stage_id = %d",
+                $stageId
+            )
+        );
+
+        return $result === null ? 0 : $result + 1;
+    }
+    /**
      * Creates a task.
      *
      * @param int $stageId The ID of the stage to add the task to.
@@ -22,7 +40,7 @@ class TaskService {
 
         $args = wp_parse_args($args, $defaults);
 
-        if ( !isset($args['name']) || !isset($args['taskOrder']) ) {
+        if ( !isset($args['name']) ) {
             throw new Exception('createTask required fields are missing');
         }
 
@@ -31,12 +49,13 @@ class TaskService {
         ));
 
         if( $result === false ) {
-            throw new Exception('Failed to create task');
+            throw new Exception('Failed to create a task');
         }
 
         $taskId = $wpdb->insert_id;
+        $taskOrder = $this->getNextTaskOrder($stageId);
 
-        $this->addTaskLocation($taskId, $stageId, $args['taskOrder']);
+        $this->addTaskLocation($taskId, $stageId, $taskOrder);
 
         return $this->taskRepository->getTaskById($taskId);
     }

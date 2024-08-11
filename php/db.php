@@ -79,9 +79,9 @@ function wpqt_insert_initial_data() {
 		$stageService->creatStage($newPipeId, array('name' => 'Stage 3'));
 		$stageService->creatStage($newPipeId, array('name' => 'Stage 4'));
 
-		$taskService->createTask($firstStageId, array('name' => 'Task 1', 'taskOrder' => 0));
-		$taskService->createTask($firstStageId, array('name' => 'Task 2', 'taskOrder' => 1));
-		$taskService->createTask($secondStageId, array('name' => 'Task 3', 'taskOrder' => 0));
-		$taskService->createTask($secondStageId, array('name' => 'Task 4', 'taskOrder' => 1));
+		$taskService->createTask($firstStageId, array('name' => 'Task 1'));
+		$taskService->createTask($firstStageId, array('name' => 'Task 2'));
+		$taskService->createTask($secondStageId, array('name' => 'Task 3'));
+		$taskService->createTask($secondStageId, array('name' => 'Task 4'));
 	}
 }

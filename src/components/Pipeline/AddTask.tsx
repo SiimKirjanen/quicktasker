@@ -9,17 +9,12 @@ type Props = {
 };
 
 function AddTask({ stageId }: Props) {
-  const { getStageLastIndex, dispatch } = useContext(PipelineContext);
+  const { dispatch } = useContext(PipelineContext);
 
   const addTask = async () => {
     try {
-      const stageTasksLength = getStageLastIndex(stageId);
-      const taskName = `New task ${stageTasksLength}`;
-      const createdTask: Task = await createTaskRequest(
-        stageId,
-        taskName,
-        stageTasksLength
-      );
+      const taskName = `New task`;
+      const createdTask: Task = await createTaskRequest(stageId, taskName);
 
       dispatch({
         type: PIPELINE_ADD_TASK,
@@ -27,8 +22,7 @@ function AddTask({ stageId }: Props) {
           stageId,
           task: {
             id: createdTask.id,
-            name: taskName,
-            order: stageTasksLength,
+            name: createdTask.name,
           },
         },
       });

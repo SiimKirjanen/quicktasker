@@ -73,8 +73,7 @@ function wpqt_register_api_routes() {
                 $taskService = new TaskService();
 
                 return $taskService->createTask( $data['stageId'], array(
-                    "name" => $data['name'],
-                    "taskOrder" => $data['order']
+                    "name" => $data['name']
                 ) );
             },
             'permission_callback' => function() {

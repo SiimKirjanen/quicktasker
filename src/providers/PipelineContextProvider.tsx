@@ -8,7 +8,6 @@ import {
   PIPELINE_SET_PIPELINE,
   PIPELINE_ADD_TASK,
 } from "../constants";
-import { Stage } from "../types/stage";
 
 const initialState = {
   loading: true,
@@ -30,7 +29,6 @@ type Dispatch = (action: Action) => void;
 type PipelineContextType = {
   state: State;
   dispatch: Dispatch;
-  getStageLastIndex: (stageId: string) => number;
 };
 
 const reducer = (state: State, action: Action) => {
@@ -104,7 +102,6 @@ const reducer = (state: State, action: Action) => {
                     {
                       id,
                       name,
-                      order,
                     },
                   ],
                 }
@@ -120,7 +117,6 @@ const reducer = (state: State, action: Action) => {
 const PipelineContext = createContext<PipelineContextType>({
   state: initialState,
   dispatch: () => {},
-  getStageLastIndex: () => 0,
 });
 
 const PipelineContextProvider = ({
@@ -136,16 +132,8 @@ const PipelineContextProvider = ({
     dispatch({ type: PIPELINE_SET_PIPELINE, payload: initialFullPipeline });
   }, []);
 
-  const getStageLastIndex = (stageId: string) => {
-    const stage = state.pipeline?.stages.find(
-      (stage: Stage) => stage.id === stageId
-    );
-
-    return stage ? stage.tasks.length : 0;
-  };
-
   return (
-    <PipelineContext.Provider value={{ state, dispatch, getStageLastIndex }}>
+    <PipelineContext.Provider value={{ state, dispatch }}>
       {children}
     </PipelineContext.Provider>
   );

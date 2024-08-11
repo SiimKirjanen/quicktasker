@@ -18,15 +18,11 @@ function moveTaskRequest(
   });
 }
 
-function createTaskRequest(
-  stageId: string,
-  name: string,
-  order: number
-): Promise<Task> {
+function createTaskRequest(stageId: string, name: string): Promise<Task> {
   return apiFetch({
     path: `/wpqt/v1/tasks`,
     method: "POST",
-    data: { stageId, order, name },
+    data: { stageId, name },
   });
 }
 
