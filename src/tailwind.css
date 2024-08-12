@@ -4,6 +4,10 @@
 
 @layer utilities {
   .wpqt-pipeline-height {
-    height: calc(100vh - 160px);
+    height: calc(100vh - 120px);
   }
+}
+
+.wpqt-admin-page #wpfooter {
+  display: none;
 }

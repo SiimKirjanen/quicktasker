@@ -7,12 +7,14 @@ function wpqt_update_db() {
 
 add_action('admin_head', 'wpqt_style_overrides');
 function wpqt_style_overrides() {
-    echo '<style>
+    $locationService = new LocationService();
+
+    if( $locationService->isWPQTPage() ) {
+        echo '<style>
         /* Change the background color of the admin area */
         #wpwrap {
             background-color: #fff;
         }
-    </style>';
+        </style>';
+    }
 }
-
-

@@ -4,7 +4,8 @@ add_action( 'admin_enqueue_scripts', 'wpqt_enqueue_app_assets' );
 function wpqt_enqueue_app_assets(){
 	$page = get_current_screen();
 
-	if( 'toplevel_page_wp-quick-tasks' !== $page->id ) {
+	$locationService = new LocationService();
+	if( !$locationService->isWPQTPage() ) {
 		return;
 	}
 
