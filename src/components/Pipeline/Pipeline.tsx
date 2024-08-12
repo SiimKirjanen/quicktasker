@@ -51,7 +51,13 @@ const Pipeline = () => {
     <div className="wpqt-flex wpqt-gap-[24px] wpqt-items-start wpqt-overflow-x-auto wpqt-pipeline-height">
       <DragDropContext onDragEnd={onDragEnd}>
         {pipeline.stages.map((stage) => {
-          return <Stage droppableId={stage.id} tasks={stage.tasks} />;
+          return (
+            <Stage
+              stageId={stage.id}
+              stageTasks={stage.tasks}
+              stageName={stage.name}
+            />
+          );
         })}
       </DragDropContext>
       <AddStage pipelineId={pipeline.id} />

@@ -1,4 +1,5 @@
 <?php
+use WPQT\Response\ApiResponse;
 
 add_action('rest_api_init', 'wpqt_register_api_routes');
 function wpqt_register_api_routes() {
@@ -98,6 +99,27 @@ function wpqt_register_api_routes() {
                 return $stageService->createStage( $data['pipelineId'], array(
                     "name" => $data['name']
                 ) );
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'stages/(?P<id>\d+)',
+        array(
+            'methods' => 'DELETE',
+            'callback' => function( $data ) {
+                try {
+                    $stageService = new StageService();
+                    $stageService->deleteStage( $data['id'] );
+
+                    return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array('Failed to delete the stage')))->toArray(), 400);
+                }
             },
             'permission_callback' => function() {
                 return PermissionRepository::hasRequiredPermissionsForPrivateAPI();

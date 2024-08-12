@@ -2,6 +2,7 @@ import apiFetch from "@wordpress/api-fetch";
 import { Pipeline } from "../types/pipeline";
 import { Task } from "../types/task";
 import { Stage } from "../types/stage";
+import { WPQTResponse } from "../types/response";
 
 function getPipelineData(pipelineId: string): Promise<Pipeline> {
   return apiFetch({ path: `/wpqt/v1/pipeline/${pipelineId}` });
@@ -38,9 +39,18 @@ function createNewStageRequest(
   });
 }
 
+function deleteStageRequest(stageId: string): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/stages/${stageId}`,
+    method: "DELETE",
+    data: { stageId },
+  });
+}
+
 export {
   getPipelineData,
   moveTaskRequest,
   createTaskRequest,
   createNewStageRequest,
+  deleteStageRequest,
 };

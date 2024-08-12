@@ -20,6 +20,14 @@
   right: 0px;
 }
 
+.wpqt-mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.wpqt-ml-auto {
+  margin-left: auto;
+}
+
 .wpqt-flex {
   display: flex;
 }
@@ -82,8 +90,16 @@
   padding: 0.5rem;
 }
 
+.wpqt-p-\[16px_16px_8px\] {
+  padding: 16px 16px 8px;
+}
+
 .wpqt-pb-\[12px\] {
   padding-bottom: 12px;
+}
+
+.wpqt-pb-2 {
+  padding-bottom: 0.5rem;
 }
 
 .wpqt-text-center {

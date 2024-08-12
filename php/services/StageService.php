@@ -39,4 +39,16 @@ class StageService {
 
         return $this->stageRepository->getStageById($wpdb->insert_id);
     }
+
+    public function deleteStage($stageId) {
+        global $wpdb;
+
+        $result = $wpdb->delete(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array('id' => $stageId));
+
+        if( $result === false ) {
+            throw new Exception('Failed to delete the stage');
+        }
+
+        return $result;
+    }
 }
