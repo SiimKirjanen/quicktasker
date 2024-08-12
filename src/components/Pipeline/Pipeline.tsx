@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "@wordpress/element";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { Pipeline } from "../../types/pipeline";
-import { getPipelineData, moveTaskRequest } from "../../api/api";
+import { moveTaskRequest } from "../../api/api";
 import { Stage } from "./Stage";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
 import { AddStage } from "./AddStage";

@@ -4,7 +4,7 @@ import { Task } from "../types/task";
 import { Stage } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 
-function getPipelineData(pipelineId: string): Promise<Pipeline> {
+function getPipelineData(pipelineId: string): Promise<WPQTResponse<Pipeline>> {
   return apiFetch({ path: `/wpqt/v1/pipeline/${pipelineId}` });
 }
 
@@ -12,7 +12,7 @@ function moveTaskRequest(
   taskId: string,
   stageId: string,
   order: number
-): Promise<void> {
+): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/tasks/${taskId}/move`,
     method: "PATCH",
@@ -20,7 +20,10 @@ function moveTaskRequest(
   });
 }
 
-function createTaskRequest(stageId: string, name: string): Promise<Task> {
+function createTaskRequest(
+  stageId: string,
+  name: string
+): Promise<WPQTResponse<Task>> {
   return apiFetch({
     path: `/wpqt/v1/tasks`,
     method: "POST",
@@ -31,7 +34,7 @@ function createTaskRequest(stageId: string, name: string): Promise<Task> {
 function createNewStageRequest(
   pipelineId: string,
   name: string
-): Promise<Stage> {
+): Promise<WPQTResponse<Stage>> {
   return apiFetch({
     path: `/wpqt/v1/stages`,
     method: "POST",

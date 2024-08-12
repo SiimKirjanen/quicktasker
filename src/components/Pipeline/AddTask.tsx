@@ -14,15 +14,15 @@ function AddTask({ stageId }: Props) {
   const addTask = async () => {
     try {
       const taskName = `New task`;
-      const createdTask: Task = await createTaskRequest(stageId, taskName);
+      const response = await createTaskRequest(stageId, taskName);
 
       dispatch({
         type: PIPELINE_ADD_TASK,
         payload: {
           stageId,
           task: {
-            id: createdTask.id,
-            name: createdTask.name,
+            id: response.data.id,
+            name: response.data.name,
           },
         },
       });

@@ -15,12 +15,14 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
-                $pipelineRepo = new PipelineRepository();
-                $test = $data['id'];
+                try {
+                    $pipelineRepo = new PipelineRepository();
+                    $pipeline = $pipelineRepo->getFullPipeline( $data['id'] );
 
-                $pipeline = $pipelineRepo->getFullPipeline( $data['id'] );
-
-                return $pipeline;
+                    return new WP_REST_Response((new ApiResponse(true, array(), $pipeline))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
             },
             'permission_callback' => function() {
                 return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
@@ -34,9 +36,14 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
-                $pipelineRepo = new PipelineRepository();
+                try {
+                    $pipelineRepo = new PipelineRepository();
+                    $pipelines = $pipelineRepo->getPipelines();
 
-                return $pipelineRepo->getPipelines();
+                    return new WP_REST_Response((new ApiResponse(true, array(), $pipelines))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
             },
             'permission_callback' => function() {
                 return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
@@ -56,8 +63,14 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
-                $taskService = new TaskService();
-                return $taskService->moveTask( $data['id'], $data['stageId'], $data['order'] );
+                try {
+                    $taskService = new TaskService();
+                    $taskService->moveTask( $data['id'], $data['stageId'], $data['order'] );
+
+                    return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
             },
             'permission_callback' => function() {
                 return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
@@ -71,11 +84,15 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'POST',
             'callback' => function( $data ) {
-                $taskService = new TaskService();
-
-                return $taskService->createTask( $data['stageId'], array(
-                    "name" => $data['name']
-                ) );
+                try {
+                    $taskService = new TaskService();
+                    $newTask = $taskService->createTask( $data['stageId'], array(
+                        "name" => $data['name']
+                    ) );
+                    return new WP_REST_Response((new ApiResponse(true, array(), $newTask))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
             },
             'permission_callback' => function() {
                 return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
@@ -94,11 +111,16 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'POST',
             'callback' => function( $data ) {
-                $stageService = new StageService();
+                try {
+                    $stageService = new StageService();
 
-                return $stageService->createStage( $data['pipelineId'], array(
-                    "name" => $data['name']
-                ) );
+                    $newStage = $stageService->createStage( $data['pipelineId'], array(
+                        "name" => $data['name']
+                    ) );
+                    return new WP_REST_Response((new ApiResponse(true, array(), $newStage))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } 
             },
             'permission_callback' => function() {
                 return PermissionRepository::hasRequiredPermissionsForPrivateAPI();

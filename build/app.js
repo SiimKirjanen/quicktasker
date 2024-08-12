@@ -7717,12 +7717,14 @@ function AddStage({
       dispatch({
         type: "ADD_STAGE",
         payload: {
-          id: response.id,
-          name: response.name,
+          id: response.data.id,
+          name: response.data.name,
           tasks: []
         }
       });
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
@@ -7793,14 +7795,14 @@ function AddTask({
   const addTask = () => __awaiter(this, void 0, void 0, function* () {
     try {
       const taskName = `New task`;
-      const createdTask = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.createTaskRequest)(stageId, taskName);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.createTaskRequest)(stageId, taskName);
       dispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_ADD_TASK,
         payload: {
           stageId,
           task: {
-            id: createdTask.id,
-            name: createdTask.name
+            id: response.data.id,
+            name: response.data.name
           }
         }
       });

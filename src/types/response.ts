@@ -1,7 +1,7 @@
-type WPQTResponse = {
+type WPQTResponse<T = any> = {
   success: boolean;
   messages: string[];
-  data: object;
+  data: T;
 };
 
 export type { WPQTResponse };

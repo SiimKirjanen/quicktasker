@@ -14,12 +14,14 @@ function AddStage({ pipelineId }: Props) {
       dispatch({
         type: "ADD_STAGE",
         payload: {
-          id: response.id,
-          name: response.name,
+          id: response.data.id,
+          name: response.data.name,
           tasks: [],
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
