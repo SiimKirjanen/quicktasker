@@ -2,7 +2,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import { Task as TaskComponent } from "./Tast";
 import { Task } from "../../types/task";
 import { AddTask } from "./AddTask";
-import { deleteStageRequest } from "../../api/api";
+import { StageControls } from "./StageControls";
 
 type Props = {
   stageId: string;
@@ -11,14 +11,6 @@ type Props = {
 };
 
 function Stage({ stageId, stageTasks, stageName }: Props) {
-  const deleteStage = async () => {
-    try {
-      await deleteStageRequest(stageId);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <Droppable droppableId={stageId}>
       {(provided, snapshot) => (
@@ -30,8 +22,9 @@ function Stage({ stageId, stageTasks, stageName }: Props) {
         >
           <div className="wpqt-flex wpqt-mb-2">
             <span>{stageName}</span>
-            <div className="wpqt-ml-auto" onClick={deleteStage}>
-              del
+
+            <div className="wpqt-ml-auto">
+              <StageControls stageId={stageId} />
             </div>
           </div>
           <div className="wpqt-flex wpqt-flex-col wpqt-gap-[8px] wpqt-pb-[12px]">

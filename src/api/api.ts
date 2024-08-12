@@ -14,7 +14,7 @@ function moveTaskRequest(
   order: number
 ): Promise<void> {
   return apiFetch({
-    path: `/wpqt/v1/task/${taskId}/move`,
+    path: `/wpqt/v1/tasks/${taskId}/move`,
     method: "PATCH",
     data: { stageId, order },
   });

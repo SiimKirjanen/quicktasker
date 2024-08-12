@@ -7589,7 +7589,7 @@ function getPipelineData(pipelineId) {
 }
 function moveTaskRequest(taskId, stageId, order) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
-    path: `/wpqt/v1/task/${taskId}/move`,
+    path: `/wpqt/v1/tasks/${taskId}/move`,
     method: "PATCH",
     data: {
       stageId,
@@ -7918,7 +7918,65 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
 /* harmony import */ var _Tast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Tast */ "./src/components/Pipeline/Tast.tsx");
 /* harmony import */ var _AddTask__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AddTask */ "./src/components/Pipeline/AddTask.tsx");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _StageControls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./StageControls */ "./src/components/Pipeline/StageControls.tsx");
+
+
+
+
+
+function Stage({
+  stageId,
+  stageTasks,
+  stageName
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
+    droppableId: stageId,
+    children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      ref: provided.innerRef,
+      className: `wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-p-2 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${snapshot.isDraggingOver ? "wpqt-bg-blue-400" : ""}`,
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-flex wpqt-mb-2",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          children: stageName
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-ml-auto",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageControls__WEBPACK_IMPORTED_MODULE_3__.StageControls, {
+            stageId: stageId
+          })
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-flex wpqt-flex-col wpqt-gap-[8px] wpqt-pb-[12px]",
+        children: stageTasks.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
+          item: item,
+          index: index
+        }))
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
+        stageId: stageId
+      }), provided.placeholder]
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Pipeline/StageControls.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/Pipeline/StageControls.tsx ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StageControls: () => (/* binding */ StageControls)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -7951,41 +8009,27 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-function Stage({
-  stageId,
-  stageTasks,
-  stageName
+function StageControls({
+  stageId
 }) {
+  const {
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__.PipelineContext);
   const deleteStage = () => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.deleteStageRequest)(stageId);
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.deleteStageRequest)(stageId);
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_DELETE_STAGE,
+        payload: stageId
+      });
     } catch (error) {
       console.error(error);
     }
   });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
-    droppableId: stageId,
-    children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      ref: provided.innerRef,
-      className: `wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-p-2 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${snapshot.isDraggingOver ? "wpqt-bg-blue-400" : ""}`,
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "wpqt-flex wpqt-mb-2",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-          children: stageName
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "wpqt-ml-auto",
-          onClick: deleteStage,
-          children: "del"
-        })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-flex wpqt-flex-col wpqt-gap-[8px] wpqt-pb-[12px]",
-        children: stageTasks.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
-          item: item,
-          index: index
-        }))
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
-        stageId: stageId
-      }), provided.placeholder]
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+      onClick: deleteStage,
+      children: "Delete"
     })
   });
 }
@@ -8036,6 +8080,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PIPELINE_ADD_STAGE: () => (/* binding */ PIPELINE_ADD_STAGE),
 /* harmony export */   PIPELINE_ADD_TASK: () => (/* binding */ PIPELINE_ADD_TASK),
+/* harmony export */   PIPELINE_DELETE_STAGE: () => (/* binding */ PIPELINE_DELETE_STAGE),
 /* harmony export */   PIPELINE_MOVE_TASK: () => (/* binding */ PIPELINE_MOVE_TASK),
 /* harmony export */   PIPELINE_REORDER_TASK: () => (/* binding */ PIPELINE_REORDER_TASK),
 /* harmony export */   PIPELINE_SET_LOADING: () => (/* binding */ PIPELINE_SET_LOADING),
@@ -8047,6 +8092,7 @@ const PIPELINE_MOVE_TASK = "MOVE_TASK";
 const PIPELINE_REORDER_TASK = "REORDER_TASK";
 const PIPELINE_ADD_TASK = "ADD_TASK";
 const PIPELINE_ADD_STAGE = "ADD_STAGE";
+const PIPELINE_DELETE_STAGE = "DELETE_STAGE";
 
 
 /***/ }),
@@ -8288,11 +8334,19 @@ const pipelineReducer = (state, action) => {
           }) : stage)
         })
       });
-    case "ADD_STAGE":
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_STAGE:
       const newStage = action.payload;
       return Object.assign(Object.assign({}, state), {
         pipeline: Object.assign(Object.assign({}, state.pipeline), {
           stages: [...state.pipeline.stages, newStage]
+        })
+      });
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_DELETE_STAGE:
+      const deletedStageId = action.payload;
+      console.log("Deleting stage", deletedStageId);
+      return Object.assign(Object.assign({}, state), {
+        pipeline: Object.assign(Object.assign({}, state.pipeline), {
+          stages: state.pipeline.stages.filter(stage => stage.id !== deletedStageId)
         })
       });
     default:

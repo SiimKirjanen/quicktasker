@@ -11,7 +11,7 @@ function wpqt_register_api_routes() {
 
     register_rest_route(
         'wpqt/v1',
-        'pipeline/(?P<id>\d+)',
+        'pipelines/(?P<id>\d+)',
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
@@ -52,7 +52,7 @@ function wpqt_register_api_routes() {
 
     register_rest_route(
         'wpqt/v1',
-        'task/(?P<id>\d+)/move',
+        'tasks/(?P<id>\d+)/move',
         array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
@@ -118,7 +118,7 @@ function wpqt_register_api_routes() {
 
                     return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
                 } catch (Exception $e) {
-                    return new WP_REST_Response((new ApiResponse(false, array('Failed to delete the stage')))->toArray(), 400);
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },
             'permission_callback' => function() {
@@ -148,7 +148,7 @@ function wpqt_register_api_routes() {
 
     register_rest_route(
         'wpqt/v1',
-        'user/(?P<id>\d+)',
+        'users/(?P<id>\d+)',
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {

@@ -1,9 +1,11 @@
 <?php
 class StageService {
     protected $stageRepository;
+    protected $taskRepository;
 
     public function __construct() {
         $this->stageRepository = new StageRepository();
+        $this->taskRepository = new TaskRepository();
     }
 
 
@@ -42,6 +44,10 @@ class StageService {
 
     public function deleteStage($stageId) {
         global $wpdb;
+        
+        if( count( $this->taskRepository->getTasksByStageId($stageId) ) > 0 ) {
+            throw new Exception('Stage has tasks. Please delete the tasks first.');
+        }
 
         $result = $wpdb->delete(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array('id' => $stageId));
 

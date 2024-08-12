@@ -1,5 +1,7 @@
 import {
+  PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
+  PIPELINE_DELETE_STAGE,
   PIPELINE_MOVE_TASK,
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
@@ -88,7 +90,7 @@ const pipelineReducer = (state: State, action: Action) => {
           ),
         },
       };
-    case "ADD_STAGE":
+    case PIPELINE_ADD_STAGE:
       const newStage: Stage = action.payload;
 
       return {
@@ -98,6 +100,20 @@ const pipelineReducer = (state: State, action: Action) => {
           stages: [...state.pipeline!.stages, newStage],
         },
       };
+    case PIPELINE_DELETE_STAGE:
+      const deletedStageId = action.payload;
+      console.log("Deleting stage", deletedStageId);
+
+      return {
+        ...state,
+        pipeline: {
+          ...state.pipeline,
+          stages: state.pipeline!.stages.filter(
+            (stage) => stage.id !== deletedStageId
+          ),
+        },
+      };
+
     default:
       return state;
   }
