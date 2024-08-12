@@ -21,6 +21,7 @@
     "@hello-pangea/dnd": "^16.6.0",
     "@heroicons/react": "^2.1.5",
     "@wordpress/api-fetch": "^7.4.0",
-    "@wordpress/element": "^6.4.0"
+    "@wordpress/element": "^6.4.0",
+    "react-toastify": "^10.0.5"
   }
 }

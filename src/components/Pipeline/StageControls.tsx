@@ -4,6 +4,7 @@ import { PipelineContext } from "../../providers/PipelineContextProvider";
 import { PIPELINE_DELETE_STAGE } from "../../constants";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { Cog8ToothIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { toast } from "react-toastify";
 
 type Props = {
   stageId: string;
@@ -19,6 +20,9 @@ function StageControls({ stageId }: Props) {
       dispatch({ type: PIPELINE_DELETE_STAGE, payload: stageId });
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete stage", {
+        position: "bottom-right",
+      });
     }
   };
 
