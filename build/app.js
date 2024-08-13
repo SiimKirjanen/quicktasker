@@ -7837,7 +7837,7 @@ function AddTask({
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-flex wpqt-justify-center wpqt-cursor-pointer wpqt-text-center wpqt-z-10",
+    className: "wpqt-flex wpqt-justify-center wpqt-cursor-pointer wpqt-text-center wpqt-p-2 wpqt-z-10 wpqt-sticky wpqt-bottom-0 wpqt-order-1 wpqt-bg-gray-100",
     onClick: addTask,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_5__["default"], {
       className: "wpqt-size-6 wpqt-text-green-600"
@@ -7914,7 +7914,7 @@ const Pipeline = () => {
     return "Loading...";
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-gap-[24px] wpqt-items-start wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height",
+    className: "wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_6__.DragDropContext, {
       onDragEnd: onDragEnd,
       children: pipeline.stages.map(stage => {
@@ -7963,7 +7963,7 @@ function Stage({
     droppableId: stageId,
     children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       ref: provided.innerRef,
-      className: `wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-p-4 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${snapshot.isDraggingOver ? "wpqt-bg-blue-400" : ""}`,
+      className: `wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-p-4 wpqt-pb-0 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${snapshot.isDraggingOver ? "wpqt-bg-blue-400" : ""}`,
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-items-center wpqt-mb-4",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -7972,15 +7972,15 @@ function Stage({
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageControls__WEBPACK_IMPORTED_MODULE_3__.StageControls, {
           stageId: stageId
         })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-flex wpqt-flex-col wpqt-pb-[12px] wpqt-overflow-y-auto wpqt-stage-tasks-height",
-        children: stageTasks.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-flex wpqt-flex-col wpqt-overflow-y-auto wpqt-h-full",
+        children: [stageTasks.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
           item: item,
           index: index
-        }))
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
-        stageId: stageId
-      }), provided.placeholder]
+        })), provided.placeholder, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
+          stageId: stageId
+        })]
+      })]
     })
   });
 }

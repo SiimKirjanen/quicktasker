@@ -34,7 +34,7 @@ function AddTask({ stageId }: Props) {
 
   return (
     <div
-      className="wpqt-flex wpqt-justify-center wpqt-cursor-pointer wpqt-text-center wpqt-z-10"
+      className="wpqt-flex wpqt-justify-center wpqt-cursor-pointer wpqt-text-center wpqt-p-2 wpqt-z-10 wpqt-sticky wpqt-bottom-0 wpqt-order-1 wpqt-bg-gray-100"
       onClick={addTask}
     >
       <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />

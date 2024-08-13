@@ -16,7 +16,7 @@ function Stage({ stageId, stageTasks, stageName }: Props) {
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
-          className={`wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-p-4 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${
+          className={`wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-p-4 wpqt-pb-0 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${
             snapshot.isDraggingOver ? "wpqt-bg-blue-400" : ""
           }`}
         >
@@ -26,13 +26,13 @@ function Stage({ stageId, stageTasks, stageName }: Props) {
             </div>
             <StageControls stageId={stageId} />
           </div>
-          <div className="wpqt-flex wpqt-flex-col wpqt-pb-[12px] wpqt-overflow-y-auto wpqt-stage-tasks-height">
+          <div className="wpqt-flex wpqt-flex-col wpqt-overflow-y-auto wpqt-h-full">
             {stageTasks.map((item: any, index: number) => (
               <TaskComponent item={item} index={index} />
             ))}
+            {provided.placeholder}
+            <AddTask stageId={stageId} />
           </div>
-          <AddTask stageId={stageId} />
-          {provided.placeholder}
         </div>
       )}
     </Droppable>
