@@ -10,10 +10,6 @@ module.exports = {
     rules: [
       ...defaultConfig.module.rules,
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader", "postcss-loader"],
-      },
-      {
         test: /\.tsx?$/,
         use: [
           {

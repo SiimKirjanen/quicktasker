@@ -7596,6 +7596,10 @@ function moveTaskRequest(taskId, stageId, order) {
     data: {
       stageId,
       order
+    },
+    headers: {
+      "Content-Type": "application/json",
+      "X-WPQT-API-Nonce": window.wpqt.apiNonce
     }
   });
 }
@@ -7606,6 +7610,10 @@ function createTaskRequest(stageId, name) {
     data: {
       stageId,
       name
+    },
+    headers: {
+      "Content-Type": "application/json",
+      "X-WPQT-API-Nonce": window.wpqt.apiNonce
     }
   });
 }
@@ -7616,6 +7624,10 @@ function createNewStageRequest(pipelineId, name) {
     data: {
       pipelineId,
       name
+    },
+    headers: {
+      "Content-Type": "application/json",
+      "X-WPQT-API-Nonce": window.wpqt.apiNonce
     }
   });
 }
@@ -7625,6 +7637,10 @@ function deleteStageRequest(stageId) {
     method: "DELETE",
     data: {
       stageId
+    },
+    headers: {
+      "Content-Type": "application/json",
+      "X-WPQT-API-Nonce": window.wpqt.apiNonce
     }
   });
 }

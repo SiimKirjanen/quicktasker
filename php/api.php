@@ -1,6 +1,16 @@
 <?php
 use WPQT\Response\ApiResponse;
 
+function WPQTverifyApiNonce($data) {
+    $nonce = $data->get_header('X-WPQT-API-Nonce');
+
+    if (!isset($nonce) || !wp_verify_nonce($nonce, 'wpqt_api_nonce')) {
+        throw new Exception('rest_nonce_invalid');
+    }
+
+    return true;
+}
+
 add_action('rest_api_init', 'wpqt_register_api_routes');
 function wpqt_register_api_routes() {
     /*
@@ -16,6 +26,7 @@ function wpqt_register_api_routes() {
             'methods' => 'GET',
             'callback' => function( $data ) {
                 try {
+                    WPQTverifyApiNonce($data);
                     $pipelineRepo = new PipelineRepository();
                     $pipeline = $pipelineRepo->getFullPipeline( $data['id'] );
 
@@ -37,6 +48,7 @@ function wpqt_register_api_routes() {
             'methods' => 'GET',
             'callback' => function( $data ) {
                 try {
+                    WPQTverifyApiNonce($data);
                     $pipelineRepo = new PipelineRepository();
                     $pipelines = $pipelineRepo->getPipelines();
 
@@ -64,6 +76,7 @@ function wpqt_register_api_routes() {
             'methods' => 'PATCH',
             'callback' => function( $data ) {
                 try {
+                    WPQTverifyApiNonce($data);
                     $taskService = new TaskService();
                     $taskService->moveTask( $data['id'], $data['stageId'], $data['order'] );
 
@@ -85,6 +98,7 @@ function wpqt_register_api_routes() {
             'methods' => 'POST',
             'callback' => function( $data ) {
                 try {
+                    WPQTverifyApiNonce($data);
                     $taskService = new TaskService();
                     $newTask = $taskService->createTask( $data['stageId'], array(
                         "name" => $data['name']
@@ -112,6 +126,7 @@ function wpqt_register_api_routes() {
             'methods' => 'POST',
             'callback' => function( $data ) {
                 try {
+                    WPQTverifyApiNonce($data);
                     $stageService = new StageService();
 
                     $newStage = $stageService->createStage( $data['pipelineId'], array(
@@ -135,6 +150,7 @@ function wpqt_register_api_routes() {
             'methods' => 'DELETE',
             'callback' => function( $data ) {
                 try {
+                    WPQTverifyApiNonce($data);
                     $stageService = new StageService();
                     $stageService->deleteStage( $data['id'] );
 
@@ -160,6 +176,7 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
+                WPQTverifyApiNonce($data);
                 return ['s'];
             },
             'permission_callback' => function() {
@@ -174,6 +191,7 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
+                WPQTverifyApiNonce($data);
                 return ['s'];
             },
             'permission_callback' => function() {
