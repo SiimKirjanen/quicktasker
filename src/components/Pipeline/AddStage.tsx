@@ -1,6 +1,7 @@
 import { createNewStageRequest } from "../../api/api";
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 type Props = { pipelineId: string };
 
@@ -25,8 +26,12 @@ function AddStage({ pipelineId }: Props) {
   };
 
   return (
-    <div>
-      <button onClick={addStage}>Add Stage</button>
+    <div
+      onClick={addStage}
+      className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-p-3 wpqt-cursor-pointer"
+    >
+      <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
+      <div className="wpqt-whitespace-nowrap">Add stage</div>
     </div>
   );
 }

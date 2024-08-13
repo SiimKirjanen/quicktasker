@@ -2,6 +2,7 @@ import { createTaskRequest } from "../../api/api";
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
 import { PIPELINE_ADD_TASK } from "../../constants";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Task } from "./Tast";
 
 type Props = {
@@ -33,10 +34,10 @@ function AddTask({ stageId }: Props) {
 
   return (
     <div
-      className="wpqt-cursor-pointer wpqt-text-center wpqt-absolute wpqt-bottom-0 wpqt-left-0 wpqt-right-0"
+      className="wpqt-flex wpqt-justify-center wpqt-cursor-pointer wpqt-text-center wpqt-z-10"
       onClick={addTask}
     >
-      Add task
+      <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
     </div>
   );
 }

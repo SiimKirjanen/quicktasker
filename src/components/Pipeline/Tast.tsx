@@ -19,8 +19,9 @@ function Task({ item, index }: Props) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          className="wpqt-bg-white wpqt-border wpqt-border-gray-200 wpqt-rounded wpqt-p-3 wpqt-mb-2 wpqt-shadow !wpqt-cursor-pointer"
         >
-          {item.name}
+          <div className="wpqt-text-sm">{item.name}</div>
         </div>
       )}
     </Draggable>
