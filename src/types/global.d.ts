@@ -5,6 +5,7 @@ declare global {
     wpqt: {
       initialFullPipeline: Pipeline;
       apiNonce: string;
+      existingPipelines: Pipeline[];
     };
   }
 }

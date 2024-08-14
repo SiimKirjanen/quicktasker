@@ -1,16 +1,21 @@
 import { createContext, useReducer, useEffect } from "@wordpress/element";
 import { Pipeline } from "../types/pipeline";
-import { PIPELINE_SET_PIPELINE } from "../constants";
+import {
+  PIPELINE_SET_EXISTING_PIPELINES,
+  PIPELINE_SET_PIPELINE,
+} from "../constants";
 import { pipelineReducer } from "../reducers/pipeline-reducer";
 
 const initialState = {
   loading: true,
   pipeline: null,
+  existingPipelines: [],
 };
 
 type State = {
   loading: boolean;
   pipeline: Pipeline | null;
+  existingPipelines: Pipeline[];
 };
 
 type Action = {
@@ -39,7 +44,12 @@ const PipelineContextProvider = ({
 
   useEffect(() => {
     const initialFullPipeline = window.wpqt.initialFullPipeline;
+    const existingPipelines = window.wpqt.existingPipelines;
 
+    dispatch({
+      type: PIPELINE_SET_EXISTING_PIPELINES,
+      payload: existingPipelines,
+    });
     dispatch({ type: PIPELINE_SET_PIPELINE, payload: initialFullPipeline });
   }, []);
 

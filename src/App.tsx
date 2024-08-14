@@ -1,4 +1,3 @@
-import { MainNav } from "./components/MainNav/MainNav";
 import { PipelinePage } from "./pages/PipelinePage";
 import { AppContextProvider } from "./providers/AppContextProvider";
 import { PipelineContextProvider } from "./providers/PipelineContextProvider";
@@ -11,10 +10,6 @@ function App() {
       <AppContextProvider>
         <PipelineContextProvider>
           <UserContextProvider>
-            <div>
-              <MainNav />
-            </div>
-
             <PipelinePage />
             <ToastContainer />
           </UserContextProvider>

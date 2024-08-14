@@ -4,6 +4,7 @@ import {
   PIPELINE_DELETE_STAGE,
   PIPELINE_MOVE_TASK,
   PIPELINE_REORDER_TASK,
+  PIPELINE_SET_EXISTING_PIPELINES,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
 } from "../constants";
@@ -113,7 +114,11 @@ const pipelineReducer = (state: State, action: Action) => {
           ),
         },
       };
-
+    case PIPELINE_SET_EXISTING_PIPELINES:
+      return {
+        ...state,
+        existingPipelines: action.payload,
+      };
     default:
       return state;
   }

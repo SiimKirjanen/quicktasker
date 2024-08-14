@@ -23,6 +23,7 @@ function wpqt_enqueue_app_assets(){
 		'apiNonce' => wp_create_nonce( 'wpqt_api_nonce' ),
 		'siteURL' => site_url(),
 		'pluginURL' => WP_QUICK_TASKS_PLUGIN_FOLDER_URL,
-		'initialFullPipeline' => $activeFullPipeline
+		'initialFullPipeline' => $activeFullPipeline,
+		'existingPipelines' => $pipelineRepo->getPipelines(),
 	));
 }

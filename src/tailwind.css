@@ -8,9 +8,6 @@
   .wpqt-pipeline-height {
     height: calc(100vh - 120px);
   }
-  .wpqt-stage-tasks-height {
-    max-height: calc(100vh - 250px);
-  }
   .wpqt-strip-btn {
     @apply wpqt-p-0 wpqt-m-0 wpqt-border-none wpqt-border-0 wpqt-bg-transparent;
   }
