@@ -5,6 +5,7 @@ import { moveTaskRequest } from "../../api/api";
 import { Stage } from "./Stage";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
 import { AddStage } from "./AddStage";
+import { Modal } from "../Modal/Modal";
 
 const Pipeline = () => {
   const {
@@ -61,6 +62,7 @@ const Pipeline = () => {
         })}
       </DragDropContext>
       <AddStage pipelineId={activePipeline.id} />
+      <Modal />
     </div>
   );
 };

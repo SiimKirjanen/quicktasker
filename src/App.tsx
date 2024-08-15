@@ -1,8 +1,9 @@
 import { PipelinePage } from "./pages/PipelinePage";
 import { AppContextProvider } from "./providers/AppContextProvider";
+import { ModalContextProvider } from "./providers/ModalContextProvider";
 import { PipelineContextProvider } from "./providers/PipelineContextProvider";
 import { UserContextProvider } from "./providers/UserContextProvider";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -10,8 +11,10 @@ function App() {
       <AppContextProvider>
         <PipelineContextProvider>
           <UserContextProvider>
-            <PipelinePage />
-            <ToastContainer />
+            <ModalContextProvider>
+              <PipelinePage />
+              <ToastContainer />
+            </ModalContextProvider>
           </UserContextProvider>
         </PipelineContextProvider>
       </AppContextProvider>
