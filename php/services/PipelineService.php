@@ -15,11 +15,11 @@ class PipelineService {
             'name' => $name
         ));
 
-        if ($result !== false) {
-            return $wpdb->insert_id;
-        } else {
-            throw new Exception('Failed to create pipeline');
-        }
+        if ($result == false) {
+            throw new Exception('Failed to create a board');
+        } 
+        
+        return $this->pipelineRepository->getPipelineById($wpdb->insert_id);
     }
 
     public function markPipelineAsPrimary($pipelineId) {

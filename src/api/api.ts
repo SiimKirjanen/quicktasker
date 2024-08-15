@@ -5,7 +5,25 @@ import { Stage } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 
 function getPipelineData(pipelineId: string): Promise<WPQTResponse<Pipeline>> {
-  return apiFetch({ path: `/wpqt/v1/pipeline/${pipelineId}` });
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}`,
+    headers: {
+      "Content-Type": "application/json",
+      "X-WPQT-API-Nonce": window.wpqt.apiNonce,
+    },
+  });
+}
+
+function createPipelineRequest(name: string): Promise<WPQTResponse<Pipeline>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines`,
+    method: "POST",
+    data: { name },
+    headers: {
+      "Content-Type": "application/json",
+      "X-WPQT-API-Nonce": window.wpqt.apiNonce,
+    },
+  });
 }
 
 function moveTaskRequest(
@@ -72,4 +90,5 @@ export {
   createTaskRequest,
   createNewStageRequest,
   deleteStageRequest,
+  createPipelineRequest,
 };

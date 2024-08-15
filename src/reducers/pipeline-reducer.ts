@@ -1,4 +1,5 @@
 import {
+  PIPELINE_ADD_EXISTING_PIPELINE,
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
   PIPELINE_DELETE_STAGE,
@@ -118,6 +119,11 @@ const pipelineReducer = (state: State, action: Action) => {
       return {
         ...state,
         existingPipelines: action.payload,
+      };
+    case PIPELINE_ADD_EXISTING_PIPELINE:
+      return {
+        ...state,
+        existingPipelines: [...state.existingPipelines, action.payload],
       };
     default:
       return state;
