@@ -4,13 +4,17 @@ import { Task } from "../types/task";
 import { Stage } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 
+function getCommonHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "X-WPQT-API-Nonce": window.wpqt.apiNonce,
+  };
+}
+
 function getPipelineData(pipelineId: string): Promise<WPQTResponse<Pipeline>> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}`,
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce,
-    },
+    headers: getCommonHeaders(),
   });
 }
 
@@ -19,10 +23,7 @@ function createPipelineRequest(name: string): Promise<WPQTResponse<Pipeline>> {
     path: `/wpqt/v1/pipelines`,
     method: "POST",
     data: { name },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce,
-    },
+    headers: getCommonHeaders(),
   });
 }
 
@@ -35,10 +36,7 @@ function moveTaskRequest(
     path: `/wpqt/v1/tasks/${taskId}/move`,
     method: "PATCH",
     data: { stageId, order },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce,
-    },
+    headers: getCommonHeaders(),
   });
 }
 
@@ -50,10 +48,7 @@ function createTaskRequest(
     path: `/wpqt/v1/tasks`,
     method: "POST",
     data: { stageId, name },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce,
-    },
+    headers: getCommonHeaders(),
   });
 }
 
@@ -65,10 +60,7 @@ function createNewStageRequest(
     path: `/wpqt/v1/stages`,
     method: "POST",
     data: { pipelineId, name },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce,
-    },
+    headers: getCommonHeaders(),
   });
 }
 
@@ -77,10 +69,7 @@ function deleteStageRequest(stageId: string): Promise<WPQTResponse> {
     path: `/wpqt/v1/stages/${stageId}`,
     method: "DELETE",
     data: { stageId },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce,
-    },
+    headers: getCommonHeaders(),
   });
 }
 

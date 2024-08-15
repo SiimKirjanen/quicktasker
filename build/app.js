@@ -7581,13 +7581,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
 
+function getCommonHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "X-WPQT-API-Nonce": window.wpqt.apiNonce
+  };
+}
 function getPipelineData(pipelineId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/pipelines/${pipelineId}`,
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce
-    }
+    headers: getCommonHeaders()
   });
 }
 function createPipelineRequest(name) {
@@ -7597,10 +7600,7 @@ function createPipelineRequest(name) {
     data: {
       name
     },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce
-    }
+    headers: getCommonHeaders()
   });
 }
 function moveTaskRequest(taskId, stageId, order) {
@@ -7611,10 +7611,7 @@ function moveTaskRequest(taskId, stageId, order) {
       stageId,
       order
     },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce
-    }
+    headers: getCommonHeaders()
   });
 }
 function createTaskRequest(stageId, name) {
@@ -7625,10 +7622,7 @@ function createTaskRequest(stageId, name) {
       stageId,
       name
     },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce
-    }
+    headers: getCommonHeaders()
   });
 }
 function createNewStageRequest(pipelineId, name) {
@@ -7639,10 +7633,7 @@ function createNewStageRequest(pipelineId, name) {
       pipelineId,
       name
     },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce
-    }
+    headers: getCommonHeaders()
   });
 }
 function deleteStageRequest(stageId) {
@@ -7652,10 +7643,7 @@ function deleteStageRequest(stageId) {
     data: {
       stageId
     },
-    headers: {
-      "Content-Type": "application/json",
-      "X-WPQT-API-Nonce": window.wpqt.apiNonce
-    }
+    headers: getCommonHeaders()
   });
 }
 

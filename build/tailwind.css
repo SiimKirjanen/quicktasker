@@ -853,10 +853,6 @@
   margin-right: auto;
 }
 
-.wpqt-mr-2 {
-  margin-right: 0.5rem;
-}
-
 .wpqt-flex {
   display: flex;
 }
@@ -916,16 +912,16 @@
   justify-content: center;
 }
 
-.wpqt-gap-\[24px\] {
-  gap: 24px;
-}
-
 .wpqt-gap-1 {
   gap: 0.25rem;
 }
 
 .wpqt-gap-2 {
   gap: 0.5rem;
+}
+
+.wpqt-gap-\[24px\] {
+  gap: 24px;
 }
 
 .wpqt-overflow-hidden {
@@ -1002,10 +998,6 @@
 
 .wpqt-text-center {
   text-align: center;
-}
-
-.wpqt-align-middle {
-  vertical-align: middle;
 }
 
 .wpqt-text-base {
