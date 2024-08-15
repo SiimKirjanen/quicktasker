@@ -8,13 +8,13 @@ import { pipelineReducer } from "../reducers/pipeline-reducer";
 
 const initialState = {
   loading: true,
-  pipeline: null,
+  activePipeline: null,
   existingPipelines: [],
 };
 
 type State = {
   loading: boolean;
-  pipeline: Pipeline | null;
+  activePipeline: Pipeline | null;
   existingPipelines: Pipeline[];
 };
 

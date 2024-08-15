@@ -7,7 +7,7 @@ import { PIPELINE_SET_PIPELINE } from "../../constants";
 
 function PipelineSelection() {
   const {
-    state: { existingPipelines, pipeline },
+    state: { existingPipelines, activePipeline },
     dispatch,
   } = useContext(PipelineContext);
 
@@ -40,7 +40,7 @@ function PipelineSelection() {
           <option
             key={existingPipeline.id}
             value={existingPipeline.id}
-            selected={pipeline!.id === existingPipeline.id}
+            selected={activePipeline!.id === existingPipeline.id}
           >
             {existingPipeline.name}
           </option>

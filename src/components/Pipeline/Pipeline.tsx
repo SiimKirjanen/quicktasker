@@ -8,7 +8,7 @@ import { AddStage } from "./AddStage";
 
 const Pipeline = () => {
   const {
-    state: { pipeline, loading },
+    state: { activePipeline, loading },
     dispatch,
   } = useContext(PipelineContext);
 
@@ -40,17 +40,17 @@ const Pipeline = () => {
 
       moveTaskRequest(draggableId, destination.droppableId, destination.index);
     },
-    [pipeline]
+    [activePipeline]
   );
 
-  if (!pipeline) {
+  if (!activePipeline) {
     return "Loading...";
   }
 
   return (
     <div className="wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height">
       <DragDropContext onDragEnd={onDragEnd}>
-        {pipeline.stages.map((stage) => {
+        {activePipeline.stages.map((stage) => {
           return (
             <Stage
               stageId={stage.id}
@@ -60,7 +60,7 @@ const Pipeline = () => {
           );
         })}
       </DragDropContext>
-      <AddStage pipelineId={pipeline.id} />
+      <AddStage pipelineId={activePipeline.id} />
     </div>
   );
 };

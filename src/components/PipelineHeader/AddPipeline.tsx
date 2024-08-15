@@ -1,6 +1,6 @@
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
-import { createPipelineRequest, getPipelineData } from "../../api/api";
+import { createPipelineRequest } from "../../api/api";
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
 import {
@@ -19,12 +19,12 @@ function AddPipeline() {
         type: PIPELINE_ADD_EXISTING_PIPELINE,
         payload: response.data,
       });
-
-      const resp = await getPipelineData(response.data.id);
-
       dispatch({
         type: PIPELINE_SET_PIPELINE,
-        payload: resp.data,
+        payload: {
+          ...response.data,
+          stages: [],
+        },
       });
     } catch (e) {
       toast.error("Failed to create a board", {

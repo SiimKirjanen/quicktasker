@@ -73,7 +73,7 @@ function wpqt_register_api_routes() {
                     WPQTverifyApiNonce($data);
                     $pipelineService = new PipelineService();
                     $newPipeline = $pipelineService->createPipeline($data['name']);
-                    
+
                     return new WP_REST_Response((new ApiResponse(true, array(), $newPipeline))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);

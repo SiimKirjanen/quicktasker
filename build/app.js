@@ -7714,10 +7714,11 @@ function AddPipeline() {
         type: _constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_EXISTING_PIPELINE,
         payload: response.data
       });
-      const resp = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getPipelineData)(response.data.id);
       dispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_SET_PIPELINE,
-        payload: resp.data
+        payload: Object.assign(Object.assign({}, response.data), {
+          stages: []
+        })
       });
     } catch (e) {
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to create a board", {
@@ -7762,14 +7763,14 @@ __webpack_require__.r(__webpack_exports__);
 function PipelineHeader() {
   const {
     state: {
-      pipeline
+      activePipeline
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__.PipelineContext);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-p-4 wpqt-gap-1",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-text-lg",
-      children: pipeline === null || pipeline === void 0 ? void 0 : pipeline.name
+      children: activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.name
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-ml-auto wpqt-flex wpqt-gap-2",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddPipeline__WEBPACK_IMPORTED_MODULE_4__.AddPipeline, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PipelineSelection__WEBPACK_IMPORTED_MODULE_3__.PipelineSelection, {})]
@@ -7837,7 +7838,7 @@ function PipelineSelection() {
   const {
     state: {
       existingPipelines,
-      pipeline
+      activePipeline
     },
     dispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__.PipelineContext);
@@ -7862,7 +7863,7 @@ function PipelineSelection() {
     children: existingPipelines.map(existingPipeline => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
         value: existingPipeline.id,
-        selected: pipeline.id === existingPipeline.id,
+        selected: activePipeline.id === existingPipeline.id,
         children: existingPipeline.name
       }, existingPipeline.id);
     })
@@ -8073,7 +8074,7 @@ __webpack_require__.r(__webpack_exports__);
 const Pipeline = () => {
   const {
     state: {
-      pipeline,
+      activePipeline,
       loading
     },
     dispatch
@@ -8105,15 +8106,15 @@ const Pipeline = () => {
       });
     }
     (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.moveTaskRequest)(draggableId, destination.droppableId, destination.index);
-  }, [pipeline]);
-  if (!pipeline) {
+  }, [activePipeline]);
+  if (!activePipeline) {
     return "Loading...";
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_6__.DragDropContext, {
       onDragEnd: onDragEnd,
-      children: pipeline.stages.map(stage => {
+      children: activePipeline.stages.map(stage => {
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_3__.Stage, {
           stageId: stage.id,
           stageTasks: stage.tasks,
@@ -8121,7 +8122,7 @@ const Pipeline = () => {
         });
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddStage__WEBPACK_IMPORTED_MODULE_5__.AddStage, {
-      pipelineId: pipeline.id
+      pipelineId: activePipeline.id
     })]
   });
 };
@@ -8450,7 +8451,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const initialState = {
   loading: true,
-  pipeline: null,
+  activePipeline: null,
   existingPipelines: []
 };
 const PipelineContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
@@ -8555,12 +8556,12 @@ const pipelineReducer = (state, action) => {
       });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_PIPELINE:
       return Object.assign(Object.assign({}, state), {
-        pipeline: action.payload
+        activePipeline: action.payload
       });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_MOVE_TASK:
-      const stages = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.moveTask)(state.pipeline.stages, action.payload.source, action.payload.destination);
+      const stages = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.moveTask)(state.activePipeline.stages, action.payload.source, action.payload.destination);
       return Object.assign(Object.assign({}, state), {
-        pipeline: Object.assign(Object.assign({}, state.pipeline), {
+        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
           stages
         })
       });
@@ -8571,13 +8572,13 @@ const pipelineReducer = (state, action) => {
       } = action.payload;
       const targetStageId = destination.droppableId;
       const targetIndex = destination.index;
-      const targetStage = (_a = state.pipeline) === null || _a === void 0 ? void 0 : _a.stages.find(stage => stage.id === targetStageId);
+      const targetStage = (_a = state.activePipeline) === null || _a === void 0 ? void 0 : _a.stages.find(stage => stage.id === targetStageId);
       const reorderedTasks = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.reorderTask)(targetStage.tasks, source.index, targetIndex);
-      const updatedStages = state.pipeline.stages.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
+      const updatedStages = state.activePipeline.stages.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
         tasks: reorderedTasks
       }) : stage);
       return Object.assign(Object.assign({}, state), {
-        pipeline: Object.assign(Object.assign({}, state.pipeline), {
+        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
           stages: updatedStages
         })
       });
@@ -8590,8 +8591,8 @@ const pipelineReducer = (state, action) => {
         }
       } = action.payload;
       return Object.assign(Object.assign({}, state), {
-        pipeline: Object.assign(Object.assign({}, state.pipeline), {
-          stages: state.pipeline.stages.map(stage => stage.id === stageId ? Object.assign(Object.assign({}, stage), {
+        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+          stages: state.activePipeline.stages.map(stage => stage.id === stageId ? Object.assign(Object.assign({}, stage), {
             tasks: [...stage.tasks, {
               id,
               name
@@ -8602,16 +8603,15 @@ const pipelineReducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_STAGE:
       const newStage = action.payload;
       return Object.assign(Object.assign({}, state), {
-        pipeline: Object.assign(Object.assign({}, state.pipeline), {
-          stages: [...state.pipeline.stages, newStage]
+        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+          stages: [...state.activePipeline.stages, newStage]
         })
       });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_DELETE_STAGE:
       const deletedStageId = action.payload;
-      console.log("Deleting stage", deletedStageId);
       return Object.assign(Object.assign({}, state), {
-        pipeline: Object.assign(Object.assign({}, state.pipeline), {
-          stages: state.pipeline.stages.filter(stage => stage.id !== deletedStageId)
+        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+          stages: state.activePipeline.stages.filter(stage => stage.id !== deletedStageId)
         })
       });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_EXISTING_PIPELINES:
