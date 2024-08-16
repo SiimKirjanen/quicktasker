@@ -69,7 +69,7 @@ const pipelineReducer = (state: State, action: Action) => {
     case PIPELINE_ADD_TASK: {
       const {
         targetStageId,
-        task: { id, name },
+        task: { id, name, description },
       }: { targetStageId: string; task: Task } = action.payload;
 
       return {
@@ -85,6 +85,7 @@ const pipelineReducer = (state: State, action: Action) => {
                     {
                       id,
                       name,
+                      description,
                     },
                   ],
                 }

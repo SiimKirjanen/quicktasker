@@ -42,12 +42,13 @@ function moveTaskRequest(
 
 function createTaskRequest(
   stageId: string,
-  name: string
+  name: string,
+  description: string
 ): Promise<WPQTResponse<Task>> {
   return apiFetch({
     path: `/wpqt/v1/tasks`,
     method: "POST",
-    data: { stageId, name },
+    data: { stageId, name, description },
     headers: getCommonHeaders(),
   });
 }
