@@ -34,7 +34,7 @@ function StageControls({ stageId }: Props) {
       <MenuItems
         anchor="bottom"
         transition
-        className="wpqt-p-4 wpqt-bg-white wpqt-rounded-xl wpqt-border wpqt-origin-top wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
+        className="wpqt-p-4 wpqt-bg-white wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-origin-top wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
       >
         <MenuItem>
           <button

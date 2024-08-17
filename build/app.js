@@ -7962,8 +7962,8 @@ function AddStage({
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-p-3 wpqt-main-border wpqt-cursor-pointer hover:wpqt-bg-gray-100",
     onClick: addStage,
-    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-p-3 wpqt-cursor-pointer",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_4__["default"], {
       className: "wpqt-size-6 wpqt-text-green-600"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -8039,12 +8039,12 @@ function AddTask({
       }
     });
   });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-flex wpqt-justify-center wpqt-cursor-pointer wpqt-text-center wpqt-p-2 wpqt-z-10 wpqt-sticky wpqt-bottom-0 wpqt-order-1 wpqt-bg-gray-100",
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-gap-2 wpqt-justify-center wpqt-items-center wpqt-cursor-pointer wpqt-text-center wpqt-p-2 wpqt-mt-2 wpqt-z-10 wpqt-sticky wpqt-bottom-0 wpqt-order-1 wpqt-bg-gray-100 ",
     onClick: openNewTaskModal,
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    children: ["Add task", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_4__["default"], {
       className: "wpqt-size-6 wpqt-text-green-600"
-    })
+    })]
   });
 }
 
@@ -8283,7 +8283,7 @@ function StageControls({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.MenuItems, {
       anchor: "bottom",
       transition: true,
-      className: "wpqt-p-4 wpqt-bg-white wpqt-rounded-xl wpqt-border wpqt-origin-top wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0",
+      className: "wpqt-p-4 wpqt-bg-white wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-origin-top wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.MenuItem, {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
           className: "wpqt-strip-btn wpqt-flex wpqt-items-center wpqt-cursor-pointer",

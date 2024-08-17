@@ -11,6 +11,10 @@
   .wpqt-strip-btn {
     @apply wpqt-p-0 wpqt-m-0 wpqt-border-none wpqt-border-0 wpqt-bg-transparent;
   }
+
+  .wpqt-main-border {
+    @apply wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md;
+  }
 }
 
 /* WordPress style overrides */
@@ -21,4 +25,3 @@
 .wpqt-admin-page #wpbody-content {
   padding-bottom: 0;
 }
-

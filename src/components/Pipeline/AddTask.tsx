@@ -19,9 +19,10 @@ function AddTask({ stageId }: Props) {
 
   return (
     <div
-      className="wpqt-flex wpqt-justify-center wpqt-cursor-pointer wpqt-text-center wpqt-p-2 wpqt-z-10 wpqt-sticky wpqt-bottom-0 wpqt-order-1 wpqt-bg-gray-100"
+      className="wpqt-flex wpqt-gap-2 wpqt-justify-center wpqt-items-center wpqt-cursor-pointer wpqt-text-center wpqt-p-2 wpqt-mt-2 wpqt-z-10 wpqt-sticky wpqt-bottom-0 wpqt-order-1 wpqt-bg-gray-100 "
       onClick={openNewTaskModal}
     >
+      Add task
       <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
     </div>
   );
