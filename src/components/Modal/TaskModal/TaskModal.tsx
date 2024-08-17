@@ -42,6 +42,23 @@ function TaskModal() {
     setTaskModalSaving(false);
   };
 
+  const handleSuccess = (type: string, task: any) => {
+    dispatch({
+      type,
+      payload: {
+        targetStageId,
+        task,
+      },
+    });
+    closeTaskModal();
+    resetTaskModal();
+  };
+
+  const handleError = (error: any) => {
+    setTaskModalSaving(false);
+    console.error(error);
+  };
+
   const addTask = async () => {
     try {
       setTaskModalSaving(true);
@@ -50,54 +67,32 @@ function TaskModal() {
         taskName,
         taskDescription
       );
-
-      dispatch({
-        type: PIPELINE_ADD_TASK,
-        payload: {
-          targetStageId,
-          task: {
-            id: response.data.id,
-            name: response.data.name,
-            description: response.data.description,
-          },
-        },
+      handleSuccess(PIPELINE_ADD_TASK, {
+        id: response.data.id,
+        name: response.data.name,
+        description: response.data.description,
       });
-      closeTaskModal();
-      resetTaskModal();
     } catch (error) {
-      setTaskModalSaving(false);
-      console.error(error);
+      handleError(error);
     }
   };
 
   const editTask = async () => {
     try {
       setTaskModalSaving(true);
-
       await editTaskRequest({
         id: taskToEdit!.id,
         stageId: targetStageId,
         name: taskName,
         description: taskDescription,
       });
-
-      dispatch({
-        type: PIPELINE_EDIT_TASK,
-        payload: {
-          targetStageId,
-          task: {
-            id: taskToEdit!.id,
-            name: taskName,
-            description: taskDescription,
-          },
-        },
+      handleSuccess(PIPELINE_EDIT_TASK, {
+        id: taskToEdit!.id,
+        name: taskName,
+        description: taskDescription,
       });
-
-      closeTaskModal();
-      resetTaskModal();
     } catch (error) {
-      setTaskModalSaving(false);
-      console.error(error);
+      handleError(error);
     }
   };
 

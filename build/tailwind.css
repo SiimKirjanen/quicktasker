@@ -929,6 +929,10 @@
   width: 100vw;
 }
 
+.wpqt-w-\[320px\] {
+  width: 320px;
+}
+
 .wpqt-max-w-md {
   max-width: 28rem;
 }
@@ -1094,6 +1098,22 @@
 
 .wpqt-pt-3 {
   padding-top: 0.75rem;
+}
+
+.wpqt-pr-1 {
+  padding-right: 0.25rem;
+}
+
+.wpqt-pr-3 {
+  padding-right: 0.75rem;
+}
+
+.wpqt-pr-4 {
+  padding-right: 1rem;
+}
+
+.wpqt-pr-5 {
+  padding-right: 1.25rem;
 }
 
 .wpqt-text-center {

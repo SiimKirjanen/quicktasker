@@ -7757,26 +7757,32 @@ function TaskModal() {
     setTaskDescription("");
     setTaskModalSaving(false);
   };
+  const handleSuccess = (type, task) => {
+    dispatch({
+      type,
+      payload: {
+        targetStageId,
+        task
+      }
+    });
+    closeTaskModal();
+    resetTaskModal();
+  };
+  const handleError = error => {
+    setTaskModalSaving(false);
+    console.error(error);
+  };
   const addTask = () => __awaiter(this, void 0, void 0, function* () {
     try {
       setTaskModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(targetStageId, taskName, taskDescription);
-      dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK,
-        payload: {
-          targetStageId,
-          task: {
-            id: response.data.id,
-            name: response.data.name,
-            description: response.data.description
-          }
-        }
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, {
+        id: response.data.id,
+        name: response.data.name,
+        description: response.data.description
       });
-      closeTaskModal();
-      resetTaskModal();
     } catch (error) {
-      setTaskModalSaving(false);
-      console.error(error);
+      handleError(error);
     }
   });
   const editTask = () => __awaiter(this, void 0, void 0, function* () {
@@ -7788,22 +7794,13 @@ function TaskModal() {
         name: taskName,
         description: taskDescription
       });
-      dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK,
-        payload: {
-          targetStageId,
-          task: {
-            id: taskToEdit.id,
-            name: taskName,
-            description: taskDescription
-          }
-        }
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK, {
+        id: taskToEdit.id,
+        name: taskName,
+        description: taskDescription
       });
-      closeTaskModal();
-      resetTaskModal();
     } catch (error) {
-      setTaskModalSaving(false);
-      console.error(error);
+      handleError(error);
     }
   });
   const saveTask = () => {
@@ -8238,7 +8235,7 @@ function AddStage({
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-p-3 wpqt-main-border wpqt-cursor-pointer hover:wpqt-bg-gray-100",
+    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-p-3 wpqt-mb-3 wpqt-main-border wpqt-cursor-pointer hover:wpqt-bg-gray-100",
     onClick: addStage,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_4__["default"], {
       className: "wpqt-size-6 wpqt-text-green-600"
@@ -8395,7 +8392,7 @@ const Pipeline = () => {
     return "Loading...";
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height",
+    className: "wpqt-flex wpqt-gap-[24px] wpqt-pr-5 wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_7__.DragDropContext, {
       onDragEnd: onDragEnd,
       children: activePipeline.stages.map(stage => {
@@ -8446,7 +8443,7 @@ function Stage({
     droppableId: stageId,
     children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       ref: provided.innerRef,
-      className: `wpqt-flex wpqt-flex-col wpqt-w-[350px] wpqt-flex-none wpqt-mb-3 wpqt-max-h-full wpqt-relative wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md`,
+      className: `wpqt-flex wpqt-flex-col wpqt-w-[320px] wpqt-flex-none wpqt-mb-3 wpqt-max-h-full wpqt-relative wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md`,
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-mb-4 wpqt-px-3 wpqt-pt-3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {

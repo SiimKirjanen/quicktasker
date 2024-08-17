@@ -49,7 +49,7 @@ const Pipeline = () => {
   }
 
   return (
-    <div className="wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height">
+    <div className="wpqt-flex wpqt-gap-[24px] wpqt-pr-5 wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height">
       <DragDropContext onDragEnd={onDragEnd}>
         {activePipeline.stages.map((stage) => {
           return (

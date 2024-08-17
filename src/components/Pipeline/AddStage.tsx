@@ -27,7 +27,7 @@ function AddStage({ pipelineId }: Props) {
 
   return (
     <div
-      className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-p-3 wpqt-main-border wpqt-cursor-pointer hover:wpqt-bg-gray-100"
+      className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-p-3 wpqt-mb-3 wpqt-main-border wpqt-cursor-pointer hover:wpqt-bg-gray-100"
       onClick={addStage}
     >
       <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
