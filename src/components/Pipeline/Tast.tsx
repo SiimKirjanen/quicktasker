@@ -28,10 +28,13 @@ function Task({ task, index }: Props) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="wpqt-bg-white wpqt-border wpqt-border-gray-200 wpqt-rounded wpqt-p-3 wpqt-mb-2 wpqt-shadow !wpqt-cursor-pointer"
+          className="wpqt-bg-white wpqt-border wpqt-border-gray-200 wpqt-rounded wpqt-p-3 wpqt-mb-2 wpqt-mx-3 wpqt-shadow !wpqt-cursor-pointer"
           onClick={openEditTaskModal}
         >
-          <div className="wpqt-text-sm">{task.name}</div>
+          <div className="wpqt-text-base">{task.name}</div>
+          {task.description && (
+            <div className="wpqt-text-sm">{task.description}</div>
+          )}
         </div>
       )}
     </Draggable>

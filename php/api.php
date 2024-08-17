@@ -123,7 +123,8 @@ function wpqt_register_api_routes() {
                     WPQTverifyApiNonce($data);
                     $taskService = new TaskService();
                     $newTask = $taskService->createTask( $data['stageId'], array(
-                        "name" => $data['name']
+                        "name" => $data['name'],
+                        "description" => $data['description']
                     ) );
                     return new WP_REST_Response((new ApiResponse(true, array(), $newTask))->toArray(), 200);
                 } catch (Exception $e) {

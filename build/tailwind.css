@@ -845,6 +845,16 @@
   order: 1;
 }
 
+.wpqt-mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.wpqt-mx-3 {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+
 .wpqt-mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -867,6 +877,14 @@
 
 .wpqt-mt-4 {
   margin-top: 1rem;
+}
+
+.wpqt-ml-3 {
+  margin-left: 0.75rem;
+}
+
+.wpqt-mr-3 {
+  margin-right: 0.75rem;
 }
 
 .wpqt-block {
@@ -1071,6 +1089,10 @@
   padding-bottom: 0px;
 }
 
+.wpqt-pt-3 {
+  padding-top: 0.75rem;
+}
+
 .wpqt-text-center {
   text-align: center;
 }
@@ -1257,5 +1279,6 @@
 .data-\[focus\]\:wpqt-outline-white\/25[data-focus] {
   outline-color: rgb(255 255 255 / 0.25);
 }
+
 
 /*# sourceMappingURL=tailwind.css.map */
