@@ -57,6 +57,7 @@ const Pipeline = () => {
               stageId={stage.id}
               stageTasks={stage.tasks}
               stageName={stage.name}
+              stageDescription={stage.description}
             />
           );
         })}

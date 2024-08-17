@@ -845,11 +845,6 @@
   order: 1;
 }
 
-.wpqt-mx-4 {
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
-
 .wpqt-mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
@@ -877,14 +872,6 @@
 
 .wpqt-mt-4 {
   margin-top: 1rem;
-}
-
-.wpqt-ml-3 {
-  margin-left: 0.75rem;
-}
-
-.wpqt-mr-3 {
-  margin-right: 0.75rem;
 }
 
 .wpqt-block {
@@ -938,12 +925,28 @@
   width: 100vw;
 }
 
+.wpqt-w-\[350px\] {
+  width: 350px;
+}
+
 .wpqt-max-w-md {
   max-width: 28rem;
 }
 
 .wpqt-flex-none {
   flex: none;
+}
+
+.wpqt-flex-1 {
+  flex: 1 1 0%;
+}
+
+.wpqt-flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.wpqt-flex-grow-0 {
+  flex-grow: 0;
 }
 
 .wpqt-origin-top {
@@ -964,6 +967,10 @@
 
 .wpqt-flex-col {
   flex-direction: column;
+}
+
+.wpqt-flex-wrap {
+  flex-wrap: wrap;
 }
 
 .wpqt-items-center {
@@ -1030,9 +1037,18 @@
   border-width: 1px;
 }
 
+.wpqt-border-solid {
+  border-style: solid;
+}
+
 .wpqt-border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
+}
+
+.wpqt-border-qtBorder {
+  --tw-border-opacity: 1;
+  border-color: rgb(208 215 222 / var(--tw-border-opacity));
 }
 
 .wpqt-bg-black\/40 {

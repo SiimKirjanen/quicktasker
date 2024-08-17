@@ -8126,7 +8126,8 @@ const Pipeline = () => {
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_3__.Stage, {
           stageId: stage.id,
           stageTasks: stage.tasks,
-          stageName: stage.name
+          stageName: stage.name,
+          stageDescription: stage.description
         });
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddStage__WEBPACK_IMPORTED_MODULE_5__.AddStage, {
@@ -8162,23 +8163,27 @@ __webpack_require__.r(__webpack_exports__);
 function Stage({
   stageId,
   stageTasks,
-  stageName
+  stageName,
+  stageDescription
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
     droppableId: stageId,
     children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       ref: provided.innerRef,
-      className: `wpqt-flex wpqt-flex-col wpqt-w-[280px] wpqt-flex-none wpqt-max-h-full wpqt-relative wpqt-pb-0 wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-rounded-md ${snapshot.isDraggingOver ? "wpqt-bg-blue-400" : ""}`,
+      className: `wpqt-flex wpqt-flex-col wpqt-w-[350px] wpqt-flex-none wpqt-mb-3 wpqt-max-h-full wpqt-relative wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md`,
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "wpqt-flex wpqt-items-center wpqt-mb-4 wpqt-px-3 wpqt-pt-3",
+        className: "wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-mb-4 wpqt-px-3 wpqt-pt-3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-text-base wpqt-leading-none wpqt-mr-auto",
           children: stageName
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageControls__WEBPACK_IMPORTED_MODULE_3__.StageControls, {
           stageId: stageId
+        }), stageDescription && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-text-sm wpqt-flex-grow-0 wpqt-flex-shrink-0 wpqt-w-full",
+          children: stageDescription
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "wpqt-flex wpqt-flex-col wpqt-overflow-y-auto wpqt-h-full wpqt-custom-scrollbar",
+        className: "wpqt-flex wpqt-flex-col wpqt-overflow-y-auto wpqt-h-full",
         children: [stageTasks.map((task, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
           task: task,
           index: index
