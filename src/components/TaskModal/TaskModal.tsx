@@ -1,11 +1,8 @@
 import {
-  Button,
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
-  Fieldset,
-  Textarea,
 } from "@headlessui/react";
 import { useContext, useState, useEffect } from "@wordpress/element";
 import { ModalContext } from "../../providers/ModalContextProvider";
@@ -16,8 +13,8 @@ import {
 } from "../../constants";
 import { createTaskRequest, editTaskRequest } from "../../api/api";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
-import { Field, Input, Label } from "@headlessui/react";
-import { clsx } from "clsx";
+
+import ModalContent from "./TaskModalContent";
 
 function TaskModal() {
   const {
@@ -78,7 +75,6 @@ function TaskModal() {
   };
 
   const editTask = async () => {
-    console.log(targetStageId);
     try {
       setTaskModalSaving(true);
 
@@ -134,51 +130,15 @@ function TaskModal() {
               {editingTask ? "Edit task" : "Add task"}
             </DialogTitle>
 
-            <Fieldset className="space-y-6 rounded-xl bg-white/5 p-6 sm:p-10">
-              <Field className="wpqt-mb-3">
-                <Label className="wpqt-block wpqt-text-sm/6 wpqt-font-medium wpqt-mb-2">
-                  Name
-                </Label>
-
-                <Input
-                  className={clsx(
-                    "wpqt-block wpqt-w-full wpqt-border-1 wpqt-rounded-lg wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6",
-                    "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"
-                  )}
-                  value={taskName}
-                  onChange={(e) => setTaskName(e.target.value)}
-                />
-              </Field>
-
-              <Field>
-                <Label className="wpqt-block wpqt-text-sm/6 wpqt-font-medium wpqt-mb-2">
-                  Description
-                </Label>
-
-                <Textarea
-                  className={clsx(
-                    "wpqt-block wpqt-w-full wpqt-resize-none wpqt-border-1 wpqt-rounded-lg wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6",
-                    "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"
-                  )}
-                  rows={3}
-                  value={taskDescription}
-                  onChange={(e) => setTaskDescription(e.target.value)}
-                />
-              </Field>
-            </Fieldset>
-
-            <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
-              <Button
-                className="wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white data-[open]:wpqt-bg-gray-700"
-                onClick={saveTask}
-              >
-                {taskModalSaving
-                  ? "Saving..."
-                  : editingTask
-                  ? "Edit task"
-                  : "Add task"}
-              </Button>
-            </div>
+            <ModalContent
+              taskName={taskName}
+              setTaskName={setTaskName}
+              taskDescription={taskDescription}
+              setTaskDescription={setTaskDescription}
+              saveTask={saveTask}
+              taskModalSaving={taskModalSaving}
+              editingTask={editingTask}
+            />
           </DialogPanel>
         </div>
       </div>
