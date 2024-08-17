@@ -19,7 +19,7 @@ function AddTask({ stageId }: Props) {
 
   return (
     <div
-      className="wpqt-flex wpqt-gap-2 wpqt-justify-center wpqt-items-center wpqt-cursor-pointer wpqt-text-center wpqt-p-2 wpqt-mt-2 wpqt-z-10 wpqt-sticky wpqt-bottom-0 wpqt-order-1 wpqt-bg-gray-100 "
+      className="wpqt-sticky wpqt-bottom-0 wpqt-z-10 wpqt-order-1 wpqt-mt-2 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 wpqt-text-center"
       onClick={openNewTaskModal}
     >
       Add task

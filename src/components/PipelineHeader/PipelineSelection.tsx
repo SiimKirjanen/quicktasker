@@ -12,7 +12,7 @@ function PipelineSelection() {
   } = useContext(PipelineContext);
 
   const changePipeline = async (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     try {
       const resp = await getPipelineData(event.target.value);
@@ -31,7 +31,7 @@ function PipelineSelection() {
   return (
     <Select
       name="status"
-      className="wpqt-border data-[hover]:wpqt-shadow data-[focus]:wpqt-bg-blue-100"
+      className="wpqt-border data-[focus]:wpqt-bg-blue-100 data-[hover]:wpqt-shadow"
       aria-label="Board selection"
       onChange={changePipeline}
     >

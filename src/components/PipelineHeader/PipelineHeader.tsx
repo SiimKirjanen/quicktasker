@@ -9,7 +9,7 @@ function PipelineHeader() {
   } = useContext(PipelineContext);
 
   return (
-    <div className="wpqt-flex wpqt-p-4 wpqt-gap-1">
+    <div className="wpqt-flex wpqt-gap-1 wpqt-p-4">
       <div className="wpqt-text-lg">{activePipeline?.name}</div>
       <div className="wpqt-ml-auto wpqt-flex wpqt-gap-2">
         <AddPipeline />

@@ -7865,19 +7865,19 @@ function ModalContent({
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Field, {
         className: "wpqt-mb-3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.Label, {
-          className: "wpqt-block wpqt-text-sm/6 wpqt-font-medium wpqt-mb-2",
+          className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Name"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Input, {
-          className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-block wpqt-w-full wpqt-border-1 wpqt-rounded-lg wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
+          className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           value: taskName,
           onChange: e => setTaskName(e.target.value)
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Field, {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.Label, {
-          className: "wpqt-block wpqt-text-sm/6 wpqt-font-medium wpqt-mb-2",
+          className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Description"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Textarea, {
-          className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-block wpqt-w-full wpqt-resize-none wpqt-border-1 wpqt-rounded-lg wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
+          className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-resize-none wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           rows: 3,
           value: taskDescription,
           onChange: e => setTaskDescription(e.target.value)
@@ -7886,7 +7886,7 @@ function ModalContent({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Button, {
-        className: "wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white data-[open]:wpqt-bg-gray-700",
+        className: "wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white",
         onClick: saveTask,
         children: taskModalSaving ? "Saving..." : editingTask ? "Edit task" : "Add task"
       })
@@ -7930,7 +7930,7 @@ function WPQTModal({
         className: "wpqt-flex wpqt-min-h-full wpqt-items-center wpqt-justify-center wpqt-p-4",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.DialogPanel, {
           transition: true,
-          className: "wpqt-w-full wpqt-max-w-md wpqt-rounded-xl wpqt-bg-white wpqt-p-6 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-transform-[wpqt-scale(95%)] data-[closed]:wpqt-opacity-0",
+          className: "data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-w-full wpqt-max-w-md wpqt-rounded-xl wpqt-bg-white wpqt-p-6 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0",
           children: children
         })
       })
@@ -8018,7 +8018,7 @@ function AddPipeline() {
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-items-center wpqt-cursor-pointer",
+    className: "wpqt-flex wpqt-cursor-pointer wpqt-items-center",
     onClick: addPipeline,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_6__["default"], {
       className: "wpqt-size-6 wpqt-text-green-600"
@@ -8058,7 +8058,7 @@ function PipelineHeader() {
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__.PipelineContext);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-p-4 wpqt-gap-1",
+    className: "wpqt-flex wpqt-gap-1 wpqt-p-4",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-text-lg",
       children: activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.name
@@ -8148,7 +8148,7 @@ function PipelineSelection() {
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Select, {
     name: "status",
-    className: "wpqt-border data-[hover]:wpqt-shadow data-[focus]:wpqt-bg-blue-100",
+    className: "wpqt-border data-[focus]:wpqt-bg-blue-100 data-[hover]:wpqt-shadow",
     "aria-label": "Board selection",
     onChange: changePipeline,
     children: existingPipelines.map(existingPipeline => {
@@ -8235,7 +8235,7 @@ function AddStage({
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-p-3 wpqt-mb-3 wpqt-main-border wpqt-cursor-pointer hover:wpqt-bg-gray-100",
+    className: "wpqt-main-border wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-p-3 hover:wpqt-bg-gray-100",
     onClick: addStage,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_4__["default"], {
       className: "wpqt-size-6 wpqt-text-green-600"
@@ -8313,7 +8313,7 @@ function AddTask({
     });
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-gap-2 wpqt-justify-center wpqt-items-center wpqt-cursor-pointer wpqt-text-center wpqt-p-2 wpqt-mt-2 wpqt-z-10 wpqt-sticky wpqt-bottom-0 wpqt-order-1 wpqt-bg-gray-100 ",
+    className: "wpqt-sticky wpqt-bottom-0 wpqt-z-10 wpqt-order-1 wpqt-mt-2 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 wpqt-text-center",
     onClick: openNewTaskModal,
     children: ["Add task", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_4__["default"], {
       className: "wpqt-size-6 wpqt-text-green-600"
@@ -8392,7 +8392,7 @@ const Pipeline = () => {
     return "Loading...";
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-gap-[24px] wpqt-pr-5 wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height",
+    className: "wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pr-5",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_7__.DragDropContext, {
       onDragEnd: onDragEnd,
       children: activePipeline.stages.map(stage => {
@@ -8443,20 +8443,20 @@ function Stage({
     droppableId: stageId,
     children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       ref: provided.innerRef,
-      className: `wpqt-flex wpqt-flex-col wpqt-w-[320px] wpqt-flex-none wpqt-mb-3 wpqt-max-h-full wpqt-relative wpqt-overflow-hidden wpqt-bg-gray-100 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md`,
+      className: `wpqt-relative wpqt-mb-3 wpqt-flex wpqt-max-h-full wpqt-w-[320px] wpqt-flex-none wpqt-flex-col wpqt-overflow-hidden wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-gray-100`,
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-mb-4 wpqt-px-3 wpqt-pt-3",
+        className: "wpqt-mb-4 wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-px-3 wpqt-pt-3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "wpqt-text-base wpqt-leading-none wpqt-mr-auto",
+          className: "wpqt-mr-auto wpqt-text-base wpqt-leading-none",
           children: stageName
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageControls__WEBPACK_IMPORTED_MODULE_3__.StageControls, {
           stageId: stageId
         }), stageDescription && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "wpqt-text-sm wpqt-flex-grow-0 wpqt-flex-shrink-0 wpqt-w-full",
+          className: "wpqt-w-full wpqt-flex-shrink-0 wpqt-flex-grow-0 wpqt-text-sm",
           children: stageDescription
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "wpqt-flex wpqt-flex-col wpqt-overflow-y-auto wpqt-h-full",
+        className: "wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto",
         children: [stageTasks.map((task, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
           task: task,
           index: index
@@ -8556,10 +8556,10 @@ function StageControls({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.MenuItems, {
       anchor: "bottom",
       transition: true,
-      className: "wpqt-p-4 wpqt-bg-white wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-origin-top wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0",
+      className: "wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.MenuItem, {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
-          className: "wpqt-strip-btn wpqt-flex wpqt-items-center wpqt-cursor-pointer",
+          className: "wpqt-strip-btn wpqt-flex wpqt-cursor-pointer wpqt-items-center",
           onClick: deleteStage,
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_8__["default"], {
             className: "wpqt-size-4 wpqt-text-red-600"
@@ -8616,7 +8616,7 @@ function Task({
     children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({
       ref: provided.innerRef
     }, provided.draggableProps, provided.dragHandleProps, {
-      className: "wpqt-bg-white wpqt-border wpqt-border-gray-200 wpqt-rounded wpqt-p-3 wpqt-mb-2 wpqt-mx-3 wpqt-shadow !wpqt-cursor-pointer",
+      className: "wpqt-mx-3 wpqt-mb-2 !wpqt-cursor-pointer wpqt-rounded wpqt-border wpqt-border-gray-200 wpqt-bg-white wpqt-p-3 wpqt-shadow",
       onClick: openEditTaskModal,
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-base",

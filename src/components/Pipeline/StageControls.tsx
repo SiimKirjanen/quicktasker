@@ -34,11 +34,11 @@ function StageControls({ stageId }: Props) {
       <MenuItems
         anchor="bottom"
         transition
-        className="wpqt-p-4 wpqt-bg-white wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-origin-top wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
+        className="wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
       >
         <MenuItem>
           <button
-            className="wpqt-strip-btn wpqt-flex wpqt-items-center wpqt-cursor-pointer"
+            className="wpqt-strip-btn wpqt-flex wpqt-cursor-pointer wpqt-items-center"
             onClick={deleteStage}
           >
             <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />

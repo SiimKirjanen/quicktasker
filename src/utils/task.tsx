@@ -12,15 +12,15 @@ import { Task } from "../types/task";
 const moveTask = (
   stages: Stage[],
   droppableSource: { index: number; droppableId: string },
-  droppableDestination: { index: number; droppableId: string }
+  droppableDestination: { index: number; droppableId: string },
 ): Stage[] => {
   const stagesClone = [...stages];
 
   const sourceStage = stagesClone.find(
-    (stage) => stage.id === droppableSource.droppableId
+    (stage) => stage.id === droppableSource.droppableId,
   );
   const destinationStage = stagesClone.find(
-    (stage) => stage.id === droppableDestination.droppableId
+    (stage) => stage.id === droppableDestination.droppableId,
   );
   if (sourceStage && destinationStage) {
     const [removed] = sourceStage.tasks.splice(droppableSource.index, 1);

@@ -41,7 +41,7 @@ const Pipeline = () => {
 
       moveTaskRequest(draggableId, destination.droppableId, destination.index);
     },
-    [activePipeline]
+    [activePipeline],
   );
 
   if (!activePipeline) {
@@ -49,7 +49,7 @@ const Pipeline = () => {
   }
 
   return (
-    <div className="wpqt-flex wpqt-gap-[24px] wpqt-pr-5 wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pipeline-height">
+    <div className="wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pr-5">
       <DragDropContext onDragEnd={onDragEnd}>
         {activePipeline.stages.map((stage) => {
           return (

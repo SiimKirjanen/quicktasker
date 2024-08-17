@@ -28,7 +28,7 @@ function Task({ task, index }: Props) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="wpqt-bg-white wpqt-border wpqt-border-gray-200 wpqt-rounded wpqt-p-3 wpqt-mb-2 wpqt-mx-3 wpqt-shadow !wpqt-cursor-pointer"
+          className="wpqt-mx-3 wpqt-mb-2 !wpqt-cursor-pointer wpqt-rounded wpqt-border wpqt-border-gray-200 wpqt-bg-white wpqt-p-3 wpqt-shadow"
           onClick={openEditTaskModal}
         >
           <div className="wpqt-text-base">{task.name}</div>

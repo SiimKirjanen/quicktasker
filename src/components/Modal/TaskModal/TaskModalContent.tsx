@@ -31,26 +31,26 @@ function ModalContent({
     <>
       <Fieldset className="space-y-6 rounded-xl bg-white/5 p-6 sm:p-10">
         <Field className="wpqt-mb-3">
-          <Label className="wpqt-block wpqt-text-sm/6 wpqt-font-medium wpqt-mb-2">
+          <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">
             Name
           </Label>
           <Input
             className={clsx(
-              "wpqt-block wpqt-w-full wpqt-border-1 wpqt-rounded-lg wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6",
-              "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"
+              "wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6",
+              "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25",
             )}
             value={taskName}
             onChange={(e) => setTaskName(e.target.value)}
           />
         </Field>
         <Field>
-          <Label className="wpqt-block wpqt-text-sm/6 wpqt-font-medium wpqt-mb-2">
+          <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">
             Description
           </Label>
           <Textarea
             className={clsx(
-              "wpqt-block wpqt-w-full wpqt-resize-none wpqt-border-1 wpqt-rounded-lg wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6",
-              "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"
+              "wpqt-border-1 wpqt-block wpqt-w-full wpqt-resize-none wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6",
+              "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25",
             )}
             rows={3}
             value={taskDescription}
@@ -60,14 +60,14 @@ function ModalContent({
       </Fieldset>
       <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
         <Button
-          className="wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white data-[open]:wpqt-bg-gray-700"
+          className="wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white"
           onClick={saveTask}
         >
           {taskModalSaving
             ? "Saving..."
             : editingTask
-            ? "Edit task"
-            : "Add task"}
+              ? "Edit task"
+              : "Add task"}
         </Button>
       </div>
     </>

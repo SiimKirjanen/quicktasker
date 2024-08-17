@@ -31,7 +31,7 @@ const pipelineReducer = (state: State, action: Action) => {
       const stages = moveTask(
         state.activePipeline!.stages,
         action.payload.source,
-        action.payload.destination
+        action.payload.destination,
       );
 
       return {
@@ -47,17 +47,19 @@ const pipelineReducer = (state: State, action: Action) => {
       const targetIndex = destination.index;
 
       const targetStage = state.activePipeline?.stages.find(
-        (stage) => stage.id === targetStageId
+        (stage) => stage.id === targetStageId,
       );
 
       const reorderedTasks = reorderTask(
         targetStage!.tasks,
         source.index,
-        targetIndex
+        targetIndex,
       );
 
       const updatedStages = state.activePipeline!.stages.map((stage) =>
-        stage.id === targetStageId ? { ...stage, tasks: reorderedTasks } : stage
+        stage.id === targetStageId
+          ? { ...stage, tasks: reorderedTasks }
+          : stage,
       );
 
       return {
@@ -90,7 +92,7 @@ const pipelineReducer = (state: State, action: Action) => {
                     },
                   ],
                 }
-              : stage
+              : stage,
           ),
         },
       };
@@ -114,10 +116,10 @@ const pipelineReducer = (state: State, action: Action) => {
                       name,
                       description,
                     }
-                  : task
+                  : task,
               ),
             }
-          : stage
+          : stage,
       );
 
       return {
@@ -146,7 +148,7 @@ const pipelineReducer = (state: State, action: Action) => {
         activePipeline: {
           ...state.activePipeline,
           stages: state.activePipeline!.stages.filter(
-            (stage) => stage.id !== deletedStageId
+            (stage) => stage.id !== deletedStageId,
           ),
         },
       };

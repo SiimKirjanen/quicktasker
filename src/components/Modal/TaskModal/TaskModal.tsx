@@ -65,7 +65,7 @@ function TaskModal() {
       const response = await createTaskRequest(
         targetStageId,
         taskName,
-        taskDescription
+        taskDescription,
       );
       handleSuccess(PIPELINE_ADD_TASK, {
         id: response.data.id,

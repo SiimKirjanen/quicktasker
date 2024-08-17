@@ -35,7 +35,7 @@ function AddPipeline() {
 
   return (
     <div
-      className="wpqt-flex wpqt-items-center wpqt-cursor-pointer"
+      className="wpqt-flex wpqt-cursor-pointer wpqt-items-center"
       onClick={addPipeline}
     >
       <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
