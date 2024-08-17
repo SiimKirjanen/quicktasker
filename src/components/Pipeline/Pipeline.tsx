@@ -5,7 +5,7 @@ import { moveTaskRequest } from "../../api/api";
 import { Stage } from "./Stage";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
 import { AddStage } from "./AddStage";
-import { TaskModal } from "../TaskModal/TaskModal";
+import { TaskModal } from "../Modal/TaskModal/TaskModal";
 
 const Pipeline = () => {
   const {

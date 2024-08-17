@@ -5,6 +5,15 @@ import {
 } from "../constants";
 import { Action, State } from "../providers/ModalContextProvider";
 
+const closeModal = (state: State) => {
+  return {
+    ...state,
+    taskModalOpen: false,
+    targetStageId: "",
+    taskToEdit: null,
+  };
+};
+
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case OPEN_NEW_TASK_MODAL: {
@@ -28,12 +37,7 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case CLOSE_TASK_MODAL: {
-      return {
-        ...state,
-        taskModalOpen: false,
-        targetStageId: "",
-        taskToEdit: null,
-      };
+      return closeModal(state);
     }
     default:
       return state;

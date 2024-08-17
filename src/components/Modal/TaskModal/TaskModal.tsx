@@ -1,20 +1,16 @@
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
+import { DialogTitle } from "@headlessui/react";
 import { useContext, useState, useEffect } from "@wordpress/element";
-import { ModalContext } from "../../providers/ModalContextProvider";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 import {
   CLOSE_TASK_MODAL,
   PIPELINE_ADD_TASK,
   PIPELINE_EDIT_TASK,
-} from "../../constants";
-import { createTaskRequest, editTaskRequest } from "../../api/api";
-import { PipelineContext } from "../../providers/PipelineContextProvider";
+} from "../../../constants";
+import { createTaskRequest, editTaskRequest } from "../../../api/api";
+import { PipelineContext } from "../../../providers/PipelineContextProvider";
 
-import ModalContent from "./TaskModalContent";
+import TaskModalContent from "./TaskModalContent";
+import { WPQTModal } from "../WPQTModal";
 
 function TaskModal() {
   const {
@@ -110,39 +106,24 @@ function TaskModal() {
   };
 
   return (
-    <Dialog
-      open={taskModalOpen}
-      as="div"
-      className="wpqt-relative wpqt-z-10 focus:wpqt-outline-none"
-      onClose={closeTaskModal}
-    >
-      <DialogBackdrop className="wpqt-fixed wpqt-inset-0 wpqt-bg-black/40" />
-      <div className="wpqt-fixed wpqt-inset-0 wpqt-z-10 wpqt-w-screen wpqt-overflow-y-auto">
-        <div className="wpqt-flex wpqt-min-h-full wpqt-items-center wpqt-justify-center wpqt-p-4">
-          <DialogPanel
-            transition
-            className="wpqt-w-full wpqt-max-w-md wpqt-rounded-xl wpqt-bg-white wpqt-p-6 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-transform-[wpqt-scale(95%)] data-[closed]:wpqt-opacity-0"
-          >
-            <DialogTitle
-              as="div"
-              className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
-            >
-              {editingTask ? "Edit task" : "Add task"}
-            </DialogTitle>
+    <WPQTModal modalOpen={taskModalOpen} closeModal={closeTaskModal}>
+      <DialogTitle
+        as="div"
+        className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
+      >
+        {editingTask ? "Edit task" : "Add task"}
+      </DialogTitle>
 
-            <ModalContent
-              taskName={taskName}
-              setTaskName={setTaskName}
-              taskDescription={taskDescription}
-              setTaskDescription={setTaskDescription}
-              saveTask={saveTask}
-              taskModalSaving={taskModalSaving}
-              editingTask={editingTask}
-            />
-          </DialogPanel>
-        </div>
-      </div>
-    </Dialog>
+      <TaskModalContent
+        taskName={taskName}
+        setTaskName={setTaskName}
+        taskDescription={taskDescription}
+        setTaskDescription={setTaskDescription}
+        saveTask={saveTask}
+        taskModalSaving={taskModalSaving}
+        editingTask={editingTask}
+      />
+    </WPQTModal>
   );
 }
 

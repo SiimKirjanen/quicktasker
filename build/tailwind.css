@@ -870,16 +870,12 @@
   margin-right: auto;
 }
 
-.wpqt-mt-4 {
-  margin-top: 1rem;
-}
-
-.wpqt-mt-3 {
-  margin-top: 0.75rem;
-}
-
 .wpqt-mt-2 {
   margin-top: 0.5rem;
+}
+
+.wpqt-mt-4 {
+  margin-top: 1rem;
 }
 
 .wpqt-block {
@@ -1166,11 +1162,6 @@
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.wpqt-text-green-500 {
-  --tw-text-opacity: 1;
-  color: rgb(34 197 94 / var(--tw-text-opacity));
-}
-
 .wpqt-shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -1247,11 +1238,6 @@
 .hover\:wpqt-bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
-}
-
-.hover\:wpqt-bg-gray-200:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
 .focus\:wpqt-outline-none:focus {
