@@ -53,6 +53,19 @@ function createTaskRequest(
   });
 }
 
+function editTaskRequest(task: Task): Promise<WPQTResponse<Task>> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${task.id}`,
+    method: "PATCH",
+    data: {
+      id: task.id,
+      name: task.name,
+      description: task.description,
+    },
+    headers: getCommonHeaders(),
+  });
+}
+
 function createNewStageRequest(
   pipelineId: string,
   name: string
@@ -81,4 +94,5 @@ export {
   createNewStageRequest,
   deleteStageRequest,
   createPipelineRequest,
+  editTaskRequest,
 };

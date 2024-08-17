@@ -1,5 +1,5 @@
 import { useContext } from "@wordpress/element";
-import { NEW_TASK_MODAL_OPEN } from "../../constants";
+import { OPEN_NEW_TASK_MODAL } from "../../constants";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { ModalContext } from "../../providers/ModalContextProvider";
 
@@ -12,8 +12,8 @@ function AddTask({ stageId }: Props) {
 
   const openNewTaskModal = async () => {
     modalDispatch({
-      type: NEW_TASK_MODAL_OPEN,
-      payload: { targetStageId: stageId, taskModalOpen: true },
+      type: OPEN_NEW_TASK_MODAL,
+      payload: { targetStageId: stageId },
     });
   };
 

@@ -1,19 +1,40 @@
-import { NEW_TASK_MODAL_OPEN } from "../constants";
+import {
+  OPEN_NEW_TASK_MODAL,
+  OPEN_EDIT_TASK_MODAL,
+  CLOSE_TASK_MODAL,
+} from "../constants";
 import { Action, State } from "../providers/ModalContextProvider";
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
-    case NEW_TASK_MODAL_OPEN:
-      const {
-        taskModalOpen,
-        targetStageId = "",
-      }: { taskModalOpen: boolean; targetStageId?: string } = action.payload;
+    case OPEN_NEW_TASK_MODAL: {
+      const { targetStageId }: { targetStageId: string } = action.payload;
 
       return {
         ...state,
-        taskModalOpen,
+        taskModalOpen: true,
         targetStageId,
+        taskToEdit: null,
       };
+    }
+    case OPEN_EDIT_TASK_MODAL: {
+      const { taskToEdit } = action.payload;
+
+      return {
+        ...state,
+        taskModalOpen: true,
+        taskToEdit,
+        targetStageId: taskToEdit.stage_id,
+      };
+    }
+    case CLOSE_TASK_MODAL: {
+      return {
+        ...state,
+        taskModalOpen: false,
+        targetStageId: "",
+        taskToEdit: null,
+      };
+    }
     default:
       return state;
   }

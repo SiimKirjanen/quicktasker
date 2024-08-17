@@ -228,4 +228,20 @@ class TaskService {
             throw new Exception('Failed to increment task order in new stage');
         }
     }
+
+    public function editTask($taskId, $args) {
+        global $wpdb;
+
+        $defaults = array();
+
+        $args = wp_parse_args($args, $defaults);
+
+        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS, $args, array('id' => $taskId));
+
+        if ($result === false) {
+            throw new Exception('Failed to edit task');
+        }
+
+        return $this->taskRepository->getTaskById($taskId);
+    }
 }

@@ -7579,6 +7579,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
 /* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
 /* harmony export */   deleteStageRequest: () => (/* binding */ deleteStageRequest),
+/* harmony export */   editTaskRequest: () => (/* binding */ editTaskRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
 /* harmony export */   moveTaskRequest: () => (/* binding */ moveTaskRequest)
 /* harmony export */ });
@@ -7626,6 +7627,18 @@ function createTaskRequest(stageId, name, description) {
       stageId,
       name,
       description
+    },
+    headers: getCommonHeaders()
+  });
+}
+function editTaskRequest(task) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/tasks/${task.id}`,
+    method: "PATCH",
+    data: {
+      id: task.id,
+      name: task.name,
+      description: task.description
     },
     headers: getCommonHeaders()
   });
@@ -8020,10 +8033,9 @@ function AddTask({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
   const openNewTaskModal = () => __awaiter(this, void 0, void 0, function* () {
     modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_2__.NEW_TASK_MODAL_OPEN,
+      type: _constants__WEBPACK_IMPORTED_MODULE_2__.OPEN_NEW_TASK_MODAL,
       payload: {
-        targetStageId: stageId,
-        taskModalOpen: true
+        targetStageId: stageId
       }
     });
   });
@@ -8167,8 +8179,8 @@ function Stage({
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-col wpqt-overflow-y-auto wpqt-h-full",
-        children: [stageTasks.map((item, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
-          item: item,
+        children: [stageTasks.map((task, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
+          task: task,
           index: index
         })), provided.placeholder, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
           stageId: stageId
@@ -8295,26 +8307,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
+
+
+
 
 
 function Task({
-  item,
+  task,
   index
 }) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_1__.Draggable, {
-    draggableId: item.id,
+  const {
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
+  const openEditTaskModal = () => {
+    modalDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.OPEN_EDIT_TASK_MODAL,
+      payload: {
+        taskToEdit: task
+      }
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
+    draggableId: task.id,
     index: index,
     children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
       ref: provided.innerRef
     }, provided.draggableProps, provided.dragHandleProps, {
       className: "wpqt-bg-white wpqt-border wpqt-border-gray-200 wpqt-rounded wpqt-p-3 wpqt-mb-2 wpqt-shadow !wpqt-cursor-pointer",
+      onClick: openEditTaskModal,
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-sm",
-        children: item.name
+        children: task.name
       })
     }))
-  }, item.id);
+  }, task.id);
 }
 
 
@@ -8386,7 +8417,8 @@ function TaskModal() {
   const {
     state: {
       taskModalOpen,
-      targetStageId
+      targetStageId,
+      taskToEdit
     },
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
@@ -8395,22 +8427,27 @@ function TaskModal() {
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.PipelineContext);
   const [taskName, setTaskName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [taskDescription, setTaskDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [taskModalLoading, setTaskModalLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [taskModalSaving, setTaskModalSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const editingTask = !!taskToEdit;
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (taskToEdit) {
+      setTaskName(taskToEdit.name);
+      setTaskDescription(taskToEdit.description);
+    }
+  }, [taskToEdit]);
   const closeTaskModal = () => {
     modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_3__.NEW_TASK_MODAL_OPEN,
-      payload: {
-        taskModalOpen: false
-      }
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_TASK_MODAL
     });
   };
   const resetTaskModal = () => {
     setTaskName("");
     setTaskDescription("");
+    setTaskModalSaving(false);
   };
   const addTask = () => __awaiter(this, void 0, void 0, function* () {
     try {
-      setTaskModalLoading(true);
+      setTaskModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(targetStageId, taskName, taskDescription);
       dispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK,
@@ -8425,12 +8462,42 @@ function TaskModal() {
       });
       closeTaskModal();
       resetTaskModal();
-      setTaskModalLoading(false);
     } catch (error) {
-      setTaskModalLoading(false);
+      setTaskModalSaving(false);
       console.error(error);
     }
   });
+  const editTask = () => __awaiter(this, void 0, void 0, function* () {
+    console.log(targetStageId);
+    try {
+      setTaskModalSaving(true);
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.editTaskRequest)({
+        id: taskToEdit.id,
+        stageId: targetStageId,
+        name: taskName,
+        description: taskDescription
+      });
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK,
+        payload: {
+          targetStageId,
+          task: {
+            id: taskToEdit.id,
+            name: taskName,
+            description: taskDescription
+          }
+        }
+      });
+      closeTaskModal();
+      resetTaskModal();
+    } catch (error) {
+      setTaskModalSaving(false);
+      console.error(error);
+    }
+  });
+  const saveTask = () => {
+    editingTask ? editTask() : addTask();
+  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Dialog, {
     open: taskModalOpen,
     as: "div",
@@ -8448,7 +8515,7 @@ function TaskModal() {
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.DialogTitle, {
             as: "div",
             className: "wpqt-text-base/7 wpqt-font-medium wpqt-text-black",
-            children: "Add new task"
+            children: editingTask ? "Edit task" : "Add task"
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Fieldset, {
             className: "space-y-6 rounded-xl bg-white/5 p-6 sm:p-10",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_9__.Field, {
@@ -8476,8 +8543,8 @@ function TaskModal() {
             className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
             children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_13__.Button, {
               className: "wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white data-[open]:wpqt-bg-gray-700",
-              onClick: addTask,
-              children: taskModalLoading ? "Saving..." : "Add task"
+              onClick: saveTask,
+              children: taskModalSaving ? "Saving..." : editingTask ? "Edit task" : "Add task"
             })
           })]
         })
@@ -8497,11 +8564,16 @@ function TaskModal() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   NEW_TASK_MODAL_OPEN: () => (/* binding */ NEW_TASK_MODAL_OPEN),
+/* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
+/* harmony export */   CLOSE_NEW_TASK_MODAL: () => (/* binding */ CLOSE_NEW_TASK_MODAL),
+/* harmony export */   CLOSE_TASK_MODAL: () => (/* binding */ CLOSE_TASK_MODAL),
+/* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
+/* harmony export */   OPEN_NEW_TASK_MODAL: () => (/* binding */ OPEN_NEW_TASK_MODAL),
 /* harmony export */   PIPELINE_ADD_EXISTING_PIPELINE: () => (/* binding */ PIPELINE_ADD_EXISTING_PIPELINE),
 /* harmony export */   PIPELINE_ADD_STAGE: () => (/* binding */ PIPELINE_ADD_STAGE),
 /* harmony export */   PIPELINE_ADD_TASK: () => (/* binding */ PIPELINE_ADD_TASK),
 /* harmony export */   PIPELINE_DELETE_STAGE: () => (/* binding */ PIPELINE_DELETE_STAGE),
+/* harmony export */   PIPELINE_EDIT_TASK: () => (/* binding */ PIPELINE_EDIT_TASK),
 /* harmony export */   PIPELINE_MOVE_TASK: () => (/* binding */ PIPELINE_MOVE_TASK),
 /* harmony export */   PIPELINE_REORDER_TASK: () => (/* binding */ PIPELINE_REORDER_TASK),
 /* harmony export */   PIPELINE_SET_EXISTING_PIPELINES: () => (/* binding */ PIPELINE_SET_EXISTING_PIPELINES),
@@ -8518,8 +8590,13 @@ const PIPELINE_ADD_STAGE = "ADD_STAGE";
 const PIPELINE_DELETE_STAGE = "DELETE_STAGE";
 const PIPELINE_SET_EXISTING_PIPELINES = "SET_EXISTING_PIPELINES";
 const PIPELINE_ADD_EXISTING_PIPELINE = "ADD_EXISTING_PIPELINE";
+const PIPELINE_EDIT_TASK = "EDIT_TASK";
 //Modal reducer constants
-const NEW_TASK_MODAL_OPEN = "NEW_TASK_MODAL_OPEN";
+const OPEN_NEW_TASK_MODAL = "OPEN_NEW_TASK_MODAL";
+const CLOSE_NEW_TASK_MODAL = "CLOSE_NEW_TASK_MODAL";
+const OPEN_EDIT_TASK_MODAL = "OPEN_EDIT_TASK_MODAL";
+const CLOSE_EDIT_TASK_MODAL = "CLOSE_EDIT_TASK_MODAL";
+const CLOSE_TASK_MODAL = "CLOSE_TASK_MODAL";
 
 
 /***/ }),
@@ -8618,7 +8695,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const initialState = {
   taskModalOpen: false,
-  targetStageId: ""
+  targetStageId: "",
+  taskToEdit: null
 };
 const ModalContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -8759,15 +8837,36 @@ __webpack_require__.r(__webpack_exports__);
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.NEW_TASK_MODAL_OPEN:
-      const {
-        taskModalOpen,
-        targetStageId = ""
-      } = action.payload;
-      return Object.assign(Object.assign({}, state), {
-        taskModalOpen,
-        targetStageId
-      });
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_TASK_MODAL:
+      {
+        const {
+          targetStageId
+        } = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          taskModalOpen: true,
+          targetStageId,
+          taskToEdit: null
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_EDIT_TASK_MODAL:
+      {
+        const {
+          taskToEdit
+        } = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          taskModalOpen: true,
+          taskToEdit,
+          targetStageId: taskToEdit.stage_id
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_TASK_MODAL:
+      {
+        return Object.assign(Object.assign({}, state), {
+          taskModalOpen: false,
+          targetStageId: "",
+          taskToEdit: null
+        });
+      }
     default:
       return state;
   }
@@ -8844,6 +8943,30 @@ const pipelineReducer = (state, action) => {
                 description
               }]
             }) : stage)
+          })
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_TASK:
+      {
+        const {
+          targetStageId,
+          task: {
+            id,
+            name,
+            description
+          }
+        } = action.payload;
+        console.log(targetStageId, id, name, description);
+        const updatedStages = state.activePipeline.stages.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
+          tasks: stage.tasks.map(task => task.id === id ? {
+            id,
+            name,
+            description
+          } : task)
+        }) : stage);
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            stages: updatedStages
           })
         });
       }

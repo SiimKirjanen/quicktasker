@@ -1,27 +1,37 @@
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "@hello-pangea/dnd";
+import { Draggable } from "@hello-pangea/dnd";
 import { Task } from "../../types/task";
+import { useContext } from "@wordpress/element";
+import { ModalContext } from "../../providers/ModalContextProvider";
+import { OPEN_EDIT_TASK_MODAL } from "../../constants";
 
 type Props = {
-  item: Task;
+  task: Task;
   index: number;
 };
 
-function Task({ item, index }: Props) {
+function Task({ task, index }: Props) {
+  const { modalDispatch } = useContext(ModalContext);
+
+  const openEditTaskModal = () => {
+    modalDispatch({
+      type: OPEN_EDIT_TASK_MODAL,
+      payload: {
+        taskToEdit: task,
+      },
+    });
+  };
+
   return (
-    <Draggable key={item.id} draggableId={item.id} index={index}>
+    <Draggable key={task.id} draggableId={task.id} index={index}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className="wpqt-bg-white wpqt-border wpqt-border-gray-200 wpqt-rounded wpqt-p-3 wpqt-mb-2 wpqt-shadow !wpqt-cursor-pointer"
+          onClick={openEditTaskModal}
         >
-          <div className="wpqt-text-sm">{item.name}</div>
+          <div className="wpqt-text-sm">{task.name}</div>
         </div>
       )}
     </Draggable>

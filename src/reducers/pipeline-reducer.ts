@@ -3,6 +3,7 @@ import {
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
   PIPELINE_DELETE_STAGE,
+  PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_EXISTING_PIPELINES,
@@ -91,6 +92,39 @@ const pipelineReducer = (state: State, action: Action) => {
                 }
               : stage
           ),
+        },
+      };
+    }
+    case PIPELINE_EDIT_TASK: {
+      const {
+        targetStageId,
+        task: { id, name, description },
+      }: { targetStageId: string; task: Task } = action.payload;
+
+      console.log(targetStageId, id, name, description);
+
+      const updatedStages = state.activePipeline!.stages.map((stage) =>
+        stage.id === targetStageId
+          ? {
+              ...stage,
+              tasks: stage.tasks.map((task) =>
+                task.id === id
+                  ? {
+                      id,
+                      name,
+                      description,
+                    }
+                  : task
+              ),
+            }
+          : stage
+      );
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline!,
+          stages: updatedStages,
         },
       };
     }

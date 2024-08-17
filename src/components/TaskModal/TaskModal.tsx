@@ -7,39 +7,51 @@ import {
   Fieldset,
   Textarea,
 } from "@headlessui/react";
-import { useContext, useState } from "@wordpress/element";
+import { useContext, useState, useEffect } from "@wordpress/element";
 import { ModalContext } from "../../providers/ModalContextProvider";
-import { NEW_TASK_MODAL_OPEN, PIPELINE_ADD_TASK } from "../../constants";
-import { createTaskRequest } from "../../api/api";
+import {
+  CLOSE_TASK_MODAL,
+  PIPELINE_ADD_TASK,
+  PIPELINE_EDIT_TASK,
+} from "../../constants";
+import { createTaskRequest, editTaskRequest } from "../../api/api";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
 import { Field, Input, Label } from "@headlessui/react";
 import { clsx } from "clsx";
 
 function TaskModal() {
   const {
-    state: { taskModalOpen, targetStageId },
+    state: { taskModalOpen, targetStageId, taskToEdit },
     modalDispatch,
   } = useContext(ModalContext);
   const { dispatch } = useContext(PipelineContext);
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
-  const [taskModalLoading, setTaskModalLoading] = useState(false);
+  const [taskModalSaving, setTaskModalSaving] = useState(false);
+  const editingTask = !!taskToEdit;
+
+  useEffect(() => {
+    if (taskToEdit) {
+      setTaskName(taskToEdit.name);
+      setTaskDescription(taskToEdit.description);
+    }
+  }, [taskToEdit]);
 
   const closeTaskModal = () => {
     modalDispatch({
-      type: NEW_TASK_MODAL_OPEN,
-      payload: { taskModalOpen: false },
+      type: CLOSE_TASK_MODAL,
     });
   };
 
   const resetTaskModal = () => {
     setTaskName("");
     setTaskDescription("");
+    setTaskModalSaving(false);
   };
 
   const addTask = async () => {
     try {
-      setTaskModalLoading(true);
+      setTaskModalSaving(true);
       const response = await createTaskRequest(
         targetStageId,
         taskName,
@@ -59,11 +71,46 @@ function TaskModal() {
       });
       closeTaskModal();
       resetTaskModal();
-      setTaskModalLoading(false);
     } catch (error) {
-      setTaskModalLoading(false);
+      setTaskModalSaving(false);
       console.error(error);
     }
+  };
+
+  const editTask = async () => {
+    console.log(targetStageId);
+    try {
+      setTaskModalSaving(true);
+
+      await editTaskRequest({
+        id: taskToEdit!.id,
+        stageId: targetStageId,
+        name: taskName,
+        description: taskDescription,
+      });
+
+      dispatch({
+        type: PIPELINE_EDIT_TASK,
+        payload: {
+          targetStageId,
+          task: {
+            id: taskToEdit!.id,
+            name: taskName,
+            description: taskDescription,
+          },
+        },
+      });
+
+      closeTaskModal();
+      resetTaskModal();
+    } catch (error) {
+      setTaskModalSaving(false);
+      console.error(error);
+    }
+  };
+
+  const saveTask = () => {
+    editingTask ? editTask() : addTask();
   };
 
   return (
@@ -84,7 +131,7 @@ function TaskModal() {
               as="div"
               className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
             >
-              Add new task
+              {editingTask ? "Edit task" : "Add task"}
             </DialogTitle>
 
             <Fieldset className="space-y-6 rounded-xl bg-white/5 p-6 sm:p-10">
@@ -123,9 +170,13 @@ function TaskModal() {
             <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
               <Button
                 className="wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-py-1.5 wpqt-px-3 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white data-[open]:wpqt-bg-gray-700"
-                onClick={addTask}
+                onClick={saveTask}
               >
-                {taskModalLoading ? "Saving..." : "Add task"}
+                {taskModalSaving
+                  ? "Saving..."
+                  : editingTask
+                  ? "Edit task"
+                  : "Add task"}
               </Button>
             </div>
           </DialogPanel>

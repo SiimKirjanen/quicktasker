@@ -1,14 +1,17 @@
 import { createContext, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/modal-reducer";
+import { Task } from "../types/task";
 
 const initialState = {
   taskModalOpen: false,
   targetStageId: "",
+  taskToEdit: null,
 };
 
 type State = {
   taskModalOpen: boolean;
   targetStageId: string;
+  taskToEdit: Task | null;
 };
 
 type Action = {
