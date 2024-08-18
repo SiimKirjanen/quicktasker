@@ -178,7 +178,8 @@ function wpqt_register_api_routes() {
                     $stageService = new StageService();
 
                     $newStage = $stageService->createStage( $data['pipelineId'], array(
-                        "name" => $data['name']
+                        "name" => $data['name'],
+                        "description" => $data['description']
                     ) );
                     return new WP_REST_Response((new ApiResponse(true, array(), $newStage))->toArray(), 200);
                 } catch (Exception $e) {

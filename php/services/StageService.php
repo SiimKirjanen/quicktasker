@@ -32,7 +32,8 @@ class StageService {
 
         $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array(
             'pipeline_id' => $pipelineId,
-            'name' => $args['name']
+            'name' => $args['name'],
+            'description' => $args['description']
         ));
 
         if( $result === false ) {
