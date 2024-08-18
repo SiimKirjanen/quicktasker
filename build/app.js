@@ -8081,7 +8081,7 @@ function TaskModal() {
       setTaskModalSaving(true);
       yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.editTaskRequest)({
         id: taskToEdit.id,
-        stageId: targetStageId,
+        stage_id: targetStageId,
         name: taskName,
         description: taskDescription
       });
@@ -9267,7 +9267,6 @@ const reducer = (state, action) => {
         const {
           targetPipelineId
         } = action.payload;
-        console.log("Opening new stage modal ", targetPipelineId);
         return Object.assign(Object.assign({}, state), {
           stageModalOpen: true,
           targetPipelineId

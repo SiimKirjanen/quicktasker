@@ -8,6 +8,7 @@ import {
 } from "../constants";
 import { Action, State } from "../providers/ModalContextProvider";
 import { Stage } from "../types/stage";
+import { Task } from "../types/task";
 
 const closeModal = (state: State) => {
   return {
@@ -34,7 +35,7 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case OPEN_EDIT_TASK_MODAL: {
-      const { taskToEdit } = action.payload;
+      const { taskToEdit }: { taskToEdit: Task } = action.payload;
 
       return {
         ...state,
@@ -48,7 +49,7 @@ const reducer = (state: State, action: Action) => {
     }
     case OPEN_NEW_STAGE_MODAL: {
       const { targetPipelineId }: { targetPipelineId: string } = action.payload;
-      console.log("Opening new stage modal ", targetPipelineId);
+
       return {
         ...state,
         stageModalOpen: true,

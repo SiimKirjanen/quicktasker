@@ -82,7 +82,7 @@ function TaskModal() {
       setTaskModalSaving(true);
       await editTaskRequest({
         id: taskToEdit!.id,
-        stageId: targetStageId,
+        stage_id: targetStageId,
         name: taskName,
         description: taskDescription,
       });

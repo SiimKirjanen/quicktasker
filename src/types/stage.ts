@@ -2,7 +2,7 @@ import { Task } from "./task";
 
 type Stage = {
   id: string;
-  pipelineId: string;
+  pipeline_id: string;
   name: string;
   description: string;
   tasks: Task[];

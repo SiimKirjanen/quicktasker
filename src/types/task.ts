@@ -1,6 +1,6 @@
 type Task = {
   id: string;
-  stageId: string;
+  stage_id: string;
   name: string;
   description: string;
 };
