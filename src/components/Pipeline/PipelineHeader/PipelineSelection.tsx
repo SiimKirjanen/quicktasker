@@ -1,9 +1,9 @@
 import { useContext } from "@wordpress/element";
-import { PipelineContext } from "../../providers/PipelineContextProvider";
+import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import { Select } from "@headlessui/react";
-import { getPipelineData } from "../../api/api";
+import { getPipelineData } from "../../../api/api";
 import { toast } from "react-toastify";
-import { PIPELINE_SET_PIPELINE } from "../../constants";
+import { PIPELINE_SET_PIPELINE } from "../../../constants";
 
 function PipelineSelection() {
   const {

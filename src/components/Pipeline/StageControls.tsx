@@ -1,29 +1,41 @@
 import { deleteStageRequest } from "../../api/api";
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
-import { PIPELINE_DELETE_STAGE } from "../../constants";
+import { OPEN_STAGE_EDIT_MODAL, PIPELINE_DELETE_STAGE } from "../../constants";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { Cog8ToothIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
+import { ModalContext } from "../../providers/ModalContextProvider";
+import { Stage } from "../../types/stage";
 
 type Props = {
-  stageId: string;
+  stage: Stage;
 };
 
-function StageControls({ stageId }: Props) {
+function StageControls({ stage }: Props) {
   const { dispatch } = useContext(PipelineContext);
+  const { modalDispatch } = useContext(ModalContext);
 
   const deleteStage = async () => {
     try {
-      await deleteStageRequest(stageId);
+      await deleteStageRequest(stage.id);
 
-      dispatch({ type: PIPELINE_DELETE_STAGE, payload: stageId });
+      dispatch({ type: PIPELINE_DELETE_STAGE, payload: stage.id });
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete stage", {
         position: "bottom-right",
       });
     }
+  };
+
+  const openStageEditModal = () => {
+    modalDispatch({
+      type: OPEN_STAGE_EDIT_MODAL,
+      payload: {
+        stageToEdit: stage,
+      },
+    });
   };
 
   return (
@@ -34,8 +46,18 @@ function StageControls({ stageId }: Props) {
       <MenuItems
         anchor="bottom"
         transition
-        className="wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
+        className="wpqt-z-20 wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
       >
+        <MenuItem className="wpqt-mb-2">
+          <button
+            className="wpqt-strip-btn wpqt-flex wpqt-cursor-pointer wpqt-items-center"
+            onClick={openStageEditModal}
+          >
+            <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
+            Edit
+          </button>
+        </MenuItem>
+
         <MenuItem>
           <button
             className="wpqt-strip-btn wpqt-flex wpqt-cursor-pointer wpqt-items-center"

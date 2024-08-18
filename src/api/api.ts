@@ -69,11 +69,21 @@ function editTaskRequest(task: Task): Promise<WPQTResponse<Task>> {
 function createNewStageRequest(
   pipelineId: string,
   name: string,
+  description: string,
 ): Promise<WPQTResponse<Stage>> {
   return apiFetch({
     path: `/wpqt/v1/stages`,
     method: "POST",
-    data: { pipelineId, name },
+    data: { pipelineId, name, description },
+    headers: getCommonHeaders(),
+  });
+}
+
+function editStageRequest(stage: Stage): Promise<WPQTResponse<Stage>> {
+  return apiFetch({
+    path: `/wpqt/v1/stages/${stage.id}`,
+    method: "PATCH",
+    data: { name: stage.name, description: stage.description },
     headers: getCommonHeaders(),
   });
 }
@@ -95,4 +105,5 @@ export {
   deleteStageRequest,
   createPipelineRequest,
   editTaskRequest,
+  editStageRequest,
 };

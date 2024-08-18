@@ -1,5 +1,5 @@
 import { useContext } from "@wordpress/element";
-import { PipelineContext } from "../../providers/PipelineContextProvider";
+import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import { PipelineSelection } from "./PipelineSelection";
 import { AddPipeline } from "./AddPipeline";
 

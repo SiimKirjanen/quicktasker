@@ -1,5 +1,5 @@
 import Pipeline from "../components/Pipeline/Pipeline";
-import { PipelineHeader } from "../components/PipelineHeader/PipelineHeader";
+import { PipelineHeader } from "../components/Pipeline/PipelineHeader/PipelineHeader";
 
 const PipelinePage = () => {
   return (

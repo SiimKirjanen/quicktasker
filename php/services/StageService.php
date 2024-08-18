@@ -42,6 +42,25 @@ class StageService {
         return $this->stageRepository->getStageById($wpdb->insert_id);
     }
 
+    public function editStage($stageId, $args) {
+        global $wpdb;
+
+        if (!array_key_exists('name', $args) || !array_key_exists('description', $args)) {
+            throw new Exception('Required fields are missing');
+        }
+
+        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array(
+            'name' => $args['name'],
+            'description' => $args['description']
+        ), array('id' => $stageId));
+
+        if( $result === false ) {
+            throw new Exception('Failed to update the stage');
+        }
+
+        return $this->stageRepository->getStageById($stageId);
+    }
+
     public function deleteStage($stageId) {
         global $wpdb;
         

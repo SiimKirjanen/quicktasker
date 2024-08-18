@@ -841,6 +841,10 @@
   z-index: 10;
 }
 
+.wpqt-z-20 {
+  z-index: 20;
+}
+
 .wpqt-order-1 {
   order: 1;
 }

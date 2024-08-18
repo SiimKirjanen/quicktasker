@@ -6,6 +6,7 @@ import { Stage } from "./Stage";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
 import { AddStage } from "./AddStage";
 import { TaskModal } from "../Modal/TaskModal/TaskModal";
+import { StageModal } from "../Modal/StageModal/StageModal";
 
 const Pipeline = () => {
   const {
@@ -52,18 +53,12 @@ const Pipeline = () => {
     <div className="wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pr-5">
       <DragDropContext onDragEnd={onDragEnd}>
         {activePipeline.stages.map((stage) => {
-          return (
-            <Stage
-              stageId={stage.id}
-              stageTasks={stage.tasks}
-              stageName={stage.name}
-              stageDescription={stage.description}
-            />
-          );
+          return <Stage stage={stage} />;
         })}
       </DragDropContext>
       <AddStage pipelineId={activePipeline.id} />
       <TaskModal />
+      <StageModal />
     </div>
   );
 };

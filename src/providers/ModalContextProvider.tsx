@@ -1,17 +1,24 @@
 import { createContext, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/modal-reducer";
 import { Task } from "../types/task";
+import { Stage } from "../types/stage";
 
 const initialState = {
   taskModalOpen: false,
   targetStageId: "",
   taskToEdit: null,
+  stageModalOpen: false,
+  stageToEdit: null,
+  targetPipelineId: "",
 };
 
 type State = {
   taskModalOpen: boolean;
   targetStageId: string;
   taskToEdit: Task | null;
+  stageModalOpen: boolean;
+  stageToEdit: Stage | null;
+  targetPipelineId: string;
 };
 
 type Action = {

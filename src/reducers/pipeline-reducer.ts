@@ -3,6 +3,7 @@ import {
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
   PIPELINE_DELETE_STAGE,
+  PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
   PIPELINE_REORDER_TASK,
@@ -103,8 +104,6 @@ const pipelineReducer = (state: State, action: Action) => {
         task: { id, name, description },
       }: { targetStageId: string; task: Task } = action.payload;
 
-      console.log(targetStageId, id, name, description);
-
       const updatedStages = state.activePipeline!.stages.map((stage) =>
         stage.id === targetStageId
           ? {
@@ -131,15 +130,28 @@ const pipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_ADD_STAGE:
-      const newStage: Stage = action.payload;
+      const { stage }: { stage: Stage } = action.payload;
 
       return {
         ...state,
         activePipeline: {
           ...state.activePipeline,
-          stages: [...state.activePipeline!.stages, newStage],
+          stages: [...state.activePipeline!.stages, stage],
         },
       };
+    case PIPELINE_EDIT_STAGE: {
+      const { stage }: { stage: Stage } = action.payload;
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: state.activePipeline!.stages.map((s) =>
+            s.id === stage.id ? stage : s,
+          ),
+        },
+      };
+    }
     case PIPELINE_DELETE_STAGE:
       const deletedStageId = action.payload;
 
