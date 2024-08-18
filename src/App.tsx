@@ -1,3 +1,4 @@
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import { PipelinePage } from "./pages/PipelinePage";
 import { AppContextProvider } from "./providers/AppContextProvider";
 import { ModalContextProvider } from "./providers/ModalContextProvider";
@@ -7,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
-    <div>
+    <ErrorBoundary>
       <AppContextProvider>
         <PipelineContextProvider>
           <UserContextProvider>
@@ -18,7 +19,7 @@ function App() {
           </UserContextProvider>
         </PipelineContextProvider>
       </AppContextProvider>
-    </div>
+    </ErrorBoundary>
   );
 }
 export default App;

@@ -913,6 +913,10 @@
   height: 100%;
 }
 
+.wpqt-h-screen {
+  height: 100vh;
+}
+
 .wpqt-max-h-full {
   max-height: 100%;
 }
@@ -1108,6 +1112,10 @@
   text-align: center;
 }
 
+.wpqt-align-middle {
+  vertical-align: middle;
+}
+
 .wpqt-text-base {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1218,7 +1226,6 @@
 }
 
 .wpqt-strip-btn {
-  margin: 0px;
   border-width: 0px;
   border-style: none;
   background-color: transparent;

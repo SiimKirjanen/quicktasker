@@ -46,7 +46,7 @@ const Pipeline = () => {
   );
 
   if (!activePipeline) {
-    return "Loading...";
+    return;
   }
 
   return (

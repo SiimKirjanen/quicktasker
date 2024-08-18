@@ -9,11 +9,11 @@
     height: calc(100vh - 120px);
   }
   .wpqt-strip-btn {
-    @apply wpqt-p-0 wpqt-m-0 wpqt-border-none wpqt-border-0 wpqt-bg-transparent;
+    @apply wpqt-border-0 wpqt-border-none wpqt-bg-transparent wpqt-p-0;
   }
 
   .wpqt-main-border {
-    @apply wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md;
+    @apply wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder;
   }
 }
 
