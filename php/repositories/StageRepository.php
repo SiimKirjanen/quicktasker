@@ -2,17 +2,19 @@
 
 class StageRepository {
     /**
-     * Retrieves stages by pipeline ID.
+     * Retrieves all stages from the database.
      *
-     * @param int $pipelineId The ID of the pipeline.
-     * @return array|null The stages associated with the pipeline, or null if none found.
+     * @return array The array of stages retrieved from the database.
      */
     public function getStagesByPipelineId($pipelineId) {
         global $wpdb;
 
         return $wpdb->get_results( $wpdb->prepare(
-            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . "
-            WHERE pipeline_id = %d",
+            "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . " AS a
+            INNER JOIN " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " AS b
+            ON a.id = b.stage_id
+            WHERE a.pipeline_id = %d
+            ORDER BY b.stage_order",
             $pipelineId
         ) );
     }
@@ -27,8 +29,10 @@ class StageRepository {
         global $wpdb;
 
         return $wpdb->get_row( $wpdb->prepare(
-            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . "
-            WHERE id = %d",
+            "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . " AS a
+            INNER JOIN " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " AS b
+            ON a.id = b.stage_id
+            WHERE a.id = %d",
             $stageId
         ) );
     }

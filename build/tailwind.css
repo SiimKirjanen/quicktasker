@@ -882,6 +882,10 @@
   margin-top: 1rem;
 }
 
+.wpqt-mt-5 {
+  margin-top: 1.25rem;
+}
+
 .wpqt-block {
   display: block;
 }
@@ -1114,10 +1118,6 @@
 
 .wpqt-text-center {
   text-align: center;
-}
-
-.wpqt-align-middle {
-  vertical-align: middle;
 }
 
 .wpqt-text-base {

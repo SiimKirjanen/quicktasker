@@ -5,6 +5,7 @@ import {
   PIPELINE_DELETE_STAGE,
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
+  PIPELINE_MOVE_STAGE,
   PIPELINE_MOVE_TASK,
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_EXISTING_PIPELINES,
@@ -149,6 +150,21 @@ const pipelineReducer = (state: State, action: Action) => {
           stages: state.activePipeline!.stages.map((s) =>
             s.id === stage.id ? stage : s,
           ),
+        },
+      };
+    }
+    case PIPELINE_MOVE_STAGE: {
+      const { sourceIndex, destinationIndex } = action.payload;
+
+      const stages = [...state.activePipeline!.stages];
+      const [removedStage] = stages.splice(sourceIndex, 1);
+      stages.splice(destinationIndex, 0, removedStage);
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages,
         },
       };
     }

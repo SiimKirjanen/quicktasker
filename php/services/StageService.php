@@ -93,6 +93,80 @@ class StageService {
         return $this->stageRepository->getStageById($stageId);
     }
 
+    public function moveStage($stageId, $args) {
+        global $wpdb;
+
+        if ( !array_key_exists('direction', $args) ) {
+            throw new Exception('Required fields are missing');
+        }
+
+        $stage = $this->stageRepository->getStageById($stageId);
+        $stages = $this->stageRepository->getStagesByPipelineId($stage->pipeline_id);
+        $direction = $args['direction'];
+
+        if ( !$stage ) {
+            throw new Exception('Stage not found');
+        }
+        $currentOrder = $stage->stage_order;
+
+        if( $direction === 'left' && $currentOrder === 0 ) {
+            throw new Exception('Stage is already at the beginning');
+        }
+
+        if( $direction === 'right' && $currentOrder === count($stages) - 1 ) {
+            throw new Exception('Stage is already at the end');
+        }
+
+        $newOrder = $currentOrder + ( $direction === 'left' ? -1 : 1 );
+
+        $this->updateStageOrder($stageId, $stage->pipeline_id, $newOrder, $currentOrder);
+
+        return $this->stageRepository->getStageById($stageId);
+    }
+
+    private function updateStageOrder($stageId, $pipelineId, $newOrder, $currentOrder) {
+        global $wpdb;
+
+        if ( $currentOrder < $newOrder) {
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " SET stage_order = stage_order - 1 WHERE pipeline_id = %d AND stage_order > %d AND stage_order <= %d",
+                    $pipelineId,
+                    $currentOrder,
+                    $newOrder
+                )
+            );
+
+            if($result === false) {
+                throw new Exception('Failed to update stage order');
+            }
+            
+        } else {
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " SET stage_order = stage_order + 1 WHERE pipeline_id = %d AND stage_order >= %d AND stage_order < %d",
+                    $pipelineId,
+                    $newOrder,
+                    $currentOrder
+                )
+            );
+
+            if($result === false) {
+                throw new Exception('Failed to update stage order');
+            }
+        }
+
+        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_STAGES_LOCATION, array(
+            'stage_order' => $newOrder
+        ), array('stage_id' => $stageId, 'pipeline_id' => $pipelineId));
+
+        if( $result === false ) {
+            throw new Exception('Failed to update stage order');
+        }
+
+        return $result;
+    }
+
     /**
      * Deletes a stage.
      *

@@ -1,7 +1,7 @@
 import apiFetch from "@wordpress/api-fetch";
 import { Pipeline } from "../types/pipeline";
 import { Task } from "../types/task";
-import { Stage } from "../types/stage";
+import { Stage, StageChangeDirection } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 
 function getCommonHeaders() {
@@ -10,6 +10,12 @@ function getCommonHeaders() {
     "X-WPQT-API-Nonce": window.wpqt.apiNonce,
   };
 }
+
+/*
+  ==================================================================================================================================================================================================================
+  Pipeline requests
+  ==================================================================================================================================================================================================================
+*/
 
 function getPipelineData(pipelineId: string): Promise<WPQTResponse<Pipeline>> {
   return apiFetch({
@@ -26,6 +32,12 @@ function createPipelineRequest(name: string): Promise<WPQTResponse<Pipeline>> {
     headers: getCommonHeaders(),
   });
 }
+
+/*
+  ==================================================================================================================================================================================================================
+  Task requests
+  ==================================================================================================================================================================================================================
+*/
 
 function moveTaskRequest(
   taskId: string,
@@ -66,6 +78,12 @@ function editTaskRequest(task: Task): Promise<WPQTResponse<Task>> {
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Stage requests
+  ==================================================================================================================================================================================================================
+*/
+
 function createNewStageRequest(
   pipelineId: string,
   name: string,
@@ -88,6 +106,18 @@ function editStageRequest(stage: Stage): Promise<WPQTResponse<Stage>> {
   });
 }
 
+function moveStageRequest(
+  stageId: string,
+  direction: StageChangeDirection,
+): Promise<WPQTResponse<Stage>> {
+  return apiFetch({
+    path: `/wpqt/v1/stages/${stageId}/move`,
+    method: "PATCH",
+    data: { direction },
+    headers: getCommonHeaders(),
+  });
+}
+
 function deleteStageRequest(stageId: string): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/stages/${stageId}`,
@@ -106,4 +136,5 @@ export {
   createPipelineRequest,
   editTaskRequest,
   editStageRequest,
+  moveStageRequest,
 };

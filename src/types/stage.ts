@@ -5,7 +5,10 @@ type Stage = {
   pipeline_id: string;
   name: string;
   description: string;
+  stage_order: number;
   tasks: Task[];
 };
 
-export type { Stage };
+type StageChangeDirection = "left" | "right";
+
+export type { Stage, StageChangeDirection };
