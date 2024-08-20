@@ -29,7 +29,7 @@ function Stage({ stage }: Props) {
             )}
           </div>
 
-          <div className="wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto">
+          <div className="wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto wpqt-overflow-x-hidden">
             {stage.tasks.map((task: Task, index: number) => (
               <TaskComponent task={task} index={index} />
             ))}

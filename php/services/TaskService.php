@@ -36,7 +36,9 @@ class TaskService {
     public function createTask($stageId, $args) {
         global $wpdb;
 
-        $defaults = array();
+        $defaults = array(
+            'description' => null
+        );
 
         $args = wp_parse_args($args, $defaults);
 
@@ -230,6 +232,13 @@ class TaskService {
         }
     }
 
+    /**
+     * Edit a task.
+     *
+     * @param int $taskId The ID of the task to edit.
+     * @param array $args The arguments to update the task with.
+     * @return void
+     */
     public function editTask($taskId, $args) {
         global $wpdb;
 

@@ -8,6 +8,12 @@ class PipelineService {
     }
 
 
+    /**
+     * Creates a pipeline with the given name.
+     *
+     * @param string $name The name of the pipeline.
+     * @return void
+     */
     public function createPipeline($name) {
         global $wpdb;
 
@@ -22,6 +28,12 @@ class PipelineService {
         return $this->pipelineRepository->getPipelineById($wpdb->insert_id);
     }
 
+    /**
+     * Marks a pipeline as primary.
+     *
+     * @param int $pipelineId The ID of the pipeline to mark as primary.
+     * @return void
+     */
     public function markPipelineAsPrimary($pipelineId) {
         global $wpdb;
 
@@ -42,12 +54,4 @@ class PipelineService {
 
         return $result;
     }
-
-    public function updatePipeline($id, $data) {
-  
-    }
-
-   public function deletePipeline() {
-
-   }
 }

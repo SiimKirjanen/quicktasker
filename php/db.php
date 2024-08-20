@@ -55,8 +55,19 @@ function wpqt_set_up_db() {
 			PRIMARY KEY  (id),
 			UNIQUE KEY task_id (task_id)
 		  ) $charset_collate;";
-	  
+		
 		dbDelta( $sql5 ); 
+	  
+		$sql6 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+			pipeline_id int(11) NOT NULL,
+            stage_id int(11) NOT NULL,
+			stage_order int(11),
+			PRIMARY KEY  (id),
+			UNIQUE KEY stage_id (stage_id)
+		  ) $charset_collate;";
+
+		dbDelta( $sql6 ); 
 
 		update_option( "wp_quick_taks_db_current_version", WP_QUICK_TASKS_DB_VERSION );
 	}
@@ -65,14 +76,15 @@ function wpqt_set_up_db() {
 function wpqt_insert_initial_data() {
 	global $wpdb;
 
-	$pipeRepo = new PipelineRepository();
-	$pipeService = new PipelineService();
-	$stageService = new StageService();
-	$taskService = new TaskService();
-	$pipelines = $pipeRepo->getPipelines();
+	try {
+		$pipeRepo = new PipelineRepository();
+		$pipeService = new PipelineService();
+		$stageService = new StageService();
+		$taskService = new TaskService();
+		$pipelines = $pipeRepo->getPipelines();
 
 	if( !count($pipelines) ) {
-		$newPipeId = $pipeService->createPipeline("Pipeline");
+		$newPipeId = $pipeService->createPipeline("Pipeline")->id;
 		$pipeService->markPipelineAsPrimary($newPipeId);
 		$firstStageId = $stageService->createStage($newPipeId, array('name' => 'Stage 1'))->id;
 		$secondStageId = $stageService->createStage($newPipeId, array('name' => 'Stage 2'))->id;
@@ -84,4 +96,9 @@ function wpqt_insert_initial_data() {
 		$taskService->createTask($secondStageId, array('name' => 'Task 3'));
 		$taskService->createTask($secondStageId, array('name' => 'Task 4'));
 	}
+	} catch (\Throwable $th) {
+		$test = true;
+	}
+
+	
 }

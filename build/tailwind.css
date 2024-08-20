@@ -1013,6 +1013,10 @@
   overflow-y: auto;
 }
 
+.wpqt-overflow-x-hidden {
+  overflow-x: hidden;
+}
+
 .wpqt-overflow-y-hidden {
   overflow-y: hidden;
 }

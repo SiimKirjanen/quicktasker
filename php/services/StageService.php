@@ -21,7 +21,8 @@ class StageService {
         global $wpdb;
 
         $defaults = array(
-            'name' => null
+            'name' => null,
+            'description' => null
         );
 
         $args = wp_parse_args($args, $defaults);
@@ -40,9 +41,39 @@ class StageService {
             throw new Exception('Failed to create a stage');
         }
 
-        return $this->stageRepository->getStageById($wpdb->insert_id);
+        $stageId = $wpdb->insert_id;
+        $stageOrder = $this->stageRepository->getNextStageOrder($pipelineId);
+
+        $this->addStageLocation($pipelineId, $stageId, $stageOrder);
+
+        return $this->stageRepository->getStageById($stageId);
     }
 
+    /**
+     * Adds a stage location to the pipeline.
+     *
+     * @param int $pipelineId The ID of the pipeline.
+     * @param int $stageId The ID of the stage.
+     * @param int $stageOrder The order of the stage.
+     * @return void
+     */
+    private function addStageLocation($pipelineId, $stageId, $stageOrder) {
+        global $wpdb;
+
+        $wpdb->insert(TABLE_WP_QUICK_TASKS_STAGES_LOCATION, array(
+            'pipeline_id' => $pipelineId,
+            'stage_id' => $stageId,
+            'stage_order' => $stageOrder
+        ));
+    }
+
+    /**
+     * Edit a stage.
+     *
+     * @param int $stageId The ID of the stage to edit.
+     * @param array $args The arguments to update the stage.
+     * @return void
+     */
     public function editStage($stageId, $args) {
         global $wpdb;
 
@@ -62,6 +93,12 @@ class StageService {
         return $this->stageRepository->getStageById($stageId);
     }
 
+    /**
+     * Deletes a stage.
+     *
+     * @param int $stageId The ID of the stage to delete.
+     * @return void
+     */
     public function deleteStage($stageId) {
         global $wpdb;
         

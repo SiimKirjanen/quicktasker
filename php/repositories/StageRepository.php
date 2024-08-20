@@ -32,4 +32,23 @@ class StageRepository {
             $stageId
         ) );
     }
+
+    /**
+     * Retrieves the next stage order for a given pipeline ID.
+     *
+     * @param int $pipelineId The ID of the pipeline.
+     * @return int The next stage order.
+     */
+    public function getNextStageOrder($pipelineId) {
+        global $wpdb;
+
+        $result = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT MAX(stage_order) FROM " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " WHERE pipeline_id = %d",
+                $pipelineId
+            )
+        );
+
+        return $result === null ? 0 : $result + 1;
+    }
 }
