@@ -75,10 +75,8 @@ const pipelineReducer = (state: State, action: Action) => {
         },
       };
     case PIPELINE_ADD_TASK: {
-      const {
-        targetStageId,
-        task: { id, name, description },
-      }: { targetStageId: string; task: Task } = action.payload;
+      const { targetStageId, task }: { targetStageId: string; task: Task } =
+        action.payload;
 
       return {
         ...state,
@@ -88,14 +86,7 @@ const pipelineReducer = (state: State, action: Action) => {
             stage.id === targetStageId
               ? {
                   ...stage,
-                  tasks: [
-                    ...stage.tasks,
-                    {
-                      id,
-                      name,
-                      description,
-                    },
-                  ],
+                  tasks: [...stage.tasks, task],
                 }
               : stage,
           ),

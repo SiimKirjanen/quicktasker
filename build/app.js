@@ -8333,11 +8333,7 @@ function TaskModal() {
     try {
       setTaskModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(targetStageId, taskName, taskDescription);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, {
-        id: response.data.id,
-        name: response.data.name,
-        description: response.data.description
-      });
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, Object.assign({}, response.data));
     } catch (error) {
       handleError(error);
     }
@@ -9020,7 +9016,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
-/* harmony import */ var _Tast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Tast */ "./src/components/Pipeline/Tast.tsx");
+/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Task */ "./src/components/Pipeline/Task.tsx");
 /* harmony import */ var _AddTask__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AddTask */ "./src/components/Pipeline/AddTask.tsx");
 /* harmony import */ var _StageControls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./StageControls */ "./src/components/Pipeline/StageControls.tsx");
 
@@ -9049,7 +9045,7 @@ function Stage({
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto wpqt-overflow-x-hidden",
-        children: [stage.tasks.map((task, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tast__WEBPACK_IMPORTED_MODULE_1__.Task, {
+        children: [stage.tasks.map((task, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Task__WEBPACK_IMPORTED_MODULE_1__.Task, {
           task: task,
           index: index
         })), provided.placeholder, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
@@ -9226,9 +9222,9 @@ function StageControls({
 
 /***/ }),
 
-/***/ "./src/components/Pipeline/Tast.tsx":
+/***/ "./src/components/Pipeline/Task.tsx":
 /*!******************************************!*\
-  !*** ./src/components/Pipeline/Tast.tsx ***!
+  !*** ./src/components/Pipeline/Task.tsx ***!
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -9256,6 +9252,7 @@ function Task({
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const openEditTaskModal = () => {
+    console.log(task);
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_3__.OPEN_EDIT_TASK_MODAL,
       payload: {
@@ -9263,6 +9260,7 @@ function Task({
       }
     });
   };
+  console.log(task);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
     draggableId: task.id,
     index: index,
@@ -9737,20 +9735,12 @@ const pipelineReducer = (state, action) => {
       {
         const {
           targetStageId,
-          task: {
-            id,
-            name,
-            description
-          }
+          task
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages: state.activePipeline.stages.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
-              tasks: [...stage.tasks, {
-                id,
-                name,
-                description
-              }]
+              tasks: [...stage.tasks, task]
             }) : stage)
           })
         });

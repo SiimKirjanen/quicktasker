@@ -68,9 +68,7 @@ function TaskModal() {
         taskDescription,
       );
       handleSuccess(PIPELINE_ADD_TASK, {
-        id: response.data.id,
-        name: response.data.name,
-        description: response.data.description,
+        ...response.data,
       });
     } catch (error) {
       handleError(error);

@@ -1,5 +1,5 @@
 import { Droppable } from "@hello-pangea/dnd";
-import { Task as TaskComponent } from "./Tast";
+import { Task as TaskComponent } from "./Task";
 import { Task } from "../../types/task";
 import { AddTask } from "./AddTask";
 import { StageControls } from "./StageControls";

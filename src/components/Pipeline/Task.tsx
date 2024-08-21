@@ -13,6 +13,7 @@ function Task({ task, index }: Props) {
   const { modalDispatch } = useContext(ModalContext);
 
   const openEditTaskModal = () => {
+    console.log(task);
     modalDispatch({
       type: OPEN_EDIT_TASK_MODAL,
       payload: {
@@ -20,6 +21,7 @@ function Task({ task, index }: Props) {
       },
     });
   };
+  console.log(task);
 
   return (
     <Draggable key={task.id} draggableId={task.id} index={index}>
