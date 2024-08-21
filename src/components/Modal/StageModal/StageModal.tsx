@@ -1,5 +1,5 @@
 import { WPQTModal } from "../WPQTModal";
-import { useContext, useRef, useState } from "@wordpress/element";
+import { useContext } from "@wordpress/element";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import {
   CLOSE_STAGE_MODAL,
@@ -8,50 +8,25 @@ import {
 } from "../../../constants";
 import { StageModalContent } from "./StageModalContent";
 import { createNewStageRequest, editStageRequest } from "../../../api/api";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import { Stage } from "../../../types/stage";
+import { useModal } from "../useModal";
 
 function StageModal() {
   const {
     state: { stageModalOpen, targetPipelineId },
-    modalDispatch,
   } = useContext(ModalContext);
-  const { dispatch } = useContext(PipelineContext);
-  const [stageModalSaving, setStageModalSAving] = useState(false);
-  const stageModalContentRef = useRef<any>(null);
-
-  const closeStageModal = () => {
-    modalDispatch({
-      type: CLOSE_STAGE_MODAL,
-    });
-    clearModalContent();
-  };
-
-  const clearModalContent = () => {
-    if (stageModalContentRef.current) {
-      stageModalContentRef.current.clearContent();
-    }
-  };
-
-  const handleSuccess = (type: string, stage: Stage) => {
-    setStageModalSAving(false);
-    dispatch({
-      type,
-      payload: {
-        stage,
-      },
-    });
-    closeStageModal();
-  };
-
-  const handleError = (error: any) => {
-    setStageModalSAving(false);
-    console.error(error);
-  };
+  const {
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError,
+  } = useModal(CLOSE_STAGE_MODAL);
 
   const addStage = async (stageName: string, stageDescription: string) => {
     try {
-      setStageModalSAving(true);
+      setModalSaving(true);
       const response = await createNewStageRequest(
         targetPipelineId,
         stageName,
@@ -69,23 +44,23 @@ function StageModal() {
 
   const editStage = async (stage: Stage) => {
     try {
-      setStageModalSAving(true);
-      await editStageRequest(stage);
+      setModalSaving(true);
+      const response = await editStageRequest(stage);
 
-      handleSuccess(PIPELINE_EDIT_STAGE, stage);
+      handleSuccess(PIPELINE_EDIT_STAGE, response.data);
     } catch (error) {
       handleError(error);
     }
   };
 
   return (
-    <WPQTModal modalOpen={stageModalOpen} closeModal={closeStageModal}>
+    <WPQTModal modalOpen={stageModalOpen} closeModal={closeModal}>
       <StageModalContent
-        ref={stageModalContentRef}
+        ref={modalContentRef}
         editStage={editStage}
         addStage={addStage}
-        stageModalSaving={stageModalSaving}
-        stageTaskModalSaving={setStageModalSAving}
+        stageModalSaving={modalSaving}
+        stageTaskModalSaving={setModalSaving}
       />
     </WPQTModal>
   );

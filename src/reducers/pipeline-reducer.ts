@@ -125,7 +125,7 @@ const pipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_ADD_STAGE:
-      const { stage }: { stage: Stage } = action.payload;
+      const stage: Stage = action.payload;
 
       return {
         ...state,
@@ -135,15 +135,26 @@ const pipelineReducer = (state: State, action: Action) => {
         },
       };
     case PIPELINE_EDIT_STAGE: {
-      const { stage }: { stage: Stage } = action.payload;
+      const updatedStage: Stage = action.payload;
+
+      const updateStage = (stage: Stage) => {
+        if (stage.id === updatedStage.id) {
+          return {
+            ...stage,
+            name: updatedStage.name,
+            description: updatedStage.description,
+          };
+        }
+        return stage;
+      };
+
+      const updatedStages = state.activePipeline!.stages.map(updateStage);
 
       return {
         ...state,
         activePipeline: {
           ...state.activePipeline,
-          stages: state.activePipeline!.stages.map((s) =>
-            s.id === stage.id ? stage : s,
-          ),
+          stages: updatedStages,
         },
       };
     }
@@ -185,7 +196,7 @@ const pipelineReducer = (state: State, action: Action) => {
         existingPipelines: [...state.existingPipelines, action.payload],
       };
     case PIPELINE_ADD_PIPELINE: {
-      const { pipeline } = action.payload;
+      const pipeline = action.payload;
 
       return {
         ...state,
@@ -193,7 +204,7 @@ const pipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_EDIT_PIPELINE: {
-      const { pipeline }: { pipeline: Pipeline } = action.payload;
+      const pipeline: Pipeline = action.payload;
 
       return {
         ...state,

@@ -7791,7 +7791,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PipelineModalContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./PipelineModalContent */ "./src/components/Modal/PipelineModal/PipelineModalContent.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+/* harmony import */ var _useModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../useModal */ "./src/components/Modal/useModal.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -7831,51 +7831,28 @@ function PipelineModal() {
   const {
     state: {
       pipelineModalOpen
-    },
-    modalDispatch
+    }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
   const {
-    dispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_7__.PipelineContext);
-  const [modalSaving, setmodalSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const pipelineModalContentRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
-  const closeModal = () => {
-    modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_5__.CLOSE_PIPELINE_MODAL
-    });
-    clearModalContent();
-  };
-  const clearModalContent = () => {
-    if (pipelineModalContentRef.current) {
-      pipelineModalContentRef.current.clearContent();
-    }
-  };
-  const handleSuccess = (type, pipeline) => {
-    setmodalSaving(false);
-    dispatch({
-      type,
-      payload: {
-        pipeline
-      }
-    });
-    closeModal();
-  };
-  const handleError = error => {
-    setmodalSaving(false);
-    console.error(error);
-  };
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError
+  } = (0,_useModal__WEBPACK_IMPORTED_MODULE_7__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_5__.CLOSE_PIPELINE_MODAL);
   const addPipeline = (pipelineName, pipelineDescription) => __awaiter(this, void 0, void 0, function* () {
     try {
-      setmodalSaving(true);
+      setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.createPipelineRequest)(pipelineName, pipelineDescription);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_PIPELINE, Object.assign({}, response.data));
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_PIPELINE, response.data);
     } catch (error) {
       handleError(error);
     }
   });
   const editPipeline = pipeline => __awaiter(this, void 0, void 0, function* () {
     try {
-      setmodalSaving(true);
+      setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.editPipelineRequest)(pipeline);
       handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_EDIT_PIPELINE, response.data);
     } catch (error) {
@@ -7886,11 +7863,11 @@ function PipelineModal() {
     modalOpen: pipelineModalOpen,
     closeModal: closeModal,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PipelineModalContent__WEBPACK_IMPORTED_MODULE_4__.PipelineModalContent, {
-      ref: pipelineModalContentRef,
+      ref: modalContentRef,
       editPipeline: editPipeline,
       addPipeline: addPipeline,
       modalSaving: modalSaving,
-      setModalSaving: setmodalSaving
+      setModalSaving: setModalSaving
     })
   });
 }
@@ -8019,7 +7996,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _StageModalContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./StageModalContent */ "./src/components/Modal/StageModal/StageModalContent.tsx");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+/* harmony import */ var _useModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../useModal */ "./src/components/Modal/useModal.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -8060,42 +8037,19 @@ function StageModal() {
     state: {
       stageModalOpen,
       targetPipelineId
-    },
-    modalDispatch
+    }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
   const {
-    dispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_7__.PipelineContext);
-  const [stageModalSaving, setStageModalSAving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
-  const stageModalContentRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
-  const closeStageModal = () => {
-    modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_4__.CLOSE_STAGE_MODAL
-    });
-    clearModalContent();
-  };
-  const clearModalContent = () => {
-    if (stageModalContentRef.current) {
-      stageModalContentRef.current.clearContent();
-    }
-  };
-  const handleSuccess = (type, stage) => {
-    setStageModalSAving(false);
-    dispatch({
-      type,
-      payload: {
-        stage
-      }
-    });
-    closeStageModal();
-  };
-  const handleError = error => {
-    setStageModalSAving(false);
-    console.error(error);
-  };
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError
+  } = (0,_useModal__WEBPACK_IMPORTED_MODULE_7__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_4__.CLOSE_STAGE_MODAL);
   const addStage = (stageName, stageDescription) => __awaiter(this, void 0, void 0, function* () {
     try {
-      setStageModalSAving(true);
+      setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.createNewStageRequest)(targetPipelineId, stageName, stageDescription);
       handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_ADD_STAGE, Object.assign(Object.assign({}, response.data), {
         tasks: []
@@ -8106,22 +8060,22 @@ function StageModal() {
   });
   const editStage = stage => __awaiter(this, void 0, void 0, function* () {
     try {
-      setStageModalSAving(true);
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.editStageRequest)(stage);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_EDIT_STAGE, stage);
+      setModalSaving(true);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.editStageRequest)(stage);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_EDIT_STAGE, response.data);
     } catch (error) {
       handleError(error);
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_1__.WPQTModal, {
     modalOpen: stageModalOpen,
-    closeModal: closeStageModal,
+    closeModal: closeModal,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageModalContent__WEBPACK_IMPORTED_MODULE_5__.StageModalContent, {
-      ref: stageModalContentRef,
+      ref: modalContentRef,
       editStage: editStage,
       addStage: addStage,
-      stageModalSaving: stageModalSaving,
-      stageTaskModalSaving: setStageModalSAving
+      stageModalSaving: modalSaving,
+      stageTaskModalSaving: setModalSaving
     })
   });
 }
@@ -8498,6 +8452,67 @@ function WPQTModal({
   });
 }
 
+
+/***/ }),
+
+/***/ "./src/components/Modal/useModal.tsx":
+/*!*******************************************!*\
+  !*** ./src/components/Modal/useModal.tsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useModal: () => (/* binding */ useModal)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+
+
+
+const useModal = closeActionType => {
+  const [modalSaving, setModalSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const modalContentRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const {
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_1__.ModalContext);
+  const {
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__.PipelineContext);
+  const closeModal = () => {
+    modalDispatch({
+      type: closeActionType
+    });
+    clearModalContent();
+  };
+  const clearModalContent = () => {
+    if (modalContentRef.current) {
+      modalContentRef.current.clearContent();
+    }
+  };
+  const handleSuccess = (type, payload) => {
+    setModalSaving(false);
+    dispatch({
+      type,
+      payload
+    });
+    closeModal();
+  };
+  const handleError = error => {
+    setModalSaving(false);
+    console.error(error);
+  };
+  return {
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError
+  };
+};
 
 /***/ }),
 
@@ -8889,7 +8904,6 @@ function PipelineHeader() {
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__.ModalContext);
   const openEditPipelineModal = () => {
-    console.log("Opening modal!");
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_6__.OPEN_EDIT_PIPELINE_MODAL,
       payload: {
@@ -9771,9 +9785,7 @@ const pipelineReducer = (state, action) => {
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_STAGE:
-      const {
-        stage
-      } = action.payload;
+      const stage = action.payload;
       return Object.assign(Object.assign({}, state), {
         activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
           stages: [...state.activePipeline.stages, stage]
@@ -9781,12 +9793,20 @@ const pipelineReducer = (state, action) => {
       });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_STAGE:
       {
-        const {
-          stage
-        } = action.payload;
+        const updatedStage = action.payload;
+        const updateStage = stage => {
+          if (stage.id === updatedStage.id) {
+            return Object.assign(Object.assign({}, stage), {
+              name: updatedStage.name,
+              description: updatedStage.description
+            });
+          }
+          return stage;
+        };
+        const updatedStages = state.activePipeline.stages.map(updateStage);
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-            stages: state.activePipeline.stages.map(s => s.id === stage.id ? stage : s)
+            stages: updatedStages
           })
         });
       }
@@ -9822,18 +9842,14 @@ const pipelineReducer = (state, action) => {
       });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_PIPELINE:
       {
-        const {
-          pipeline
-        } = action.payload;
+        const pipeline = action.payload;
         return Object.assign(Object.assign({}, state), {
           existingPipelines: [...state.existingPipelines, pipeline]
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_PIPELINE:
       {
-        const {
-          pipeline
-        } = action.payload;
+        const pipeline = action.payload;
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             name: pipeline.name,

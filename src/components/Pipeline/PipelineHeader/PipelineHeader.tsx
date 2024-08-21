@@ -13,7 +13,6 @@ function PipelineHeader() {
   const { modalDispatch } = useContext(ModalContext);
 
   const openEditPipelineModal = () => {
-    console.log("Opening modal!");
     modalDispatch({
       type: OPEN_EDIT_PIPELINE_MODAL,
       payload: {

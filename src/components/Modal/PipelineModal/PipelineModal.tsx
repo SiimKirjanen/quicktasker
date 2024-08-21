@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "@wordpress/element";
+import { useContext } from "@wordpress/element";
 import { WPQTModal } from "../WPQTModal";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { PipelineModalContent } from "./PipelineModalContent";
@@ -9,60 +9,33 @@ import {
 } from "../../../constants";
 import { createPipelineRequest, editPipelineRequest } from "../../../api/api";
 import { Pipeline } from "../../../types/pipeline";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
+import { useModal } from "../useModal";
 
 function PipelineModal() {
   const {
     state: { pipelineModalOpen },
-    modalDispatch,
   } = useContext(ModalContext);
-  const { dispatch } = useContext(PipelineContext);
-  const [modalSaving, setmodalSaving] = useState(false);
-  const pipelineModalContentRef = useRef<any>(null);
-
-  const closeModal = () => {
-    modalDispatch({
-      type: CLOSE_PIPELINE_MODAL,
-    });
-    clearModalContent();
-  };
-
-  const clearModalContent = () => {
-    if (pipelineModalContentRef.current) {
-      pipelineModalContentRef.current.clearContent();
-    }
-  };
-
-  const handleSuccess = (type: string, pipeline: Pipeline) => {
-    setmodalSaving(false);
-    dispatch({
-      type,
-      payload: {
-        pipeline,
-      },
-    });
-    closeModal();
-  };
-
-  const handleError = (error: any) => {
-    setmodalSaving(false);
-    console.error(error);
-  };
+  const {
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError,
+  } = useModal(CLOSE_PIPELINE_MODAL);
 
   const addPipeline = async (
     pipelineName: string,
     pipelineDescription: string,
   ) => {
     try {
-      setmodalSaving(true);
+      setModalSaving(true);
       const response = await createPipelineRequest(
         pipelineName,
         pipelineDescription,
       );
 
-      handleSuccess(PIPELINE_ADD_PIPELINE, {
-        ...response.data,
-      });
+      handleSuccess(PIPELINE_ADD_PIPELINE, response.data);
     } catch (error) {
       handleError(error);
     }
@@ -70,7 +43,7 @@ function PipelineModal() {
 
   const editPipeline = async (pipeline: Pipeline) => {
     try {
-      setmodalSaving(true);
+      setModalSaving(true);
       const response = await editPipelineRequest(pipeline);
 
       handleSuccess(PIPELINE_EDIT_PIPELINE, response.data);
@@ -82,11 +55,11 @@ function PipelineModal() {
   return (
     <WPQTModal modalOpen={pipelineModalOpen} closeModal={closeModal}>
       <PipelineModalContent
-        ref={pipelineModalContentRef}
+        ref={modalContentRef}
         editPipeline={editPipeline}
         addPipeline={addPipeline}
         modalSaving={modalSaving}
-        setModalSaving={setmodalSaving}
+        setModalSaving={setModalSaving}
       />
     </WPQTModal>
   );
