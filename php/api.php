@@ -85,6 +85,31 @@ function wpqt_register_api_routes() {
         ),
     );
 
+    register_rest_route(
+        'wpqt/v1',
+        'pipelines/(?P<id>\d+)',
+        array(
+            'methods' => 'PATCH',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $pipelineService = new PipelineService();
+                    $pipeline = $pipelineService->editPipeline($data['id'], array(
+                        "name" => $data['name'],
+                        "description" => $data['description']
+                    ));
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $pipeline))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
     /*
     ==================================================================================================================================================================================================================
     Task endpoints

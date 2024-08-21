@@ -24,11 +24,25 @@ function getPipelineData(pipelineId: string): Promise<WPQTResponse<Pipeline>> {
   });
 }
 
-function createPipelineRequest(name: string): Promise<WPQTResponse<Pipeline>> {
+function createPipelineRequest(
+  name: string,
+  description: string,
+): Promise<WPQTResponse<Pipeline>> {
   return apiFetch({
     path: `/wpqt/v1/pipelines`,
     method: "POST",
-    data: { name },
+    data: { name, description },
+    headers: getCommonHeaders(),
+  });
+}
+
+function editPipelineRequest(
+  pipeline: Pipeline,
+): Promise<WPQTResponse<Pipeline>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipeline.id}`,
+    method: "PATCH",
+    data: { name: pipeline.name, description: pipeline.description },
     headers: getCommonHeaders(),
   });
 }
@@ -137,4 +151,5 @@ export {
   editTaskRequest,
   editStageRequest,
   moveStageRequest,
+  editPipelineRequest,
 };

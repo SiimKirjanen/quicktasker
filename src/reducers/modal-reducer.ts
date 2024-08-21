@@ -5,8 +5,12 @@ import {
   OPEN_NEW_STAGE_MODAL,
   CLOSE_STAGE_MODAL,
   OPEN_STAGE_EDIT_MODAL,
+  CLOSE_PIPELINE_MODAL,
+  OPEN_NEW_PIPELINE_MODAL,
+  OPEN_EDIT_PIPELINE_MODAL,
 } from "../constants";
 import { Action, State } from "../providers/ModalContextProvider";
+import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
 
@@ -19,6 +23,8 @@ const closeModal = (state: State) => {
     stageModalOpen: false,
     targetPipelineId: "",
     stageToEdit: null,
+    pipelineModalOpen: false,
+    pipelineToEdit: null,
   };
 };
 
@@ -66,6 +72,27 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case CLOSE_STAGE_MODAL: {
+      return closeModal(state);
+    }
+    case OPEN_NEW_PIPELINE_MODAL: {
+      return {
+        ...state,
+        pipelineModalOpen: true,
+        pipelineToEdit: null,
+      };
+    }
+    case OPEN_EDIT_PIPELINE_MODAL: {
+      const { pipelineToEdit }: { pipelineToEdit: Pipeline } = action.payload;
+      console.log("AI Ai");
+      console.log(pipelineToEdit);
+
+      return {
+        ...state,
+        pipelineModalOpen: true,
+        pipelineToEdit,
+      };
+    }
+    case CLOSE_PIPELINE_MODAL: {
       return closeModal(state);
     }
     default:

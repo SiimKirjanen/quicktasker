@@ -1,8 +1,10 @@
 import {
   PIPELINE_ADD_EXISTING_PIPELINE,
+  PIPELINE_ADD_PIPELINE,
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
   PIPELINE_DELETE_STAGE,
+  PIPELINE_EDIT_PIPELINE,
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_STAGE,
@@ -16,6 +18,7 @@ import { Action, State } from "../providers/PipelineContextProvider";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
 import { moveTask, reorderTask } from "../utils/task";
+import { Pipeline } from "../types/pipeline";
 
 const pipelineReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -190,6 +193,29 @@ const pipelineReducer = (state: State, action: Action) => {
         ...state,
         existingPipelines: [...state.existingPipelines, action.payload],
       };
+    case PIPELINE_ADD_PIPELINE: {
+      const { pipeline } = action.payload;
+
+      return {
+        ...state,
+        existingPipelines: [...state.existingPipelines, pipeline],
+      };
+    }
+    case PIPELINE_EDIT_PIPELINE: {
+      const { pipeline }: { pipeline: Pipeline } = action.payload;
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          name: pipeline.name,
+          description: pipeline.description,
+        },
+        existingPipelines: state.existingPipelines.map((p) =>
+          p.id === pipeline.id ? pipeline : p,
+        ),
+      };
+    }
     default:
       return state;
   }

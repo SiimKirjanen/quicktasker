@@ -2,6 +2,7 @@ import { createContext, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/modal-reducer";
 import { Task } from "../types/task";
 import { Stage } from "../types/stage";
+import { Pipeline } from "../types/pipeline";
 
 const initialState = {
   taskModalOpen: false,
@@ -10,6 +11,8 @@ const initialState = {
   stageModalOpen: false,
   stageToEdit: null,
   targetPipelineId: "",
+  pipelineModalOpen: false,
+  pipelineToEdit: null,
 };
 
 type State = {
@@ -19,6 +22,8 @@ type State = {
   stageModalOpen: boolean;
   stageToEdit: Stage | null;
   targetPipelineId: string;
+  pipelineModalOpen: boolean;
+  pipelineToEdit: Pipeline | null;
 };
 
 type Action = {

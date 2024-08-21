@@ -1,40 +1,21 @@
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
-import { toast } from "react-toastify";
-import { createPipelineRequest } from "../../../api/api";
 import { useContext } from "@wordpress/element";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
-import {
-  PIPELINE_ADD_EXISTING_PIPELINE,
-  PIPELINE_SET_PIPELINE,
-} from "../../../constants";
+import { OPEN_NEW_PIPELINE_MODAL } from "../../../constants";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 
 function AddPipeline() {
-  const { dispatch } = useContext(PipelineContext);
+  const { modalDispatch } = useContext(ModalContext);
 
-  const addPipeline = async () => {
-    try {
-      const response = await createPipelineRequest("New Board");
-
-      dispatch({
-        type: PIPELINE_ADD_EXISTING_PIPELINE,
-        payload: response.data,
-      });
-      dispatch({
-        type: PIPELINE_SET_PIPELINE,
-        payload: {
-          ...response.data,
-          stages: [],
-        },
-      });
-    } catch (e) {
-      toast.error("Failed to create a board");
-    }
+  const openPipelineModal = async () => {
+    modalDispatch({
+      type: OPEN_NEW_PIPELINE_MODAL,
+    });
   };
 
   return (
     <div
       className="wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-      onClick={addPipeline}
+      onClick={openPipelineModal}
     >
       <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
       Add Board
