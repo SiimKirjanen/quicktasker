@@ -198,14 +198,21 @@ class StageService {
     public function deleteStage($stageId) {
         global $wpdb;
         
+        // Check if the stage has tasks
         if( count( $this->taskRepository->getTasksByStageId($stageId) ) > 0 ) {
-            throw new Exception('Stage has tasks. Please delete the tasks first.');
+            throw new Exception('Stage has tasks. Please delete/relocate the tasks first.');
         }
 
+        // Delete the stage from the pipeline stages table
         $result = $wpdb->delete(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array('id' => $stageId));
-
         if( $result === false ) {
-            throw new Exception('Failed to delete the stage');
+            throw new Exception('Failed to delete the stage.');
+        }
+
+        // Delete the stage from the stages location table
+        $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_STAGES_LOCATION, array('stage_id' => $stageId));
+        if( $result2 === false ) {
+            throw new Exception('Failed to delete the stage.');
         }
 
         return $result;

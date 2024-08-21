@@ -99,9 +99,10 @@ function wpqt_register_api_routes() {
             'callback' => function( $data ) {
                 global $wpdb;
 
-                $wpdb->query('START TRANSACTION');
                 try {
                     WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+
                     $taskService = new TaskService();
                     $taskService->moveTask( $data['id'], $data['stageId'], $data['order'] );
 
@@ -109,6 +110,7 @@ function wpqt_register_api_routes() {
                     return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
                 } catch (Exception $e) {
                     $wpdb->query('ROLLBACK');
+
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },
@@ -124,15 +126,24 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'POST',
             'callback' => function( $data ) {
+                global $wpdb;
+
                 try {
                     WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+
                     $taskService = new TaskService();
+                    
                     $newTask = $taskService->createTask( $data['stageId'], array(
                         "name" => $data['name'],
                         "description" => $data['description']
                     ) );
+                    $wpdb->query('COMMIT');
+
                     return new WP_REST_Response((new ApiResponse(true, array(), $newTask))->toArray(), 200);
                 } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
+
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },
@@ -203,16 +214,24 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
+                global $wpdb;
+
                 try {
                     WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+
                     $stageService = new StageService();
 
                     $stage = $stageService->editStage( $data['id'], array(
                         "name" => $data['name'],
                         "description" => $data['description']
                     ) );
+                    $wpdb->query('COMMIT');
+
                     return new WP_REST_Response((new ApiResponse(true, array(), $stage))->toArray(), 200);
                 } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
+
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } 
             },
@@ -228,15 +247,23 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
+                global $wpdb;
+
                 try {
                     WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+
                     $stageService = new StageService();
 
                     $stage = $stageService->moveStage( $data['id'], array(
                         "direction" => $data['direction'],
                     ) );
+                    $wpdb->query('COMMIT');
+
                     return new WP_REST_Response((new ApiResponse(true, array(), $stage))->toArray(), 200);
                 } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
+
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } 
             },
@@ -252,13 +279,20 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'DELETE',
             'callback' => function( $data ) {
+                global $wpdb;
+
                 try {
                     WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+
                     $stageService = new StageService();
                     $stageService->deleteStage( $data['id'] );
+                    $wpdb->query('COMMIT');
 
                     return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
                 } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
+                    
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },

@@ -77,6 +77,8 @@ function wpqt_insert_initial_data() {
 	global $wpdb;
 
 	try {
+		$wpdb->query('START TRANSACTION');
+
 		$pipeRepo = new PipelineRepository();
 		$pipeService = new PipelineService();
 		$stageService = new StageService();
@@ -95,10 +97,10 @@ function wpqt_insert_initial_data() {
 		$taskService->createTask($firstStageId, array('name' => 'Task 2'));
 		$taskService->createTask($secondStageId, array('name' => 'Task 3'));
 		$taskService->createTask($secondStageId, array('name' => 'Task 4'));
+
+		$wpdb->query('COMMIT');
 	}
 	} catch (\Throwable $th) {
-		$test = true;
+		$wpdb->query('ROLLBACK');
 	}
-
-	
 }
