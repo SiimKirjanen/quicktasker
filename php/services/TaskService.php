@@ -100,49 +100,41 @@ class TaskService {
     public function moveTask($taskId, $newStageId, $newOrder) {
         global $wpdb;
 
-        $wpdb->query('START TRANSACTION');
-    
-        try {
-            $currentTask = $this->taskRepository->getTaskById($taskId);
-    
-            if (!$currentTask) {
-                throw new Exception('Task not found');
-            }
-            $currentStageId = $currentTask->stage_id;
-            $currentOrder = $currentTask->task_order;
-    
-            if ($currentStageId == $newStageId) {
-                $this->updateTaskOrderWithinStage($currentStageId, $currentOrder, $newOrder);
-            } else {
-                $this->updateTaskOrderAcrossStages($currentStageId, $currentOrder, $newStageId, $newOrder);
-            }
-    
-            // Update the stage_id and task_order of the moved task
-            $rowsUpdated = $wpdb->update(
-                TABLE_WP_QUICK_TASKS_TASKS_LOCATION,
-                array(
-                    'stage_id' => $newStageId,
-                    'task_order' => $newOrder,
-                ),
-                array(
-                    'task_id' => $taskId
-                ),
-                array(
-                    '%d',
-                    '%d'
-                )
-            );
-    
-            if ($rowsUpdated === false) {
-                throw new Exception('Failed to move task');
-            }
-    
-            $wpdb->query('COMMIT');
-            return $rowsUpdated;
-        } catch (Exception $e) {
-            $wpdb->query('ROLLBACK');
-            throw $e;
+        $currentTask = $this->taskRepository->getTaskById($taskId);
+
+        if (!$currentTask) {
+            throw new Exception('Task not found');
         }
+        $currentStageId = $currentTask->stage_id;
+        $currentOrder = $currentTask->task_order;
+
+        if ($currentStageId == $newStageId) {
+            $this->updateTaskOrderWithinStage($currentStageId, $currentOrder, $newOrder);
+        } else {
+            $this->updateTaskOrderAcrossStages($currentStageId, $currentOrder, $newStageId, $newOrder);
+        }
+
+        // Update the stage_id and task_order of the moved task
+        $rowsUpdated = $wpdb->update(
+            TABLE_WP_QUICK_TASKS_TASKS_LOCATION,
+            array(
+                'stage_id' => $newStageId,
+                'task_order' => $newOrder,
+            ),
+            array(
+                'task_id' => $taskId
+            ),
+            array(
+                '%d',
+                '%d'
+            )
+        );
+
+        if ($rowsUpdated === false) {
+            throw new Exception('Failed to move task');
+        }
+
+        return $rowsUpdated;
     }
     
     /**

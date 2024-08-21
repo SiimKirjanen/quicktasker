@@ -8426,13 +8426,42 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _Stage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Stage */ "./src/components/Pipeline/Stage.tsx");
 /* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
 /* harmony import */ var _AddStage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./AddStage */ "./src/components/Pipeline/AddStage.tsx");
 /* harmony import */ var _Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Modal/TaskModal/TaskModal */ "./src/components/Modal/TaskModal/TaskModal.tsx");
 /* harmony import */ var _Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Modal/StageModal/StageModal */ "./src/components/Modal/StageModal/StageModal.tsx");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
 
 
 
@@ -8450,15 +8479,7 @@ const Pipeline = () => {
     },
     dispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__.PipelineContext);
-  const onDragEnd = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(result => {
-    const {
-      source,
-      destination,
-      draggableId
-    } = result;
-    if (!destination) {
-      return;
-    }
+  const dispatchMove = (source, destination) => {
     if (source.droppableId === destination.droppableId) {
       dispatch({
         type: "REORDER_TASK",
@@ -8476,14 +8497,33 @@ const Pipeline = () => {
         }
       });
     }
-    (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.moveTaskRequest)(draggableId, destination.droppableId, destination.index);
-  }, [activePipeline]);
+  };
+  const onDragEnd = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(result => __awaiter(void 0, void 0, void 0, function* () {
+    const {
+      source,
+      destination,
+      draggableId
+    } = result;
+    if (!destination) {
+      return;
+    }
+    dispatchMove(source, destination);
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.moveTaskRequest)(draggableId, destination.droppableId, destination.index);
+    } catch (error) {
+      console.error(error);
+      dispatchMove(destination, source);
+      react_toastify__WEBPACK_IMPORTED_MODULE_8__.toast.error("Failed to move a task", {
+        position: "bottom-right"
+      });
+    }
+  }), [activePipeline]);
   if (!activePipeline) {
     return;
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pr-5",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_8__.DragDropContext, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_9__.DragDropContext, {
       onDragEnd: onDragEnd,
       children: activePipeline.stages.map(stage => {
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_3__.Stage, {

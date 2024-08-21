@@ -97,13 +97,18 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
+                global $wpdb;
+
+                $wpdb->query('START TRANSACTION');
                 try {
                     WPQTverifyApiNonce($data);
                     $taskService = new TaskService();
                     $taskService->moveTask( $data['id'], $data['stageId'], $data['order'] );
 
+                    $wpdb->query('COMMIT');
                     return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
                 } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },

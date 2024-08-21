@@ -93,6 +93,18 @@ class StageService {
         return $this->stageRepository->getStageById($stageId);
     }
 
+    /**
+     * Moves a stage within a pipeline.
+     *
+     * @param int $stageId The ID of the stage to be moved.
+     * @param array $args The arguments for moving the stage.
+     *   - direction (string): The direction in which to move the stage ('left' or 'right').
+     *
+     * @return Stage|null The updated stage object if successful, null otherwise.
+     *
+     * @throws Exception If the required fields are missing, the stage is not found,
+     *   or the stage is already at the beginning/end.
+     */
     public function moveStage($stageId, $args) {
         global $wpdb;
 
@@ -124,6 +136,16 @@ class StageService {
         return $this->stageRepository->getStageById($stageId);
     }
 
+    /**
+     * Updates the stage order in the database.
+     *
+     * @param int $stageId The ID of the stage.
+     * @param int $pipelineId The ID of the pipeline.
+     * @param int $newOrder The new order of the stage.
+     * @param int $currentOrder The current order of the stage.
+     * @return int The number of rows affected by the update.
+     * @throws Exception If the update fails.
+     */
     private function updateStageOrder($stageId, $pipelineId, $newOrder, $currentOrder) {
         global $wpdb;
 
