@@ -7558,7 +7558,9 @@ function App() {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.PipelineContextProvider, {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_6__.UserContextProvider, {
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__.ModalContextProvider, {
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage__WEBPACK_IMPORTED_MODULE_2__.PipelinePage, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_7__.ToastContainer, {})]
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage__WEBPACK_IMPORTED_MODULE_2__.PipelinePage, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_7__.ToastContainer, {
+              position: "bottom-right"
+            })]
           })
         })
       })
@@ -8513,9 +8515,7 @@ const Pipeline = () => {
     } catch (error) {
       console.error(error);
       dispatchMove(destination, source);
-      react_toastify__WEBPACK_IMPORTED_MODULE_8__.toast.error("Failed to move a task", {
-        position: "bottom-right"
-      });
+      react_toastify__WEBPACK_IMPORTED_MODULE_8__.toast.error("Failed to move a task");
     }
   }), [activePipeline]);
   if (!activePipeline) {
@@ -8610,9 +8610,7 @@ function AddPipeline() {
         })
       });
     } catch (e) {
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to create a board", {
-        position: "bottom-right"
-      });
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to create a board");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -8739,9 +8737,7 @@ function PipelineSelection() {
         payload: resp.data
       });
     } catch (e) {
-      react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error("Failed to change pipeline", {
-        position: "bottom-right"
-      });
+      react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error("Failed to change pipeline");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Select, {
@@ -8903,9 +8899,7 @@ function StageControls({
       });
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error("Failed to delete a stage", {
-        position: "bottom-right"
-      });
+      react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error("Failed to delete a stage");
     }
   });
   const openStageEditModal = () => {
@@ -8930,9 +8924,7 @@ function StageControls({
       });
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error("Failed to move a stage", {
-        position: "bottom-right"
-      });
+      react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error("Failed to move a stage");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Menu, {

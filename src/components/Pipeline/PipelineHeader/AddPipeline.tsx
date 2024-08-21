@@ -27,9 +27,7 @@ function AddPipeline() {
         },
       });
     } catch (e) {
-      toast.error("Failed to create a board", {
-        position: "bottom-right",
-      });
+      toast.error("Failed to create a board");
     }
   };
 

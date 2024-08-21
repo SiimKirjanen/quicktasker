@@ -22,9 +22,7 @@ function PipelineSelection() {
         payload: resp.data,
       });
     } catch (e) {
-      toast.error("Failed to change pipeline", {
-        position: "bottom-right",
-      });
+      toast.error("Failed to change pipeline");
     }
   };
 

@@ -39,9 +39,7 @@ function StageControls({ stage }: Props) {
       dispatch({ type: PIPELINE_DELETE_STAGE, payload: stage.id });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete a stage", {
-        position: "bottom-right",
-      });
+      toast.error("Failed to delete a stage");
     }
   };
 
@@ -69,9 +67,7 @@ function StageControls({ stage }: Props) {
       });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to move a stage", {
-        position: "bottom-right",
-      });
+      toast.error("Failed to move a stage");
     }
   };
 

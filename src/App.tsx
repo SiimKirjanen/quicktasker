@@ -14,7 +14,7 @@ function App() {
           <UserContextProvider>
             <ModalContextProvider>
               <PipelinePage />
-              <ToastContainer />
+              <ToastContainer position="bottom-right" />
             </ModalContextProvider>
           </UserContextProvider>
         </PipelineContextProvider>

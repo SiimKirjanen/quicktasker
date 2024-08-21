@@ -61,9 +61,7 @@ const Pipeline = () => {
       } catch (error) {
         console.error(error);
         dispatchMove(destination, source);
-        toast.error("Failed to move a task", {
-          position: "bottom-right",
-        });
+        toast.error("Failed to move a task");
       }
     },
     [activePipeline],
