@@ -24,6 +24,13 @@ function StageModal() {
     modalDispatch({
       type: CLOSE_STAGE_MODAL,
     });
+    clearModalContent();
+  };
+
+  const clearModalContent = () => {
+    if (stageModalContentRef.current) {
+      stageModalContentRef.current.clearContent();
+    }
   };
 
   const handleSuccess = (type: string, stage: Stage) => {
@@ -35,9 +42,6 @@ function StageModal() {
       },
     });
     closeStageModal();
-    if (stageModalContentRef.current) {
-      stageModalContentRef.current.clearContent();
-    }
   };
 
   const handleError = (error: any) => {

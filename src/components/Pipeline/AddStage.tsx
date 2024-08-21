@@ -9,7 +9,6 @@ function AddStage({ pipelineId }: Props) {
   const { modalDispatch } = useContext(ModalContext);
 
   const openNewStageModal = async () => {
-    console.log("herllo1!!");
     modalDispatch({
       type: OPEN_NEW_STAGE_MODAL,
       payload: {

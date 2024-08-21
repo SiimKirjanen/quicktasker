@@ -7843,6 +7843,12 @@ function PipelineModal() {
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_5__.CLOSE_PIPELINE_MODAL
     });
+    clearModalContent();
+  };
+  const clearModalContent = () => {
+    if (pipelineModalContentRef.current) {
+      pipelineModalContentRef.current.clearContent();
+    }
   };
   const handleSuccess = (type, pipeline) => {
     setmodalSaving(false);
@@ -7853,9 +7859,6 @@ function PipelineModal() {
       }
     });
     closeModal();
-    if (pipelineModalContentRef.current) {
-      pipelineModalContentRef.current.clearContent();
-    }
   };
   const handleError = error => {
     setmodalSaving(false);
@@ -8069,6 +8072,12 @@ function StageModal() {
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_4__.CLOSE_STAGE_MODAL
     });
+    clearModalContent();
+  };
+  const clearModalContent = () => {
+    if (stageModalContentRef.current) {
+      stageModalContentRef.current.clearContent();
+    }
   };
   const handleSuccess = (type, stage) => {
     setStageModalSAving(false);
@@ -8079,9 +8088,6 @@ function StageModal() {
       }
     });
     closeStageModal();
-    if (stageModalContentRef.current) {
-      stageModalContentRef.current.clearContent();
-    }
   };
   const handleError = error => {
     setStageModalSAving(false);
@@ -8308,6 +8314,7 @@ function TaskModal() {
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_TASK_MODAL
     });
+    resetTaskModal();
   };
   const resetTaskModal = () => {
     setTaskName("");
@@ -8550,7 +8557,6 @@ function AddStage({
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const openNewStageModal = () => __awaiter(this, void 0, void 0, function* () {
-    console.log("herllo1!!");
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_3__.OPEN_NEW_STAGE_MODAL,
       payload: {
@@ -9252,7 +9258,6 @@ function Task({
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const openEditTaskModal = () => {
-    console.log(task);
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_3__.OPEN_EDIT_TASK_MODAL,
       payload: {
@@ -9260,7 +9265,6 @@ function Task({
       }
     });
   };
-  console.log(task);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
     draggableId: task.id,
     index: index,
@@ -9663,8 +9667,6 @@ const reducer = (state, action) => {
         const {
           pipelineToEdit
         } = action.payload;
-        console.log("AI Ai");
-        console.log(pipelineToEdit);
         return Object.assign(Object.assign({}, state), {
           pipelineModalOpen: true,
           pipelineToEdit

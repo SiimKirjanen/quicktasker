@@ -34,6 +34,7 @@ function TaskModal() {
     modalDispatch({
       type: CLOSE_TASK_MODAL,
     });
+    resetTaskModal();
   };
 
   const resetTaskModal = () => {

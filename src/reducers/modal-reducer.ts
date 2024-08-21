@@ -83,8 +83,6 @@ const reducer = (state: State, action: Action) => {
     }
     case OPEN_EDIT_PIPELINE_MODAL: {
       const { pipelineToEdit }: { pipelineToEdit: Pipeline } = action.payload;
-      console.log("AI Ai");
-      console.log(pipelineToEdit);
 
       return {
         ...state,

@@ -24,6 +24,13 @@ function PipelineModal() {
     modalDispatch({
       type: CLOSE_PIPELINE_MODAL,
     });
+    clearModalContent();
+  };
+
+  const clearModalContent = () => {
+    if (pipelineModalContentRef.current) {
+      pipelineModalContentRef.current.clearContent();
+    }
   };
 
   const handleSuccess = (type: string, pipeline: Pipeline) => {
@@ -35,9 +42,6 @@ function PipelineModal() {
       },
     });
     closeModal();
-    if (pipelineModalContentRef.current) {
-      pipelineModalContentRef.current.clearContent();
-    }
   };
 
   const handleError = (error: any) => {
