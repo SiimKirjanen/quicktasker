@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   DialogTitle,
   Field,
   Fieldset,
@@ -18,6 +19,7 @@ import Switch from "react-switch";
 import { Pipeline } from "../../../types/pipeline";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { clsx } from "clsx";
+import { CheckIcon } from "@heroicons/react/24/solid";
 
 type Props = {
   editPipeline: (pipeline: Pipeline) => void;
@@ -87,7 +89,7 @@ const PipelineModalContent = forwardRef(
               onChange={(e) => setPipelineName(e.target.value)}
             />
           </Field>
-          <Field>
+          <Field className="wpqt-mb-3">
             <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">
               Description
             </Label>
@@ -104,16 +106,26 @@ const PipelineModalContent = forwardRef(
 
           <Field>
             <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">
-              Is primary board
+              Mark as primary board
             </Label>
-            <Switch
-              onChange={setIsPrimary}
+            <Checkbox
               checked={isPrimary}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              height={26}
-              width={48}
-            />
+              onChange={setIsPrimary}
+              className="wpqt-group wpqt-block wpqt-size-4 wpqt-rounded wpqt-border wpqt-border-solid wpqt-border-gray-500 data-[checked]:wpqt-bg-green-500"
+            >
+              <svg
+                className="wpqt-stroke-white wpqt-opacity-0 group-data-[checked]:wpqt-opacity-100"
+                viewBox="0 0 14 14"
+                fill="none"
+              >
+                <path
+                  d="M3 8L6 11L11 3.5"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Checkbox>
           </Field>
         </Fieldset>
         <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">

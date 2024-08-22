@@ -27,11 +27,17 @@ const pipelineReducer = (state: State, action: Action) => {
         ...state,
         loading: action.payload,
       };
-    case PIPELINE_SET_PIPELINE:
+    case PIPELINE_SET_PIPELINE: {
+      const pipelineData = action.payload;
+
       return {
         ...state,
-        activePipeline: action.payload,
+        activePipeline: {
+          ...pipelineData,
+          is_primary: pipelineData.is_primary === "1",
+        },
       };
+    }
     case PIPELINE_MOVE_TASK:
       const stages = moveTask(
         state.activePipeline!.stages,

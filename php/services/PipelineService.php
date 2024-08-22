@@ -77,6 +77,6 @@ class PipelineService {
             throw new Exception('Failed to mark pipeline as primary');
         }
 
-        return result;   
+        return $result;   
     }
 }
