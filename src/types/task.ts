@@ -3,6 +3,7 @@ type Task = {
   stage_id: string;
   name: string;
   description: string;
+  task_order: number;
 };
 
 export type { Task };

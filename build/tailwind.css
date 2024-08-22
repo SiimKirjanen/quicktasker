@@ -886,6 +886,10 @@
   margin-top: 1.25rem;
 }
 
+.wpqt-mt-3 {
+  margin-top: 0.75rem;
+}
+
 .wpqt-block {
   display: block;
 }
@@ -1270,11 +1274,6 @@
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.data-\[focus\]\:wpqt-bg-blue-100[data-focus] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
-}
-
 .data-\[hover\]\:wpqt-bg-gray-600[data-hover] {
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
@@ -1287,12 +1286,6 @@
 
 .data-\[closed\]\:wpqt-opacity-0[data-closed] {
   opacity: 0;
-}
-
-.data-\[hover\]\:wpqt-shadow[data-hover] {
-  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .data-\[focus\]\:wpqt-outline-1[data-focus] {

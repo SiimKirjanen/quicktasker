@@ -5,6 +5,7 @@ type Pipeline = {
   name: string;
   description?: string;
   stages: Stage[];
+  is_primary: boolean;
 };
 
 export type { Pipeline };

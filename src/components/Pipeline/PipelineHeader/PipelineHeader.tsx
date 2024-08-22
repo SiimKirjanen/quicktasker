@@ -1,7 +1,6 @@
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import { PipelineSelection } from "./PipelineSelection";
-import { AddPipeline } from "./AddPipeline";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_EDIT_PIPELINE_MODAL } from "../../../constants";
@@ -34,8 +33,7 @@ function PipelineHeader() {
         onClick={openEditPipelineModal}
       />
 
-      <div className="wpqt-ml-auto wpqt-flex wpqt-gap-2">
-        <AddPipeline />
+      <div className="wpqt-ml-auto">
         <PipelineSelection />
       </div>
     </div>

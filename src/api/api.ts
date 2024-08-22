@@ -47,6 +47,16 @@ function editPipelineRequest(
   });
 }
 
+function setPipelinePrimaryRequest(
+  pipelineId: string,
+): Promise<WPQTResponse<Pipeline>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/set-primary`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   Task requests
@@ -152,4 +162,5 @@ export {
   editStageRequest,
   moveStageRequest,
   editPipelineRequest,
+  setPipelinePrimaryRequest,
 };
