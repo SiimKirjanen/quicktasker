@@ -100,15 +100,36 @@ function wpqt_register_api_routes() {
                     $pipelineService = new PipelineService();
                     $pipeline = $pipelineService->editPipeline($data['id'], array(
                         "name" => $data['name'],
-                        "description" => $data['description'],
-                        "is_primary" => $data['is_primary']
+                        "description" => $data['description']
                     ));
 
                     $wpdb->query('COMMIT');
                     return new WP_REST_Response((new ApiResponse(true, array(), $pipeline))->toArray(), 200);
                 } catch (Exception $e) {
                     $wpdb->query('ROLLBACK');
-                    
+
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'pipelines/(?P<id>\d+)/set-primary',
+        array(
+            'methods' => 'PATCH',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $pipelineService = new PipelineService();
+                    $pipelineService->markPipelineAsPrimary($data['id']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },

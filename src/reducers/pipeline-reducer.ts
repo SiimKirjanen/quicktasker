@@ -13,6 +13,7 @@ import {
   PIPELINE_SET_EXISTING_PIPELINES,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
+  PIPELINE_SET_PRIMARY,
 } from "../constants";
 import { Action, State } from "../providers/PipelineContextProvider";
 import { Stage } from "../types/stage";
@@ -181,11 +182,17 @@ const pipelineReducer = (state: State, action: Action) => {
           ),
         },
       };
-    case PIPELINE_SET_EXISTING_PIPELINES:
+    case PIPELINE_SET_EXISTING_PIPELINES: {
+      const pipelines = action.payload.map((pipeline: any) => ({
+        ...pipeline,
+        is_primary: pipeline.is_primary === "1",
+      }));
+
       return {
         ...state,
-        existingPipelines: action.payload,
+        existingPipelines: pipelines,
       };
+    }
     case PIPELINE_ADD_EXISTING_PIPELINE:
       return {
         ...state,
@@ -212,6 +219,17 @@ const pipelineReducer = (state: State, action: Action) => {
         existingPipelines: state.existingPipelines.map((p) =>
           p.id === pipeline.id ? pipeline : p,
         ),
+      };
+    }
+    case PIPELINE_SET_PRIMARY: {
+      const primaryPipelineId: string = action.payload;
+
+      return {
+        ...state,
+        existingPipelines: state.existingPipelines.map((pipeline) => ({
+          ...pipeline,
+          is_primary: pipeline.id === primaryPipelineId,
+        })),
       };
     }
     default:

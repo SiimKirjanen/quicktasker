@@ -7588,7 +7588,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editTaskRequest: () => (/* binding */ editTaskRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
 /* harmony export */   moveStageRequest: () => (/* binding */ moveStageRequest),
-/* harmony export */   moveTaskRequest: () => (/* binding */ moveTaskRequest)
+/* harmony export */   moveTaskRequest: () => (/* binding */ moveTaskRequest),
+/* harmony export */   setPipelinePrimaryRequest: () => (/* binding */ setPipelinePrimaryRequest)
 /* harmony export */ });
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
@@ -7630,6 +7631,13 @@ function editPipelineRequest(pipeline) {
       description: pipeline.description,
       is_primary: pipeline.is_primary
     },
+    headers: getCommonHeaders()
+  });
+}
+function setPipelinePrimaryRequest(pipelineId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/set-primary`,
+    method: "PATCH",
     headers: getCommonHeaders()
   });
 }
@@ -7894,8 +7902,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/checkbox/checkbox.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
@@ -7917,26 +7924,22 @@ const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const [pipelineName, setPipelineName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [pipelineDescription, setPipelineDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [isPrimary, setIsPrimary] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const editingPipeline = !!pipelineToEdit;
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (pipelineToEdit) {
       setPipelineName(pipelineToEdit.name);
       setPipelineDescription(pipelineToEdit.description || "");
-      setIsPrimary(pipelineToEdit.is_primary);
     }
   }, [pipelineToEdit]);
   const savePipeline = () => {
     editingPipeline ? editPipeline(Object.assign(Object.assign({}, pipelineToEdit), {
       name: pipelineName,
-      description: pipelineDescription,
-      is_primary: isPrimary
+      description: pipelineDescription
     })) : addPipeline(pipelineName, pipelineDescription);
   };
   const clearContent = () => {
     setPipelineName("");
     setPipelineDescription("");
-    setIsPrimary(false);
   };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useImperativeHandle)(ref, () => ({
     clearContent
@@ -7969,30 +7972,10 @@ const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
           value: pipelineDescription,
           onChange: e => setPipelineDescription(e.target.value)
         })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Field, {
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Label, {
-          className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
-          children: "Mark as primary board"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_10__.Checkbox, {
-          checked: isPrimary,
-          onChange: setIsPrimary,
-          className: "wpqt-group wpqt-block wpqt-size-4 wpqt-rounded wpqt-border wpqt-border-solid wpqt-border-gray-500 data-[checked]:wpqt-bg-green-500",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-            className: "wpqt-stroke-white wpqt-opacity-0 group-data-[checked]:wpqt-opacity-100",
-            viewBox: "0 0 14 14",
-            fill: "none",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-              d: "M3 8L6 11L11 3.5",
-              strokeWidth: 2,
-              strokeLinecap: "round",
-              strokeLinejoin: "round"
-            })
-          })
-        })]
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_11__.Button, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_10__.Button, {
         className: "wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white",
         onClick: savePipeline,
         children: modalSaving ? "Saving..." : editingPipeline ? "Edit board" : "Add board"
@@ -8882,13 +8865,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/menu/menu.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/menu/menu.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/ChevronDownIcon.js");
-/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/PlusCircleIcon.js");
+/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/ChevronDownIcon.js");
+/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/StarIcon.js");
+/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/PlusCircleIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/StarIcon.js");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -8925,6 +8911,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
 function PipelineSelection() {
   const {
     state: {
@@ -8947,22 +8935,34 @@ function PipelineSelection() {
       react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error("Failed to change pipeline");
     }
   });
+  const changePipelinePrimary = pipeline => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.setPipelinePrimaryRequest)(pipeline.id);
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_SET_PRIMARY,
+        payload: pipeline.id
+      });
+    } catch (e) {
+      console.error(e);
+      react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error("Failed to set primary board");
+    }
+  });
   const openPipelineModal = () => __awaiter(this, void 0, void 0, function* () {
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_5__.OPEN_NEW_PIPELINE_MODAL
     });
   });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Menu, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.MenuButton, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Menu, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.MenuButton, {
       as: "div",
       className: "wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1 wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-2",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-leading-none",
         children: activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.name
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_9__["default"], {
         className: "wpqt-size-4"
       })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.MenuItems, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.MenuItems, {
       transition: true,
       anchor: "bottom end",
       className: "wpqt-z-20 wpqt-mt-3 wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0",
@@ -8970,20 +8970,38 @@ function PipelineSelection() {
         className: "wpqt-mb-4 wpqt-text-center wpqt-font-bold",
         children: "Change board"
       }), existingPipelines.map(existingPipeline => {
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.MenuItem, {
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-justify-center",
-            onClick: () => changePipeline(existingPipeline.id),
-            children: existingPipeline.name
+        const isPrimary = existingPipeline.is_primary;
+        const isCurrentPipeline = (activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.id) === existingPipeline.id;
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.MenuItem, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "wpqt-mb-3 wpqt-flex",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: (0,clsx__WEBPACK_IMPORTED_MODULE_7__.clsx)("wpqt-cursor-pointer wpqt-text-center", {
+                "wpqt-font-bold": isCurrentPipeline
+              }),
+              onClick: () => changePipeline(existingPipeline.id),
+              children: existingPipeline.name
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: "wpqt-ml-auto",
+              children: isPrimary ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                className: "wpqt-size-4 wpqt-cursor-pointer wpqt-text-blue-500"
+              }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
+                className: "wpqt-size-4 wpqt-cursor-pointer wpqt-text-gray-400",
+                onClick: e => {
+                  e.stopPropagation();
+                  changePipelinePrimary(existingPipeline);
+                }
+              })
+            })]
           })
         }, existingPipeline.id);
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.MenuItem, {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.MenuItem, {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
           className: "wpqt-mt-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2",
           onClick: openPipelineModal,
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
             children: "Add new board"
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_12__["default"], {
             className: "wpqt-size-6 wpqt-text-green-600"
           })]
         })
@@ -9305,7 +9323,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_REORDER_TASK: () => (/* binding */ PIPELINE_REORDER_TASK),
 /* harmony export */   PIPELINE_SET_EXISTING_PIPELINES: () => (/* binding */ PIPELINE_SET_EXISTING_PIPELINES),
 /* harmony export */   PIPELINE_SET_LOADING: () => (/* binding */ PIPELINE_SET_LOADING),
-/* harmony export */   PIPELINE_SET_PIPELINE: () => (/* binding */ PIPELINE_SET_PIPELINE)
+/* harmony export */   PIPELINE_SET_PIPELINE: () => (/* binding */ PIPELINE_SET_PIPELINE),
+/* harmony export */   PIPELINE_SET_PRIMARY: () => (/* binding */ PIPELINE_SET_PRIMARY)
 /* harmony export */ });
 //Pipeline reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
@@ -9322,6 +9341,7 @@ const PIPELINE_EDIT_STAGE = "EDIT_STAGE";
 const PIPELINE_MOVE_STAGE = "MOVE_STAGE";
 const PIPELINE_ADD_PIPELINE = "ADD_PIPELINE";
 const PIPELINE_EDIT_PIPELINE = "EDIT_PIPELINE";
+const PIPELINE_SET_PRIMARY = "SET_PRIMARY";
 //Modal reducer constants
 const OPEN_NEW_TASK_MODAL = "OPEN_NEW_TASK_MODAL";
 const CLOSE_NEW_TASK_MODAL = "CLOSE_NEW_TASK_MODAL";
@@ -9796,9 +9816,14 @@ const pipelineReducer = (state, action) => {
         })
       });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_EXISTING_PIPELINES:
-      return Object.assign(Object.assign({}, state), {
-        existingPipelines: action.payload
-      });
+      {
+        const pipelines = action.payload.map(pipeline => Object.assign(Object.assign({}, pipeline), {
+          is_primary: pipeline.is_primary === "1"
+        }));
+        return Object.assign(Object.assign({}, state), {
+          existingPipelines: pipelines
+        });
+      }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_EXISTING_PIPELINE:
       return Object.assign(Object.assign({}, state), {
         existingPipelines: [...state.existingPipelines, action.payload]
@@ -9819,6 +9844,15 @@ const pipelineReducer = (state, action) => {
             description: pipeline.description
           }),
           existingPipelines: state.existingPipelines.map(p => p.id === pipeline.id ? pipeline : p)
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_PRIMARY:
+      {
+        const primaryPipelineId = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          existingPipelines: state.existingPipelines.map(pipeline => Object.assign(Object.assign({}, pipeline), {
+            is_primary: pipeline.id === primaryPipelineId
+          }))
         });
       }
     default:
@@ -21829,38 +21863,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/@headlessui/react/dist/components/checkbox/checkbox.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@headlessui/react/dist/components/checkbox/checkbox.js ***!
-  \*****************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Checkbox: () => (/* binding */ Re)
-/* harmony export */ });
-/* harmony import */ var _react_aria_focus__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @react-aria/focus */ "./node_modules/@react-aria/focus/dist/useFocusRing.mjs");
-/* harmony import */ var _react_aria_interactions__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @react-aria/interactions */ "./node_modules/@react-aria/interactions/dist/useHover.mjs");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../hooks/use-id.js */ "react");
-/* harmony import */ var _hooks_use_active_press_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../hooks/use-active-press.js */ "./node_modules/@headlessui/react/dist/hooks/use-active-press.js");
-/* harmony import */ var _hooks_use_controllable_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../hooks/use-controllable.js */ "./node_modules/@headlessui/react/dist/hooks/use-controllable.js");
-/* harmony import */ var _hooks_use_default_value_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../hooks/use-default-value.js */ "./node_modules/@headlessui/react/dist/hooks/use-default-value.js");
-/* harmony import */ var _hooks_use_disposables_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../hooks/use-disposables.js */ "./node_modules/@headlessui/react/dist/hooks/use-disposables.js");
-/* harmony import */ var _hooks_use_event_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../hooks/use-event.js */ "./node_modules/@headlessui/react/dist/hooks/use-event.js");
-/* harmony import */ var _internal_disabled_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../internal/disabled.js */ "./node_modules/@headlessui/react/dist/internal/disabled.js");
-/* harmony import */ var _internal_form_fields_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../internal/form-fields.js */ "./node_modules/@headlessui/react/dist/internal/form-fields.js");
-/* harmony import */ var _internal_id_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../internal/id.js */ "./node_modules/@headlessui/react/dist/internal/id.js");
-/* harmony import */ var _utils_bugs_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utils/bugs.js */ "./node_modules/@headlessui/react/dist/utils/bugs.js");
-/* harmony import */ var _utils_form_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../utils/form.js */ "./node_modules/@headlessui/react/dist/utils/form.js");
-/* harmony import */ var _utils_render_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../utils/render.js */ "./node_modules/@headlessui/react/dist/utils/render.js");
-/* harmony import */ var _description_description_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../description/description.js */ "./node_modules/@headlessui/react/dist/components/description/description.js");
-/* harmony import */ var _keyboard_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../keyboard.js */ "./node_modules/@headlessui/react/dist/components/keyboard.js");
-/* harmony import */ var _label_label_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../label/label.js */ "./node_modules/@headlessui/react/dist/components/label/label.js");
-"use client";let se="span";function ie(T,h){let C=(0,react__WEBPACK_IMPORTED_MODULE_0__.useId)(),k=(0,_internal_id_js__WEBPACK_IMPORTED_MODULE_1__.useProvidedId)(),x=(0,_internal_disabled_js__WEBPACK_IMPORTED_MODULE_2__.useDisabled)(),{id:g=k||`headlessui-checkbox-${C}`,disabled:e=x||!1,autoFocus:s=!1,checked:E,defaultChecked:v,onChange:P,name:d,value:D,form:R,indeterminate:n=!1,...A}=T,r=(0,_hooks_use_default_value_js__WEBPACK_IMPORTED_MODULE_3__.useDefaultValue)(v),[a,t]=(0,_hooks_use_controllable_js__WEBPACK_IMPORTED_MODULE_4__.useControllable)(E,P,r!=null?r:!1),F=(0,_label_label_js__WEBPACK_IMPORTED_MODULE_5__.useLabelledBy)(),K=(0,_description_description_js__WEBPACK_IMPORTED_MODULE_6__.useDescribedBy)(),_=(0,_hooks_use_disposables_js__WEBPACK_IMPORTED_MODULE_7__.useDisposables)(),[p,c]=(0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!1),u=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_8__.useEvent)(()=>{c(!0),t==null||t(!a),_.nextFrame(()=>{c(!1)})}),H=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_8__.useEvent)(o=>{if((0,_utils_bugs_js__WEBPACK_IMPORTED_MODULE_9__.isDisabledReactIssue7711)(o.currentTarget))return o.preventDefault();o.preventDefault(),u()}),B=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_8__.useEvent)(o=>{o.key===_keyboard_js__WEBPACK_IMPORTED_MODULE_10__.Keys.Space?(o.preventDefault(),u()):o.key===_keyboard_js__WEBPACK_IMPORTED_MODULE_10__.Keys.Enter&&(0,_utils_form_js__WEBPACK_IMPORTED_MODULE_11__.attemptSubmit)(o.currentTarget)}),L=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_8__.useEvent)(o=>o.preventDefault()),{isFocusVisible:m,focusProps:I}=(0,_react_aria_focus__WEBPACK_IMPORTED_MODULE_12__.useFocusRing)({autoFocus:s}),{isHovered:f,hoverProps:M}=(0,_react_aria_interactions__WEBPACK_IMPORTED_MODULE_13__.useHover)({isDisabled:e}),{pressed:b,pressProps:U}=(0,_hooks_use_active_press_js__WEBPACK_IMPORTED_MODULE_14__.useActivePress)({disabled:e}),O=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_15__.mergeProps)({ref:h,id:g,role:"checkbox","aria-checked":n?"mixed":a?"true":"false","aria-labelledby":F,"aria-describedby":K,"aria-disabled":e?!0:void 0,indeterminate:n?"true":void 0,tabIndex:e?void 0:0,onKeyUp:e?void 0:B,onKeyPress:e?void 0:L,onClick:e?void 0:H},I,M,U),X=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({checked:a,disabled:e,hover:f,focus:m,active:b,indeterminate:n,changing:p,autofocus:s}),[a,n,e,f,m,b,p,s]),G=(0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(()=>{if(r!==void 0)return t==null?void 0:t(r)},[t,r]);return react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment,null,d!=null&&react__WEBPACK_IMPORTED_MODULE_0__.createElement(_internal_form_fields_js__WEBPACK_IMPORTED_MODULE_16__.FormFields,{disabled:e,data:{[d]:D||"on"},overrides:{type:"checkbox",checked:a},form:R,onReset:G}),(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_15__.render)({ourProps:O,theirProps:A,slot:X,defaultTag:se,name:"Checkbox"}))}let Re=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_15__.forwardRefWithAs)(ie);
-
-
-/***/ }),
-
 /***/ "./node_modules/@headlessui/react/dist/components/description/description.js":
 /*!***********************************************************************************!*\
   !*** ./node_modules/@headlessui/react/dist/components/description/description.js ***!
@@ -22299,39 +22301,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _use_disposables_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./use-disposables.js */ "./node_modules/@headlessui/react/dist/hooks/use-disposables.js");
 /* harmony import */ var _use_event_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./use-event.js */ "./node_modules/@headlessui/react/dist/hooks/use-event.js");
 function E(e){let t=e.width/2,n=e.height/2;return{top:e.clientY-n,right:e.clientX+t,bottom:e.clientY+n,left:e.clientX-t}}function P(e,t){return!(!e||!t||e.right<t.left||e.left>t.right||e.bottom<t.top||e.top>t.bottom)}function w({disabled:e=!1}={}){let t=(0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null),[n,l]=(0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!1),r=(0,_use_disposables_js__WEBPACK_IMPORTED_MODULE_1__.useDisposables)(),o=(0,_use_event_js__WEBPACK_IMPORTED_MODULE_2__.useEvent)(()=>{t.current=null,l(!1),r.dispose()}),f=(0,_use_event_js__WEBPACK_IMPORTED_MODULE_2__.useEvent)(s=>{if(r.dispose(),t.current===null){t.current=s.currentTarget,l(!0);{let i=(0,_utils_owner_js__WEBPACK_IMPORTED_MODULE_3__.getOwnerDocument)(s.currentTarget);r.addEventListener(i,"pointerup",o,!1),r.addEventListener(i,"pointermove",c=>{if(t.current){let p=E(c);l(P(p,t.current.getBoundingClientRect()))}},!1),r.addEventListener(i,"pointercancel",o,!1)}}});return{pressed:n,pressProps:e?{}:{onPointerDown:f,onPointerUp:o,onClick:o}}}
-
-
-/***/ }),
-
-/***/ "./node_modules/@headlessui/react/dist/hooks/use-controllable.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@headlessui/react/dist/hooks/use-controllable.js ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useControllable: () => (/* binding */ T)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var _use_event_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./use-event.js */ "./node_modules/@headlessui/react/dist/hooks/use-event.js");
-function T(l,r,c){let[i,s]=(0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(c),e=l!==void 0,t=(0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(e),u=(0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(!1),d=(0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(!1);return e&&!t.current&&!u.current?(u.current=!0,t.current=e,console.error("A component is changing from uncontrolled to controlled. This may be caused by the value changing from undefined to a defined value, which should not happen.")):!e&&t.current&&!d.current&&(d.current=!0,t.current=e,console.error("A component is changing from controlled to uncontrolled. This may be caused by the value changing from a defined value to undefined, which should not happen.")),[e?l:i,(0,_use_event_js__WEBPACK_IMPORTED_MODULE_1__.useEvent)(n=>(e||s(n),r==null?void 0:r(n)))]}
-
-
-/***/ }),
-
-/***/ "./node_modules/@headlessui/react/dist/hooks/use-default-value.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@headlessui/react/dist/hooks/use-default-value.js ***!
-  \************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useDefaultValue: () => (/* binding */ l)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-function l(e){let[t]=(0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(e);return t}
 
 
 /***/ }),
@@ -23362,6 +23331,46 @@ function a(o,r){let t=o(),n=new Set;return{getSnapshot(){return t},subscribe(e){
 
 /***/ }),
 
+/***/ "./node_modules/@heroicons/react/24/outline/esm/StarIcon.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/StarIcon.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function StarIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(StarIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
 /***/ "./node_modules/@heroicons/react/24/solid/esm/ArrowLeftIcon.js":
 /*!*********************************************************************!*\
   !*** ./node_modules/@heroicons/react/24/solid/esm/ArrowLeftIcon.js ***!
@@ -23586,6 +23595,44 @@ function PlusCircleIcon({
   }));
 }
 const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(PlusCircleIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
+/***/ "./node_modules/@heroicons/react/24/solid/esm/StarIcon.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/solid/esm/StarIcon.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function StarIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24",
+    fill: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    fillRule: "evenodd",
+    d: "M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z",
+    clipRule: "evenodd"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(StarIcon);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
 
 /***/ }),

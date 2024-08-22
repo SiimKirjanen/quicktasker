@@ -1,14 +1,22 @@
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { getPipelineData } from "../../../api/api";
+import { getPipelineData, setPipelinePrimaryRequest } from "../../../api/api";
 import { toast } from "react-toastify";
 import {
   OPEN_NEW_PIPELINE_MODAL,
   PIPELINE_SET_PIPELINE,
+  PIPELINE_SET_PRIMARY,
 } from "../../../constants";
-import { ChevronDownIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronDownIcon,
+  PlusCircleIcon,
+  StarIcon,
+} from "@heroicons/react/24/solid";
+import { StarIcon as StarIconOutline } from "@heroicons/react/24/outline";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { Pipeline } from "../../../types/pipeline";
+import { clsx } from "clsx";
 
 function PipelineSelection() {
   const {
@@ -27,6 +35,20 @@ function PipelineSelection() {
       });
     } catch (e) {
       toast.error("Failed to change pipeline");
+    }
+  };
+
+  const changePipelinePrimary = async (pipeline: Pipeline) => {
+    try {
+      await setPipelinePrimaryRequest(pipeline.id);
+
+      dispatch({
+        type: PIPELINE_SET_PRIMARY,
+        payload: pipeline.id,
+      });
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to set primary board");
     }
   };
 
@@ -55,13 +77,33 @@ function PipelineSelection() {
           Change board
         </div>
         {existingPipelines.map((existingPipeline) => {
+          const isPrimary = existingPipeline.is_primary;
+          const isCurrentPipeline = activePipeline?.id === existingPipeline.id;
+
           return (
             <MenuItem key={existingPipeline.id}>
-              <div
-                className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-justify-center"
-                onClick={() => changePipeline(existingPipeline.id)}
-              >
-                {existingPipeline.name}
+              <div className="wpqt-mb-3 wpqt-flex">
+                <div
+                  className={clsx("wpqt-cursor-pointer wpqt-text-center", {
+                    "wpqt-font-bold": isCurrentPipeline,
+                  })}
+                  onClick={() => changePipeline(existingPipeline.id)}
+                >
+                  {existingPipeline.name}
+                </div>
+                <div className="wpqt-ml-auto">
+                  {isPrimary ? (
+                    <StarIcon className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-blue-500" />
+                  ) : (
+                    <StarIconOutline
+                      className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-gray-400"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changePipelinePrimary(existingPipeline);
+                      }}
+                    />
+                  )}
+                </div>
               </div>
             </MenuItem>
           );
