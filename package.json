@@ -26,6 +26,7 @@
     "@wordpress/api-fetch": "^7.4.0",
     "@wordpress/element": "^6.4.0",
     "clsx": "^2.1.1",
+    "react-switch": "^7.0.0",
     "react-toastify": "^10.0.5"
   }
 }

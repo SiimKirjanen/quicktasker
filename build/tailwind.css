@@ -878,16 +878,16 @@
   margin-top: 0.5rem;
 }
 
+.wpqt-mt-3 {
+  margin-top: 0.75rem;
+}
+
 .wpqt-mt-4 {
   margin-top: 1rem;
 }
 
 .wpqt-mt-5 {
   margin-top: 1.25rem;
-}
-
-.wpqt-mt-3 {
-  margin-top: 0.75rem;
 }
 
 .wpqt-block {
@@ -1147,6 +1147,10 @@
 .wpqt-text-sm\/6 {
   font-size: 0.875rem;
   line-height: 1.5rem;
+}
+
+.wpqt-font-bold {
+  font-weight: 700;
 }
 
 .wpqt-font-medium {

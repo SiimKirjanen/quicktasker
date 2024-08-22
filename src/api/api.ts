@@ -42,17 +42,11 @@ function editPipelineRequest(
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipeline.id}`,
     method: "PATCH",
-    data: { name: pipeline.name, description: pipeline.description },
-    headers: getCommonHeaders(),
-  });
-}
-
-function setPipelinePrimaryRequest(
-  pipelineId: string,
-): Promise<WPQTResponse<Pipeline>> {
-  return apiFetch({
-    path: `/wpqt/v1/pipelines/${pipelineId}/set-primary`,
-    method: "PATCH",
+    data: {
+      name: pipeline.name,
+      description: pipeline.description,
+      is_primary: pipeline.is_primary,
+    },
     headers: getCommonHeaders(),
   });
 }
@@ -162,5 +156,4 @@ export {
   editStageRequest,
   moveStageRequest,
   editPipelineRequest,
-  setPipelinePrimaryRequest,
 };

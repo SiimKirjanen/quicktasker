@@ -51,13 +51,17 @@ function PipelineSelection() {
         anchor="bottom end"
         className="wpqt-z-20 wpqt-mt-3 wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
       >
+        <div className="wpqt-mb-4 wpqt-text-center wpqt-font-bold">
+          Change board
+        </div>
         {existingPipelines.map((existingPipeline) => {
           return (
             <MenuItem key={existingPipeline.id}>
-              <div className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center">
-                <div onClick={() => changePipeline(existingPipeline.id)}>
-                  {existingPipeline.name}
-                </div>
+              <div
+                className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-justify-center"
+                onClick={() => changePipeline(existingPipeline.id)}
+              >
+                {existingPipeline.name}
               </div>
             </MenuItem>
           );

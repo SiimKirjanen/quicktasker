@@ -52,16 +52,13 @@ class PipelineService {
             throw new Exception('Failed to edit pipeline');
         }
 
+        if($args['is_primary'] === true) {
+            $this->markPipelineAsPrimary($pipelineId);
+        }
+
         return $this->pipelineRepository->getPipelineById($pipelineId);       
     }
 
-    /**
-     * Marks a pipeline as primary.
-     *
-     * @param int $pipelineId The ID of the pipeline to mark as primary.
-     * @return Pipeline|null The updated pipeline object if successful, null otherwise.
-     * @throws Exception If failed to mark pipeline as primary.
-     */
     public function markPipelineAsPrimary($pipelineId) {
         global $wpdb;
 
@@ -80,6 +77,6 @@ class PipelineService {
             throw new Exception('Failed to mark pipeline as primary');
         }
 
-        return $this->pipelineRepository->getPipelineById($pipelineId);   
+        return result;   
     }
 }
