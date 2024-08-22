@@ -75,18 +75,17 @@ const pipelineReducer = (state: State, action: Action) => {
         },
       };
     case PIPELINE_ADD_TASK: {
-      const { targetStageId, task }: { targetStageId: string; task: Task } =
-        action.payload;
+      const newTask: Task = action.payload;
 
       return {
         ...state,
         activePipeline: {
           ...state.activePipeline!,
           stages: state.activePipeline!.stages.map((stage) =>
-            stage.id === targetStageId
+            stage.id === newTask.stage_id
               ? {
                   ...stage,
-                  tasks: [...stage.tasks, task],
+                  tasks: [...stage.tasks, newTask],
                 }
               : stage,
           ),
@@ -94,23 +93,14 @@ const pipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_EDIT_TASK: {
-      const {
-        targetStageId,
-        task: { id, name, description },
-      }: { targetStageId: string; task: Task } = action.payload;
+      const editedTask: Task = action.payload;
 
       const updatedStages = state.activePipeline!.stages.map((stage) =>
-        stage.id === targetStageId
+        stage.id === editedTask.stage_id
           ? {
               ...stage,
               tasks: stage.tasks.map((task) =>
-                task.id === id
-                  ? {
-                      id,
-                      name,
-                      description,
-                    }
-                  : task,
+                task.id === editedTask.id ? editedTask : task,
               ),
             }
           : stage,

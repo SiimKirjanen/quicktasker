@@ -1,5 +1,4 @@
-import { DialogTitle } from "@headlessui/react";
-import { useContext, useState, useEffect } from "@wordpress/element";
+import { useContext } from "@wordpress/element";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import {
   CLOSE_TASK_MODAL,
@@ -7,115 +6,56 @@ import {
   PIPELINE_EDIT_TASK,
 } from "../../../constants";
 import { createTaskRequest, editTaskRequest } from "../../../api/api";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
-
-import TaskModalContent from "./TaskModalContent";
+import { TaskModalContent } from "./TaskModalContent";
 import { WPQTModal } from "../WPQTModal";
+import { useModal } from "../useModal";
+import { Task } from "../../../types/task";
 
 function TaskModal() {
   const {
-    state: { taskModalOpen, targetStageId, taskToEdit },
-    modalDispatch,
+    state: { taskModalOpen, targetStageId },
   } = useContext(ModalContext);
-  const { dispatch } = useContext(PipelineContext);
-  const [taskName, setTaskName] = useState("");
-  const [taskDescription, setTaskDescription] = useState("");
-  const [taskModalSaving, setTaskModalSaving] = useState(false);
-  const editingTask = !!taskToEdit;
+  const {
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError,
+  } = useModal(CLOSE_TASK_MODAL);
 
-  useEffect(() => {
-    if (taskToEdit) {
-      setTaskName(taskToEdit.name);
-      setTaskDescription(taskToEdit.description);
-    }
-  }, [taskToEdit]);
-
-  const closeTaskModal = () => {
-    modalDispatch({
-      type: CLOSE_TASK_MODAL,
-    });
-    resetTaskModal();
-  };
-
-  const resetTaskModal = () => {
-    setTaskName("");
-    setTaskDescription("");
-    setTaskModalSaving(false);
-  };
-
-  const handleSuccess = (type: string, task: any) => {
-    dispatch({
-      type,
-      payload: {
-        targetStageId,
-        task,
-      },
-    });
-    closeTaskModal();
-    resetTaskModal();
-  };
-
-  const handleError = (error: any) => {
-    setTaskModalSaving(false);
-    console.error(error);
-  };
-
-  const addTask = async () => {
+  const addTask = async (taskName: string, taskDescription: string) => {
     try {
-      setTaskModalSaving(true);
+      setModalSaving(true);
       const response = await createTaskRequest(
         targetStageId,
         taskName,
         taskDescription,
       );
-      handleSuccess(PIPELINE_ADD_TASK, {
-        ...response.data,
-      });
+      handleSuccess(PIPELINE_ADD_TASK, response.data);
     } catch (error) {
       handleError(error);
     }
   };
 
-  const editTask = async () => {
+  const editTask = async (task: Task) => {
     try {
-      setTaskModalSaving(true);
-      await editTaskRequest({
-        id: taskToEdit!.id,
-        stage_id: targetStageId,
-        name: taskName,
-        description: taskDescription,
-      });
-      handleSuccess(PIPELINE_EDIT_TASK, {
-        id: taskToEdit!.id,
-        name: taskName,
-        description: taskDescription,
-      });
+      setModalSaving(true);
+      const response = await editTaskRequest(task);
+
+      handleSuccess(PIPELINE_EDIT_TASK, response.data);
     } catch (error) {
       handleError(error);
     }
-  };
-
-  const saveTask = () => {
-    editingTask ? editTask() : addTask();
   };
 
   return (
-    <WPQTModal modalOpen={taskModalOpen} closeModal={closeTaskModal}>
-      <DialogTitle
-        as="div"
-        className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
-      >
-        {editingTask ? "Edit task" : "Add task"}
-      </DialogTitle>
-
+    <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal}>
       <TaskModalContent
-        taskName={taskName}
-        setTaskName={setTaskName}
-        taskDescription={taskDescription}
-        setTaskDescription={setTaskDescription}
-        saveTask={saveTask}
-        taskModalSaving={taskModalSaving}
-        editingTask={editingTask}
+        ref={modalContentRef}
+        addTask={addTask}
+        editTask={editTask}
+        taskModalSaving={modalSaving}
       />
     </WPQTModal>
   );

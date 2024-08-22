@@ -8197,15 +8197,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/dialog/dialog.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
-/* harmony import */ var _TaskModalContent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TaskModalContent */ "./src/components/Modal/TaskModal/TaskModalContent.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _TaskModalContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TaskModalContent */ "./src/components/Modal/TaskModal/TaskModalContent.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _useModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../useModal */ "./src/components/Modal/useModal.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -8241,101 +8240,48 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
 function TaskModal() {
   const {
     state: {
       taskModalOpen,
-      targetStageId,
-      taskToEdit
-    },
-    modalDispatch
+      targetStageId
+    }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const {
-    dispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.PipelineContext);
-  const [taskName, setTaskName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [taskDescription, setTaskDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [taskModalSaving, setTaskModalSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const editingTask = !!taskToEdit;
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (taskToEdit) {
-      setTaskName(taskToEdit.name);
-      setTaskDescription(taskToEdit.description);
-    }
-  }, [taskToEdit]);
-  const closeTaskModal = () => {
-    modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_TASK_MODAL
-    });
-    resetTaskModal();
-  };
-  const resetTaskModal = () => {
-    setTaskName("");
-    setTaskDescription("");
-    setTaskModalSaving(false);
-  };
-  const handleSuccess = (type, task) => {
-    dispatch({
-      type,
-      payload: {
-        targetStageId,
-        task
-      }
-    });
-    closeTaskModal();
-    resetTaskModal();
-  };
-  const handleError = error => {
-    setTaskModalSaving(false);
-    console.error(error);
-  };
-  const addTask = () => __awaiter(this, void 0, void 0, function* () {
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError
+  } = (0,_useModal__WEBPACK_IMPORTED_MODULE_7__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_TASK_MODAL);
+  const addTask = (taskName, taskDescription) => __awaiter(this, void 0, void 0, function* () {
     try {
-      setTaskModalSaving(true);
+      setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(targetStageId, taskName, taskDescription);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, Object.assign({}, response.data));
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, response.data);
     } catch (error) {
       handleError(error);
     }
   });
-  const editTask = () => __awaiter(this, void 0, void 0, function* () {
+  const editTask = task => __awaiter(this, void 0, void 0, function* () {
     try {
-      setTaskModalSaving(true);
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.editTaskRequest)({
-        id: taskToEdit.id,
-        stage_id: targetStageId,
-        name: taskName,
-        description: taskDescription
-      });
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK, {
-        id: taskToEdit.id,
-        name: taskName,
-        description: taskDescription
-      });
+      setModalSaving(true);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.editTaskRequest)(task);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK, response.data);
     } catch (error) {
       handleError(error);
     }
   });
-  const saveTask = () => {
-    editingTask ? editTask() : addTask();
-  };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_7__.WPQTModal, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_6__.WPQTModal, {
     modalOpen: taskModalOpen,
-    closeModal: closeTaskModal,
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.DialogTitle, {
-      as: "div",
-      className: "wpqt-text-base/7 wpqt-font-medium wpqt-text-black",
-      children: editingTask ? "Edit task" : "Add task"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskModalContent__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      taskName: taskName,
-      setTaskName: setTaskName,
-      taskDescription: taskDescription,
-      setTaskDescription: setTaskDescription,
-      saveTask: saveTask,
-      taskModalSaving: taskModalSaving,
-      editingTask: editingTask
-    })]
+    closeModal: closeModal,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskModalContent__WEBPACK_IMPORTED_MODULE_5__.TaskModalContent, {
+      ref: modalContentRef,
+      addTask: addTask,
+      editTask: editTask,
+      taskModalSaving: modalSaving
+    })
   });
 }
 
@@ -8350,48 +8296,81 @@ function TaskModal() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   TaskModalContent: () => (/* binding */ TaskModalContent)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/fieldset/fieldset.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/field/field.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
-/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/dialog/dialog.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/fieldset/fieldset.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/field/field.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 
 
 
-function ModalContent({
-  taskName,
-  setTaskName,
-  taskDescription,
-  setTaskDescription,
-  saveTask,
+
+
+const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(({
+  addTask,
   taskModalSaving,
-  editingTask
-}) {
+  editTask
+}, ref) => {
+  const {
+    state: {
+      taskToEdit
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
+  const [taskName, setTaskName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [taskDescription, setTaskDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (taskToEdit) {
+      setTaskName(taskToEdit.name);
+      setTaskDescription(taskToEdit.description);
+    }
+  }, [taskToEdit]);
+  const editingTask = !!taskToEdit;
+  const saveTask = () => {
+    editingTask ? editTask(Object.assign(Object.assign({}, taskToEdit), {
+      name: taskName,
+      description: taskDescription
+    })) : addTask(taskName, taskDescription);
+  };
+  const clearContent = () => {
+    setTaskName("");
+    setTaskDescription("");
+  };
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useImperativeHandle)(ref, () => ({
+    clearContent
+  }));
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.Fieldset, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.DialogTitle, {
+      as: "div",
+      className: "wpqt-text-base/7 wpqt-font-medium wpqt-text-black",
+      children: editingTask ? "Edit task" : "Add task"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Fieldset, {
       className: "space-y-6 rounded-xl bg-white/5 p-6 sm:p-10",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Field, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Field, {
         className: "wpqt-mb-3",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.Label, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Label, {
           className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Name"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Input, {
-          className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Input, {
+          className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           value: taskName,
           onChange: e => setTaskName(e.target.value)
         })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Field, {
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.Label, {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Field, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Label, {
           className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Description"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Textarea, {
-          className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-resize-none wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_9__.Textarea, {
+          className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-resize-none wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           rows: 3,
           value: taskDescription,
           onChange: e => setTaskDescription(e.target.value)
@@ -8399,15 +8378,15 @@ function ModalContent({
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Button, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_10__.Button, {
         className: "wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white",
         onClick: saveTask,
         children: taskModalSaving ? "Saving..." : editingTask ? "Edit task" : "Add task"
       })
     })]
   });
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ModalContent);
+});
+
 
 /***/ }),
 
@@ -9749,34 +9728,20 @@ const pipelineReducer = (state, action) => {
       });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_TASK:
       {
-        const {
-          targetStageId,
-          task
-        } = action.payload;
+        const newTask = action.payload;
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-            stages: state.activePipeline.stages.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
-              tasks: [...stage.tasks, task]
+            stages: state.activePipeline.stages.map(stage => stage.id === newTask.stage_id ? Object.assign(Object.assign({}, stage), {
+              tasks: [...stage.tasks, newTask]
             }) : stage)
           })
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_TASK:
       {
-        const {
-          targetStageId,
-          task: {
-            id,
-            name,
-            description
-          }
-        } = action.payload;
-        const updatedStages = state.activePipeline.stages.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
-          tasks: stage.tasks.map(task => task.id === id ? {
-            id,
-            name,
-            description
-          } : task)
+        const editedTask = action.payload;
+        const updatedStages = state.activePipeline.stages.map(stage => stage.id === editedTask.stage_id ? Object.assign(Object.assign({}, stage), {
+          tasks: stage.tasks.map(task => task.id === editedTask.id ? editedTask : task)
         }) : stage);
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
