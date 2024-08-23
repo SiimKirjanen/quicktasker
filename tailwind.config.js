@@ -7,6 +7,9 @@ module.exports = {
       colors: {
         qtBorder: "#d0d7de",
       },
+      height: {
+        "screen-minus-top-bar": "calc(100vh - 32px)",
+      },
     },
   },
   plugins: [],

@@ -925,6 +925,10 @@
   height: 100vh;
 }
 
+.wpqt-h-screen-minus-top-bar {
+  height: calc(100vh - 32px);
+}
+
 .wpqt-max-h-full {
   max-height: 100%;
 }
@@ -1147,6 +1151,11 @@
 .wpqt-text-sm\/6 {
   font-size: 0.875rem;
   line-height: 1.5rem;
+}
+
+.wpqt-text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 
 .wpqt-font-bold {
