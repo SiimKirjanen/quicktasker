@@ -1,7 +1,7 @@
 import apiFetch from "@wordpress/api-fetch";
 import { Pipeline, PipelineFromServer } from "../types/pipeline";
 import { Task } from "../types/task";
-import { Stage, StageChangeDirection } from "../types/stage";
+import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 
 function getCommonHeaders() {
@@ -116,7 +116,7 @@ function createNewStageRequest(
   pipelineId: string,
   name: string,
   description: string,
-): Promise<WPQTResponse<Stage>> {
+): Promise<WPQTResponse<StageFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/stages`,
     method: "POST",
@@ -125,7 +125,9 @@ function createNewStageRequest(
   });
 }
 
-function editStageRequest(stage: Stage): Promise<WPQTResponse<Stage>> {
+function editStageRequest(
+  stage: Stage,
+): Promise<WPQTResponse<StageFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/stages/${stage.id}`,
     method: "PATCH",
@@ -137,7 +139,7 @@ function editStageRequest(stage: Stage): Promise<WPQTResponse<Stage>> {
 function moveStageRequest(
   stageId: string,
   direction: StageChangeDirection,
-): Promise<WPQTResponse<Stage>> {
+): Promise<WPQTResponse<StageFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/stages/${stageId}/move`,
     method: "PATCH",

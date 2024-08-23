@@ -9040,30 +9040,33 @@ function Stage({
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
     droppableId: stage.id,
-    children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      ref: provided.innerRef,
-      className: `wpqt-relative wpqt-mb-3 wpqt-flex wpqt-max-h-full wpqt-w-[320px] wpqt-flex-none wpqt-flex-col wpqt-overflow-hidden wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-gray-100`,
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "wpqt-mb-4 wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-px-3 wpqt-pt-3",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "wpqt-mr-auto wpqt-text-base wpqt-leading-none",
-          children: stage.name
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageControls__WEBPACK_IMPORTED_MODULE_3__.StageControls, {
-          stage: stage
-        }), stage.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "wpqt-w-full wpqt-flex-shrink-0 wpqt-flex-grow-0 wpqt-text-sm",
-          children: stage.description
+    children: (provided, snapshot) => {
+      var _a;
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        ref: provided.innerRef,
+        className: `wpqt-relative wpqt-mb-3 wpqt-flex wpqt-max-h-full wpqt-w-[320px] wpqt-flex-none wpqt-flex-col wpqt-overflow-hidden wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-gray-100`,
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "wpqt-mb-4 wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-px-3 wpqt-pt-3",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "wpqt-mr-auto wpqt-text-base wpqt-leading-none",
+            children: stage.name
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageControls__WEBPACK_IMPORTED_MODULE_3__.StageControls, {
+            stage: stage
+          }), stage.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "wpqt-w-full wpqt-flex-shrink-0 wpqt-flex-grow-0 wpqt-text-sm",
+            children: stage.description
+          })]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto wpqt-overflow-x-hidden",
+          children: [(_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.map((task, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Task__WEBPACK_IMPORTED_MODULE_1__.Task, {
+            task: task,
+            index: index
+          })), provided.placeholder, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
+            stageId: stage.id
+          })]
         })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto wpqt-overflow-x-hidden",
-        children: [stage.tasks.map((task, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Task__WEBPACK_IMPORTED_MODULE_1__.Task, {
-          task: task,
-          index: index
-        })), provided.placeholder, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
-          stageId: stage.id
-        })]
-      })]
-    })
+      });
+    }
   });
 }
 
@@ -9735,25 +9738,30 @@ const pipelineReducer = (state, action) => {
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_REORDER_TASK:
-      const {
-        source,
-        destination
-      } = action.payload;
-      const targetStageId = destination.droppableId;
-      const targetIndex = destination.index;
-      if (!state.activePipeline) {
-        return state;
+      {
+        const {
+          source,
+          destination
+        } = action.payload;
+        const targetStageId = destination.droppableId;
+        const targetIndex = destination.index;
+        if (!state.activePipeline) {
+          return state;
+        }
+        const targetStage = (_a = state.activePipeline.stages) === null || _a === void 0 ? void 0 : _a.find(stage => stage.id === targetStageId);
+        if (!targetStage || !targetStage.tasks) {
+          return state;
+        }
+        const reorderedTasks = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.reorderTask)(targetStage.tasks, source.index, targetIndex);
+        const updatedStages = (_b = state.activePipeline.stages) === null || _b === void 0 ? void 0 : _b.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
+          tasks: reorderedTasks
+        }) : stage);
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            stages: updatedStages
+          })
+        });
       }
-      const targetStage = (_a = state.activePipeline.stages) === null || _a === void 0 ? void 0 : _a.find(stage => stage.id === targetStageId);
-      const reorderedTasks = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.reorderTask)(targetStage.tasks, source.index, targetIndex);
-      const updatedStages = (_b = state.activePipeline.stages) === null || _b === void 0 ? void 0 : _b.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
-        tasks: reorderedTasks
-      }) : stage);
-      return Object.assign(Object.assign({}, state), {
-        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-          stages: updatedStages
-        })
-      });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_TASK:
       {
         const newTask = action.payload;
@@ -9763,7 +9771,7 @@ const pipelineReducer = (state, action) => {
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages: (_c = state.activePipeline.stages) === null || _c === void 0 ? void 0 : _c.map(stage => stage.id === newTask.stage_id ? Object.assign(Object.assign({}, stage), {
-              tasks: [...stage.tasks, newTask]
+              tasks: [...(stage.tasks || []), newTask]
             }) : stage)
           })
         });
@@ -9774,9 +9782,12 @@ const pipelineReducer = (state, action) => {
         if (!state.activePipeline) {
           return state;
         }
-        const updatedStages = (_d = state.activePipeline.stages) === null || _d === void 0 ? void 0 : _d.map(stage => stage.id === editedTask.stage_id ? Object.assign(Object.assign({}, stage), {
-          tasks: stage.tasks.map(task => task.id === editedTask.id ? editedTask : task)
-        }) : stage);
+        const updatedStages = (_d = state.activePipeline.stages) === null || _d === void 0 ? void 0 : _d.map(stage => {
+          var _a;
+          return stage.id === editedTask.stage_id ? Object.assign(Object.assign({}, stage), {
+            tasks: (_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.map(task => task.id === editedTask.id ? editedTask : task)
+          }) : stage;
+        });
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages: updatedStages
@@ -9918,7 +9929,7 @@ const moveTask = (stages, droppableSource, droppableDestination) => {
   const stagesClone = [...stages];
   const sourceStage = stagesClone.find(stage => stage.id === droppableSource.droppableId);
   const destinationStage = stagesClone.find(stage => stage.id === droppableDestination.droppableId);
-  if (sourceStage && destinationStage) {
+  if ((sourceStage === null || sourceStage === void 0 ? void 0 : sourceStage.tasks) && (destinationStage === null || destinationStage === void 0 ? void 0 : destinationStage.tasks)) {
     const [removed] = sourceStage.tasks.splice(droppableSource.index, 1);
     destinationStage.tasks.splice(droppableDestination.index, 0, removed);
   }

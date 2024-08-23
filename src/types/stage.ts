@@ -1,14 +1,21 @@
 import { Task } from "./task";
 
-type Stage = {
+type BaseStage = {
   id: string;
   pipeline_id: string;
   name: string;
   description: string;
+  tasks?: Task[];
+};
+
+type Stage = BaseStage & {
   stage_order: number;
-  tasks: Task[];
+};
+
+type StageFromServer = BaseStage & {
+  stage_order: string;
 };
 
 type StageChangeDirection = "left" | "right";
 
-export type { Stage, StageChangeDirection };
+export { type Stage, type StageChangeDirection, type StageFromServer };

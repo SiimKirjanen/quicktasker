@@ -58,7 +58,7 @@ const pipelineReducer = (state: State, action: Action) => {
         },
       };
     }
-    case PIPELINE_REORDER_TASK:
+    case PIPELINE_REORDER_TASK: {
       const { source, destination } = action.payload;
       const targetStageId = destination.droppableId;
       const targetIndex = destination.index;
@@ -70,6 +70,10 @@ const pipelineReducer = (state: State, action: Action) => {
       const targetStage = state.activePipeline.stages?.find(
         (stage) => stage.id === targetStageId,
       );
+
+      if (!targetStage || !targetStage.tasks) {
+        return state;
+      }
 
       const reorderedTasks = reorderTask(
         targetStage!.tasks,
@@ -90,6 +94,7 @@ const pipelineReducer = (state: State, action: Action) => {
           stages: updatedStages,
         },
       };
+    }
     case PIPELINE_ADD_TASK: {
       const newTask: Task = action.payload;
 
@@ -105,7 +110,7 @@ const pipelineReducer = (state: State, action: Action) => {
             stage.id === newTask.stage_id
               ? {
                   ...stage,
-                  tasks: [...stage.tasks, newTask],
+                  tasks: [...(stage.tasks || []), newTask],
                 }
               : stage,
           ),
@@ -123,7 +128,7 @@ const pipelineReducer = (state: State, action: Action) => {
         stage.id === editedTask.stage_id
           ? {
               ...stage,
-              tasks: stage.tasks.map((task) =>
+              tasks: stage.tasks?.map((task) =>
                 task.id === editedTask.id ? editedTask : task,
               ),
             }

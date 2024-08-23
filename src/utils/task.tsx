@@ -22,7 +22,7 @@ const moveTask = (
   const destinationStage = stagesClone.find(
     (stage) => stage.id === droppableDestination.droppableId,
   );
-  if (sourceStage && destinationStage) {
+  if (sourceStage?.tasks && destinationStage?.tasks) {
     const [removed] = sourceStage.tasks.splice(droppableSource.index, 1);
 
     destinationStage.tasks.splice(droppableDestination.index, 0, removed);
