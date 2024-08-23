@@ -1,19 +1,21 @@
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
-import { PipelinePage } from "./pages/PipelinePage";
 import { AppContextProvider } from "./providers/AppContextProvider";
 import { ModalContextProvider } from "./providers/ModalContextProvider";
 import { PipelineContextProvider } from "./providers/PipelineContextProvider";
 import { UserContextProvider } from "./providers/UserContextProvider";
 import { ToastContainer } from "react-toastify";
+import { useCurrentPage } from "./hooks/useCurrentPage";
 
 function App() {
+  const currentPage = useCurrentPage();
+
   return (
     <ErrorBoundary>
       <AppContextProvider>
         <PipelineContextProvider>
           <UserContextProvider>
             <ModalContextProvider>
-              <PipelinePage />
+              {currentPage}
               <ToastContainer position="bottom-right" />
             </ModalContextProvider>
           </UserContextProvider>
@@ -22,4 +24,5 @@ function App() {
     </ErrorBoundary>
   );
 }
+
 export default App;

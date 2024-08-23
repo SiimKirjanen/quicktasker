@@ -28,6 +28,15 @@ class PipelineService {
         return $this->pipelineRepository->getPipelineById($wpdb->insert_id);
     }
 
+    /**
+     * Edit a pipeline.
+     *
+     * @param int $pipelineId The ID of the pipeline to edit.
+     * @param array $args The arguments for editing the pipeline.
+     *   - name (string|null) The name of the pipeline.
+     * @return Pipeline The edited pipeline.
+     * @throws Exception If required fields are missing or if editing the pipeline fails.
+     */
     public function editPipeline($pipelineId, $args) {
         global $wpdb;
 

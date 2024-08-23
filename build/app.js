@@ -7538,12 +7538,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_ErrorBoundary_ErrorBoundary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/ErrorBoundary/ErrorBoundary */ "./src/components/ErrorBoundary/ErrorBoundary.tsx");
-/* harmony import */ var _pages_PipelinePage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/PipelinePage */ "./src/pages/PipelinePage.tsx");
-/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
-/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _hooks_useCurrentPage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./hooks/useCurrentPage */ "./src/hooks/useCurrentPage.tsx");
 
 
 
@@ -7553,12 +7553,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function App() {
+  const currentPage = (0,_hooks_useCurrentPage__WEBPACK_IMPORTED_MODULE_7__.useCurrentPage)();
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ErrorBoundary_ErrorBoundary__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_3__.AppContextProvider, {
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.PipelineContextProvider, {
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_6__.UserContextProvider, {
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__.ModalContextProvider, {
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage__WEBPACK_IMPORTED_MODULE_2__.PipelinePage, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_7__.ToastContainer, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_2__.AppContextProvider, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__.PipelineContextProvider, {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserContextProvider, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContextProvider, {
+            children: [currentPage, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_6__.ToastContainer, {
               position: "bottom-right"
             })]
           })
@@ -9363,6 +9364,117 @@ const CLOSE_PIPELINE_MODAL = "CLOSE_PIPELINE_EDIT_MODAL";
 
 /***/ }),
 
+/***/ "./src/hooks/useCurrentPage.tsx":
+/*!**************************************!*\
+  !*** ./src/hooks/useCurrentPage.tsx ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useCurrentPage: () => (/* binding */ useCurrentPage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _pages_UsersPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pages/UsersPage */ "./src/pages/UsersPage.tsx");
+/* harmony import */ var _pages_PipelinePage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/PipelinePage */ "./src/pages/PipelinePage.tsx");
+/* harmony import */ var _pages_ArchivePage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pages/ArchivePage */ "./src/pages/ArchivePage.tsx");
+/* harmony import */ var _pages_OverviewPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pages/OverviewPage */ "./src/pages/OverviewPage.tsx");
+
+
+
+
+
+
+const useCurrentPage = () => {
+  const [currentPage, setCurrentPage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(getPageFromUrl());
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const handleUrlChange = () => {
+      setCurrentPage(getPageFromUrl());
+    };
+    window.addEventListener("popstate", handleUrlChange);
+    window.addEventListener("hashchange", handleUrlChange);
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+      window.removeEventListener("hashchange", handleUrlChange);
+    };
+  }, []);
+  return currentPage;
+};
+const getPageFromUrl = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = urlParams.get("page");
+  const hash = window.location.hash;
+  if (page === "wp-quick-tasks") {
+    switch (hash) {
+      case "#/users":
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UsersPage__WEBPACK_IMPORTED_MODULE_2__.UsersPage, {});
+      case "#/boards":
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage__WEBPACK_IMPORTED_MODULE_3__.PipelinePage, {});
+      case "#/archive":
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_ArchivePage__WEBPACK_IMPORTED_MODULE_4__.ArchivePage, {});
+      default:
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_OverviewPage__WEBPACK_IMPORTED_MODULE_5__.OverviewPage, {});
+    }
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage__WEBPACK_IMPORTED_MODULE_3__.PipelinePage, {});
+};
+
+
+/***/ }),
+
+/***/ "./src/pages/ArchivePage.tsx":
+/*!***********************************!*\
+  !*** ./src/pages/ArchivePage.tsx ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ArchivePage: () => (/* binding */ ArchivePage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function ArchivePage() {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+      children: "Archive Page"
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/pages/OverviewPage.tsx":
+/*!************************************!*\
+  !*** ./src/pages/OverviewPage.tsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   OverviewPage: () => (/* binding */ OverviewPage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function OverviewPage() {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+      children: "Overview"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      children: "This is the overview page."
+    })]
+  });
+}
+
+
+/***/ }),
+
 /***/ "./src/pages/PipelinePage.tsx":
 /*!************************************!*\
   !*** ./src/pages/PipelinePage.tsx ***!
@@ -9385,6 +9497,30 @@ const PipelinePage = () => {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_2__.PipelineHeader, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline_Pipeline__WEBPACK_IMPORTED_MODULE_1__["default"], {})]
   });
 };
+
+
+/***/ }),
+
+/***/ "./src/pages/UsersPage.tsx":
+/*!*********************************!*\
+  !*** ./src/pages/UsersPage.tsx ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UsersPage: () => (/* binding */ UsersPage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function UsersPage() {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+      children: "Users"
+    })
+  });
+}
 
 
 /***/ }),
