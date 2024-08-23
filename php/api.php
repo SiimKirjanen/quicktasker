@@ -29,8 +29,13 @@ function wpqt_register_api_routes() {
                     WPQTverifyApiNonce($data);
                     $pipelineRepo = new PipelineRepository();
                     $pipeline = $pipelineRepo->getFullPipeline( $data['id'] );
+                    $pipelines = $pipelineRepo->getPipelines();
 
-                    return new WP_REST_Response((new ApiResponse(true, array(), $pipeline))->toArray(), 200);
+                    return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                        'pipeline' => $pipeline,
+                        'pipelines' => $pipelines
+
+                    ]))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
@@ -73,7 +78,7 @@ function wpqt_register_api_routes() {
                     WPQTverifyApiNonce($data);
                     $pipelineService = new PipelineService();
                     $newPipeline = $pipelineService->createPipeline($data['name']);
-
+                   
                     return new WP_REST_Response((new ApiResponse(true, array(), $newPipeline))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);

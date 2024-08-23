@@ -1,11 +1,10 @@
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { getPipelineData, setPipelinePrimaryRequest } from "../../../api/api";
+import { setPipelinePrimaryRequest } from "../../../api/api";
 import { toast } from "react-toastify";
 import {
   OPEN_NEW_PIPELINE_MODAL,
-  PIPELINE_SET_PIPELINE,
   PIPELINE_SET_PRIMARY,
 } from "../../../constants";
 import {
@@ -22,21 +21,9 @@ function PipelineSelection() {
   const {
     state: { existingPipelines, activePipeline },
     dispatch,
+    fetchAndSetPipelineData,
   } = useContext(PipelineContext);
   const { modalDispatch } = useContext(ModalContext);
-
-  const changePipeline = async (pipelineId: string) => {
-    try {
-      const response = await getPipelineData(pipelineId);
-
-      dispatch({
-        type: PIPELINE_SET_PIPELINE,
-        payload: response.data,
-      });
-    } catch (e) {
-      toast.error("Failed to change pipeline");
-    }
-  };
 
   const changePipelinePrimary = async (pipeline: Pipeline) => {
     try {
@@ -87,7 +74,7 @@ function PipelineSelection() {
                   className={clsx("wpqt-cursor-pointer wpqt-text-center", {
                     "wpqt-font-bold": isCurrentPipeline,
                   })}
-                  onClick={() => changePipeline(existingPipeline.id)}
+                  onClick={() => fetchAndSetPipelineData(existingPipeline.id)}
                 >
                   {existingPipeline.name}
                 </div>

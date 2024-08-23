@@ -15,4 +15,9 @@ type PipelineFromServer = BasePipeline & {
   is_primary: string;
 };
 
-export type { Pipeline, PipelineFromServer };
+type FullPipelineDataFromServer = {
+  pipeline: PipelineFromServer;
+  pipelines: PipelineFromServer[];
+};
+
+export type { Pipeline, PipelineFromServer, FullPipelineDataFromServer };

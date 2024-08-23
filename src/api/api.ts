@@ -1,5 +1,9 @@
 import apiFetch from "@wordpress/api-fetch";
-import { Pipeline, PipelineFromServer } from "../types/pipeline";
+import {
+  FullPipelineDataFromServer,
+  Pipeline,
+  PipelineFromServer,
+} from "../types/pipeline";
 import { Task, TaskFromServer } from "../types/task";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
@@ -19,7 +23,7 @@ function getCommonHeaders() {
 
 function getPipelineData(
   pipelineId: string,
-): Promise<WPQTResponse<PipelineFromServer>> {
+): Promise<WPQTResponse<FullPipelineDataFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}`,
     headers: getCommonHeaders(),

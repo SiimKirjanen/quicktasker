@@ -69,7 +69,7 @@ const Pipeline = () => {
   );
 
   if (!activePipeline) {
-    return;
+    return <div>Loading...</div>;
   }
 
   return (

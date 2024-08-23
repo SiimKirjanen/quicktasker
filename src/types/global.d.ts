@@ -3,9 +3,8 @@ import { Pipeline } from "./pipeline";
 declare global {
   interface Window {
     wpqt: {
-      initialFullPipeline: Pipeline;
+      initialActivePipelineId: string;
       apiNonce: string;
-      existingPipelines: Pipeline[];
     };
   }
 }
