@@ -18,4 +18,4 @@ type StageFromServer = BaseStage & {
 
 type StageChangeDirection = "left" | "right";
 
-export { type Stage, type StageChangeDirection, type StageFromServer };
+export type { Stage, StageChangeDirection, StageFromServer };

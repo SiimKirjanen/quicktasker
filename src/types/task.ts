@@ -1,9 +1,16 @@
-type Task = {
+type BaseTask = {
   id: string;
   stage_id: string;
   name: string;
   description: string;
+};
+
+type Task = BaseTask & {
   task_order: number;
 };
 
-export type { Task };
+type TaskFromServer = BaseTask & {
+  task_order: string;
+};
+
+export type { Task, TaskFromServer };

@@ -1,6 +1,6 @@
 import apiFetch from "@wordpress/api-fetch";
 import { Pipeline, PipelineFromServer } from "../types/pipeline";
-import { Task } from "../types/task";
+import { Task, TaskFromServer } from "../types/task";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 
@@ -84,7 +84,7 @@ function createTaskRequest(
   stageId: string,
   name: string,
   description: string,
-): Promise<WPQTResponse<Task>> {
+): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/tasks`,
     method: "POST",
@@ -93,7 +93,7 @@ function createTaskRequest(
   });
 }
 
-function editTaskRequest(task: Task): Promise<WPQTResponse<Task>> {
+function editTaskRequest(task: Task): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/tasks/${task.id}`,
     method: "PATCH",
