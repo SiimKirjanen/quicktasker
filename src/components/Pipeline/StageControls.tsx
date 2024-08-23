@@ -27,7 +27,7 @@ function StageControls({ stage }: Props) {
     state: { activePipeline },
   } = useContext(PipelineContext);
   const { modalDispatch } = useContext(ModalContext);
-  const stagesLength = activePipeline!.stages.length;
+  const stagesLength = activePipeline?.stages?.length ?? 0;
   const stageOrder = +stage.stage_order;
   const showMoveLeft = stageOrder !== 0 && stageOrder < stagesLength;
   const showMoveRight = stageOrder !== stagesLength - 1;

@@ -1,11 +1,18 @@
 import { Stage } from "./stage";
 
-type Pipeline = {
+type BasePipeline = {
   id: string;
   name: string;
   description?: string;
-  stages: Stage[];
+  stages?: Stage[];
+};
+
+type Pipeline = BasePipeline & {
   is_primary: boolean;
 };
 
-export type { Pipeline };
+type PipelineFromServer = BasePipeline & {
+  is_primary: string;
+};
+
+export type { Pipeline, PipelineFromServer };

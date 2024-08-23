@@ -39,9 +39,13 @@ const pipelineReducer = (state: State, action: Action) => {
         },
       };
     }
-    case PIPELINE_MOVE_TASK:
+    case PIPELINE_MOVE_TASK: {
+      if (!state.activePipeline || !state.activePipeline.stages) {
+        return state;
+      }
+
       const stages = moveTask(
-        state.activePipeline!.stages,
+        state.activePipeline.stages,
         action.payload.source,
         action.payload.destination,
       );
@@ -53,12 +57,17 @@ const pipelineReducer = (state: State, action: Action) => {
           stages,
         },
       };
+    }
     case PIPELINE_REORDER_TASK:
       const { source, destination } = action.payload;
       const targetStageId = destination.droppableId;
       const targetIndex = destination.index;
 
-      const targetStage = state.activePipeline?.stages.find(
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const targetStage = state.activePipeline.stages?.find(
         (stage) => stage.id === targetStageId,
       );
 
@@ -68,7 +77,7 @@ const pipelineReducer = (state: State, action: Action) => {
         targetIndex,
       );
 
-      const updatedStages = state.activePipeline!.stages.map((stage) =>
+      const updatedStages = state.activePipeline.stages?.map((stage) =>
         stage.id === targetStageId
           ? { ...stage, tasks: reorderedTasks }
           : stage,
@@ -84,11 +93,15 @@ const pipelineReducer = (state: State, action: Action) => {
     case PIPELINE_ADD_TASK: {
       const newTask: Task = action.payload;
 
+      if (!state.activePipeline) {
+        return state;
+      }
+
       return {
         ...state,
         activePipeline: {
           ...state.activePipeline!,
-          stages: state.activePipeline!.stages.map((stage) =>
+          stages: state.activePipeline.stages?.map((stage) =>
             stage.id === newTask.stage_id
               ? {
                   ...stage,
@@ -102,7 +115,11 @@ const pipelineReducer = (state: State, action: Action) => {
     case PIPELINE_EDIT_TASK: {
       const editedTask: Task = action.payload;
 
-      const updatedStages = state.activePipeline!.stages.map((stage) =>
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) =>
         stage.id === editedTask.stage_id
           ? {
               ...stage,
@@ -121,18 +138,27 @@ const pipelineReducer = (state: State, action: Action) => {
         },
       };
     }
-    case PIPELINE_ADD_STAGE:
+    case PIPELINE_ADD_STAGE: {
       const stage: Stage = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
 
       return {
         ...state,
         activePipeline: {
           ...state.activePipeline,
-          stages: [...state.activePipeline!.stages, stage],
+          stages: [...(state.activePipeline.stages || []), stage],
         },
       };
+    }
     case PIPELINE_EDIT_STAGE: {
       const updatedStage: Stage = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
 
       const updateStage = (stage: Stage) => {
         if (stage.id === updatedStage.id) {
@@ -145,7 +171,7 @@ const pipelineReducer = (state: State, action: Action) => {
         return stage;
       };
 
-      const updatedStages = state.activePipeline!.stages.map(updateStage);
+      const updatedStages = state.activePipeline.stages?.map(updateStage);
 
       return {
         ...state,
@@ -158,7 +184,11 @@ const pipelineReducer = (state: State, action: Action) => {
     case PIPELINE_MOVE_STAGE: {
       const { sourceIndex, destinationIndex } = action.payload;
 
-      const stages = [...state.activePipeline!.stages];
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const stages = [...(state.activePipeline.stages || [])];
       const [removedStage] = stages.splice(sourceIndex, 1);
       stages.splice(destinationIndex, 0, removedStage);
 
@@ -170,18 +200,23 @@ const pipelineReducer = (state: State, action: Action) => {
         },
       };
     }
-    case PIPELINE_DELETE_STAGE:
+    case PIPELINE_DELETE_STAGE: {
       const deletedStageId = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
 
       return {
         ...state,
         activePipeline: {
           ...state.activePipeline,
-          stages: state.activePipeline!.stages.filter(
+          stages: state.activePipeline.stages?.filter(
             (stage) => stage.id !== deletedStageId,
           ),
         },
       };
+    }
     case PIPELINE_SET_EXISTING_PIPELINES: {
       const pipelines = action.payload.map((pipeline: any) => ({
         ...pipeline,

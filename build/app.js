@@ -8720,6 +8720,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 const Pipeline = () => {
+  var _a;
   const {
     state: {
       activePipeline,
@@ -8771,7 +8772,7 @@ const Pipeline = () => {
     className: "wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden wpqt-pr-5",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_10__.DragDropContext, {
       onDragEnd: onDragEnd,
-      children: activePipeline.stages.map(stage => {
+      children: (_a = activePipeline.stages) === null || _a === void 0 ? void 0 : _a.map(stage => {
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_3__.Stage, {
           stage: stage
         });
@@ -9132,6 +9133,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 function StageControls({
   stage
 }) {
+  var _a, _b;
   const {
     dispatch,
     state: {
@@ -9141,7 +9143,7 @@ function StageControls({
   const {
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__.ModalContext);
-  const stagesLength = activePipeline.stages.length;
+  const stagesLength = (_b = (_a = activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.stages) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
   const stageOrder = +stage.stage_order;
   const showMoveLeft = stageOrder !== 0 && stageOrder < stagesLength;
   const showMoveRight = stageOrder !== stagesLength - 1;
@@ -9705,7 +9707,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const pipelineReducer = (state, action) => {
-  var _a;
+  var _a, _b, _c, _d, _e, _f;
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_LOADING:
       return Object.assign(Object.assign({}, state), {
@@ -9721,12 +9723,17 @@ const pipelineReducer = (state, action) => {
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_MOVE_TASK:
-      const stages = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.moveTask)(state.activePipeline.stages, action.payload.source, action.payload.destination);
-      return Object.assign(Object.assign({}, state), {
-        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-          stages
-        })
-      });
+      {
+        if (!state.activePipeline || !state.activePipeline.stages) {
+          return state;
+        }
+        const stages = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.moveTask)(state.activePipeline.stages, action.payload.source, action.payload.destination);
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            stages
+          })
+        });
+      }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_REORDER_TASK:
       const {
         source,
@@ -9734,9 +9741,12 @@ const pipelineReducer = (state, action) => {
       } = action.payload;
       const targetStageId = destination.droppableId;
       const targetIndex = destination.index;
-      const targetStage = (_a = state.activePipeline) === null || _a === void 0 ? void 0 : _a.stages.find(stage => stage.id === targetStageId);
+      if (!state.activePipeline) {
+        return state;
+      }
+      const targetStage = (_a = state.activePipeline.stages) === null || _a === void 0 ? void 0 : _a.find(stage => stage.id === targetStageId);
       const reorderedTasks = (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.reorderTask)(targetStage.tasks, source.index, targetIndex);
-      const updatedStages = state.activePipeline.stages.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
+      const updatedStages = (_b = state.activePipeline.stages) === null || _b === void 0 ? void 0 : _b.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
         tasks: reorderedTasks
       }) : stage);
       return Object.assign(Object.assign({}, state), {
@@ -9747,9 +9757,12 @@ const pipelineReducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_TASK:
       {
         const newTask = action.payload;
+        if (!state.activePipeline) {
+          return state;
+        }
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-            stages: state.activePipeline.stages.map(stage => stage.id === newTask.stage_id ? Object.assign(Object.assign({}, stage), {
+            stages: (_c = state.activePipeline.stages) === null || _c === void 0 ? void 0 : _c.map(stage => stage.id === newTask.stage_id ? Object.assign(Object.assign({}, stage), {
               tasks: [...stage.tasks, newTask]
             }) : stage)
           })
@@ -9758,7 +9771,10 @@ const pipelineReducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_TASK:
       {
         const editedTask = action.payload;
-        const updatedStages = state.activePipeline.stages.map(stage => stage.id === editedTask.stage_id ? Object.assign(Object.assign({}, stage), {
+        if (!state.activePipeline) {
+          return state;
+        }
+        const updatedStages = (_d = state.activePipeline.stages) === null || _d === void 0 ? void 0 : _d.map(stage => stage.id === editedTask.stage_id ? Object.assign(Object.assign({}, stage), {
           tasks: stage.tasks.map(task => task.id === editedTask.id ? editedTask : task)
         }) : stage);
         return Object.assign(Object.assign({}, state), {
@@ -9768,15 +9784,23 @@ const pipelineReducer = (state, action) => {
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_STAGE:
-      const stage = action.payload;
-      return Object.assign(Object.assign({}, state), {
-        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-          stages: [...state.activePipeline.stages, stage]
-        })
-      });
+      {
+        const stage = action.payload;
+        if (!state.activePipeline) {
+          return state;
+        }
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            stages: [...(state.activePipeline.stages || []), stage]
+          })
+        });
+      }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_STAGE:
       {
         const updatedStage = action.payload;
+        if (!state.activePipeline) {
+          return state;
+        }
         const updateStage = stage => {
           if (stage.id === updatedStage.id) {
             return Object.assign(Object.assign({}, stage), {
@@ -9786,7 +9810,7 @@ const pipelineReducer = (state, action) => {
           }
           return stage;
         };
-        const updatedStages = state.activePipeline.stages.map(updateStage);
+        const updatedStages = (_e = state.activePipeline.stages) === null || _e === void 0 ? void 0 : _e.map(updateStage);
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages: updatedStages
@@ -9799,7 +9823,10 @@ const pipelineReducer = (state, action) => {
           sourceIndex,
           destinationIndex
         } = action.payload;
-        const stages = [...state.activePipeline.stages];
+        if (!state.activePipeline) {
+          return state;
+        }
+        const stages = [...(state.activePipeline.stages || [])];
         const [removedStage] = stages.splice(sourceIndex, 1);
         stages.splice(destinationIndex, 0, removedStage);
         return Object.assign(Object.assign({}, state), {
@@ -9809,12 +9836,17 @@ const pipelineReducer = (state, action) => {
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_DELETE_STAGE:
-      const deletedStageId = action.payload;
-      return Object.assign(Object.assign({}, state), {
-        activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-          stages: state.activePipeline.stages.filter(stage => stage.id !== deletedStageId)
-        })
-      });
+      {
+        const deletedStageId = action.payload;
+        if (!state.activePipeline) {
+          return state;
+        }
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            stages: (_f = state.activePipeline.stages) === null || _f === void 0 ? void 0 : _f.filter(stage => stage.id !== deletedStageId)
+          })
+        });
+      }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_EXISTING_PIPELINES:
       {
         const pipelines = action.payload.map(pipeline => Object.assign(Object.assign({}, pipeline), {

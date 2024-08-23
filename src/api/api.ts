@@ -1,5 +1,5 @@
 import apiFetch from "@wordpress/api-fetch";
-import { Pipeline } from "../types/pipeline";
+import { Pipeline, PipelineFromServer } from "../types/pipeline";
 import { Task } from "../types/task";
 import { Stage, StageChangeDirection } from "../types/stage";
 import { WPQTResponse } from "../types/response";
@@ -17,7 +17,9 @@ function getCommonHeaders() {
   ==================================================================================================================================================================================================================
 */
 
-function getPipelineData(pipelineId: string): Promise<WPQTResponse<Pipeline>> {
+function getPipelineData(
+  pipelineId: string,
+): Promise<WPQTResponse<PipelineFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}`,
     headers: getCommonHeaders(),
@@ -27,7 +29,7 @@ function getPipelineData(pipelineId: string): Promise<WPQTResponse<Pipeline>> {
 function createPipelineRequest(
   name: string,
   description: string,
-): Promise<WPQTResponse<Pipeline>> {
+): Promise<WPQTResponse<PipelineFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/pipelines`,
     method: "POST",
@@ -38,7 +40,7 @@ function createPipelineRequest(
 
 function editPipelineRequest(
   pipeline: Pipeline,
-): Promise<WPQTResponse<Pipeline>> {
+): Promise<WPQTResponse<PipelineFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipeline.id}`,
     method: "PATCH",
@@ -51,9 +53,7 @@ function editPipelineRequest(
   });
 }
 
-function setPipelinePrimaryRequest(
-  pipelineId: string,
-): Promise<WPQTResponse<Pipeline>> {
+function setPipelinePrimaryRequest(pipelineId: string): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}/set-primary`,
     method: "PATCH",
