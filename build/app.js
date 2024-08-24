@@ -9613,7 +9613,7 @@ const setSubMenuItemActive = () => {
     return;
   }
   const submenuItems = document.querySelectorAll("#toplevel_page_wp-quick-tasks .wp-submenu li");
-  submenuItems.forEach(item => item.classList.remove("current"));
+  submenuItems.forEach(item => item.classList.remove("wpqt-current"));
   const hashMap = {
     "#/users": "#/users",
     "#/boards": "#/boards",
@@ -9624,7 +9624,7 @@ const setSubMenuItemActive = () => {
   submenuItems.forEach(item => {
     const link = item.querySelector("a");
     if (link && link.getAttribute("href") && link.getAttribute("href") === `admin.php?page=wp-quick-tasks${targetHash}`) {
-      item.classList.add("current");
+      item.classList.add("wpqt-current");
     }
   });
 };

@@ -54,7 +54,7 @@ const setSubMenuItemActive = () => {
   const submenuItems = document.querySelectorAll(
     "#toplevel_page_wp-quick-tasks .wp-submenu li",
   );
-  submenuItems.forEach((item) => item.classList.remove("current"));
+  submenuItems.forEach((item) => item.classList.remove("wpqt-current"));
 
   const hashMap: { [key: string]: string } = {
     "#/users": "#/users",
@@ -73,7 +73,7 @@ const setSubMenuItemActive = () => {
       link.getAttribute("href") &&
       link.getAttribute("href") === `admin.php?page=wp-quick-tasks${targetHash}`
     ) {
-      item.classList.add("current");
+      item.classList.add("wpqt-current");
     }
   });
 };
