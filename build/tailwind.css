@@ -1053,6 +1053,14 @@
   border-radius: 0.75rem;
 }
 
+.wpqt-rounded-full {
+  border-radius: 9999px;
+}
+
+.wpqt-rounded-sm {
+  border-radius: 0.125rem;
+}
+
 .wpqt-border {
   border-width: 1px;
 }
@@ -1106,6 +1114,10 @@
   padding: 1.5rem;
 }
 
+.wpqt-p-1 {
+  padding: 0.25rem;
+}
+
 .wpqt-px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -1114,6 +1126,11 @@
 .wpqt-py-1\.5 {
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
+}
+
+.wpqt-px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
 }
 
 .wpqt-pr-5 {
@@ -1156,6 +1173,11 @@
 .wpqt-text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.wpqt-text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .wpqt-font-bold {

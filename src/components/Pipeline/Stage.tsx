@@ -9,6 +9,16 @@ type Props = {
   stage: Stage;
 };
 
+function TaskCount({ tasks }: { tasks: Task[] | undefined }) {
+  const taskCount = tasks!.length;
+
+  return (
+    <span className="wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-1 wpqt-text-xs">
+      {taskCount}
+    </span>
+  );
+}
+
 function Stage({ stage }: Props) {
   return (
     <Droppable droppableId={stage.id}>
@@ -18,8 +28,8 @@ function Stage({ stage }: Props) {
           className={`wpqt-relative wpqt-mb-3 wpqt-flex wpqt-max-h-full wpqt-w-[320px] wpqt-flex-none wpqt-flex-col wpqt-overflow-hidden wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-gray-100`}
         >
           <div className="wpqt-mb-4 wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-px-3 wpqt-pt-3">
-            <div className="wpqt-mr-auto wpqt-text-base wpqt-leading-none">
-              {stage.name}
+            <div className="wpqt-mr-auto wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-text-base wpqt-leading-none">
+              {stage.name} <TaskCount tasks={stage.tasks} />
             </div>
             <StageControls stage={stage} />
             {stage.description && (
