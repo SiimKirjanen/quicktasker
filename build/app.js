@@ -9563,7 +9563,9 @@ const useCurrentPage = () => {
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const handleUrlChange = () => {
       setCurrentPage(getPageFromUrl());
+      setSubMenuItemActive();
     };
+    handleUrlChange(); // Initial call to set the state and submenu
     window.addEventListener("popstate", handleUrlChange);
     window.addEventListener("hashchange", handleUrlChange);
     return () => {
@@ -9574,9 +9576,10 @@ const useCurrentPage = () => {
   return currentPage;
 };
 const getPageFromUrl = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const page = urlParams.get("page");
-  const hash = window.location.hash;
+  const {
+    page,
+    hash
+  } = getUrlParams();
   if (page === "wp-quick-tasks") {
     switch (hash) {
       case "#/users":
@@ -9589,7 +9592,39 @@ const getPageFromUrl = () => {
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_OverviewPage__WEBPACK_IMPORTED_MODULE_5__.OverviewPage, {});
     }
   }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage__WEBPACK_IMPORTED_MODULE_3__.PipelinePage, {});
+};
+const setSubMenuItemActive = () => {
+  const {
+    page,
+    hash
+  } = getUrlParams();
+  if (page !== "wp-quick-tasks") {
+    return;
+  }
+  const submenuItems = document.querySelectorAll("#toplevel_page_wp-quick-tasks .wp-submenu li");
+  submenuItems.forEach(item => item.classList.remove("current"));
+  const hashMap = {
+    "#/users": "#/users",
+    "#/boards": "#/boards",
+    "#/archive": "#/archive",
+    default: ""
+  };
+  const targetHash = hashMap[hash] !== undefined ? hashMap[hash] : hashMap["default"];
+  submenuItems.forEach(item => {
+    const link = item.querySelector("a");
+    if (link && link.getAttribute("href") && link.getAttribute("href") === `admin.php?page=wp-quick-tasks${targetHash}`) {
+      item.classList.add("current");
+    }
+  });
+};
+const getUrlParams = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = urlParams.get("page");
+  const hash = window.location.hash;
+  return {
+    page,
+    hash
+  };
 };
 
 

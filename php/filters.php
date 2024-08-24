@@ -12,10 +12,6 @@
  */
 add_filter( 'admin_body_class', 'wpqt_admin_body_class' );
 function wpqt_admin_body_class($classes) {
-	if( !isset($_GET['page']) ) {
-		return $classes;
-	}
-
     $locationService = new LocationService();
 
 	if( $locationService->isWPQTPage() ) {
