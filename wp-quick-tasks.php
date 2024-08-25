@@ -1,11 +1,11 @@
 <?php
 
 /*
-	Plugin Name: WP Quick Tasks
+	Plugin Name: QuickTasker
 	Description: TODO.
 	Author: Siim Kirjanen
 	Author URI: https://github.com/SiimKirjanen
-	Text Domain: wp-quick-tasks
+	Text Domain: quick-tasker
 	Version: 1.0.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28

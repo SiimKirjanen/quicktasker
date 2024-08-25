@@ -246,4 +246,57 @@ class TaskService {
 
         return $this->taskRepository->getTaskById($taskId);
     }
+
+    public function deleteTask($taskId) {
+        global $wpdb;
+
+        $taskToDelete = $this->taskRepository->getTaskById($taskId);
+        $result = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS, array('id' => $taskId));
+
+        if ($result === false) {
+            throw new Exception('Failed to delete task');
+        }
+
+        $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('task_id' => $taskId));
+
+        if ($result2 === false) {
+            throw new Exception('Failed to delete task location');
+        }
+
+        $this->reOrderAfterDeletion($taskToDelete->task_order, $taskToDelete->stage_id);
+
+        return true;
+    }
+
+    /**
+     * Reorders the tasks after a deletion.
+     *
+     * This method updates the task order of the tasks in the specified stage
+     * after a task has been deleted. It decrements the task order of all tasks
+     * with a higher order than the deleted task.
+     *
+     * @param int $deletedTaskOrder The order of the deleted task.
+     * @param int $stageId The ID of the stage.
+     * @return int The number of rows affected by the update query.
+     * @throws Exception If the update query fails.
+     */
+    private function reOrderAfterDeletion($deletedTaskOrder, $stageId) {
+        global $wpdb;
+
+        $result = $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                SET task_order = task_order - 1
+                WHERE stage_id = %d AND task_order > %d",
+                $stageId,
+                $deletedTaskOrder
+            )
+        );
+
+        if ($result === false) {
+            throw new Exception('Failed to change tasks order after deletion');
+        }
+
+        return $result;
+    }
 }

@@ -1,8 +1,8 @@
 import { Droppable } from "@hello-pangea/dnd";
-import { Task as TaskComponent } from "./Task";
+import { Task as TaskComponent } from "./Task/Task";
 import { Task } from "../../types/task";
 import { AddTask } from "./AddTask";
-import { StageControls } from "./StageControls";
+import { StageControlsDropdown } from "./StageControlsDropdown";
 import { Stage } from "../../types/stage";
 
 type Props = {
@@ -25,13 +25,14 @@ function Stage({ stage }: Props) {
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
+          data-stage-id={stage.id}
           className={`wpqt-relative wpqt-mb-3 wpqt-flex wpqt-max-h-full wpqt-w-[320px] wpqt-flex-none wpqt-flex-col wpqt-overflow-hidden wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-gray-100`}
         >
           <div className="wpqt-mb-4 wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-px-3 wpqt-pt-3">
             <div className="wpqt-mr-auto wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-text-base wpqt-leading-none">
               {stage.name} <TaskCount tasks={stage.tasks} />
             </div>
-            <StageControls stage={stage} />
+            <StageControlsDropdown stage={stage} />
             {stage.description && (
               <div className="wpqt-w-full wpqt-flex-shrink-0 wpqt-flex-grow-0 wpqt-text-sm">
                 {stage.description}

@@ -21,7 +21,7 @@ type Props = {
   stage: Stage;
 };
 
-function StageControls({ stage }: Props) {
+function StageControlsDropdown({ stage }: Props) {
   const {
     dispatch,
     state: { activePipeline },
@@ -129,4 +129,4 @@ function StageControls({ stage }: Props) {
   );
 }
 
-export { StageControls };
+export { StageControlsDropdown };

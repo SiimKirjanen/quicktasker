@@ -237,6 +237,34 @@ function wpqt_register_api_routes() {
         ),
     );
 
+    register_rest_route(
+        'wpqt/v1',
+        'tasks/(?P<id>\d+)',
+        array(
+            'methods' => 'DELETE',
+            'callback' => function( $data ) {
+                global $wpdb;
+
+                try {
+                    WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+                    $taskService = new TaskService();
+                    $taskService->deleteTask( $data['id'] );
+                    $wpdb->query('COMMIT');
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
+
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
      /*
     ==================================================================================================================================================================================================================
     Stage endpoints

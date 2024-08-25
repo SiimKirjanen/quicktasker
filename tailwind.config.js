@@ -6,6 +6,7 @@ module.exports = {
     extend: {
       colors: {
         qtBorder: "#d0d7de",
+        qtBlueHover: "#3b82f6",
       },
       height: {
         "screen-minus-top-bar": "calc(100vh - 32px)",
