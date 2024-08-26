@@ -118,6 +118,14 @@ function deleteTaskRequest(taskId: string): Promise<WPQTResponse> {
   });
 }
 
+function archiveTaskRequest(taskId: string): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}/archive`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   Stage requests
@@ -182,4 +190,5 @@ export {
   editPipelineRequest,
   setPipelinePrimaryRequest,
   deleteTaskRequest,
+  archiveTaskRequest,
 };

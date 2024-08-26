@@ -1,12 +1,16 @@
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { TrashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
+import { MenuItem } from "@headlessui/react";
+import {
+  TrashIcon,
+  EllipsisHorizontalIcon,
+  ArchiveBoxIcon,
+} from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
-import { deleteTaskRequest } from "../../../api/api";
+import { archiveTaskRequest, deleteTaskRequest } from "../../../api/api";
 import { WPQTDropdown } from "../WPQTDropdown";
 
 type Props = {
@@ -15,7 +19,6 @@ type Props = {
 
 function TaskControlsDropdown({ task }: Props) {
   const {
-    dispatch,
     state: { activePipeline },
     fetchAndSetPipelineData,
   } = useContext(PipelineContext);
@@ -44,6 +47,19 @@ function TaskControlsDropdown({ task }: Props) {
     });
   };
 
+  const archiveTask = async (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+
+    try {
+      await archiveTaskRequest(task.id);
+      fetchAndSetPipelineData(activePipeline!.id);
+      toast.success("Task archived successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to archive a task");
+    }
+  };
+
   return (
     <WPQTDropdown
       menuBtn={
@@ -53,12 +69,23 @@ function TaskControlsDropdown({ task }: Props) {
       <MenuItem>
         <div
           className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
+          onClick={archiveTask}
+        >
+          <ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />
+          Archive task
+        </div>
+      </MenuItem>
+
+      <MenuItem>
+        <div
+          className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
           onClick={openTaskEditModal}
         >
           <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
           Edit task
         </div>
       </MenuItem>
+
       <MenuItem>
         <div
           className="wpqt-mt-5 wpqt-flex wpqt-cursor-pointer wpqt-items-center"

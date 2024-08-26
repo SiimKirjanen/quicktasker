@@ -263,24 +263,39 @@ class TaskService {
             throw new Exception('Failed to delete task location');
         }
 
-        $this->reOrderAfterDeletion($taskToDelete->task_order, $taskToDelete->stage_id);
+        $this->shiftTaskOrder($taskToDelete->task_order, $taskToDelete->stage_id);
 
         return true;
     }
 
+    public function archiveTask($taskId) {
+        global $wpdb;
+
+        $taskToArchive = $this->taskRepository->getTaskById($taskId);
+        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS, array('is_archived' => 1), array('id' => $taskId));
+
+        if ($result === false) {
+            throw new Exception('Failed to archive task');
+        }
+
+        $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('task_id' => $taskId));
+
+        if ($result2 === false) {
+            throw new Exception('Failed to delete task location');
+        }
+
+        $this->shiftTaskOrder($taskToArchive->task_order, $taskToArchive->stage_id);
+    }
+
     /**
-     * Reorders the tasks after a deletion.
-     *
-     * This method updates the task order of the tasks in the specified stage
-     * after a task has been deleted. It decrements the task order of all tasks
-     * with a higher order than the deleted task.
+     * Shifts the task order after a task is deleted or archived.
      *
      * @param int $deletedTaskOrder The order of the deleted task.
      * @param int $stageId The ID of the stage.
      * @return int The number of rows affected by the update query.
      * @throws Exception If the update query fails.
      */
-    private function reOrderAfterDeletion($deletedTaskOrder, $stageId) {
+    private function shiftTaskOrder($deletedTaskOrder, $stageId) {
         global $wpdb;
 
         $result = $wpdb->query(
@@ -294,7 +309,7 @@ class TaskService {
         );
 
         if ($result === false) {
-            throw new Exception('Failed to change tasks order after deletion');
+            throw new Exception('Failed to shift tasks order');
         }
 
         return $result;
