@@ -416,6 +416,35 @@ function wpqt_register_api_routes() {
             }
         ),
     );
+
+    register_rest_route(
+        'wpqt/v1',
+        'stages/(?P<id>\d+)/archive-tasks',
+        array(
+            'methods' => 'PATCH',
+            'callback' => function( $data ) {
+                global $wpdb;
+
+                try {
+                    WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+
+                    $stageService = new StageService();
+                    $stageService->archiveStageTasks( $data['id'] );
+                    $wpdb->query('COMMIT');
+
+                    return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
+                } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
+                    
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
     /*
     ==================================================================================================================================================================================================================
     User endpoints

@@ -247,6 +247,13 @@ class TaskService {
         return $this->taskRepository->getTaskById($taskId);
     }
 
+    /**
+     * Deletes a task.
+     *
+     * @param int $taskId The ID of the task to delete.
+     * @return bool True if the task is successfully deleted, false otherwise.
+     * @throws Exception If there is an error deleting the task or its location.
+     */
     public function deleteTask($taskId) {
         global $wpdb;
 
@@ -268,6 +275,12 @@ class TaskService {
         return true;
     }
 
+    /**
+     * Archives a task.
+     *
+     * @param int $taskId The ID of the task to be archived.
+     * @throws Exception If failed to archive the task or delete the task location.
+     */
     public function archiveTask($taskId) {
         global $wpdb;
 

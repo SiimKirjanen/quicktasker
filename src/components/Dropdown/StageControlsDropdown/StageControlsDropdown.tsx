@@ -1,4 +1,8 @@
-import { deleteStageRequest, moveStageRequest } from "../../../api/api";
+import {
+  archiveStageTasksRequest,
+  deleteStageRequest,
+  moveStageRequest,
+} from "../../../api/api";
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import {
@@ -26,6 +30,7 @@ function StageControlsDropdown({ stage }: Props) {
   const {
     dispatch,
     state: { activePipeline },
+    fetchAndSetPipelineData,
   } = useContext(PipelineContext);
   const { modalDispatch } = useContext(ModalContext);
   const stagesLength = activePipeline?.stages?.length ?? 0;
@@ -72,6 +77,17 @@ function StageControlsDropdown({ stage }: Props) {
     }
   };
 
+  const archiveAllStageTasks = async () => {
+    try {
+      await archiveStageTasksRequest(stage.id);
+      fetchAndSetPipelineData(activePipeline!.id);
+      toast.success(`Archived all ${stage.name} tasks`);
+    } catch (error) {
+      console.error(error);
+      toast.error(`Failed to archive stage ${stage.name} tasks`);
+    }
+  };
+
   return (
     <WPQTDropdown
       menuBtn={<Cog8ToothIcon className="wpqt-size-5 wpqt-text-gray-400" />}
@@ -107,6 +123,16 @@ function StageControlsDropdown({ stage }: Props) {
         >
           <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
           Edit stage
+        </div>
+      </MenuItem>
+
+      <MenuItem>
+        <div
+          className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
+          onClick={archiveAllStageTasks}
+        >
+          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
+          Archive all stage tasks
         </div>
       </MenuItem>
 

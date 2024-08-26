@@ -7699,6 +7699,7 @@ function App() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   archiveStageTasksRequest: () => (/* binding */ archiveStageTasksRequest),
 /* harmony export */   archiveTaskRequest: () => (/* binding */ archiveTaskRequest),
 /* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
@@ -7862,6 +7863,13 @@ function deleteStageRequest(stageId) {
     data: {
       stageId
     },
+    headers: getCommonHeaders()
+  });
+}
+function archiveStageTasksRequest(stageId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/stages/${stageId}/archive-tasks`,
+    method: "PATCH",
     headers: getCommonHeaders()
   });
 }
@@ -8091,7 +8099,8 @@ function StageControlsDropdown({
     dispatch,
     state: {
       activePipeline
-    }
+    },
+    fetchAndSetPipelineData
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__.PipelineContext);
   const {
     modalDispatch
@@ -8137,6 +8146,16 @@ function StageControlsDropdown({
       react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error("Failed to move a stage");
     }
   });
+  const archiveAllStageTasks = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.archiveStageTasksRequest)(stage.id);
+      fetchAndSetPipelineData(activePipeline.id);
+      react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.success(`Archived all ${stage.name} tasks`);
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error(`Failed to archive stage ${stage.name} tasks`);
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_7__.WPQTDropdown, {
     menuBtn: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_8__["default"], {
       className: "wpqt-size-5 wpqt-text-gray-400"
@@ -8164,6 +8183,14 @@ function StageControlsDropdown({
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_12__["default"], {
           className: "wpqt-size-4 wpqt-text-red-600"
         }), "Edit stage"]
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_9__.MenuItem, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center",
+        onClick: archiveAllStageTasks,
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_12__["default"], {
+          className: "wpqt-size-4 wpqt-text-red-600"
+        }), "Archive all stage tasks"]
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_9__.MenuItem, {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {

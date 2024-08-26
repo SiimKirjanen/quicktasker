@@ -217,4 +217,39 @@ class StageService {
 
         return $result;
     }
+
+    /**
+     * Archives all tasks associated with a specific stage.
+     *
+     * @param int $stageId The ID of the stage.
+     * @return bool Returns true if the tasks are successfully archived, otherwise throws an exception.
+     * @throws Exception If there is a failure in archiving tasks or deleting task location.
+     */
+    public function archiveStageTasks($stageId) {
+        global $wpdb;
+
+        $sql = "
+            UPDATE " . TABLE_WP_QUICK_TASKS_TASKS . " AS a
+            INNER JOIN " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " AS b
+            ON a.id = b.task_id
+            SET a.is_archived = 1
+            WHERE b.stage_id = %d
+        ";
+
+        $result = $wpdb->query($wpdb->prepare($sql, $stageId));
+
+        if ($result === false) {
+            throw new Exception('Failed to archive tasks');
+        }
+
+        $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('stage_id' => $stageId));
+
+        if ($result2 === false) {
+            throw new Exception('Failed to delete task location');
+        }
+
+        return true;
+
+
+    }
 }
