@@ -12,7 +12,7 @@ function ArchiveItems() {
   }
 
   return (
-    <div>
+    <div className="wpqt-flex wpqt-flex-wrap wpqt-gap-2">
       {archivedTasks.map((task) => (
         <ArchiveItem key={task.id} task={task} />
       ))}
