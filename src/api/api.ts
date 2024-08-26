@@ -4,7 +4,7 @@ import {
   Pipeline,
   PipelineFromServer,
 } from "../types/pipeline";
-import { Task, TaskFromServer } from "../types/task";
+import { ArchivedTaskFromServer, Task, TaskFromServer } from "../types/task";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 
@@ -126,6 +126,16 @@ function archiveTaskRequest(taskId: string): Promise<WPQTResponse> {
   });
 }
 
+function getArchivedTasksRequest(): Promise<
+  WPQTResponse<ArchivedTaskFromServer[]>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/archived`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   Stage requests
@@ -200,4 +210,5 @@ export {
   deleteTaskRequest,
   archiveTaskRequest,
   archiveStageTasksRequest,
+  getArchivedTasksRequest,
 };

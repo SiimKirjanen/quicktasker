@@ -1,8 +1,13 @@
+import { Archive } from "../components/Archive/Archive";
+import { ArchiveContextProvider } from "../providers/ArchiveContextProvider";
+
 function ArchivePage() {
   return (
-    <div>
-      <h1>Archive Page</h1>
-    </div>
+    <ArchiveContextProvider>
+      <div>
+        <Archive />
+      </div>
+    </ArchiveContextProvider>
   );
 }
 

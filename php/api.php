@@ -152,6 +152,28 @@ function wpqt_register_api_routes() {
 
     register_rest_route(
         'wpqt/v1',
+        'tasks/archived',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $tasksRepo = new TaskRepository();
+                    $archivedTasks = $tasksRepo->getArchivedTasks();
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
         'tasks/(?P<id>\d+)/move',
         array(
             'methods' => 'PATCH',

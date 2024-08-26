@@ -8,11 +8,23 @@ class TaskRepository {
      */
     public function getTasks() {
         global $wpdb;
+    
+        return $wpdb->get_results(
+            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_TASKS
+        );
+    }
 
-        return $wpdb->get_results( $wpdb->prepare(
-            "SELECT * FROM %s",
-            TABLE_WP_QUICK_TASKS_TASKS
-        ) );
+    /**
+     * Retrieves the archived tasks from the database.
+     *
+     * @return array The archived tasks.
+     */
+    public function getArchivedTasks() {
+        global $wpdb;
+    
+        return $wpdb->get_results(
+            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_TASKS . " WHERE is_archived = 1"
+        );
     }
 
     /**

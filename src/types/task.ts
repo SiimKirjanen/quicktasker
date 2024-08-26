@@ -13,4 +13,10 @@ type TaskFromServer = BaseTask & {
   task_order: string;
 };
 
-export type { Task, TaskFromServer };
+type BaseArchivedTask = Omit<BaseTask, "stage_id">;
+
+type ArchivedTask = BaseArchivedTask;
+
+type ArchivedTaskFromServer = BaseArchivedTask;
+
+export type { Task, TaskFromServer, ArchivedTaskFromServer, ArchivedTask };

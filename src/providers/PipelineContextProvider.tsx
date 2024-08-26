@@ -47,6 +47,12 @@ const PipelineContextProvider = ({
 }) => {
   const [state, dispatch] = useReducer(pipelineReducer, initialState);
 
+  useEffect(() => {
+    const initialActivePipelineId = window.wpqt.initialActivePipelineId;
+
+    fetchAndSetPipelineData(initialActivePipelineId);
+  }, []);
+
   const fetchAndSetPipelineData = async (pipelineId: string) => {
     try {
       dispatch({ type: PIPELINE_SET_LOADING, payload: true });
@@ -66,12 +72,6 @@ const PipelineContextProvider = ({
       toast.error("Unable to load the board. Please try again later.");
     }
   };
-
-  useEffect(() => {
-    const initialActivePipelineId = window.wpqt.initialActivePipelineId;
-
-    fetchAndSetPipelineData(initialActivePipelineId);
-  }, []);
 
   return (
     <PipelineContext.Provider
