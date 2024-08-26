@@ -2,7 +2,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import { Task as TaskComponent } from "./Task/Task";
 import { Task } from "../../types/task";
 import { AddTask } from "./AddTask";
-import { StageControlsDropdown } from "./StageControlsDropdown";
+import { StageControlsDropdown } from "../Dropdown/StageControlsDropdown/StageControlsDropdown";
 import { Stage } from "../../types/stage";
 
 type Props = {

@@ -3,7 +3,7 @@ import { Task } from "../../../types/task";
 import { useContext } from "@wordpress/element";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
-import { TaskControlsDropdown } from "./TaskControlsDropdown";
+import { TaskControlsDropdown } from "../../Dropdown/TaskControlsDropdown/TaskControlsDropdown";
 
 type Props = {
   task: Task;

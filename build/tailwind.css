@@ -1316,11 +1316,6 @@
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
 }
 
-.hover\:wpqt-text-blue-500:hover {
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
-}
-
 .hover\:wpqt-text-qtBlueHover:hover {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));

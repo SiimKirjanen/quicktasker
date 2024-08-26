@@ -1,11 +1,11 @@
-import { deleteStageRequest, moveStageRequest } from "../../api/api";
+import { deleteStageRequest, moveStageRequest } from "../../../api/api";
 import { useContext } from "@wordpress/element";
-import { PipelineContext } from "../../providers/PipelineContextProvider";
+import { PipelineContext } from "../../../providers/PipelineContextProvider";
 import {
   OPEN_STAGE_EDIT_MODAL,
   PIPELINE_DELETE_STAGE,
   PIPELINE_MOVE_STAGE,
-} from "../../constants";
+} from "../../../constants";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import {
   Cog8ToothIcon,
@@ -14,8 +14,9 @@ import {
   ArrowRightIcon,
 } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
-import { ModalContext } from "../../providers/ModalContextProvider";
-import { Stage, StageChangeDirection } from "../../types/stage";
+import { ModalContext } from "../../../providers/ModalContextProvider";
+import { Stage, StageChangeDirection } from "../../../types/stage";
+import { WPQTDropdown } from "../WPQTDropdown";
 
 type Props = {
   stage: Stage;
@@ -72,60 +73,53 @@ function StageControlsDropdown({ stage }: Props) {
   };
 
   return (
-    <Menu>
-      <MenuButton className="wpqt-strip-btn wpqt-cursor-pointer">
-        <Cog8ToothIcon className="wpqt-size-5 wpqt-text-gray-400" />
-      </MenuButton>
-      <MenuItems
-        anchor="bottom"
-        transition
-        className="wpqt-z-20 wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
-      >
-        {showMoveLeft && (
-          <MenuItem>
-            <div
-              className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-              onClick={() => moveStage("left")}
-            >
-              <ArrowLeftIcon className="wpqt-size-4 wpqt-text-red-600" />
-              Move left
-            </div>
-          </MenuItem>
-        )}
-
-        {showMoveRight && (
-          <MenuItem>
-            <div
-              className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-              onClick={() => moveStage("right")}
-            >
-              <ArrowRightIcon className="wpqt-size-4 wpqt-text-red-600" />
-              Move right
-            </div>
-          </MenuItem>
-        )}
-
+    <WPQTDropdown
+      menuBtn={<Cog8ToothIcon className="wpqt-size-5 wpqt-text-gray-400" />}
+    >
+      {showMoveLeft && (
         <MenuItem>
           <div
             className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-            onClick={openStageEditModal}
+            onClick={() => moveStage("left")}
           >
-            <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-            Edit stage
+            <ArrowLeftIcon className="wpqt-size-4 wpqt-text-red-600" />
+            Move left
           </div>
         </MenuItem>
+      )}
 
+      {showMoveRight && (
         <MenuItem>
           <div
-            className="wpqt-mt-5 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-            onClick={deleteStage}
+            className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
+            onClick={() => moveStage("right")}
           >
-            <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-            Delete stage
+            <ArrowRightIcon className="wpqt-size-4 wpqt-text-red-600" />
+            Move right
           </div>
         </MenuItem>
-      </MenuItems>
-    </Menu>
+      )}
+
+      <MenuItem>
+        <div
+          className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
+          onClick={openStageEditModal}
+        >
+          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
+          Edit stage
+        </div>
+      </MenuItem>
+
+      <MenuItem>
+        <div
+          className="wpqt-mt-5 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
+          onClick={deleteStage}
+        >
+          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
+          Delete stage
+        </div>
+      </MenuItem>
+    </WPQTDropdown>
   );
 }
 

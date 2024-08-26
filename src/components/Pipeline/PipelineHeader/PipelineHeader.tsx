@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../../providers/PipelineContextProvider";
-import { PipelineSelection } from "./PipelineSelection";
+import { PipelineSelectionDropdown } from "../../Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_EDIT_PIPELINE_MODAL } from "../../../constants";
@@ -36,7 +36,7 @@ function PipelineHeader() {
       />
 
       <div className="wpqt-ml-auto">
-        <PipelineSelection />
+        <PipelineSelectionDropdown />
       </div>
     </div>
   );

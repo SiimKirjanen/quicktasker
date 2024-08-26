@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
 import { deleteTaskRequest } from "../../../api/api";
+import { WPQTDropdown } from "../WPQTDropdown";
 
 type Props = {
   task: Task;
@@ -44,39 +45,30 @@ function TaskControlsDropdown({ task }: Props) {
   };
 
   return (
-    <Menu>
-      <MenuButton
-        className="wpqt-strip-btn hover:wpqt-blue-500 wpqt-cursor-pointer"
-        onClick={(event) => event.stopPropagation()}
-      >
+    <WPQTDropdown
+      menuBtn={
         <EllipsisHorizontalIcon className="wpqt-size-6 wpqt-text-gray-400 hover:wpqt-text-qtBlueHover" />
-      </MenuButton>
-      <MenuItems
-        anchor="bottom"
-        transition
-        className="wpqt-z-20 wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
-      >
-        <MenuItem>
-          <div
-            className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-            onClick={openTaskEditModal}
-          >
-            <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-            Edit task
-          </div>
-        </MenuItem>
-
-        <MenuItem>
-          <div
-            className="wpqt-mt-5 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-            onClick={deleteTask}
-          >
-            <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-            Delete task
-          </div>
-        </MenuItem>
-      </MenuItems>
-    </Menu>
+      }
+    >
+      <MenuItem>
+        <div
+          className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
+          onClick={openTaskEditModal}
+        >
+          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
+          Edit task
+        </div>
+      </MenuItem>
+      <MenuItem>
+        <div
+          className="wpqt-mt-5 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
+          onClick={deleteTask}
+        >
+          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
+          Delete task
+        </div>
+      </MenuItem>
+    </WPQTDropdown>
   );
 }
 
