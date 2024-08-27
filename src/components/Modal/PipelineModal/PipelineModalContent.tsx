@@ -1,7 +1,5 @@
 import {
   Button,
-  Checkbox,
-  DialogTitle,
   Field,
   Fieldset,
   Input,
@@ -18,6 +16,7 @@ import {
 import { Pipeline } from "../../../types/pipeline";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { clsx } from "clsx";
+import { WPQTModalTitle } from "../WPQTModal";
 
 type Props = {
   editPipeline: (pipeline: Pipeline) => void;
@@ -63,12 +62,9 @@ const PipelineModalContent = forwardRef(
 
     return (
       <>
-        <DialogTitle
-          as="div"
-          className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
-        >
+        <WPQTModalTitle>
           {editingPipeline ? "Edit board" : "Add board"}
-        </DialogTitle>
+        </WPQTModalTitle>
         <Fieldset className="space-y-6 rounded-xl bg-white/5 p-6 sm:p-10">
           <Field className="wpqt-mb-3">
             <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">

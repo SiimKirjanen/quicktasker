@@ -1,6 +1,5 @@
 import {
   Button,
-  DialogTitle,
   Field,
   Fieldset,
   Input,
@@ -17,6 +16,7 @@ import {
 import { clsx } from "clsx";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage } from "../../../types/stage";
+import { WPQTModalTitle } from "../WPQTModal";
 
 type Props = {
   editStage: (stage: Stage) => void;
@@ -62,12 +62,9 @@ const StageModalContent = forwardRef(
 
     return (
       <>
-        <DialogTitle
-          as="div"
-          className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
-        >
+        <WPQTModalTitle>
           {editingStage ? "Edit task" : "Add Stage"}
-        </DialogTitle>
+        </WPQTModalTitle>
         <Fieldset className="space-y-6 rounded-xl bg-white/5 p-6 sm:p-10">
           <Field className="wpqt-mb-3">
             <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">

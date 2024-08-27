@@ -5,7 +5,6 @@ import {
   Label,
   Textarea,
   Button,
-  DialogTitle,
 } from "@headlessui/react";
 import {
   forwardRef,
@@ -17,6 +16,7 @@ import {
 import { clsx } from "clsx";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
+import { WPQTModalTitle } from "../WPQTModal";
 
 type Props = {
   addTask: (name: string, description: string) => void;
@@ -61,12 +61,9 @@ const TaskModalContent = forwardRef(
 
     return (
       <>
-        <DialogTitle
-          as="div"
-          className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
-        >
+        <WPQTModalTitle>
           {editingTask ? "Edit task" : "Add task"}
-        </DialogTitle>
+        </WPQTModalTitle>
         <Fieldset className="space-y-6 rounded-xl bg-white/5 p-6 sm:p-10">
           <Field className="wpqt-mb-3">
             <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">

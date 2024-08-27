@@ -8,10 +8,14 @@ import { SET_ARCHIVE_TASKS } from "../constants";
 const initialState = {
   archivedTasks: null,
   archiveLoading: false,
+  archiveModalOpen: false,
+  archiveModalTask: null,
 };
 
 type State = {
   archivedTasks: ArchivedTask[] | null;
+  archiveModalOpen: boolean;
+  archiveModalTask: ArchivedTask | null;
 };
 
 type Action = {
@@ -23,12 +27,12 @@ type Dispatch = (action: Action) => void;
 
 type ArchiveContextType = {
   state: State;
-  dispatch: Dispatch;
+  archiveDispatch: Dispatch;
 };
 
 const ArchiveContext = createContext<ArchiveContextType>({
   state: initialState,
-  dispatch: () => {},
+  archiveDispatch: () => {},
 });
 
 const ArchiveContextProvider = ({
@@ -36,7 +40,7 @@ const ArchiveContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, archiveDispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     fetchAndSetArchivedTasks();
@@ -46,7 +50,7 @@ const ArchiveContextProvider = ({
     try {
       const { data } = await getArchivedTasksRequest();
 
-      dispatch({ type: SET_ARCHIVE_TASKS, payload: data });
+      archiveDispatch({ type: SET_ARCHIVE_TASKS, payload: data });
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch archived tasks");
@@ -54,7 +58,7 @@ const ArchiveContextProvider = ({
   };
 
   return (
-    <ArchiveContext.Provider value={{ state, dispatch }}>
+    <ArchiveContext.Provider value={{ state, archiveDispatch }}>
       {children}
     </ArchiveContext.Provider>
   );

@@ -841,32 +841,20 @@
   bottom: 0px;
 }
 
-.wpqt-right-\[12px\] {
-  right: 12px;
-}
-
-.wpqt-top-\[12px\] {
-  top: 12px;
-}
-
-.wpqt-right-0 {
-  right: 0px;
-}
-
-.wpqt-top-0 {
-  top: 0px;
-}
-
 .wpqt-right-2 {
   right: 0.5rem;
 }
 
-.wpqt-top-2 {
-  top: 0.5rem;
+.wpqt-right-\[12px\] {
+  right: 12px;
 }
 
 .wpqt-top-1 {
   top: 0.25rem;
+}
+
+.wpqt-top-\[12px\] {
+  top: 12px;
 }
 
 .wpqt-z-10 {
@@ -993,10 +981,6 @@
   flex-grow: 0;
 }
 
-.wpqt-basis-\[300px\] {
-  flex-basis: 300px;
-}
-
 .wpqt-basis-\[200px\] {
   flex-basis: 200px;
 }
@@ -1015,10 +999,6 @@
 
 .wpqt-resize-none {
   resize: none;
-}
-
-.wpqt-flex-row {
-  flex-direction: row;
 }
 
 .wpqt-flex-col {
@@ -1166,28 +1146,16 @@
   padding-bottom: 1rem;
 }
 
-.wpqt-pr-5 {
-  padding-right: 1.25rem;
-}
-
-.wpqt-pt-3 {
-  padding-top: 0.75rem;
-}
-
-.wpqt-pr-3 {
-  padding-right: 0.75rem;
-}
-
 .wpqt-pr-4 {
   padding-right: 1rem;
 }
 
-.wpqt-pr-2 {
-  padding-right: 0.5rem;
-}
-
 .wpqt-pr-6 {
   padding-right: 1.5rem;
+}
+
+.wpqt-pt-3 {
+  padding-top: 0.75rem;
 }
 
 .wpqt-text-center {

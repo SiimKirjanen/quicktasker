@@ -1,4 +1,9 @@
-import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
 
 type Props = {
   children: React.ReactNode;
@@ -28,4 +33,15 @@ function WPQTModal({ modalOpen, closeModal, children }: Props) {
   );
 }
 
-export { WPQTModal };
+function WPQTModalTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <DialogTitle
+      as="div"
+      className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
+    >
+      {children}
+    </DialogTitle>
+  );
+}
+
+export { WPQTModal, WPQTModalTitle };
