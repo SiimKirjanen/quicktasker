@@ -8,14 +8,10 @@ import { SET_ARCHIVE_TASKS } from "../constants";
 const initialState = {
   archivedTasks: null,
   archiveLoading: false,
-  archiveModalOpen: false,
-  archiveModalTask: null,
 };
 
 type State = {
   archivedTasks: ArchivedTask[] | null;
-  archiveModalOpen: boolean;
-  archiveModalTask: ArchivedTask | null;
 };
 
 type Action = {

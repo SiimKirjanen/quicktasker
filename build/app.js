@@ -8004,8 +8004,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Dropdown_ArchivedTaskDropdown_ArchivedTaskDropdown__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown */ "./src/components/Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown.tsx");
-/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 
 
 
@@ -8015,11 +8015,11 @@ function ArchiveItem({
   task
 }) {
   const {
-    archiveDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_3__.ArchiveContext);
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__.ModalContext);
   const openArchivedTaskModal = e => {
-    archiveDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_4__.OPEN_ARCHIVE_TASK_MODAL,
+    modalDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.OPEN_ARCHIVE_TASK_MODAL,
       payload: task
     });
   };
@@ -8739,9 +8739,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
-/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _ArchiveTaskModalContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ArchiveTaskModalContent */ "./src/components/Modal/ArchiveTaskModal/ArchiveTaskModalContent.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _ArchiveTaskModalContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ArchiveTaskModalContent */ "./src/components/Modal/ArchiveTaskModal/ArchiveTaskModalContent.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 
 
 
@@ -8751,19 +8751,19 @@ __webpack_require__.r(__webpack_exports__);
 function ArchiveTaskModal() {
   const {
     state: {
-      archiveModalOpen
+      archiveTaskModalOpen
     },
-    archiveDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_3__.ArchiveContext);
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__.ModalContext);
   const closeArchiveModal = () => {
-    archiveDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_4__.CLOSE_ARCHIVE_TASK_MODAL
+    modalDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_ARCHIVE_TASK_MODAL
     });
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModal, {
-    modalOpen: archiveModalOpen,
+    modalOpen: archiveTaskModalOpen,
     closeModal: closeArchiveModal,
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveTaskModalContent__WEBPACK_IMPORTED_MODULE_5__.ArchiveTaskModalContent, {})
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveTaskModalContent__WEBPACK_IMPORTED_MODULE_4__.ArchiveTaskModalContent, {})
   });
 }
 
@@ -8785,8 +8785,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 
 
 
@@ -8796,12 +8796,12 @@ function ArchiveTaskModalContent() {
     state: {
       archiveModalTask
     }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__.ArchiveContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
   if (!archiveModalTask) {
     return null;
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalTitle, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModalTitle, {
       children: archiveModalTask.name
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-flex-col",
@@ -10675,9 +10675,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 const initialState = {
   archivedTasks: null,
-  archiveLoading: false,
-  archiveModalOpen: false,
-  archiveModalTask: null
+  archiveLoading: false
 };
 const ArchiveContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -10744,7 +10742,9 @@ const initialState = {
   stageToEdit: null,
   targetPipelineId: "",
   pipelineModalOpen: false,
-  pipelineToEdit: null
+  pipelineToEdit: null,
+  archiveTaskModalOpen: false,
+  archiveModalTask: null
 };
 const ModalContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -10953,21 +10953,6 @@ const reducer = (state, action) => {
           archivedTasks
         });
       }
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_ARCHIVE_TASK_MODAL:
-      {
-        const archiveTask = action.payload;
-        return Object.assign(Object.assign({}, state), {
-          archiveModalOpen: true,
-          archiveModalTask: archiveTask
-        });
-      }
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_ARCHIVE_TASK_MODAL:
-      {
-        return Object.assign(Object.assign({}, state), {
-          archiveModalOpen: false,
-          archiveModalTask: null
-        });
-      }
     default:
       {
         return state;
@@ -11000,7 +10985,9 @@ const closeModal = state => {
     targetPipelineId: "",
     stageToEdit: null,
     pipelineModalOpen: false,
-    pipelineToEdit: null
+    pipelineToEdit: null,
+    archiveTaskModalOpen: false,
+    archiveModalTask: null
   });
 };
 const reducer = (state, action) => {
@@ -11073,6 +11060,18 @@ const reducer = (state, action) => {
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_PIPELINE_MODAL:
+      {
+        return closeModal(state);
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_ARCHIVE_TASK_MODAL:
+      {
+        const archiveTask = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          archiveTaskModalOpen: true,
+          archiveModalTask: archiveTask
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_ARCHIVE_TASK_MODAL:
       {
         return closeModal(state);
       }

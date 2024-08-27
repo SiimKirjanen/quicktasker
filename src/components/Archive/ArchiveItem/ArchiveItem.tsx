@@ -1,20 +1,20 @@
 import { useContext } from "@wordpress/element";
 import { ArchivedTask } from "../../../types/task";
 import { ArchivedTaskDropdown } from "../../Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown";
-import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { OPEN_ARCHIVE_TASK_MODAL } from "../../../constants";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 
 type Props = {
   task: ArchivedTask;
 };
 
 function ArchiveItem({ task }: Props) {
-  const { archiveDispatch } = useContext(ArchiveContext);
+  const { modalDispatch } = useContext(ModalContext);
 
   const openArchivedTaskModal = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
-    archiveDispatch({ type: OPEN_ARCHIVE_TASK_MODAL, payload: task });
+    modalDispatch({ type: OPEN_ARCHIVE_TASK_MODAL, payload: task });
   };
 
   return (

@@ -1,11 +1,11 @@
 import { useContext } from "@wordpress/element";
-import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { WPQTModalTitle } from "../WPQTModal";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 
 function ArchiveTaskModalContent() {
   const {
     state: { archiveModalTask },
-  } = useContext(ArchiveContext);
+  } = useContext(ModalContext);
 
   if (!archiveModalTask) {
     return null;

@@ -8,11 +8,13 @@ import {
   CLOSE_PIPELINE_MODAL,
   OPEN_NEW_PIPELINE_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
+  OPEN_ARCHIVE_TASK_MODAL,
+  CLOSE_ARCHIVE_TASK_MODAL,
 } from "../constants";
 import { Action, State } from "../providers/ModalContextProvider";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
-import { Task } from "../types/task";
+import { ArchivedTask, Task } from "../types/task";
 
 const closeModal = (state: State) => {
   return {
@@ -25,6 +27,8 @@ const closeModal = (state: State) => {
     stageToEdit: null,
     pipelineModalOpen: false,
     pipelineToEdit: null,
+    archiveTaskModalOpen: false,
+    archiveModalTask: null,
   };
 };
 
@@ -91,6 +95,18 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case CLOSE_PIPELINE_MODAL: {
+      return closeModal(state);
+    }
+    case OPEN_ARCHIVE_TASK_MODAL: {
+      const archiveTask: ArchivedTask = action.payload;
+
+      return {
+        ...state,
+        archiveTaskModalOpen: true,
+        archiveModalTask: archiveTask,
+      };
+    }
+    case CLOSE_ARCHIVE_TASK_MODAL: {
       return closeModal(state);
     }
     default:
