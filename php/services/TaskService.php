@@ -141,7 +141,7 @@ class TaskService {
         }
         if($stageChanged) {
             $newStage = $this->stageRepository->getStageById($newStageId);
-            $this->logService->log('Task moved to a ' . $newStage->name, 'task');
+            $this->logService->log('Task moved to a ' . $newStage->name, WP_QT_LOG_TYPE_TASK, $taskId);
         }
 
         return $rowsUpdated;

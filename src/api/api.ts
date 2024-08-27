@@ -7,6 +7,7 @@ import {
 import { ArchivedTaskFromServer, Task, TaskFromServer } from "../types/task";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
+import { LogFromServer } from "../types/log";
 
 function getCommonHeaders() {
   return {
@@ -138,6 +139,45 @@ function getArchivedTasksRequest(): Promise<
 
 /*
   ==================================================================================================================================================================================================================
+  Comment requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getTaskComments(taskId: string): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}/comments`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+function addTaskCommentRequest(
+  taskId: string,
+  comment: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}/comments`,
+    data: { comment },
+    method: "POST",
+    headers: getCommonHeaders(),
+  });
+}
+
+/*
+  ==================================================================================================================================================================================================================
+  Logs requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getTaskLogs(taskId: string): Promise<WPQTResponse<LogFromServer[]>> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}/logs`,
+    headers: getCommonHeaders(),
+  });
+}
+
+/*
+  ==================================================================================================================================================================================================================
   Stage requests
   ==================================================================================================================================================================================================================
 */
@@ -211,4 +251,7 @@ export {
   archiveTaskRequest,
   archiveStageTasksRequest,
   getArchivedTasksRequest,
+  addTaskCommentRequest,
+  getTaskLogs,
+  getTaskComments,
 };

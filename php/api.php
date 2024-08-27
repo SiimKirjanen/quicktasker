@@ -1,5 +1,6 @@
 <?php
 use WPQT\Response\ApiResponse;
+use WPQT\Log\LogRepository;
 
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
@@ -162,6 +163,29 @@ function wpqt_register_api_routes() {
                     $archivedTasks = $tasksRepo->getArchivedTasks();
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'tasks/(?P<id>\d+)/logs',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $logRepo = new LogRepository();
+                    $logs = $logRepo->getLogs($data['id'], WP_QT_LOG_TYPE_TASK);
+              
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }

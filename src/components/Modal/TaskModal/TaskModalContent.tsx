@@ -17,6 +17,7 @@ import { clsx } from "clsx";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
 import { WPQTModalTitle } from "../WPQTModal";
+import { TaskModalTabs } from "../../Tab/TaskModalTabs/TaskModalTabs";
 
 type Props = {
   addTask: (name: string, description: string) => void;
@@ -64,7 +65,7 @@ const TaskModalContent = forwardRef(
         <WPQTModalTitle>
           {editingTask ? "Edit task" : "Add task"}
         </WPQTModalTitle>
-        <Fieldset className="space-y-6 rounded-xl bg-white/5 p-6 sm:p-10">
+        <Fieldset className="wpqt-mb-3">
           <Field className="wpqt-mb-3">
             <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">
               Name
@@ -93,6 +94,11 @@ const TaskModalContent = forwardRef(
             />
           </Field>
         </Fieldset>
+        {editingTask && (
+          <div>
+            <TaskModalTabs task={taskToEdit} />
+          </div>
+        )}
         <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
           <Button
             className="wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white"

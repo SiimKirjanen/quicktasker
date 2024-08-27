@@ -7699,6 +7699,7 @@ function App() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addTaskCommentRequest: () => (/* binding */ addTaskCommentRequest),
 /* harmony export */   archiveStageTasksRequest: () => (/* binding */ archiveStageTasksRequest),
 /* harmony export */   archiveTaskRequest: () => (/* binding */ archiveTaskRequest),
 /* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
@@ -7711,6 +7712,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editTaskRequest: () => (/* binding */ editTaskRequest),
 /* harmony export */   getArchivedTasksRequest: () => (/* binding */ getArchivedTasksRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
+/* harmony export */   getTaskComments: () => (/* binding */ getTaskComments),
+/* harmony export */   getTaskLogs: () => (/* binding */ getTaskLogs),
 /* harmony export */   moveStageRequest: () => (/* binding */ moveStageRequest),
 /* harmony export */   moveTaskRequest: () => (/* binding */ moveTaskRequest),
 /* harmony export */   setPipelinePrimaryRequest: () => (/* binding */ setPipelinePrimaryRequest)
@@ -7823,6 +7826,39 @@ function getArchivedTasksRequest() {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/tasks/archived`,
     method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Comment requests
+  ==================================================================================================================================================================================================================
+*/
+function getTaskComments(taskId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/tasks/${taskId}/comments`,
+    method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function addTaskCommentRequest(taskId, comment) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/tasks/${taskId}/comments`,
+    data: {
+      comment
+    },
+    method: "POST",
+    headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Logs requests
+  ==================================================================================================================================================================================================================
+*/
+function getTaskLogs(taskId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/tasks/${taskId}/logs`,
     headers: getCommonHeaders()
   });
 }
@@ -8652,25 +8688,32 @@ class ErrorBoundary extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Comp
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Loading: () => (/* binding */ Loading)
+/* harmony export */   Loading: () => (/* binding */ Loading),
+/* harmony export */   LoadingOval: () => (/* binding */ LoadingOval)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_loader_spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-loader-spinner */ "./node_modules/react-loader-spinner/dist/module.js");
 
 
+function LoadingOval({
+  width = "80",
+  height = "80"
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_loader_spinner__WEBPACK_IMPORTED_MODULE_1__.Oval, {
+    visible: true,
+    height: height,
+    width: width,
+    color: "#4fa94d",
+    ariaLabel: "oval-loading",
+    wrapperStyle: {},
+    wrapperClass: ""
+  });
+}
 function Loading() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-h-screen-minus-top-bar wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_loader_spinner__WEBPACK_IMPORTED_MODULE_1__.Oval, {
-      visible: true,
-      height: "80",
-      width: "80",
-      color: "#4fa94d",
-      ariaLabel: "oval-loading",
-      wrapperStyle: {},
-      wrapperClass: ""
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-flex wpqt-h-screen-minus-top-bar wpqt-flex-col wpqt-items-center wpqt-justify-center",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LoadingOval, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mt-4 wpqt-text-xl wpqt-font-semibold",
       children: "Loading..."
     })]
@@ -9305,17 +9348,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/fieldset/fieldset.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/field/field.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/fieldset/fieldset.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/field/field.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _Tab_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Tab/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/TaskModalTabs/TaskModalTabs.tsx");
+
 
 
 
@@ -9357,32 +9402,36 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalTitle, {
       children: editingTask ? "Edit task" : "Add task"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Fieldset, {
-      className: "space-y-6 rounded-xl bg-white/5 p-6 sm:p-10",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Field, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Fieldset, {
+      className: "wpqt-mb-3",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Field, {
         className: "wpqt-mb-3",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Label, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Label, {
           className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Name"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Input, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_9__.Input, {
           className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           value: taskName,
           onChange: e => setTaskName(e.target.value)
         })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Field, {
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Label, {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Field, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Label, {
           className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Description"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_9__.Textarea, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_10__.Textarea, {
           className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-resize-none wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           rows: 3,
           value: taskDescription,
           onChange: e => setTaskDescription(e.target.value)
         })]
       })]
+    }), editingTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_5__.TaskModalTabs, {
+        task: taskToEdit
+      })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_10__.Button, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_11__.Button, {
         className: "wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white",
         onClick: saveTask,
         children: taskModalSaving ? "Saving..." : editingTask ? "Edit task" : "Add task"
@@ -10026,6 +10075,210 @@ function Task({
       })]
     }))
   }, task.id);
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/TaskModalTabs/CommentsTabContent.tsx":
+/*!*****************************************************************!*\
+  !*** ./src/components/Tab/TaskModalTabs/CommentsTabContent.tsx ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CommentsTabContent: () => (/* binding */ CommentsTabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function CommentsTabContent({
+  taskId
+}) {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    console.log("CommentsTabContent");
+  }, []);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: "Comments"
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/TaskModalTabs/LogsTabContent.tsx":
+/*!*************************************************************!*\
+  !*** ./src/components/Tab/TaskModalTabs/LogsTabContent.tsx ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LogsTabContent: () => (/* binding */ LogsTabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+function LogsTabContent({
+  taskId
+}) {
+  const [logs, setLogs] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const loadLogs = () => __awaiter(this, void 0, void 0, function* () {
+    const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getTaskLogs)(taskId);
+    setLogs(response.data);
+  });
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    loadLogs();
+  }, []);
+  if (logs === null) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-justify-center",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.LoadingOval, {
+        width: "30",
+        height: "30"
+      })
+    });
+  }
+  if (logs.length === 0) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: "No logs available"
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: logs.map((log, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: log.text
+    }, index))
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/TaskModalTabs/TaskModalTabs.tsx":
+/*!************************************************************!*\
+  !*** ./src/components/Tab/TaskModalTabs/TaskModalTabs.tsx ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TaskModalTabs: () => (/* binding */ TaskModalTabs)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _WPQTTabs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTTabs */ "./src/components/Tab/WPQTTabs.tsx");
+/* harmony import */ var _CommentsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CommentsTabContent */ "./src/components/Tab/TaskModalTabs/CommentsTabContent.tsx");
+/* harmony import */ var _LogsTabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./LogsTabContent */ "./src/components/Tab/TaskModalTabs/LogsTabContent.tsx");
+
+
+
+
+function TaskModalTabs({
+  task
+}) {
+  const tabs = ["Comments", "Logs"];
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTTabs__WEBPACK_IMPORTED_MODULE_1__.WPQTTabs, {
+    tabs: tabs,
+    tabsContent: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsTabContent, {
+      taskId: task.id
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogsTabContent__WEBPACK_IMPORTED_MODULE_3__.LogsTabContent, {
+      taskId: task.id
+    })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/WPQTTabs.tsx":
+/*!*****************************************!*\
+  !*** ./src/components/Tab/WPQTTabs.tsx ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WPQTTabs: () => (/* binding */ WPQTTabs)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/tabs/tabs.js");
+
+
+function WPQTTabs({
+  tabs,
+  tabsContent
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabGroup, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabList, {
+      className: "wpqt-mb-3 wpqt-flex",
+      children: tabs.map(tab => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(WPQTTab, {
+        children: tab
+      }, tab))
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabPanels, {
+      children: tabsContent.map((tabContent, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(WPQTTabPanel, {
+        children: tabContent
+      }, index))
+    })]
+  });
+}
+function WPQTTab({
+  children
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Tab, {
+    as: "div",
+    className: "wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-text-center data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500",
+    children: children
+  });
+}
+function WPQTTabPanel({
+  children
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabPanel, {
+    children: children
+  });
 }
 
 
@@ -27179,6 +27432,44 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/@headlessui/react/dist/components/tabs/tabs.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@headlessui/react/dist/components/tabs/tabs.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Tab: () => (/* binding */ st),
+/* harmony export */   TabGroup: () => (/* binding */ Oe),
+/* harmony export */   TabList: () => (/* binding */ Ne),
+/* harmony export */   TabPanel: () => (/* binding */ Be),
+/* harmony export */   TabPanels: () => (/* binding */ ke)
+/* harmony export */ });
+/* harmony import */ var _react_aria_focus__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @react-aria/focus */ "./node_modules/@react-aria/focus/dist/useFocusRing.mjs");
+/* harmony import */ var _react_aria_interactions__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @react-aria/interactions */ "./node_modules/@react-aria/interactions/dist/useHover.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../hooks/use-id.js */ "react");
+/* harmony import */ var _hooks_use_active_press_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../hooks/use-active-press.js */ "./node_modules/@headlessui/react/dist/hooks/use-active-press.js");
+/* harmony import */ var _hooks_use_event_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/use-event.js */ "./node_modules/@headlessui/react/dist/hooks/use-event.js");
+/* harmony import */ var _hooks_use_iso_morphic_effect_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../hooks/use-iso-morphic-effect.js */ "./node_modules/@headlessui/react/dist/hooks/use-iso-morphic-effect.js");
+/* harmony import */ var _hooks_use_latest_value_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../hooks/use-latest-value.js */ "./node_modules/@headlessui/react/dist/hooks/use-latest-value.js");
+/* harmony import */ var _hooks_use_resolve_button_type_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../hooks/use-resolve-button-type.js */ "./node_modules/@headlessui/react/dist/hooks/use-resolve-button-type.js");
+/* harmony import */ var _hooks_use_sync_refs_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../hooks/use-sync-refs.js */ "./node_modules/@headlessui/react/dist/hooks/use-sync-refs.js");
+/* harmony import */ var _internal_focus_sentinel_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../internal/focus-sentinel.js */ "./node_modules/@headlessui/react/dist/internal/focus-sentinel.js");
+/* harmony import */ var _internal_hidden_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../internal/hidden.js */ "./node_modules/@headlessui/react/dist/internal/hidden.js");
+/* harmony import */ var _utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/focus-management.js */ "./node_modules/@headlessui/react/dist/utils/focus-management.js");
+/* harmony import */ var _utils_match_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/match.js */ "./node_modules/@headlessui/react/dist/utils/match.js");
+/* harmony import */ var _utils_micro_task_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../utils/micro-task.js */ "./node_modules/@headlessui/react/dist/utils/micro-task.js");
+/* harmony import */ var _utils_owner_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../utils/owner.js */ "./node_modules/@headlessui/react/dist/utils/owner.js");
+/* harmony import */ var _utils_render_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utils/render.js */ "./node_modules/@headlessui/react/dist/utils/render.js");
+/* harmony import */ var _utils_stable_collection_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/stable-collection.js */ "./node_modules/@headlessui/react/dist/utils/stable-collection.js");
+/* harmony import */ var _keyboard_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../keyboard.js */ "./node_modules/@headlessui/react/dist/components/keyboard.js");
+"use client";var Ae=(t=>(t[t.Forwards=0]="Forwards",t[t.Backwards=1]="Backwards",t))(Ae||{}),Ee=(o=>(o[o.Less=-1]="Less",o[o.Equal=0]="Equal",o[o.Greater=1]="Greater",o))(Ee||{}),Re=(n=>(n[n.SetSelectedIndex=0]="SetSelectedIndex",n[n.RegisterTab=1]="RegisterTab",n[n.UnregisterTab=2]="UnregisterTab",n[n.RegisterPanel=3]="RegisterPanel",n[n.UnregisterPanel=4]="UnregisterPanel",n))(Re||{});let Le={[0](e,r){var c;let t=(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.sortByDomNode)(e.tabs,T=>T.current),o=(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.sortByDomNode)(e.panels,T=>T.current),a=t.filter(T=>{var d;return!((d=T.current)!=null&&d.hasAttribute("disabled"))}),n={...e,tabs:t,panels:o};if(r.index<0||r.index>t.length-1){let T=(0,_utils_match_js__WEBPACK_IMPORTED_MODULE_2__.match)(Math.sign(r.index-e.selectedIndex),{[-1]:()=>1,[0]:()=>(0,_utils_match_js__WEBPACK_IMPORTED_MODULE_2__.match)(Math.sign(r.index),{[-1]:()=>0,[0]:()=>0,[1]:()=>1}),[1]:()=>0});if(a.length===0)return n;let d=(0,_utils_match_js__WEBPACK_IMPORTED_MODULE_2__.match)(T,{[0]:()=>t.indexOf(a[0]),[1]:()=>t.indexOf(a[a.length-1])});return{...n,selectedIndex:d===-1?e.selectedIndex:d}}let u=t.slice(0,r.index),x=[...t.slice(r.index),...u].find(T=>a.includes(T));if(!x)return n;let f=(c=t.indexOf(x))!=null?c:e.selectedIndex;return f===-1&&(f=e.selectedIndex),{...n,selectedIndex:f}},[1](e,r){if(e.tabs.includes(r.tab))return e;let t=e.tabs[e.selectedIndex],o=(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.sortByDomNode)([...e.tabs,r.tab],n=>n.current),a=e.selectedIndex;return e.info.current.isControlled||(a=o.indexOf(t),a===-1&&(a=e.selectedIndex)),{...e,tabs:o,selectedIndex:a}},[2](e,r){return{...e,tabs:e.tabs.filter(t=>t!==r.tab)}},[3](e,r){return e.panels.includes(r.panel)?e:{...e,panels:(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.sortByDomNode)([...e.panels,r.panel],t=>t.current)}},[4](e,r){return{...e,panels:e.panels.filter(t=>t!==r.panel)}}},z=(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)(null);z.displayName="TabsDataContext";function C(e){let r=(0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(z);if(r===null){let t=new Error(`<${e} /> is missing a parent <Tab.Group /> component.`);throw Error.captureStackTrace&&Error.captureStackTrace(t,C),t}return r}let V=(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)(null);V.displayName="TabsActionsContext";function Q(e){let r=(0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(V);if(r===null){let t=new Error(`<${e} /> is missing a parent <Tab.Group /> component.`);throw Error.captureStackTrace&&Error.captureStackTrace(t,Q),t}return r}function _e(e,r){return (0,_utils_match_js__WEBPACK_IMPORTED_MODULE_2__.match)(r.type,Le,e,r)}let De="div";function Se(e,r){let{defaultIndex:t=0,vertical:o=!1,manual:a=!1,onChange:n,selectedIndex:u=null,..._}=e;const x=o?"vertical":"horizontal",f=a?"manual":"auto";let c=u!==null,T=(0,_hooks_use_latest_value_js__WEBPACK_IMPORTED_MODULE_3__.useLatestValue)({isControlled:c}),d=(0,_hooks_use_sync_refs_js__WEBPACK_IMPORTED_MODULE_4__.useSyncRefs)(r),[i,s]=(0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)(_e,{info:T,selectedIndex:u!=null?u:t,tabs:[],panels:[]}),F=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({selectedIndex:i.selectedIndex}),[i.selectedIndex]),M=(0,_hooks_use_latest_value_js__WEBPACK_IMPORTED_MODULE_3__.useLatestValue)(n||(()=>{})),b=(0,_hooks_use_latest_value_js__WEBPACK_IMPORTED_MODULE_3__.useLatestValue)(i.tabs),m=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({orientation:x,activation:f,...i}),[x,f,i]),E=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_5__.useEvent)(p=>(s({type:1,tab:p}),()=>s({type:2,tab:p}))),I=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_5__.useEvent)(p=>(s({type:3,panel:p}),()=>s({type:4,panel:p}))),g=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_5__.useEvent)(p=>{R.current!==p&&M.current(p),c||s({type:0,index:p})}),R=(0,_hooks_use_latest_value_js__WEBPACK_IMPORTED_MODULE_3__.useLatestValue)(c?e.selectedIndex:i.selectedIndex),J=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({registerTab:E,registerPanel:I,change:g}),[]);(0,_hooks_use_iso_morphic_effect_js__WEBPACK_IMPORTED_MODULE_6__.useIsoMorphicEffect)(()=>{s({type:0,index:u!=null?u:t})},[u]),(0,_hooks_use_iso_morphic_effect_js__WEBPACK_IMPORTED_MODULE_6__.useIsoMorphicEffect)(()=>{if(R.current===void 0||i.tabs.length<=0)return;let p=(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.sortByDomNode)(i.tabs,L=>L.current);p.some((L,B)=>i.tabs[B]!==L)&&g(p.indexOf(i.tabs[R.current]))});let k={ref:d};return react__WEBPACK_IMPORTED_MODULE_0__.createElement(_utils_stable_collection_js__WEBPACK_IMPORTED_MODULE_7__.StableCollection,null,react__WEBPACK_IMPORTED_MODULE_0__.createElement(V.Provider,{value:J},react__WEBPACK_IMPORTED_MODULE_0__.createElement(z.Provider,{value:m},m.tabs.length<=0&&react__WEBPACK_IMPORTED_MODULE_0__.createElement(_internal_focus_sentinel_js__WEBPACK_IMPORTED_MODULE_8__.FocusSentinel,{onFocus:()=>{var p,h;for(let L of b.current)if(((p=L.current)==null?void 0:p.tabIndex)===0)return(h=L.current)==null||h.focus(),!0;return!1}}),(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.render)({ourProps:k,theirProps:_,slot:F,defaultTag:De,name:"Tabs"}))))}let Fe="div";function Ie(e,r){let{orientation:t,selectedIndex:o}=C("Tab.List"),a=(0,_hooks_use_sync_refs_js__WEBPACK_IMPORTED_MODULE_4__.useSyncRefs)(r),n=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({selectedIndex:o}),[o]);return (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.render)({ourProps:{ref:a,role:"tablist","aria-orientation":t},theirProps:e,slot:n,defaultTag:Fe,name:"Tabs.List"})}let he="button";function ve(e,r){var Y,Z;let t=(0,react__WEBPACK_IMPORTED_MODULE_0__.useId)(),{id:o=`headlessui-tabs-tab-${t}`,disabled:a=!1,autoFocus:n=!1,...u}=e,{orientation:_,activation:x,selectedIndex:f,tabs:c,panels:T}=C("Tab"),d=Q("Tab"),i=C("Tab"),s=(0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null),F=(0,_hooks_use_sync_refs_js__WEBPACK_IMPORTED_MODULE_4__.useSyncRefs)(s,r);(0,_hooks_use_iso_morphic_effect_js__WEBPACK_IMPORTED_MODULE_6__.useIsoMorphicEffect)(()=>d.registerTab(s),[d,s]);let M=(0,_utils_stable_collection_js__WEBPACK_IMPORTED_MODULE_7__.useStableCollectionIndex)("tabs"),b=c.indexOf(s);b===-1&&(b=M);let m=b===f,E=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_5__.useEvent)(l=>{var X;let A=l();if(A===_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.FocusResult.Success&&x==="auto"){let $=(X=(0,_utils_owner_js__WEBPACK_IMPORTED_MODULE_10__.getOwnerDocument)(s))==null?void 0:X.activeElement,ee=i.tabs.findIndex(Te=>Te.current===$);ee!==-1&&d.change(ee)}return A}),I=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_5__.useEvent)(l=>{let A=c.map($=>$.current).filter(Boolean);if(l.key===_keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.Space||l.key===_keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.Enter){l.preventDefault(),l.stopPropagation(),d.change(b);return}switch(l.key){case _keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.Home:case _keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.PageUp:return l.preventDefault(),l.stopPropagation(),E(()=>(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.focusIn)(A,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.First));case _keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.End:case _keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.PageDown:return l.preventDefault(),l.stopPropagation(),E(()=>(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.focusIn)(A,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.Last))}if(E(()=>(0,_utils_match_js__WEBPACK_IMPORTED_MODULE_2__.match)(_,{vertical(){return l.key===_keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.ArrowUp?(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.focusIn)(A,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.Previous|_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.WrapAround):l.key===_keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.ArrowDown?(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.focusIn)(A,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.Next|_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.WrapAround):_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.FocusResult.Error},horizontal(){return l.key===_keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.ArrowLeft?(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.focusIn)(A,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.Previous|_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.WrapAround):l.key===_keyboard_js__WEBPACK_IMPORTED_MODULE_11__.Keys.ArrowRight?(0,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.focusIn)(A,_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.Next|_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.Focus.WrapAround):_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.FocusResult.Error}}))===_utils_focus_management_js__WEBPACK_IMPORTED_MODULE_1__.FocusResult.Success)return l.preventDefault()}),g=(0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(!1),R=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_5__.useEvent)(()=>{var l;g.current||(g.current=!0,(l=s.current)==null||l.focus({preventScroll:!0}),d.change(b),(0,_utils_micro_task_js__WEBPACK_IMPORTED_MODULE_12__.microTask)(()=>{g.current=!1}))}),J=(0,_hooks_use_event_js__WEBPACK_IMPORTED_MODULE_5__.useEvent)(l=>{l.preventDefault()}),{isFocusVisible:k,focusProps:p}=(0,_react_aria_focus__WEBPACK_IMPORTED_MODULE_13__.useFocusRing)({autoFocus:n}),{isHovered:h,hoverProps:L}=(0,_react_aria_interactions__WEBPACK_IMPORTED_MODULE_14__.useHover)({isDisabled:a}),{pressed:B,pressProps:ie}=(0,_hooks_use_active_press_js__WEBPACK_IMPORTED_MODULE_15__.useActivePress)({disabled:a}),pe=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({selected:m,hover:h,active:B,focus:k,autofocus:n,disabled:a}),[m,h,k,B,n,a]),ue=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.mergeProps)({ref:F,onKeyDown:I,onMouseDown:J,onClick:R,id:o,role:"tab",type:(0,_hooks_use_resolve_button_type_js__WEBPACK_IMPORTED_MODULE_16__.useResolveButtonType)(e,s),"aria-controls":(Z=(Y=T[b])==null?void 0:Y.current)==null?void 0:Z.id,"aria-selected":m,tabIndex:m?0:-1,disabled:a||void 0,autoFocus:n},p,L,ie);return (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.render)({ourProps:ue,theirProps:u,slot:pe,defaultTag:he,name:"Tabs.Tab"})}let Ce="div";function Me(e,r){let{selectedIndex:t}=C("Tab.Panels"),o=(0,_hooks_use_sync_refs_js__WEBPACK_IMPORTED_MODULE_4__.useSyncRefs)(r),a=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({selectedIndex:t}),[t]);return (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.render)({ourProps:{ref:o},theirProps:e,slot:a,defaultTag:Ce,name:"Tabs.Panels"})}let Ge="div",Ue=_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.RenderFeatures.RenderStrategy|_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.RenderFeatures.Static;function He(e,r){var E,I,g,R;let t=(0,react__WEBPACK_IMPORTED_MODULE_0__.useId)(),{id:o=`headlessui-tabs-panel-${t}`,tabIndex:a=0,...n}=e,{selectedIndex:u,tabs:_,panels:x}=C("Tab.Panel"),f=Q("Tab.Panel"),c=(0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null),T=(0,_hooks_use_sync_refs_js__WEBPACK_IMPORTED_MODULE_4__.useSyncRefs)(c,r);(0,_hooks_use_iso_morphic_effect_js__WEBPACK_IMPORTED_MODULE_6__.useIsoMorphicEffect)(()=>f.registerPanel(c),[f,c]);let d=(0,_utils_stable_collection_js__WEBPACK_IMPORTED_MODULE_7__.useStableCollectionIndex)("panels"),i=x.indexOf(c);i===-1&&(i=d);let s=i===u,{isFocusVisible:F,focusProps:M}=(0,_react_aria_focus__WEBPACK_IMPORTED_MODULE_13__.useFocusRing)(),b=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({selected:s,focus:F}),[s,F]),m=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.mergeProps)({ref:T,id:o,role:"tabpanel","aria-labelledby":(I=(E=_[i])==null?void 0:E.current)==null?void 0:I.id,tabIndex:s?a:-1},M);return!s&&((g=n.unmount)==null||g)&&!((R=n.static)!=null&&R)?react__WEBPACK_IMPORTED_MODULE_0__.createElement(_internal_hidden_js__WEBPACK_IMPORTED_MODULE_17__.Hidden,{"aria-hidden":"true",...m}):(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.render)({ourProps:m,theirProps:n,slot:b,defaultTag:Ge,features:Ue,visible:s,name:"Tabs.Panel"})}let we=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.forwardRefWithAs)(ve),Oe=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.forwardRefWithAs)(Se),Ne=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.forwardRefWithAs)(Ie),ke=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.forwardRefWithAs)(Me),Be=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_9__.forwardRefWithAs)(He),st=Object.assign(we,{Group:Oe,List:Ne,Panels:ke,Panel:Be});
+
+
+/***/ }),
+
 /***/ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js":
 /*!*****************************************************************************!*\
   !*** ./node_modules/@headlessui/react/dist/components/textarea/textarea.js ***!
@@ -28008,6 +28299,25 @@ let y=(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)({styles:void 0,setRef
 
 /***/ }),
 
+/***/ "./node_modules/@headlessui/react/dist/internal/focus-sentinel.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@headlessui/react/dist/internal/focus-sentinel.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FocusSentinel: () => (/* binding */ b)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var _hooks_use_is_mounted_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../hooks/use-is-mounted.js */ "./node_modules/@headlessui/react/dist/hooks/use-is-mounted.js");
+/* harmony import */ var _hidden_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hidden.js */ "./node_modules/@headlessui/react/dist/internal/hidden.js");
+function b({onFocus:n}){let[r,o]=(0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!0),u=(0,_hooks_use_is_mounted_js__WEBPACK_IMPORTED_MODULE_1__.useIsMounted)();return r?react__WEBPACK_IMPORTED_MODULE_0__.createElement(_hidden_js__WEBPACK_IMPORTED_MODULE_2__.Hidden,{as:"button",type:"button",features:_hidden_js__WEBPACK_IMPORTED_MODULE_2__.HiddenFeatures.Focusable,onFocus:a=>{a.preventDefault();let e,i=50;function t(){if(i--<=0){e&&cancelAnimationFrame(e);return}if(n()){if(cancelAnimationFrame(e),!u.current)return;o(!1);return}e=requestAnimationFrame(t)}e=requestAnimationFrame(t)}}):null}
+
+
+/***/ }),
+
 /***/ "./node_modules/@headlessui/react/dist/internal/form-fields.js":
 /*!*********************************************************************!*\
   !*** ./node_modules/@headlessui/react/dist/internal/form-fields.js ***!
@@ -28408,6 +28718,24 @@ var M=(a=>(a[a.None=0]="None",a[a.RenderStrategy=1]="RenderStrategy",a[a.Static=
 `),"","You can apply a few solutions:",['Add an `as="..."` prop, to ensure that we render an actual element instead of a "Fragment".',"Render a single element as the child so that we can forward the props onto that element."].map(d=>`  - ${d}`).join(`
 `)].join(`
 `))}else{let d=f.props,p=d==null?void 0:d.className,c=typeof p=="function"?(...F)=>(0,_class_names_js__WEBPACK_IMPORTED_MODULE_2__.classNames)(p(...F),o.className):(0,_class_names_js__WEBPACK_IMPORTED_MODULE_2__.classNames)(p,o.className),T=c?{className:c}:{},g=N(f.props,m(h(o,["ref"])));for(let F in u)F in g&&delete u[F];return (0,react__WEBPACK_IMPORTED_MODULE_0__.cloneElement)(f,Object.assign({},g,u,y,{ref:s(f.ref,y.ref)},T))}return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(t,Object.assign({},h(o,["ref"]),t!==react__WEBPACK_IMPORTED_MODULE_0__.Fragment&&y,t!==react__WEBPACK_IMPORTED_MODULE_0__.Fragment&&u),f)}function I(){let r=(0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)([]),n=(0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(e=>{for(let a of r.current)a!=null&&(typeof a=="function"?a(e):a.current=e)},[]);return(...e)=>{if(!e.every(a=>a==null))return r.current=e,n}}function A(...r){return r.every(n=>n==null)?void 0:n=>{for(let e of r)e!=null&&(typeof e=="function"?e(n):e.current=n)}}function N(...r){var a;if(r.length===0)return{};if(r.length===1)return r[0];let n={},e={};for(let s of r)for(let t in s)t.startsWith("on")&&typeof s[t]=="function"?((a=e[t])!=null||(e[t]=[]),e[t].push(s[t])):n[t]=s[t];if(n.disabled||n["aria-disabled"])for(let s in e)/^(on(?:Click|Pointer|Mouse|Key)(?:Down|Up|Press)?)$/.test(s)&&(e[s]=[t=>{var l;return(l=t==null?void 0:t.preventDefault)==null?void 0:l.call(t)}]);for(let s in e)Object.assign(n,{[s](t,...l){let i=e[s];for(let o of i){if((t instanceof Event||(t==null?void 0:t.nativeEvent)instanceof Event)&&t.defaultPrevented)return;o(t,...l)}}});return n}function D(...r){var a;if(r.length===0)return{};if(r.length===1)return r[0];let n={},e={};for(let s of r)for(let t in s)t.startsWith("on")&&typeof s[t]=="function"?((a=e[t])!=null||(e[t]=[]),e[t].push(s[t])):n[t]=s[t];for(let s in e)Object.assign(n,{[s](...t){let l=e[s];for(let i of l)i==null||i(...t)}});return n}function W(r){var n;return Object.assign((0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(r),{displayName:(n=r.displayName)!=null?n:r.name})}function m(r){let n=Object.assign({},r);for(let e in n)n[e]===void 0&&delete n[e];return n}function h(r,n=[]){let e=Object.assign({},r);for(let a of n)a in e&&delete e[a];return e}
+
+
+/***/ }),
+
+/***/ "./node_modules/@headlessui/react/dist/utils/stable-collection.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@headlessui/react/dist/utils/stable-collection.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StableCollection: () => (/* binding */ f),
+/* harmony export */   useStableCollectionIndex: () => (/* binding */ C)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+const s=react__WEBPACK_IMPORTED_MODULE_0__.createContext(null);function a(){return{groups:new Map,get(o,e){var i;let t=this.groups.get(o);t||(t=new Map,this.groups.set(o,t));let n=(i=t.get(e))!=null?i:0;t.set(e,n+1);let r=Array.from(t.keys()).indexOf(e);function u(){let c=t.get(e);c>1?t.set(e,c-1):t.delete(e)}return[r,u]}}}function f({children:o}){let e=react__WEBPACK_IMPORTED_MODULE_0__.useRef(a());return react__WEBPACK_IMPORTED_MODULE_0__.createElement(s.Provider,{value:e},o)}function C(o){let e=react__WEBPACK_IMPORTED_MODULE_0__.useContext(s);if(!e)throw new Error("You must wrap your component in a <StableCollection>");let t=react__WEBPACK_IMPORTED_MODULE_0__.useId(),[n,r]=e.current.get(o,t);return react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>r,[]),n}
 
 
 /***/ }),

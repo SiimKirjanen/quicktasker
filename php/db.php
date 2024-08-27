@@ -85,6 +85,7 @@ function wpqt_set_up_db() {
 		$sql7 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_LOGS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             text text NOT NULL,
+			type_id int(11) NOT NULL,
 			type ENUM('task', 'pipeline', 'stage', 'user') NOT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id)

@@ -973,6 +973,10 @@
   flex: none;
 }
 
+.wpqt-flex-1 {
+  flex: 1 1 0%;
+}
+
 .wpqt-flex-shrink-0 {
   flex-shrink: 0;
 }
@@ -1031,6 +1035,12 @@
 
 .wpqt-gap-\[24px\] {
   gap: 24px;
+}
+
+.wpqt-space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
 .wpqt-overflow-hidden {
@@ -1124,6 +1134,10 @@
 
 .wpqt-p-6 {
   padding: 1.5rem;
+}
+
+.wpqt-p-1 {
+  padding: 0.25rem;
 }
 
 .wpqt-px-1 {
@@ -1342,6 +1356,36 @@
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.data-\[selected\]\:wpqt-border-b-2[data-selected] {
+  border-bottom-width: 2px;
+}
+
+.data-\[selected\]\:wpqt-border-l-0[data-selected] {
+  border-left-width: 0px;
+}
+
+.data-\[selected\]\:wpqt-border-r-0[data-selected] {
+  border-right-width: 0px;
+}
+
+.data-\[selected\]\:wpqt-border-t-0[data-selected] {
+  border-top-width: 0px;
+}
+
+.data-\[selected\]\:wpqt-border-solid[data-selected] {
+  border-style: solid;
+}
+
+.data-\[selected\]\:wpqt-border-blue-500[data-selected] {
+  --tw-border-opacity: 1;
+  border-color: rgb(59 130 246 / var(--tw-border-opacity));
+}
+
+.data-\[selected\]\:wpqt-border-b-blue-500[data-selected] {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(59 130 246 / var(--tw-border-opacity));
+}
+
 .data-\[hover\]\:wpqt-bg-gray-600[data-hover] {
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
@@ -1350,6 +1394,15 @@
 .data-\[open\]\:wpqt-bg-gray-700[data-open] {
   --tw-bg-opacity: 1;
   background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+}
+
+.data-\[selected\]\:wpqt-bg-blue-500[data-selected] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+
+.data-\[hover\]\:wpqt-underline[data-hover] {
+  text-decoration-line: underline;
 }
 
 .data-\[closed\]\:wpqt-opacity-0[data-closed] {

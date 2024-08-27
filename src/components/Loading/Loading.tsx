@@ -1,17 +1,28 @@
 import { Oval } from "react-loader-spinner";
 
+type LoadingOverProps = {
+  width?: string;
+  height?: string;
+};
+
+function LoadingOval({ width = "80", height = "80" }: LoadingOverProps) {
+  return (
+    <Oval
+      visible={true}
+      height={height}
+      width={width}
+      color="#4fa94d"
+      ariaLabel="oval-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+    />
+  );
+}
+
 function Loading() {
   return (
-    <div className="wpqt-h-screen-minus-top-bar wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center">
-      <Oval
-        visible={true}
-        height="80"
-        width="80"
-        color="#4fa94d"
-        ariaLabel="oval-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
-      />
+    <div className="wpqt-flex wpqt-h-screen-minus-top-bar wpqt-flex-col wpqt-items-center wpqt-justify-center">
+      <LoadingOval />
       <div className="wpqt-mt-4 wpqt-text-xl wpqt-font-semibold">
         Loading...
       </div>
@@ -19,4 +30,4 @@ function Loading() {
   );
 }
 
-export { Loading };
+export { Loading, LoadingOval };
