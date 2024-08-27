@@ -27,6 +27,7 @@ require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
 require( 'php/services/TaskService.php' );
 require( 'php/services/LocationService.php' );
+require( 'php/services/LogService.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );

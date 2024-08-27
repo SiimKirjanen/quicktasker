@@ -2,10 +2,12 @@
 class StageService {
     protected $stageRepository;
     protected $taskRepository;
+    protected $logService;
 
     public function __construct() {
         $this->stageRepository = new StageRepository();
         $this->taskRepository = new TaskRepository();
+        $this->logService = new LogService();
     }
 
 

@@ -1,10 +1,15 @@
 <?php
+use WPQT\Log\LogService;
 
 class TaskService {
     protected $taskRepository;
+    protected $stageRepository;
+    protected $logService;
 
     public function __construct() {
         $this->taskRepository = new TaskRepository();
+        $this->stageRepository = new StageRepository();
+        $this->logService = new LogService();
     }
 
     /**
@@ -107,8 +112,9 @@ class TaskService {
         }
         $currentStageId = $currentTask->stage_id;
         $currentOrder = $currentTask->task_order;
+        $stageChanged = $currentStageId != $newStageId;
 
-        if ($currentStageId == $newStageId) {
+        if (!$stageChanged) {
             $this->updateTaskOrderWithinStage($currentStageId, $currentOrder, $newOrder);
         } else {
             $this->updateTaskOrderAcrossStages($currentStageId, $currentOrder, $newStageId, $newOrder);
@@ -132,6 +138,10 @@ class TaskService {
 
         if ($rowsUpdated === false) {
             throw new Exception('Failed to move task');
+        }
+        if($stageChanged) {
+            $newStage = $this->stageRepository->getStageById($newStageId);
+            $this->logService->log('Task moved to a ' . $newStage->name, 'task');
         }
 
         return $rowsUpdated;

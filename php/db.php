@@ -82,6 +82,26 @@ function wpqt_set_up_db() {
 
 		dbDelta( $sql6 ); 
 
+		$sql7 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_LOGS . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+            text text NOT NULL,
+			type ENUM('task', 'pipeline', 'stage', 'user') NOT NULL,
+			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id)
+		  ) $charset_collate;";
+
+		  dbDelta( $sql7 ); 
+
+		  $sql8 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_COMMENTS . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+            text text NOT NULL,
+			type ENUM('task', 'user') NOT NULL,
+			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id)
+		  ) $charset_collate;";
+
+		  dbDelta( $sql8 ); 
+
 		update_option( "wp_quick_taks_db_current_version", WP_QUICK_TASKS_DB_VERSION );
 	}
 }
