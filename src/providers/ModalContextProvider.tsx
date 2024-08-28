@@ -60,6 +60,7 @@ const ModalContextProvider = ({ children }: { children: React.ReactNode }) => {
 export {
   ModalContextProvider,
   ModalContext,
+  initialState,
   type State,
   type Action,
   type ModalDispatch,

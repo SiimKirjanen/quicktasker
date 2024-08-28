@@ -23,6 +23,7 @@ require( 'php/repositories/PipelineRepository.php' );
 require( 'php/repositories/TaskRepository.php' );
 require( 'php/repositories/StageRepository.php' );
 require( 'php/repositories/LogRepository.php' );
+require( 'php/repositories/CommentRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );

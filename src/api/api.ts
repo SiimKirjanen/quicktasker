@@ -8,6 +8,7 @@ import { ArchivedTaskFromServer, Task, TaskFromServer } from "../types/task";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 import { LogFromServer } from "../types/log";
+import { WPQTCommentFromServer } from "../types/comment";
 
 function getCommonHeaders() {
   return {
@@ -143,7 +144,9 @@ function getArchivedTasksRequest(): Promise<
   ==================================================================================================================================================================================================================
 */
 
-function getTaskComments(taskId: string): Promise<WPQTResponse> {
+function getTaskComments(
+  taskId: string,
+): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
   return apiFetch({
     path: `/wpqt/v1/tasks/${taskId}/comments`,
     method: "GET",

@@ -13,7 +13,7 @@ const useCurrentPage = () => {
       setSubMenuItemActive();
     };
 
-    handleUrlChange(); // Initial call to set the state and submenu
+    handleUrlChange();
 
     window.addEventListener("popstate", handleUrlChange);
     window.addEventListener("hashchange", handleUrlChange);

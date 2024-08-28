@@ -9475,7 +9475,7 @@ function WPQTModal({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-fixed wpqt-inset-0 wpqt-z-10 wpqt-w-screen wpqt-overflow-y-auto",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-flex wpqt-min-h-full wpqt-items-center wpqt-justify-center wpqt-p-4",
+        className: "wpqt-flex wpqt-min-h-full wpqt-items-center wpqt-justify-center",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.DialogPanel, {
           transition: true,
           className: "data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-w-full wpqt-max-w-md wpqt-rounded-xl wpqt-bg-white wpqt-p-6 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0",
@@ -10093,18 +10093,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _TabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TabContent */ "./src/components/Tab/TaskModalTabs/TabContent.tsx");
+
 
 
 function CommentsTabContent({
   taskId
 }) {
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    console.log("CommentsTabContent");
-  }, []);
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: "Comments"
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_2__.TabContent, {
+    taskId: taskId,
+    fetchData: _api_api__WEBPACK_IMPORTED_MODULE_1__.getTaskComments,
+    renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: comment.text
+    }, comment.id),
+    noDataMessage: "No comments available"
   });
 }
 
@@ -10124,10 +10127,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _TabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TabContent */ "./src/components/Tab/TaskModalTabs/TabContent.tsx");
+
+
+
+function LogsTabContent({
+  taskId
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_2__.TabContent, {
+    taskId: taskId,
+    fetchData: _api_api__WEBPACK_IMPORTED_MODULE_1__.getTaskLogs,
+    renderItem: log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: log.text
+    }, log.id),
+    noDataMessage: "No logs available"
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/TaskModalTabs/TabContent.tsx":
+/*!*********************************************************!*\
+  !*** ./src/components/Tab/TaskModalTabs/TabContent.tsx ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TabContent: () => (/* binding */ TabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10158,36 +10194,36 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
-function LogsTabContent({
-  taskId
+function TabContent({
+  taskId,
+  fetchData,
+  renderItem,
+  noDataMessage
 }) {
-  const [logs, setLogs] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
-  const loadLogs = () => __awaiter(this, void 0, void 0, function* () {
-    const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getTaskLogs)(taskId);
-    setLogs(response.data);
+  const [data, setData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const loadData = () => __awaiter(this, void 0, void 0, function* () {
+    const response = yield fetchData(taskId);
+    setData(response.data);
   });
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    loadLogs();
-  }, []);
-  if (logs === null) {
+    loadData();
+  }, [taskId]);
+  if (data === null) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.LoadingOval, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_2__.LoadingOval, {
         width: "30",
         height: "30"
       })
     });
   }
-  if (logs.length === 0) {
+  if (data.length === 0) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: "No logs available"
+      children: noDataMessage
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: logs.map((log, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: log.text
-    }, index))
+    children: data.map(item => renderItem(item))
   });
 }
 
@@ -10391,7 +10427,7 @@ const useCurrentPage = () => {
       setCurrentPage(getPageFromUrl());
       setSubMenuItemActive();
     };
-    handleUrlChange(); // Initial call to set the state and submenu
+    handleUrlChange();
     window.addEventListener("popstate", handleUrlChange);
     window.addEventListener("hashchange", handleUrlChange);
     return () => {
@@ -10724,7 +10760,8 @@ const ArchiveContextProvider = ({
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ModalContext: () => (/* binding */ ModalContext),
-/* harmony export */   ModalContextProvider: () => (/* binding */ ModalContextProvider)
+/* harmony export */   ModalContextProvider: () => (/* binding */ ModalContextProvider),
+/* harmony export */   initialState: () => (/* binding */ initialState)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
@@ -10975,20 +11012,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   reducer: () => (/* binding */ reducer)
 /* harmony export */ });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 
-const closeModal = state => {
-  return Object.assign(Object.assign({}, state), {
-    taskModalOpen: false,
-    targetStageId: "",
-    taskToEdit: null,
-    stageModalOpen: false,
-    targetPipelineId: "",
-    stageToEdit: null,
-    pipelineModalOpen: false,
-    pipelineToEdit: null,
-    archiveTaskModalOpen: false,
-    archiveModalTask: null
-  });
+
+const closeModal = () => {
+  return Object.assign({}, _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_1__.initialState);
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -11016,7 +11044,7 @@ const reducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_TASK_MODAL:
       {
-        return closeModal(state);
+        return closeModal();
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_STAGE_MODAL:
       {
@@ -11040,7 +11068,7 @@ const reducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_STAGE_MODAL:
       {
-        return closeModal(state);
+        return closeModal();
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_PIPELINE_MODAL:
       {
@@ -11061,7 +11089,7 @@ const reducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_PIPELINE_MODAL:
       {
-        return closeModal(state);
+        return closeModal();
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_ARCHIVE_TASK_MODAL:
       {
@@ -11073,7 +11101,7 @@ const reducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_ARCHIVE_TASK_MODAL:
       {
-        return closeModal(state);
+        return closeModal();
       }
     default:
       return state;

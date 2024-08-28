@@ -1,6 +1,7 @@
 <?php
 use WPQT\Response\ApiResponse;
 use WPQT\Log\LogRepository;
+use WPQT\Comment\CommentRepository;
 
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
@@ -186,6 +187,28 @@ function wpqt_register_api_routes() {
               
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'tasks/(?P<id>\d+)/comments',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $commentRepo = new CommentRepository();
+                    $taskComments = $commentRepo->getTaskComments($data['id']);
+              
+                    return new WP_REST_Response((new ApiResponse(true, array(), $taskComments))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }

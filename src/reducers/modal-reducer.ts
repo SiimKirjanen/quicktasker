@@ -11,24 +11,14 @@ import {
   OPEN_ARCHIVE_TASK_MODAL,
   CLOSE_ARCHIVE_TASK_MODAL,
 } from "../constants";
-import { Action, State } from "../providers/ModalContextProvider";
+import { Action, State, initialState } from "../providers/ModalContextProvider";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { ArchivedTask, Task } from "../types/task";
 
-const closeModal = (state: State) => {
+const closeModal = () => {
   return {
-    ...state,
-    taskModalOpen: false,
-    targetStageId: "",
-    taskToEdit: null,
-    stageModalOpen: false,
-    targetPipelineId: "",
-    stageToEdit: null,
-    pipelineModalOpen: false,
-    pipelineToEdit: null,
-    archiveTaskModalOpen: false,
-    archiveModalTask: null,
+    ...initialState,
   };
 };
 
@@ -55,7 +45,7 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case CLOSE_TASK_MODAL: {
-      return closeModal(state);
+      return closeModal();
     }
     case OPEN_NEW_STAGE_MODAL: {
       const { targetPipelineId }: { targetPipelineId: string } = action.payload;
@@ -76,7 +66,7 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case CLOSE_STAGE_MODAL: {
-      return closeModal(state);
+      return closeModal();
     }
     case OPEN_NEW_PIPELINE_MODAL: {
       return {
@@ -95,7 +85,7 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case CLOSE_PIPELINE_MODAL: {
-      return closeModal(state);
+      return closeModal();
     }
     case OPEN_ARCHIVE_TASK_MODAL: {
       const archiveTask: ArchivedTask = action.payload;
@@ -107,7 +97,7 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case CLOSE_ARCHIVE_TASK_MODAL: {
-      return closeModal(state);
+      return closeModal();
     }
     default:
       return state;

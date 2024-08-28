@@ -96,6 +96,7 @@ function wpqt_set_up_db() {
 		  $sql8 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_COMMENTS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             text text NOT NULL,
+			type_id int(11) NOT NULL,
 			type ENUM('task', 'user') NOT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id)
