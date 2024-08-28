@@ -11,6 +11,7 @@ function wpqt_enqueue_app_assets(){
 
 	$pipelineRepo = new PipelineRepository();
 	$activePipeline = $pipelineRepo->getActivePipeline();
+	$pipelines = $pipelineRepo->getPipelines();
 
 	$build_asset = require(WP_QUICK_TASKS_PLUGIN_FOLDER_DIR . '/build/app.asset.php');
 	$dependencies = array_merge(array('wp-element', 'wp-api-fetch'), $build_asset['dependencies']);
@@ -23,5 +24,6 @@ function wpqt_enqueue_app_assets(){
 		'siteURL' => site_url(),
 		'pluginURL' => WP_QUICK_TASKS_PLUGIN_FOLDER_URL,
 		'initialActivePipelineId' => $activePipeline->id,
+		'initialPipelines' => $pipelines,
 	));
 }

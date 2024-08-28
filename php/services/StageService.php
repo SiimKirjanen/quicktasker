@@ -1,4 +1,6 @@
 <?php
+use WPQT\Log\LogService;
+
 class StageService {
     protected $stageRepository;
     protected $taskRepository;
@@ -9,7 +11,6 @@ class StageService {
         $this->taskRepository = new TaskRepository();
         $this->logService = new LogService();
     }
-
 
     /**
      * Creates a stage for a pipeline.

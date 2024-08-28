@@ -1,12 +1,14 @@
 import { useContext, useRef, useState } from "@wordpress/element";
 import { ModalContext } from "../../providers/ModalContextProvider";
 import { PipelineContext } from "../../providers/PipelineContextProvider";
+import { PipelinesContext } from "../../providers/PipelinesContextProvider";
 
 export const useModal = (closeActionType: string) => {
   const [modalSaving, setModalSaving] = useState(false);
   const modalContentRef = useRef<any>(null);
   const { modalDispatch } = useContext(ModalContext);
   const { dispatch } = useContext(PipelineContext);
+  const { pipelinesDispatch } = useContext(PipelinesContext);
 
   const closeModal = () => {
     modalDispatch({
@@ -21,9 +23,17 @@ export const useModal = (closeActionType: string) => {
     }
   };
 
-  const handleSuccess = (type: string, payload: any) => {
+  const handleSuccess = (
+    type: string,
+    payload: any,
+    usePipelinesDispatch: boolean = false,
+  ) => {
+    const dispatchFunction = usePipelinesDispatch
+      ? pipelinesDispatch
+      : dispatch;
+
     setModalSaving(false);
-    dispatch({
+    dispatchFunction({
       type,
       payload,
     });

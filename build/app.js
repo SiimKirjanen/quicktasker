@@ -7665,6 +7665,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _hooks_useCurrentPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./hooks/useCurrentPage */ "./src/hooks/useCurrentPage.tsx");
+/* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
+
 
 
 
@@ -7677,10 +7679,12 @@ function App() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ErrorBoundary_ErrorBoundary__WEBPACK_IMPORTED_MODULE_1__["default"], {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_2__.AppContextProvider, {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserContextProvider, {
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContextProvider, {
-          children: [currentPage, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_5__.ToastContainer, {
-            position: "bottom-right"
-          })]
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContextProvider, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_7__.PipelinesContextProvider, {
+            children: [currentPage, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_5__.ToastContainer, {
+              position: "bottom-right"
+            })]
+          })
         })
       })
     })
@@ -8181,17 +8185,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/menu/menu.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/menu/menu.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/ChevronDownIcon.js");
-/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/StarIcon.js");
-/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/PlusCircleIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/StarIcon.js");
+/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/ChevronDownIcon.js");
+/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/StarIcon.js");
+/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/PlusCircleIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/StarIcon.js");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
 /* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
+/* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -8231,22 +8236,27 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function PipelineSelectionDropdown() {
   const {
     state: {
-      existingPipelines,
       activePipeline
     },
-    dispatch,
     fetchAndSetPipelineData
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__.PipelineContext);
+  const {
+    state: {
+      pipelines
+    },
+    pipelinesDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_9__.PipelinesContext);
   const {
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__.ModalContext);
   const changePipelinePrimary = pipeline => __awaiter(this, void 0, void 0, function* () {
     try {
       yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.setPipelinePrimaryRequest)(pipeline.id);
-      dispatch({
+      pipelinesDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_SET_PRIMARY,
         payload: pipeline.id
       });
@@ -8266,17 +8276,17 @@ function PipelineSelectionDropdown() {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-leading-none",
         children: activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.name
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_10__["default"], {
         className: "wpqt-size-4"
       })]
     }),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mb-4 wpqt-text-center wpqt-font-bold",
       children: "Change board"
-    }), existingPipelines.map(existingPipeline => {
+    }), pipelines.map(existingPipeline => {
       const isPrimary = existingPipeline.is_primary;
       const isCurrentPipeline = (activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.id) === existingPipeline.id;
-      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_10__.MenuItem, {
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_11__.MenuItem, {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
           className: "wpqt-mb-3 wpqt-flex",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -8287,9 +8297,9 @@ function PipelineSelectionDropdown() {
             children: existingPipeline.name
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
             className: "wpqt-ml-auto",
-            children: isPrimary ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_11__["default"], {
+            children: isPrimary ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_12__["default"], {
               className: "wpqt-size-4 wpqt-cursor-pointer wpqt-text-blue-500"
-            }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
+            }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
               className: "wpqt-size-4 wpqt-cursor-pointer wpqt-text-gray-400",
               onClick: e => {
                 e.stopPropagation();
@@ -8299,13 +8309,13 @@ function PipelineSelectionDropdown() {
           })]
         })
       }, existingPipeline.id);
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_10__.MenuItem, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_11__.MenuItem, {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-mt-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2",
         onClick: openPipelineModal,
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           children: "Add new board"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_14__["default"], {
           className: "wpqt-size-6 wpqt-text-green-600"
         })]
       })
@@ -8934,7 +8944,7 @@ function PipelineModal() {
     try {
       setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.createPipelineRequest)(pipelineName, pipelineDescription);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_PIPELINE, response.data);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_PIPELINE, response.data, true);
     } catch (error) {
       handleError(error);
     }
@@ -9576,6 +9586,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
+/* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
+
 
 
 
@@ -9588,6 +9600,9 @@ const useModal = closeActionType => {
   const {
     dispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__.PipelineContext);
+  const {
+    pipelinesDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_3__.PipelinesContext);
   const closeModal = () => {
     modalDispatch({
       type: closeActionType
@@ -9599,9 +9614,10 @@ const useModal = closeActionType => {
       modalContentRef.current.clearContent();
     }
   };
-  const handleSuccess = (type, payload) => {
+  const handleSuccess = (type, payload, usePipelinesDispatch = false) => {
+    const dispatchFunction = usePipelinesDispatch ? pipelinesDispatch : dispatch;
     setModalSaving(false);
-    dispatch({
+    dispatchFunction({
       type,
       payload
     });
@@ -10411,6 +10427,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   OPEN_NEW_STAGE_MODAL: () => (/* binding */ OPEN_NEW_STAGE_MODAL),
 /* harmony export */   OPEN_NEW_TASK_MODAL: () => (/* binding */ OPEN_NEW_TASK_MODAL),
 /* harmony export */   OPEN_STAGE_EDIT_MODAL: () => (/* binding */ OPEN_STAGE_EDIT_MODAL),
+/* harmony export */   PIPELINES_SET: () => (/* binding */ PIPELINES_SET),
 /* harmony export */   PIPELINE_ADD_EXISTING_PIPELINE: () => (/* binding */ PIPELINE_ADD_EXISTING_PIPELINE),
 /* harmony export */   PIPELINE_ADD_PIPELINE: () => (/* binding */ PIPELINE_ADD_PIPELINE),
 /* harmony export */   PIPELINE_ADD_STAGE: () => (/* binding */ PIPELINE_ADD_STAGE),
@@ -10426,10 +10443,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_SET_LOADING: () => (/* binding */ PIPELINE_SET_LOADING),
 /* harmony export */   PIPELINE_SET_PIPELINE: () => (/* binding */ PIPELINE_SET_PIPELINE),
 /* harmony export */   PIPELINE_SET_PRIMARY: () => (/* binding */ PIPELINE_SET_PRIMARY),
+/* harmony export */   PIPELINE_SET_PRIMARY2: () => (/* binding */ PIPELINE_SET_PRIMARY2),
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS)
 /* harmony export */ });
-//Pipeline reducer constants
+//Pipeline nad pipelines reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
 const PIPELINE_SET_PIPELINE = "SET_PIPELINE";
 const PIPELINE_MOVE_TASK = "MOVE_TASK";
@@ -10445,6 +10463,8 @@ const PIPELINE_MOVE_STAGE = "MOVE_STAGE";
 const PIPELINE_ADD_PIPELINE = "ADD_PIPELINE";
 const PIPELINE_EDIT_PIPELINE = "EDIT_PIPELINE";
 const PIPELINE_SET_PRIMARY = "SET_PRIMARY";
+const PIPELINES_SET = "SET_PIPELINES";
+const PIPELINE_SET_PRIMARY2 = "SET_PRIMARY";
 //Modal reducer constants
 const OPEN_NEW_TASK_MODAL = "OPEN_NEW_TASK_MODAL";
 const CLOSE_NEW_TASK_MODAL = "CLOSE_NEW_TASK_MODAL";
@@ -10970,8 +10990,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 const initialState = {
   loading: true,
-  activePipeline: null,
-  existingPipelines: []
+  activePipeline: null
 };
 const PipelineContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -10994,14 +11013,9 @@ const PipelineContextProvider = ({
       });
       const {
         data: {
-          pipeline,
-          pipelines
+          pipeline
         }
       } = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.getPipelineData)(pipelineId);
-      dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_2__.PIPELINE_SET_EXISTING_PIPELINES,
-        payload: pipelines
-      });
       dispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_2__.PIPELINE_SET_PIPELINE,
         payload: pipeline
@@ -11024,6 +11038,58 @@ const PipelineContextProvider = ({
       state,
       dispatch,
       fetchAndSetPipelineData
+    },
+    children: children
+  });
+};
+
+
+/***/ }),
+
+/***/ "./src/providers/PipelinesContextProvider.tsx":
+/*!****************************************************!*\
+  !*** ./src/providers/PipelinesContextProvider.tsx ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PipelinesContext: () => (/* binding */ PipelinesContext),
+/* harmony export */   PipelinesContextProvider: () => (/* binding */ PipelinesContextProvider)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _reducers_pipelines_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/pipelines-reducer */ "./src/reducers/pipelines-reducer.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+
+
+
+
+const initialState = {
+  pipelines: []
+};
+const PipelinesContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
+  state: initialState,
+  pipelinesDispatch: () => {}
+});
+const PipelinesContextProvider = ({
+  children
+}) => {
+  const [state, pipelinesDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_pipelines_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const initialPipelines = window.wpqt.initialPipelines;
+    pipelinesDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINES_SET,
+      payload: initialPipelines
+    });
+  }, []);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(PipelinesContext.Provider, {
+    value: {
+      state,
+      pipelinesDispatch
     },
     children: children
   });
@@ -11394,44 +11460,63 @@ const pipelineReducer = (state, action) => {
           })
         });
       }
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_EXISTING_PIPELINES:
+    default:
+      return state;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./src/reducers/pipelines-reducer.ts":
+/*!*******************************************!*\
+  !*** ./src/reducers/pipelines-reducer.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reducer: () => (/* binding */ reducer)
+/* harmony export */ });
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINES_SET:
       {
-        const pipelines = action.payload.map(pipeline => Object.assign(Object.assign({}, pipeline), {
-          is_primary: pipeline.is_primary === "1"
-        }));
+        const pipelines = action.payload;
         return Object.assign(Object.assign({}, state), {
-          existingPipelines: pipelines
+          pipelines: pipelines.map(pipeline => {
+            return Object.assign(Object.assign({}, pipeline), {
+              is_primary: pipeline.is_primary === "1"
+            });
+          })
         });
       }
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_EXISTING_PIPELINE:
-      return Object.assign(Object.assign({}, state), {
-        existingPipelines: [...state.existingPipelines, action.payload]
-      });
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_PIPELINE:
       {
         const pipeline = action.payload;
         return Object.assign(Object.assign({}, state), {
-          existingPipelines: [...state.existingPipelines, pipeline]
-        });
-      }
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_PIPELINE:
-      {
-        const pipeline = action.payload;
-        return Object.assign(Object.assign({}, state), {
-          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-            name: pipeline.name,
-            description: pipeline.description
-          }),
-          existingPipelines: state.existingPipelines.map(p => p.id === pipeline.id ? pipeline : p)
+          pipelines: [...state.pipelines, Object.assign(Object.assign({}, pipeline), {
+            is_primary: false
+          })]
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_PRIMARY:
       {
         const primaryPipelineId = action.payload;
         return Object.assign(Object.assign({}, state), {
-          existingPipelines: state.existingPipelines.map(pipeline => Object.assign(Object.assign({}, pipeline), {
+          pipelines: state.pipelines.map(pipeline => Object.assign(Object.assign({}, pipeline), {
             is_primary: pipeline.id === primaryPipelineId
           }))
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_PIPELINE:
+      {
+        const pipeline = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          pipelines: state.pipelines.map(p => p.id === pipeline.id ? pipeline : p)
         });
       }
     default:

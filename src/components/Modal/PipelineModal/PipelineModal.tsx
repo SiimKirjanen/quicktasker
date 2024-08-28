@@ -35,7 +35,7 @@ function PipelineModal() {
         pipelineDescription,
       );
 
-      handleSuccess(PIPELINE_ADD_PIPELINE, response.data);
+      handleSuccess(PIPELINE_ADD_PIPELINE, response.data, true);
     } catch (error) {
       handleError(error);
     }

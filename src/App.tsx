@@ -4,6 +4,7 @@ import { ModalContextProvider } from "./providers/ModalContextProvider";
 import { UserContextProvider } from "./providers/UserContextProvider";
 import { ToastContainer } from "react-toastify";
 import { useCurrentPage } from "./hooks/useCurrentPage";
+import { PipelinesContextProvider } from "./providers/PipelinesContextProvider";
 
 function App() {
   const currentPage = useCurrentPage();
@@ -13,8 +14,10 @@ function App() {
       <AppContextProvider>
         <UserContextProvider>
           <ModalContextProvider>
-            {currentPage}
-            <ToastContainer position="bottom-right" />
+            <PipelinesContextProvider>
+              {currentPage}
+              <ToastContainer position="bottom-right" />
+            </PipelinesContextProvider>
           </ModalContextProvider>
         </UserContextProvider>
       </AppContextProvider>

@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
 import { PipelineContext } from "../../../providers/PipelineContextProvider";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { MenuItem } from "@headlessui/react";
 import { setPipelinePrimaryRequest } from "../../../api/api";
 import { toast } from "react-toastify";
 import {
@@ -17,20 +17,24 @@ import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { clsx } from "clsx";
 import { WPQTDropdown } from "../WPQTDropdown";
+import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 
 function PipelineSelectionDropdown() {
   const {
-    state: { existingPipelines, activePipeline },
-    dispatch,
+    state: { activePipeline },
     fetchAndSetPipelineData,
   } = useContext(PipelineContext);
+  const {
+    state: { pipelines },
+    pipelinesDispatch,
+  } = useContext(PipelinesContext);
   const { modalDispatch } = useContext(ModalContext);
 
   const changePipelinePrimary = async (pipeline: Pipeline) => {
     try {
       await setPipelinePrimaryRequest(pipeline.id);
 
-      dispatch({
+      pipelinesDispatch({
         type: PIPELINE_SET_PRIMARY,
         payload: pipeline.id,
       });
@@ -59,7 +63,7 @@ function PipelineSelectionDropdown() {
       <div className="wpqt-mb-4 wpqt-text-center wpqt-font-bold">
         Change board
       </div>
-      {existingPipelines.map((existingPipeline) => {
+      {pipelines.map((existingPipeline) => {
         const isPrimary = existingPipeline.is_primary;
         const isCurrentPipeline = activePipeline?.id === existingPipeline.id;
 

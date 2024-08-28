@@ -1,10 +1,6 @@
 import { createContext, useReducer, useEffect } from "@wordpress/element";
 import { Pipeline } from "../types/pipeline";
-import {
-  PIPELINE_SET_EXISTING_PIPELINES,
-  PIPELINE_SET_LOADING,
-  PIPELINE_SET_PIPELINE,
-} from "../constants";
+import { PIPELINE_SET_LOADING, PIPELINE_SET_PIPELINE } from "../constants";
 import { pipelineReducer } from "../reducers/pipeline-reducer";
 import { getPipelineData } from "../api/api";
 import { toast } from "react-toastify";
@@ -12,13 +8,11 @@ import { toast } from "react-toastify";
 const initialState = {
   loading: true,
   activePipeline: null,
-  existingPipelines: [],
 };
 
 type State = {
   loading: boolean;
   activePipeline: Pipeline | null;
-  existingPipelines: Pipeline[];
 };
 
 type Action = {
@@ -57,13 +51,9 @@ const PipelineContextProvider = ({
     try {
       dispatch({ type: PIPELINE_SET_LOADING, payload: true });
       const {
-        data: { pipeline, pipelines },
+        data: { pipeline },
       } = await getPipelineData(pipelineId);
 
-      dispatch({
-        type: PIPELINE_SET_EXISTING_PIPELINES,
-        payload: pipelines,
-      });
       dispatch({ type: PIPELINE_SET_PIPELINE, payload: pipeline });
       dispatch({ type: PIPELINE_SET_LOADING, payload: false });
     } catch (e) {
