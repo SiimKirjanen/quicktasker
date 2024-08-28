@@ -4,10 +4,11 @@ import { PipelineSelectionDropdown } from "../../Dropdown/PipelineSelectionDropd
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_EDIT_PIPELINE_MODAL } from "../../../constants";
+import { LoadingOval } from "../../Loading/Loading";
 
 function PipelineHeader() {
   const {
-    state: { activePipeline },
+    state: { activePipeline, loading },
   } = useContext(PipelineContext);
   const { modalDispatch } = useContext(ModalContext);
 
@@ -35,7 +36,8 @@ function PipelineHeader() {
         onClick={openEditPipelineModal}
       />
 
-      <div className="wpqt-ml-auto">
+      <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-2">
+        {loading && <LoadingOval width="24" height="24" />}
         <PipelineSelectionDropdown />
       </div>
     </div>

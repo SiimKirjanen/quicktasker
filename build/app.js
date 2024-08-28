@@ -9897,9 +9897,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
 /* harmony import */ var _Dropdown_PipelineSelectionDropdown_PipelineSelectionDropdown__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown */ "./src/components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown.tsx");
-/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/PencilSquareIcon.js");
+/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/PencilSquareIcon.js");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+
 
 
 
@@ -9910,7 +9912,8 @@ __webpack_require__.r(__webpack_exports__);
 function PipelineHeader() {
   const {
     state: {
-      activePipeline
+      activePipeline,
+      loading
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__.PipelineContext);
   const {
@@ -9936,12 +9939,15 @@ function PipelineHeader() {
       }), activePipeline.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: activePipeline.description
       })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_7__["default"], {
       className: "wpqt-size-5 wpqt-cursor-pointer wpqt-text-gray-400",
       onClick: openEditPipelineModal
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-ml-auto",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_PipelineSelectionDropdown_PipelineSelectionDropdown__WEBPACK_IMPORTED_MODULE_3__.PipelineSelectionDropdown, {})
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-2",
+      children: [loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_6__.LoadingOval, {
+        width: "24",
+        height: "24"
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_PipelineSelectionDropdown_PipelineSelectionDropdown__WEBPACK_IMPORTED_MODULE_3__.PipelineSelectionDropdown, {})]
     })]
   });
 }
