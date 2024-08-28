@@ -1,13 +1,13 @@
 import { useContext, useRef, useState } from "@wordpress/element";
 import { ModalContext } from "../../providers/ModalContextProvider";
-import { PipelineContext } from "../../providers/PipelineContextProvider";
+import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
 import { PipelinesContext } from "../../providers/PipelinesContextProvider";
 
 export const useModal = (closeActionType: string) => {
   const [modalSaving, setModalSaving] = useState(false);
   const modalContentRef = useRef<any>(null);
   const { modalDispatch } = useContext(ModalContext);
-  const { dispatch } = useContext(PipelineContext);
+  const { dispatch } = useContext(ActivePipelineContext);
   const { pipelinesDispatch } = useContext(PipelinesContext);
 
   const closeModal = () => {

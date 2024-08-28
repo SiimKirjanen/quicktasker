@@ -1,5 +1,5 @@
 import { useContext } from "@wordpress/element";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { MenuItem } from "@headlessui/react";
 import { setPipelinePrimaryRequest } from "../../../api/api";
 import { toast } from "react-toastify";
@@ -23,7 +23,7 @@ function PipelineSelectionDropdown() {
   const {
     state: { activePipeline },
     fetchAndSetPipelineData,
-  } = useContext(PipelineContext);
+  } = useContext(ActivePipelineContext);
   const {
     state: { pipelines },
     pipelinesDispatch,

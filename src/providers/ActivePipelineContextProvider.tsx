@@ -28,13 +28,13 @@ type PipelineContextType = {
   fetchAndSetPipelineData: (pipelineId: string) => void;
 };
 
-const PipelineContext = createContext<PipelineContextType>({
+const ActivePipelineContext = createContext<PipelineContextType>({
   state: initialState,
   dispatch: () => {},
   fetchAndSetPipelineData: () => {},
 });
 
-const PipelineContextProvider = ({
+const ActivePipelineContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
@@ -64,12 +64,17 @@ const PipelineContextProvider = ({
   };
 
   return (
-    <PipelineContext.Provider
+    <ActivePipelineContext.Provider
       value={{ state, dispatch, fetchAndSetPipelineData }}
     >
       {children}
-    </PipelineContext.Provider>
+    </ActivePipelineContext.Provider>
   );
 };
 
-export { PipelineContextProvider, PipelineContext, type State, type Action };
+export {
+  ActivePipelineContextProvider,
+  ActivePipelineContext,
+  type State,
+  type Action,
+};

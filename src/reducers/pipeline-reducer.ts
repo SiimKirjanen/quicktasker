@@ -10,7 +10,7 @@ import {
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
 } from "../constants";
-import { Action, State } from "../providers/PipelineContextProvider";
+import { Action, State } from "../providers/ActivePipelineContextProvider";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
 import { moveTask, reorderTask } from "../utils/task";

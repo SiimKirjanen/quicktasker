@@ -7,7 +7,7 @@ import {
 import { Pipeline } from "../../types/pipeline";
 import { moveTaskRequest } from "../../api/api";
 import { Stage } from "./Stage";
-import { PipelineContext } from "../../providers/PipelineContextProvider";
+import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
 import { AddStage } from "./AddStage";
 import { TaskModal } from "../Modal/TaskModal/TaskModal";
 import { StageModal } from "../Modal/StageModal/StageModal";
@@ -19,7 +19,7 @@ const Pipeline = () => {
   const {
     state: { activePipeline, loading },
     dispatch,
-  } = useContext(PipelineContext);
+  } = useContext(ActivePipelineContext);
 
   const dispatchMove = (
     source: DraggableLocation,

@@ -1,16 +1,16 @@
 import { Page } from "../components/Page/Page";
 import Pipeline from "../components/Pipeline/Pipeline";
 import { PipelineHeader } from "../components/Pipeline/PipelineHeader/PipelineHeader";
-import { PipelineContextProvider } from "../providers/PipelineContextProvider";
+import { ActivePipelineContextProvider } from "../providers/ActivePipelineContextProvider";
 
 const PipelinePage = () => {
   return (
-    <PipelineContextProvider>
+    <ActivePipelineContextProvider>
       <Page>
         <PipelineHeader />
         <Pipeline />
       </Page>
-    </PipelineContextProvider>
+    </ActivePipelineContextProvider>
   );
 };
 export { PipelinePage };

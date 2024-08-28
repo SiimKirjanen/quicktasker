@@ -4,13 +4,13 @@ import {
   moveStageRequest,
 } from "../../../api/api";
 import { useContext } from "@wordpress/element";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import {
   OPEN_STAGE_EDIT_MODAL,
   PIPELINE_DELETE_STAGE,
   PIPELINE_MOVE_STAGE,
 } from "../../../constants";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { MenuItem } from "@headlessui/react";
 import {
   Cog8ToothIcon,
   TrashIcon,
@@ -31,7 +31,7 @@ function StageControlsDropdown({ stage }: Props) {
     dispatch,
     state: { activePipeline },
     fetchAndSetPipelineData,
-  } = useContext(PipelineContext);
+  } = useContext(ActivePipelineContext);
   const { modalDispatch } = useContext(ModalContext);
   const stagesLength = activePipeline?.stages?.length ?? 0;
   const stageOrder = +stage.stage_order;

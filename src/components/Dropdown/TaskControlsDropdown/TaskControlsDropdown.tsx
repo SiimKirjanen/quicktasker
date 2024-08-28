@@ -1,5 +1,5 @@
 import { useContext } from "@wordpress/element";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
 import { MenuItem } from "@headlessui/react";
 import {
@@ -21,7 +21,7 @@ function TaskControlsDropdown({ task }: Props) {
   const {
     state: { activePipeline },
     fetchAndSetPipelineData,
-  } = useContext(PipelineContext);
+  } = useContext(ActivePipelineContext);
   const { modalDispatch } = useContext(ModalContext);
 
   const deleteTask = async (e: React.MouseEvent<HTMLDivElement>) => {

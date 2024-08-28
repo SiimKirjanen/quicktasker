@@ -1,5 +1,5 @@
 import { useContext } from "@wordpress/element";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { PipelineSelectionDropdown } from "../../Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -9,7 +9,7 @@ import { LoadingOval } from "../../Loading/Loading";
 function PipelineHeader() {
   const {
     state: { activePipeline, loading },
-  } = useContext(PipelineContext);
+  } = useContext(ActivePipelineContext);
   const { modalDispatch } = useContext(ModalContext);
 
   const openEditPipelineModal = () => {

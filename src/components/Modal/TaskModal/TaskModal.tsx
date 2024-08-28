@@ -10,7 +10,7 @@ import { TaskModalContent } from "./TaskModalContent";
 import { WPQTModal } from "../WPQTModal";
 import { useModal } from "../useModal";
 import { Task } from "../../../types/task";
-import { PipelineContext } from "../../../providers/PipelineContextProvider";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 function TaskModal() {
   const {
@@ -18,7 +18,7 @@ function TaskModal() {
   } = useContext(ModalContext);
   const {
     state: { activePipeline },
-  } = useContext(PipelineContext);
+  } = useContext(ActivePipelineContext);
 
   const {
     modalSaving,
