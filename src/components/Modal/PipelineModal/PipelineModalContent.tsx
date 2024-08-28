@@ -71,6 +71,7 @@ const PipelineModalContent = forwardRef(
               Name
             </Label>
             <Input
+              autoFocus
               className={clsx(
                 "wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6",
                 "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25",

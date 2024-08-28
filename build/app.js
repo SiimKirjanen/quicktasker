@@ -7784,14 +7784,15 @@ function moveTaskRequest(taskId, stageId, order) {
     headers: getCommonHeaders()
   });
 }
-function createTaskRequest(stageId, name, description) {
+function createTaskRequest(stageId, pipelineId, name, description) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/tasks`,
     method: "POST",
     data: {
       stageId,
       name,
-      description
+      description,
+      pipelineId
     },
     headers: getCommonHeaders()
   });
@@ -7978,10 +7979,42 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+
+
+
+
 
 function ArchiveControls() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: "Archive controls"
+  const {
+    state: {
+      archiveSearchValue
+    },
+    archiveDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__.ArchiveContext);
+  const setArchiveSearchValue = event => {
+    archiveDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_ARCHIVE_SEARCH_VALUE,
+      payload: event.target.value
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-mb-4",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-text-base",
+      children: "Archive filtering"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.Input, {
+        type: "text",
+        value: archiveSearchValue,
+        onChange: setArchiveSearchValue
+      })
+    })]
   });
 }
 
@@ -8058,6 +8091,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
 /* harmony import */ var _ArchiveItem_ArchiveItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ArchiveItem/ArchiveItem */ "./src/components/Archive/ArchiveItem/ArchiveItem.tsx");
+/* harmony import */ var _hooks_useArchiveFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/useArchiveFilter */ "./src/hooks/useArchiveFilter.tsx");
+
 
 
 
@@ -8068,14 +8103,22 @@ function ArchiveItems() {
       archivedTasks
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__.ArchiveContext);
+  const {
+    filterArchive
+  } = (0,_hooks_useArchiveFilter__WEBPACK_IMPORTED_MODULE_4__.useArchiveFilter)();
   if (!archivedTasks) {
     return null;
   }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-flex wpqt-flex-wrap wpqt-gap-2",
-    children: archivedTasks.map(task => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveItem_ArchiveItem__WEBPACK_IMPORTED_MODULE_3__.ArchiveItem, {
-      task: task
-    }, task.id))
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-text-base",
+      children: "Archive"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-flex-wrap wpqt-gap-2",
+      children: archivedTasks.filter(filterArchive).map(task => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveItem_ArchiveItem__WEBPACK_IMPORTED_MODULE_3__.ArchiveItem, {
+        task: task
+      }, task.id))
+    })]
   });
 }
 
@@ -8803,11 +8846,13 @@ function ArchiveTaskModalContent() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModalTitle, {
       children: archiveModalTask.name
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-flex-col",
-      children: archiveModalTask.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [archiveModalTask.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         children: ["Description: ", archiveModalTask.description]
-      })
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: ["Board id: ", archiveModalTask.pipeline_id]
+      })]
     })]
   });
 }
@@ -8992,6 +9037,7 @@ const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
           className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Name"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Input, {
+          autoFocus: true,
           className: (0,clsx__WEBPACK_IMPORTED_MODULE_3__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           value: pipelineName,
           onChange: e => setPipelineName(e.target.value)
@@ -9202,6 +9248,7 @@ const StageModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.for
           className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Name"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Input, {
+          autoFocus: true,
           className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           value: stageName,
           onChange: e => setStageName(e.target.value)
@@ -9252,6 +9299,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TaskModalContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TaskModalContent */ "./src/components/Modal/TaskModal/TaskModalContent.tsx");
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
 /* harmony import */ var _useModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../useModal */ "./src/components/Modal/useModal.tsx");
+/* harmony import */ var _providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/PipelineContextProvider */ "./src/providers/PipelineContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9287,6 +9335,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function TaskModal() {
   const {
     state: {
@@ -9294,6 +9343,11 @@ function TaskModal() {
       targetStageId
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
+  const {
+    state: {
+      activePipeline
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelineContextProvider__WEBPACK_IMPORTED_MODULE_8__.PipelineContext);
   const {
     modalSaving,
     setModalSaving,
@@ -9305,7 +9359,7 @@ function TaskModal() {
   const addTask = (taskName, taskDescription) => __awaiter(this, void 0, void 0, function* () {
     try {
       setModalSaving(true);
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(targetStageId, taskName, taskDescription);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(targetStageId, activePipeline.id, taskName, taskDescription);
       handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, response.data);
     } catch (error) {
       handleError(error);
@@ -9410,6 +9464,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
           className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
           children: "Name"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_9__.Input, {
+          autoFocus: true,
           className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
           value: taskName,
           onChange: e => setTaskName(e.target.value)
@@ -10371,6 +10426,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_SET_LOADING: () => (/* binding */ PIPELINE_SET_LOADING),
 /* harmony export */   PIPELINE_SET_PIPELINE: () => (/* binding */ PIPELINE_SET_PIPELINE),
 /* harmony export */   PIPELINE_SET_PRIMARY: () => (/* binding */ PIPELINE_SET_PRIMARY),
+/* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS)
 /* harmony export */ });
 //Pipeline reducer constants
@@ -10405,6 +10461,46 @@ const CLOSE_PIPELINE_MODAL = "CLOSE_PIPELINE_EDIT_MODAL";
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";
 const CLOSE_ARCHIVE_TASK_MODAL = "CLOSE_ARCHIVE_TASK_MODAL";
+const SET_ARCHIVE_SEARCH_VALUE = "SET_ARCHIVE_SEARCH_VALUE";
+
+
+/***/ }),
+
+/***/ "./src/hooks/useArchiveFilter.tsx":
+/*!****************************************!*\
+  !*** ./src/hooks/useArchiveFilter.tsx ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useArchiveFilter: () => (/* binding */ useArchiveFilter)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
+
+
+const useArchiveFilter = () => {
+  const {
+    state: {
+      archiveSearchValue
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_1__.ArchiveContext);
+  const filterArchive = archivedTask => {
+    if (archivedTask.name.toLowerCase().includes(archiveSearchValue.toLowerCase())) {
+      return true;
+    }
+    if (archivedTask.description && archivedTask.description.toLowerCase().includes(archiveSearchValue.toLowerCase())) {
+      return true;
+    }
+    return false;
+  };
+  return {
+    filterArchive
+  };
+};
 
 
 /***/ }),
@@ -10725,7 +10821,9 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 const initialState = {
   archivedTasks: null,
-  archiveLoading: false
+  archiveLoading: false,
+  archiveSearchValue: "",
+  archiveFilteredPipelineId: null
 };
 const ArchiveContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -11004,6 +11102,13 @@ const reducer = (state, action) => {
           archivedTasks
         });
       }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_ARCHIVE_SEARCH_VALUE:
+      {
+        const archiveSearchValue = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          archiveSearchValue
+        });
+      }
     default:
       {
         return state;
@@ -11137,7 +11242,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   pipelineReducer: () => (/* binding */ pipelineReducer)
 /* harmony export */ });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
-/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/task */ "./src/utils/task.tsx");
+/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/task */ "./src/utils/task.ts");
 
 
 const pipelineReducer = (state, action) => {
@@ -11337,10 +11442,10 @@ const pipelineReducer = (state, action) => {
 
 /***/ }),
 
-/***/ "./src/utils/task.tsx":
-/*!****************************!*\
-  !*** ./src/utils/task.tsx ***!
-  \****************************/
+/***/ "./src/utils/task.ts":
+/*!***************************!*\
+  !*** ./src/utils/task.ts ***!
+  \***************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";

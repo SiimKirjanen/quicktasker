@@ -264,7 +264,8 @@ function wpqt_register_api_routes() {
                     
                     $newTask = $taskService->createTask( $data['stageId'], array(
                         "name" => $data['name'],
-                        "description" => $data['description']
+                        "description" => $data['description'],
+                        "pipelineId" => $data['pipelineId']
                     ) );
                     $wpdb->query('COMMIT');
 

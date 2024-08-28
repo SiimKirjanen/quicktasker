@@ -10,11 +10,16 @@ import { TaskModalContent } from "./TaskModalContent";
 import { WPQTModal } from "../WPQTModal";
 import { useModal } from "../useModal";
 import { Task } from "../../../types/task";
+import { PipelineContext } from "../../../providers/PipelineContextProvider";
 
 function TaskModal() {
   const {
     state: { taskModalOpen, targetStageId },
   } = useContext(ModalContext);
+  const {
+    state: { activePipeline },
+  } = useContext(PipelineContext);
+
   const {
     modalSaving,
     setModalSaving,
@@ -29,6 +34,7 @@ function TaskModal() {
       setModalSaving(true);
       const response = await createTaskRequest(
         targetStageId,
+        activePipeline!.id,
         taskName,
         taskDescription,
       );

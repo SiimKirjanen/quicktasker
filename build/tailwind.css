@@ -845,6 +845,10 @@
   right: 0.5rem;
 }
 
+.wpqt-right-\[-20px\] {
+  right: -20px;
+}
+
 .wpqt-right-\[12px\] {
   right: 12px;
 }
@@ -853,24 +857,12 @@
   top: 0.25rem;
 }
 
-.wpqt-top-\[12px\] {
-  top: 12px;
-}
-
-.wpqt-right-0 {
-  right: 0px;
-}
-
-.wpqt-top-0 {
-  top: 0px;
-}
-
-.wpqt-right-\[-20px\] {
-  right: -20px;
-}
-
 .wpqt-top-\[-20px\] {
   top: -20px;
+}
+
+.wpqt-top-\[12px\] {
+  top: 12px;
 }
 
 .wpqt-z-10 {
@@ -949,24 +941,8 @@
   height: 1.5rem;
 }
 
-.wpqt-size-7 {
-  width: 1.75rem;
-  height: 1.75rem;
-}
-
-.wpqt-size-9 {
-  width: 2.25rem;
-  height: 2.25rem;
-}
-
-.wpqt-size-10 {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-
-.wpqt-size-8 {
-  width: 2rem;
-  height: 2rem;
+.wpqt-h-\[40px\] {
+  height: 40px;
 }
 
 .wpqt-h-full {
@@ -981,10 +957,6 @@
   height: calc(100vh - 32px);
 }
 
-.wpqt-h-\[40px\] {
-  height: 40px;
-}
-
 .wpqt-max-h-full {
   max-height: 100%;
 }
@@ -997,16 +969,16 @@
   width: 320px;
 }
 
+.wpqt-w-\[40px\] {
+  width: 40px;
+}
+
 .wpqt-w-full {
   width: 100%;
 }
 
 .wpqt-w-screen {
   width: 100vw;
-}
-
-.wpqt-w-\[40px\] {
-  width: 40px;
 }
 
 .wpqt-max-w-md {
@@ -1109,6 +1081,10 @@
   border-radius: 0.25rem;
 }
 
+.wpqt-rounded-full {
+  border-radius: 9999px;
+}
+
 .wpqt-rounded-lg {
   border-radius: 0.5rem;
 }
@@ -1119,10 +1095,6 @@
 
 .wpqt-rounded-xl {
   border-radius: 0.75rem;
-}
-
-.wpqt-rounded-full {
-  border-radius: 9999px;
 }
 
 .wpqt-border {
@@ -1289,6 +1261,11 @@
   color: rgb(22 163 74 / var(--tw-text-opacity));
 }
 
+.wpqt-text-qtBorder {
+  --tw-text-opacity: 1;
+  color: rgb(208 215 222 / var(--tw-text-opacity));
+}
+
 .wpqt-text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
@@ -1297,11 +1274,6 @@
 .wpqt-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.wpqt-text-qtBorder {
-  --tw-text-opacity: 1;
-  color: rgb(208 215 222 / var(--tw-text-opacity));
 }
 
 .wpqt-shadow {

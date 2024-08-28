@@ -35,6 +35,7 @@ function wpqt_set_up_db() {
           
         $sql3 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_TASKS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
+			pipeline_id int(11) NOT NULL,
             name varchar(255) NOT NULL,
             description text,
 			is_archived tinyint(1) DEFAULT 0,

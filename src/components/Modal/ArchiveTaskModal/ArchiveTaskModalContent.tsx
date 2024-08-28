@@ -18,6 +18,7 @@ function ArchiveTaskModalContent() {
         {archiveModalTask.description && (
           <div>Description: {archiveModalTask.description}</div>
         )}
+        <div>Board id: {archiveModalTask.pipeline_id}</div>
       </div>
     </>
   );

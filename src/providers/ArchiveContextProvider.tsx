@@ -8,10 +8,15 @@ import { SET_ARCHIVE_TASKS } from "../constants";
 const initialState = {
   archivedTasks: null,
   archiveLoading: false,
+  archiveSearchValue: "",
+  archiveFilteredPipelineId: null,
 };
 
 type State = {
   archivedTasks: ArchivedTask[] | null;
+  archiveLoading: boolean;
+  archiveSearchValue: string;
+  archiveFilteredPipelineId: string | null;
 };
 
 type Action = {

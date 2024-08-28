@@ -1,5 +1,35 @@
+import { Input } from "@headlessui/react";
+import { useContext } from "@wordpress/element";
+import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
+import { SET_ARCHIVE_SEARCH_VALUE } from "../../../constants";
+
 function ArchiveControls() {
-  return <div>Archive controls</div>;
+  const {
+    state: { archiveSearchValue },
+    archiveDispatch,
+  } = useContext(ArchiveContext);
+
+  const setArchiveSearchValue = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    archiveDispatch({
+      type: SET_ARCHIVE_SEARCH_VALUE,
+      payload: event.target.value,
+    });
+  };
+
+  return (
+    <div className="wpqt-mb-4">
+      <div className="wpqt-text-base">Archive filtering</div>
+      <div className="wpqt-flex">
+        <Input
+          type="text"
+          value={archiveSearchValue}
+          onChange={setArchiveSearchValue}
+        />
+      </div>
+    </div>
+  );
 }
 
 export { ArchiveControls };

@@ -54,6 +54,7 @@ class TaskService {
         $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS, array(
             'name' => $args['name'],
             'description' => $args['description'],
+            'pipeline_id' => $args['pipelineId']
         ));
 
         if( $result === false ) {

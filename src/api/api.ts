@@ -88,13 +88,14 @@ function moveTaskRequest(
 
 function createTaskRequest(
   stageId: string,
+  pipelineId: string,
   name: string,
   description: string,
 ): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/tasks`,
     method: "POST",
-    data: { stageId, name, description },
+    data: { stageId, name, description, pipelineId },
     headers: getCommonHeaders(),
   });
 }
