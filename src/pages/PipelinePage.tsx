@@ -1,4 +1,4 @@
-import { Page } from "../components/Page/Page";
+import { Page } from "./Page/Page";
 import Pipeline from "../components/Pipeline/Pipeline";
 import { PipelineHeader } from "../components/Pipeline/PipelineHeader/PipelineHeader";
 import { ActivePipelineContextProvider } from "../providers/ActivePipelineContextProvider";

@@ -1,4 +1,8 @@
-import { SET_ARCHIVE_SEARCH_VALUE, SET_ARCHIVE_TASKS } from "../constants";
+import {
+  SET_ARCHIVE_FILTERED_PIPELINE,
+  SET_ARCHIVE_SEARCH_VALUE,
+  SET_ARCHIVE_TASKS,
+} from "../constants";
 import { Action, State } from "../providers/ArchiveContextProvider";
 import { ArchivedTaskFromServer } from "../types/task";
 
@@ -18,6 +22,14 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         archiveSearchValue,
+      };
+    }
+    case SET_ARCHIVE_FILTERED_PIPELINE: {
+      const archiveFilteredPipelineId: string = action.payload;
+
+      return {
+        ...state,
+        archiveFilteredPipelineId,
       };
     }
     default: {

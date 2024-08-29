@@ -4,25 +4,24 @@ import { ArchiveContext } from "../providers/ArchiveContextProvider";
 
 const useArchiveFilter = () => {
   const {
-    state: { archiveSearchValue },
+    state: { archiveSearchValue, archiveFilteredPipelineId },
   } = useContext(ArchiveContext);
 
   const filterArchive = (archivedTask: ArchivedTask) => {
-    if (
-      archivedTask.name.toLowerCase().includes(archiveSearchValue.toLowerCase())
-    ) {
-      return true;
-    }
-    if (
-      archivedTask.description &&
-      archivedTask.description
+    const matchesSearchValue =
+      archivedTask.name
         .toLowerCase()
-        .includes(archiveSearchValue.toLowerCase())
-    ) {
-      return true;
-    }
+        .includes(archiveSearchValue.toLowerCase()) ||
+      (archivedTask.description &&
+        archivedTask.description
+          .toLowerCase()
+          .includes(archiveSearchValue.toLowerCase()));
 
-    return false;
+    const matchesPipelineId =
+      !archiveFilteredPipelineId ||
+      archivedTask.pipeline_id === archiveFilteredPipelineId;
+
+    return matchesSearchValue && matchesPipelineId;
   };
 
   return {

@@ -9,14 +9,14 @@ const initialState = {
   archivedTasks: null,
   archiveLoading: false,
   archiveSearchValue: "",
-  archiveFilteredPipelineId: null,
+  archiveFilteredPipelineId: "",
 };
 
 type State = {
   archivedTasks: ArchivedTask[] | null;
   archiveLoading: boolean;
   archiveSearchValue: string;
-  archiveFilteredPipelineId: string | null;
+  archiveFilteredPipelineId: string;
 };
 
 type Action = {

@@ -1,5 +1,5 @@
 import { Archive } from "../components/Archive/Archive";
-import { Page } from "../components/Page/Page";
+import { Page } from "./Page/Page";
 import { ArchiveContextProvider } from "../providers/ArchiveContextProvider";
 
 function ArchivePage() {
