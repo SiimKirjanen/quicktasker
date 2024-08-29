@@ -1,8 +1,14 @@
+import { UserModal } from "../components/Modal/UserModal/UserModal";
+import { UserList } from "../components/User/UserList/UserList";
+import { Page } from "./Page/Page";
+
 function UsersPage() {
   return (
-    <div>
-      <h1>Users</h1>
-    </div>
+    <Page>
+      <div>User page</div>
+      <UserList />
+      <UserModal />
+    </Page>
   );
 }
 

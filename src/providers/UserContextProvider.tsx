@@ -1,11 +1,16 @@
-import { createContext, useReducer } from "@wordpress/element";
+import { createContext, useEffect, useReducer } from "@wordpress/element";
+import { User } from "../types/user";
+import { reducer } from "../reducers/user-reducer";
+import { SET_USERS } from "../constants";
 
 const initialState = {
   loading: true,
+  users: [],
 };
 
 type State = {
   loading: boolean;
+  users: User[];
 };
 
 type Action = {
@@ -17,30 +22,28 @@ type Dispatch = (action: Action) => void;
 
 type UserContextType = {
   state: State;
-  dispatch: Dispatch;
-};
-
-const reducer = (state: State, action: Action) => {
-  switch (action.type) {
-    // Add your different action types and corresponding logic here
-    default:
-      return state;
-  }
+  userDispatch: Dispatch;
 };
 
 const UserContext = createContext<UserContextType>({
   state: initialState,
-  dispatch: () => {},
+  userDispatch: () => {},
 });
 
 const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, userDispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const initialUsers = window.wpqt.initialUsers;
+
+    userDispatch({ type: SET_USERS, payload: initialUsers });
+  }, []);
 
   return (
-    <UserContext.Provider value={{ state, dispatch }}>
+    <UserContext.Provider value={{ state, userDispatch }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-export { UserContextProvider, UserContext };
+export { UserContextProvider, UserContext, type State, type Action };

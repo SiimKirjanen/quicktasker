@@ -9,7 +9,7 @@ import {
 import { StageModalContent } from "./StageModalContent";
 import { createNewStageRequest, editStageRequest } from "../../../api/api";
 import { Stage } from "../../../types/stage";
-import { useModal } from "../useModal";
+import { DispatchType, useModal } from "../useModal";
 
 function StageModal() {
   const {
@@ -33,10 +33,14 @@ function StageModal() {
         stageDescription,
       );
 
-      handleSuccess(PIPELINE_ADD_STAGE, {
-        ...response.data,
-        tasks: [],
-      });
+      handleSuccess(
+        PIPELINE_ADD_STAGE,
+        {
+          ...response.data,
+          tasks: [],
+        },
+        DispatchType.ACTIVE_PIPELINE,
+      );
     } catch (error) {
       handleError(error);
     }
@@ -47,7 +51,11 @@ function StageModal() {
       setModalSaving(true);
       const response = await editStageRequest(stage);
 
-      handleSuccess(PIPELINE_EDIT_STAGE, response.data);
+      handleSuccess(
+        PIPELINE_EDIT_STAGE,
+        response.data,
+        DispatchType.ACTIVE_PIPELINE,
+      );
     } catch (error) {
       handleError(error);
     }

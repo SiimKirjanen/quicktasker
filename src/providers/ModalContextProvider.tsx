@@ -3,6 +3,7 @@ import { reducer } from "../reducers/modal-reducer";
 import { ArchivedTask, Task } from "../types/task";
 import { Stage } from "../types/stage";
 import { Pipeline } from "../types/pipeline";
+import { User } from "../types/user";
 
 const initialState = {
   taskModalOpen: false,
@@ -15,6 +16,8 @@ const initialState = {
   pipelineToEdit: null,
   archiveTaskModalOpen: false,
   archiveModalTask: null,
+  userModalOpen: false,
+  userToEdit: null,
 };
 
 type State = {
@@ -28,6 +31,8 @@ type State = {
   pipelineToEdit: Pipeline | null;
   archiveTaskModalOpen: boolean;
   archiveModalTask: ArchivedTask | null;
+  userModalOpen: boolean;
+  userToEdit: User | null;
 };
 
 type Action = {

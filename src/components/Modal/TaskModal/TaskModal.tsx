@@ -8,7 +8,7 @@ import {
 import { createTaskRequest, editTaskRequest } from "../../../api/api";
 import { TaskModalContent } from "./TaskModalContent";
 import { WPQTModal } from "../WPQTModal";
-import { useModal } from "../useModal";
+import { DispatchType, useModal } from "../useModal";
 import { Task } from "../../../types/task";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
@@ -38,7 +38,11 @@ function TaskModal() {
         taskName,
         taskDescription,
       );
-      handleSuccess(PIPELINE_ADD_TASK, response.data);
+      handleSuccess(
+        PIPELINE_ADD_TASK,
+        response.data,
+        DispatchType.ACTIVE_PIPELINE,
+      );
     } catch (error) {
       handleError(error);
     }
@@ -49,7 +53,11 @@ function TaskModal() {
       setModalSaving(true);
       const response = await editTaskRequest(task);
 
-      handleSuccess(PIPELINE_EDIT_TASK, response.data);
+      handleSuccess(
+        PIPELINE_EDIT_TASK,
+        response.data,
+        DispatchType.ACTIVE_PIPELINE,
+      );
     } catch (error) {
       handleError(error);
     }

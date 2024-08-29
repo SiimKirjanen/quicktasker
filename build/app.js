@@ -7709,6 +7709,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
 /* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
+/* harmony export */   createUserRequest: () => (/* binding */ createUserRequest),
 /* harmony export */   deleteStageRequest: () => (/* binding */ deleteStageRequest),
 /* harmony export */   deleteTaskRequest: () => (/* binding */ deleteTaskRequest),
 /* harmony export */   editPipelineRequest: () => (/* binding */ editPipelineRequest),
@@ -7919,6 +7920,22 @@ function archiveStageTasksRequest(stageId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/stages/${stageId}/archive-tasks`,
     method: "PATCH",
+    headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  User requests
+  ==================================================================================================================================================================================================================
+*/
+function createUserRequest(name, description) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/users`,
+    method: "POST",
+    data: {
+      name,
+      description
+    },
     headers: getCommonHeaders()
   });
 }
@@ -8946,7 +8963,7 @@ function PipelineModal() {
     try {
       setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.createPipelineRequest)(pipelineName, pipelineDescription);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_PIPELINE, response.data, true);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_PIPELINE, response.data, _useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.ACTIVE_PIPELINE);
     } catch (error) {
       handleError(error);
     }
@@ -8955,7 +8972,7 @@ function PipelineModal() {
     try {
       setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.editPipelineRequest)(pipeline);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_EDIT_PIPELINE, response.data);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_EDIT_PIPELINE, response.data, _useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.ACTIVE_PIPELINE);
     } catch (error) {
       handleError(error);
     }
@@ -9157,7 +9174,7 @@ function StageModal() {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.createNewStageRequest)(targetPipelineId, stageName, stageDescription);
       handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_ADD_STAGE, Object.assign(Object.assign({}, response.data), {
         tasks: []
-      }));
+      }), _useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.ACTIVE_PIPELINE);
     } catch (error) {
       handleError(error);
     }
@@ -9166,7 +9183,7 @@ function StageModal() {
     try {
       setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.editStageRequest)(stage);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_EDIT_STAGE, response.data);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_EDIT_STAGE, response.data, _useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.ACTIVE_PIPELINE);
     } catch (error) {
       handleError(error);
     }
@@ -9372,7 +9389,7 @@ function TaskModal() {
     try {
       setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(targetStageId, activePipeline.id, taskName, taskDescription);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, response.data);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, response.data, _useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.ACTIVE_PIPELINE);
     } catch (error) {
       handleError(error);
     }
@@ -9381,7 +9398,7 @@ function TaskModal() {
     try {
       setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.editTaskRequest)(task);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK, response.data);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK, response.data, _useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.ACTIVE_PIPELINE);
     } catch (error) {
       handleError(error);
     }
@@ -9510,6 +9527,204 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
 
 /***/ }),
 
+/***/ "./src/components/Modal/UserModal/UserModal.tsx":
+/*!******************************************************!*\
+  !*** ./src/components/Modal/UserModal/UserModal.tsx ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserModal: () => (/* binding */ UserModal)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _useModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../useModal */ "./src/components/Modal/useModal.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _UserModalContent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UserModalContent */ "./src/components/Modal/UserModal/UserModalContent.tsx");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+function UserModal() {
+  const {
+    state: {
+      userModalOpen
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
+  const {
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError
+  } = (0,_useModal__WEBPACK_IMPORTED_MODULE_4__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_5__.CLOSE_USER_MODAL);
+  const createUser = (userName, userDescription) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      setModalSaving(true);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_7__.createUserRequest)(userName, userDescription);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.ADD_USER, response.data, _useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.USER);
+    } catch (error) {
+      handleError(error);
+    }
+  });
+  const editUser = user => __awaiter(this, void 0, void 0, function* () {});
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModal, {
+    modalOpen: userModalOpen,
+    closeModal: closeModal,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserModalContent__WEBPACK_IMPORTED_MODULE_6__.UserModalContent, {
+      ref: modalContentRef,
+      modalSaving: modalSaving,
+      createUser: createUser,
+      editUser: editUser
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Modal/UserModal/UserModalContent.tsx":
+/*!*************************************************************!*\
+  !*** ./src/components/Modal/UserModal/UserModalContent.tsx ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserModalContent: () => (/* binding */ UserModalContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/fieldset/fieldset.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/field/field.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+
+
+
+
+
+
+const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.forwardRef)(function UserModalContent({
+  createUser,
+  editUser,
+  modalSaving
+}, ref) {
+  const {
+    state: {
+      userToEdit
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__.ModalContext);
+  const [userName, setUserName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useState)("");
+  const [userDescription, setUserDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useState)("");
+  const editingUser = !!userToEdit;
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
+    if (userToEdit) {
+      setUserName(userToEdit.name);
+      setUserDescription(userToEdit.description);
+    }
+  }, [userToEdit]);
+  const saveUser = () => {
+    editingUser ? editUser(Object.assign(Object.assign({}, userToEdit), {
+      name: userName,
+      description: userDescription
+    })) : createUser(userName, userDescription);
+  };
+  const clearContent = () => {
+    setUserName("");
+    setUserDescription("");
+  };
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useImperativeHandle)(ref, () => ({
+    clearContent
+  }));
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_1__.WPQTModalTitle, {
+      children: "User modal"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Fieldset, {
+      className: "wpqt-mb-3",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Field, {
+        className: "wpqt-mb-3",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Label, {
+          className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
+          children: "Name"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Input, {
+          autoFocus: true,
+          className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
+          value: userName,
+          onChange: e => setUserName(e.target.value)
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Field, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_7__.Label, {
+          className: "wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium",
+          children: "Description"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_9__.Textarea, {
+          className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__.clsx)("wpqt-border-1 wpqt-block wpqt-w-full wpqt-resize-none wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
+          rows: 3,
+          value: userDescription,
+          onChange: e => setUserDescription(e.target.value)
+        })]
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_10__.Button, {
+        className: "wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white",
+        onClick: saveUser,
+        children: modalSaving ? "Saving..." : editingUser ? "Edit user" : "Add user"
+      })
+    })]
+  });
+});
+
+
+/***/ }),
+
 /***/ "./src/components/Modal/WPQTModal.tsx":
 /*!********************************************!*\
   !*** ./src/components/Modal/WPQTModal.tsx ***!
@@ -9582,6 +9797,7 @@ function WPQTModalTitle({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DispatchType: () => (/* binding */ DispatchType),
 /* harmony export */   useModal: () => (/* binding */ useModal)
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
@@ -9589,10 +9805,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
 /* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
+/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
 
 
 
 
+
+const DispatchType = {
+  ACTIVE_PIPELINE: "ACTIVE_PIPELINE",
+  PIPELINES: "PIPELINES",
+  USER: "USER"
+};
 const useModal = closeActionType => {
   const [modalSaving, setModalSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const modalContentRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -9600,11 +9823,14 @@ const useModal = closeActionType => {
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_1__.ModalContext);
   const {
-    dispatch
+    dispatch: activePipelineDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__.ActivePipelineContext);
   const {
     pipelinesDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_3__.PipelinesContext);
+  const {
+    userDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserContext);
   const closeModal = () => {
     modalDispatch({
       type: closeActionType
@@ -9616,8 +9842,28 @@ const useModal = closeActionType => {
       modalContentRef.current.clearContent();
     }
   };
-  const handleSuccess = (type, payload, usePipelinesDispatch = false) => {
-    const dispatchFunction = usePipelinesDispatch ? pipelinesDispatch : dispatch;
+  const handleSuccess = (type, payload, dispatchType) => {
+    let dispatchFunction;
+    switch (dispatchType) {
+      case DispatchType.PIPELINES:
+        {
+          dispatchFunction = pipelinesDispatch;
+          break;
+        }
+      case DispatchType.ACTIVE_PIPELINE:
+        {
+          dispatchFunction = activePipelineDispatch;
+          break;
+        }
+      case DispatchType.USER:
+        {
+          dispatchFunction = userDispatch;
+          break;
+        }
+      default:
+        dispatchFunction = activePipelineDispatch;
+        break;
+    }
     setModalSaving(false);
     dispatchFunction({
       type,
@@ -9638,6 +9884,7 @@ const useModal = closeActionType => {
     handleError
   };
 };
+
 
 /***/ }),
 
@@ -10480,6 +10727,66 @@ function WPQTTabPanel({
 
 /***/ }),
 
+/***/ "./src/components/User/UserList/UserList.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/User/UserList/UserList.tsx ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserList: () => (/* binding */ UserList)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+
+
+
+
+
+function UserList() {
+  const {
+    state: {
+      users
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserContext);
+  const {
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
+  const openCreateUserModal = () => {
+    modalDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_4__.OPEN_NEW_USER_MODAL
+    });
+  };
+  if (!users.length) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: ["No users found ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+        onClick: openCreateUserModal,
+        children: "Add"
+      })]
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [users.map(user => {
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        children: user.name
+      }, user.id);
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+      onClick: openCreateUserModal,
+      children: "Add"
+    })]
+  });
+}
+
+
+/***/ }),
+
 /***/ "./src/constants.ts":
 /*!**************************!*\
   !*** ./src/constants.ts ***!
@@ -10489,18 +10796,21 @@ function WPQTTabPanel({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
 /* harmony export */   CLOSE_ARCHIVE_TASK_MODAL: () => (/* binding */ CLOSE_ARCHIVE_TASK_MODAL),
 /* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
 /* harmony export */   CLOSE_NEW_TASK_MODAL: () => (/* binding */ CLOSE_NEW_TASK_MODAL),
 /* harmony export */   CLOSE_PIPELINE_MODAL: () => (/* binding */ CLOSE_PIPELINE_MODAL),
 /* harmony export */   CLOSE_STAGE_MODAL: () => (/* binding */ CLOSE_STAGE_MODAL),
 /* harmony export */   CLOSE_TASK_MODAL: () => (/* binding */ CLOSE_TASK_MODAL),
+/* harmony export */   CLOSE_USER_MODAL: () => (/* binding */ CLOSE_USER_MODAL),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
 /* harmony export */   OPEN_NEW_PIPELINE_MODAL: () => (/* binding */ OPEN_NEW_PIPELINE_MODAL),
 /* harmony export */   OPEN_NEW_STAGE_MODAL: () => (/* binding */ OPEN_NEW_STAGE_MODAL),
 /* harmony export */   OPEN_NEW_TASK_MODAL: () => (/* binding */ OPEN_NEW_TASK_MODAL),
+/* harmony export */   OPEN_NEW_USER_MODAL: () => (/* binding */ OPEN_NEW_USER_MODAL),
 /* harmony export */   OPEN_STAGE_EDIT_MODAL: () => (/* binding */ OPEN_STAGE_EDIT_MODAL),
 /* harmony export */   PIPELINES_SET: () => (/* binding */ PIPELINES_SET),
 /* harmony export */   PIPELINE_ADD_EXISTING_PIPELINE: () => (/* binding */ PIPELINE_ADD_EXISTING_PIPELINE),
@@ -10521,7 +10831,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_SET_PRIMARY2: () => (/* binding */ PIPELINE_SET_PRIMARY2),
 /* harmony export */   SET_ARCHIVE_FILTERED_PIPELINE: () => (/* binding */ SET_ARCHIVE_FILTERED_PIPELINE),
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
-/* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS)
+/* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
+/* harmony export */   SET_USERS: () => (/* binding */ SET_USERS)
 /* harmony export */ });
 //Pipeline nad pipelines reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
@@ -10553,12 +10864,17 @@ const OPEN_STAGE_EDIT_MODAL = "OPEN_STAGE_EDIT_MODAL";
 const OPEN_NEW_PIPELINE_MODAL = "OPEN_NEW_PIPELINE_MODAL";
 const OPEN_EDIT_PIPELINE_MODAL = "OPEN_EDIT_PIPELINE_MODAL";
 const CLOSE_PIPELINE_MODAL = "CLOSE_PIPELINE_EDIT_MODAL";
+const CLOSE_USER_MODAL = "CLOSE_USER_MODAL";
+const OPEN_NEW_USER_MODAL = "OPEN_NEW_USER_MODAL";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";
 const CLOSE_ARCHIVE_TASK_MODAL = "CLOSE_ARCHIVE_TASK_MODAL";
 const SET_ARCHIVE_SEARCH_VALUE = "SET_ARCHIVE_SEARCH_VALUE";
 const SET_ARCHIVE_FILTERED_PIPELINE = "SET_ARCHIVE_FILTERED_PIPELINE";
+//User reducer constants
+const SET_USERS = "SET_USERS";
+const ADD_USER = "ADD_USER";
 
 
 /***/ }),
@@ -10826,12 +11142,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_Modal_UserModal_UserModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Modal/UserModal/UserModal */ "./src/components/Modal/UserModal/UserModal.tsx");
+/* harmony import */ var _components_User_UserList_UserList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/User/UserList/UserList */ "./src/components/User/UserList/UserList.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Page/Page */ "./src/pages/Page/Page.tsx");
+
+
+
 
 function UsersPage() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-      children: "Users"
-    })
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_3__.Page, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: "User page"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_User_UserList_UserList__WEBPACK_IMPORTED_MODULE_2__.UserList, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_UserModal_UserModal__WEBPACK_IMPORTED_MODULE_1__.UserModal, {})]
   });
 }
 
@@ -11124,7 +11446,9 @@ const initialState = {
   pipelineModalOpen: false,
   pipelineToEdit: null,
   archiveTaskModalOpen: false,
-  archiveModalTask: null
+  archiveModalTask: null,
+  userModalOpen: false,
+  userToEdit: null
 };
 const ModalContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -11214,30 +11538,35 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _reducers_user_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/user-reducer */ "./src/reducers/user-reducer.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+
+
 
 
 const initialState = {
-  loading: true
-};
-const reducer = (state, action) => {
-  switch (action.type) {
-    // Add your different action types and corresponding logic here
-    default:
-      return state;
-  }
+  loading: true,
+  users: []
 };
 const UserContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
-  dispatch: () => {}
+  userDispatch: () => {}
 });
 const UserContextProvider = ({
   children
 }) => {
-  const [state, dispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(reducer, initialState);
+  const [state, userDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_user_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const initialUsers = window.wpqt.initialUsers;
+    userDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_USERS,
+      payload: initialUsers
+    });
+  }, []);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserContext.Provider, {
     value: {
       state,
-      dispatch
+      userDispatch
     },
     children: children
   });
@@ -11392,6 +11721,17 @@ const reducer = (state, action) => {
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_ARCHIVE_TASK_MODAL:
+      {
+        return closeModal();
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_USER_MODAL:
+      {
+        console.log("OPEN_NEW_USER_MODAL");
+        return Object.assign(Object.assign({}, state), {
+          userModalOpen: true
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_USER_MODAL:
       {
         return closeModal();
       }
@@ -11624,6 +11964,43 @@ const reducer = (state, action) => {
         const pipeline = action.payload;
         return Object.assign(Object.assign({}, state), {
           pipelines: state.pipelines.map(p => p.id === pipeline.id ? pipeline : p)
+        });
+      }
+    default:
+      return state;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./src/reducers/user-reducer.ts":
+/*!**************************************!*\
+  !*** ./src/reducers/user-reducer.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reducer: () => (/* binding */ reducer)
+/* harmony export */ });
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USERS:
+      {
+        const users = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          users
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_USER:
+      {
+        const user = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          users: [...state.users, user]
         });
       }
     default:

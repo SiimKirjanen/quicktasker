@@ -2,6 +2,8 @@
 use WPQT\Response\ApiResponse;
 use WPQT\Log\LogRepository;
 use WPQT\Comment\CommentRepository;
+use WPQT\User\UserRepositry;
+use WPQT\User\UserService;
 
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
@@ -527,8 +529,15 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
-                WPQTverifyApiNonce($data);
-                return ['s'];
+                try {
+                    WPQTverifyApiNonce($data);
+                    $userRepo = new UserRepository();
+                    $users = $userRepo->getUsers();
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $users))->toArray(), 200);
+                }catch(Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
             },
             'permission_callback' => function() {
                 return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
@@ -544,6 +553,31 @@ function wpqt_register_api_routes() {
             'callback' => function( $data ) {
                 WPQTverifyApiNonce($data);
                 return ['s'];
+            },
+            'permission_callback' => function() {
+                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+            }
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'users',
+        array(
+            'methods' => 'POST',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $userService = new UserService();
+                    $user = $userService->createUser(array(
+                        "name" => $data['name'],
+                        "description" => $data['description'],
+                    ));
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
+                }catch(Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
             },
             'permission_callback' => function() {
                 return PermissionRepository::hasRequiredPermissionsForPrivateAPI();

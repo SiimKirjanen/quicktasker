@@ -10,6 +10,8 @@ import {
   OPEN_EDIT_PIPELINE_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
   CLOSE_ARCHIVE_TASK_MODAL,
+  CLOSE_USER_MODAL,
+  OPEN_NEW_USER_MODAL,
 } from "../constants";
 import { Action, State, initialState } from "../providers/ModalContextProvider";
 import { Pipeline } from "../types/pipeline";
@@ -97,6 +99,16 @@ const reducer = (state: State, action: Action) => {
       };
     }
     case CLOSE_ARCHIVE_TASK_MODAL: {
+      return closeModal();
+    }
+    case OPEN_NEW_USER_MODAL: {
+      console.log("OPEN_NEW_USER_MODAL");
+      return {
+        ...state,
+        userModalOpen: true,
+      };
+    }
+    case CLOSE_USER_MODAL: {
       return closeModal();
     }
     default:

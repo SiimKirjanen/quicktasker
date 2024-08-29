@@ -1,5 +1,7 @@
 <?php
 
+namespace WPQT\User;
+
 class UserRepository {
 
     /**
@@ -10,10 +12,9 @@ class UserRepository {
     public function getUsers() {
         global $wpdb;
 
-        return $wpdb->get_results( $wpdb->prepare(
-            "SELECT * FROM %s",
-            TABLE_WP_QUICK_TASKS_USERS
-        ) );
+        return $wpdb->get_results(
+            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USERS
+        );
     }
 
     /**
@@ -25,11 +26,11 @@ class UserRepository {
     public function getUserById($id) {
         global $wpdb;
 
-        return $wpdb->get_row( $wpdb->prepare(
-            "SELECT * FROM %s
-            WHERE id = %d",
-            TABLE_WP_QUICK_TASKS_USERS,
-            $id
-        ) );
+        return $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USERS . " WHERE id = %d",
+                $id
+            )
+        );
     }
 }

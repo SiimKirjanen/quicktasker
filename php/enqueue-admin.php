@@ -1,7 +1,9 @@
 <?php
+use WPQT\User\UserRepository;
 
 add_action( 'admin_enqueue_scripts', 'wpqt_enqueue_app_assets' );
 function wpqt_enqueue_app_assets(){
+
 	$page = get_current_screen();
 
 	$locationService = new LocationService();
@@ -10,8 +12,11 @@ function wpqt_enqueue_app_assets(){
 	}
 
 	$pipelineRepo = new PipelineRepository();
+	$userRepo = new UserRepository();
+
 	$activePipeline = $pipelineRepo->getActivePipeline();
 	$pipelines = $pipelineRepo->getPipelines();
+	$users = $userRepo->getUsers();
 
 	$build_asset = require(WP_QUICK_TASKS_PLUGIN_FOLDER_DIR . '/build/app.asset.php');
 	$dependencies = array_merge(array('wp-element', 'wp-api-fetch'), $build_asset['dependencies']);
@@ -25,5 +30,6 @@ function wpqt_enqueue_app_assets(){
 		'pluginURL' => WP_QUICK_TASKS_PLUGIN_FOLDER_URL,
 		'initialActivePipelineId' => $activePipeline->id,
 		'initialPipelines' => $pipelines,
+		'initialUsers' => $users,
 	));
 }

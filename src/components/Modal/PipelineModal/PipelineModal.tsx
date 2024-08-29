@@ -9,7 +9,7 @@ import {
 } from "../../../constants";
 import { createPipelineRequest, editPipelineRequest } from "../../../api/api";
 import { Pipeline } from "../../../types/pipeline";
-import { useModal } from "../useModal";
+import { DispatchType, useModal } from "../useModal";
 
 function PipelineModal() {
   const {
@@ -35,7 +35,11 @@ function PipelineModal() {
         pipelineDescription,
       );
 
-      handleSuccess(PIPELINE_ADD_PIPELINE, response.data, true);
+      handleSuccess(
+        PIPELINE_ADD_PIPELINE,
+        response.data,
+        DispatchType.ACTIVE_PIPELINE,
+      );
     } catch (error) {
       handleError(error);
     }
@@ -46,7 +50,11 @@ function PipelineModal() {
       setModalSaving(true);
       const response = await editPipelineRequest(pipeline);
 
-      handleSuccess(PIPELINE_EDIT_PIPELINE, response.data);
+      handleSuccess(
+        PIPELINE_EDIT_PIPELINE,
+        response.data,
+        DispatchType.ACTIVE_PIPELINE,
+      );
     } catch (error) {
       handleError(error);
     }
