@@ -1,7 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { WPQTModal } from "../WPQTModal";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { DispatchType, useModal } from "../useModal";
+import { DispatchType, useModal } from "../../../hooks/useModal";
 import { ADD_USER, CLOSE_USER_MODAL } from "../../../constants";
 import { UserModalContent } from "./UserModalContent";
 import { createUserRequest } from "../../../api/api";

@@ -9,7 +9,7 @@ import {
 import { StageModalContent } from "./StageModalContent";
 import { createNewStageRequest, editStageRequest } from "../../../api/api";
 import { Stage } from "../../../types/stage";
-import { DispatchType, useModal } from "../useModal";
+import { DispatchType, useModal } from "../../../hooks/useModal";
 
 function StageModal() {
   const {

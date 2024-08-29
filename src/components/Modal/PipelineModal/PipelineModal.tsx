@@ -9,7 +9,7 @@ import {
 } from "../../../constants";
 import { createPipelineRequest, editPipelineRequest } from "../../../api/api";
 import { Pipeline } from "../../../types/pipeline";
-import { DispatchType, useModal } from "../useModal";
+import { DispatchType, useModal } from "../../../hooks/useModal";
 
 function PipelineModal() {
   const {

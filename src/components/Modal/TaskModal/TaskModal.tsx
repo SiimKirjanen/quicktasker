@@ -8,7 +8,7 @@ import {
 import { createTaskRequest, editTaskRequest } from "../../../api/api";
 import { TaskModalContent } from "./TaskModalContent";
 import { WPQTModal } from "../WPQTModal";
-import { DispatchType, useModal } from "../useModal";
+import { DispatchType, useModal } from "../../../hooks/useModal";
 import { Task } from "../../../types/task";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 

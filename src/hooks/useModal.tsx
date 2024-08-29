@@ -1,8 +1,8 @@
 import { useContext, useRef, useState } from "@wordpress/element";
-import { ModalContext } from "../../providers/ModalContextProvider";
-import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
-import { PipelinesContext } from "../../providers/PipelinesContextProvider";
-import { UserContext } from "../../providers/UserContextProvider";
+import { ModalContext } from "../providers/ModalContextProvider";
+import { ActivePipelineContext } from "../providers/ActivePipelineContextProvider";
+import { PipelinesContext } from "../providers/PipelinesContextProvider";
+import { UserContext } from "../providers/UserContextProvider";
 
 const DispatchType = {
   ACTIVE_PIPELINE: "ACTIVE_PIPELINE",
