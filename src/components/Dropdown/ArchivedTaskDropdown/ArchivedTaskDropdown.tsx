@@ -1,16 +1,17 @@
-import { EllipsisHorizontalIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { WPQTDropdown, WPQTDropdownItem } from "../WPQTDropdown";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+  WPQTDropdown,
+  WPQTDropdownIcon,
+  WPQTDropdownItem,
+} from "../WPQTDropdown";
 
 function ArchivedTaskDropdown() {
   return (
-    <WPQTDropdown
-      menuBtn={
-        <EllipsisHorizontalIcon className="wpqt-size-6 wpqt-text-gray-400 hover:wpqt-text-qtBlueHover" />
-      }
-    >
+    <WPQTDropdown menuBtn={<WPQTDropdownIcon />}>
       <WPQTDropdownItem
-        text="Delete archive item"
-        icon={<TrashIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        text="Delete"
+        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+        className="!wpqt-mb-0"
       />
     </WPQTDropdown>
   );

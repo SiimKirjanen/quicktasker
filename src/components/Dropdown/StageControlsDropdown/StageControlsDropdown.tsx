@@ -10,7 +10,15 @@ import {
   PIPELINE_DELETE_STAGE,
   PIPELINE_MOVE_STAGE,
 } from "../../../constants";
-import { Cog8ToothIcon, ArchiveBoxIcon } from "@heroicons/react/24/solid";
+import {
+  Cog8ToothIcon,
+  ArchiveBoxIcon,
+  ArrowLeftCircleIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage, StageChangeDirection } from "../../../types/stage";
@@ -89,7 +97,7 @@ function StageControlsDropdown({ stage }: Props) {
       {showMoveLeft && (
         <WPQTDropdownItem
           text="Move left"
-          icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+          icon={<ChevronLeftIcon className="wpqt-icon-blue wpqt-size-4" />}
           onClick={() => moveStage("left")}
         />
       )}
@@ -97,25 +105,26 @@ function StageControlsDropdown({ stage }: Props) {
       {showMoveRight && (
         <WPQTDropdownItem
           text="Move right"
-          icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+          icon={<ChevronRightIcon className="wpqt-icon-blue wpqt-size-4" />}
           onClick={() => moveStage("right")}
         />
       )}
       <WPQTDropdownItem
         text="Edit stage"
-        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openStageEditModal}
       />
       <WPQTDropdownItem
         text="Archive all stage tasks"
-        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={archiveAllStageTasks}
       />
 
       <WPQTDropdownItem
         text="Delete stage"
-        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
         onClick={deleteStage}
+        className="!wpqt-mb-0"
       />
     </WPQTDropdown>
   );

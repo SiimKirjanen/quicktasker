@@ -882,6 +882,10 @@
   margin-right: 0.75rem;
 }
 
+.wpqt-mb-0 {
+  margin-bottom: 0px;
+}
+
 .wpqt-mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -914,8 +918,8 @@
   margin-top: 1rem;
 }
 
-.wpqt-mt-5 {
-  margin-top: 1.25rem;
+.\!wpqt-mb-0 {
+  margin-bottom: 0px !important;
 }
 
 .wpqt-block {
@@ -1007,10 +1011,6 @@
 
 .wpqt-flex-grow-0 {
   flex-grow: 0;
-}
-
-.wpqt-basis-\[200px\] {
-  flex-basis: 200px;
 }
 
 .wpqt-origin-top {
@@ -1194,10 +1194,6 @@
   padding-right: 1rem;
 }
 
-.wpqt-pr-6 {
-  padding-right: 1.5rem;
-}
-
 .wpqt-pr-\[24px\] {
   padding-right: 24px;
 }
@@ -1275,6 +1271,11 @@
   color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
+.wpqt-text-blue-700 {
+  --tw-text-opacity: 1;
+  color: rgb(29 78 216 / var(--tw-text-opacity));
+}
+
 .wpqt-text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
@@ -1285,6 +1286,11 @@
   color: rgb(22 163 74 / var(--tw-text-opacity));
 }
 
+.wpqt-text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity));
+}
+
 .wpqt-text-qtBorder {
   --tw-text-opacity: 1;
   color: rgb(208 215 222 / var(--tw-text-opacity));
@@ -1293,6 +1299,11 @@
 .wpqt-text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
+}
+
+.wpqt-text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
 .wpqt-text-white {
@@ -1355,6 +1366,21 @@
   border-color: rgb(208 215 222 / var(--tw-border-opacity));
 }
 
+.wpqt-icon-red {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
+}
+
+.wpqt-icon-green {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity));
+}
+
+.wpqt-icon-blue {
+  --tw-text-opacity: 1;
+  color: rgb(29 78 216 / var(--tw-text-opacity));
+}
+
 /* Start of WordPress style overrides */
 
 .wpqt-admin-page #wpfooter {
@@ -1386,6 +1412,10 @@
 .hover\:wpqt-text-qtBlueHover:hover {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
+.hover\:wpqt-underline:hover {
+  text-decoration-line: underline;
 }
 
 .focus\:wpqt-outline-none:focus {

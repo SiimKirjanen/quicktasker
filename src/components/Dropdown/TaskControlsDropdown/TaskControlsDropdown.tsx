@@ -4,7 +4,9 @@ import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
 import {
   EllipsisHorizontalIcon,
   ArchiveBoxIcon,
-} from "@heroicons/react/24/solid";
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
@@ -66,18 +68,19 @@ function TaskControlsDropdown({ task }: Props) {
     >
       <WPQTDropdownItem
         text="Archive task"
-        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={archiveTask}
       />
       <WPQTDropdownItem
         text="Edit task"
-        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openTaskEditModal}
       />
       <WPQTDropdownItem
         text="Delete task"
-        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
         onClick={deleteTask}
+        className="!wpqt-mb-0"
       />
     </WPQTDropdown>
   );

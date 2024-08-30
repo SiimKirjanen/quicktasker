@@ -1,4 +1,8 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+  TrashIcon,
+  PencilSquareIcon,
+  RectangleStackIcon,
+} from "@heroicons/react/24/outline";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
@@ -10,15 +14,17 @@ function UserDropdown() {
     <WPQTDropdown menuBtn={<WPQTDropdownIcon />}>
       <WPQTDropdownItem
         text="Edit user"
-        icon={<TrashIcon className="wpqt-size-4 wpqt-text-red-600" />}
-      />
-      <WPQTDropdownItem
-        text="Disable user"
-        icon={<TrashIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
       />
       <WPQTDropdownItem
         text="User tasks"
-        icon={<TrashIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-4" />}
+      />
+
+      <WPQTDropdownItem
+        text="Disable user"
+        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+        className="!wpqt-mb-0"
       />
     </WPQTDropdown>
   );

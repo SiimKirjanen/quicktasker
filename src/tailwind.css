@@ -15,6 +15,15 @@
   .wpqt-main-border {
     @apply wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder;
   }
+  .wpqt-icon-red {
+    @apply wpqt-text-red-700;
+  }
+  .wpqt-icon-green {
+    @apply wpqt-text-green-700;
+  }
+  .wpqt-icon-blue {
+    @apply wpqt-text-blue-700;
+  }
 }
 
 /* Start of WordPress style overrides */
