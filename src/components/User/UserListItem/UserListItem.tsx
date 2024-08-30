@@ -1,5 +1,6 @@
 import { User } from "../../../types/user";
 import { formatDate } from "../../../utils/date";
+import { WPQTCard, WPQTCardDataItem } from "../../Card/Card";
 
 type Props = {
   user: User;
@@ -7,12 +8,12 @@ type Props = {
 
 function UserListItem({ user }: Props) {
   return (
-    <div className="wpqt-rounded wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-3">
-      <div>Name: {user.name}</div>
-      <div>Desscription: {user.description}</div>
-      <div>Creation date: {formatDate(user.created_at)}</div>
-      <div>Controls</div>
-    </div>
+    <WPQTCard title={user.name} description={user.description}>
+      <WPQTCardDataItem
+        label="Created at"
+        value={formatDate(user.created_at)}
+      />
+    </WPQTCard>
   );
 }
 

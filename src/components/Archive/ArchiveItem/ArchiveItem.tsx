@@ -3,6 +3,7 @@ import { ArchivedTask } from "../../../types/task";
 import { ArchivedTaskDropdown } from "../../Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown";
 import { OPEN_ARCHIVE_TASK_MODAL } from "../../../constants";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { WPQTCard, WPQTCardDataItem } from "../../Card/Card";
 
 type Props = {
   task: ArchivedTask;
@@ -16,6 +17,14 @@ function ArchiveItem({ task }: Props) {
   ) => {
     modalDispatch({ type: OPEN_ARCHIVE_TASK_MODAL, payload: task });
   };
+
+  return (
+    <WPQTCard
+      title={task.name}
+      description={task.description}
+      dropdown={<ArchivedTaskDropdown />}
+    ></WPQTCard>
+  );
 
   return (
     <div
