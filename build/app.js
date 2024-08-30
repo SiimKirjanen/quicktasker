@@ -8456,7 +8456,7 @@ function StageControlsDropdown({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__.ModalContext);
   const stagesLength = (_b = (_a = activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.stages) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
   const stageOrder = +stage.stage_order;
-  const showMoveLeft = stageOrder !== 0 && stageOrder < stagesLength;
+  const showMoveLeft = stageOrder > 0 && stageOrder < stagesLength;
   const showMoveRight = stageOrder !== stagesLength - 1;
   const deleteStage = () => __awaiter(this, void 0, void 0, function* () {
     try {
@@ -8480,16 +8480,8 @@ function StageControlsDropdown({
   };
   const moveStage = direction => __awaiter(this, void 0, void 0, function* () {
     try {
-      const resp = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.moveStageRequest)(stage.id, direction);
-      const sourceIndex = stage.stage_order;
-      const destinationIndex = resp.data.stage_order;
-      dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_MOVE_STAGE,
-        payload: {
-          sourceIndex,
-          destinationIndex
-        }
-      });
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.moveStageRequest)(stage.id, direction);
+      fetchAndSetPipelineData(activePipeline.id);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error("Failed to move a stage");
@@ -10749,6 +10741,9 @@ function UserListItem({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Assigned tasks count",
       value: "TODO"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
+      label: "Password set",
+      value: "TODO"
     })]
   });
 }
@@ -10804,7 +10799,7 @@ function UserList() {
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-grid wpqt-grid-cols-2 wpqt-gap-2",
+    className: "wpqt-grid wpqt-grid-cols-3 wpqt-gap-2",
     children: users.map(user => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_5__.UserListItem, {
         user: user
@@ -12027,24 +12022,6 @@ const activePipelineReducer = (state, action) => {
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages: updatedStages
-          })
-        });
-      }
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_MOVE_STAGE:
-      {
-        const {
-          sourceIndex,
-          destinationIndex
-        } = action.payload;
-        if (!state.activePipeline) {
-          return state;
-        }
-        const stages = [...(state.activePipeline.stages || [])];
-        const [removedStage] = stages.splice(sourceIndex, 1);
-        stages.splice(destinationIndex, 0, removedStage);
-        return Object.assign(Object.assign({}, state), {
-          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
-            stages
           })
         });
       }

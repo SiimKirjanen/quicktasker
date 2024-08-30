@@ -124,7 +124,7 @@ class StageService {
         }
         $currentOrder = $stage->stage_order;
 
-        if( $direction === 'left' && $currentOrder === 0 ) {
+        if( $direction === 'left' && $currentOrder <= 0 ) {
             throw new Exception('Stage is already at the beginning');
         }
 

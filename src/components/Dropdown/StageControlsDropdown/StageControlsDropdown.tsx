@@ -8,12 +8,10 @@ import { ActivePipelineContext } from "../../../providers/ActivePipelineContextP
 import {
   OPEN_STAGE_EDIT_MODAL,
   PIPELINE_DELETE_STAGE,
-  PIPELINE_MOVE_STAGE,
 } from "../../../constants";
 import {
   Cog8ToothIcon,
   ArchiveBoxIcon,
-  ArrowLeftCircleIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   PencilSquareIcon,
@@ -37,7 +35,7 @@ function StageControlsDropdown({ stage }: Props) {
   const { modalDispatch } = useContext(ModalContext);
   const stagesLength = activePipeline?.stages?.length ?? 0;
   const stageOrder = +stage.stage_order;
-  const showMoveLeft = stageOrder !== 0 && stageOrder < stagesLength;
+  const showMoveLeft = stageOrder > 0 && stageOrder < stagesLength;
   const showMoveRight = stageOrder !== stagesLength - 1;
 
   const deleteStage = async () => {
@@ -62,17 +60,8 @@ function StageControlsDropdown({ stage }: Props) {
 
   const moveStage = async (direction: StageChangeDirection) => {
     try {
-      const resp = await moveStageRequest(stage.id, direction);
-      const sourceIndex = stage.stage_order;
-      const destinationIndex = resp.data.stage_order;
-
-      dispatch({
-        type: PIPELINE_MOVE_STAGE,
-        payload: {
-          sourceIndex,
-          destinationIndex,
-        },
-      });
+      await moveStageRequest(stage.id, direction);
+      fetchAndSetPipelineData(activePipeline!.id);
     } catch (error) {
       console.error(error);
       toast.error("Failed to move a stage");

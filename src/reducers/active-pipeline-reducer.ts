@@ -180,25 +180,6 @@ const activePipelineReducer = (state: State, action: Action) => {
         },
       };
     }
-    case PIPELINE_MOVE_STAGE: {
-      const { sourceIndex, destinationIndex } = action.payload;
-
-      if (!state.activePipeline) {
-        return state;
-      }
-
-      const stages = [...(state.activePipeline.stages || [])];
-      const [removedStage] = stages.splice(sourceIndex, 1);
-      stages.splice(destinationIndex, 0, removedStage);
-
-      return {
-        ...state,
-        activePipeline: {
-          ...state.activePipeline,
-          stages,
-        },
-      };
-    }
     case PIPELINE_DELETE_STAGE: {
       const deletedStageId = action.payload;
 

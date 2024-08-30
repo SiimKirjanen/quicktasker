@@ -22,6 +22,7 @@ function UserListItem({ user }: Props) {
       <WPQTCardDataItem label="Email" value="TODO" />
       <WPQTCardDataItem label="Phone" value="TODO" />
       <WPQTCardDataItem label="Assigned tasks count" value="TODO" />
+      <WPQTCardDataItem label="Password set" value="TODO" />
     </WPQTCard>
   );
 }

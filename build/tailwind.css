@@ -882,8 +882,8 @@
   margin-right: 0.75rem;
 }
 
-.wpqt-mb-0 {
-  margin-bottom: 0px;
+.\!wpqt-mb-0 {
+  margin-bottom: 0px !important;
 }
 
 .wpqt-mb-1 {
@@ -916,10 +916,6 @@
 
 .wpqt-mt-4 {
   margin-top: 1rem;
-}
-
-.\!wpqt-mb-0 {
-  margin-bottom: 0px !important;
 }
 
 .wpqt-block {
@@ -1029,8 +1025,8 @@
   resize: none;
 }
 
-.wpqt-grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.wpqt-grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .wpqt-grid-cols-4 {
@@ -1271,11 +1267,6 @@
   color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
-.wpqt-text-blue-700 {
-  --tw-text-opacity: 1;
-  color: rgb(29 78 216 / var(--tw-text-opacity));
-}
-
 .wpqt-text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
@@ -1286,29 +1277,19 @@
   color: rgb(22 163 74 / var(--tw-text-opacity));
 }
 
-.wpqt-text-green-700 {
-  --tw-text-opacity: 1;
-  color: rgb(21 128 61 / var(--tw-text-opacity));
-}
-
 .wpqt-text-qtBorder {
   --tw-text-opacity: 1;
   color: rgb(208 215 222 / var(--tw-text-opacity));
 }
 
-.wpqt-text-red-600 {
-  --tw-text-opacity: 1;
-  color: rgb(220 38 38 / var(--tw-text-opacity));
-}
-
-.wpqt-text-red-700 {
-  --tw-text-opacity: 1;
-  color: rgb(185 28 28 / var(--tw-text-opacity));
-}
-
 .wpqt-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.wpqt-text-qtBlueHover {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
 .wpqt-shadow {
