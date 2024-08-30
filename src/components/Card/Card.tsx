@@ -30,7 +30,7 @@ function WPQTCard({
     >
       <div className="wpqt-mb-2">
         <div className="wpqt-text-lg">{title}</div>
-        {description && <div>{description}</div>}
+        {description && <div className="wpqt-italic">{description}</div>}
       </div>
       <div>{children}</div>
       {hasDropdown && (

@@ -1,9 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
-import { MenuItem } from "@headlessui/react";
 import {
-  TrashIcon,
   EllipsisHorizontalIcon,
   ArchiveBoxIcon,
 } from "@heroicons/react/24/solid";
@@ -11,7 +9,7 @@ import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
 import { archiveTaskRequest, deleteTaskRequest } from "../../../api/api";
-import { WPQTDropdown } from "../WPQTDropdown";
+import { WPQTDropdown, WPQTDropdownItem } from "../WPQTDropdown";
 
 type Props = {
   task: Task;
@@ -24,7 +22,7 @@ function TaskControlsDropdown({ task }: Props) {
   } = useContext(ActivePipelineContext);
   const { modalDispatch } = useContext(ModalContext);
 
-  const deleteTask = async (e: React.MouseEvent<HTMLDivElement>) => {
+  const deleteTask = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
     try {
@@ -36,7 +34,7 @@ function TaskControlsDropdown({ task }: Props) {
     }
   };
 
-  const openTaskEditModal = (e: React.MouseEvent<HTMLDivElement>) => {
+  const openTaskEditModal = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     modalDispatch({
@@ -47,7 +45,7 @@ function TaskControlsDropdown({ task }: Props) {
     });
   };
 
-  const archiveTask = async (e: React.MouseEvent<HTMLDivElement>) => {
+  const archiveTask = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
     try {
@@ -66,35 +64,21 @@ function TaskControlsDropdown({ task }: Props) {
         <EllipsisHorizontalIcon className="wpqt-size-6 wpqt-text-gray-400 hover:wpqt-text-qtBlueHover" />
       }
     >
-      <MenuItem>
-        <div
-          className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-          onClick={archiveTask}
-        >
-          <ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />
-          Archive task
-        </div>
-      </MenuItem>
-
-      <MenuItem>
-        <div
-          className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-          onClick={openTaskEditModal}
-        >
-          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-          Edit task
-        </div>
-      </MenuItem>
-
-      <MenuItem>
-        <div
-          className="wpqt-mt-5 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-          onClick={deleteTask}
-        >
-          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-          Delete task
-        </div>
-      </MenuItem>
+      <WPQTDropdownItem
+        text="Archive task"
+        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        onClick={archiveTask}
+      />
+      <WPQTDropdownItem
+        text="Edit task"
+        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        onClick={openTaskEditModal}
+      />
+      <WPQTDropdownItem
+        text="Delete task"
+        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        onClick={deleteTask}
+      />
     </WPQTDropdown>
   );
 }

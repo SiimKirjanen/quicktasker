@@ -1,4 +1,5 @@
-import { Menu, MenuButton, MenuItems } from "@headlessui/react";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { EllipsisHorizontalIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   children: React.ReactNode;
@@ -27,4 +28,29 @@ function WPQTDropdown({ children, menuBtn, menuBtnClasses = "" }: Props) {
   );
 }
 
-export { WPQTDropdown };
+function WPQTDropdownIcon() {
+  return (
+    <EllipsisHorizontalIcon className="wpqt-size-6 wpqt-text-gray-400 hover:wpqt-text-qtBlueHover" />
+  );
+}
+
+type WPQTDropdownItemProps = {
+  text: string;
+  onClick?: (e: React.MouseEvent) => void | Promise<void>;
+  icon: React.ReactNode;
+};
+function WPQTDropdownItem({ text, onClick, icon }: WPQTDropdownItemProps) {
+  return (
+    <MenuItem>
+      <div
+        className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2"
+        onClick={onClick}
+      >
+        {icon}
+        {text}
+      </div>
+    </MenuItem>
+  );
+}
+
+export { WPQTDropdown, WPQTDropdownIcon, WPQTDropdownItem };

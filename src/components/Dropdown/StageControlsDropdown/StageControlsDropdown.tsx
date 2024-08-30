@@ -10,17 +10,11 @@ import {
   PIPELINE_DELETE_STAGE,
   PIPELINE_MOVE_STAGE,
 } from "../../../constants";
-import { MenuItem } from "@headlessui/react";
-import {
-  Cog8ToothIcon,
-  TrashIcon,
-  ArrowLeftIcon,
-  ArrowRightIcon,
-} from "@heroicons/react/24/solid";
+import { Cog8ToothIcon, ArchiveBoxIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage, StageChangeDirection } from "../../../types/stage";
-import { WPQTDropdown } from "../WPQTDropdown";
+import { WPQTDropdown, WPQTDropdownItem } from "../WPQTDropdown";
 
 type Props = {
   stage: Stage;
@@ -93,58 +87,36 @@ function StageControlsDropdown({ stage }: Props) {
       menuBtn={<Cog8ToothIcon className="wpqt-size-5 wpqt-text-gray-400" />}
     >
       {showMoveLeft && (
-        <MenuItem>
-          <div
-            className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-            onClick={() => moveStage("left")}
-          >
-            <ArrowLeftIcon className="wpqt-size-4 wpqt-text-red-600" />
-            Move left
-          </div>
-        </MenuItem>
+        <WPQTDropdownItem
+          text="Move left"
+          icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+          onClick={() => moveStage("left")}
+        />
       )}
 
       {showMoveRight && (
-        <MenuItem>
-          <div
-            className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-            onClick={() => moveStage("right")}
-          >
-            <ArrowRightIcon className="wpqt-size-4 wpqt-text-red-600" />
-            Move right
-          </div>
-        </MenuItem>
+        <WPQTDropdownItem
+          text="Move right"
+          icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+          onClick={() => moveStage("right")}
+        />
       )}
+      <WPQTDropdownItem
+        text="Edit stage"
+        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        onClick={openStageEditModal}
+      />
+      <WPQTDropdownItem
+        text="Archive all stage tasks"
+        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        onClick={archiveAllStageTasks}
+      />
 
-      <MenuItem>
-        <div
-          className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-          onClick={openStageEditModal}
-        >
-          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-          Edit stage
-        </div>
-      </MenuItem>
-
-      <MenuItem>
-        <div
-          className="wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-          onClick={archiveAllStageTasks}
-        >
-          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-          Archive all stage tasks
-        </div>
-      </MenuItem>
-
-      <MenuItem>
-        <div
-          className="wpqt-mt-5 wpqt-flex wpqt-cursor-pointer wpqt-items-center"
-          onClick={deleteStage}
-        >
-          <TrashIcon className="wpqt-size-4 wpqt-text-red-600" />
-          Delete stage
-        </div>
-      </MenuItem>
+      <WPQTDropdownItem
+        text="Delete stage"
+        icon={<ArchiveBoxIcon className="wpqt-size-4 wpqt-text-red-600" />}
+        onClick={deleteStage}
+      />
     </WPQTDropdown>
   );
 }
