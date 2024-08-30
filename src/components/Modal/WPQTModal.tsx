@@ -1,8 +1,12 @@
 import {
+  Button,
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
+  Field,
+  Fieldset,
+  Label,
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -51,4 +55,50 @@ function WPQTModalTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-export { WPQTModal, WPQTModalTitle };
+function WPQTModalFieldSet({ children }: { children: React.ReactNode }) {
+  return <Fieldset className="wpqt-mb-3">{children}</Fieldset>;
+}
+
+function WPQTModalField({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Field className="wpqt-mb-3">
+      <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">
+        {label}
+      </Label>
+      {children}
+    </Field>
+  );
+}
+
+function WPQTModalFooter({
+  onSave,
+  saveBtnText,
+}: {
+  onSave: () => void;
+  saveBtnText: string;
+}) {
+  return (
+    <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
+      <Button
+        className="wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white"
+        onClick={onSave}
+      >
+        {saveBtnText}
+      </Button>
+    </div>
+  );
+}
+
+export {
+  WPQTModal,
+  WPQTModalTitle,
+  WPQTModalFieldSet,
+  WPQTModalField,
+  WPQTModalFooter,
+};
