@@ -2,6 +2,7 @@ type BaseUser = {
   id: string;
   name: string;
   description: string;
+  created_at: string;
 };
 
 type User = BaseUser;

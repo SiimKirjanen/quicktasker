@@ -1,5 +1,5 @@
 function UserFilter() {
-  return <div>User list</div>;
+  return <div>User filtering</div>;
 }
 
 export { UserFilter };

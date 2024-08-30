@@ -1,9 +1,12 @@
+import { WPQTPageHeader } from "../components/common/Header/Header";
+import { Page } from "./Page/Page";
+
 function OverviewPage() {
   return (
-    <div>
-      <h1>Overview</h1>
+    <Page>
+      <WPQTPageHeader>Overview</WPQTPageHeader>
       <p>This is the overview page.</p>
-    </div>
+    </Page>
   );
 }
 

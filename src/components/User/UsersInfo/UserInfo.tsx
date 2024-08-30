@@ -2,9 +2,9 @@ import { useContext } from "@wordpress/element";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_NEW_USER_MODAL } from "../../../constants";
-import { UserListItem } from "../UserListItem/UserListItem";
+import { WPQTButton } from "../../common/Button/Button";
 
-function UserList() {
+function UsersInfo() {
   const {
     state: { users },
   } = useContext(UserContext);
@@ -16,21 +16,11 @@ function UserList() {
     });
   };
 
-  if (!users.length) {
-    return (
-      <div>
-        No users found <button onClick={openCreateUserModal}>Add</button>
-      </div>
-    );
-  }
-
   return (
-    <div className="wpqt-grid wpqt-grid-cols-2 wpqt-gap-2">
-      {users.map((user) => {
-        return <UserListItem key={user.id} user={user} />;
-      })}
+    <div>
+      <WPQTButton onClick={openCreateUserModal} btnText="Add user" />
     </div>
   );
 }
 
-export { UserList };
+export { UsersInfo };

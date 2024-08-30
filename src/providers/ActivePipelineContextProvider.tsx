@@ -1,7 +1,7 @@
 import { createContext, useReducer, useEffect } from "@wordpress/element";
 import { Pipeline } from "../types/pipeline";
 import { PIPELINE_SET_LOADING, PIPELINE_SET_PIPELINE } from "../constants";
-import { pipelineReducer } from "../reducers/pipeline-reducer";
+import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
 import { getPipelineData } from "../api/api";
 import { toast } from "react-toastify";
 
@@ -39,7 +39,7 @@ const ActivePipelineContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [state, dispatch] = useReducer(pipelineReducer, initialState);
+  const [state, dispatch] = useReducer(activePipelineReducer, initialState);
 
   useEffect(() => {
     const initialActivePipelineId = window.wpqt.initialActivePipelineId;

@@ -15,7 +15,7 @@ import { Stage } from "../types/stage";
 import { Task } from "../types/task";
 import { moveTask, reorderTask } from "../utils/task";
 
-const pipelineReducer = (state: State, action: Action) => {
+const activePipelineReducer = (state: State, action: Action) => {
   switch (action.type) {
     case PIPELINE_SET_LOADING:
       return {
@@ -221,4 +221,4 @@ const pipelineReducer = (state: State, action: Action) => {
   }
 };
 
-export { pipelineReducer };
+export { activePipelineReducer };

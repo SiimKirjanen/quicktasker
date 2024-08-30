@@ -15,7 +15,6 @@ function ArchiveItems() {
 
   return (
     <div>
-      <div className="wpqt-text-base">Archive</div>
       <div className="wpqt-flex wpqt-flex-wrap wpqt-gap-2">
         {archivedTasks.filter(filterArchive).map((task) => (
           <ArchiveItem key={task.id} task={task} />

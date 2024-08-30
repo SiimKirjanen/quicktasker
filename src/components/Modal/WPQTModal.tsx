@@ -1,5 +1,4 @@
 import {
-  Button,
   Dialog,
   DialogBackdrop,
   DialogPanel,
@@ -9,6 +8,7 @@ import {
   Label,
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { WPQTButton } from "../common/Button/Button";
 
 type Props = {
   children: React.ReactNode;
@@ -85,12 +85,7 @@ function WPQTModalFooter({
 }) {
   return (
     <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
-      <Button
-        className="wpqt-inline-flex wpqt-items-center wpqt-gap-2 wpqt-rounded-md wpqt-bg-gray-700 wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 wpqt-font-semibold wpqt-text-white wpqt-shadow-inner wpqt-shadow-white/10 focus:wpqt-outline-none data-[hover]:wpqt-bg-gray-600 data-[open]:wpqt-bg-gray-700 data-[focus]:wpqt-outline-1 data-[focus]:wpqt-outline-white"
-        onClick={onSave}
-      >
-        {saveBtnText}
-      </Button>
+      <WPQTButton onClick={onSave} btnText={saveBtnText} />
     </div>
   );
 }
