@@ -3,7 +3,7 @@ import { User } from "../types/user";
 import { reducer } from "../reducers/user-reducer";
 import { SET_USERS } from "../constants";
 
-const initialState = {
+const initialState: State = {
   loading: true,
   users: [],
   usersSearchValue: "",
@@ -33,7 +33,10 @@ const UserContext = createContext<UserContextType>({
 });
 
 const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [state, userDispatch] = useReducer(reducer, initialState);
+  const [state, userDispatch] = useReducer<React.Reducer<State, Action>>(
+    reducer,
+    initialState,
+  );
 
   useEffect(() => {
     const initialUsers = window.wpqt.initialUsers;

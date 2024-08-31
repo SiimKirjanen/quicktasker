@@ -1,5 +1,5 @@
 import { Pipeline } from "./pipeline";
-import { User } from "./user";
+import { ServerUser, User } from "./user";
 
 declare global {
   interface Window {
@@ -7,7 +7,7 @@ declare global {
       initialActivePipelineId: string;
       initialPipelines: Pipeline[];
       apiNonce: string;
-      initialUsers: User[];
+      initialUsers: ServerUser[];
     };
   }
 }

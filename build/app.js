@@ -10872,7 +10872,7 @@ function UserListItem({
       label: "Assigned tasks count",
       value: "TODO"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
-      label: "Password set",
+      label: "Set up completed",
       value: "TODO"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Status",
@@ -12472,25 +12472,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
 
+const transformServerUserToUser = serverUser => Object.assign(Object.assign({}, serverUser), {
+  is_active: serverUser.is_active === "1"
+});
 const reducer = (state, action) => {
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USERS:
       {
-        const users = action.payload;
+        const serverUsers = action.payload;
+        const users = serverUsers.map(transformServerUserToUser);
         return Object.assign(Object.assign({}, state), {
           users
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_USER:
       {
-        const user = action.payload;
+        const serverUser = action.payload;
+        const user = transformServerUserToUser(serverUser);
         return Object.assign(Object.assign({}, state), {
           users: [...state.users, user]
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.EDIT_USER:
       {
-        const editedUser = action.payload;
+        const editedServerUser = action.payload;
+        const editedUser = transformServerUserToUser(editedServerUser);
         const users = state.users.map(user => user.id === editedUser.id ? editedUser : user);
         return Object.assign(Object.assign({}, state), {
           users
