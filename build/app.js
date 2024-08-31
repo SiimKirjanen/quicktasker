@@ -9717,6 +9717,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _UserModalContent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UserModalContent */ "./src/components/Modal/UserModal/UserModalContent.tsx");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9752,6 +9753,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function UserModal() {
   const {
     state: {
@@ -9773,6 +9775,7 @@ function UserModal() {
       handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.ADD_USER, response.data, _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.USER);
     } catch (error) {
       handleError(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_8__.toast.error("User creation failed. Please try again");
     }
   });
   const editUser = user => __awaiter(this, void 0, void 0, function* () {

@@ -3,24 +3,24 @@
 namespace WPQT\User;
 
 use WPQT\User\UserRepository;
+use WPQT\Hash\HashService;
 
 class UserService {
     protected $userRepository;
+    protected $hashService;
 
     public function __construct() {
         $this->userRepository = new UserRepository();
+        $this->hashService = new HashService();
     }
 
+ 
     /**
      * Creates a new user.
      *
      * @param array $args The user data.
-     *   - 'name'        (string) The name of the user.
-     *   - 'description' (string) The description of the user.
-     *
      * @return User The newly created user.
-     *
-     * @throws Exception If failed to create a user.
+     * @throws Exception If failed to create a user or user page.
      */
     public function createUser($args) {
         global $wpdb;
@@ -38,6 +38,19 @@ class UserService {
         }
 
         $newUserId = $wpdb->insert_id;
+        $pageHash = $this->hashService->generateUserPageHash($args['name']);
+
+        $result2 = $wpdb->insert(
+            TABLE_WP_QUICK_TASKS_USER_PAGES,
+            array(
+                'user_id' => $newUserId,
+                'page_hash' => $pageHash,
+            )
+        );
+
+        if (!$result2) {
+            throw new Exception('Failed to create a user page');
+        }
 
         return $this->userRepository->getUserById($newUserId);
     }

@@ -55,7 +55,6 @@ function wpqt_set_up_db() {
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			is_active tinyint(1) DEFAULT 1,
-			user_page_id int(11),
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 	  
@@ -108,6 +107,18 @@ function wpqt_set_up_db() {
 		  ) $charset_collate;";
 
 		  dbDelta( $sql8 ); 
+
+		  $sql9 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USER_PAGES . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+			user_id int(11) NOT NULL,
+			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			page_hash varchar(255) NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY page_hash (page_hash)
+		  ) $charset_collate;";
+
+		  dbDelta( $sql9 ); 
 
 		update_option( "wp_quick_taks_db_current_version", WP_QUICK_TASKS_DB_VERSION );
 	}

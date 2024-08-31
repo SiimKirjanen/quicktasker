@@ -6,6 +6,7 @@ import { ADD_USER, CLOSE_USER_MODAL, EDIT_USER } from "../../../constants";
 import { UserModalContent } from "./UserModalContent";
 import { createUserRequest, editUserRequest } from "../../../api/api";
 import { User } from "../../../types/user";
+import { toast } from "react-toastify";
 
 function UserModal() {
   const {
@@ -27,6 +28,7 @@ function UserModal() {
       handleSuccess(ADD_USER, response.data, DispatchType.USER);
     } catch (error) {
       handleError(error);
+      toast.error("User creation failed. Please try again");
     }
   };
 

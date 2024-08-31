@@ -32,6 +32,7 @@ require( 'php/services/TaskService.php' );
 require( 'php/services/LocationService.php' );
 require( 'php/services/LogService.php' );
 require( 'php/services/UserService.php' );
+require( 'php/services/HashService.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
