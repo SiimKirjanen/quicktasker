@@ -9,8 +9,24 @@ import {
   WPQTDropdownIcon,
   WPQTDropdownItem,
 } from "../WPQTDropdown";
+import { useContext } from "@wordpress/element";
+import { ModalContext } from "../../../providers/ModalContextProvider";
+import { OPEN_EDIT_USER_MODAL } from "../../../constants";
+import { User } from "../../../types/user";
 
-function UserDropdown() {
+type Props = {
+  user: User;
+};
+function UserDropdown({ user }: Props) {
+  const { modalDispatch } = useContext(ModalContext);
+
+  const openEditUserModal = () => {
+    modalDispatch({
+      type: OPEN_EDIT_USER_MODAL,
+      payload: user,
+    });
+  };
+
   return (
     <WPQTDropdown
       menuBtn={({ active }) => (
@@ -23,6 +39,7 @@ function UserDropdown() {
       <WPQTDropdownItem
         text="Edit user"
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
+        onClick={openEditUserModal}
       />
       <WPQTDropdownItem
         text="User tasks"

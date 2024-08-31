@@ -9,7 +9,7 @@ import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 import { LogFromServer } from "../types/log";
 import { WPQTCommentFromServer } from "../types/comment";
-import { ServerUser } from "../types/user";
+import { ServerUser, User } from "../types/user";
 
 function getCommonHeaders() {
   return {
@@ -258,6 +258,15 @@ function createUserRequest(
   });
 }
 
+function editUserRequest(user: User): Promise<WPQTResponse<ServerUser>> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${user.id}`,
+    method: "PATCH",
+    data: { user },
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getPipelineData,
   moveTaskRequest,
@@ -278,4 +287,5 @@ export {
   getTaskLogs,
   getTaskComments,
   createUserRequest,
+  editUserRequest,
 };

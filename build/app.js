@@ -7715,6 +7715,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editPipelineRequest: () => (/* binding */ editPipelineRequest),
 /* harmony export */   editStageRequest: () => (/* binding */ editStageRequest),
 /* harmony export */   editTaskRequest: () => (/* binding */ editTaskRequest),
+/* harmony export */   editUserRequest: () => (/* binding */ editUserRequest),
 /* harmony export */   getArchivedTasksRequest: () => (/* binding */ getArchivedTasksRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
 /* harmony export */   getTaskComments: () => (/* binding */ getTaskComments),
@@ -7935,6 +7936,16 @@ function createUserRequest(name, description) {
     data: {
       name,
       description
+    },
+    headers: getCommonHeaders()
+  });
+}
+function editUserRequest(user) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/users/${user.id}`,
+    method: "PATCH",
+    data: {
+      user
     },
     headers: getCommonHeaders()
   });
@@ -8648,35 +8659,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EllipsisHorizontalIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/RectangleStackIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EllipsisHorizontalIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/RectangleStackIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 
 
 
-function UserDropdown() {
+
+
+
+function UserDropdown({
+  user
+}) {
+  const {
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
+  const openEditUserModal = () => {
+    modalDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_4__.OPEN_EDIT_USER_MODAL,
+      payload: user
+    });
+  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdown, {
     menuBtn: ({
       active
     }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownIcon, {
       isActive: active,
-      IconComponent: _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_2__["default"]
+      IconComponent: _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__["default"]
     }),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
       text: "Edit user",
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
         className: "wpqt-icon-green wpqt-size-4"
-      })
+      }),
+      onClick: openEditUserModal
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
       text: "User tasks",
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
         className: "wpqt-icon-blue wpqt-size-4"
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
       text: "Disable user",
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
         className: "wpqt-icon-red wpqt-size-4"
       }),
       className: "!wpqt-mb-0"
@@ -9745,7 +9775,15 @@ function UserModal() {
       handleError(error);
     }
   });
-  const editUser = user => __awaiter(this, void 0, void 0, function* () {});
+  const editUser = user => __awaiter(this, void 0, void 0, function* () {
+    try {
+      setModalSaving(true);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_7__.editUserRequest)(user);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.EDIT_USER, response.data, _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.USER);
+    } catch (error) {
+      handleError(error);
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModal, {
     modalOpen: userModalOpen,
     closeModal: closeModal,
@@ -10815,7 +10853,9 @@ function UserListItem({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCard, {
     title: user.name,
     description: user.description,
-    dropdown: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserDropdown_UserDropdown__WEBPACK_IMPORTED_MODULE_3__.UserDropdown, {}),
+    dropdown: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserDropdown_UserDropdown__WEBPACK_IMPORTED_MODULE_3__.UserDropdown, {
+      user: user
+    }),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Users page",
       value: "TODO"
@@ -11102,9 +11142,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CLOSE_STAGE_MODAL: () => (/* binding */ CLOSE_STAGE_MODAL),
 /* harmony export */   CLOSE_TASK_MODAL: () => (/* binding */ CLOSE_TASK_MODAL),
 /* harmony export */   CLOSE_USER_MODAL: () => (/* binding */ CLOSE_USER_MODAL),
+/* harmony export */   EDIT_USER: () => (/* binding */ EDIT_USER),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
+/* harmony export */   OPEN_EDIT_USER_MODAL: () => (/* binding */ OPEN_EDIT_USER_MODAL),
 /* harmony export */   OPEN_NEW_PIPELINE_MODAL: () => (/* binding */ OPEN_NEW_PIPELINE_MODAL),
 /* harmony export */   OPEN_NEW_STAGE_MODAL: () => (/* binding */ OPEN_NEW_STAGE_MODAL),
 /* harmony export */   OPEN_NEW_TASK_MODAL: () => (/* binding */ OPEN_NEW_TASK_MODAL),
@@ -11165,6 +11207,7 @@ const OPEN_EDIT_PIPELINE_MODAL = "OPEN_EDIT_PIPELINE_MODAL";
 const CLOSE_PIPELINE_MODAL = "CLOSE_PIPELINE_EDIT_MODAL";
 const CLOSE_USER_MODAL = "CLOSE_USER_MODAL";
 const OPEN_NEW_USER_MODAL = "OPEN_NEW_USER_MODAL";
+const OPEN_EDIT_USER_MODAL = "OPEN_EDIT_USER_MODAL";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";
@@ -11175,6 +11218,7 @@ const SET_ARCHIVE_FILTERED_PIPELINE = "SET_ARCHIVE_FILTERED_PIPELINE";
 const SET_USERS = "SET_USERS";
 const ADD_USER = "ADD_USER";
 const SET_USERS_SEARCH_VALUE = "SET_USERS_SEARCH_VALUE";
+const EDIT_USER = "EDIT_USER";
 
 
 /***/ }),
@@ -12336,6 +12380,14 @@ const reducer = (state, action) => {
           userModalOpen: true
         });
       }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_EDIT_USER_MODAL:
+      {
+        const userToEdit = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          userModalOpen: true,
+          userToEdit
+        });
+      }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_USER_MODAL:
       {
         return closeModal();
@@ -12434,6 +12486,14 @@ const reducer = (state, action) => {
         const user = action.payload;
         return Object.assign(Object.assign({}, state), {
           users: [...state.users, user]
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.EDIT_USER:
+      {
+        const editedUser = action.payload;
+        const users = state.users.map(user => user.id === editedUser.id ? editedUser : user);
+        return Object.assign(Object.assign({}, state), {
+          users
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USERS_SEARCH_VALUE:

@@ -12,7 +12,7 @@ function UserListItem({ user }: Props) {
     <WPQTCard
       title={user.name}
       description={user.description}
-      dropdown={<UserDropdown />}
+      dropdown={<UserDropdown user={user} />}
     >
       <WPQTCardDataItem label="Users page" value="TODO" />
       <WPQTCardDataItem

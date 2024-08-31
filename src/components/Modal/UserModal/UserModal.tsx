@@ -2,9 +2,9 @@ import { useContext } from "@wordpress/element";
 import { WPQTModal } from "../WPQTModal";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { DispatchType, useModal } from "../../../hooks/useModal";
-import { ADD_USER, CLOSE_USER_MODAL } from "../../../constants";
+import { ADD_USER, CLOSE_USER_MODAL, EDIT_USER } from "../../../constants";
 import { UserModalContent } from "./UserModalContent";
-import { createUserRequest } from "../../../api/api";
+import { createUserRequest, editUserRequest } from "../../../api/api";
 import { User } from "../../../types/user";
 
 function UserModal() {
@@ -30,7 +30,15 @@ function UserModal() {
     }
   };
 
-  const editUser = async (user: User) => {};
+  const editUser = async (user: User) => {
+    try {
+      setModalSaving(true);
+      const response = await editUserRequest(user);
+      handleSuccess(EDIT_USER, response.data, DispatchType.USER);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   return (
     <WPQTModal modalOpen={userModalOpen} closeModal={closeModal}>

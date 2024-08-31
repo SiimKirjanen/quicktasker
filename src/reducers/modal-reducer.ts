@@ -12,11 +12,13 @@ import {
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_USER_MODAL,
   OPEN_NEW_USER_MODAL,
+  OPEN_EDIT_USER_MODAL,
 } from "../constants";
 import { Action, State, initialState } from "../providers/ModalContextProvider";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { ArchivedTask, Task } from "../types/task";
+import { User } from "../types/user";
 
 const closeModal = () => {
   return {
@@ -106,6 +108,15 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         userModalOpen: true,
+      };
+    }
+    case OPEN_EDIT_USER_MODAL: {
+      const userToEdit: User = action.payload;
+
+      return {
+        ...state,
+        userModalOpen: true,
+        userToEdit,
       };
     }
     case CLOSE_USER_MODAL: {

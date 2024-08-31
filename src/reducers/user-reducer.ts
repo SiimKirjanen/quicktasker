@@ -1,4 +1,9 @@
-import { ADD_USER, SET_USERS, SET_USERS_SEARCH_VALUE } from "../constants";
+import {
+  ADD_USER,
+  EDIT_USER,
+  SET_USERS,
+  SET_USERS_SEARCH_VALUE,
+} from "../constants";
 import { Action, State } from "../providers/UserContextProvider";
 import { ServerUser } from "../types/user";
 
@@ -18,6 +23,17 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         users: [...state.users, user],
+      };
+    }
+    case EDIT_USER: {
+      const editedUser: ServerUser = action.payload;
+      const users = state.users.map((user) =>
+        user.id === editedUser.id ? editedUser : user,
+      );
+
+      return {
+        ...state,
+        users,
       };
     }
     case SET_USERS_SEARCH_VALUE: {
