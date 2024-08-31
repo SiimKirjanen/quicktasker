@@ -11,7 +11,11 @@ import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
 import { archiveTaskRequest, deleteTaskRequest } from "../../../api/api";
-import { WPQTDropdown, WPQTDropdownItem } from "../WPQTDropdown";
+import {
+  WPQTDropdown,
+  WPQTDropdownIcon,
+  WPQTDropdownItem,
+} from "../WPQTDropdown";
 
 type Props = {
   task: Task;
@@ -62,9 +66,12 @@ function TaskControlsDropdown({ task }: Props) {
 
   return (
     <WPQTDropdown
-      menuBtn={
-        <EllipsisHorizontalIcon className="wpqt-size-6 wpqt-text-gray-400 hover:wpqt-text-qtBlueHover" />
-      }
+      menuBtn={({ active }) => (
+        <WPQTDropdownIcon
+          isActive={active}
+          IconComponent={EllipsisHorizontalIcon}
+        />
+      )}
     >
       <WPQTDropdownItem
         text="Archive task"

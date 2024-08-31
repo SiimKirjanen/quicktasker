@@ -20,7 +20,11 @@ import {
 import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage, StageChangeDirection } from "../../../types/stage";
-import { WPQTDropdown, WPQTDropdownItem } from "../WPQTDropdown";
+import {
+  WPQTDropdown,
+  WPQTDropdownIcon,
+  WPQTDropdownItem,
+} from "../WPQTDropdown";
 
 type Props = {
   stage: Stage;
@@ -81,7 +85,9 @@ function StageControlsDropdown({ stage }: Props) {
 
   return (
     <WPQTDropdown
-      menuBtn={<Cog8ToothIcon className="wpqt-size-5 wpqt-text-gray-400" />}
+      menuBtn={({ active }) => (
+        <WPQTDropdownIcon isActive={active} IconComponent={Cog8ToothIcon} />
+      )}
     >
       {showMoveLeft && (
         <WPQTDropdownItem

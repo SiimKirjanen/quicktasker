@@ -53,12 +53,14 @@ function PipelineSelectionDropdown() {
   return (
     <WPQTDropdown
       menuBtnClasses="wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1 wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-2"
-      menuBtn={
+      menuBtn={({ active }) => (
         <>
           <div className="wpqt-leading-none">{activePipeline?.name}</div>
-          <ChevronDownIcon className="wpqt-size-4" />
+          <ChevronDownIcon
+            className={`wpqt-size-4 ${active ? "wpqt-text-qtBlueHover" : ""}`}
+          />
         </>
-      }
+      )}
     >
       <div className="wpqt-mb-4 wpqt-text-center wpqt-font-bold">
         Change board

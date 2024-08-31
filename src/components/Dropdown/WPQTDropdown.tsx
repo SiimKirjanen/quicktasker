@@ -3,7 +3,7 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   children: React.ReactNode;
-  menuBtn: React.ReactNode;
+  menuBtn: (props: { active: boolean }) => React.ReactNode;
   menuBtnClasses?: string;
 };
 
@@ -15,7 +15,7 @@ function WPQTDropdown({ children, menuBtn, menuBtnClasses = "" }: Props) {
         className={`${menuBtnClasses} wpqt-cursor-pointer`}
         onClick={(event) => event.stopPropagation()}
       >
-        {menuBtn}
+        {({ active }) => <>{menuBtn({ active })}</>}
       </MenuButton>
       <MenuItems
         anchor="bottom end"
@@ -28,9 +28,16 @@ function WPQTDropdown({ children, menuBtn, menuBtnClasses = "" }: Props) {
   );
 }
 
-function WPQTDropdownIcon() {
+type WPQTDropdownIconProps = {
+  isActive?: boolean;
+  IconComponent: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+};
+
+function WPQTDropdownIcon({ isActive, IconComponent }: WPQTDropdownIconProps) {
   return (
-    <EllipsisHorizontalIcon className="wpqt-size-6 wpqt-text-gray-400 hover:wpqt-text-qtBlueHover" />
+    <IconComponent
+      className={`wpqt-size-6 wpqt-text-gray-400 hover:wpqt-text-qtBlueHover ${isActive ? "wpqt-text-qtBlueHover" : ""}`}
+    />
   );
 }
 

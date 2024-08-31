@@ -2,6 +2,7 @@ import {
   TrashIcon,
   PencilSquareIcon,
   RectangleStackIcon,
+  EllipsisHorizontalIcon,
 } from "@heroicons/react/24/outline";
 import {
   WPQTDropdown,
@@ -11,7 +12,14 @@ import {
 
 function UserDropdown() {
   return (
-    <WPQTDropdown menuBtn={<WPQTDropdownIcon />}>
+    <WPQTDropdown
+      menuBtn={({ active }) => (
+        <WPQTDropdownIcon
+          isActive={active}
+          IconComponent={EllipsisHorizontalIcon}
+        />
+      )}
+    >
       <WPQTDropdownItem
         text="Edit user"
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}

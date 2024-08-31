@@ -1,4 +1,4 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { EllipsisHorizontalIcon, TrashIcon } from "@heroicons/react/24/outline";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
@@ -7,7 +7,14 @@ import {
 
 function ArchivedTaskDropdown() {
   return (
-    <WPQTDropdown menuBtn={<WPQTDropdownIcon />}>
+    <WPQTDropdown
+      menuBtn={({ active }) => (
+        <WPQTDropdownIcon
+          isActive={active}
+          IconComponent={EllipsisHorizontalIcon}
+        />
+      )}
+    >
       <WPQTDropdownItem
         text="Delete"
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
