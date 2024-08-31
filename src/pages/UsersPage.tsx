@@ -1,7 +1,7 @@
 import { UserModal } from "../components/Modal/UserModal/UserModal";
 import { UserList } from "../components/User/UserList/UserList";
 import { Page } from "./Page/Page";
-import { UserFilter } from "../components/User/UserFilter/UserFilter";
+import { UserFilter } from "../components/Filters/UserFilter/UserFilter";
 import { UsersInfo } from "../components/User/UsersInfo/UserInfo";
 import { WPQTPageHeader } from "../components/common/Header/Header";
 

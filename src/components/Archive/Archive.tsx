@@ -1,7 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { ArchiveContext } from "../../providers/ArchiveContextProvider";
 import { Loading } from "../Loading/Loading";
-import { ArchiveControls } from "./ArchiveControls/ArchiveControls";
+import { ArchiveFilter } from "../Filters/ArchiveFilter/ArchiveFilter";
 import { ArchiveItems } from "./ArchiveItems/ArchiveItems";
 import { ArchiveTaskModal } from "../Modal/ArchiveTaskModal/ArchiveTaskModal";
 
@@ -16,7 +16,7 @@ function Archive() {
 
   return (
     <div>
-      <ArchiveControls />
+      <ArchiveFilter />
       <ArchiveItems />
       <ArchiveTaskModal />
     </div>

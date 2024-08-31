@@ -1277,6 +1277,11 @@
   color: rgb(22 163 74 / var(--tw-text-opacity));
 }
 
+.wpqt-text-qtBlueHover {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
 .wpqt-text-qtBorder {
   --tw-text-opacity: 1;
   color: rgb(208 215 222 / var(--tw-text-opacity));
@@ -1285,11 +1290,6 @@
 .wpqt-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.wpqt-text-qtBlueHover {
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
 .wpqt-shadow {

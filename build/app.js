@@ -7960,7 +7960,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _ArchiveControls_ArchiveControls__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ArchiveControls/ArchiveControls */ "./src/components/Archive/ArchiveControls/ArchiveControls.tsx");
+/* harmony import */ var _Filters_ArchiveFilter_ArchiveFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Filters/ArchiveFilter/ArchiveFilter */ "./src/components/Filters/ArchiveFilter/ArchiveFilter.tsx");
 /* harmony import */ var _ArchiveItems_ArchiveItems__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ArchiveItems/ArchiveItems */ "./src/components/Archive/ArchiveItems/ArchiveItems.tsx");
 /* harmony import */ var _Modal_ArchiveTaskModal_ArchiveTaskModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Modal/ArchiveTaskModal/ArchiveTaskModal */ "./src/components/Modal/ArchiveTaskModal/ArchiveTaskModal.tsx");
 
@@ -7980,64 +7980,7 @@ function Archive() {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {});
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveControls_ArchiveControls__WEBPACK_IMPORTED_MODULE_4__.ArchiveControls, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveItems_ArchiveItems__WEBPACK_IMPORTED_MODULE_5__.ArchiveItems, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Modal_ArchiveTaskModal_ArchiveTaskModal__WEBPACK_IMPORTED_MODULE_6__.ArchiveTaskModal, {})]
-  });
-}
-
-
-/***/ }),
-
-/***/ "./src/components/Archive/ArchiveControls/ArchiveControls.tsx":
-/*!********************************************************************!*\
-  !*** ./src/components/Archive/ArchiveControls/ArchiveControls.tsx ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ArchiveControls: () => (/* binding */ ArchiveControls)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Select/PipelineFilterSelect/PipelineFilterSelect */ "./src/components/Select/PipelineFilterSelect/PipelineFilterSelect.tsx");
-
-
-
-
-
-
-function ArchiveControls() {
-  const {
-    state: {
-      archiveSearchValue
-    },
-    archiveDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__.ArchiveContext);
-  const setArchiveSearchValue = event => {
-    archiveDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_ARCHIVE_SEARCH_VALUE,
-      payload: event.target.value
-    });
-  };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-mb-4",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-text-base",
-      children: "Archive filtering"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "wpqt-flex wpqt-gap-2",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Input, {
-        type: "text",
-        value: archiveSearchValue,
-        onChange: setArchiveSearchValue
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_4__.PipelineFilterSelect, {})]
-    })]
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Filters_ArchiveFilter_ArchiveFilter__WEBPACK_IMPORTED_MODULE_4__.ArchiveFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveItems_ArchiveItems__WEBPACK_IMPORTED_MODULE_5__.ArchiveItems, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Modal_ArchiveTaskModal_ArchiveTaskModal__WEBPACK_IMPORTED_MODULE_6__.ArchiveTaskModal, {})]
   });
 }
 
@@ -8200,26 +8143,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EllipsisHorizontalIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EyeIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
 
 
 
 function ArchivedTaskDropdown() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdown, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdown, {
     menuBtn: ({
       active
     }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownIcon, {
       isActive: active,
       IconComponent: _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_2__["default"]
     }),
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
-      text: "Delete",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
+      text: "View task",
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        className: "wpqt-icon-blue wpqt-size-4"
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
+      text: "Delete",
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
         className: "wpqt-icon-red wpqt-size-4"
       }),
       className: "!wpqt-mb-0"
-    })
+    })]
   });
 }
 
@@ -8853,6 +8802,143 @@ class ErrorBoundary extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Comp
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ErrorBoundary);
+
+/***/ }),
+
+/***/ "./src/components/Filters/ArchiveFilter/ArchiveFilter.tsx":
+/*!****************************************************************!*\
+  !*** ./src/components/Filters/ArchiveFilter/ArchiveFilter.tsx ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ArchiveFilter: () => (/* binding */ ArchiveFilter)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Select/PipelineFilterSelect/PipelineFilterSelect */ "./src/components/Select/PipelineFilterSelect/PipelineFilterSelect.tsx");
+/* harmony import */ var _WPQTFilter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../WPQTFilter */ "./src/components/Filters/WPQTFilter.tsx");
+
+
+
+
+
+
+
+function ArchiveFilter() {
+  const {
+    state: {
+      archiveSearchValue
+    },
+    archiveDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__.ArchiveContext);
+  const setArchiveSearchValue = event => {
+    archiveDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_ARCHIVE_SEARCH_VALUE,
+      payload: event.target.value
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_5__.WPQTFilter, {
+    title: "Archive filtering",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Input, {
+      type: "text",
+      value: archiveSearchValue,
+      onChange: setArchiveSearchValue
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_4__.PipelineFilterSelect, {})]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Filters/UserFilter/UserFilter.tsx":
+/*!**********************************************************!*\
+  !*** ./src/components/Filters/UserFilter/UserFilter.tsx ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserFilter: () => (/* binding */ UserFilter)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _WPQTFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../WPQTFilter */ "./src/components/Filters/WPQTFilter.tsx");
+
+
+
+
+
+
+function UserFilter() {
+  const {
+    state: {
+      usersSearchValue
+    },
+    userDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserContext);
+  const setArchiveSearchValue = event => {
+    userDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_USERS_SEARCH_VALUE,
+      payload: event.target.value
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_4__.WPQTFilter, {
+    title: "User filtering",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Input, {
+      type: "text",
+      value: usersSearchValue,
+      onChange: setArchiveSearchValue
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Filters/WPQTFilter.tsx":
+/*!***********************************************!*\
+  !*** ./src/components/Filters/WPQTFilter.tsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WPQTFilter: () => (/* binding */ WPQTFilter)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function WPQTFilter({
+  children,
+  title
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-mb-4",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-mb-2 wpqt-text-base",
+      children: title
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-gap-2",
+      children: children
+    })]
+  });
+}
+
 
 /***/ }),
 
@@ -10703,29 +10789,6 @@ function WPQTTabPanel({
 
 /***/ }),
 
-/***/ "./src/components/User/UserFilter/UserFilter.tsx":
-/*!*******************************************************!*\
-  !*** ./src/components/User/UserFilter/UserFilter.tsx ***!
-  \*******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UserFilter: () => (/* binding */ UserFilter)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-
-function UserFilter() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: "User filtering"
-  });
-}
-
-
-/***/ }),
-
 /***/ "./src/components/User/UserListItem/UserListItem.tsx":
 /*!***********************************************************!*\
   !*** ./src/components/User/UserListItem/UserListItem.tsx ***!
@@ -10771,6 +10834,9 @@ function UserListItem({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Password set",
       value: "TODO"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
+      label: "Status",
+      value: "TODO"
     })]
   });
 }
@@ -10797,6 +10863,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../UserListItem/UserListItem */ "./src/components/User/UserListItem/UserListItem.tsx");
+/* harmony import */ var _hooks_userUserFilter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/userUserFilter */ "./src/hooks/userUserFilter.tsx");
+
 
 
 
@@ -10812,6 +10880,9 @@ function UserList() {
   const {
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
+  const {
+    filterUsers
+  } = (0,_hooks_userUserFilter__WEBPACK_IMPORTED_MODULE_6__.useUserFilter)();
   const openCreateUserModal = () => {
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_4__.OPEN_NEW_USER_MODAL
@@ -10827,7 +10898,7 @@ function UserList() {
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-grid wpqt-grid-cols-3 wpqt-gap-2",
-    children: users.map(user => {
+    children: users.filter(filterUsers).map(user => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_5__.UserListItem, {
         user: user
       }, user.id);
@@ -11059,7 +11130,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_ARCHIVE_FILTERED_PIPELINE: () => (/* binding */ SET_ARCHIVE_FILTERED_PIPELINE),
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
-/* harmony export */   SET_USERS: () => (/* binding */ SET_USERS)
+/* harmony export */   SET_USERS: () => (/* binding */ SET_USERS),
+/* harmony export */   SET_USERS_SEARCH_VALUE: () => (/* binding */ SET_USERS_SEARCH_VALUE)
 /* harmony export */ });
 //Pipeline nad pipelines reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
@@ -11102,6 +11174,7 @@ const SET_ARCHIVE_FILTERED_PIPELINE = "SET_ARCHIVE_FILTERED_PIPELINE";
 //User reducer constants
 const SET_USERS = "SET_USERS";
 const ADD_USER = "ADD_USER";
+const SET_USERS_SEARCH_VALUE = "SET_USERS_SEARCH_VALUE";
 
 
 /***/ }),
@@ -11339,6 +11412,40 @@ const useModal = closeActionType => {
 
 /***/ }),
 
+/***/ "./src/hooks/userUserFilter.tsx":
+/*!**************************************!*\
+  !*** ./src/hooks/userUserFilter.tsx ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useUserFilter: () => (/* binding */ useUserFilter)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
+
+
+const useUserFilter = () => {
+  const {
+    state: {
+      usersSearchValue
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_1__.UserContext);
+  const filterUsers = user => {
+    const matchesSearchValue = user.name.toLowerCase().includes(usersSearchValue.toLowerCase()) || user.description && user.description.toLowerCase().includes(usersSearchValue.toLowerCase());
+    return matchesSearchValue;
+  };
+  return {
+    filterUsers
+  };
+};
+
+
+/***/ }),
+
 /***/ "./src/pages/ArchivePage.tsx":
 /*!***********************************!*\
   !*** ./src/pages/ArchivePage.tsx ***!
@@ -11481,7 +11588,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Modal_UserModal_UserModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Modal/UserModal/UserModal */ "./src/components/Modal/UserModal/UserModal.tsx");
 /* harmony import */ var _components_User_UserList_UserList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/User/UserList/UserList */ "./src/components/User/UserList/UserList.tsx");
 /* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Page/Page */ "./src/pages/Page/Page.tsx");
-/* harmony import */ var _components_User_UserFilter_UserFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/User/UserFilter/UserFilter */ "./src/components/User/UserFilter/UserFilter.tsx");
+/* harmony import */ var _components_Filters_UserFilter_UserFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Filters/UserFilter/UserFilter */ "./src/components/Filters/UserFilter/UserFilter.tsx");
 /* harmony import */ var _components_User_UsersInfo_UserInfo__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/User/UsersInfo/UserInfo */ "./src/components/User/UsersInfo/UserInfo.tsx");
 /* harmony import */ var _components_common_Header_Header__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/common/Header/Header */ "./src/components/common/Header/Header.tsx");
 
@@ -11496,7 +11603,7 @@ function UsersPage() {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Header_Header__WEBPACK_IMPORTED_MODULE_6__.WPQTPageHeader, {
       description: "This is a users page",
       children: "User page"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_User_UsersInfo_UserInfo__WEBPACK_IMPORTED_MODULE_5__.UsersInfo, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_User_UserFilter_UserFilter__WEBPACK_IMPORTED_MODULE_4__.UserFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_User_UserList_UserList__WEBPACK_IMPORTED_MODULE_2__.UserList, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_UserModal_UserModal__WEBPACK_IMPORTED_MODULE_1__.UserModal, {})]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_User_UsersInfo_UserInfo__WEBPACK_IMPORTED_MODULE_5__.UsersInfo, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filters_UserFilter_UserFilter__WEBPACK_IMPORTED_MODULE_4__.UserFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_User_UserList_UserList__WEBPACK_IMPORTED_MODULE_2__.UserList, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_UserModal_UserModal__WEBPACK_IMPORTED_MODULE_1__.UserModal, {})]
   });
 }
 
@@ -11889,7 +11996,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const initialState = {
   loading: true,
-  users: []
+  users: [],
+  usersSearchValue: ""
 };
 const UserContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -12326,6 +12434,13 @@ const reducer = (state, action) => {
         const user = action.payload;
         return Object.assign(Object.assign({}, state), {
           users: [...state.users, user]
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USERS_SEARCH_VALUE:
+      {
+        const usersSearchValue = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          usersSearchValue
         });
       }
     default:
@@ -30049,6 +30164,51 @@ function EllipsisHorizontalIcon({
   }));
 }
 const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(EllipsisHorizontalIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
+/***/ "./node_modules/@heroicons/react/24/outline/esm/EyeIcon.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/EyeIcon.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function EyeIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(EyeIcon);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
 
 /***/ }),

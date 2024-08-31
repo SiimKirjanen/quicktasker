@@ -6,11 +6,13 @@ import { SET_USERS } from "../constants";
 const initialState = {
   loading: true,
   users: [],
+  usersSearchValue: "",
 };
 
 type State = {
   loading: boolean;
   users: User[];
+  usersSearchValue: string;
 };
 
 type Action = {
