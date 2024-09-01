@@ -42,3 +42,7 @@ if( is_admin() ) {
 	require( 'php/admin-pages.php' );
 	require( 'php/enqueue-admin.php' );	
 }
+
+if( !is_admin() ) {
+	require( 'php/enqueue-user-page-public.php' );
+}

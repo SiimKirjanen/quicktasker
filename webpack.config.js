@@ -5,6 +5,7 @@ module.exports = {
   ...defaultConfig,
   entry: {
     app: path.resolve(process.cwd(), "src", "index.js"),
+    userApp: path.resolve(process.cwd(), "src", "user-page-app", "index.js"),
   },
   module: {
     rules: [
