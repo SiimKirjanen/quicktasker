@@ -965,6 +965,10 @@
   height: calc(100vh - 32px);
 }
 
+.wpqt-h-\[200px\] {
+  height: 200px;
+}
+
 .wpqt-max-h-full {
   max-height: 100%;
 }

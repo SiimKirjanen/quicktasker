@@ -11,7 +11,7 @@ function Archive() {
   } = useContext(ArchiveContext);
 
   if (!archivedTasks) {
-    return <Loading />;
+    return <Loading className="wpqt-h-[200px]" />;
   }
 
   return (

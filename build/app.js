@@ -8007,7 +8007,9 @@ function Archive() {
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__.ArchiveContext);
   if (!archivedTasks) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {});
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
+      className: "wpqt-h-[200px]"
+    });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Filters_ArchiveFilter_ArchiveFilter__WEBPACK_IMPORTED_MODULE_4__.ArchiveFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveItems_ArchiveItems__WEBPACK_IMPORTED_MODULE_5__.ArchiveItems, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Modal_ArchiveTaskModal_ArchiveTaskModal__WEBPACK_IMPORTED_MODULE_6__.ArchiveTaskModal, {})]
@@ -9085,6 +9087,7 @@ function WPQTFilter({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FullLoading: () => (/* binding */ FullLoading),
 /* harmony export */   Loading: () => (/* binding */ Loading),
 /* harmony export */   LoadingOval: () => (/* binding */ LoadingOval)
 /* harmony export */ });
@@ -9107,13 +9110,21 @@ function LoadingOval({
     wrapperClass: ""
   });
 }
-function Loading() {
+function FullLoading() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-h-screen-minus-top-bar wpqt-flex-col wpqt-items-center wpqt-justify-center",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LoadingOval, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mt-4 wpqt-text-xl wpqt-font-semibold",
       children: "Loading..."
     })]
+  });
+}
+function Loading({
+  className
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: `wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center ${className}`,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LoadingOval, {})
   });
 }
 
@@ -10361,7 +10372,7 @@ const Pipeline = () => {
     }
   }), [activePipeline]);
   if (!activePipeline) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_10__.Loading, {});
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_10__.FullLoading, {});
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden",

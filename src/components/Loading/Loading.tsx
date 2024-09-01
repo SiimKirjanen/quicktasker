@@ -19,7 +19,7 @@ function LoadingOval({ width = "80", height = "80" }: LoadingOverProps) {
   );
 }
 
-function Loading() {
+function FullLoading() {
   return (
     <div className="wpqt-flex wpqt-h-screen-minus-top-bar wpqt-flex-col wpqt-items-center wpqt-justify-center">
       <LoadingOval />
@@ -30,4 +30,14 @@ function Loading() {
   );
 }
 
-export { Loading, LoadingOval };
+function Loading({ className }: { className?: string }) {
+  return (
+    <div
+      className={`wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center ${className}`}
+    >
+      <LoadingOval />
+    </div>
+  );
+}
+
+export { FullLoading, LoadingOval, Loading };

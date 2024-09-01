@@ -1,5 +1,15 @@
 <?php
+    if ( ! defined( 'ABSPATH' ) ) {
+        exit; 
+    }
+    use WPQT\UserPage\UserPageService;
 
+    $userPageService = new UserPageService();
+
+    if( !$userPageService->checkIfUserPageHashExists($_GET['code']) ) {
+        echo 'User page not found.';
+        exit;
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
