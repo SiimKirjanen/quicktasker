@@ -1,5 +1,6 @@
 import {
   ADD_USER,
+  DELETE_USER,
   EDIT_USER,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
@@ -38,6 +39,15 @@ const reducer = (state: State, action: Action): State => {
       const users = state.users.map((user) =>
         user.id === editedUser.id ? editedUser : user,
       );
+
+      return {
+        ...state,
+        users,
+      };
+    }
+    case DELETE_USER: {
+      const userId: string = action.payload;
+      const users = state.users.filter((user) => user.id !== userId);
 
       return {
         ...state,

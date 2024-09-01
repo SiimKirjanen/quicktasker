@@ -7,6 +7,8 @@ module.exports = {
       colors: {
         qtBorder: "#d0d7de",
         qtBlueHover: "#3b82f6",
+        qtTextGreen: "#2b8a3e",
+        qtTextRed: "#d32f2f",
       },
       height: {
         "screen-minus-top-bar": "calc(100vh - 32px)",

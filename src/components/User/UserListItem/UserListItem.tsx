@@ -8,6 +8,8 @@ type Props = {
 };
 
 function UserListItem({ user }: Props) {
+  const userIsActive = user.is_active;
+
   return (
     <WPQTCard
       title={user.name}
@@ -23,7 +25,15 @@ function UserListItem({ user }: Props) {
       <WPQTCardDataItem label="Phone" value="TODO" />
       <WPQTCardDataItem label="Assigned tasks count" value="TODO" />
       <WPQTCardDataItem label="Set up completed" value="TODO" />
-      <WPQTCardDataItem label="Status" value="TODO" />
+      <WPQTCardDataItem
+        label="Status"
+        value={userIsActive ? "Active" : "Disabled"}
+        valueClassName={
+          userIsActive
+            ? "wpqt-text-qtTextGreen wpqt-font-bold"
+            : "wpqt-text-qtTextRed wpqt-font-bold"
+        }
+      />
     </WPQTCard>
   );
 }

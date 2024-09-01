@@ -13,7 +13,7 @@ class UserRepository {
         global $wpdb;
 
         return $wpdb->get_results(
-            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USERS
+            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USERS . " WHERE deleted = 0"
         );
     }
 

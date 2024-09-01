@@ -42,11 +42,21 @@ function WPQTCard({
   );
 }
 
-function WPQTCardDataItem({ label, value }: { label: string; value: string }) {
+type WPQTCardDataItemProps = {
+  label: string;
+  value: string;
+  valueClassName?: string;
+};
+
+function WPQTCardDataItem({
+  label,
+  value,
+  valueClassName,
+}: WPQTCardDataItemProps) {
   return (
     <div className="wpqt-mb-1 wpqt-flex wpqt-gap-1">
       <div>{label}:</div>
-      <div>{value}</div>
+      <div className={`${valueClassName}`}>{value}</div>
     </div>
   );
 }

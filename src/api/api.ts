@@ -267,6 +267,26 @@ function editUserRequest(user: User): Promise<WPQTResponse<ServerUser>> {
   });
 }
 
+function changeUserStatusRequest(
+  user: User,
+  status: boolean,
+): Promise<WPQTResponse<ServerUser>> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${user.id}/status`,
+    method: "PATCH",
+    data: { status },
+    headers: getCommonHeaders(),
+  });
+}
+
+function deleteUserRequest(user: User): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${user.id}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getPipelineData,
   moveTaskRequest,
@@ -288,4 +308,6 @@ export {
   getTaskComments,
   createUserRequest,
   editUserRequest,
+  changeUserStatusRequest,
+  deleteUserRequest,
 };

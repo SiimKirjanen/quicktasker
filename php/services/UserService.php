@@ -83,4 +83,55 @@ class UserService {
 
         return $this->userRepository->getUserById($userId);
     }
+
+    /**
+     * Change the status of a user.
+     *
+     * @param int $userId The ID of the user.
+     * @param int $status The new status of the user.
+     * @return User The updated user object.
+     * @throws Exception If failed to disable a user.
+     */
+    public function changeUserStatus($userId, $status) {
+        global $wpdb;
+
+        $result = $wpdb->update(
+            TABLE_WP_QUICK_TASKS_USERS,
+            array(
+                'is_active' => $status,
+            ),
+            array('id' => $userId)
+        );
+
+        if (!$result) {
+            throw new Exception('Failed to disable a user');
+        }
+
+        return $this->userRepository->getUserById($userId);
+    }
+
+    /**
+     * Deletes a user.
+     *
+     * @param int $userId The ID of the user to delete.
+     * @return bool True if the user was successfully deleted, false otherwise.
+     * @throws Exception If the user deletion fails.
+     */
+    public function deleteUser($userId) {
+        global $wpdb;
+
+        $result = $wpdb->update(
+            TABLE_WP_QUICK_TASKS_USERS,
+            array(
+                'deleted' => 1,
+            ),
+            array('id' => $userId)
+        );
+
+        if (!$result) {
+            throw new Exception('Failed to delete a user');
+        }
+
+        return true;
+    }
 }
