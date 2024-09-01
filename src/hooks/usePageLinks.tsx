@@ -1,12 +1,11 @@
 import { useContext } from "@wordpress/element";
 import { AppContext } from "../providers/AppContextProvider";
-import { WPQT_PAGE } from "../constants";
 
 function usePageLinks() {
   const {
-    state: { siteURL },
+    state: { siteURL, publicUserPageId },
   } = useContext(AppContext);
-  const userPage = siteURL + `?page=${WPQT_PAGE}`;
+  const userPage = siteURL + `?page=${publicUserPageId}`;
 
   return {
     userPage,

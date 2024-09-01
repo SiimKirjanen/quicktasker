@@ -1,15 +1,17 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/app-reducer";
-import { SET_SITE_URL } from "../constants";
-
-const initialState: State = {
-  loading: true,
-  siteURL: "",
-};
+import { INIT_APP_STATE } from "../constants";
 
 type State = {
   loading: boolean;
   siteURL: string;
+  publicUserPageId: string;
+};
+
+const initialState: State = {
+  loading: true,
+  siteURL: "",
+  publicUserPageId: "",
 };
 
 type Action = {
@@ -33,9 +35,16 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, appDispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const siteUrl = window.wpqt.siteURL;
+    const siteURL = window.wpqt.siteURL;
+    const publicUserPageId = window.wpqt.publicUserPageId;
 
-    appDispatch({ type: SET_SITE_URL, payload: siteUrl });
+    appDispatch({
+      type: INIT_APP_STATE,
+      payload: {
+        siteURL,
+        publicUserPageId,
+      },
+    });
   }, []);
 
   return (

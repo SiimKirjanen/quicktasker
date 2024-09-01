@@ -1,4 +1,4 @@
-import { SET_SITE_URL } from "../constants";
+import { INIT_APP_STATE, SET_SITE_URL } from "../constants";
 import { Action, State } from "../providers/AppContextProvider";
 
 const reducer = (state: State, action: Action) => {
@@ -9,6 +9,15 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         siteURL,
+      };
+    }
+    case INIT_APP_STATE: {
+      const { siteURL, publicUserPageId } = action.payload;
+
+      return {
+        ...state,
+        siteURL,
+        publicUserPageId,
       };
     }
     default:

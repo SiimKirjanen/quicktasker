@@ -49,9 +49,7 @@ const DELETE_USER = "DELETE_USER";
 
 //App reducer
 const SET_SITE_URL = "SET_SITE_URL";
-
-//Page
-const WPQT_PAGE = "wpqt";
+const INIT_APP_STATE = "INIT_APP_STATE";
 
 export {
   PIPELINE_SET_LOADING,
@@ -96,5 +94,5 @@ export {
   OPEN_EDIT_USER_MODAL,
   DELETE_USER,
   SET_SITE_URL,
-  WPQT_PAGE,
+  INIT_APP_STATE,
 };

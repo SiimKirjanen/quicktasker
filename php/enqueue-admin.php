@@ -31,5 +31,6 @@ function wpqt_enqueue_app_assets(){
 		'initialActivePipelineId' => $activePipeline->id,
 		'initialPipelines' => $pipelines,
 		'initialUsers' => $users,
+		'publicUserPageId' => WP_QUICK_TASKS_PUBLIC_USER_PAGE_ID
 	));
 }

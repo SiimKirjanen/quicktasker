@@ -11,6 +11,7 @@ Directories, URL
 define('WP_QUICK_TASKS_PLUGIN_FOLDER_DIR', plugin_dir_path( dirname( __FILE__ ) ));
 define('WP_QUICK_TASKS_PLUGIN_MAIN_FILE', WP_QUICK_TASKS_PLUGIN_FOLDER_DIR . '/wp-quick-tasks.php');
 define('WP_QUICK_TASKS_PLUGIN_FOLDER_URL', plugin_dir_url( dirname( __FILE__ ) ));
+define('WP_QUICK_TASKS_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 
 /*
 ==================================================================================================================================================================================================================

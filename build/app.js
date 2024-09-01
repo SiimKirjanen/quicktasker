@@ -11259,6 +11259,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CLOSE_USER_MODAL: () => (/* binding */ CLOSE_USER_MODAL),
 /* harmony export */   DELETE_USER: () => (/* binding */ DELETE_USER),
 /* harmony export */   EDIT_USER: () => (/* binding */ EDIT_USER),
+/* harmony export */   INIT_APP_STATE: () => (/* binding */ INIT_APP_STATE),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
@@ -11290,8 +11291,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
 /* harmony export */   SET_USERS: () => (/* binding */ SET_USERS),
-/* harmony export */   SET_USERS_SEARCH_VALUE: () => (/* binding */ SET_USERS_SEARCH_VALUE),
-/* harmony export */   WPQT_PAGE: () => (/* binding */ WPQT_PAGE)
+/* harmony export */   SET_USERS_SEARCH_VALUE: () => (/* binding */ SET_USERS_SEARCH_VALUE)
 /* harmony export */ });
 //Pipeline nad pipelines reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
@@ -11340,8 +11340,7 @@ const EDIT_USER = "EDIT_USER";
 const DELETE_USER = "DELETE_USER";
 //App reducer
 const SET_SITE_URL = "SET_SITE_URL";
-//Page
-const WPQT_PAGE = "wpqt";
+const INIT_APP_STATE = "INIT_APP_STATE";
 
 
 /***/ }),
@@ -11593,17 +11592,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
-
 
 
 function usePageLinks() {
   const {
     state: {
-      siteURL
+      siteURL,
+      publicUserPageId
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_1__.AppContext);
-  const userPage = siteURL + `?page=${_constants__WEBPACK_IMPORTED_MODULE_2__.WPQT_PAGE}`;
+  const userPage = siteURL + `?page=${publicUserPageId}`;
   return {
     userPage
   };
@@ -11945,7 +11943,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const initialState = {
   loading: true,
-  siteURL: ""
+  siteURL: "",
+  publicUserPageId: ""
 };
 const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -11956,10 +11955,14 @@ const AppContextProvider = ({
 }) => {
   const [state, appDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_app_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    const siteUrl = window.wpqt.siteURL;
+    const siteURL = window.wpqt.siteURL;
+    const publicUserPageId = window.wpqt.publicUserPageId;
     appDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_SITE_URL,
-      payload: siteUrl
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.INIT_APP_STATE,
+      payload: {
+        siteURL,
+        publicUserPageId
+      }
     });
   }, []);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(AppContext.Provider, {
@@ -12405,6 +12408,17 @@ const reducer = (state, action) => {
         const siteURL = action.payload;
         return Object.assign(Object.assign({}, state), {
           siteURL
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.INIT_APP_STATE:
+      {
+        const {
+          siteURL,
+          publicUserPageId
+        } = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          siteURL,
+          publicUserPageId
         });
       }
     default:

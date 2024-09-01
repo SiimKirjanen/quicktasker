@@ -9,6 +9,7 @@ declare global {
       apiNonce: string;
       initialUsers: ServerUser[];
       siteURL: string;
+      publicUserPageId: string;
     };
   }
 }
