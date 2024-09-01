@@ -1,11 +1,15 @@
-import { createContext, useReducer } from "@wordpress/element";
+import { createContext, useEffect, useReducer } from "@wordpress/element";
+import { reducer } from "../reducers/app-reducer";
+import { SET_SITE_URL } from "../constants";
 
-const initialState = {
+const initialState: State = {
   loading: true,
+  siteURL: "",
 };
 
 type State = {
   loading: boolean;
+  siteURL: string;
 };
 
 type Action = {
@@ -17,30 +21,28 @@ type Dispatch = (action: Action) => void;
 
 type AppContextType = {
   state: State;
-  dispatch: Dispatch;
-};
-
-const reducer = (state: State, action: Action) => {
-  switch (action.type) {
-    // Add your different action types and corresponding logic here
-    default:
-      return state;
-  }
+  appDispatch: Dispatch;
 };
 
 const AppContext = createContext<AppContextType>({
   state: initialState,
-  dispatch: () => {},
+  appDispatch: () => {},
 });
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, appDispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const siteUrl = window.wpqt.siteURL;
+
+    appDispatch({ type: SET_SITE_URL, payload: siteUrl });
+  }, []);
 
   return (
-    <AppContext.Provider value={{ state, dispatch }}>
+    <AppContext.Provider value={{ state, appDispatch }}>
       {children}
     </AppContext.Provider>
   );
 };
 
-export { AppContextProvider, AppContext };
+export { AppContextProvider, AppContext, type State, type Action };

@@ -1287,11 +1287,6 @@
   color: rgb(208 215 222 / var(--tw-text-opacity));
 }
 
-.wpqt-text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
 .wpqt-text-qtTextGreen {
   --tw-text-opacity: 1;
   color: rgb(43 138 62 / var(--tw-text-opacity));
@@ -1300,6 +1295,11 @@
 .wpqt-text-qtTextRed {
   --tw-text-opacity: 1;
   color: rgb(211 47 47 / var(--tw-text-opacity));
+}
+
+.wpqt-text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .wpqt-shadow {

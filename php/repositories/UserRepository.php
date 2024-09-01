@@ -13,7 +13,10 @@ class UserRepository {
         global $wpdb;
 
         return $wpdb->get_results(
-            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USERS . " WHERE deleted = 0"
+            "SELECT a.*, b.page_hash FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
+            LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_PAGES . " AS b
+            ON a.id = b.user_id
+            WHERE a.deleted = 0"
         );
     }
 
@@ -28,7 +31,10 @@ class UserRepository {
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USERS . " WHERE id = %d",
+                "SELECT a.*, b.page_hash FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
+                LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_DETAILS . " AS b
+                ON a.id = b.user_id
+                WHERE a.id = %d AND a.deleted = 0",
                 $id
             )
         );

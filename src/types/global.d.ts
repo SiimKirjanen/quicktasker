@@ -8,6 +8,7 @@ declare global {
       initialPipelines: Pipeline[];
       apiNonce: string;
       initialUsers: ServerUser[];
+      siteURL: string;
     };
   }
 }

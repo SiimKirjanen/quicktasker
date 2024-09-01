@@ -8145,7 +8145,8 @@ function WPQTCard({
 function WPQTCardDataItem({
   label,
   value,
-  valueClassName
+  valueClassName,
+  valueLink
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-mb-1 wpqt-flex wpqt-gap-1",
@@ -8153,7 +8154,12 @@ function WPQTCardDataItem({
       children: [label, ":"]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: `${valueClassName}`,
-      children: value
+      children: valueLink ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+        href: valueLink,
+        target: "_blank",
+        className: "wpqt-text-qtTextBlue",
+        children: value
+      }) : value
     })]
   });
 }
@@ -10944,6 +10950,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_date__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils/date */ "./src/utils/date.ts");
 /* harmony import */ var _Card_Card__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Card/Card */ "./src/components/Card/Card.tsx");
 /* harmony import */ var _Dropdown_UserDropdown_UserDropdown__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Dropdown/UserDropdown/UserDropdown */ "./src/components/Dropdown/UserDropdown/UserDropdown.tsx");
+/* harmony import */ var _hooks_usePageLinks__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/usePageLinks */ "./src/hooks/usePageLinks.tsx");
+
 
 
 
@@ -10951,6 +10959,9 @@ __webpack_require__.r(__webpack_exports__);
 function UserListItem({
   user
 }) {
+  const {
+    userPage
+  } = (0,_hooks_usePageLinks__WEBPACK_IMPORTED_MODULE_4__.usePageLinks)();
   const userIsActive = user.is_active;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCard, {
     title: user.name,
@@ -10960,7 +10971,8 @@ function UserListItem({
     }),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Users page",
-      value: "TODO"
+      value: "Link",
+      valueLink: userPage + "&code=" + user.page_hash
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "User created at",
       value: (0,_utils_date__WEBPACK_IMPORTED_MODULE_1__.formatDate)(user.created_at)
@@ -11276,8 +11288,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_ARCHIVE_FILTERED_PIPELINE: () => (/* binding */ SET_ARCHIVE_FILTERED_PIPELINE),
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
+/* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
 /* harmony export */   SET_USERS: () => (/* binding */ SET_USERS),
-/* harmony export */   SET_USERS_SEARCH_VALUE: () => (/* binding */ SET_USERS_SEARCH_VALUE)
+/* harmony export */   SET_USERS_SEARCH_VALUE: () => (/* binding */ SET_USERS_SEARCH_VALUE),
+/* harmony export */   WPQT_PAGE: () => (/* binding */ WPQT_PAGE)
 /* harmony export */ });
 //Pipeline nad pipelines reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
@@ -11324,6 +11338,10 @@ const ADD_USER = "ADD_USER";
 const SET_USERS_SEARCH_VALUE = "SET_USERS_SEARCH_VALUE";
 const EDIT_USER = "EDIT_USER";
 const DELETE_USER = "DELETE_USER";
+//App reducer
+const SET_SITE_URL = "SET_SITE_URL";
+//Page
+const WPQT_PAGE = "wpqt";
 
 
 /***/ }),
@@ -11557,6 +11575,39 @@ const useModal = closeActionType => {
     handleError
   };
 };
+
+
+/***/ }),
+
+/***/ "./src/hooks/usePageLinks.tsx":
+/*!************************************!*\
+  !*** ./src/hooks/usePageLinks.tsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   usePageLinks: () => (/* binding */ usePageLinks)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+
+
+
+function usePageLinks() {
+  const {
+    state: {
+      siteURL
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_1__.AppContext);
+  const userPage = siteURL + `?page=${_constants__WEBPACK_IMPORTED_MODULE_2__.WPQT_PAGE}`;
+  return {
+    userPage
+  };
+}
 
 
 /***/ }),
@@ -11886,30 +11937,35 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _reducers_app_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/app-reducer */ "./src/reducers/app-reducer.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+
+
 
 
 const initialState = {
-  loading: true
-};
-const reducer = (state, action) => {
-  switch (action.type) {
-    // Add your different action types and corresponding logic here
-    default:
-      return state;
-  }
+  loading: true,
+  siteURL: ""
 };
 const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
-  dispatch: () => {}
+  appDispatch: () => {}
 });
 const AppContextProvider = ({
   children
 }) => {
-  const [state, dispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(reducer, initialState);
+  const [state, appDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_app_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const siteUrl = window.wpqt.siteURL;
+    appDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_SITE_URL,
+      payload: siteUrl
+    });
+  }, []);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(AppContext.Provider, {
     value: {
       state,
-      dispatch
+      appDispatch
     },
     children: children
   });
@@ -12319,6 +12375,36 @@ const activePipelineReducer = (state, action) => {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages: (_f = state.activePipeline.stages) === null || _f === void 0 ? void 0 : _f.filter(stage => stage.id !== deletedStageId)
           })
+        });
+      }
+    default:
+      return state;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./src/reducers/app-reducer.ts":
+/*!*************************************!*\
+  !*** ./src/reducers/app-reducer.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reducer: () => (/* binding */ reducer)
+/* harmony export */ });
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_SITE_URL:
+      {
+        const siteURL = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          siteURL
         });
       }
     default:

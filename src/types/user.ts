@@ -5,6 +5,7 @@ type BaseUser = {
   created_at: string;
   email: string;
   phone: string;
+  page_hash: string;
 };
 
 type User = BaseUser & {

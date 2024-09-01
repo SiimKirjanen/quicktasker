@@ -47,6 +47,12 @@ const SET_USERS_SEARCH_VALUE = "SET_USERS_SEARCH_VALUE";
 const EDIT_USER = "EDIT_USER";
 const DELETE_USER = "DELETE_USER";
 
+//App reducer
+const SET_SITE_URL = "SET_SITE_URL";
+
+//Page
+const WPQT_PAGE = "wpqt";
+
 export {
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
@@ -89,4 +95,6 @@ export {
   EDIT_USER,
   OPEN_EDIT_USER_MODAL,
   DELETE_USER,
+  SET_SITE_URL,
+  WPQT_PAGE,
 };

@@ -46,17 +46,27 @@ type WPQTCardDataItemProps = {
   label: string;
   value: string;
   valueClassName?: string;
+  valueLink?: string;
 };
 
 function WPQTCardDataItem({
   label,
   value,
   valueClassName,
+  valueLink,
 }: WPQTCardDataItemProps) {
   return (
     <div className="wpqt-mb-1 wpqt-flex wpqt-gap-1">
       <div>{label}:</div>
-      <div className={`${valueClassName}`}>{value}</div>
+      <div className={`${valueClassName}`}>
+        {valueLink ? (
+          <a href={valueLink} target="_blank" className="wpqt-text-qtTextBlue">
+            {value}
+          </a>
+        ) : (
+          value
+        )}
+      </div>
     </div>
   );
 }
