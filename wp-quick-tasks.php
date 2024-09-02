@@ -26,6 +26,7 @@ require( 'php/repositories/LogRepository.php' );
 require( 'php/repositories/CommentRepository.php' );
 require( 'php/repositories/UserRepository.php' );
 require( 'php/repositories/UserPageRepository.php' );
+require( 'php/repositories/PasswordRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );

@@ -9,6 +9,7 @@ const initialState: State = {
   isActiveUser: false,
   setupCompleted: false,
   pageHash: "",
+  isLoggedIn: false,
 };
 
 type State = {
@@ -16,6 +17,7 @@ type State = {
   isActiveUser: boolean;
   setupCompleted: boolean;
   pageHash: string;
+  isLoggedIn: boolean;
 };
 
 type Action = {

@@ -17,7 +17,7 @@ class LogService {
         ));
 
         if( $result === false ) {
-            throw new Exception('Failed to add a log');
+            throw new \Exception('Failed to add a log');
         }
 
         return $wpdb->insert_id;

@@ -53,7 +53,7 @@ class UserService {
         );
 
         if (!$result2) {
-            throw new Exception('Failed to create a user page');
+            throw new \Exception('Failed to create a user page');
         }
 
         return $this->userRepository->getUserById($newUserId);
@@ -82,7 +82,7 @@ class UserService {
         );
 
         if (!$result) {
-            throw new Exception('Failed to update a user');
+            throw new \Exception('Failed to update a user');
         }
 
         return $this->userRepository->getUserById($userId);
@@ -108,7 +108,7 @@ class UserService {
         );
 
         if (!$result) {
-            throw new Exception('Failed to disable a user');
+            throw new \Exception('Failed to disable a user');
         }
 
         return $this->userRepository->getUserById($userId);
@@ -133,7 +133,7 @@ class UserService {
         );
 
         if (!$result) {
-            throw new Exception('Failed to delete a user');
+            throw new \Exception('Failed to delete a user');
         }
 
         return true;

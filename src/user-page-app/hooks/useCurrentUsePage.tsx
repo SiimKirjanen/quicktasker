@@ -5,10 +5,11 @@ import { AssignableTasksPage } from "../components/Pages/AssignableTasksPage/Ass
 import { UserPageAppContext } from "../providers/UserPageAppContextProvider";
 import { SetUpPage } from "../components/Pages/SetUpPage/SetUpPage";
 import { ErrorPage } from "../components/Pages/ErrorPage/ErrorPage";
+import { LoginPage } from "../components/Pages/LoginPage/LoginPage";
 
 function useCurrentUserPage() {
   const {
-    state: { isActiveUser, setupCompleted, loading },
+    state: { isActiveUser, setupCompleted, loading, isLoggedIn },
   } = useContext(UserPageAppContext);
   const [currentPage, setCurrentPage] = useState(getCurrentPage());
 
@@ -16,13 +17,19 @@ function useCurrentUserPage() {
     if (loading) {
       return <div>Loading...</div>;
     }
-    if (!setupCompleted) {
-      return <SetUpPage />;
-    }
 
     if (!isActiveUser) {
       return <ErrorPage />;
     }
+
+    if (!setupCompleted) {
+      return <SetUpPage />;
+    }
+
+    if (!isLoggedIn) {
+      return <LoginPage />;
+    }
+
     return getPageFromUrl();
   }
 

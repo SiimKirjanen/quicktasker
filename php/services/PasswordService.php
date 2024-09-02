@@ -1,11 +1,18 @@
 <?php
 namespace WPQT\Password;
 
+use WPQT\Password\PasswordRepository;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
 class PasswordService {
+    protected $passwordRepository;
+
+    public function __construct() {
+        $this->passwordRepository = new PasswordRepository();
+    }
 
     /**
      * Creates a password hash using the default algorithm.
@@ -18,14 +25,21 @@ class PasswordService {
     }
 
     /**
-     * Verifies a password against its hash.
+     * Verifies the password against the stored password.
      *
-     * @param string $password The password to verify.
-     * @param string $hash The hash to compare against.
-     * @return bool Returns true if the password matches the hash, false otherwise.
+     * @param string $pageHash The hash of the user page.
+     * @param string $password The password to be verified.
+     * @return bool Returns true if the password is verified, otherwise throws an exception.
+     * @throws Exception Throws an exception if failed to retrieve the stored password.
      */
-    public function verifyPassword($password, $hash) {
-        return password_verify($password, $hash);
+    public function verifyPassword($pageHash, $password) {
+        $storedPassword = $this->passwordRepository->getUserPagePasswordByHash($pageHash);
+
+        if( !$storedPassword ) {
+            throw new \Exception('Failed to retrieve stored password');
+        }
+
+        return password_verify($password, $storedPassword);
     }
 
     /**
@@ -52,7 +66,7 @@ class PasswordService {
         );
 
         if( $rowsUpdated === false ) {
-            throw new Exception('Failed to store password');
+            throw new \Exception('Failed to store password');
         }
 
         return true;
