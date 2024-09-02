@@ -27,7 +27,7 @@ class UserPageService {
     public function checkIfUserPageSetupCompleted($pageUser) {
         $hasPassword = $this->userService->checkIfUserHasPassword($pageUser->id);
 
-        if(!$hasPassword ) {
+        if( !$hasPassword ) {
             return false;
         }
         return true;

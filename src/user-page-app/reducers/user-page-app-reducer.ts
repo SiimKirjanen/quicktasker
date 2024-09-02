@@ -15,13 +15,14 @@ const transformServerUserPageStatus = (
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case SET_USER_PAGE_STATUS: {
-      const serverUserPageStatus: ServerUserPageStatus = action.payload;
+      const serverUserPageStatus = action.payload;
       const userPageStatus: UserPageStatus =
         transformServerUserPageStatus(serverUserPageStatus);
 
       return {
         ...state,
         ...userPageStatus,
+        loading: false,
       };
     }
     default:

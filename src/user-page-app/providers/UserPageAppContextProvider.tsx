@@ -2,18 +2,20 @@ import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/user-page-app-reducer";
 import { SET_USER_PAGE_STATUS } from "../constants";
 import { getUserPageStatusRequest } from "../api/user-page-api";
-import useQueryParams from "../hooks/useQueryParams";
+import useQueryParams from "../../hooks/useQueryParams";
 
 const initialState: State = {
   loading: true,
   isActiveUser: false,
   setupCompleted: false,
+  pageHash: "",
 };
 
 type State = {
   loading: boolean;
   isActiveUser: boolean;
   setupCompleted: boolean;
+  pageHash: string;
 };
 
 type Action = {
@@ -51,11 +53,14 @@ const UserPageAppContextProvider = ({
   const getUserPageStatus = async () => {
     try {
       const pageHash = getQueryParam("code");
-      console.log(pageHash);
+
       if (pageHash) {
         const { data } = await getUserPageStatusRequest(pageHash);
 
-        userPageAppDispatch({ type: SET_USER_PAGE_STATUS, payload: data });
+        userPageAppDispatch({
+          type: SET_USER_PAGE_STATUS,
+          payload: { ...data, pageHash },
+        });
       }
     } catch (error) {}
   };

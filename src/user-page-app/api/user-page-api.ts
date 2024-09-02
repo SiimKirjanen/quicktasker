@@ -11,4 +11,15 @@ function getUserPageStatusRequest(
   });
 }
 
-export { getUserPageStatusRequest };
+function setUpUserPageRequest(
+  pageHash: string,
+  data: { password: string },
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/user-page/${pageHash}/setup`,
+    data,
+    method: "POST",
+  });
+}
+
+export { getUserPageStatusRequest, setUpUserPageRequest };

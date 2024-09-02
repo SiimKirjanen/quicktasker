@@ -1,13 +1,19 @@
+import { PageWrap } from "./components/Pages/Page/PageWrap";
 import { UserPageAppContextProvider } from "./providers/UserPageAppContextProvider";
+import { useCurrentUserPage } from "./hooks/useCurrentUsePage";
 
 function UserPageApp() {
   return (
     <UserPageAppContextProvider>
-      <div>
-        <h1>User Page</h1>
-      </div>
+      <UserPageContent />
     </UserPageAppContextProvider>
   );
+}
+
+function UserPageContent() {
+  const currentPage = useCurrentUserPage();
+
+  return <PageWrap>{currentPage}</PageWrap>;
 }
 
 export default UserPageApp;
