@@ -1,6 +1,10 @@
 <?php
 namespace WPQT\UserPage;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 class UserPageRepository {
 
     /**

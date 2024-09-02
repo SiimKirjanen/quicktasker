@@ -2,6 +2,10 @@
 
 namespace WPQT\Comment;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 class CommentRepository {
     public function getTaskComments($taskId) {
         global $wpdb;

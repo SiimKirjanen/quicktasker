@@ -1,6 +1,9 @@
 <?php
-
 namespace WPQT\Response;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
 
 class ApiResponse {
     private $success;

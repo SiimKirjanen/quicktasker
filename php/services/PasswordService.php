@@ -1,6 +1,10 @@
 <?php
 namespace WPQT\Password;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 class PasswordService {
 
     /**

@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 class PipelineRepository {
     /**
      * Retrieves all pipelines from the database.

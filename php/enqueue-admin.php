@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 use WPQT\User\UserRepository;
 
 add_action( 'admin_enqueue_scripts', 'wpqt_enqueue_app_assets' );

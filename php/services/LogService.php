@@ -2,6 +2,10 @@
 
 namespace WPQT\Log;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 class LogService {
     public function log($text, $type, $typeId) {
         global $wpdb;

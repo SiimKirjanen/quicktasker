@@ -1,5 +1,10 @@
 <?php
 namespace WPQT\UserPage;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 use WPQT\UserPage\UserPageRepository;
 use WPQT\User\UserService;
 

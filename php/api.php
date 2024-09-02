@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 use WPQT\Response\ApiResponse;
 use WPQT\Log\LogRepository;
 use WPQT\Comment\CommentRepository;

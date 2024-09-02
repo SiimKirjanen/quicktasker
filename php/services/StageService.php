@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 use WPQT\Log\LogService;
 
 class StageService {

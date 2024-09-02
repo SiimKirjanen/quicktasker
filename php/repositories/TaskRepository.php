@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 class TaskRepository {
     /**
      * Retrieves all tasks from the database.

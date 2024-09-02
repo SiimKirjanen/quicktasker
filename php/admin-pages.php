@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 add_action( 'admin_menu', 'wp_quick_taks_add_admin_menu');
 function wp_quick_taks_add_admin_menu() {
     add_menu_page(

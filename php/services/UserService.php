@@ -2,6 +2,10 @@
 
 namespace WPQT\User;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 use WPQT\User\UserRepository;
 use WPQT\Hash\HashService;
 

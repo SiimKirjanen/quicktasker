@@ -2,6 +2,10 @@
 
 namespace WPQT\User;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 class UserRepository {
 
     /**

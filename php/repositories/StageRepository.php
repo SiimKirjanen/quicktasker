@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 class StageRepository {
     /**
      * Retrieves all stages from the database.

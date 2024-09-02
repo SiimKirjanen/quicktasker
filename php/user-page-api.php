@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
+
 use WPQT\Response\ApiResponse;
 use WPQT\UserPage\UserPageService;
 use WPQT\UserPage\UserPageRepository;
@@ -54,7 +58,7 @@ function wpqt_register_user_page_api_routes() {
                         throw new Exception('User page setup has already been completed');
                     }
                     $passwordService->storePassword($pageUser->id, $data['password']);
-                    
+
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
