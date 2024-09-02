@@ -1,12 +1,15 @@
 <?php
 namespace WPQT\UserPage;
 use WPQT\UserPage\UserPageRepository;
+use WPQT\User\UserService;
 
 class UserPageService {
     protected $userPageRepository;
+    protected $userService;
 
     public function __construct() {
         $this->userPageRepository = new UserPageRepository();
+        $this->userService = new UserService();
     }
     
     /**
@@ -19,5 +22,14 @@ class UserPageService {
         $userPage = $this->userPageRepository->getUserPageByHash($pageHash);
 
         return $userPage !== null;
+    }
+
+    public function checkIfUserPageSetupCompleted($pageUser) {
+        $hasPassword = $this->userService->checkIfUserHasPassword($pageUser->id);
+
+        if(!$hasPassword ) {
+            return false;
+        }
+        return true;
     }
 }

@@ -18,7 +18,7 @@ define('WP_QUICK_TASKS_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 DB constants
 ==================================================================================================================================================================================================================
 */
-define('WP_QUICK_TASKS_DB_VERSION', "1.8");
+define('WP_QUICK_TASKS_DB_VERSION', "1.9");
 
 define('TABLE_WP_QUICK_TASKS_USERS', $wpdb->prefix . "wpqt_users");
 define('TABLE_WP_QUICK_TASKS_PIPELINES', $wpdb->prefix . "wpqt_pipelines");

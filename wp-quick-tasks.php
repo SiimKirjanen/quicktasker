@@ -35,10 +35,12 @@ require( 'php/services/LogService.php' );
 require( 'php/services/UserService.php' );
 require( 'php/services/HashService.php' );
 require( 'php/services/UserPageService.php' );
+require( 'php/services/PasswordService.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
 require( 'php/api.php' );
+require( 'php/user-page-api.php' );
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );

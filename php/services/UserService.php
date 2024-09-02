@@ -134,4 +134,27 @@ class UserService {
 
         return true;
     }
+
+    /**
+     * Check if a user has a password.
+     *
+     * @param int $userId The ID of the user.
+     * @return bool Returns true if the user has a password, false otherwise.
+     */
+    public function checkIfUserHasPassword($userId) {
+        global $wpdb;
+
+        $result = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM " . TABLE_WP_QUICK_TASKS_USERS . " WHERE id = %d AND password IS NOT NULL",
+                $userId
+            )
+        );
+
+        if ($result > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

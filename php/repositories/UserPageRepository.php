@@ -19,4 +19,25 @@ class UserPageRepository {
             )
         );
     }
+
+    /**
+     * Retrieves a user by its page hash.
+     *
+     * @param string $pageHash The hash of the user page.
+     * @return object|null The user object if found, null otherwise.
+     */
+    public function getPageUserByHash($pageHash) {
+        global $wpdb;
+
+        return $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT a.*, b.* FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a 
+                LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_PAGES . " AS b
+                ON a.id = b.user_id 
+                WHERE b.page_hash = %s",
+                $pageHash
+            )
+        );
+    }
+
 }
