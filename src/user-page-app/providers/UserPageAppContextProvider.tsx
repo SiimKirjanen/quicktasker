@@ -3,11 +3,13 @@ import { reducer } from "../reducers/user-page-app-reducer";
 import { SET_USER_PAGE_STATUS } from "../constants";
 import { getUserPageStatusRequest } from "../api/user-page-api";
 import useQueryParams from "../../hooks/useQueryParams";
+import { useSession } from "../hooks/useSession";
 
 const initialState: State = {
   loading: true,
   isActiveUser: false,
   setupCompleted: false,
+  isLoggedIn: false,
   pageHash: "",
 };
 
@@ -15,6 +17,7 @@ type State = {
   loading: boolean;
   isActiveUser: boolean;
   setupCompleted: boolean;
+  isLoggedIn: boolean;
   pageHash: string;
 };
 
@@ -45,21 +48,23 @@ const UserPageAppContextProvider = ({
     initialState,
   );
   const { getQueryParam } = useQueryParams();
+  const { isLoggedIn } = useSession();
 
   useEffect(() => {
-    getUserPageStatus();
+    loadUserPageStatus();
   }, []);
 
-  const getUserPageStatus = async () => {
+  const loadUserPageStatus = async () => {
     try {
       const pageHash = getQueryParam("code");
 
       if (pageHash) {
+        const userLoggedIn = isLoggedIn();
         const { data } = await getUserPageStatusRequest(pageHash);
 
         userPageAppDispatch({
           type: SET_USER_PAGE_STATUS,
-          payload: { ...data, pageHash },
+          payload: { ...data, pageHash, isLoggedIn: userLoggedIn },
         });
       }
     } catch (error) {}

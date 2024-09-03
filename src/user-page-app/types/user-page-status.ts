@@ -1,4 +1,6 @@
-type BaseUserPageStatus = {};
+type BaseUserPageStatus = {
+  isLoggedIn: boolean;
+};
 
 type UserPageStatus = BaseUserPageStatus & {
   isActiveUser: boolean;

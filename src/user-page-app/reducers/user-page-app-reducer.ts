@@ -1,28 +1,26 @@
-import { SET_USER_PAGE_STATUS } from "../constants";
+import { SET_USER_LOGGED_IN, SET_USER_PAGE_STATUS } from "../constants";
 import { Action, State } from "../providers/UserPageAppContextProvider";
-import {
-  ServerUserPageStatus,
-  UserPageStatus,
-} from "../types/user-page-status";
-
-const transformServerUserPageStatus = (
-  serverPageStatus: ServerUserPageStatus,
-): UserPageStatus => ({
-  ...serverPageStatus,
-  isActiveUser: serverPageStatus.isActiveUser === "1",
-});
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case SET_USER_PAGE_STATUS: {
-      const serverUserPageStatus = action.payload;
-      const userPageStatus: UserPageStatus =
-        transformServerUserPageStatus(serverUserPageStatus);
+      const userPageStatus = action.payload;
 
       return {
         ...state,
-        ...userPageStatus,
+        isActiveUser: userPageStatus.isActiveUser === "1",
+        isLoggedIn: userPageStatus.isLoggedIn,
+        setupCompleted: userPageStatus.setupCompleted,
         loading: false,
+        pageHash: userPageStatus.pageHash,
+      };
+    }
+    case SET_USER_LOGGED_IN: {
+      const isLoggedIn: boolean = action.payload;
+
+      return {
+        ...state,
+        isLoggedIn,
       };
     }
     default:

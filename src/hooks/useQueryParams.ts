@@ -4,9 +4,11 @@ const useQueryParams = () => {
 
     return searchParams.get(param);
   };
+  const code = getQueryParam("code");
 
   return {
     getQueryParam,
+    code,
   };
 };
 
