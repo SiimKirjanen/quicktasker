@@ -67,6 +67,7 @@ function UserPageContent() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getOverviewRequest: () => (/* binding */ getOverviewRequest),
 /* harmony export */   getUserPageStatusRequest: () => (/* binding */ getUserPageStatusRequest),
 /* harmony export */   logInUserPageRequest: () => (/* binding */ logInUserPageRequest),
 /* harmony export */   setUpUserPageRequest: () => (/* binding */ setUpUserPageRequest)
@@ -94,6 +95,12 @@ function logInUserPageRequest(pageHash, password) {
     data: {
       password
     }
+  });
+}
+function getOverviewRequest() {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    method: "GET",
+    path: `/wpqt/v1/user-page/overview`
   });
 }
 
@@ -160,8 +167,51 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
 
 function HomePage() {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    getOverviewData();
+  }, []);
+  const getOverviewData = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.getOverviewRequest)();
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
       children: "Home!"

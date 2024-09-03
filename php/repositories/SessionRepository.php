@@ -6,6 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class SessionRepository{
+
+    /**
+     * Retrieves the user session based on the session token.
+     *
+     * @param string $sessionToken The session token to retrieve the user session.
+     * @return object|null The user session object if found, null otherwise.
+     */
     public function getUserSession($sessionToken){
         global $wpdb;
 
@@ -16,6 +23,12 @@ class SessionRepository{
             )
         );
     }
+    /**
+     * Retrieves a user session by its ID.
+     *
+     * @param int $sessionId The ID of the session to retrieve.
+     * @return object|null The session object if found, null otherwise.
+     */
     public function getUserSessionById($sessionId){
         global $wpdb;
 

@@ -101,4 +101,24 @@ function wpqt_register_user_page_api_routes() {
             },
         'permission_callback' => '__return_true'
     ));
+
+    register_rest_route('wpqt/v1', 'user-page/overview', array(
+        'methods' => 'GET',
+        'callback' => function( $data ) {
+                try {
+                    $sessionService = new SessionService();
+                    $session = $sessionService->verifySessionToken();
+
+                    $overviewData = (object)[
+                        'assignedTasksCount' => 100,
+                        'selectableTasksCount' => 55
+                    ];
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $overviewData))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true'
+    ));
 }

@@ -34,4 +34,16 @@ function logInUserPageRequest(
   });
 }
 
-export { getUserPageStatusRequest, setUpUserPageRequest, logInUserPageRequest };
+function getOverviewRequest(): Promise<WPQTResponse<UserPageOverview>> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-page/overview`,
+  });
+}
+
+export {
+  getUserPageStatusRequest,
+  setUpUserPageRequest,
+  logInUserPageRequest,
+  getOverviewRequest,
+};

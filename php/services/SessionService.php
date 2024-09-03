@@ -13,6 +13,13 @@ class SessionService {
         $this->sessionRepository = new SessionRepository();
     }
 
+    /**
+     * Calculates the expiry date for a new token.
+     *
+     * This method calculates the expiry date for a new token by adding one hour to the current UTC time.
+     *
+     * @return string The expiry date in 'Y-m-d H:i:s' format in UTC.
+     */
     public function getNewTokenExpiryDate() {
          // Get the current UTC time
          $current_time = time();
@@ -24,15 +31,33 @@ class SessionService {
          return gmdate('Y-m-d H:i:s', $expiry_time);
     }
 
+    /**
+     * Retrieves the current UTC time in 'Y-m-d H:i:s' format.
+     *
+     * @return string The current UTC time.
+     */
     public function getCurrentUTCTime() {
         // Get the current UTC time in 'Y-m-d H:i:s' format
         return gmdate('Y-m-d H:i:s');
     }
 
+    /**
+     * Generates a session token.
+     *
+     * @return string The generated session token.
+     */
     public function generateSessionToken() {
         return bin2hex(random_bytes(32));
     }
 
+    /**
+     * Creates a new session for a user.
+     *
+     * @param int $userId The ID of the user.
+     * @param string $userPageHash The page hash associated with the user.
+     * @return UserSession The newly created user session.
+     * @throws \Exception If failed to delete existing session or create new session.
+     */
     public function createSession($userId, $userPageHash) {
         global $wpdb;
 
@@ -65,4 +90,27 @@ class SessionService {
         
         return $this->sessionRepository->getUserSessionById($wpdb->insert_id);
     }
+
+  
+    /**
+     * Verifies the session token.
+     *
+     * @throws \Exception If the session token is invalid or has expired.
+     *
+     * @return Session|null The session object if the token is valid and has not expired, null otherwise.
+     */
+    public function verifySessionToken() {
+        $sessionToken = $_COOKIE['wpqt-session-token'];
+        $session = $this->sessionRepository->getUserSession($sessionToken);
+
+        if( $session === null ) {
+            throw new \Exception('Invalid session token');
+        }
+
+        if( strtotime($session->expires_at_utc) < time() ) {
+            throw new \Exception('Session has expired');
+        }
+
+        return $session;
+    } 
 }
