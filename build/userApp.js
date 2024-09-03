@@ -188,6 +188,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
 /* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
+/* harmony import */ var _hooks_useSession__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/useSession */ "./src/user-page-app/hooks/useSession.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -219,15 +220,20 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function LoginPage() {
   const {
     state: {
       pageHash
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserPageAppContext);
+  const {
+    setSessionCookie
+  } = (0,_hooks_useSession__WEBPACK_IMPORTED_MODULE_4__.useSession)();
   const login = () => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.logInUserPageRequest)(pageHash, "password");
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.logInUserPageRequest)(pageHash, "siim");
+      setSessionCookie(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -405,6 +411,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Pages_SetUpPage_SetUpPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/Pages/SetUpPage/SetUpPage */ "./src/user-page-app/components/Pages/SetUpPage/SetUpPage.tsx");
 /* harmony import */ var _components_Pages_ErrorPage_ErrorPage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/Pages/ErrorPage/ErrorPage */ "./src/user-page-app/components/Pages/ErrorPage/ErrorPage.tsx");
 /* harmony import */ var _components_Pages_LoginPage_LoginPage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/Pages/LoginPage/LoginPage */ "./src/user-page-app/components/Pages/LoginPage/LoginPage.tsx");
+/* harmony import */ var _useSession__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./useSession */ "./src/user-page-app/hooks/useSession.tsx");
+
 
 
 
@@ -419,10 +427,12 @@ function useCurrentUserPage() {
     state: {
       isActiveUser,
       setupCompleted,
-      loading,
-      isLoggedIn
+      loading
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserPageAppContext);
+  const {
+    isLoggedId
+  } = (0,_useSession__WEBPACK_IMPORTED_MODULE_9__.useSession)();
   const [currentPage, setCurrentPage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(getCurrentPage());
   function getCurrentPage() {
     if (loading) {
@@ -436,7 +446,7 @@ function useCurrentUserPage() {
     if (!setupCompleted) {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_SetUpPage_SetUpPage__WEBPACK_IMPORTED_MODULE_6__.SetUpPage, {});
     }
-    if (!isLoggedIn) {
+    if (!isLoggedId) {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_LoginPage_LoginPage__WEBPACK_IMPORTED_MODULE_8__.LoginPage, {});
     }
     return getPageFromUrl();
@@ -477,6 +487,44 @@ const getUrlParams = () => {
     hash
   };
 };
+
+
+/***/ }),
+
+/***/ "./src/user-page-app/hooks/useSession.tsx":
+/*!************************************************!*\
+  !*** ./src/user-page-app/hooks/useSession.tsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useSession: () => (/* binding */ useSession)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/dist/js.cookie.mjs");
+
+
+function useSession() {
+  const [isLoggedId, setIsLoggedId] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!!js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get("wpqt-session-token"));
+  const setSessionCookie = session => {
+    const expireData = new Date(`${session.expiresAtUTC}Z`);
+    js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].set("wpqt-session-token", session.sessionToken, {
+      expires: expireData,
+      path: "/"
+    });
+    setIsLoggedId(true);
+  };
+  const getSessionCookie = () => {
+    return js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get("wpqt-session-token");
+  };
+  return {
+    setSessionCookie,
+    getSessionCookie,
+    isLoggedId
+  };
+}
 
 
 /***/ }),
@@ -537,8 +585,7 @@ const initialState = {
   loading: true,
   isActiveUser: false,
   setupCompleted: false,
-  pageHash: "",
-  isLoggedIn: false
+  pageHash: ""
 };
 const UserPageAppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -615,6 +662,16 @@ const reducer = (state, action) => {
 
 /***/ }),
 
+/***/ "react":
+/*!************************!*\
+  !*** external "React" ***!
+  \************************/
+/***/ ((module) => {
+
+module.exports = window["React"];
+
+/***/ }),
+
 /***/ "react/jsx-runtime":
 /*!**********************************!*\
   !*** external "ReactJSXRuntime" ***!
@@ -642,6 +699,154 @@ module.exports = window["wp"]["apiFetch"];
 /***/ ((module) => {
 
 module.exports = window["wp"]["element"];
+
+/***/ }),
+
+/***/ "./node_modules/js-cookie/dist/js.cookie.mjs":
+/*!***************************************************!*\
+  !*** ./node_modules/js-cookie/dist/js.cookie.mjs ***!
+  \***************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ api)
+/* harmony export */ });
+/*! js-cookie v3.0.5 | MIT */
+/* eslint-disable no-var */
+function assign (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+    for (var key in source) {
+      target[key] = source[key];
+    }
+  }
+  return target
+}
+/* eslint-enable no-var */
+
+/* eslint-disable no-var */
+var defaultConverter = {
+  read: function (value) {
+    if (value[0] === '"') {
+      value = value.slice(1, -1);
+    }
+    return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent)
+  },
+  write: function (value) {
+    return encodeURIComponent(value).replace(
+      /%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,
+      decodeURIComponent
+    )
+  }
+};
+/* eslint-enable no-var */
+
+/* eslint-disable no-var */
+
+function init (converter, defaultAttributes) {
+  function set (name, value, attributes) {
+    if (typeof document === 'undefined') {
+      return
+    }
+
+    attributes = assign({}, defaultAttributes, attributes);
+
+    if (typeof attributes.expires === 'number') {
+      attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
+    }
+    if (attributes.expires) {
+      attributes.expires = attributes.expires.toUTCString();
+    }
+
+    name = encodeURIComponent(name)
+      .replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent)
+      .replace(/[()]/g, escape);
+
+    var stringifiedAttributes = '';
+    for (var attributeName in attributes) {
+      if (!attributes[attributeName]) {
+        continue
+      }
+
+      stringifiedAttributes += '; ' + attributeName;
+
+      if (attributes[attributeName] === true) {
+        continue
+      }
+
+      // Considers RFC 6265 section 5.2:
+      // ...
+      // 3.  If the remaining unparsed-attributes contains a %x3B (";")
+      //     character:
+      // Consume the characters of the unparsed-attributes up to,
+      // not including, the first %x3B (";") character.
+      // ...
+      stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+    }
+
+    return (document.cookie =
+      name + '=' + converter.write(value, name) + stringifiedAttributes)
+  }
+
+  function get (name) {
+    if (typeof document === 'undefined' || (arguments.length && !name)) {
+      return
+    }
+
+    // To prevent the for loop in the first place assign an empty array
+    // in case there are no cookies at all.
+    var cookies = document.cookie ? document.cookie.split('; ') : [];
+    var jar = {};
+    for (var i = 0; i < cookies.length; i++) {
+      var parts = cookies[i].split('=');
+      var value = parts.slice(1).join('=');
+
+      try {
+        var found = decodeURIComponent(parts[0]);
+        jar[found] = converter.read(value, found);
+
+        if (name === found) {
+          break
+        }
+      } catch (e) {}
+    }
+
+    return name ? jar[name] : jar
+  }
+
+  return Object.create(
+    {
+      set,
+      get,
+      remove: function (name, attributes) {
+        set(
+          name,
+          '',
+          assign({}, attributes, {
+            expires: -1
+          })
+        );
+      },
+      withAttributes: function (attributes) {
+        return init(this.converter, assign({}, this.attributes, attributes))
+      },
+      withConverter: function (converter) {
+        return init(assign({}, this.converter, converter), this.attributes)
+      }
+    },
+    {
+      attributes: { value: Object.freeze(defaultAttributes) },
+      converter: { value: Object.freeze(converter) }
+    }
+  )
+}
+
+var api = init(defaultConverter, { path: '/' });
+/* eslint-enable no-var */
+
+
+
 
 /***/ })
 

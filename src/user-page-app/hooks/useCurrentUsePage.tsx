@@ -6,11 +6,13 @@ import { UserPageAppContext } from "../providers/UserPageAppContextProvider";
 import { SetUpPage } from "../components/Pages/SetUpPage/SetUpPage";
 import { ErrorPage } from "../components/Pages/ErrorPage/ErrorPage";
 import { LoginPage } from "../components/Pages/LoginPage/LoginPage";
+import { useSession } from "./useSession";
 
 function useCurrentUserPage() {
   const {
-    state: { isActiveUser, setupCompleted, loading, isLoggedIn },
+    state: { isActiveUser, setupCompleted, loading },
   } = useContext(UserPageAppContext);
+  const { isLoggedId } = useSession();
   const [currentPage, setCurrentPage] = useState(getCurrentPage());
 
   function getCurrentPage() {
@@ -26,7 +28,7 @@ function useCurrentUserPage() {
       return <SetUpPage />;
     }
 
-    if (!isLoggedIn) {
+    if (!isLoggedId) {
       return <LoginPage />;
     }
 

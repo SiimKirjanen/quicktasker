@@ -1,15 +1,19 @@
 import { useContext } from "@wordpress/element";
 import { logInUserPageRequest } from "../../../api/user-page-api";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
+import { useSession } from "../../../hooks/useSession";
 
 function LoginPage() {
   const {
     state: { pageHash },
   } = useContext(UserPageAppContext);
+  const { setSessionCookie } = useSession();
 
   const login = async () => {
     try {
-      await logInUserPageRequest(pageHash, "password");
+      const response = await logInUserPageRequest(pageHash, "siim");
+
+      setSessionCookie(response.data);
     } catch (error) {
       console.error(error);
     }

@@ -5,6 +5,7 @@
     "target": "ES2015",
     "strict": true,
     "moduleResolution": "node",
-    "noEmitOnError": false
+    "noEmitOnError": false,
+    "allowSyntheticDefaultImports": true
   }
 }

@@ -1,6 +1,7 @@
 import apiFetch from "@wordpress/api-fetch";
 import { WPQTResponse } from "../../types/response";
 import { ServerUserPageStatus } from "../types/user-page-status";
+import { UserSession } from "../types/user-session";
 
 function getUserPageStatusRequest(
   pageHash: string,
@@ -25,7 +26,7 @@ function setUpUserPageRequest(
 function logInUserPageRequest(
   pageHash: string,
   password: string,
-): Promise<WPQTResponse> {
+): Promise<WPQTResponse<UserSession>> {
   return apiFetch({
     path: `/wpqt/v1/user-page/${pageHash}/login`,
     method: "POST",
