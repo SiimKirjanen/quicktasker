@@ -126,6 +126,19 @@ function wpqt_set_up_db() {
 
 		  dbDelta( $sql9 ); 
 
+		  $sql10 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+			session_token varchar(255) NOT NULL,
+			user_id int(11) NOT NULL,
+			page_hash varchar(255) NOT NULL,
+			created_at_utc datetime NOT NULL COMMENT 'UTC',
+			expires_at_utc datetime NOT NULL COMMENT 'UTC',
+			PRIMARY KEY  (id),
+			UNIQUE KEY session_token (session_token)
+		  ) $charset_collate;";
+
+		  dbDelta( $sql10 ); 
+
 		update_option( "wp_quick_taks_db_current_version", WP_QUICK_TASKS_DB_VERSION );
 	}
 }

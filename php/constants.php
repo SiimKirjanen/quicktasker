@@ -21,7 +21,7 @@ define('WP_QUICK_TASKS_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 DB constants
 ==================================================================================================================================================================================================================
 */
-define('WP_QUICK_TASKS_DB_VERSION', "1.9");
+define('WP_QUICK_TASKS_DB_VERSION', "1.15");
 
 define('TABLE_WP_QUICK_TASKS_USERS', $wpdb->prefix . "wpqt_users");
 define('TABLE_WP_QUICK_TASKS_PIPELINES', $wpdb->prefix . "wpqt_pipelines");
@@ -32,6 +32,7 @@ define('TABLE_WP_QUICK_TASKS_STAGES_LOCATION', $wpdb->prefix . "wpqt_stages_loca
 define('TABLE_WP_QUICK_TASKS_LOGS', $wpdb->prefix . "wpqt_logs");
 define('TABLE_WP_QUICK_TASKS_COMMENTS', $wpdb->prefix . "wpqt_comments");
 define('TABLE_WP_QUICK_TASKS_USER_PAGES', $wpdb->prefix . "wpqt_user_pages");
+define('TABLE_WP_QUICK_TASKS_USER_SESSIONS', $wpdb->prefix . "wpqt_user_sessions");
 
 /*
 ==================================================================================================================================================================================================================

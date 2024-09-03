@@ -75,7 +75,7 @@ function wpqt_register_user_page_api_routes() {
                 try {
                     WPQTverifyUserPageHash($data['hash']);
                     $passwordService = new PasswordService();
-                    $sessionServie = new SessionService();
+                    $sessionService = new SessionService();
                     $userPageRepository = new UserPageRepository();
 
                     if($data['password'] === null) {
@@ -89,9 +89,12 @@ function wpqt_register_user_page_api_routes() {
                     }
                     
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']);
-                    $sessionToken = $sessionServie->createSession($userPage->user_id, $data['hash']);
+                    $userSession = $sessionService->createSession($userPage->user_id, $data['hash']);
 
-                    return new WP_REST_Response((new ApiResponse(true, array(), $sessionToken))->toArray(), 200);
+                    return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                        'sessionToken' => $userSession->session_token,
+                        'expiresAtUTC' => $userSession->expires_at_utc
+                    ]))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }

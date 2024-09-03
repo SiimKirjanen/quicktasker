@@ -27,6 +27,7 @@ require( 'php/repositories/CommentRepository.php' );
 require( 'php/repositories/UserRepository.php' );
 require( 'php/repositories/UserPageRepository.php' );
 require( 'php/repositories/PasswordRepository.php' );
+require( 'php/repositories/SessionRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
@@ -37,11 +38,12 @@ require( 'php/services/UserService.php' );
 require( 'php/services/HashService.php' );
 require( 'php/services/UserPageService.php' );
 require( 'php/services/PasswordService.php' );
+require( 'php/services/SessionService.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
-require( 'php/api.php' );
-require( 'php/user-page-api.php' );
+require( 'php/api/admin-api.php' );
+require( 'php/api/user-page-api.php' );
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );
