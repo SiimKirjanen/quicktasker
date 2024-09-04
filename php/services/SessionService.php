@@ -99,12 +99,16 @@ class SessionService {
      *
      * @return Session|null The session object if the token is valid and has not expired, null otherwise.
      */
-    public function verifySessionToken() {
-        $sessionToken = $_COOKIE['wpqt-session-token'];
+    public function verifySessionToken($pageHash) {
+        $sessionToken = $_COOKIE['wpqt-session-token-' . $pageHash];
         $session = $this->sessionRepository->getUserSession($sessionToken);
 
         if( $session === null ) {
             throw new \Exception('Invalid session token');
+        }
+
+        if($pageHash !== $session->page_hash) {
+            throw new \Exception('Session token does not match the page hash');
         }
 
         if( strtotime($session->expires_at_utc) < time() ) {

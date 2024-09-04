@@ -45,10 +45,12 @@ function logInUserPageRequest(
   });
 }
 
-function getOverviewRequest(): Promise<WPQTResponse<UserPageOverview>> {
+function getOverviewRequest(
+  pageHash: string,
+): Promise<WPQTResponse<UserPageOverview>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-page/overview`,
+    path: `/wpqt/v1/user-page/${pageHash}/overview`,
     headers: getCommonHeaders(),
   });
 }

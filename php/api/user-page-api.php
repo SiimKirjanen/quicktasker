@@ -27,6 +27,13 @@ function WPQTverifyUserApiNonce($data) {
     return true;
 }
 
+function WPQTverifyUserSession($pageHash) {
+    $sessionService = new SessionService();
+    $session = $sessionService->verifySessionToken($pageHash);
+
+    return $session;
+}
+
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
     register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/status', array(
@@ -113,13 +120,13 @@ function wpqt_register_user_page_api_routes() {
         'permission_callback' => '__return_true'
     ));
 
-    register_rest_route('wpqt/v1', 'user-page/overview', array(
+    register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/overview', array(
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
                     WPQTverifyUserApiNonce($data);
-                    $sessionService = new SessionService();
-                    $session = $sessionService->verifySessionToken();
+                    WPQTverifyUserPageHash($data['hash']);
+                    $session = WPQTverifyUserSession($data['hash']);
 
                     $overviewData = (object)[
                         'assignedTasksCount' => 100,

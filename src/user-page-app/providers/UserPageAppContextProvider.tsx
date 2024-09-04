@@ -2,15 +2,15 @@ import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/user-page-app-reducer";
 import { SET_USER_PAGE_STATUS } from "../constants";
 import { getUserPageStatusRequest } from "../api/user-page-api";
-import useQueryParams from "../../hooks/useQueryParams";
 import { useSession } from "../hooks/useSession";
+import { getQueryParam } from "../../utils/url";
 
 const initialState: State = {
   loading: true,
   isActiveUser: false,
   setupCompleted: false,
   isLoggedIn: false,
-  pageHash: "",
+  pageHash: getQueryParam("code") || "",
 };
 
 type State = {
@@ -47,7 +47,6 @@ const UserPageAppContextProvider = ({
     reducer,
     initialState,
   );
-  const { getQueryParam } = useQueryParams();
   const { isLoggedIn } = useSession();
 
   useEffect(() => {
@@ -56,7 +55,7 @@ const UserPageAppContextProvider = ({
 
   const loadUserPageStatus = async () => {
     try {
-      const pageHash = getQueryParam("code");
+      const pageHash = state.pageHash;
 
       if (pageHash) {
         const userLoggedIn = isLoggedIn();
@@ -64,7 +63,7 @@ const UserPageAppContextProvider = ({
 
         userPageAppDispatch({
           type: SET_USER_PAGE_STATUS,
-          payload: { ...data, pageHash, isLoggedIn: userLoggedIn },
+          payload: { ...data, isLoggedIn: userLoggedIn },
         });
       }
     } catch (error) {}

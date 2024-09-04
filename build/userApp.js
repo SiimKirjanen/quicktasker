@@ -2,31 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/hooks/useQueryParams.ts":
-/*!*************************************!*\
-  !*** ./src/hooks/useQueryParams.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-const useQueryParams = () => {
-  const getQueryParam = param => {
-    const searchParams = new URLSearchParams(window.location.search);
-    return searchParams.get(param);
-  };
-  const code = getQueryParam("code");
-  return {
-    getQueryParam,
-    code
-  };
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useQueryParams);
-
-/***/ }),
-
 /***/ "./src/user-page-app/UserPageApp.tsx":
 /*!*******************************************!*\
   !*** ./src/user-page-app/UserPageApp.tsx ***!
@@ -108,10 +83,10 @@ function logInUserPageRequest(pageHash, password) {
     headers: getCommonHeaders()
   });
 }
-function getOverviewRequest() {
+function getOverviewRequest(pageHash) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "GET",
-    path: `/wpqt/v1/user-page/overview`,
+    path: `/wpqt/v1/user-page/${pageHash}/overview`,
     headers: getCommonHeaders()
   });
 }
@@ -182,6 +157,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
+/* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -212,14 +188,19 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function HomePage() {
+  const {
+    state: {
+      pageHash
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserPageAppContext);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     getOverviewData();
   }, []);
   const getOverviewData = () => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.getOverviewRequest)();
-      console.log(response);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.getOverviewRequest)(pageHash);
     } catch (error) {
       console.error(error);
     }
@@ -569,6 +550,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   useSession: () => (/* binding */ useSession)
 /* harmony export */ });
 /* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/dist/js.cookie.mjs");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -597,19 +581,26 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
   });
 };
 
+
+
 function useSession() {
+  const {
+    state: {
+      pageHash
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserPageAppContext);
   const setSessionCookie = session => __awaiter(this, void 0, void 0, function* () {
     const expireData = new Date(`${session.expiresAtUTC}Z`);
-    js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("wpqt-session-token", session.sessionToken, {
+    js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set(`wpqt-session-token-${pageHash}`, session.sessionToken, {
       expires: expireData,
       path: "/"
     });
   });
   const getSessionCookie = () => {
-    return js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].get("wpqt-session-token");
+    return js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].get(`wpqt-session-token-${pageHash}`);
   };
   const isLoggedIn = () => {
-    return !!js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].get("wpqt-session-token");
+    return !!js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].get(`wpqt-session-token-${pageHash}`);
   };
   return {
     setSessionCookie,
@@ -639,8 +630,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reducers_user_page_app_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/user-page-app-reducer */ "./src/user-page-app/reducers/user-page-app-reducer.ts");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants */ "./src/user-page-app/constants.ts");
 /* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
-/* harmony import */ var _hooks_useQueryParams__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/useQueryParams */ "./src/hooks/useQueryParams.ts");
-/* harmony import */ var _hooks_useSession__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../hooks/useSession */ "./src/user-page-app/hooks/useSession.tsx");
+/* harmony import */ var _hooks_useSession__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../hooks/useSession */ "./src/user-page-app/hooks/useSession.tsx");
+/* harmony import */ var _utils_url__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/url */ "./src/utils/url.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -680,7 +671,7 @@ const initialState = {
   isActiveUser: false,
   setupCompleted: false,
   isLoggedIn: false,
-  pageHash: ""
+  pageHash: (0,_utils_url__WEBPACK_IMPORTED_MODULE_6__.getQueryParam)("code") || ""
 };
 const UserPageAppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -691,17 +682,14 @@ const UserPageAppContextProvider = ({
 }) => {
   const [state, userPageAppDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_user_page_app_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
   const {
-    getQueryParam
-  } = (0,_hooks_useQueryParams__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  const {
     isLoggedIn
-  } = (0,_hooks_useSession__WEBPACK_IMPORTED_MODULE_6__.useSession)();
+  } = (0,_hooks_useSession__WEBPACK_IMPORTED_MODULE_5__.useSession)();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     loadUserPageStatus();
   }, []);
   const loadUserPageStatus = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-      const pageHash = getQueryParam("code");
+      const pageHash = state.pageHash;
       if (pageHash) {
         const userLoggedIn = isLoggedIn();
         const {
@@ -710,7 +698,6 @@ const UserPageAppContextProvider = ({
         userPageAppDispatch({
           type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_USER_PAGE_STATUS,
           payload: Object.assign(Object.assign({}, data), {
-            pageHash,
             isLoggedIn: userLoggedIn
           })
         });
@@ -750,8 +737,7 @@ const reducer = (state, action) => {
           isActiveUser: userPageStatus.isActiveUser === "1",
           isLoggedIn: userPageStatus.isLoggedIn,
           setupCompleted: userPageStatus.setupCompleted,
-          loading: false,
-          pageHash: userPageStatus.pageHash
+          loading: false
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USER_LOGGED_IN:
@@ -764,6 +750,24 @@ const reducer = (state, action) => {
     default:
       return state;
   }
+};
+
+
+/***/ }),
+
+/***/ "./src/utils/url.ts":
+/*!**************************!*\
+  !*** ./src/utils/url.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getQueryParam: () => (/* binding */ getQueryParam)
+/* harmony export */ });
+const getQueryParam = param => {
+  const searchParams = new URLSearchParams(window.location.search);
+  return searchParams.get(param);
 };
 
 
