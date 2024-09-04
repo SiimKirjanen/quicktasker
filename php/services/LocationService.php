@@ -1,4 +1,5 @@
 <?php
+namespace WPQT\Location;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 

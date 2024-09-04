@@ -1,10 +1,12 @@
 <?php
-
+namespace WPQT\Stage;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
 use WPQT\Log\LogService;
+use WPQT\Stage\StageRepository;
+use WPQT\Task\TaskRepository;
 
 class StageService {
     protected $stageRepository;
@@ -46,7 +48,7 @@ class StageService {
         ));
 
         if( $result === false ) {
-            throw new Exception('Failed to create a stage');
+            throw new \Exception('Failed to create a stage');
         }
 
         $stageId = $wpdb->insert_id;
@@ -86,7 +88,7 @@ class StageService {
         global $wpdb;
 
         if (!array_key_exists('name', $args) || !array_key_exists('description', $args)) {
-            throw new Exception('Required fields are missing');
+            throw new \Exception('Required fields are missing');
         }
 
         $result = $wpdb->update(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array(
@@ -95,7 +97,7 @@ class StageService {
         ), array('id' => $stageId));
 
         if( $result === false ) {
-            throw new Exception('Failed to update the stage');
+            throw new \Exception('Failed to update the stage');
         }
 
         return $this->stageRepository->getStageById($stageId);
@@ -117,7 +119,7 @@ class StageService {
         global $wpdb;
 
         if ( !array_key_exists('direction', $args) ) {
-            throw new Exception('Required fields are missing');
+            throw new \Exception('Required fields are missing');
         }
 
         $stage = $this->stageRepository->getStageById($stageId);
@@ -125,16 +127,16 @@ class StageService {
         $direction = $args['direction'];
 
         if ( !$stage ) {
-            throw new Exception('Stage not found');
+            throw new \Exception('Stage not found');
         }
         $currentOrder = $stage->stage_order;
 
         if( $direction === 'left' && $currentOrder <= 0 ) {
-            throw new Exception('Stage is already at the beginning');
+            throw new \Exception('Stage is already at the beginning');
         }
 
         if( $direction === 'right' && $currentOrder === count($stages) - 1 ) {
-            throw new Exception('Stage is already at the end');
+            throw new \Exception('Stage is already at the end');
         }
 
         $newOrder = $currentOrder + ( $direction === 'left' ? -1 : 1 );
@@ -168,7 +170,7 @@ class StageService {
             );
 
             if($result === false) {
-                throw new Exception('Failed to update stage order');
+                throw new \Exception('Failed to update stage order');
             }
             
         } else {
@@ -182,7 +184,7 @@ class StageService {
             );
 
             if($result === false) {
-                throw new Exception('Failed to update stage order');
+                throw new \Exception('Failed to update stage order');
             }
         }
 
@@ -191,7 +193,7 @@ class StageService {
         ), array('stage_id' => $stageId, 'pipeline_id' => $pipelineId));
 
         if( $result === false ) {
-            throw new Exception('Failed to update stage order');
+            throw new \Exception('Failed to update stage order');
         }
 
         return $result;
@@ -208,19 +210,19 @@ class StageService {
         
         // Check if the stage has tasks
         if( count( $this->taskRepository->getTasksByStageId($stageId) ) > 0 ) {
-            throw new Exception('Stage has tasks. Please delete/relocate the tasks first.');
+            throw new \Exception('Stage has tasks. Please delete/relocate the tasks first.');
         }
 
         // Delete the stage from the pipeline stages table
         $result = $wpdb->delete(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array('id' => $stageId));
         if( $result === false ) {
-            throw new Exception('Failed to delete the stage.');
+            throw new \Exception('Failed to delete the stage.');
         }
 
         // Delete the stage from the stages location table
         $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_STAGES_LOCATION, array('stage_id' => $stageId));
         if( $result2 === false ) {
-            throw new Exception('Failed to delete the stage.');
+            throw new \Exception('Failed to delete the stage.');
         }
 
         return $result;
@@ -247,13 +249,13 @@ class StageService {
         $result = $wpdb->query($wpdb->prepare($sql, $stageId));
 
         if ($result === false) {
-            throw new Exception('Failed to archive tasks');
+            throw new \Exception('Failed to archive tasks');
         }
 
         $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('stage_id' => $stageId));
 
         if ($result2 === false) {
-            throw new Exception('Failed to delete task location');
+            throw new \Exception('Failed to delete task location');
         }
 
         return true;

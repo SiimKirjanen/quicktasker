@@ -1,8 +1,11 @@
 <?php
+namespace WPQT\Pipeline;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
+
+use WPQT\Pipeline\PipelineRepository;
 
 class PipelineService {
     protected $pipelineRepository;
@@ -26,7 +29,7 @@ class PipelineService {
         ));
 
         if ($result == false) {
-            throw new Exception('Failed to create a board');
+            throw new \Exception('Failed to create a board');
         } 
         
         return $this->pipelineRepository->getPipelineById($wpdb->insert_id);
@@ -51,7 +54,7 @@ class PipelineService {
         $args = wp_parse_args($args, $defaults);
 
         if (empty($args['name'])) {
-            throw new Exception('Required fields are missing');
+            throw new \Exception('Required fields are missing');
         }
 
         $result = $wpdb->update(TABLE_WP_QUICK_TASKS_PIPELINES, array(
@@ -62,7 +65,7 @@ class PipelineService {
         ));
 
         if ($result === false) {
-            throw new Exception('Failed to edit pipeline');
+            throw new \Exception('Failed to edit pipeline');
         }
 
         return $this->pipelineRepository->getPipelineById($pipelineId);       
@@ -90,7 +93,7 @@ class PipelineService {
         );
 
         if ($result === false) {
-            throw new Exception('Failed to mark pipeline as primary');
+            throw new \Exception('Failed to mark pipeline as primary');
         }
 
         return $result;   

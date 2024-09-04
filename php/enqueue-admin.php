@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPQT\User\UserRepository;
 use WPQT\Nonce\NonceService;
+use WPQT\Location\LocationService;
+use WPQT\Pipeline\PipelineRepository;
 
 add_action( 'admin_enqueue_scripts', 'wpqt_enqueue_app_assets' );
 function wpqt_enqueue_app_assets(){

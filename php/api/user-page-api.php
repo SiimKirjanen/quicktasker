@@ -10,6 +10,8 @@ use WPQT\UserPage\UserPageRepository;
 use WPQT\Password\PasswordService;
 use WPQT\Session\SessionService;
 use WPQT\Nonce\NonceService;
+use WPQT\Pipeline\PipelineRepository;
+use WPQT\Pipeline\PipelineService;
 
 function WPQTverifyUserPageHash($hash) {
    $userPageService = new UserPageService();

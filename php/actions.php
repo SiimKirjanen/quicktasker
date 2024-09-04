@@ -3,6 +3,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
+use WPQT\Location\LocationService;
 
 add_action( 'plugins_loaded', 'wpqt_update_db' );
 function wpqt_update_db() {

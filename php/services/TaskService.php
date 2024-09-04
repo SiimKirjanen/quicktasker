@@ -1,10 +1,13 @@
 <?php
+namespace WPQT\Task;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
 use WPQT\Log\LogService;
+use WPQT\Stage\StageRepository;
+use WPQT\Task\TaskRepository;
 
 class TaskService {
     protected $taskRepository;
@@ -53,7 +56,7 @@ class TaskService {
         $args = wp_parse_args($args, $defaults);
 
         if ( !isset($args['name']) ) {
-            throw new Exception('createTask required fields are missing');
+            throw new \Exception('createTask required fields are missing');
         }
 
         $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS, array(
@@ -63,7 +66,7 @@ class TaskService {
         ));
 
         if( $result === false ) {
-            throw new Exception('Failed to create a task');
+            throw new \Exception('Failed to create a task');
         }
 
         $taskId = $wpdb->insert_id;
@@ -95,7 +98,7 @@ class TaskService {
         if ($result !== false) {
             return $wpdb->insert_id;
         } else {
-            throw new Exception('Failed to add task order');
+            throw new \Exception('Failed to add task order');
         }
     }
 
@@ -114,7 +117,7 @@ class TaskService {
         $currentTask = $this->taskRepository->getTaskById($taskId);
 
         if (!$currentTask) {
-            throw new Exception('Task not found');
+            throw new \Exception('Task not found');
         }
         $currentStageId = $currentTask->stage_id;
         $currentOrder = $currentTask->task_order;
@@ -143,7 +146,7 @@ class TaskService {
         );
 
         if ($rowsUpdated === false) {
-            throw new Exception('Failed to move task');
+            throw new \Exception('Failed to move task');
         }
         if($stageChanged) {
             $newStage = $this->stageRepository->getStageById($newStageId);
@@ -191,7 +194,7 @@ class TaskService {
         }
       
         if ($result === false) {
-            throw new Exception('Failed to update task order within stage');
+            throw new \Exception('Failed to update task order within stage');
         }
     }
     
@@ -221,7 +224,7 @@ class TaskService {
         );
 
         if ($result1 === false) {
-            throw new Exception('Failed to decrement task order in current stage');
+            throw new \Exception('Failed to decrement task order in current stage');
         }
     
         // Increment the task order of tasks in the new stage
@@ -236,7 +239,7 @@ class TaskService {
         );
 
         if ($result2 === false) {
-            throw new Exception('Failed to increment task order in new stage');
+            throw new \Exception('Failed to increment task order in new stage');
         }
     }
 
@@ -257,7 +260,7 @@ class TaskService {
         $result = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS, $args, array('id' => $taskId));
 
         if ($result === false) {
-            throw new Exception('Failed to edit task');
+            throw new \Exception('Failed to edit task');
         }
 
         return $this->taskRepository->getTaskById($taskId);
@@ -277,13 +280,13 @@ class TaskService {
         $result = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS, array('id' => $taskId));
 
         if ($result === false) {
-            throw new Exception('Failed to delete task');
+            throw new \Exception('Failed to delete task');
         }
 
         $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('task_id' => $taskId));
 
         if ($result2 === false) {
-            throw new Exception('Failed to delete task location');
+            throw new \Exception('Failed to delete task location');
         }
 
         $this->shiftTaskOrder($taskToDelete->task_order, $taskToDelete->stage_id);
@@ -304,13 +307,13 @@ class TaskService {
         $result = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS, array('is_archived' => 1), array('id' => $taskId));
 
         if ($result === false) {
-            throw new Exception('Failed to archive task');
+            throw new \Exception('Failed to archive task');
         }
 
         $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('task_id' => $taskId));
 
         if ($result2 === false) {
-            throw new Exception('Failed to delete task location');
+            throw new \Exception('Failed to delete task location');
         }
 
         $this->shiftTaskOrder($taskToArchive->task_order, $taskToArchive->stage_id);
@@ -338,7 +341,7 @@ class TaskService {
         );
 
         if ($result === false) {
-            throw new Exception('Failed to shift tasks order');
+            throw new \Exception('Failed to shift tasks order');
         }
 
         return $result;

@@ -1,4 +1,5 @@
 <?php
+namespace WPQT\Task;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 

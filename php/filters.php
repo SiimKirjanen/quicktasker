@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+use WPQT\Location\LocationService;
 /**
  * Adds a filter to modify the admin body class.
  *

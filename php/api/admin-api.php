@@ -10,6 +10,12 @@ use WPQT\Comment\CommentRepository;
 use WPQT\User\UserRepositry;
 use WPQT\User\UserService;
 use WPQT\Nonce\NonceService;
+use WPQT\Pipeline\PipelineRepository;
+use WPQT\Pipeline\PipelineService;
+use WPQT\Task\TaskRepository;
+use WPQT\Task\TaskService;
+use WPQT\Stage\StageService;
+use WPQT\Permission\PermissionService;
 
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
@@ -48,7 +54,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -70,7 +76,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -92,7 +98,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -124,7 +130,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -146,7 +152,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -174,7 +180,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -197,7 +203,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -219,7 +225,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -248,7 +254,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -282,7 +288,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -307,7 +313,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -335,7 +341,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -363,7 +369,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -393,7 +399,7 @@ function wpqt_register_api_routes() {
                 } 
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -426,7 +432,7 @@ function wpqt_register_api_routes() {
                 } 
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -458,7 +464,7 @@ function wpqt_register_api_routes() {
                 } 
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -487,7 +493,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -516,7 +522,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -543,7 +549,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -558,7 +564,7 @@ function wpqt_register_api_routes() {
                 return ['s'];
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -589,7 +595,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -611,7 +617,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -633,7 +639,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );
@@ -655,7 +661,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionRepository::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
         ),
     );

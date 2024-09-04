@@ -1,4 +1,5 @@
 <?php
+namespace WPQT\Stage;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 

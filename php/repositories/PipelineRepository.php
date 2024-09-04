@@ -1,8 +1,11 @@
 <?php
+namespace WPQT\Pipeline;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
+use WPQT\Stage\StageRepository;
+use WPQT\Task\TaskRepository;
 
 class PipelineRepository {
     /**

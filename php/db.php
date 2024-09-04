@@ -3,6 +3,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
+use WPQT\Pipeline\PipelineRepository;
+use WPQT\Pipeline\PipelineService;
+use WPQT\Stage\StageService;
 
 function wpqt_set_up_db() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

@@ -1,10 +1,11 @@
 <?php
+namespace WPQT\Permission;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-class PermissionRepository {
+class PermissionService {
     /**
      * Checks if the current user has the required permissions to access the private API.
      *

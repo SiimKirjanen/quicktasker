@@ -35,7 +35,7 @@ class UserPageRepository {
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT a.*, b.* FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a 
+                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.email, a.phone, a.is_active, b.page_hash, b.user_id FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a 
                 LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_PAGES . " AS b
                 ON a.id = b.user_id 
                 WHERE b.page_hash = %s",
