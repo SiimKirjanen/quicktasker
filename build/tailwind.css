@@ -1206,6 +1206,10 @@
   text-align: center;
 }
 
+.wpqt-font-inter {
+  font-family: Inter, sans-serif;
+}
+
 .wpqt-text-base {
   font-size: 1rem;
   line-height: 1.5rem;

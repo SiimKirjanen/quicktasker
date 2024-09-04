@@ -13,6 +13,9 @@ module.exports = {
       height: {
         "screen-minus-top-bar": "calc(100vh - 32px)",
       },
+      fontFamily: {
+        inter: ["Inter", "sans-serif"],
+      },
     },
   },
   plugins: [],

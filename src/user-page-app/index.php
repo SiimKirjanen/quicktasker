@@ -19,7 +19,7 @@
     <title>User page</title>
     <?php wp_head(); ?>
 </head>
-<body>
+<body class="wpqt-font-inter">
     <div id="wpqt-public-user-app"></div>
     <?php wp_footer(); ?>	
 </body>

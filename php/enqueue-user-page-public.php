@@ -31,4 +31,6 @@ function wpqt_enqueue_user_public_page(){
 		'siteURL' => site_url(),
 		'pluginURL' => WP_QUICK_TASKS_PLUGIN_FOLDER_URL,
 	));
+
+    wp_enqueue_style( 'wpqt-user-page-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap', array(), null );
 }

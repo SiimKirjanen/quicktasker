@@ -56,5 +56,11 @@ function wpqt_remove_unnecessary_tags_and_more(){
 
          // Remove skip link script
          remove_action( 'wp_footer', 'the_block_template_skip_link' );
+
+		 // Remove block library inline CSS
+		 add_action( 'wp_enqueue_scripts', function() {
+            wp_dequeue_style( 'wp-block-library' );
+			wp_dequeue_style( 'global-styles' );
+        }, 100 );
 	}
 }
