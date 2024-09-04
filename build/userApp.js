@@ -77,17 +77,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
 
+function getCommonHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "X-WPQT-USER-API-Nonce": window.wpqt_user.userApiNonce
+  };
+}
 function getUserPageStatusRequest(pageHash) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/user-page/${pageHash}/status`,
-    method: "GET"
+    method: "GET",
+    headers: getCommonHeaders()
   });
 }
 function setUpUserPageRequest(pageHash, data) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/user-page/${pageHash}/setup`,
     data,
-    method: "POST"
+    method: "POST",
+    headers: getCommonHeaders()
   });
 }
 function logInUserPageRequest(pageHash, password) {
@@ -96,13 +104,15 @@ function logInUserPageRequest(pageHash, password) {
     method: "POST",
     data: {
       password
-    }
+    },
+    headers: getCommonHeaders()
   });
 }
 function getOverviewRequest() {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "GET",
-    path: `/wpqt/v1/user-page/overview`
+    path: `/wpqt/v1/user-page/overview`,
+    headers: getCommonHeaders()
   });
 }
 

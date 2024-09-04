@@ -9,6 +9,7 @@ use WPQT\UserPage\UserPageService;
 use WPQT\UserPage\UserPageRepository;
 use WPQT\Password\PasswordService;
 use WPQT\Session\SessionService;
+use WPQT\Nonce\NonceService;
 
 function WPQTverifyUserPageHash($hash) {
    $userPageService = new UserPageService();
@@ -19,12 +20,20 @@ function WPQTverifyUserPageHash($hash) {
     return true;
 }
 
+function WPQTverifyUserApiNonce($data) {
+    $nonce = $data->get_header('X-WPQT-USER-API-Nonce');
+    NonceService::verifyNonce($nonce, WPQT_USER_API_NONCE);
+
+    return true;
+}
+
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
     register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/status', array(
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
+                    WPQTverifyUserApiNonce($data);
                     WPQTverifyUserPageHash($data['hash']);
                     $userPageRepository = new UserPageRepository();
                     $userPageService = new UserPageService();
@@ -48,6 +57,7 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'POST',
         'callback' => function( $data ) {
                 try {
+                    WPQTverifyUserApiNonce($data);
                     WPQTverifyUserPageHash($data['hash']);
                     $userPageRepository = new UserPageRepository();
                     $userPageService = new UserPageService();
@@ -73,6 +83,7 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'POST',
         'callback' => function( $data ) {
                 try {
+                    WPQTverifyUserApiNonce($data);
                     WPQTverifyUserPageHash($data['hash']);
                     $passwordService = new PasswordService();
                     $sessionService = new SessionService();
@@ -106,6 +117,7 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
+                    WPQTverifyUserApiNonce($data);
                     $sessionService = new SessionService();
                     $session = $sessionService->verifySessionToken();
 

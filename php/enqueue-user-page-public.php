@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\User\UserRepository;
+use WPQT\Nonce\NonceService;
 
 add_action( 'wp_enqueue_scripts', 'wpqt_enqueue_user_public_page' );
 function wpqt_enqueue_user_public_page(){
@@ -24,7 +25,7 @@ function wpqt_enqueue_user_public_page(){
     wp_enqueue_script('wpqt-script', WP_QUICK_TASKS_PLUGIN_FOLDER_URL . '/build/userApp.js', $dependencies, $build_asset['version'], true);
 
 	wp_localize_script('wpqt-script', 'wpqt_user', array(
-		'userApiNonce' => wp_create_nonce( 'wpqt_user_api_nonce' ),
+		'userApiNonce' => NonceService::createNonce( WPQT_USER_API_NONCE ),
 		'siteURL' => site_url(),
 		'pluginURL' => WP_QUICK_TASKS_PLUGIN_FOLDER_URL,
 	));

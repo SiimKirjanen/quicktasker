@@ -9,13 +9,11 @@ use WPQT\Log\LogRepository;
 use WPQT\Comment\CommentRepository;
 use WPQT\User\UserRepositry;
 use WPQT\User\UserService;
+use WPQT\Nonce\NonceService;
 
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
-
-    if (!isset($nonce) || !wp_verify_nonce($nonce, 'wpqt_api_nonce')) {
-        throw new Exception('rest_nonce_invalid');
-    }
+    NonceService::verifyNonce($nonce, WPQT_ADMIN_API_NONCE);
 
     return true;
 }
