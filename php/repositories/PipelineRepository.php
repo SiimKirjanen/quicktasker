@@ -59,12 +59,28 @@ class PipelineRepository {
     public function getFullPipeline($pipelineId) {
         $stageRepository = new StageRepository();
         $taskRepository = new TaskRepository();
+
+        // Fetch the pipeline
         $pipeline = $this->getPipelineById($pipelineId);
+
+        // Fetch all stages for the pipeline
         $pipelineStages = $stageRepository->getStagesByPipelineId($pipelineId);
 
+        // Fetch all tasks for the stages
+        $stageIds = array_map(function($stage) {
+            return $stage->id;
+        }, $pipelineStages);
+        $tasks = $taskRepository->getTasksByStageIds($stageIds);
+
+        // Organize tasks under their respective stages
+        $tasksByStage = [];
+        foreach ($tasks as $task) {
+            $tasksByStage[$task->stage_id][] = $task;
+        }
+
+         // Assign tasks and users to stages
         foreach ($pipelineStages as $stage) {
-            $tasks = $taskRepository->getTasksByStageId($stage->id);
-            $stage->tasks = $tasks;
+            $stage->tasks = isset($tasksByStage[$stage->id]) ? $tasksByStage[$stage->id] : [];
         }
 
         $pipeline->stages = $pipelineStages;

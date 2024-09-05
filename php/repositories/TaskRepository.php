@@ -86,4 +86,26 @@ class TaskRepository {
             $stageId
         ) );
     }
+
+    public function getTasksByStageIds($stageIds) {
+        global $wpdb;
+
+        // Prepare the placeholders for the IN clause
+        $placeholders = implode(',', array_fill(0, count($stageIds), '%d'));
+
+        // Prepare the SQL query
+        $sql = $wpdb->prepare(
+            "SELECT a.*, b.stage_id 
+             FROM " . TABLE_WP_QUICK_TASKS_TASKS . " AS a
+             INNER JOIN " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " AS b
+             ON a.id = b.task_id
+             WHERE b.stage_id IN ($placeholders)",
+            $stageIds
+        );
+
+        // Execute the query and get the results
+        $results = $wpdb->get_results($sql);
+
+        return $results;
+    }
 }
