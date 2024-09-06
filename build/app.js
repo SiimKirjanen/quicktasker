@@ -8726,9 +8726,9 @@ function UserAssignementDropdown({
     menuBtn: ({
       active
     }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1",
+      className: "wpqt-group wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        className: `wpqt-size-5 ${active ? "wpqt-text-blue-800" : "wpqt-text-blue-400"} hover:wpqt-text-blue-800`
+        className: `wpqt-mr-1 wpqt-size-5 ${active ? "wpqt-text-blue-800" : "wpqt-text-blue-400"} group-hover:wpqt-text-blue-800`
       }), task.assigned_users && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: task.assigned_users.map((user, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
           children: [user.name, index < task.assigned_users.length - 1 && ", "]
@@ -11039,9 +11039,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/MinusIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PlusIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/MinusIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PlusIcon.js");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11075,6 +11078,9 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
+
 function UserAssignementSelection({
   task
 }) {
@@ -11083,21 +11089,48 @@ function UserAssignementSelection({
       users
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserContext);
-  const availableUsers = users.filter(user => !task.assigned_users.some(assignedUser => assignedUser.id === user.id));
+  const {
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__.ActivePipelineContext);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const availableUsers = users.filter(user => {
+    var _a;
+    return !((_a = task.assigned_users) !== null && _a !== void 0 ? _a : []).some(assignedUser => assignedUser.id === user.id);
+  });
   const assignUser = user => __awaiter(this, void 0, void 0, function* () {
     try {
+      setLoading(true);
       yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.assignTaskToUserRequest)(user.id, task.id);
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_7__.PIPELINE_ADD_USER_TO_TASK,
+        payload: {
+          taskId: task.id,
+          user
+        }
+      });
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error("Failed to assign user to task");
+    } finally {
+      setLoading(false);
     }
   });
   const removeUser = user => __awaiter(this, void 0, void 0, function* () {
     try {
+      setLoading(true);
       yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.removeTaskFromUserRequest)(user.id, task.id);
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_7__.PIPELINE_REMOVE_USER_FROM_TASK,
+        payload: {
+          taskId: task.id,
+          userId: user.id
+        }
+      });
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error("Failed to remove user from task");
+    } finally {
+      setLoading(false);
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -11106,27 +11139,36 @@ function UserAssignementSelection({
       sectionTitle: "Assigned users",
       users: task.assigned_users,
       onItemSelect: removeUser,
-      ActionIcon: _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__["default"],
-      actionIconClasses: "wpqt-icon-red"
+      ActionIcon: _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"],
+      actionIconClasses: "wpqt-icon-red",
+      noUsersText: "No users assigned"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserAssignementSection, {
       sectionTitle: "Assign a user",
       users: availableUsers,
       onItemSelect: assignUser,
-      actionIconClasses: "wpqt-icon-green"
+      actionIconClasses: "wpqt-icon-green",
+      noUsersText: "No users available to assign"
+    }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-justify-center",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_5__.LoadingOval, {
+        width: "30",
+        height: "30"
+      })
     })]
   });
 }
 function UserAssignementSection({
   sectionTitle,
   onItemSelect = () => {},
-  users,
-  ActionIcon = _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"],
-  actionIconClasses
+  users = [],
+  ActionIcon = _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"],
+  actionIconClasses,
+  noUsersText
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-mb-2",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mb-2",
+      className: "wpqt-mb-2 wpqt-text-lg",
       children: sectionTitle
     }), users.map(user => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -11134,11 +11176,21 @@ function UserAssignementSection({
           e.stopPropagation();
           onItemSelect(user);
         },
-        className: "wpqt-flex wpqt-cursor-pointer wpqt-px-2 wpqt-py-1 hover:wpqt-bg-gray-100",
-        children: [user.name, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ActionIcon, {
+        className: "wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-px-2 wpqt-py-1 hover:wpqt-bg-gray-100",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "wpqt-flex wpqt-flex-col",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            children: user.name
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "wpqt-italic",
+            children: user.description
+          })]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ActionIcon, {
           className: `wpqt-ml-auto wpqt-size-5 ${actionIconClasses}`
         })]
       }, user.id);
+    }), users.length === 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: noUsersText
     })]
   });
 }
@@ -11486,12 +11538,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_ADD_PIPELINE: () => (/* binding */ PIPELINE_ADD_PIPELINE),
 /* harmony export */   PIPELINE_ADD_STAGE: () => (/* binding */ PIPELINE_ADD_STAGE),
 /* harmony export */   PIPELINE_ADD_TASK: () => (/* binding */ PIPELINE_ADD_TASK),
+/* harmony export */   PIPELINE_ADD_USER_TO_TASK: () => (/* binding */ PIPELINE_ADD_USER_TO_TASK),
 /* harmony export */   PIPELINE_DELETE_STAGE: () => (/* binding */ PIPELINE_DELETE_STAGE),
 /* harmony export */   PIPELINE_EDIT_PIPELINE: () => (/* binding */ PIPELINE_EDIT_PIPELINE),
 /* harmony export */   PIPELINE_EDIT_STAGE: () => (/* binding */ PIPELINE_EDIT_STAGE),
 /* harmony export */   PIPELINE_EDIT_TASK: () => (/* binding */ PIPELINE_EDIT_TASK),
 /* harmony export */   PIPELINE_MOVE_STAGE: () => (/* binding */ PIPELINE_MOVE_STAGE),
 /* harmony export */   PIPELINE_MOVE_TASK: () => (/* binding */ PIPELINE_MOVE_TASK),
+/* harmony export */   PIPELINE_REMOVE_USER_FROM_TASK: () => (/* binding */ PIPELINE_REMOVE_USER_FROM_TASK),
 /* harmony export */   PIPELINE_REORDER_TASK: () => (/* binding */ PIPELINE_REORDER_TASK),
 /* harmony export */   PIPELINE_SET_EXISTING_PIPELINES: () => (/* binding */ PIPELINE_SET_EXISTING_PIPELINES),
 /* harmony export */   PIPELINE_SET_LOADING: () => (/* binding */ PIPELINE_SET_LOADING),
@@ -11505,7 +11559,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_USERS: () => (/* binding */ SET_USERS),
 /* harmony export */   SET_USERS_SEARCH_VALUE: () => (/* binding */ SET_USERS_SEARCH_VALUE)
 /* harmony export */ });
-//Pipeline nad pipelines reducer constants
+//Pipeline reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
 const PIPELINE_SET_PIPELINE = "SET_PIPELINE";
 const PIPELINE_MOVE_TASK = "MOVE_TASK";
@@ -11523,6 +11577,8 @@ const PIPELINE_EDIT_PIPELINE = "EDIT_PIPELINE";
 const PIPELINE_SET_PRIMARY = "SET_PRIMARY";
 const PIPELINES_SET = "SET_PIPELINES";
 const PIPELINE_SET_PRIMARY2 = "SET_PRIMARY";
+const PIPELINE_ADD_USER_TO_TASK = "ADD_USER_TO_TASK";
+const PIPELINE_REMOVE_USER_FROM_TASK = "REMOVE_USER_FROM_TASK";
 //Modal reducer constants
 const OPEN_NEW_TASK_MODAL = "OPEN_NEW_TASK_MODAL";
 const CLOSE_NEW_TASK_MODAL = "CLOSE_NEW_TASK_MODAL";
@@ -12462,7 +12518,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const activePipelineReducer = (state, action) => {
-  var _a, _b, _c, _d, _e, _f;
+  var _a, _b, _c, _d, _e, _f, _g, _h;
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_LOADING:
       return Object.assign(Object.assign({}, state), {
@@ -12589,6 +12645,65 @@ const activePipelineReducer = (state, action) => {
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages: (_f = state.activePipeline.stages) === null || _f === void 0 ? void 0 : _f.filter(stage => stage.id !== deletedStageId)
+          })
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_USER_TO_TASK:
+      {
+        const {
+          taskId,
+          user
+        } = action.payload;
+        if (!state.activePipeline) {
+          return state;
+        }
+        const updatedStages = (_g = state.activePipeline.stages) === null || _g === void 0 ? void 0 : _g.map(stage => {
+          var _a;
+          const updatedTasks = (_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.map(task => {
+            if (task.id === taskId) {
+              return Object.assign(Object.assign({}, task), {
+                assigned_users: [...(task.assigned_users || []), user]
+              });
+            }
+            return task;
+          });
+          return Object.assign(Object.assign({}, stage), {
+            tasks: updatedTasks
+          });
+        });
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            stages: updatedStages
+          })
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_REMOVE_USER_FROM_TASK:
+      {
+        const {
+          taskId,
+          userId
+        } = action.payload;
+        if (!state.activePipeline) {
+          return state;
+        }
+        const updatedStages = (_h = state.activePipeline.stages) === null || _h === void 0 ? void 0 : _h.map(stage => {
+          var _a;
+          const updatedTasks = (_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.map(task => {
+            var _a;
+            if (task.id === taskId) {
+              return Object.assign(Object.assign({}, task), {
+                assigned_users: (_a = task.assigned_users) === null || _a === void 0 ? void 0 : _a.filter(user => user.id !== userId)
+              });
+            }
+            return task;
+          });
+          return Object.assign(Object.assign({}, stage), {
+            tasks: updatedTasks
+          });
+        });
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            stages: updatedStages
           })
         });
       }

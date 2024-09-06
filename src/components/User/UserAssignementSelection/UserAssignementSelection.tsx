@@ -1,6 +1,6 @@
 import { User } from "../../../types/user";
 import { Task } from "../../../types/task";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { UserContext } from "../../../providers/UserContextProvider";
 import {
   assignTaskToUserRequest,
@@ -8,6 +8,12 @@ import {
 } from "../../../api/api";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
+import { LoadingOval } from "../../Loading/Loading";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import {
+  PIPELINE_ADD_USER_TO_TASK,
+  PIPELINE_REMOVE_USER_FROM_TASK,
+} from "../../../constants";
 
 type Props = {
   task: Task;
@@ -17,29 +23,52 @@ function UserAssignementSelection({ task }: Props) {
   const {
     state: { users },
   } = useContext(UserContext);
+  const { dispatch } = useContext(ActivePipelineContext);
+  const [loading, setLoading] = useState(false);
 
   const availableUsers = users.filter(
     (user: User) =>
-      !task.assigned_users.some(
+      !(task.assigned_users ?? []).some(
         (assignedUser: User) => assignedUser.id === user.id,
       ),
   );
 
   const assignUser = async (user: User) => {
     try {
+      setLoading(true);
       await assignTaskToUserRequest(user.id, task.id);
+
+      dispatch({
+        type: PIPELINE_ADD_USER_TO_TASK,
+        payload: {
+          taskId: task.id,
+          user,
+        },
+      });
     } catch (error) {
       console.error(error);
       toast.error("Failed to assign user to task");
+    } finally {
+      setLoading(false);
     }
   };
 
   const removeUser = async (user: User) => {
     try {
+      setLoading(true);
       await removeTaskFromUserRequest(user.id, task.id);
+      dispatch({
+        type: PIPELINE_REMOVE_USER_FROM_TASK,
+        payload: {
+          taskId: task.id,
+          userId: user.id,
+        },
+      });
     } catch (error) {
       console.error(error);
       toast.error("Failed to remove user from task");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,14 +80,20 @@ function UserAssignementSelection({ task }: Props) {
         onItemSelect={removeUser}
         ActionIcon={MinusIcon}
         actionIconClasses="wpqt-icon-red"
+        noUsersText="No users assigned"
       />
-
       <UserAssignementSection
         sectionTitle="Assign a user"
         users={availableUsers}
         onItemSelect={assignUser}
         actionIconClasses="wpqt-icon-green"
+        noUsersText="No users available to assign"
       />
+      {loading && (
+        <div className="wpqt-flex wpqt-justify-center">
+          <LoadingOval width="30" height="30" />
+        </div>
+      )}
     </div>
   );
 }
@@ -69,17 +104,19 @@ type UserAssignementSectionProps = {
   users: User[];
   ActionIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   actionIconClasses?: string;
+  noUsersText: string;
 };
 function UserAssignementSection({
   sectionTitle,
   onItemSelect = () => {},
-  users,
+  users = [],
   ActionIcon = PlusIcon,
   actionIconClasses,
+  noUsersText,
 }: UserAssignementSectionProps) {
   return (
     <div className="wpqt-mb-2">
-      <div className="wpqt-mb-2">{sectionTitle}</div>
+      <div className="wpqt-mb-2 wpqt-text-lg">{sectionTitle}</div>
       {users.map((user: User) => {
         return (
           <div
@@ -88,15 +125,19 @@ function UserAssignementSection({
               e.stopPropagation();
               onItemSelect(user);
             }}
-            className="wpqt-flex wpqt-cursor-pointer wpqt-px-2 wpqt-py-1 hover:wpqt-bg-gray-100"
+            className="wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-px-2 wpqt-py-1 hover:wpqt-bg-gray-100"
           >
-            {user.name}
+            <div className="wpqt-flex wpqt-flex-col">
+              <div>{user.name}</div>
+              <div className="wpqt-italic">{user.description}</div>
+            </div>
             <ActionIcon
               className={`wpqt-ml-auto wpqt-size-5 ${actionIconClasses}`}
             />
           </div>
         );
       })}
+      {users.length === 0 && <div>{noUsersText}</div>}
     </div>
   );
 }

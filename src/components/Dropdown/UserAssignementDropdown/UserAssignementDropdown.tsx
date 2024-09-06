@@ -14,9 +14,9 @@ function UserAssignementDropdown({ task }: Props) {
       menuBtnClasses="wpqt-inline-flex"
       anchor="bottom start"
       menuBtn={({ active }) => (
-        <div className="wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1">
+        <div className="wpqt-group wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1">
           <UserCircleIcon
-            className={`wpqt-size-5 ${active ? "wpqt-text-blue-800" : "wpqt-text-blue-400"} hover:wpqt-text-blue-800`}
+            className={`wpqt-mr-1 wpqt-size-5 ${active ? "wpqt-text-blue-800" : "wpqt-text-blue-400"} group-hover:wpqt-text-blue-800`}
           />
           {task.assigned_users && (
             <div>

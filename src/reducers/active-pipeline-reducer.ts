@@ -1,11 +1,12 @@
 import {
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
+  PIPELINE_ADD_USER_TO_TASK,
   PIPELINE_DELETE_STAGE,
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
-  PIPELINE_MOVE_STAGE,
   PIPELINE_MOVE_TASK,
+  PIPELINE_REMOVE_USER_FROM_TASK,
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
@@ -13,6 +14,7 @@ import {
 import { Action, State } from "../providers/ActivePipelineContextProvider";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
+import { ServerUser, User } from "../types/user";
 import { moveTask, reorderTask } from "../utils/task";
 
 const activePipelineReducer = (state: State, action: Action) => {
@@ -194,6 +196,73 @@ const activePipelineReducer = (state: State, action: Action) => {
           stages: state.activePipeline.stages?.filter(
             (stage) => stage.id !== deletedStageId,
           ),
+        },
+      };
+    }
+    case PIPELINE_ADD_USER_TO_TASK: {
+      const { taskId, user }: { taskId: string; user: User } = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        const updatedTasks = stage.tasks?.map((task: Task) => {
+          if (task.id === taskId) {
+            return {
+              ...task,
+              assigned_users: [...(task.assigned_users || []), user],
+            };
+          }
+          return task;
+        });
+
+        return {
+          ...stage,
+          tasks: updatedTasks,
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
+        },
+      };
+    }
+    case PIPELINE_REMOVE_USER_FROM_TASK: {
+      const { taskId, userId }: { taskId: string; userId: string } =
+        action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        const updatedTasks = stage.tasks?.map((task: Task) => {
+          if (task.id === taskId) {
+            return {
+              ...task,
+              assigned_users: task.assigned_users?.filter(
+                (user) => user.id !== userId,
+              ),
+            };
+          }
+          return task;
+        });
+
+        return {
+          ...stage,
+          tasks: updatedTasks,
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
         },
       };
     }
