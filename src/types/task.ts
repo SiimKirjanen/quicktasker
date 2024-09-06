@@ -1,9 +1,12 @@
+import { User } from "./user";
+
 type BaseTask = {
   id: string;
   pipeline_id: string;
   stage_id: string;
   name: string;
   description: string;
+  assigned_users: User[];
 };
 
 type Task = BaseTask & {

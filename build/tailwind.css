@@ -1150,6 +1150,11 @@
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.wpqt-bg-gray-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+}
+
 .wpqt-p-1 {
   padding: 0.25rem;
 }
@@ -1188,6 +1193,16 @@
 .wpqt-py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.wpqt-px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.wpqt-py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 
 .wpqt-pr-4 {
@@ -1270,6 +1285,11 @@
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+.wpqt-text-blue-400 {
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity));
+}
+
 .wpqt-text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
@@ -1308,6 +1328,15 @@
 .wpqt-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.wpqt-text-blue-800 {
+  --tw-text-opacity: 1;
+  color: rgb(30 64 175 / var(--tw-text-opacity));
+}
+
+.wpqt-underline {
+  text-decoration-line: underline;
 }
 
 .wpqt-shadow {
@@ -1406,6 +1435,16 @@
 .hover\:wpqt-bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
+.hover\:wpqt-bg-gray-400:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+}
+
+.hover\:wpqt-text-blue-800:hover {
+  --tw-text-opacity: 1;
+  color: rgb(30 64 175 / var(--tw-text-opacity));
 }
 
 .hover\:wpqt-text-qtBlueHover:hover {

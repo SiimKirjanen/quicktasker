@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
+use WPQT\User\UserRepository;
 
 class PipelineRepository {
     /**
@@ -59,6 +60,7 @@ class PipelineRepository {
     public function getFullPipeline($pipelineId) {
         $stageRepository = new StageRepository();
         $taskRepository = new TaskRepository();
+        $userRepository = new UserRepository();
 
         // Fetch the pipeline
         $pipeline = $this->getPipelineById($pipelineId);
@@ -72,15 +74,30 @@ class PipelineRepository {
         }, $pipelineStages);
         $tasks = $taskRepository->getTasksByStageIds($stageIds);
 
+        // Fetch all assigned users for the tasks
+        $taskIds = array_map(function($task) {
+            return $task->id;
+        }, $tasks);
+        $assignedUsers = $userRepository->getAssignedUsersByTaskIds($taskIds);
+
         // Organize tasks under their respective stages
         $tasksByStage = [];
         foreach ($tasks as $task) {
             $tasksByStage[$task->stage_id][] = $task;
         }
 
+         // Organize assigned users under their respective tasks
+        $usersByTask = [];
+        foreach ($assignedUsers as $user) {
+            $usersByTask[$user->task_id][] = $user;
+        }
+
          // Assign tasks and users to stages
         foreach ($pipelineStages as $stage) {
             $stage->tasks = isset($tasksByStage[$stage->id]) ? $tasksByStage[$stage->id] : [];
+            foreach ($stage->tasks as $task) {
+                $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
+            }
         }
 
         $pipeline->stages = $pipelineStages;

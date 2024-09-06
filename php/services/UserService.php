@@ -161,4 +161,56 @@ class UserService {
             return false;
         }
     }
+
+    /**
+     * Assigns a task to a user.
+     *
+     * @param int $userId The ID of the user.
+     * @param int $taskId The ID of the task.
+     * @return bool True if the user is successfully assigned to the task, false otherwise.
+     * @throws \Exception If failed to assign a user to a task.
+     */
+    public function assignTaskToUser($userId, $taskId) {
+        global $wpdb;
+
+        $result = $wpdb->insert(
+            TABLE_WP_QUICK_TASKS_USER_TASK,
+            array(
+                'user_id' => $userId,
+                'task_id' => $taskId,
+            )
+        );
+
+        if (!$result) {
+            throw new \Exception('Failed to assign a task to a user');
+        }
+
+        return true;
+    }
+
+    /**
+     * Removes a user from a task.
+     *
+     * @param int $userId The ID of the user to be removed.
+     * @param int $taskId The ID of the task from which the user will be removed.
+     * @return bool Returns true if the user was successfully removed from the task, otherwise throws an exception.
+     * @throws \Exception If failed to remove a user from a task.
+     */
+    public function removeTaskFromUser($userId, $taskId) {
+        global $wpdb;
+
+        $result = $wpdb->delete(
+            TABLE_WP_QUICK_TASKS_USER_TASK,
+            array(
+                'user_id' => $userId,
+                'task_id' => $taskId,
+            )
+        );
+
+        if (!$result) {
+            throw new \Exception('Failed to remove a user from a task');
+        }
+
+        return true;
+    }
 }

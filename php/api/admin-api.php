@@ -17,6 +17,14 @@ use WPQT\Task\TaskService;
 use WPQT\Stage\StageService;
 use WPQT\Permission\PermissionService;
 
+function validate_numeric($param, $request, $key) {
+    return is_numeric($param);
+}
+
+function sanitize_absint($param, $request, $key) {
+    return absint($param);
+}
+
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
     NonceService::verifyNonce($nonce, WPQT_ADMIN_API_NONCE);
@@ -597,6 +605,78 @@ function wpqt_register_api_routes() {
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
             }
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'users/(?P<id>\d+)/tasks',
+        array(
+            'methods' => 'POST',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+            
+                    $userService = new UserService();
+                    $userService->assignTaskToUser($data['id'], $data->get_param('task_id'));
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                }catch(Exception $e) {
+    
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => 'validate_numeric',
+                    'sanitize_callback' => 'sanitize_absint',
+                ),
+                'task_id' => array(
+                    'required' => true,
+                    'validate_callback' => 'validate_numeric',
+                    'sanitize_callback' => 'sanitize_absint',
+                ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'users/(?P<id>\d+)/tasks',
+        array(
+            'methods' => 'DELETE',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+            
+                    $userService = new UserService();
+                    $userService->removeTaskFromUser($data['id'], $data->get_param('task_id'));
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                }catch(Exception $e) {
+                    
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => 'validate_numeric',
+                    'sanitize_callback' => 'sanitize_absint',
+                ),
+                'task_id' => array(
+                    'required' => true,
+                    'validate_callback' => 'validate_numeric',
+                    'sanitize_callback' => 'sanitize_absint',
+                ),
+            ),
         ),
     );
 

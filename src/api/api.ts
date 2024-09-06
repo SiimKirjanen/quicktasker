@@ -279,6 +279,30 @@ function changeUserStatusRequest(
   });
 }
 
+function assignTaskToUserRequest(
+  userId: string,
+  taskId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${userId}/tasks`,
+    method: "POST",
+    data: { task_id: taskId },
+    headers: getCommonHeaders(),
+  });
+}
+
+function removeTaskFromUserRequest(
+  userId: string,
+  taskId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${userId}/tasks`,
+    method: "DELETE",
+    data: { task_id: taskId },
+    headers: getCommonHeaders(),
+  });
+}
+
 function deleteUserRequest(user: User): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/users/${user.id}`,
@@ -310,4 +334,6 @@ export {
   editUserRequest,
   changeUserStatusRequest,
   deleteUserRequest,
+  assignTaskToUserRequest,
+  removeTaskFromUserRequest,
 };

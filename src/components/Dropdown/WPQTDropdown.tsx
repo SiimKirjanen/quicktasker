@@ -1,13 +1,19 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import { AnchorProps } from "@headlessui/react/dist/internal/floating";
 
 type Props = {
   children: React.ReactNode;
   menuBtn: (props: { active: boolean }) => React.ReactNode;
   menuBtnClasses?: string;
+  anchor?: AnchorProps;
 };
 
-function WPQTDropdown({ children, menuBtn, menuBtnClasses = "" }: Props) {
+function WPQTDropdown({
+  children,
+  menuBtn,
+  menuBtnClasses = "",
+  anchor = "bottom end",
+}: Props) {
   return (
     <Menu>
       <MenuButton
@@ -18,7 +24,7 @@ function WPQTDropdown({ children, menuBtn, menuBtnClasses = "" }: Props) {
         {({ active }) => <>{menuBtn({ active })}</>}
       </MenuButton>
       <MenuItems
-        anchor="bottom end"
+        anchor={anchor}
         transition
         className="wpqt-z-20 wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
       >

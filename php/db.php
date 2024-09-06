@@ -142,6 +142,17 @@ function wpqt_set_up_db() {
 
 		  dbDelta( $sql10 ); 
 
+		  $sql11 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USER_TASK . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+			user_id int(11) NOT NULL,
+			task_id int(11) NOT NULL,
+			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id)
+		  ) $charset_collate;";
+
+		  dbDelta( $sql11 ); 
+
 		update_option( "wp_quick_taks_db_current_version", WP_QUICK_TASKS_DB_VERSION );
 	}
 }
