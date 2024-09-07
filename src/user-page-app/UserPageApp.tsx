@@ -1,12 +1,17 @@
 import { PageWrap } from "./components/Pages/Page/PageWrap";
 import { UserPageAppContextProvider } from "./providers/UserPageAppContextProvider";
 import { useCurrentUserPage } from "./hooks/useCurrentUsePage";
+import ErrorBoundary from "../components/ErrorBoundary/ErrorBoundary";
+import { ToastContainer } from "react-toastify";
 
 function UserPageApp() {
   return (
-    <UserPageAppContextProvider>
-      <UserPageContent />
-    </UserPageAppContextProvider>
+    <ErrorBoundary>
+      <UserPageAppContextProvider>
+        <UserPageContent />
+        <ToastContainer position="bottom-center" />
+      </UserPageAppContextProvider>
+    </ErrorBoundary>
   );
 }
 

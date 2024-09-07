@@ -882,6 +882,11 @@
   margin-right: 0.75rem;
 }
 
+.wpqt-mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .\!wpqt-mb-0 {
   margin-bottom: 0px !important;
 }
@@ -936,11 +941,6 @@
 
 .wpqt-grid {
   display: grid;
-}
-
-.wpqt-size-1 {
-  width: 0.25rem;
-  height: 0.25rem;
 }
 
 .wpqt-size-4 {
@@ -1000,6 +1000,10 @@
 
 .wpqt-w-screen {
   width: 100vw;
+}
+
+.wpqt-max-w-5xl {
+  max-width: 64rem;
 }
 
 .wpqt-max-w-md {
@@ -1076,6 +1080,12 @@
 
 .wpqt-gap-\[24px\] {
   gap: 24px;
+}
+
+.wpqt-space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
 .wpqt-overflow-hidden {
@@ -1157,6 +1167,16 @@
 .wpqt-bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.wpqt-bg-blue-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+}
+
+.wpqt-bg-blue-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
 }
 
 .wpqt-p-1 {

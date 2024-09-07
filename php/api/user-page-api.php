@@ -116,7 +116,10 @@ function wpqt_register_user_page_api_routes() {
                         'expiresAtUTC' => $userSession->expires_at_utc
                     ]))->toArray(), 200);
                 } catch (Exception $e) {
-                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    if($e->getMessage() === 'Invalid password') {
+                         return new WP_REST_Response((new ApiResponse(false, array('Invalid password')))->toArray(), 401);
+                    }
+                    return new WP_REST_Response((new ApiResponse(false))->toArray(), 400);
                 }
             },
         'permission_callback' => '__return_true'

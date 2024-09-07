@@ -13,6 +13,7 @@ function useSession() {
     Cookies.set(`wpqt-session-token-${pageHash}`, session.sessionToken, {
       expires: expireData,
       path: "/",
+      sameSite: "strict",
     });
   };
 

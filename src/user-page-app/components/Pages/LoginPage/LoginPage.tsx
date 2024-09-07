@@ -1,8 +1,14 @@
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { logInUserPageRequest } from "../../../api/user-page-api";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { useSession } from "../../../hooks/useSession";
 import { SET_USER_LOGGED_IN } from "../../../constants";
+import { WPQTFieldSet } from "../../../../components/common/Form/FieldSet";
+import { WPQTLegend } from "../../../../components/common/Form/Legend";
+import { WPQTField } from "../../../../components/common/Form/Field";
+import { WPQTInput } from "../../../../components/common/Input/Input";
+import { WPQTLabel } from "../../../../components/common/Form/Label";
+import { WPQTButton } from "../../../../components/common/Button/Button";
 
 function LoginPage() {
   const {
@@ -10,20 +16,41 @@ function LoginPage() {
     userPageAppDispatch,
   } = useContext(UserPageAppContext);
   const { setSessionCookie } = useSession();
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const login = async () => {
     try {
-      const response = await logInUserPageRequest(pageHash, "siim");
+      const response = await logInUserPageRequest(pageHash, password);
       await setSessionCookie(response.data);
       userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: true });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+
+      if (error && Array.isArray(error.messages)) {
+        if (error.messages.includes("Invalid password")) {
+          setError("Invalid password");
+        }
+      } else {
+        setError("An error occurred. Please try again.");
+      }
     }
   };
   return (
     <div>
-      <h1>Login Page</h1>
-      <button onClick={login}>Login</button>
+      <form>
+        <WPQTFieldSet>
+          <WPQTLegend>Log in</WPQTLegend>
+          <WPQTField>
+            <WPQTLabel>Enter password</WPQTLabel>
+            <WPQTInput value={password} onChange={setPassword} />
+          </WPQTField>
+          <WPQTField>
+            <WPQTButton btnText="Login" onClick={login} />
+          </WPQTField>
+          {error && <div className="wpqt-text-qtTextRed">{error}</div>}
+        </WPQTFieldSet>
+      </form>
     </div>
   );
 }
