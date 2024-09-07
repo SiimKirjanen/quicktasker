@@ -906,8 +906,8 @@
   margin-left: auto;
 }
 
-.wpqt-mr-2 {
-  margin-right: 0.5rem;
+.wpqt-mr-1 {
+  margin-right: 0.25rem;
 }
 
 .wpqt-mr-auto {
@@ -920,10 +920,6 @@
 
 .wpqt-mt-4 {
   margin-top: 1rem;
-}
-
-.wpqt-mr-1 {
-  margin-right: 0.25rem;
 }
 
 .wpqt-block {
@@ -940,6 +936,11 @@
 
 .wpqt-grid {
   display: grid;
+}
+
+.wpqt-size-1 {
+  width: 0.25rem;
+  height: 0.25rem;
 }
 
 .wpqt-size-4 {

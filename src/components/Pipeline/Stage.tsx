@@ -36,6 +36,7 @@ function Stage({ stage }: Props) {
           </div>
         )}
       </div>
+
       <Droppable droppableId={stage.id}>
         {(provided, snapshot) => (
           <div
@@ -43,7 +44,7 @@ function Stage({ stage }: Props) {
             className="wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto wpqt-overflow-x-hidden"
           >
             {stage.tasks?.map((task: Task, index: number) => (
-              <TaskComponent task={task} index={index} />
+              <TaskComponent task={task} index={index} key={task.id} />
             ))}
             {provided.placeholder}
             <AddTask stageId={stage.id} />

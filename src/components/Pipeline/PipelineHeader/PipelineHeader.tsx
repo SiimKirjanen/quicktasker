@@ -5,10 +5,12 @@ import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_EDIT_PIPELINE_MODAL } from "../../../constants";
 import { LoadingOval } from "../../Loading/Loading";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 function PipelineHeader() {
   const {
     state: { activePipeline, loading },
+    fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
   const { modalDispatch } = useContext(ModalContext);
 
@@ -37,7 +39,15 @@ function PipelineHeader() {
       />
 
       <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-2">
-        {loading && <LoadingOval width="24" height="24" />}
+        {loading ? (
+          <LoadingOval width="24" height="24" />
+        ) : (
+          <ArrowPathIcon
+            className="wpqt-size-5 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+            onClick={() => fetchAndSetPipelineData(activePipeline.id)}
+          />
+        )}
+
         <PipelineSelectionDropdown />
       </div>
     </div>
