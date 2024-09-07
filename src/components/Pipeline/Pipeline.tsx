@@ -17,7 +17,7 @@ import { FullLoading } from "../Loading/Loading";
 
 const Pipeline = () => {
   const {
-    state: { activePipeline, loading },
+    state: { activePipeline },
     dispatch,
   } = useContext(ActivePipelineContext);
 
@@ -80,7 +80,10 @@ const Pipeline = () => {
           return <Stage key={stage.id} stage={stage} />;
         })}
       </DragDropContext>
-      <AddStage pipelineId={activePipeline.id} />
+      <AddStage
+        pipelineId={activePipeline.id}
+        stagesLength={activePipeline!.stages?.length}
+      />
       <TaskModal />
       <StageModal />
       <PipelineModal />

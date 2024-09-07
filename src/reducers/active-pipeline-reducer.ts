@@ -3,6 +3,7 @@ import {
   PIPELINE_ADD_TASK,
   PIPELINE_ADD_USER_TO_TASK,
   PIPELINE_DELETE_STAGE,
+  PIPELINE_EDIT_PIPELINE,
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
@@ -12,6 +13,7 @@ import {
   PIPELINE_SET_PIPELINE,
 } from "../constants";
 import { Action, State } from "../providers/ActivePipelineContextProvider";
+import { PipelineFromServer } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
 import { ServerUser, User } from "../types/user";
@@ -263,6 +265,23 @@ const activePipelineReducer = (state: State, action: Action) => {
         activePipeline: {
           ...state.activePipeline,
           stages: updatedStages,
+        },
+      };
+    }
+    case PIPELINE_EDIT_PIPELINE: {
+      const updatedPipeline: PipelineFromServer = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          name: updatedPipeline.name,
+          description: updatedPipeline.description,
+          is_primary: updatedPipeline.is_primary === "1",
         },
       };
     }

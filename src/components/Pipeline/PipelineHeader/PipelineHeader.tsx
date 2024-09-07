@@ -30,13 +30,15 @@ function PipelineHeader() {
   return (
     <div className="wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-py-4">
       <div>
-        <div className="wpqt-text-lg">{activePipeline.name}</div>
+        <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
+          <div className="wpqt-text-lg">{activePipeline.name}</div>
+          <PencilSquareIcon
+            className="wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer"
+            onClick={openEditPipelineModal}
+          />
+        </div>
         {activePipeline.description && <div>{activePipeline.description}</div>}
       </div>
-      <PencilSquareIcon
-        className="wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer"
-        onClick={openEditPipelineModal}
-      />
 
       <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-3">
         {loading ? (

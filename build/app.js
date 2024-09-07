@@ -8965,7 +8965,7 @@ function WPQTDropdownItem({
   } : {};
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.MenuItem, {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, tooltipAttributes, {
-      className: `${className} wpqt-mb-3 wpqt-flex wpqt-items-center wpqt-gap-2 ${!disabled ? "wpqt-cursor-pointer hover:wpqt-underline" : "wpqt-cursor-not-allowed"}`,
+      className: `${className} wpqt-mb-3 wpqt-flex wpqt-items-center wpqt-gap-2 ${!disabled ? "wpqt-cursor-pointer hover:wpqt-underline" : "wpqt-cursor-not-allowed wpqt-line-through"}`,
       onClick: e => {
         if (!disabled && onClick) {
           onClick(e);
@@ -10246,7 +10246,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 function AddStage({
-  pipelineId
+  pipelineId,
+  stagesLength = 0
 }) {
   const {
     modalDispatch
@@ -10259,6 +10260,21 @@ function AddStage({
       }
     });
   });
+  if (stagesLength === 0) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-pipeline-height wpqt-flex wpqt-w-full wpqt-items-center wpqt-justify-center",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-main-border wpqt-flex wpqt-cursor-pointer wpqt-flex-col wpqt-items-center wpqt-justify-start wpqt-gap-y-1 wpqt-p-3 hover:wpqt-bg-gray-100",
+        onClick: openNewStageModal,
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          className: "wpqt-size-6 wpqt-text-green-600"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-whitespace-nowrap",
+          children: "Add first stage"
+        })]
+      })
+    });
+  }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-main-border wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-flex-col wpqt-items-center wpqt-justify-start wpqt-self-start wpqt-p-3 hover:wpqt-bg-gray-100",
     onClick: openNewStageModal,
@@ -10340,8 +10356,8 @@ function AddTask({
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-sticky wpqt-bottom-0 wpqt-z-10 wpqt-order-1 wpqt-mt-2 wpqt-flex wpqt-justify-center wpqt-bg-gray-100 wpqt-py-2",
-    onClick: openNewTaskModal,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      onClick: openNewTaskModal,
       className: "wpqt-main-border wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-p-2 hover:wpqt-bg-white",
       children: ["Add task", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
         className: "wpqt-size-6 wpqt-text-green-600"
@@ -10418,11 +10434,10 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 const Pipeline = () => {
-  var _a;
+  var _a, _b;
   const {
     state: {
-      activePipeline,
-      loading
+      activePipeline
     },
     dispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__.ActivePipelineContext);
@@ -10476,7 +10491,8 @@ const Pipeline = () => {
         }, stage.id);
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddStage__WEBPACK_IMPORTED_MODULE_5__.AddStage, {
-      pipelineId: activePipeline.id
+      pipelineId: activePipeline.id,
+      stagesLength: (_b = activePipeline.stages) === null || _b === void 0 ? void 0 : _b.length
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_6__.TaskModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_7__.StageModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Modal_PipelineModal_PipelineModal__WEBPACK_IMPORTED_MODULE_9__.PipelineModal, {})]
   });
 };
@@ -10540,15 +10556,18 @@ function PipelineHeader() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-py-4",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-text-lg",
-        children: activePipeline.name
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-flex wpqt-items-center wpqt-gap-2",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-text-lg",
+          children: activePipeline.name
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+          className: "wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer",
+          onClick: openEditPipelineModal
+        })]
       }), activePipeline.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: activePipeline.description
       })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      className: "wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer",
-      onClick: openEditPipelineModal
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-3",
       children: [loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_6__.LoadingOval, {
@@ -12763,6 +12782,20 @@ const activePipelineReducer = (state, action) => {
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages: updatedStages
+          })
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_PIPELINE:
+      {
+        const updatedPipeline = action.payload;
+        if (!state.activePipeline) {
+          return state;
+        }
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            name: updatedPipeline.name,
+            description: updatedPipeline.description,
+            is_primary: updatedPipeline.is_primary === "1"
           })
         });
       }

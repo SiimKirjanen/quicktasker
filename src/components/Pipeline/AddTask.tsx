@@ -18,11 +18,11 @@ function AddTask({ stageId }: Props) {
   };
 
   return (
-    <div
-      className="wpqt-sticky wpqt-bottom-0 wpqt-z-10 wpqt-order-1 wpqt-mt-2 wpqt-flex wpqt-justify-center wpqt-bg-gray-100 wpqt-py-2"
-      onClick={openNewTaskModal}
-    >
-      <div className="wpqt-main-border wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-p-2 hover:wpqt-bg-white">
+    <div className="wpqt-sticky wpqt-bottom-0 wpqt-z-10 wpqt-order-1 wpqt-mt-2 wpqt-flex wpqt-justify-center wpqt-bg-gray-100 wpqt-py-2">
+      <div
+        onClick={openNewTaskModal}
+        className="wpqt-main-border wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-p-2 hover:wpqt-bg-white"
+      >
         Add task
         <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
       </div>

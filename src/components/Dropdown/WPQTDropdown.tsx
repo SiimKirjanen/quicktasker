@@ -80,7 +80,7 @@ function WPQTDropdownItem({
         className={`${className} wpqt-mb-3 wpqt-flex wpqt-items-center wpqt-gap-2 ${
           !disabled
             ? "wpqt-cursor-pointer hover:wpqt-underline"
-            : "wpqt-cursor-not-allowed"
+            : "wpqt-cursor-not-allowed wpqt-line-through"
         }`}
         onClick={(e) => {
           if (!disabled && onClick) {

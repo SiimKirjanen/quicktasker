@@ -877,6 +877,10 @@
   order: 1;
 }
 
+.wpqt-m-auto {
+  margin: auto;
+}
+
 .wpqt-mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
@@ -1092,6 +1096,14 @@
 
 .wpqt-gap-\[24px\] {
   gap: 24px;
+}
+
+.wpqt-gap-y-2 {
+  row-gap: 0.5rem;
+}
+
+.wpqt-gap-y-1 {
+  row-gap: 0.25rem;
 }
 
 .wpqt-space-y-6 > :not([hidden]) ~ :not([hidden]) {
@@ -1368,6 +1380,10 @@
 .wpqt-text-qtTextRed {
   --tw-text-opacity: 1;
   color: rgb(211 47 47 / var(--tw-text-opacity));
+}
+
+.wpqt-line-through {
+  text-decoration-line: line-through;
 }
 
 .wpqt-shadow {
