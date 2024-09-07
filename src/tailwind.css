@@ -24,6 +24,9 @@
   .wpqt-icon-blue {
     @apply wpqt-text-blue-700;
   }
+  .wpqt-icon-yellow {
+    @apply wpqt-text-yellow-500;
+  }
 }
 
 /* Start of WordPress style overrides */

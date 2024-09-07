@@ -1,5 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { AnchorProps } from "@headlessui/react/dist/internal/floating";
+import { WPQTTooltip } from "../Tooltip/WPQTTooltip";
 
 type Props = {
   children: React.ReactNode;
@@ -52,21 +53,44 @@ type WPQTDropdownItemProps = {
   onClick?: (e: React.MouseEvent) => void | Promise<void>;
   icon: React.ReactNode;
   className?: string;
+  disabled?: boolean;
+  id?: string;
 };
 function WPQTDropdownItem({
   text,
   onClick,
   icon,
   className,
+  disabled = false,
+  id = "",
 }: WPQTDropdownItemProps) {
+  const tooltipAttributes: React.HTMLAttributes<HTMLDivElement> = disabled
+    ? {
+        "data-tooltip-id": id,
+        "data-tooltip-content":
+          "Stage can be deleted when there are no tasks on it.",
+        "data-tooltip-position-strategy": "fixed",
+        "data-tooltip-variant": "info",
+      }
+    : {};
   return (
     <MenuItem>
       <div
-        className={`${className} wpqt-mb-3 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2 hover:wpqt-underline`}
-        onClick={onClick}
+        {...tooltipAttributes}
+        className={`${className} wpqt-mb-3 wpqt-flex wpqt-items-center wpqt-gap-2 ${
+          !disabled
+            ? "wpqt-cursor-pointer hover:wpqt-underline"
+            : "wpqt-cursor-not-allowed"
+        }`}
+        onClick={(e) => {
+          if (!disabled && onClick) {
+            onClick(e);
+          }
+        }}
       >
         {icon}
         {text}
+        <WPQTTooltip id={id} />
       </div>
     </MenuItem>
   );

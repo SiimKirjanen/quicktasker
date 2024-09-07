@@ -38,6 +38,7 @@ function StageControlsDropdown({ stage }: Props) {
   } = useContext(ActivePipelineContext);
   const { modalDispatch } = useContext(ModalContext);
   const stagesLength = activePipeline?.stages?.length ?? 0;
+  const stageTasksLenght = stage.tasks?.length ?? 0;
   const stageOrder = +stage.stage_order;
   const showMoveLeft = stageOrder > 0 && stageOrder < stagesLength;
   const showMoveRight = stageOrder !== stagesLength - 1;
@@ -119,7 +120,9 @@ function StageControlsDropdown({ stage }: Props) {
         text="Delete stage"
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
         onClick={deleteStage}
+        disabled={stageTasksLenght > 0}
         className="!wpqt-mb-0"
+        id={`item-dropdown-${stage.id}`}
       />
     </WPQTDropdown>
   );

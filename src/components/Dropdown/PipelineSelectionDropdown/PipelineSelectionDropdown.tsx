@@ -7,12 +7,11 @@ import {
   OPEN_NEW_PIPELINE_MODAL,
   PIPELINE_SET_PRIMARY,
 } from "../../../constants";
+import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/solid";
 import {
-  ChevronDownIcon,
+  StarIcon as StarIconOutline,
   PlusCircleIcon,
-  StarIcon,
-} from "@heroicons/react/24/solid";
-import { StarIcon as StarIconOutline } from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/outline";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { clsx } from "clsx";
