@@ -12,6 +12,7 @@ import { ErrorPage } from "./components/Pages/ErrorPage/ErrorPage";
 import { SetUpPage } from "./components/Pages/SetUpPage/SetUpPage";
 import { LoginPage } from "./components/Pages/LoginPage/LoginPage";
 import { AssignableTasksPage } from "./components/Pages/AssignableTasksPage/AssignableTasksPage";
+import { UserTaskPage } from "./components/Pages/UserTaskPage/UserTaskPage";
 
 function UserPageApp() {
   return (
@@ -49,6 +50,7 @@ function UserPageContent() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/user-tasks" element={<UserTasksPage />} />
+        <Route path="/user-tasks/:taskId" element={<UserTaskPage />} />
         <Route path="/assignable-tasks" element={<AssignableTasksPage />} />
       </Routes>
     </Router>

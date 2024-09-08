@@ -10,7 +10,7 @@ function HomePage() {
   const {
     state: { pageHash },
   } = useContext(UserPageAppContext);
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(true);
   const [overview, setOverview] = useState<null | UserPageOverview>(null);
   const navigate = useNavigate();
 
@@ -20,11 +20,14 @@ function HomePage() {
 
   const getOverviewData = async () => {
     try {
+      setLoading(true);
       const response = await getOverviewRequest(pageHash);
 
       setOverview(response.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,7 +36,7 @@ function HomePage() {
   };
 
   return (
-    <PageWrap>
+    <PageWrap loading={loading}>
       <PageContentWrap>
         <h1>Overview</h1>
         <div>Assigned tasks: {overview?.assignedTasksCount}</div>

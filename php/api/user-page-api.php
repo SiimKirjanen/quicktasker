@@ -13,6 +13,7 @@ use WPQT\Nonce\NonceService;
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Task\TaskRepository;
+use WPQT\User\UserService;
 
 function WPQTverifyUserPageHash($hash) {
    $userPageService = new UserPageService();
@@ -39,7 +40,7 @@ function WPQTverifyUserSession($pageHash) {
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
-    register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/status', array(
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/status', array(
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
@@ -63,7 +64,7 @@ function wpqt_register_user_page_api_routes() {
         'permission_callback' => '__return_true'
     ));
 
-    register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/setup', array(
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/setup', array(
         'methods' => 'POST',
         'callback' => function( $data ) {
                 try {
@@ -89,7 +90,7 @@ function wpqt_register_user_page_api_routes() {
         'permission_callback' => '__return_true'
     ));
 
-    register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/login', array(
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/login', array(
         'methods' => 'POST',
         'callback' => function( $data ) {
                 try {
@@ -126,7 +127,7 @@ function wpqt_register_user_page_api_routes() {
         'permission_callback' => '__return_true'
     ));
 
-    register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/overview', array(
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/overview', array(
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
@@ -149,7 +150,7 @@ function wpqt_register_user_page_api_routes() {
         'permission_callback' => '__return_true'
     ));
 
-    register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/assigned-tasks', array(
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/assigned-tasks', array(
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
@@ -160,6 +161,29 @@ function wpqt_register_user_page_api_routes() {
                     $assignedTasks = $taskRepository->getTasksAssignedToUser($session->user_id);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $assignedTasks))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true'
+    ));
+
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/assigned-tasks/(?P<task_id>[0-9]+)', array(
+        'methods' => 'GET',
+        'callback' => function( $data ) {
+                try {
+                    WPQTverifyUserApiNonce($data);
+                    WPQTverifyUserPageHash($data['hash']);
+                    $session = WPQTverifyUserSession($data['hash']);
+                    $userService = new UserService();
+                    if($userService->checkIfUserHasAssignedToTask($session->user_id, $data['task_id']) === false) {
+                        throw new Exception('User is not assigned to this task');
+                    }
+
+                    $taskRepository = new TaskRepository();
+                    $task = $taskRepository->getTaskById($data['task_id']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }

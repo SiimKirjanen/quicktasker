@@ -1,18 +1,31 @@
-import { UserAssignedTasksContextProvider } from "../../../providers/UserAssignedTasksContextProvider";
+import { useContext } from "@wordpress/element";
+import {
+  UserAssignedTasksContext,
+  UserAssignedTasksContextProvider,
+} from "../../../providers/UserAssignedTasksContextProvider";
 import { PageContentWrap, PageWrap } from "../Page/Page";
 import { UserTasks } from "./UserTasks";
 
 function UserTasksPage() {
-  console.log("UserTasksPage");
   return (
     <UserAssignedTasksContextProvider>
-      <PageWrap>
-        <PageContentWrap>
-          <h1>Assigned Tasks</h1>
-          <UserTasks />
-        </PageContentWrap>
-      </PageWrap>
+      <UserTaskPageContent />
     </UserAssignedTasksContextProvider>
+  );
+}
+
+function UserTaskPageContent() {
+  const {
+    state: { loading },
+  } = useContext(UserAssignedTasksContext);
+
+  return (
+    <PageWrap loading={loading}>
+      <PageContentWrap>
+        <h1>Assigned Tasks</h1>
+        <UserTasks />
+      </PageContentWrap>
+    </PageWrap>
   );
 }
 

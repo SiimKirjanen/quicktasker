@@ -16,7 +16,7 @@ function getUserPageStatusRequest(
   pageHash: string,
 ): Promise<WPQTResponse<ServerUserPageStatus>> {
   return apiFetch({
-    path: `/wpqt/v1/user-page/${pageHash}/status`,
+    path: `/wpqt/v1/user-pages/${pageHash}/status`,
     method: "GET",
     headers: getCommonHeaders(),
   });
@@ -27,7 +27,7 @@ function setUpUserPageRequest(
   data: { password: string },
 ): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/user-page/${pageHash}/setup`,
+    path: `/wpqt/v1/user-pages/${pageHash}/setup`,
     data,
     method: "POST",
     headers: getCommonHeaders(),
@@ -39,7 +39,7 @@ function logInUserPageRequest(
   password: string,
 ): Promise<WPQTResponse<UserSession>> {
   return apiFetch({
-    path: `/wpqt/v1/user-page/${pageHash}/login`,
+    path: `/wpqt/v1/user-pages/${pageHash}/login`,
     method: "POST",
     data: { password },
     headers: getCommonHeaders(),
@@ -51,7 +51,7 @@ function getOverviewRequest(
 ): Promise<WPQTResponse<UserPageOverview>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-page/${pageHash}/overview`,
+    path: `/wpqt/v1/user-pages/${pageHash}/overview`,
     headers: getCommonHeaders(),
   });
 }
@@ -61,7 +61,18 @@ function getAssignedTasksRequest(
 ): Promise<WPQTResponse<TaskFromServer[]>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-page/${pageHash}/assigned-tasks`,
+    path: `/wpqt/v1/user-pages/${pageHash}/assigned-tasks`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function getAssignedTaskDataRequest(
+  pageHash: string,
+  taskId: number,
+): Promise<WPQTResponse<TaskFromServer>> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/assigned-tasks/${taskId}`,
     headers: getCommonHeaders(),
   });
 }
@@ -72,4 +83,5 @@ export {
   logInUserPageRequest,
   getOverviewRequest,
   getAssignedTasksRequest,
+  getAssignedTaskDataRequest,
 };

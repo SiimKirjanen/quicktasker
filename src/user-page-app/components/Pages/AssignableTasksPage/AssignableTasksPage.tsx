@@ -1,7 +1,11 @@
-import { PageWrap } from "../Page/Page";
+import { PageContentWrap, PageWrap } from "../Page/Page";
 
 function AssignableTasksPage() {
-  return <PageWrap>AssignableTasksPage</PageWrap>;
+  return (
+    <PageWrap>
+      <PageContentWrap>AssignableTasksPage</PageContentWrap>
+    </PageWrap>
+  );
 }
 
 export { AssignableTasksPage };

@@ -890,11 +890,6 @@
   margin-right: 0.75rem;
 }
 
-.wpqt-mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .\!wpqt-mb-0 {
   margin-bottom: 0px !important;
 }
@@ -966,6 +961,16 @@
   height: 1.5rem;
 }
 
+.wpqt-size-8 {
+  width: 2rem;
+  height: 2rem;
+}
+
+.wpqt-size-9 {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
 .wpqt-h-\[200px\] {
   height: 200px;
 }
@@ -1002,6 +1007,10 @@
   width: 320px;
 }
 
+.wpqt-w-\[360px\] {
+  width: 360px;
+}
+
 .wpqt-w-\[40px\] {
   width: 40px;
 }
@@ -1012,18 +1021,6 @@
 
 .wpqt-w-screen {
   width: 100vw;
-}
-
-.wpqt-w-\[340px\] {
-  width: 340px;
-}
-
-.wpqt-w-\[360px\] {
-  width: 360px;
-}
-
-.wpqt-max-w-5xl {
-  max-width: 64rem;
 }
 
 .wpqt-max-w-md {
@@ -1066,6 +1063,10 @@
   resize: none;
 }
 
+.wpqt-grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
 .wpqt-grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1074,8 +1075,8 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.wpqt-grid-cols-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+.wpqt-grid-cols-\[1fr_auto_1fr\] {
+  grid-template-columns: 1fr auto 1fr;
 }
 
 .wpqt-flex-col {
@@ -1434,7 +1435,7 @@
 }
 
 .wpqt-user-app-content-height {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 92px);
 }
 
 .wpqt-main-border {
@@ -1572,14 +1573,6 @@
 
   .lg\:wpqt-order-2 {
     order: 2;
-  }
-
-  .lg\:wpqt-grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .lg\:wpqt-grid-cols-5 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
   .lg\:wpqt-grid-cols-4 {

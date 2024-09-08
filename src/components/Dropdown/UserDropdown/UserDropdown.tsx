@@ -3,8 +3,6 @@ import {
   PencilSquareIcon,
   RectangleStackIcon,
   EllipsisHorizontalIcon,
-  NoSymbolIcon,
-  PlayCircleIcon,
   PowerIcon,
 } from "@heroicons/react/24/outline";
 import {
