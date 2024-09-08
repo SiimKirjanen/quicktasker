@@ -12,6 +12,7 @@ use WPQT\Session\SessionService;
 use WPQT\Nonce\NonceService;
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
+use WPQT\Task\TaskRepository;
 
 function WPQTverifyUserPageHash($hash) {
    $userPageService = new UserPageService();
@@ -132,15 +133,35 @@ function wpqt_register_user_page_api_routes() {
                     WPQTverifyUserApiNonce($data);
                     WPQTverifyUserPageHash($data['hash']);
                     $session = WPQTverifyUserSession($data['hash']);
+                    $taskRepository = new TaskRepository();
+                    $assignedTasks = $taskRepository->getTasksAssignedToUser($session->user_id);
 
                     $overviewData = (object)[
-                        'assignedTasksCount' => 100,
+                        'assignedTasksCount' => count($assignedTasks),
                         'selectableTasksCount' => 55
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $overviewData))->toArray(), 200);
                 } catch (Exception $e) {
-                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true'
+    ));
+
+    register_rest_route('wpqt/v1', 'user-page/(?P<hash>[a-zA-Z0-9]+)/assigned-tasks', array(
+        'methods' => 'GET',
+        'callback' => function( $data ) {
+                try {
+                    WPQTverifyUserApiNonce($data);
+                    WPQTverifyUserPageHash($data['hash']);
+                    $session = WPQTverifyUserSession($data['hash']);
+                    $taskRepository = new TaskRepository();
+                    $assignedTasks = $taskRepository->getTasksAssignedToUser($session->user_id);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $assignedTasks))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
         'permission_callback' => '__return_true'

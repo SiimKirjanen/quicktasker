@@ -108,4 +108,22 @@ class TaskRepository {
 
         return $results;
     }
+
+    /**
+     * Retrieves tasks assigned to a specific user.
+     *
+     * @param int $userId The ID of the user.
+     * @return array The tasks assigned to the user.
+     */
+    public function getTasksAssignedToUser($userId) {
+        global $wpdb;
+
+        return $wpdb->get_results( $wpdb->prepare(
+            "SELECT b.* FROM ". TABLE_WP_QUICK_TASKS_USER_TASK . " AS a
+            LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS ." AS b
+            ON a.task_id = b.id
+            WHERE a.user_id = %d",
+            $userId
+        ) );
+    }
 }

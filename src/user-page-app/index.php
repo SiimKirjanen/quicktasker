@@ -2,14 +2,6 @@
     if ( ! defined( 'ABSPATH' ) ) {
         exit; 
     }
-    use WPQT\UserPage\UserPageService;
-
-    $userPageService = new UserPageService();
-
-    if( !$userPageService->checkIfUserPageHashExists($_GET['code']) ) {
-        echo 'User page not found.';
-        exit;
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +11,7 @@
     <title>User page</title>
     <?php wp_head(); ?>
 </head>
-<body class="wpqt-font-inter">
+<body class="wpqt-font-inter wpqt-m-0">
     <div id="wpqt-public-user-app"></div>
     <?php wp_footer(); ?>	
 </body>

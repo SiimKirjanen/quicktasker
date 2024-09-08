@@ -11,7 +11,7 @@ const reducer = (state: State, action: Action): State => {
         isActiveUser: userPageStatus.isActiveUser === "1",
         isLoggedIn: userPageStatus.isLoggedIn,
         setupCompleted: userPageStatus.setupCompleted,
-        loading: false,
+        initialLoading: false,
       };
     }
     case SET_USER_LOGGED_IN: {

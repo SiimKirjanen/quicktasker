@@ -3,6 +3,7 @@ import { WPQTResponse } from "../../types/response";
 import { ServerUserPageStatus } from "../types/user-page-status";
 import { UserSession } from "../types/user-session";
 import { UserPageOverview } from "../types/user-page-overview";
+import { TaskFromServer } from "../../types/task";
 
 function getCommonHeaders() {
   return {
@@ -55,9 +56,20 @@ function getOverviewRequest(
   });
 }
 
+function getAssignedTasksRequest(
+  pageHash: string,
+): Promise<WPQTResponse<TaskFromServer[]>> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-page/${pageHash}/assigned-tasks`,
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getUserPageStatusRequest,
   setUpUserPageRequest,
   logInUserPageRequest,
   getOverviewRequest,
+  getAssignedTasksRequest,
 };

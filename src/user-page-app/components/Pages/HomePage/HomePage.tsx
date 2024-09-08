@@ -1,11 +1,18 @@
-import { useContext, useEffect } from "@wordpress/element";
+import { useContext, useEffect, useState } from "@wordpress/element";
 import { getOverviewRequest } from "../../../api/user-page-api";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
+import { PageContentWrap, PageWrap } from "../Page/Page";
+import { UserPageOverview } from "../../../types/user-page-overview";
+import { WPQTButton } from "../../../../components/common/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const {
     state: { pageHash },
   } = useContext(UserPageAppContext);
+  const [loading, setLoading] = useState();
+  const [overview, setOverview] = useState<null | UserPageOverview>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getOverviewData();
@@ -14,14 +21,29 @@ function HomePage() {
   const getOverviewData = async () => {
     try {
       const response = await getOverviewRequest(pageHash);
+
+      setOverview(response.data);
     } catch (error) {
       console.error(error);
     }
   };
+
+  const goToUsersPage = () => {
+    navigate("/user-tasks");
+  };
+
   return (
-    <div>
-      <h1>Home!</h1>
-    </div>
+    <PageWrap>
+      <PageContentWrap>
+        <h1>Overview</h1>
+        <div>Assigned tasks: {overview?.assignedTasksCount}</div>
+
+        <WPQTButton
+          btnText="See assigned taks"
+          onClick={goToUsersPage}
+        ></WPQTButton>
+      </PageContentWrap>
+    </PageWrap>
   );
 }
 

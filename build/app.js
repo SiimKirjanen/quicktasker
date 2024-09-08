@@ -10620,7 +10620,7 @@ function Stage({
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     "data-stage-id": stage.id,
-    className: `wpqt-relative wpqt-mb-3 wpqt-flex wpqt-max-h-full wpqt-w-[320px] wpqt-flex-none wpqt-flex-col wpqt-overflow-hidden wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-gray-100`,
+    className: `wpqt-relative wpqt-mb-3 wpqt-flex wpqt-max-h-full wpqt-w-[360px] wpqt-flex-none wpqt-flex-col wpqt-overflow-hidden wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-gray-100`,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-mb-4 wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1 wpqt-px-3 wpqt-pt-3",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -13181,6 +13181,7 @@ function formatDate(dateString, options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   convertTaskFromServer: () => (/* binding */ convertTaskFromServer),
 /* harmony export */   moveTask: () => (/* binding */ moveTask),
 /* harmony export */   reorderTask: () => (/* binding */ reorderTask)
 /* harmony export */ });
@@ -13216,6 +13217,14 @@ const reorderTask = (list, startIndex, endIndex) => {
   result.splice(endIndex, 0, removed);
   return result;
 };
+/**
+ * Converts a task object received from the server to a Task object.
+ * @param task - The task object received from the server.
+ * @returns The converted Task object.
+ */
+const convertTaskFromServer = task => Object.assign(Object.assign({}, task), {
+  task_order: Number(task.task_order)
+});
 
 
 /***/ }),

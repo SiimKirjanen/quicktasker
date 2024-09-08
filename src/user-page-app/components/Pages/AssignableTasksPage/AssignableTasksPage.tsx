@@ -1,9 +1,7 @@
+import { PageWrap } from "../Page/Page";
+
 function AssignableTasksPage() {
-  return (
-    <div>
-      <h1>Assignable Tasks</h1>
-    </div>
-  );
+  return <PageWrap>AssignableTasksPage</PageWrap>;
 }
 
 export { AssignableTasksPage };

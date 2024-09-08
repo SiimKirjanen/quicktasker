@@ -877,8 +877,12 @@
   order: 1;
 }
 
-.wpqt-m-auto {
-  margin: auto;
+.wpqt-order-2 {
+  order: 2;
+}
+
+.wpqt-m-0 {
+  margin: 0px;
 }
 
 .wpqt-mx-3 {
@@ -970,6 +974,10 @@
   height: 40px;
 }
 
+.wpqt-h-\[60px\] {
+  height: 60px;
+}
+
 .wpqt-h-full {
   height: 100%;
 }
@@ -1006,6 +1014,14 @@
   width: 100vw;
 }
 
+.wpqt-w-\[340px\] {
+  width: 340px;
+}
+
+.wpqt-w-\[360px\] {
+  width: 360px;
+}
+
 .wpqt-max-w-5xl {
   max-width: 64rem;
 }
@@ -1038,12 +1054,12 @@
   cursor: pointer !important;
 }
 
-.wpqt-cursor-pointer {
-  cursor: pointer;
-}
-
 .wpqt-cursor-not-allowed {
   cursor: not-allowed;
+}
+
+.wpqt-cursor-pointer {
+  cursor: pointer;
 }
 
 .wpqt-resize-none {
@@ -1056,6 +1072,10 @@
 
 .wpqt-grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.wpqt-grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .wpqt-flex-col {
@@ -1096,10 +1116,6 @@
 
 .wpqt-gap-\[24px\] {
   gap: 24px;
-}
-
-.wpqt-gap-y-2 {
-  row-gap: 0.5rem;
 }
 
 .wpqt-gap-y-1 {
@@ -1187,19 +1203,14 @@
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
 }
 
-.wpqt-bg-white {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.wpqt-bg-slate-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
-}
-
 .wpqt-bg-red-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
+}
+
+.wpqt-bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 .wpqt-p-1 {
@@ -1422,6 +1433,10 @@
   height: calc(100vh - 120px);
 }
 
+.wpqt-user-app-content-height {
+  height: calc(100vh - 60px);
+}
+
 .wpqt-main-border {
   border-radius: 0.375rem;
   border-width: 1px;
@@ -1443,11 +1458,6 @@
 .wpqt-icon-blue {
   --tw-text-opacity: 1;
   color: rgb(29 78 216 / var(--tw-text-opacity));
-}
-
-.wpqt-icon-yellow {
-  --tw-text-opacity: 1;
-  color: rgb(234 179 8 / var(--tw-text-opacity));
 }
 
 /* Start of WordPress style overrides */
@@ -1547,6 +1557,34 @@
 
 .data-\[focus\]\:wpqt-outline-white\/25[data-focus] {
   outline-color: rgb(255 255 255 / 0.25);
+}
+
+@media (min-width: 640px) {
+  .sm\:wpqt-grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:wpqt-order-1 {
+    order: 1;
+  }
+
+  .lg\:wpqt-order-2 {
+    order: 2;
+  }
+
+  .lg\:wpqt-grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:wpqt-grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .lg\:wpqt-grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 /*# sourceMappingURL=tailwind.css.map */

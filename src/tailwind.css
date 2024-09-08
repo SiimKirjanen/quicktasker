@@ -8,6 +8,9 @@
   .wpqt-pipeline-height {
     height: calc(100vh - 120px);
   }
+  .wpqt-user-app-content-height {
+    height: calc(100vh - 60px);
+  }
   .wpqt-strip-btn {
     @apply wpqt-border-0 wpqt-border-none wpqt-bg-transparent wpqt-p-0;
   }

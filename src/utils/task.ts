@@ -1,5 +1,5 @@
 import { Stage } from "../types/stage";
-import { Task } from "../types/task";
+import { Task, TaskFromServer } from "../types/task";
 
 /**
  * Moves a task from one stage to another within a list of stages.
@@ -47,4 +47,14 @@ const reorderTask = (list: Task[], startIndex: number, endIndex: number) => {
   return result;
 };
 
-export { moveTask, reorderTask };
+/**
+ * Converts a task object received from the server to a Task object.
+ * @param task - The task object received from the server.
+ * @returns The converted Task object.
+ */
+const convertTaskFromServer = (task: TaskFromServer): Task => ({
+  ...task,
+  task_order: Number(task.task_order), // Convert task_order to number
+});
+
+export { moveTask, reorderTask, convertTaskFromServer };

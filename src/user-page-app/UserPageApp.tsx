@@ -1,8 +1,17 @@
-import { PageWrap } from "./components/Pages/Page/PageWrap";
-import { UserPageAppContextProvider } from "./providers/UserPageAppContextProvider";
-import { useCurrentUserPage } from "./hooks/useCurrentUsePage";
+import {
+  UserPageAppContext,
+  UserPageAppContextProvider,
+} from "./providers/UserPageAppContextProvider";
 import ErrorBoundary from "../components/ErrorBoundary/ErrorBoundary";
 import { ToastContainer } from "react-toastify";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { HomePage } from "./components/Pages/HomePage/HomePage";
+import { UserTasksPage } from "./components/Pages/UserTasksPage/UserTasksPage";
+import { useContext } from "@wordpress/element";
+import { ErrorPage } from "./components/Pages/ErrorPage/ErrorPage";
+import { SetUpPage } from "./components/Pages/SetUpPage/SetUpPage";
+import { LoginPage } from "./components/Pages/LoginPage/LoginPage";
+import { AssignableTasksPage } from "./components/Pages/AssignableTasksPage/AssignableTasksPage";
 
 function UserPageApp() {
   return (
@@ -16,9 +25,34 @@ function UserPageApp() {
 }
 
 function UserPageContent() {
-  const currentPage = useCurrentUserPage();
+  const {
+    state: { initialLoading, isActiveUser, setupCompleted, isLoggedIn },
+  } = useContext(UserPageAppContext);
 
-  return <PageWrap>{currentPage}</PageWrap>;
+  if (initialLoading) {
+    return <div>Loading...</div>;
+  }
+  if (!isActiveUser) {
+    return <ErrorPage />;
+  }
+
+  if (!setupCompleted) {
+    return <SetUpPage />;
+  }
+
+  if (!isLoggedIn) {
+    return <LoginPage />;
+  }
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/user-tasks" element={<UserTasksPage />} />
+        <Route path="/assignable-tasks" element={<AssignableTasksPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default UserPageApp;

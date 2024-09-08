@@ -6,7 +6,7 @@ import { useSession } from "../hooks/useSession";
 import { getQueryParam } from "../../utils/url";
 
 const initialState: State = {
-  loading: true,
+  initialLoading: true,
   isActiveUser: false,
   setupCompleted: false,
   isLoggedIn: false,
@@ -14,7 +14,7 @@ const initialState: State = {
 };
 
 type State = {
-  loading: boolean;
+  initialLoading: boolean;
   isActiveUser: boolean;
   setupCompleted: boolean;
   isLoggedIn: boolean;

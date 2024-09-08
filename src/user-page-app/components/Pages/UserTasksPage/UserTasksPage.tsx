@@ -1,8 +1,18 @@
+import { UserAssignedTasksContextProvider } from "../../../providers/UserAssignedTasksContextProvider";
+import { PageContentWrap, PageWrap } from "../Page/Page";
+import { UserTasks } from "./UserTasks";
+
 function UserTasksPage() {
+  console.log("UserTasksPage");
   return (
-    <div>
-      <h1>Assigned Tasks</h1>
-    </div>
+    <UserAssignedTasksContextProvider>
+      <PageWrap>
+        <PageContentWrap>
+          <h1>Assigned Tasks</h1>
+          <UserTasks />
+        </PageContentWrap>
+      </PageWrap>
+    </UserAssignedTasksContextProvider>
   );
 }
 
