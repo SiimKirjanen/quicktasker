@@ -15,29 +15,7 @@ use WPQT\Pipeline\PipelineService;
 use WPQT\Task\TaskRepository;
 use WPQT\User\UserService;
 use WPQT\WPQTException;
-
-function WPQTverifyUserPageHash($hash) {
-   $userPageService = new UserPageService();
-
-    if( !$userPageService->checkIfUserPageHashExists($hash) ) {
-        throw new Exception('User page hash does not exist');
-    }
-    return true;
-}
-
-function WPQTverifyUserApiNonce($data) {
-    $nonce = $data->get_header('X-WPQT-USER-API-Nonce');
-    NonceService::verifyNonce($nonce, WPQT_USER_API_NONCE);
-
-    return true;
-}
-
-function WPQTverifyUserSession($pageHash) {
-    $sessionService = new SessionService();
-    $session = $sessionService->verifySessionToken($pageHash);
-
-    return $session;
-}
+use WPQT\RequestValidation;
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
@@ -45,8 +23,7 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
-                    WPQTverifyUserApiNonce($data);
-                    WPQTverifyUserPageHash($data['hash']);
+                    RequestValidation::validateUserPageApiRequest($data, array('session' => false));
                     $userPageRepository = new UserPageRepository();
                     $userPageService = new UserPageService();
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']);
@@ -58,8 +35,10 @@ function wpqt_register_user_page_api_routes() {
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $userPageStatus))->toArray(), 200);
-                } catch (Exception $e) {
+                } catch(WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
         'permission_callback' => '__return_true'
@@ -69,8 +48,7 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'POST',
         'callback' => function( $data ) {
                 try {
-                    WPQTverifyUserApiNonce($data);
-                    WPQTverifyUserPageHash($data['hash']);
+                    RequestValidation::validateUserPageApiRequest($data, array('session' => false));
                     $userPageRepository = new UserPageRepository();
                     $userPageService = new UserPageService();
                     $passwordService = new PasswordService();
@@ -79,13 +57,15 @@ function wpqt_register_user_page_api_routes() {
                     $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage);
 
                     if( $hasSetupCompleted ) {
-                        throw new Exception('User page setup has already been completed');
+                        throw new WPQTException('User page setup has already been completed', true);
                     }
                     $passwordService->storePassword($userPage->user_id, $data['password']);
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                } catch (Exception $e) {
+                } catch(WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
         'permission_callback' => '__return_true'
@@ -95,20 +75,19 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'POST',
         'callback' => function( $data ) {
                 try {
-                    WPQTverifyUserApiNonce($data);
-                    WPQTverifyUserPageHash($data['hash']);
+                    RequestValidation::validateUserPageApiRequest($data, array('session' => false));
                     $passwordService = new PasswordService();
                     $sessionService = new SessionService();
                     $userPageRepository = new UserPageRepository();
 
                     if($data['password'] === null) {
-                        throw new Exception('Password is required');
+                        throw new WPQTException('Password is required');
                     }
                 
                     $passwordMatch = $passwordService->verifyPassword($data['hash'], $data['password']);
 
                     if( !$passwordMatch ) {
-                        throw new Exception('Invalid password');
+                        throw new WPQTException('Invalid password', true);
                     }
                     
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']);
@@ -118,11 +97,10 @@ function wpqt_register_user_page_api_routes() {
                         'sessionToken' => $userSession->session_token,
                         'expiresAtUTC' => $userSession->expires_at_utc
                     ]))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } catch (Exception $e) {
-                    if($e->getMessage() === 'Invalid password') {
-                         return new WP_REST_Response((new ApiResponse(false, array('Invalid password')))->toArray(), 401);
-                    }
-                    return new WP_REST_Response((new ApiResponse(false))->toArray(), 400);
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
         'permission_callback' => '__return_true'
@@ -132,9 +110,7 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
-                    WPQTverifyUserApiNonce($data);
-                    WPQTverifyUserPageHash($data['hash']);
-                    $session = WPQTverifyUserSession($data['hash']);
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                     $taskRepository = new TaskRepository();
                     $assignedTasks = $taskRepository->getTasksAssignedToUser($session->user_id);
 
@@ -144,6 +120,8 @@ function wpqt_register_user_page_api_routes() {
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $overviewData))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
@@ -155,13 +133,13 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
-                    WPQTverifyUserApiNonce($data);
-                    WPQTverifyUserPageHash($data['hash']);
-                    $session = WPQTverifyUserSession($data['hash']);
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                     $taskRepository = new TaskRepository();
                     $assignedTasks = $taskRepository->getTasksAssignedToUser($session->user_id);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $assignedTasks))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
@@ -173,21 +151,19 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
-                    WPQTverifyUserApiNonce($data);
-                    WPQTverifyUserPageHash($data['hash']);
-                    $session = WPQTverifyUserSession($data['hash']);
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                     $userService = new UserService();
+                    $taskRepository = new TaskRepository();
+
                     if($userService->checkIfUserHasAssignedToTask($session->user_id, $data['task_id']) === false) {
                         throw new WPQTException('User is not assigned to task', true);
                     }
-
-                    $taskRepository = new TaskRepository();
                     $task = $taskRepository->getTaskById($data['task_id']);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
-                }catch(WPQTException $e) {
+                } catch(WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                }catch (Exception $e) {
+                } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },

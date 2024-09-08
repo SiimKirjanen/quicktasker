@@ -2,6 +2,7 @@
 namespace WPQT\Session;
 
 use WPQT\Session\SessionRepository;
+use WPQT\WPQTException;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
@@ -104,15 +105,15 @@ class SessionService {
         $session = $this->sessionRepository->getUserSession($sessionToken);
 
         if( $session === null ) {
-            throw new \Exception('Invalid session token');
+            throw new WPQTException('Invalid session token', true);
         }
 
         if($pageHash !== $session->page_hash) {
-            throw new \Exception('Session token does not match the page hash');
+            throw new WPQTException('Session token does not match the page hash', true);
         }
 
         if( strtotime($session->expires_at_utc) < time() ) {
-            throw new \Exception('Session has expired');
+            throw new WPQTException('Session has expired', true);
         }
 
         return $session;

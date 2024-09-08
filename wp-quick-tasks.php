@@ -41,6 +41,7 @@ require( 'php/services/UserPageService.php' );
 require( 'php/services/PasswordService.php' );
 require( 'php/services/SessionService.php' );
 require( 'php/services/NonceService.php' );
+require( 'php/services/RequestValidation.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
