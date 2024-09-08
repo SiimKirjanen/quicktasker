@@ -22,7 +22,10 @@ function NavigationBar({ loading, onRefresh = () => {} }: Props) {
         {loading ? (
           <LoadingOval width="30" height="30" />
         ) : (
-          <ArrowPathIcon className="wpqt-icon-blue wpqt-size-9 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover" />
+          <ArrowPathIcon
+            className="wpqt-icon-blue wpqt-size-9 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+            onClick={onRefresh}
+          />
         )}
       </div>
 

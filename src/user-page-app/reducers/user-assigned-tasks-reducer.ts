@@ -1,6 +1,6 @@
 import { Task } from "../../types/task";
 import { convertTaskFromServer } from "../../utils/task";
-import { SET_ASSIGNED_TASKS } from "../constants";
+import { SET_ASSIGNED_TASKS, SET_ASSIGNED_TASKS_LOADING } from "../constants";
 import { Action, State } from "../providers/UserAssignedTasksContextProvider";
 
 const reducer = (state: State, action: Action): State => {
@@ -12,6 +12,14 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         assignedTasks,
         loading: false,
+      };
+    }
+    case SET_ASSIGNED_TASKS_LOADING: {
+      const loading: boolean = action.payload;
+
+      return {
+        ...state,
+        loading,
       };
     }
     default: {

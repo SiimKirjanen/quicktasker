@@ -36,7 +36,7 @@ function HomePage() {
   };
 
   return (
-    <PageWrap loading={loading}>
+    <PageWrap loading={loading} onRefresh={getOverviewData}>
       <PageContentWrap>
         <h1>Overview</h1>
         <div>Assigned tasks: {overview?.assignedTasksCount}</div>

@@ -15,13 +15,16 @@ function UserTaskPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getUserPageTask(Number(taskId));
+    getUserPageTask();
   }, [taskId]);
 
-  const getUserPageTask = async (taskId: number) => {
+  const getUserPageTask = async () => {
     try {
       setLoading(true);
-      const response = await getAssignedTaskDataRequest(pageHash, taskId);
+      const response = await getAssignedTaskDataRequest(
+        pageHash,
+        Number(taskId),
+      );
 
       setTask(convertTaskFromServer(response.data));
     } catch (error) {
@@ -32,7 +35,7 @@ function UserTaskPage() {
   };
 
   return (
-    <PageWrap loading={loading}>
+    <PageWrap loading={loading} onRefresh={getUserPageTask}>
       <PageContentWrap>{JSON.stringify(task)}</PageContentWrap>
     </PageWrap>
   );

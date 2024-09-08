@@ -31,11 +31,13 @@ type Dispatch = (action: Action) => void;
 type UserPageAppContextType = {
   state: State;
   userPageAppDispatch: Dispatch;
+  loadUserPageStatus: () => void;
 };
 
 const UserPageAppContext = createContext<UserPageAppContextType>({
   state: initialState,
   userPageAppDispatch: () => {},
+  loadUserPageStatus: () => {},
 });
 
 const UserPageAppContextProvider = ({
@@ -70,7 +72,9 @@ const UserPageAppContextProvider = ({
   };
 
   return (
-    <UserPageAppContext.Provider value={{ state, userPageAppDispatch }}>
+    <UserPageAppContext.Provider
+      value={{ state, userPageAppDispatch, loadUserPageStatus }}
+    >
       {children}
     </UserPageAppContext.Provider>
   );

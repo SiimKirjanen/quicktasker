@@ -8,7 +8,7 @@ import { Task } from "../../types/task";
 import { reducer } from "../reducers/user-assigned-tasks-reducer";
 import { getAssignedTasksRequest } from "../api/user-page-api";
 import { UserPageAppContext } from "./UserPageAppContextProvider";
-import { SET_ASSIGNED_TASKS } from "../constants";
+import { SET_ASSIGNED_TASKS, SET_ASSIGNED_TASKS_LOADING } from "../constants";
 
 const initialState: State = {
   loading: true,
@@ -57,6 +57,10 @@ const UserAssignedTasksContextProvider = ({
 
   const loadAssignedTasks = async () => {
     try {
+      userAssignedTasksDispatch({
+        type: SET_ASSIGNED_TASKS_LOADING,
+        payload: true,
+      });
       const response = await getAssignedTasksRequest(pageHash);
 
       userAssignedTasksDispatch({
@@ -65,6 +69,11 @@ const UserAssignedTasksContextProvider = ({
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      userAssignedTasksDispatch({
+        type: SET_ASSIGNED_TASKS_LOADING,
+        payload: false,
+      });
     }
   };
 

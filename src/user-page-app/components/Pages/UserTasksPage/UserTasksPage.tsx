@@ -17,10 +17,11 @@ function UserTasksPage() {
 function UserTaskPageContent() {
   const {
     state: { loading },
+    loadAssignedTasks,
   } = useContext(UserAssignedTasksContext);
 
   return (
-    <PageWrap loading={loading}>
+    <PageWrap loading={loading} onRefresh={loadAssignedTasks}>
       <PageContentWrap>
         <h1>Assigned Tasks</h1>
         <UserTasks />

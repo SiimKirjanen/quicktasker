@@ -14,6 +14,7 @@ use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Task\TaskRepository;
 use WPQT\User\UserService;
+use WPQT\WPQTException;
 
 function WPQTverifyUserPageHash($hash) {
    $userPageService = new UserPageService();
@@ -177,14 +178,16 @@ function wpqt_register_user_page_api_routes() {
                     $session = WPQTverifyUserSession($data['hash']);
                     $userService = new UserService();
                     if($userService->checkIfUserHasAssignedToTask($session->user_id, $data['task_id']) === false) {
-                        throw new Exception('User is not assigned to this task');
+                        throw new WPQTException('User is not assigned to task', true);
                     }
 
                     $taskRepository = new TaskRepository();
                     $task = $taskRepository->getTaskById($data['task_id']);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
-                } catch (Exception $e) {
+                }catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },

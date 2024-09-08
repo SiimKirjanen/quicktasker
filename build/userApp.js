@@ -5671,7 +5671,8 @@ function NavigationBar({
         width: "30",
         height: "30"
       }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        className: "wpqt-icon-blue wpqt-size-9 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+        className: "wpqt-icon-blue wpqt-size-9 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover",
+        onClick: onRefresh
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-justify-end wpqt-gap-2",
@@ -5821,6 +5822,7 @@ function HomePage() {
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_4__.PageWrap, {
     loading: loading,
+    onRefresh: getOverviewData,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_4__.PageContentWrap, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
         children: "Overview"
@@ -5980,7 +5982,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function PageWrap({
   children,
-  loading = false
+  loading = false,
+  onRefresh
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-flex-col",
@@ -5990,7 +5993,8 @@ function PageWrap({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-order-2 lg:wpqt-order-1",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Navigation_Navigation__WEBPACK_IMPORTED_MODULE_1__.NavigationBar, {
-        loading: loading
+        loading: loading,
+        onRefresh: onRefresh
       })
     })]
   });
@@ -6150,12 +6154,12 @@ function UserTaskPage() {
   const [task, setTask] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    getUserPageTask(Number(taskId));
+    getUserPageTask();
   }, [taskId]);
-  const getUserPageTask = taskId => __awaiter(this, void 0, void 0, function* () {
+  const getUserPageTask = () => __awaiter(this, void 0, void 0, function* () {
     try {
       setLoading(true);
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getAssignedTaskDataRequest)(pageHash, taskId);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getAssignedTaskDataRequest)(pageHash, Number(taskId));
       setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data));
     } catch (error) {
       console.error(error);
@@ -6165,6 +6169,7 @@ function UserTaskPage() {
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageWrap, {
     loading: loading,
+    onRefresh: getUserPageTask,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageContentWrap, {
       children: JSON.stringify(task)
     })
@@ -6252,10 +6257,12 @@ function UserTaskPageContent() {
   const {
     state: {
       loading
-    }
+    },
+    loadAssignedTasks
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserAssignedTasksContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserAssignedTasksContext);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_3__.PageWrap, {
     loading: loading,
+    onRefresh: loadAssignedTasks,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_3__.PageContentWrap, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
         children: "Assigned Tasks"
@@ -6277,14 +6284,16 @@ function UserTaskPageContent() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   SET_ASSIGNED_TASKS: () => (/* binding */ SET_ASSIGNED_TASKS),
+/* harmony export */   SET_ASSIGNED_TASKS_LOADING: () => (/* binding */ SET_ASSIGNED_TASKS_LOADING),
 /* harmony export */   SET_USER_LOGGED_IN: () => (/* binding */ SET_USER_LOGGED_IN),
 /* harmony export */   SET_USER_PAGE_STATUS: () => (/* binding */ SET_USER_PAGE_STATUS)
 /* harmony export */ });
 // User page reducer constants
 const SET_USER_PAGE_STATUS = "SET_USER_PAGE_STATUS";
 const SET_USER_LOGGED_IN = "SET_USER_LOGGED_IN";
-//
+// Assigned tasks reducer constants
 const SET_ASSIGNED_TASKS = "SET_ASSIGNED_TASKS";
+const SET_ASSIGNED_TASKS_LOADING = "SET_ASSIGNED_TASKS_LOADING";
 
 
 /***/ }),
@@ -6440,6 +6449,10 @@ const UserAssignedTasksContextProvider = ({
   }, [pageHash]);
   const loadAssignedTasks = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
+      userAssignedTasksDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_ASSIGNED_TASKS_LOADING,
+        payload: true
+      });
       const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getAssignedTasksRequest)(pageHash);
       userAssignedTasksDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_ASSIGNED_TASKS,
@@ -6447,6 +6460,11 @@ const UserAssignedTasksContextProvider = ({
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      userAssignedTasksDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_ASSIGNED_TASKS_LOADING,
+        payload: false
+      });
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserAssignedTasksContext.Provider, {
@@ -6526,7 +6544,8 @@ const initialState = {
 };
 const UserPageAppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
-  userPageAppDispatch: () => {}
+  userPageAppDispatch: () => {},
+  loadUserPageStatus: () => {}
 });
 const UserPageAppContextProvider = ({
   children
@@ -6558,7 +6577,8 @@ const UserPageAppContextProvider = ({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserPageAppContext.Provider, {
     value: {
       state,
-      userPageAppDispatch
+      userPageAppDispatch,
+      loadUserPageStatus
     },
     children: children
   });
@@ -6590,6 +6610,13 @@ const reducer = (state, action) => {
         return Object.assign(Object.assign({}, state), {
           assignedTasks,
           loading: false
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_1__.SET_ASSIGNED_TASKS_LOADING:
+      {
+        const loading = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          loading
         });
       }
     default:
