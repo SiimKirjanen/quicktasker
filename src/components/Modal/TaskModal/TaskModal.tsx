@@ -29,7 +29,11 @@ function TaskModal() {
     handleError,
   } = useModal(CLOSE_TASK_MODAL);
 
-  const addTask = async (taskName: string, taskDescription: string) => {
+  const addTask = async (
+    taskName: string,
+    taskDescription: string,
+    isFreeForAll: boolean,
+  ) => {
     try {
       setModalSaving(true);
       const response = await createTaskRequest(
@@ -37,6 +41,7 @@ function TaskModal() {
         activePipeline!.id,
         taskName,
         taskDescription,
+        isFreeForAll,
       );
       handleSuccess(
         PIPELINE_ADD_TASK,

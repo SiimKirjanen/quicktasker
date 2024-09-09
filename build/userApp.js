@@ -6732,6 +6732,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   moveTask: () => (/* binding */ moveTask),
 /* harmony export */   reorderTask: () => (/* binding */ reorderTask)
 /* harmony export */ });
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./user */ "./src/utils/user.ts");
+
 /**
  * Moves a task from one stage to another within a list of stages.
  *
@@ -6770,7 +6772,9 @@ const reorderTask = (list, startIndex, endIndex) => {
  * @returns The converted Task object.
  */
 const convertTaskFromServer = task => Object.assign(Object.assign({}, task), {
-  task_order: Number(task.task_order)
+  task_order: Number(task.task_order),
+  free_for_all: task.free_for_all === "1",
+  assigned_users: task.assigned_users ? task.assigned_users.map(user => Object.assign({}, (0,_user__WEBPACK_IMPORTED_MODULE_0__.convertUserFromServer)(user))) : []
 });
 
 
@@ -6791,6 +6795,24 @@ const getQueryParam = param => {
   const searchParams = new URLSearchParams(window.location.search);
   return searchParams.get(param);
 };
+
+
+/***/ }),
+
+/***/ "./src/utils/user.ts":
+/*!***************************!*\
+  !*** ./src/utils/user.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   convertUserFromServer: () => (/* binding */ convertUserFromServer)
+/* harmony export */ });
+const convertUserFromServer = user => Object.assign(Object.assign({}, user), {
+  is_active: user.is_active === "1"
+});
 
 
 /***/ }),

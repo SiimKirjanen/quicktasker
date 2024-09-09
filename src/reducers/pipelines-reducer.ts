@@ -6,28 +6,51 @@ import {
 } from "../constants";
 import { Action, State } from "../providers/PipelinesContextProvider";
 import { Pipeline, PipelineFromServer } from "../types/pipeline";
+import { Stage, StageFromServer } from "../types/stage";
+import { convertStageFromServer } from "../utils/stage";
 
-const reducer = (state: State, action: Action) => {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case PIPELINES_SET: {
       const pipelines: PipelineFromServer[] = action.payload;
 
+      const transformStage = (stage: StageFromServer): Stage => {
+        return {
+          ...convertStageFromServer(stage),
+        };
+      };
+
+      const transformPipeline = (pipeline: PipelineFromServer): Pipeline => {
+        return {
+          ...pipeline,
+          stages: pipeline.stages?.map(transformStage),
+          is_primary: pipeline.is_primary === "1",
+        };
+      };
+
       return {
         ...state,
-        pipelines: pipelines.map((pipeline) => {
-          return {
-            ...pipeline,
-            is_primary: pipeline.is_primary === "1",
-          };
-        }),
+        pipelines: pipelines.map(transformPipeline),
       };
     }
     case PIPELINE_ADD_PIPELINE: {
       const pipeline: PipelineFromServer = action.payload;
 
+      const transformStage = (stage: StageFromServer): Stage => {
+        return {
+          ...convertStageFromServer(stage),
+        };
+      };
+
+      const transformedPipeline: Pipeline = {
+        ...pipeline,
+        stages: pipeline.stages?.map(transformStage),
+        is_primary: false,
+      };
+
       return {
         ...state,
-        pipelines: [...state.pipelines, { ...pipeline, is_primary: false }],
+        pipelines: [...state.pipelines, transformedPipeline],
       };
     }
     case PIPELINE_SET_PRIMARY: {

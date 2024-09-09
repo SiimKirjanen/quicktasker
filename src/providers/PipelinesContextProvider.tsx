@@ -3,7 +3,7 @@ import { Pipeline } from "../types/pipeline";
 import { reducer } from "../reducers/pipelines-reducer";
 import { PIPELINES_SET } from "../constants";
 
-const initialState = {
+const initialState: State = {
   pipelines: [],
 };
 

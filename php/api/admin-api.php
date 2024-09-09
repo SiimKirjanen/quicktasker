@@ -284,7 +284,8 @@ function wpqt_register_api_routes() {
                     $newTask = $taskService->createTask( $data['stageId'], array(
                         "name" => $data['name'],
                         "description" => $data['description'],
-                        "pipelineId" => $data['pipelineId']
+                        "pipelineId" => $data['pipelineId'],
+                        "freeForAll" => $data['freeForAll'],
                     ) );
                     $wpdb->query('COMMIT');
 
@@ -312,7 +313,8 @@ function wpqt_register_api_routes() {
                     $taskService = new TaskService();
                     $task = $taskService->editTask( $data['id'], array(
                         "name" => $data['name'],
-                        "description" => $data['description']
+                        "description" => $data['description'],
+                        "free_for_all" => $data['freeForAll'],
                     ) );
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);

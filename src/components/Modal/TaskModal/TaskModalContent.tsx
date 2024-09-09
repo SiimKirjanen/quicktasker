@@ -16,9 +16,10 @@ import {
 import { TaskModalTabs } from "../../Tab/TaskModalTabs/TaskModalTabs";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
+import { Toggle } from "../../common/Toggle/Toggle";
 
 type Props = {
-  addTask: (name: string, description: string) => void;
+  addTask: (name: string, description: string, freeForAllTask: boolean) => void;
   taskModalSaving: boolean;
   editTask: (task: Task) => void;
 };
@@ -30,11 +31,13 @@ const TaskModalContent = forwardRef(
     } = useContext(ModalContext);
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
+    const [freeForAllTask, setFreeForAllTask] = useState(false);
 
     useEffect(() => {
       if (taskToEdit) {
         setTaskName(taskToEdit.name);
         setTaskDescription(taskToEdit.description);
+        setFreeForAllTask(taskToEdit.free_for_all);
       }
     }, [taskToEdit]);
     const editingTask = !!taskToEdit;
@@ -45,8 +48,9 @@ const TaskModalContent = forwardRef(
             ...taskToEdit,
             name: taskName,
             description: taskDescription,
+            free_for_all: freeForAllTask,
           })
-        : addTask(taskName, taskDescription);
+        : addTask(taskName, taskDescription, freeForAllTask);
     };
 
     const clearContent = () => {
@@ -71,6 +75,7 @@ const TaskModalContent = forwardRef(
               onChange={(newValue: string) => setTaskName(newValue)}
             />
           </WPQTModalField>
+
           <WPQTModalField label="Description">
             <WPQTTextarea
               rowsCount={3}
@@ -78,7 +83,12 @@ const TaskModalContent = forwardRef(
               onChange={(newValue: string) => setTaskDescription(newValue)}
             />
           </WPQTModalField>
+
+          <WPQTModalField label="Free for all task">
+            <Toggle checked={freeForAllTask} handleChange={setFreeForAllTask} />
+          </WPQTModalField>
         </WPQTModalFieldSet>
+
         {editingTask && (
           <div>
             <TaskModalTabs task={taskToEdit} />

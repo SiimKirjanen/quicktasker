@@ -1,5 +1,7 @@
 import { Stage } from "../types/stage";
 import { Task, TaskFromServer } from "../types/task";
+import { ServerUser } from "../types/user";
+import { convertUserFromServer } from "./user";
 
 /**
  * Moves a task from one stage to another within a list of stages.
@@ -54,7 +56,13 @@ const reorderTask = (list: Task[], startIndex: number, endIndex: number) => {
  */
 const convertTaskFromServer = (task: TaskFromServer): Task => ({
   ...task,
-  task_order: Number(task.task_order), // Convert task_order to number
+  task_order: Number(task.task_order),
+  free_for_all: task.free_for_all === "1",
+  assigned_users: task.assigned_users
+    ? task.assigned_users.map((user: ServerUser) => ({
+        ...convertUserFromServer(user),
+      }))
+    : [], // Default to an empty array if assigned_users is undefined
 });
 
 export { moveTask, reorderTask, convertTaskFromServer };

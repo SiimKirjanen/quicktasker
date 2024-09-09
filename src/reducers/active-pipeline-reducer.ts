@@ -14,10 +14,11 @@ import {
 } from "../constants";
 import { Action, State } from "../providers/ActivePipelineContextProvider";
 import { PipelineFromServer } from "../types/pipeline";
-import { Stage } from "../types/stage";
-import { Task } from "../types/task";
-import { ServerUser, User } from "../types/user";
-import { moveTask, reorderTask } from "../utils/task";
+import { Stage, StageFromServer } from "../types/stage";
+import { Task, TaskFromServer } from "../types/task";
+import { User } from "../types/user";
+import { convertStageFromServer } from "../utils/stage";
+import { convertTaskFromServer, moveTask, reorderTask } from "../utils/task";
 
 const activePipelineReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -27,12 +28,21 @@ const activePipelineReducer = (state: State, action: Action) => {
         loading: action.payload,
       };
     case PIPELINE_SET_PIPELINE: {
-      const pipelineData = action.payload;
+      const pipelineData: PipelineFromServer = action.payload;
+
+      const transformedStages = (pipelineData.stages || []).map(
+        (stage: StageFromServer) => {
+          return {
+            ...convertStageFromServer(stage),
+          };
+        },
+      );
 
       return {
         ...state,
         activePipeline: {
           ...pipelineData,
+          stages: transformedStages,
           is_primary: pipelineData.is_primary === "1",
         },
       };
@@ -94,7 +104,9 @@ const activePipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_ADD_TASK: {
-      const newTask: Task = action.payload;
+      const newTask: Task = convertTaskFromServer(
+        action.payload as TaskFromServer,
+      );
 
       if (!state.activePipeline) {
         return state;
@@ -116,7 +128,9 @@ const activePipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_EDIT_TASK: {
-      const editedTask: Task = action.payload;
+      const editedTask: Task = convertTaskFromServer(
+        action.payload as TaskFromServer,
+      );
 
       if (!state.activePipeline) {
         return state;

@@ -1,18 +1,19 @@
-import { Stage } from "./stage";
+import { Stage, StageFromServer } from "./stage";
 
 type BasePipeline = {
   id: string;
   name: string;
   description?: string;
-  stages?: Stage[];
 };
 
 type Pipeline = BasePipeline & {
   is_primary: boolean;
+  stages?: Stage[];
 };
 
 type PipelineFromServer = BasePipeline & {
   is_primary: string;
+  stages?: StageFromServer[];
 };
 
 type FullPipelineDataFromServer = {

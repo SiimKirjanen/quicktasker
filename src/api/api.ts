@@ -92,11 +92,18 @@ function createTaskRequest(
   pipelineId: string,
   name: string,
   description: string,
+  isFreeForAll: boolean,
 ): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/tasks`,
     method: "POST",
-    data: { stageId, name, description, pipelineId },
+    data: {
+      stageId,
+      name,
+      description,
+      pipelineId,
+      freeForAll: isFreeForAll,
+    },
     headers: getCommonHeaders(),
   });
 }
@@ -109,6 +116,7 @@ function editTaskRequest(task: Task): Promise<WPQTResponse<TaskFromServer>> {
       id: task.id,
       name: task.name,
       description: task.description,
+      freeForAll: task.free_for_all,
     },
     headers: getCommonHeaders(),
   });
