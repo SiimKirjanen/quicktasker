@@ -1,6 +1,6 @@
 type UserPageOverview = {
   assignedTasksCount: number;
-  selectableTasksCount: number;
+  assignableTaskCount: number;
 };
 
 export type { UserPageOverview };

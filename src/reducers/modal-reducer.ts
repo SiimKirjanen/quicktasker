@@ -26,7 +26,7 @@ const closeModal = () => {
   };
 };
 
-const reducer = (state: State, action: Action) => {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case OPEN_NEW_TASK_MODAL: {
       const { targetStageId }: { targetStageId: string } = action.payload;
@@ -104,7 +104,6 @@ const reducer = (state: State, action: Action) => {
       return closeModal();
     }
     case OPEN_NEW_USER_MODAL: {
-      console.log("OPEN_NEW_USER_MODAL");
       return {
         ...state,
         userModalOpen: true,

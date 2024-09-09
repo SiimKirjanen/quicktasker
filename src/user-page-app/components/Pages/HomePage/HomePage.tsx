@@ -33,10 +33,6 @@ function HomePage() {
     }
   };
 
-  const goToUsersPage = () => {
-    navigate("/user-tasks");
-  };
-
   return (
     <PageWrap loading={loading} onRefresh={getOverviewData}>
       <PageContentWrap>
@@ -45,7 +41,14 @@ function HomePage() {
 
         <WPQTButton
           btnText="See assigned taks"
-          onClick={goToUsersPage}
+          onClick={() => navigate("/user-tasks")}
+        ></WPQTButton>
+
+        <div>Assignable tasks: {overview?.assignableTaskCount}</div>
+
+        <WPQTButton
+          btnText="See assignable tasks"
+          onClick={() => navigate("/assignable-tasks")}
         ></WPQTButton>
       </PageContentWrap>
     </PageWrap>

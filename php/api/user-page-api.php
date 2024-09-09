@@ -113,10 +113,11 @@ function wpqt_register_user_page_api_routes() {
                     $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                     $taskRepository = new TaskRepository();
                     $assignedTasks = $taskRepository->getTasksAssignedToUser($session->user_id);
+                    $assignableTasks = $taskRepository->getTasksAssignableToUser($session->user_id);
 
                     $overviewData = (object)[
                         'assignedTasksCount' => count($assignedTasks),
-                        'selectableTasksCount' => 55
+                        'assignableTaskCount' => count($assignableTasks)
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $overviewData))->toArray(), 200);
@@ -138,6 +139,24 @@ function wpqt_register_user_page_api_routes() {
                     $assignedTasks = $taskRepository->getTasksAssignedToUser($session->user_id);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $assignedTasks))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true'
+    ));
+
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/assignable-tasks', array(
+        'methods' => 'GET',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $taskRepository = new TaskRepository();
+                    $assignableTasks = $taskRepository->getTasksAssignableToUser($session->user_id);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $assignableTasks))->toArray(), 200);
                 } catch(WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } catch (Exception $e) {

@@ -6,7 +6,7 @@ import {
 import { Action, State } from "../providers/ArchiveContextProvider";
 import { ArchivedTaskFromServer } from "../types/task";
 
-const reducer = (state: State, action: Action) => {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case SET_ARCHIVE_TASKS: {
       const archivedTasks: ArchivedTaskFromServer[] = action.payload;

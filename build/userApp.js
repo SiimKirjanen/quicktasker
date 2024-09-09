@@ -5548,6 +5548,9 @@ function UserPageContent() {
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
         path: "/assignable-tasks",
         element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_AssignableTasksPage_AssignableTasksPage__WEBPACK_IMPORTED_MODULE_10__.AssignableTasksPage, {})
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
+        path: "/assignable-tasks/:taskId",
+        element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_UserTaskPage_UserTaskPage__WEBPACK_IMPORTED_MODULE_11__.UserTaskPage, {})
       })]
     })
   });
@@ -5565,6 +5568,7 @@ function UserPageContent() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getAssignableTasksRequest: () => (/* binding */ getAssignableTasksRequest),
 /* harmony export */   getAssignedTaskDataRequest: () => (/* binding */ getAssignedTaskDataRequest),
 /* harmony export */   getAssignedTasksRequest: () => (/* binding */ getAssignedTasksRequest),
 /* harmony export */   getOverviewRequest: () => (/* binding */ getOverviewRequest),
@@ -5617,6 +5621,13 @@ function getAssignedTasksRequest(pageHash) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "GET",
     path: `/wpqt/v1/user-pages/${pageHash}/assigned-tasks`,
+    headers: getCommonHeaders()
+  });
+}
+function getAssignableTasksRequest(pageHash) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/assignable-tasks`,
     headers: getCommonHeaders()
   });
 }
@@ -5701,13 +5712,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
+/* harmony import */ var _providers_UserAssignableTasksContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/UserAssignableTasksContextProvider */ "./src/user-page-app/providers/UserAssignableTasksContextProvider.tsx");
+/* harmony import */ var _components_Card_Card__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/Card/Card */ "./src/components/Card/Card.tsx");
+
+
+
+
 
 
 function AssignableTasksPage() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_1__.PageWrap, {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_1__.PageContentWrap, {
-      children: "AssignableTasksPage"
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserAssignableTasksContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserAssignableTasksContextProvider, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(AssignebaleTasksPageContent, {})
+  });
+}
+function AssignebaleTasksPageContent() {
+  const {
+    state: {
+      loading,
+      assignableTasks
+    },
+    loadAssignableTasks
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserAssignableTasksContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserAssignableTasksContext);
+  const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_5__.useNavigate)();
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageWrap, {
+    loading: loading,
+    onRefresh: loadAssignableTasks,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageContentWrap, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+        children: "Assignable tasks"
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-2 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4",
+        children: assignableTasks.map(task => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_4__.WPQTCard, {
+          className: "wpqt-cursor-pointer",
+          title: task.name,
+          description: task.description,
+          onClick: () => navigate(`/assignable-tasks/${task.id}`)
+        }))
+      })]
     })
   });
 }
@@ -5822,9 +5867,6 @@ function HomePage() {
       setLoading(false);
     }
   });
-  const goToUsersPage = () => {
-    navigate("/user-tasks");
-  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_4__.PageWrap, {
     loading: loading,
     onRefresh: getOverviewData,
@@ -5835,7 +5877,12 @@ function HomePage() {
         children: ["Assigned tasks: ", overview === null || overview === void 0 ? void 0 : overview.assignedTasksCount]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
         btnText: "See assigned taks",
-        onClick: goToUsersPage
+        onClick: () => navigate("/user-tasks")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: ["Assignable tasks: ", overview === null || overview === void 0 ? void 0 : overview.assignableTaskCount]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
+        btnText: "See assignable tasks",
+        onClick: () => navigate("/assignable-tasks")
       })]
     })
   });
@@ -6292,6 +6339,8 @@ function UserTaskPageContent() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SET_ASSIGNABLE_TASKS: () => (/* binding */ SET_ASSIGNABLE_TASKS),
+/* harmony export */   SET_ASSIGNABLE_TASKS_LOADING: () => (/* binding */ SET_ASSIGNABLE_TASKS_LOADING),
 /* harmony export */   SET_ASSIGNED_TASKS: () => (/* binding */ SET_ASSIGNED_TASKS),
 /* harmony export */   SET_ASSIGNED_TASKS_LOADING: () => (/* binding */ SET_ASSIGNED_TASKS_LOADING),
 /* harmony export */   SET_USER_LOGGED_IN: () => (/* binding */ SET_USER_LOGGED_IN),
@@ -6303,6 +6352,9 @@ const SET_USER_LOGGED_IN = "SET_USER_LOGGED_IN";
 // Assigned tasks reducer constants
 const SET_ASSIGNED_TASKS = "SET_ASSIGNED_TASKS";
 const SET_ASSIGNED_TASKS_LOADING = "SET_ASSIGNED_TASKS_LOADING";
+//Assignable tasks reducer constants
+const SET_ASSIGNABLE_TASKS = "SET_ASSIGNABLE_TASKS";
+const SET_ASSIGNABLE_TASKS_LOADING = "SET_ASSIGNABLE_TASKS_LOADING";
 
 
 /***/ }),
@@ -6407,6 +6459,118 @@ function useSession() {
     isLoggedIn
   };
 }
+
+
+/***/ }),
+
+/***/ "./src/user-page-app/providers/UserAssignableTasksContextProvider.tsx":
+/*!****************************************************************************!*\
+  !*** ./src/user-page-app/providers/UserAssignableTasksContextProvider.tsx ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserAssignableTasksContext: () => (/* binding */ UserAssignableTasksContext),
+/* harmony export */   UserAssignableTasksContextProvider: () => (/* binding */ UserAssignableTasksContextProvider)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
+/* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
+/* harmony import */ var _reducers_user_assignable_tasks_reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../reducers/user-assignable-tasks-reducer */ "./src/user-page-app/reducers/user-assignable-tasks-reducer.ts");
+/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../constants */ "./src/user-page-app/constants.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+const initialState = {
+  loading: true,
+  assignableTasks: []
+};
+const UserAssignableTasksContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
+  state: initialState,
+  userAssignableTasksDispatch: () => {},
+  loadAssignableTasks: () => {}
+});
+const UserAssignableTasksContextProvider = ({
+  children
+}) => {
+  const [state, userAssignableTasksDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_user_assignable_tasks_reducer__WEBPACK_IMPORTED_MODULE_4__.reducer, initialState);
+  const {
+    state: {
+      pageHash
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserPageAppContext);
+  const {
+    handleError
+  } = (0,_hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_3__.useErrorHandler)();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    loadAssignableTasks();
+  }, [pageHash]);
+  const loadAssignableTasks = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+      userAssignableTasksDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_ASSIGNABLE_TASKS_LOADING,
+        payload: true
+      });
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_5__.getAssignableTasksRequest)(pageHash);
+      userAssignableTasksDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_ASSIGNABLE_TASKS,
+        payload: response.data
+      });
+    } catch (error) {
+      handleError(error);
+    } finally {
+      userAssignableTasksDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_ASSIGNABLE_TASKS_LOADING,
+        payload: false
+      });
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserAssignableTasksContext.Provider, {
+    value: {
+      state,
+      userAssignableTasksDispatch,
+      loadAssignableTasks
+    },
+    children: children
+  });
+};
 
 
 /***/ }),
@@ -6632,6 +6796,47 @@ const UserPageAppContextProvider = ({
     },
     children: children
   });
+};
+
+
+/***/ }),
+
+/***/ "./src/user-page-app/reducers/user-assignable-tasks-reducer.ts":
+/*!*********************************************************************!*\
+  !*** ./src/user-page-app/reducers/user-assignable-tasks-reducer.ts ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reducer: () => (/* binding */ reducer)
+/* harmony export */ });
+/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/task */ "./src/utils/task.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants */ "./src/user-page-app/constants.ts");
+
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_1__.SET_ASSIGNABLE_TASKS_LOADING:
+      {
+        const loading = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          loading
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_1__.SET_ASSIGNABLE_TASKS:
+      {
+        const tasks = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          assignableTasks: tasks.map(_utils_task__WEBPACK_IMPORTED_MODULE_0__.convertTaskFromServer)
+        });
+      }
+    default:
+      {
+        return state;
+      }
+  }
 };
 
 

@@ -5,7 +5,7 @@ import { Stage } from "../types/stage";
 import { Pipeline } from "../types/pipeline";
 import { User } from "../types/user";
 
-const initialState = {
+const initialState: State = {
   taskModalOpen: false,
   targetStageId: "",
   taskToEdit: null,

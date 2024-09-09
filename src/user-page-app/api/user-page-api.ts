@@ -66,6 +66,16 @@ function getAssignedTasksRequest(
   });
 }
 
+function getAssignableTasksRequest(
+  pageHash: string,
+): Promise<WPQTResponse<TaskFromServer[]>> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/assignable-tasks`,
+    headers: getCommonHeaders(),
+  });
+}
+
 function getAssignedTaskDataRequest(
   pageHash: string,
   taskId: number,
@@ -83,5 +93,6 @@ export {
   logInUserPageRequest,
   getOverviewRequest,
   getAssignedTasksRequest,
+  getAssignableTasksRequest,
   getAssignedTaskDataRequest,
 };

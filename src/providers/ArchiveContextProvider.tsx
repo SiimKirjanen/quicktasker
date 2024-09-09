@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { reducer } from "../reducers/archive-reducer";
 import { SET_ARCHIVE_TASKS } from "../constants";
 
-const initialState = {
+const initialState: State = {
   archivedTasks: null,
   archiveLoading: false,
   archiveSearchValue: "",

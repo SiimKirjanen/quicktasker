@@ -13051,7 +13051,6 @@ const reducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_USER_MODAL:
       {
-        console.log("OPEN_NEW_USER_MODAL");
         return Object.assign(Object.assign({}, state), {
           userModalOpen: true
         });
