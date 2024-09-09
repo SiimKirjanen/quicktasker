@@ -9,6 +9,7 @@ import { WPQTField } from "../../../../components/common/Form/Field";
 import { WPQTInput } from "../../../../components/common/Input/Input";
 import { WPQTLabel } from "../../../../components/common/Form/Label";
 import { WPQTButton } from "../../../../components/common/Button/Button";
+import { useErrorHandler } from "../../../hooks/useErrorHandler";
 
 function LoginPage() {
   const {
@@ -17,7 +18,7 @@ function LoginPage() {
   } = useContext(UserPageAppContext);
   const { setSessionCookie } = useSession();
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const { handleError } = useErrorHandler();
 
   const login = async () => {
     try {
@@ -25,15 +26,7 @@ function LoginPage() {
       await setSessionCookie(response.data);
       userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: true });
     } catch (error: any) {
-      console.error(error);
-
-      if (error && Array.isArray(error.messages)) {
-        if (error.messages.includes("Invalid password")) {
-          setError("Invalid password");
-        }
-      } else {
-        setError("An error occurred. Please try again.");
-      }
+      handleError(error);
     }
   };
   return (
@@ -48,7 +41,6 @@ function LoginPage() {
           <WPQTField>
             <WPQTButton btnText="Login" onClick={login} />
           </WPQTField>
-          {error && <div className="wpqt-text-qtTextRed">{error}</div>}
         </WPQTFieldSet>
       </form>
     </div>

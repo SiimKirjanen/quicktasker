@@ -4,6 +4,7 @@ import { SET_USER_PAGE_STATUS } from "../constants";
 import { getUserPageStatusRequest } from "../api/user-page-api";
 import { useSession } from "../hooks/useSession";
 import { getQueryParam } from "../../utils/url";
+import { useErrorHandler } from "../hooks/useErrorHandler";
 
 const initialState: State = {
   initialLoading: true,
@@ -50,6 +51,7 @@ const UserPageAppContextProvider = ({
     initialState,
   );
   const { isLoggedIn } = useSession();
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     loadUserPageStatus();
@@ -68,7 +70,9 @@ const UserPageAppContextProvider = ({
           payload: { ...data, isLoggedIn: userLoggedIn },
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   return (

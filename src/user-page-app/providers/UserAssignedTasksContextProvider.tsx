@@ -9,6 +9,7 @@ import { reducer } from "../reducers/user-assigned-tasks-reducer";
 import { getAssignedTasksRequest } from "../api/user-page-api";
 import { UserPageAppContext } from "./UserPageAppContextProvider";
 import { SET_ASSIGNED_TASKS, SET_ASSIGNED_TASKS_LOADING } from "../constants";
+import { useErrorHandler } from "../hooks/useErrorHandler";
 
 const initialState: State = {
   loading: true,
@@ -50,6 +51,7 @@ const UserAssignedTasksContextProvider = ({
   const {
     state: { pageHash },
   } = useContext(UserPageAppContext);
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     loadAssignedTasks();
@@ -68,7 +70,7 @@ const UserAssignedTasksContextProvider = ({
         payload: response.data,
       });
     } catch (error) {
-      console.error(error);
+      handleError(error);
     } finally {
       userAssignedTasksDispatch({
         type: SET_ASSIGNED_TASKS_LOADING,

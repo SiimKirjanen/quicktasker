@@ -5,6 +5,7 @@ import { PageContentWrap, PageWrap } from "../Page/Page";
 import { UserPageOverview } from "../../../types/user-page-overview";
 import { WPQTButton } from "../../../../components/common/Button/Button";
 import { useNavigate } from "react-router-dom";
+import { useErrorHandler } from "../../../hooks/useErrorHandler";
 
 function HomePage() {
   const {
@@ -13,6 +14,7 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [overview, setOverview] = useState<null | UserPageOverview>(null);
   const navigate = useNavigate();
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     getOverviewData();
@@ -25,7 +27,7 @@ function HomePage() {
 
       setOverview(response.data);
     } catch (error) {
-      console.error(error);
+      handleError(error);
     } finally {
       setLoading(false);
     }

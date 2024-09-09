@@ -5,6 +5,7 @@ import { getAssignedTaskDataRequest } from "../../../api/user-page-api";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { useParams } from "react-router-dom";
 import { convertTaskFromServer } from "../../../../utils/task";
+import { useErrorHandler } from "../../../hooks/useErrorHandler";
 
 function UserTaskPage() {
   const {
@@ -13,6 +14,7 @@ function UserTaskPage() {
   const { taskId } = useParams<{ taskId: string }>();
   const [task, setTask] = useState<null | Task>(null);
   const [loading, setLoading] = useState(true);
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     getUserPageTask();
@@ -28,7 +30,7 @@ function UserTaskPage() {
 
       setTask(convertTaskFromServer(response.data));
     } catch (error) {
-      console.error(error);
+      handleError(error);
     } finally {
       setLoading(false);
     }
