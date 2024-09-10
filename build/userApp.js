@@ -5305,7 +5305,7 @@ function WPQTButton({
   btnText
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    className: "wpqt-cursor-pointer wpqt-rounded-md wpqt-px-3 wpqt-py-1 wpqt-text-sm/6",
+    className: "wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600",
     onClick: onClick,
     children: btnText
   });
@@ -5488,7 +5488,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Pages_SetUpPage_SetUpPage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/Pages/SetUpPage/SetUpPage */ "./src/user-page-app/components/Pages/SetUpPage/SetUpPage.tsx");
 /* harmony import */ var _components_Pages_LoginPage_LoginPage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/Pages/LoginPage/LoginPage */ "./src/user-page-app/components/Pages/LoginPage/LoginPage.tsx");
 /* harmony import */ var _components_Pages_AssignableTasksPage_AssignableTasksPage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/Pages/AssignableTasksPage/AssignableTasksPage */ "./src/user-page-app/components/Pages/AssignableTasksPage/AssignableTasksPage.tsx");
-/* harmony import */ var _components_Pages_UserTaskPage_UserTaskPage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/Pages/UserTaskPage/UserTaskPage */ "./src/user-page-app/components/Pages/UserTaskPage/UserTaskPage.tsx");
+/* harmony import */ var _components_Pages_TaskPage_TaskPage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/Pages/TaskPage/TaskPage */ "./src/user-page-app/components/Pages/TaskPage/TaskPage.tsx");
 
 
 
@@ -5544,13 +5544,13 @@ function UserPageContent() {
         element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_5__.UserTasksPage, {})
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
         path: "/user-tasks/:taskId",
-        element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_UserTaskPage_UserTaskPage__WEBPACK_IMPORTED_MODULE_11__.UserTaskPage, {})
+        element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_TaskPage_TaskPage__WEBPACK_IMPORTED_MODULE_11__.TaskPage, {})
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
         path: "/assignable-tasks",
         element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_AssignableTasksPage_AssignableTasksPage__WEBPACK_IMPORTED_MODULE_10__.AssignableTasksPage, {})
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
         path: "/assignable-tasks/:taskId",
-        element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_UserTaskPage_UserTaskPage__WEBPACK_IMPORTED_MODULE_11__.UserTaskPage, {})
+        element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_TaskPage_TaskPage__WEBPACK_IMPORTED_MODULE_11__.TaskPage, {})
       })]
     })
   });
@@ -5568,13 +5568,15 @@ function UserPageContent() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   assignTaskToUser: () => (/* binding */ assignTaskToUser),
 /* harmony export */   getAssignableTasksRequest: () => (/* binding */ getAssignableTasksRequest),
-/* harmony export */   getAssignedTaskDataRequest: () => (/* binding */ getAssignedTaskDataRequest),
 /* harmony export */   getAssignedTasksRequest: () => (/* binding */ getAssignedTasksRequest),
 /* harmony export */   getOverviewRequest: () => (/* binding */ getOverviewRequest),
+/* harmony export */   getTaskDataRequest: () => (/* binding */ getTaskDataRequest),
 /* harmony export */   getUserPageStatusRequest: () => (/* binding */ getUserPageStatusRequest),
 /* harmony export */   logInUserPageRequest: () => (/* binding */ logInUserPageRequest),
-/* harmony export */   setUpUserPageRequest: () => (/* binding */ setUpUserPageRequest)
+/* harmony export */   setUpUserPageRequest: () => (/* binding */ setUpUserPageRequest),
+/* harmony export */   unAssignTaskFromUser: () => (/* binding */ unAssignTaskFromUser)
 /* harmony export */ });
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
@@ -5631,10 +5633,24 @@ function getAssignableTasksRequest(pageHash) {
     headers: getCommonHeaders()
   });
 }
-function getAssignedTaskDataRequest(pageHash, taskId) {
+function getTaskDataRequest(pageHash, taskId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/assigned-tasks/${taskId}`,
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}`,
+    headers: getCommonHeaders()
+  });
+}
+function assignTaskToUser(pageHash, taskId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    method: "POST",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}/users`,
+    headers: getCommonHeaders()
+  });
+}
+function unAssignTaskFromUser(pageHash, taskId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    method: "DELETE",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}/users`,
     headers: getCommonHeaders()
   });
 }
@@ -6139,16 +6155,16 @@ function SetUpPage() {
 
 /***/ }),
 
-/***/ "./src/user-page-app/components/Pages/UserTaskPage/UserTaskPage.tsx":
-/*!**************************************************************************!*\
-  !*** ./src/user-page-app/components/Pages/UserTaskPage/UserTaskPage.tsx ***!
-  \**************************************************************************/
+/***/ "./src/user-page-app/components/Pages/TaskPage/TaskPage.tsx":
+/*!******************************************************************!*\
+  !*** ./src/user-page-app/components/Pages/TaskPage/TaskPage.tsx ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UserTaskPage: () => (/* binding */ UserTaskPage)
+/* harmony export */   TaskPage: () => (/* binding */ TaskPage)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
@@ -6157,9 +6173,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
 /* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
 /* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../utils/task */ "./src/utils/task.ts");
 /* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
+/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _providers_UserAssignableTasksContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/UserAssignableTasksContextProvider */ "./src/user-page-app/providers/UserAssignableTasksContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6195,27 +6213,34 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-function UserTaskPage() {
+
+
+function TaskPage() {
   const {
     state: {
-      pageHash
+      pageHash,
+      userId
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageAppContext);
   const {
+    userAssignableTasksDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserAssignableTasksContextProvider__WEBPACK_IMPORTED_MODULE_8__.UserAssignableTasksContext);
+  const {
     taskId
-  } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useParams)();
+  } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.useParams)();
   const [task, setTask] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const {
     handleError
   } = (0,_hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_6__.useErrorHandler)();
+  const isAssignedToTask = task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     getUserPageTask();
   }, [taskId]);
   const getUserPageTask = () => __awaiter(this, void 0, void 0, function* () {
     try {
       setLoading(true);
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getAssignedTaskDataRequest)(pageHash, Number(taskId));
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getTaskDataRequest)(pageHash, taskId);
       setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data));
     } catch (error) {
       handleError(error);
@@ -6223,11 +6248,35 @@ function UserTaskPage() {
       setLoading(false);
     }
   });
+  const assignTask = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.assignTaskToUser)(pageHash, task.id);
+      setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data));
+    } catch (error) {
+      handleError(error);
+    }
+  });
+  const unAssignTask = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.unAssignTaskFromUser)(pageHash, task.id);
+      setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data));
+    } catch (error) {
+      handleError(error);
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageWrap, {
     loading: loading,
     onRefresh: getUserPageTask,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageContentWrap, {
-      children: JSON.stringify(task)
+      children: task && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+        children: [JSON.stringify(task), isAssignedToTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTButton, {
+          onClick: unAssignTask,
+          btnText: "Unassign from task"
+        }), !isAssignedToTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTButton, {
+          onClick: assignTask,
+          btnText: "Assign task"
+        })]
+      })
     })
   });
 }
@@ -6339,6 +6388,7 @@ function UserTaskPageContent() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   REMOVE_ASSIGNABLE_TASK: () => (/* binding */ REMOVE_ASSIGNABLE_TASK),
 /* harmony export */   SET_ASSIGNABLE_TASKS: () => (/* binding */ SET_ASSIGNABLE_TASKS),
 /* harmony export */   SET_ASSIGNABLE_TASKS_LOADING: () => (/* binding */ SET_ASSIGNABLE_TASKS_LOADING),
 /* harmony export */   SET_ASSIGNED_TASKS: () => (/* binding */ SET_ASSIGNED_TASKS),
@@ -6355,6 +6405,7 @@ const SET_ASSIGNED_TASKS_LOADING = "SET_ASSIGNED_TASKS_LOADING";
 //Assignable tasks reducer constants
 const SET_ASSIGNABLE_TASKS = "SET_ASSIGNABLE_TASKS";
 const SET_ASSIGNABLE_TASKS_LOADING = "SET_ASSIGNABLE_TASKS_LOADING";
+const REMOVE_ASSIGNABLE_TASK = "REMOVE_ASSIGNABLE_TASK";
 
 
 /***/ }),
@@ -6374,7 +6425,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function useErrorHandler() {
   const handleError = error => {
-    if (error.messages && Array.isArray(error.messages)) {
+    if (error.messages && Array.isArray(error.messages) && error.messages.length > 0) {
       const errorMessage = error.messages.join(", ");
       react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error(errorMessage);
     }
@@ -6749,7 +6800,8 @@ const initialState = {
   isActiveUser: false,
   setupCompleted: false,
   isLoggedIn: false,
-  pageHash: (0,_utils_url__WEBPACK_IMPORTED_MODULE_6__.getQueryParam)("code") || ""
+  pageHash: (0,_utils_url__WEBPACK_IMPORTED_MODULE_6__.getQueryParam)("code") || "",
+  userId: ""
 };
 const UserPageAppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -6832,6 +6884,13 @@ const reducer = (state, action) => {
           assignableTasks: tasks.map(_utils_task__WEBPACK_IMPORTED_MODULE_0__.convertTaskFromServer)
         });
       }
+    case _constants__WEBPACK_IMPORTED_MODULE_1__.REMOVE_ASSIGNABLE_TASK:
+      {
+        const taskId = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          assignableTasks: state.assignableTasks.filter(task => task.id !== taskId)
+        });
+      }
     default:
       {
         return state;
@@ -6901,12 +6960,18 @@ const reducer = (state, action) => {
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USER_PAGE_STATUS:
       {
-        const userPageStatus = action.payload;
+        const {
+          isActiveUser,
+          isLoggedIn,
+          setupCompleted,
+          userId
+        } = action.payload;
         return Object.assign(Object.assign({}, state), {
-          isActiveUser: userPageStatus.isActiveUser === "1",
-          isLoggedIn: userPageStatus.isLoggedIn,
-          setupCompleted: userPageStatus.setupCompleted,
-          initialLoading: false
+          isActiveUser: isActiveUser === "1",
+          isLoggedIn,
+          setupCompleted,
+          initialLoading: false,
+          userId
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USER_LOGGED_IN:

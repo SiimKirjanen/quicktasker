@@ -5,7 +5,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+use WPQT\User\UserRepository;
+
 class TaskRepository {
+
+    protected $userRepository;
+
+    public function __construct() {
+        $this->userRepository = new UserRepository();
+    }
+
     /**
      * Retrieves all tasks from the database.
      *
@@ -36,18 +45,26 @@ class TaskRepository {
      * Retrieves a task by its ID.
      *
      * @param int $id The ID of the task to retrieve.
+     * @param bool $addAssignedUsers Whether to include assigned users in the task object.
      * @return object|null The task object if found, null otherwise.
      */
-    public function getTaskById($id) {
+    public function getTaskById($id, $addAssignedUsers = false) {
         global $wpdb;
 
-        return $wpdb->get_row( $wpdb->prepare(
+        $task = $wpdb->get_row( $wpdb->prepare(
             "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
             LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS_LOCATION ." AS b
             ON a.id = b.task_id
             WHERE a.id = %d",
             $id
         ) );
+
+        if ( $task && $addAssignedUsers) {
+            $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
+            $task->assigned_users = $users;
+        }
+
+        return $task;
     }
 
     /**

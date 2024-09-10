@@ -80,16 +80,18 @@ class UserRepository {
     public function getAssignedUsersByTaskId($taskId) {
         global $wpdb;
 
-        return $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT " . self::USER_FIELDS . ", b.page_hash
-                 FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
-                 INNER JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS b
-                 ON a.id = b.user_id
-                 WHERE b.task_id = %d AND a.deleted = 0",
-                $taskId
-            )
+        $query = $wpdb->prepare(
+            "SELECT DISTINCT " . self::USER_FIELDS . "
+             FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
+             INNER JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS b
+             ON a.id = b.user_id
+             WHERE b.task_id = %d AND a.deleted = 0",
+            $taskId
         );
+
+        $results = $wpdb->get_results($query);
+
+        return $results;
     }
 
 }

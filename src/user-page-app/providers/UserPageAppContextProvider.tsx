@@ -12,6 +12,7 @@ const initialState: State = {
   setupCompleted: false,
   isLoggedIn: false,
   pageHash: getQueryParam("code") || "",
+  userId: "",
 };
 
 type State = {
@@ -20,6 +21,7 @@ type State = {
   setupCompleted: boolean;
   isLoggedIn: boolean;
   pageHash: string;
+  userId: string;
 };
 
 type Action = {

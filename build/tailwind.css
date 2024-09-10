@@ -1190,8 +1190,17 @@
   border-color: rgb(208 215 222 / var(--tw-border-opacity));
 }
 
+.wpqt-border-transparent {
+  border-color: transparent;
+}
+
 .wpqt-bg-black\/40 {
   background-color: rgb(0 0 0 / 0.4);
+}
+
+.wpqt-bg-blue-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
 }
 
 .wpqt-bg-gray-100 {
@@ -1207,6 +1216,11 @@
 .wpqt-bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.wpqt-bg-blue-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
 
 .wpqt-p-1 {
@@ -1389,6 +1403,11 @@
   color: rgb(211 47 47 / var(--tw-text-opacity));
 }
 
+.wpqt-text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
 .wpqt-line-through {
   text-decoration-line: line-through;
 }
@@ -1409,6 +1428,12 @@
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.wpqt-transition-\[color\,background-color\,border-color\,text-decoration-color\,fill\,stroke\,box-shadow\] {
+  transition-property: color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -1501,6 +1526,32 @@
 .focus\:wpqt-outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.focus\:wpqt-ring-4:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.focus\:wpqt-ring-blue-300:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(147 197 253 / var(--tw-ring-opacity));
+}
+
+.focus\:wpqt-ring-blue-800:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(30 64 175 / var(--tw-ring-opacity));
+}
+
+.enabled\:hover\:wpqt-bg-blue-800:hover:enabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 64 175 / var(--tw-bg-opacity));
+}
+
+.enabled\:hover\:wpqt-bg-blue-600:hover:enabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
 
 .wpqt-group:hover .group-hover\:wpqt-text-blue-800 {

@@ -76,13 +76,35 @@ function getAssignableTasksRequest(
   });
 }
 
-function getAssignedTaskDataRequest(
+function getTaskDataRequest(
   pageHash: string,
-  taskId: number,
+  taskId: string,
 ): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/assigned-tasks/${taskId}`,
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function assignTaskToUser(
+  pageHash: string,
+  taskId: string,
+): Promise<WPQTResponse<TaskFromServer>> {
+  return apiFetch({
+    method: "POST",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}/users`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function unAssignTaskFromUser(
+  pageHash: string,
+  taskId: string,
+): Promise<WPQTResponse<TaskFromServer>> {
+  return apiFetch({
+    method: "DELETE",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}/users`,
     headers: getCommonHeaders(),
   });
 }
@@ -94,5 +116,7 @@ export {
   getOverviewRequest,
   getAssignedTasksRequest,
   getAssignableTasksRequest,
-  getAssignedTaskDataRequest,
+  getTaskDataRequest,
+  assignTaskToUser,
+  unAssignTaskFromUser,
 };

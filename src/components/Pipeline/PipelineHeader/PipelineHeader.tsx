@@ -37,7 +37,9 @@ function PipelineHeader() {
             onClick={openEditPipelineModal}
           />
         </div>
-        {activePipeline.description && <div>{activePipeline.description}</div>}
+        {activePipeline.description && (
+          <div className="wpqt-italic">{activePipeline.description}</div>
+        )}
       </div>
 
       <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-3">

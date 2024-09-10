@@ -149,7 +149,8 @@ function wpqt_set_up_db() {
 			task_id int(11) NOT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			PRIMARY KEY  (id)
+			PRIMARY KEY  (id),
+			UNIQUE KEY unique_user_task (user_id, task_id)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql11 ); 

@@ -1,6 +1,7 @@
 import { TaskFromServer } from "../../types/task";
 import { convertTaskFromServer } from "../../utils/task";
 import {
+  REMOVE_ASSIGNABLE_TASK,
   SET_ASSIGNABLE_TASKS,
   SET_ASSIGNABLE_TASKS_LOADING,
 } from "../constants";
@@ -22,6 +23,16 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         assignableTasks: tasks.map(convertTaskFromServer),
+      };
+    }
+    case REMOVE_ASSIGNABLE_TASK: {
+      const taskId: string = action.payload;
+
+      return {
+        ...state,
+        assignableTasks: state.assignableTasks.filter(
+          (task) => task.id !== taskId,
+        ),
       };
     }
     default: {
