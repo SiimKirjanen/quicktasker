@@ -17,7 +17,7 @@ function UserTasks() {
             className="wpqt-cursor-pointer"
             title={task.name}
             description={task.description}
-            onClick={() => navigate(`/user-tasks/${task.id}`)}
+            onClick={() => navigate(`/user-tasks/${task.task_hash}`)}
           ></WPQTCard>
         );
       })}

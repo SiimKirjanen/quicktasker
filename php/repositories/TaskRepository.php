@@ -67,6 +67,25 @@ class TaskRepository {
         return $task;
     }
 
+    public function getTaskByHash($hash, $addAssignedUsers = false) {
+        global $wpdb;
+
+        $task = $wpdb->get_row( $wpdb->prepare(
+            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS_LOCATION ." AS b
+            ON a.id = b.task_id
+            WHERE a.task_hash = %s",
+            $hash
+        ) );
+
+        if ( $task && $addAssignedUsers) {
+            $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
+            $task->assigned_users = $users;
+        }
+
+        return $task;
+    }
+
     /**
      * Retrieves tasks by stage ID.
      *

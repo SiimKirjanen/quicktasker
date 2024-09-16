@@ -13,7 +13,7 @@ import { useErrorHandler } from "../../../hooks/useErrorHandler";
 
 function LoginPage() {
   const {
-    state: { pageHash },
+    state: { pageHash, userName },
     userPageAppDispatch,
   } = useContext(UserPageAppContext);
   const { setSessionCookie } = useSession();
@@ -30,7 +30,9 @@ function LoginPage() {
     }
   };
   return (
-    <div>
+    <div className="wpqt-flex wpqt-h-screen wpqt-flex-col wpqt-items-center wpqt-justify-center">
+      <h2>Hello {userName}</h2>
+      <p>Plese log in to continue</p>
       <form>
         <WPQTFieldSet>
           <WPQTLegend>Log in</WPQTLegend>

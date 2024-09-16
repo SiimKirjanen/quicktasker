@@ -1118,12 +1118,6 @@
   row-gap: 0.25rem;
 }
 
-.wpqt-space-y-6 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
-}
-
 .wpqt-self-start {
   align-self: flex-start;
 }
@@ -1180,6 +1174,10 @@
   border-style: solid;
 }
 
+.wpqt-border-none {
+  border-style: none;
+}
+
 .wpqt-border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
@@ -1216,11 +1214,6 @@
 .wpqt-bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.wpqt-bg-blue-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
 
 .wpqt-p-1 {
@@ -1534,19 +1527,9 @@
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
-.focus\:wpqt-ring-blue-300:focus {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(147 197 253 / var(--tw-ring-opacity));
-}
-
 .focus\:wpqt-ring-blue-800:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(30 64 175 / var(--tw-ring-opacity));
-}
-
-.enabled\:hover\:wpqt-bg-blue-800:hover:enabled {
-  --tw-bg-opacity: 1;
-  background-color: rgb(30 64 175 / var(--tw-bg-opacity));
 }
 
 .enabled\:hover\:wpqt-bg-blue-600:hover:enabled {

@@ -33,7 +33,8 @@ function wpqt_register_user_page_api_routes() {
                     $userPageStatus = (object)[
                         'isActiveUser' => $userPage->is_active,
                         'setupCompleted' => $hasSetupCompleted,
-                        'userId' => $userPage->user_id
+                        'userId' => $userPage->user_id,
+                        'userName' => $userPage->name,
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $userPageStatus))->toArray(), 200);
@@ -168,7 +169,7 @@ function wpqt_register_user_page_api_routes() {
         'permission_callback' => '__return_true'
     ));
 
-    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_id>[0-9]+)', array(
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)', array(
         'methods' => 'GET',
         'callback' => function( $data ) {
                 try {
@@ -176,12 +177,11 @@ function wpqt_register_user_page_api_routes() {
                     $userService = new UserService();
                     $taskRepository = new TaskRepository();
                     $permissionService = new PermissionService();
+                    $task = $taskRepository->getTaskByHash($data['task_hash'], true);
                   
-                    if(!$permissionService->checkIfUserIsAllowedToViewTask($session->user_id, $data['task_id'])) {
+                    if(!$permissionService->checkIfUserIsAllowedToViewTask($session->user_id, $task->id)) {
                         throw new WPQTException('Not allowed', true);
                     }
-
-                    $task = $taskRepository->getTaskById($data['task_id'], true);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
                 } catch(WPQTException $e) {
@@ -193,7 +193,7 @@ function wpqt_register_user_page_api_routes() {
         'permission_callback' => '__return_true'
     ));
 
-    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_id>[0-9]+)/users', array(
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/users', array(
         'methods' => 'POST, DELETE',
         'callback' => function( $data ) {
                 try {
@@ -201,18 +201,19 @@ function wpqt_register_user_page_api_routes() {
                     $userService = new UserService();
                     $taskRepository = new TaskRepository();
                     $permissionService = new PermissionService();
+                    $taskId = $taskRepository->getTaskByHash($data['task_hash'])->id;
                   
-                    if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $data['task_id'])) {
+                    if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $taskId)) {
                         throw new WPQTException('Not allowed', true);
                     }
 
                     if ($data->get_method() === 'POST') {
-                        $userService->assignTaskToUser($session->user_id, $data['task_id']);
+                        $userService->assignTaskToUser($session->user_id, $taskId);
                     } elseif ($data->get_method() === 'DELETE') {
-                        $userService->removeTaskFromUser($session->user_id, $data['task_id']);
+                        $userService->removeTaskFromUser($session->user_id, $taskId);
                     }
 
-                    $task = $taskRepository->getTaskById($data['task_id'], true);
+                    $task = $taskRepository->getTaskByHash($data['task_hash'], true);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
                 } catch(WPQTException $e) {

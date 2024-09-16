@@ -78,33 +78,33 @@ function getAssignableTasksRequest(
 
 function getTaskDataRequest(
   pageHash: string,
-  taskId: string,
+  taskHash: string,
 ): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}`,
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}`,
     headers: getCommonHeaders(),
   });
 }
 
 function assignTaskToUser(
   pageHash: string,
-  taskId: string,
+  taskHash: string,
 ): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     method: "POST",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}/users`,
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/users`,
     headers: getCommonHeaders(),
   });
 }
 
 function unAssignTaskFromUser(
   pageHash: string,
-  taskId: string,
+  taskHash: string,
 ): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     method: "DELETE",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}/users`,
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/users`,
     headers: getCommonHeaders(),
   });
 }

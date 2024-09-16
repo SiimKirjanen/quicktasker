@@ -8,16 +8,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Log\LogService;
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
+use WPQT\Hash\HashService;
 
 class TaskService {
     protected $taskRepository;
     protected $stageRepository;
     protected $logService;
+    protected $hashService;
 
     public function __construct() {
         $this->taskRepository = new TaskRepository();
         $this->stageRepository = new StageRepository();
         $this->logService = new LogService();
+        $this->hashService = new HashService();
     }
 
     /**
@@ -64,6 +67,7 @@ class TaskService {
             'description' => $args['description'],
             'pipeline_id' => $args['pipelineId'],
             'free_for_all' => $args['freeForAll'],
+            'task_hash' => $this->hashService->generateTaskHash($args['name'])
         ));
 
         if( $result === false ) {

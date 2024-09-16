@@ -7,6 +7,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class LogService {
+    
+    /**
+     * Logs a message with the specified type and type ID.
+     *
+     * @param string $text The text to be logged.
+     * @param string $type The type of the log.
+     * @param int $typeId The ID of the log type.
+     * @return int The ID of the inserted log.
+     * @throws \Exception If failed to add a log.
+     */
     public function log($text, $type, $typeId) {
         global $wpdb;
 
@@ -22,4 +32,5 @@ class LogService {
 
         return $wpdb->insert_id;
     }
+
 }

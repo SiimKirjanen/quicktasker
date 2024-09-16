@@ -32,7 +32,7 @@ function AssignebaleTasksPageContent() {
               className="wpqt-cursor-pointer"
               title={task.name}
               description={task.description}
-              onClick={() => navigate(`/assignable-tasks/${task.id}`)}
+              onClick={() => navigate(`/assignable-tasks/${task.task_hash}`)}
             ></WPQTCard>
           ))}
         </div>

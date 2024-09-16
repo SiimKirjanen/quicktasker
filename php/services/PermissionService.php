@@ -46,6 +46,13 @@ class PermissionService {
         }
     }
 
+    /**
+     * Check if a user is allowed to edit a task.
+     *
+     * @param int $userId The ID of the user.
+     * @param int $taskId The ID of the task.
+     * @return bool Returns true if the user is allowed to edit the task, false otherwise.
+     */
     public function checkIfUserIsAllowedToEditTask($userId, $taskId) {
         global $wpdb;
 

@@ -5364,7 +5364,7 @@ function WPQTFieldSet({
   className
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Fieldset, {
-    className: `wpqt-space-y-6 wpqt-rounded-xl wpqt-p-6 wpqt-sm:p-10${className}`,
+    className: `wpqt-border-none ${className}`,
     children: children
   });
 }
@@ -5543,13 +5543,13 @@ function UserPageContent() {
         path: "/user-tasks",
         element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_5__.UserTasksPage, {})
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
-        path: "/user-tasks/:taskId",
-        element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_TaskPage_TaskPage__WEBPACK_IMPORTED_MODULE_11__.TaskPage, {})
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
         path: "/assignable-tasks",
         element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_AssignableTasksPage_AssignableTasksPage__WEBPACK_IMPORTED_MODULE_10__.AssignableTasksPage, {})
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
-        path: "/assignable-tasks/:taskId",
+        path: "/user-tasks/:taskHash",
+        element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_TaskPage_TaskPage__WEBPACK_IMPORTED_MODULE_11__.TaskPage, {})
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_13__.Route, {
+        path: "/assignable-tasks/:taskHash",
         element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_TaskPage_TaskPage__WEBPACK_IMPORTED_MODULE_11__.TaskPage, {})
       })]
     })
@@ -5633,24 +5633,24 @@ function getAssignableTasksRequest(pageHash) {
     headers: getCommonHeaders()
   });
 }
-function getTaskDataRequest(pageHash, taskId) {
+function getTaskDataRequest(pageHash, taskHash) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}`,
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}`,
     headers: getCommonHeaders()
   });
 }
-function assignTaskToUser(pageHash, taskId) {
+function assignTaskToUser(pageHash, taskHash) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "POST",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}/users`,
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/users`,
     headers: getCommonHeaders()
   });
 }
-function unAssignTaskFromUser(pageHash, taskId) {
+function unAssignTaskFromUser(pageHash, taskHash) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "DELETE",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskId}/users`,
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/users`,
     headers: getCommonHeaders()
   });
 }
@@ -5766,7 +5766,7 @@ function AssignebaleTasksPageContent() {
           className: "wpqt-cursor-pointer",
           title: task.name,
           description: task.description,
-          onClick: () => navigate(`/assignable-tasks/${task.id}`)
+          onClick: () => navigate(`/assignable-tasks/${task.task_hash}`)
         }))
       })]
     })
@@ -5976,7 +5976,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 function LoginPage() {
   const {
     state: {
-      pageHash
+      pageHash,
+      userName
     },
     userPageAppDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserPageAppContext);
@@ -5999,8 +6000,13 @@ function LoginPage() {
       handleError(error);
     }
   });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("form", {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-h-screen wpqt-flex-col wpqt-items-center wpqt-justify-center",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+      children: ["Hello ", userName]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      children: "Plese log in to continue"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("form", {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_common_Form_FieldSet__WEBPACK_IMPORTED_MODULE_6__.WPQTFieldSet, {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Form_Legend__WEBPACK_IMPORTED_MODULE_7__.WPQTLegend, {
           children: "Log in"
@@ -6018,7 +6024,7 @@ function LoginPage() {
           })
         })]
       })
-    })
+    })]
   });
 }
 
@@ -6226,7 +6232,7 @@ function TaskPage() {
     userAssignableTasksDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserAssignableTasksContextProvider__WEBPACK_IMPORTED_MODULE_8__.UserAssignableTasksContext);
   const {
-    taskId
+    taskHash
   } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.useParams)();
   const [task, setTask] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
@@ -6236,11 +6242,11 @@ function TaskPage() {
   const isAssignedToTask = task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     getUserPageTask();
-  }, [taskId]);
+  }, [taskHash]);
   const getUserPageTask = () => __awaiter(this, void 0, void 0, function* () {
     try {
       setLoading(true);
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getTaskDataRequest)(pageHash, taskId);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getTaskDataRequest)(pageHash, taskHash);
       setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data));
     } catch (error) {
       handleError(error);
@@ -6250,7 +6256,7 @@ function TaskPage() {
   });
   const assignTask = () => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.assignTaskToUser)(pageHash, task.id);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.assignTaskToUser)(pageHash, taskHash);
       setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data));
     } catch (error) {
       handleError(error);
@@ -6258,7 +6264,7 @@ function TaskPage() {
   });
   const unAssignTask = () => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.unAssignTaskFromUser)(pageHash, task.id);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.unAssignTaskFromUser)(pageHash, taskHash);
       setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data));
     } catch (error) {
       handleError(error);
@@ -6321,7 +6327,7 @@ function UserTasks() {
         className: "wpqt-cursor-pointer",
         title: task.name,
         description: task.description,
-        onClick: () => navigate(`/user-tasks/${task.id}`)
+        onClick: () => navigate(`/user-tasks/${task.task_hash}`)
       });
     })
   });
@@ -6801,7 +6807,8 @@ const initialState = {
   setupCompleted: false,
   isLoggedIn: false,
   pageHash: (0,_utils_url__WEBPACK_IMPORTED_MODULE_6__.getQueryParam)("code") || "",
-  userId: ""
+  userId: "",
+  userName: ""
 };
 const UserPageAppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -6964,14 +6971,16 @@ const reducer = (state, action) => {
           isActiveUser,
           isLoggedIn,
           setupCompleted,
-          userId
+          userId,
+          userName
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           isActiveUser: isActiveUser === "1",
           isLoggedIn,
           setupCompleted,
           initialLoading: false,
-          userId
+          userId,
+          userName
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USER_LOGGED_IN:

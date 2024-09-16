@@ -6,6 +6,7 @@ type BaseTask = {
   stage_id: string;
   name: string;
   description: string;
+  task_hash: string;
 };
 
 type Task = BaseTask & {

@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Stage\StageService;
+use WPQT\Task\TaskService;
 
 function wpqt_set_up_db() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -49,7 +50,9 @@ function wpqt_set_up_db() {
 			free_for_all tinyint(1) DEFAULT 0,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			PRIMARY KEY  (id)
+			task_hash varchar(255) NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY task_hash (task_hash)
 		  ) $charset_collate;";
 	  
 		dbDelta( $sql3 ); 
@@ -179,14 +182,15 @@ function wpqt_insert_initial_data() {
 		$stageService->createStage($newPipeId, array('name' => 'Stage 3'));
 		$stageService->createStage($newPipeId, array('name' => 'Stage 4'));
 
-		$taskService->createTask($firstStageId, array('name' => 'Task 1'));
-		$taskService->createTask($firstStageId, array('name' => 'Task 2'));
-		$taskService->createTask($secondStageId, array('name' => 'Task 3'));
-		$taskService->createTask($secondStageId, array('name' => 'Task 4'));
+		$taskService->createTask($firstStageId, array('name' => 'Task 1', 'pipelineId' => $newPipeId));
+		$taskService->createTask($firstStageId, array('name' => 'Task 2', 'pipelineId' => $newPipeId));
+		$taskService->createTask($secondStageId, array('name' => 'Task 3', 'pipelineId' => $newPipeId));
+		$taskService->createTask($secondStageId, array('name' => 'Task 4', 'pipelineId' => $newPipeId));
 
 		$wpdb->query('COMMIT');
 	}
 	} catch (\Throwable $th) {
 		$wpdb->query('ROLLBACK');
+		error_log('Error in wpqt_insert_initial_data: ' . $th->getMessage());
 	}
 }

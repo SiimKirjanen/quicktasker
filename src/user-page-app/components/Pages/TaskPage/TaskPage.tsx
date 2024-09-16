@@ -12,7 +12,6 @@ import { convertTaskFromServer } from "../../../../utils/task";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { WPQTButton } from "../../../../components/common/Button/Button";
 import { UserAssignableTasksContext } from "../../../providers/UserAssignableTasksContextProvider";
-import { REMOVE_ASSIGNABLE_TASK } from "../../../constants";
 
 function TaskPage() {
   const {
@@ -21,7 +20,7 @@ function TaskPage() {
   const { userAssignableTasksDispatch } = useContext(
     UserAssignableTasksContext,
   );
-  const { taskId } = useParams<{ taskId: string }>();
+  const { taskHash } = useParams<{ taskHash: string }>();
   const [task, setTask] = useState<null | Task>(null);
   const [loading, setLoading] = useState(true);
   const { handleError } = useErrorHandler();
@@ -31,12 +30,12 @@ function TaskPage() {
 
   useEffect(() => {
     getUserPageTask();
-  }, [taskId]);
+  }, [taskHash]);
 
   const getUserPageTask = async () => {
     try {
       setLoading(true);
-      const response = await getTaskDataRequest(pageHash, taskId!);
+      const response = await getTaskDataRequest(pageHash, taskHash!);
 
       setTask(convertTaskFromServer(response.data));
     } catch (error) {
@@ -48,7 +47,7 @@ function TaskPage() {
 
   const assignTask = async () => {
     try {
-      const response = await assignTaskToUser(pageHash, task!.id);
+      const response = await assignTaskToUser(pageHash, taskHash!);
 
       setTask(convertTaskFromServer(response.data));
     } catch (error) {
@@ -58,7 +57,7 @@ function TaskPage() {
 
   const unAssignTask = async () => {
     try {
-      const response = await unAssignTaskFromUser(pageHash, task!.id);
+      const response = await unAssignTaskFromUser(pageHash, taskHash!);
 
       setTask(convertTaskFromServer(response.data));
     } catch (error) {

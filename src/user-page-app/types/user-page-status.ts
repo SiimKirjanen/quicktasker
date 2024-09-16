@@ -1,6 +1,7 @@
 type BaseUserPageStatus = {
   isLoggedIn: boolean;
   userId: string;
+  userName: string;
 };
 
 type UserPageStatus = BaseUserPageStatus & {
