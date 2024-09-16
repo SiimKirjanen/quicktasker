@@ -5284,6 +5284,49 @@ function Loading({
 
 /***/ }),
 
+/***/ "./src/components/Select/WPQTSelect.tsx":
+/*!**********************************************!*\
+  !*** ./src/components/Select/WPQTSelect.tsx ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WPQTSelect: () => (/* binding */ WPQTSelect)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/select/select.js");
+
+
+function WPQTSelect({
+  options,
+  selectedOptionValue,
+  onSelectionChange,
+  allSelector = true
+}) {
+  const handleChange = event => {
+    const selectedValue = event.target.value;
+    onSelectionChange(selectedValue);
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Select, {
+    name: "pipeline-filtering",
+    value: selectedOptionValue,
+    onChange: handleChange,
+    children: [allSelector && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+      value: "",
+      children: "All boards"
+    }), options.map(option => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+      value: option.value,
+      children: option.label
+    }, option.value))]
+  });
+}
+
+
+/***/ }),
+
 /***/ "./src/components/common/Button/Button.tsx":
 /*!*************************************************!*\
   !*** ./src/components/common/Button/Button.tsx ***!
@@ -5569,6 +5612,7 @@ function UserPageContent() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   assignTaskToUser: () => (/* binding */ assignTaskToUser),
+/* harmony export */   changeTaskStageRequest: () => (/* binding */ changeTaskStageRequest),
 /* harmony export */   getAssignableTasksRequest: () => (/* binding */ getAssignableTasksRequest),
 /* harmony export */   getAssignedTasksRequest: () => (/* binding */ getAssignedTasksRequest),
 /* harmony export */   getOverviewRequest: () => (/* binding */ getOverviewRequest),
@@ -5651,6 +5695,16 @@ function unAssignTaskFromUser(pageHash, taskHash) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "DELETE",
     path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/users`,
+    headers: getCommonHeaders()
+  });
+}
+function changeTaskStageRequest(pageHash, taskHash, stageId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    method: "PATCH",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/stage`,
+    data: {
+      stageId
+    },
     headers: getCommonHeaders()
   });
 }
@@ -6183,7 +6237,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../utils/task */ "./src/utils/task.ts");
 /* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
 /* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _providers_UserAssignableTasksContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/UserAssignableTasksContextProvider */ "./src/user-page-app/providers/UserAssignableTasksContextProvider.tsx");
+/* harmony import */ var _components_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../components/Select/WPQTSelect */ "./src/components/Select/WPQTSelect.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6229,12 +6283,10 @@ function TaskPage() {
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageAppContext);
   const {
-    userAssignableTasksDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserAssignableTasksContextProvider__WEBPACK_IMPORTED_MODULE_8__.UserAssignableTasksContext);
-  const {
     taskHash
   } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.useParams)();
   const [task, setTask] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const [stageOptions, setStageOptions] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const {
     handleError
@@ -6247,7 +6299,14 @@ function TaskPage() {
     try {
       setLoading(true);
       const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getTaskDataRequest)(pageHash, taskHash);
-      setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data));
+      const options = response.data.stages.map(stage => {
+        return {
+          label: stage.name,
+          value: stage.id
+        };
+      });
+      setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data.task));
+      setStageOptions(options);
     } catch (error) {
       handleError(error);
     } finally {
@@ -6270,17 +6329,42 @@ function TaskPage() {
       handleError(error);
     }
   });
+  const changeTaskStage = stageId => __awaiter(this, void 0, void 0, function* () {
+    try {
+      setLoading(true);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.changeTaskStageRequest)(pageHash, taskHash, stageId);
+      const options = response.data.stages.map(stage => {
+        return {
+          label: stage.name,
+          value: stage.id
+        };
+      });
+      setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_5__.convertTaskFromServer)(response.data.task));
+      setStageOptions(options);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageWrap, {
     loading: loading,
     onRefresh: getUserPageTask,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageContentWrap, {
-      children: task && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+      children: task && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         children: [JSON.stringify(task), isAssignedToTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTButton, {
           onClick: unAssignTask,
           btnText: "Unassign from task"
         }), !isAssignedToTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTButton, {
           onClick: assignTask,
           btnText: "Assign task"
+        }), stageOptions && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_8__.WPQTSelect, {
+            options: stageOptions,
+            onSelectionChange: changeTaskStage,
+            selectedOptionValue: task.stage_id,
+            allSelector: false
+          })
         })]
       })
     })
@@ -14170,6 +14254,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_render_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/render.js */ "./node_modules/@headlessui/react/dist/utils/render.js");
 /* harmony import */ var _label_label_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../label/label.js */ "./node_modules/@headlessui/react/dist/components/label/label.js");
 "use client";let a=_label_label_js__WEBPACK_IMPORTED_MODULE_1__.Label;function o(t,n){return react__WEBPACK_IMPORTED_MODULE_0__.createElement(_label_label_js__WEBPACK_IMPORTED_MODULE_1__.Label,{as:"div",ref:n,...t})}let d=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_2__.forwardRefWithAs)(o);
+
+
+/***/ }),
+
+/***/ "./node_modules/@headlessui/react/dist/components/select/select.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@headlessui/react/dist/components/select/select.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Select: () => (/* binding */ $)
+/* harmony export */ });
+/* harmony import */ var _react_aria_focus__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @react-aria/focus */ "./node_modules/@react-aria/focus/dist/useFocusRing.mjs");
+/* harmony import */ var _react_aria_interactions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @react-aria/interactions */ "./node_modules/@react-aria/interactions/dist/useHover.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../hooks/use-id.js */ "react");
+/* harmony import */ var _hooks_use_active_press_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../hooks/use-active-press.js */ "./node_modules/@headlessui/react/dist/hooks/use-active-press.js");
+/* harmony import */ var _internal_disabled_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../internal/disabled.js */ "./node_modules/@headlessui/react/dist/internal/disabled.js");
+/* harmony import */ var _internal_id_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../internal/id.js */ "./node_modules/@headlessui/react/dist/internal/id.js");
+/* harmony import */ var _utils_render_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/render.js */ "./node_modules/@headlessui/react/dist/utils/render.js");
+/* harmony import */ var _description_description_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../description/description.js */ "./node_modules/@headlessui/react/dist/components/description/description.js");
+/* harmony import */ var _label_label_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../label/label.js */ "./node_modules/@headlessui/react/dist/components/label/label.js");
+"use client";let H="select";function B(a,i){let p=(0,react__WEBPACK_IMPORTED_MODULE_0__.useId)(),d=(0,_internal_id_js__WEBPACK_IMPORTED_MODULE_1__.useProvidedId)(),n=(0,_internal_disabled_js__WEBPACK_IMPORTED_MODULE_2__.useDisabled)(),{id:c=d||`headlessui-select-${p}`,disabled:e=n||!1,invalid:t=!1,autoFocus:o=!1,...f}=a,m=(0,_label_label_js__WEBPACK_IMPORTED_MODULE_3__.useLabelledBy)(),u=(0,_description_description_js__WEBPACK_IMPORTED_MODULE_4__.useDescribedBy)(),{isFocusVisible:r,focusProps:T}=(0,_react_aria_focus__WEBPACK_IMPORTED_MODULE_5__.useFocusRing)({autoFocus:o}),{isHovered:l,hoverProps:b}=(0,_react_aria_interactions__WEBPACK_IMPORTED_MODULE_6__.useHover)({isDisabled:e}),{pressed:s,pressProps:y}=(0,_hooks_use_active_press_js__WEBPACK_IMPORTED_MODULE_7__.useActivePress)({disabled:e}),P=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_8__.mergeProps)({ref:i,id:c,"aria-labelledby":m,"aria-describedby":u,"aria-invalid":t?"":void 0,disabled:e||void 0,autoFocus:o},T,b,y),S=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({disabled:e,invalid:t,hover:l,focus:r,active:s,autofocus:o}),[e,t,l,r,s,o]);return (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_8__.render)({ourProps:P,theirProps:f,slot:S,defaultTag:H,name:"Select"})}let $=(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_8__.forwardRefWithAs)(B);
 
 
 /***/ }),

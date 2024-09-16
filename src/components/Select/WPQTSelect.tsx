@@ -8,12 +8,14 @@ type Props = {
   options: Option[];
   selectedOptionValue: string;
   onSelectionChange: (selectedValue: string) => void;
+  allSelector?: boolean;
 };
 
 function WPQTSelect({
   options,
   selectedOptionValue,
   onSelectionChange,
+  allSelector = true,
 }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
@@ -26,7 +28,7 @@ function WPQTSelect({
       value={selectedOptionValue}
       onChange={handleChange}
     >
-      <option value="">All boards</option>
+      {allSelector && <option value="">All boards</option>}
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -36,4 +38,4 @@ function WPQTSelect({
   );
 }
 
-export { WPQTSelect };
+export { WPQTSelect, type Option };

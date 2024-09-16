@@ -10820,7 +10820,8 @@ __webpack_require__.r(__webpack_exports__);
 function WPQTSelect({
   options,
   selectedOptionValue,
-  onSelectionChange
+  onSelectionChange,
+  allSelector = true
 }) {
   const handleChange = event => {
     const selectedValue = event.target.value;
@@ -10830,7 +10831,7 @@ function WPQTSelect({
     name: "pipeline-filtering",
     value: selectedOptionValue,
     onChange: handleChange,
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+    children: [allSelector && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
       value: "",
       children: "All boards"
     }), options.map(option => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {

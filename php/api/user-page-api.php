@@ -17,6 +17,8 @@ use WPQT\User\UserService;
 use WPQT\WPQTException;
 use WPQT\RequestValidation;
 use WPQT\Permission\PermissionService;
+use WPQT\Stage\StageRepository;
+use WPQT\Task\TaskService;
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
@@ -177,13 +179,19 @@ function wpqt_register_user_page_api_routes() {
                     $userService = new UserService();
                     $taskRepository = new TaskRepository();
                     $permissionService = new PermissionService();
+                    $stageRepository = new StageRepository();
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);
-                  
+                   
                     if(!$permissionService->checkIfUserIsAllowedToViewTask($session->user_id, $task->id)) {
                         throw new WPQTException('Not allowed', true);
                     }
 
-                    return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
+                    $data = (object)[
+                        'task' => $task,
+                        'stages' => $stageRepository->getStagesByPipelineId($task->pipeline_id)
+                    ];
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);
                 } catch(WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } catch (Exception $e) {
@@ -216,6 +224,38 @@ function wpqt_register_user_page_api_routes() {
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true'
+    ));
+
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/stage', array(
+        'methods' => 'PATCH',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $userService = new UserService();
+                    $taskRepository = new TaskRepository();
+                    $permissionService = new PermissionService();
+                    $stageRepository = new StageRepository();
+                    $taskService = new TaskService();
+                    $task = $taskRepository->getTaskByHash($data['task_hash'], true);
+                   
+                    if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id)) {
+                        throw new WPQTException('Not allowed', true);
+                    }
+                    $taskService->moveTask($task->id, $data['stageId'], 0);
+
+                    $data = (object)[
+                        'task' => $task,
+                        'stages' => $stageRepository->getStagesByPipelineId($task->pipeline_id)
+                    ];
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);
                 } catch(WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } catch (Exception $e) {

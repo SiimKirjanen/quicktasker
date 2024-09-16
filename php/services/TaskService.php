@@ -9,6 +9,7 @@ use WPQT\Log\LogService;
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
 use WPQT\Hash\HashService;
+use WPQT\Exceptions\WPQTException;
 
 class TaskService {
     protected $taskRepository;
@@ -122,7 +123,7 @@ class TaskService {
         $currentTask = $this->taskRepository->getTaskById($taskId);
 
         if (!$currentTask) {
-            throw new \Exception('Task not found');
+            throw new WPQTException('Task not found');
         }
         $currentStageId = $currentTask->stage_id;
         $currentOrder = $currentTask->task_order;
@@ -151,7 +152,7 @@ class TaskService {
         );
 
         if ($rowsUpdated === false) {
-            throw new \Exception('Failed to move task');
+            throw new WPQTException('Failed to move task');
         }
         if($stageChanged) {
             $newStage = $this->stageRepository->getStageById($newStageId);
