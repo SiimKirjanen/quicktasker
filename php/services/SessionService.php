@@ -57,7 +57,7 @@ class SessionService {
      * @param int $userId The ID of the user.
      * @param string $userPageHash The page hash associated with the user.
      * @return UserSession The newly created user session.
-     * @throws \Exception If failed to delete existing session or create new session.
+     * @throws WPQTException If failed to delete existing session or create new session.
      */
     public function createSession($userId, $userPageHash) {
         global $wpdb;
@@ -71,7 +71,7 @@ class SessionService {
         );
 
         if( $result1 === false ) {
-            throw new \Exception('Failed to delete existing session');
+            throw new WPQTException('Failed to delete existing session');
         }
 
         $result2 = $wpdb->insert(
@@ -86,13 +86,37 @@ class SessionService {
         );
 
         if( $result2 === false ) {
-            throw new \Exception('Failed to create new session');
+            throw new WPQTException('Failed to create new session');
         }
         
         return $this->sessionRepository->getUserSessionById($wpdb->insert_id);
     }
 
   
+    /**
+     * Deletes a session from the database based on the provided session token.
+     *
+     * @param string $sessionToken The token of the session to be deleted.
+     * @return bool True on successful deletion.
+     * @throws WPQTException If the session deletion fails.
+     */
+    public function deleteSession($sessionToken) {
+        global $wpdb;
+
+        $result = $wpdb->delete(
+            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            array(
+                'session_token' => $sessionToken
+            )
+        );
+
+        if( $result === false ) {
+            throw new WPQTException('Failed to delete session', true);
+        }
+
+        return true;
+    }
+
     /**
      * Verifies the session token.
      *

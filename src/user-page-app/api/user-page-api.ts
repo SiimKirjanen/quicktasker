@@ -123,6 +123,14 @@ function changeTaskStageRequest(
   });
 }
 
+function logoutUserPageRequest(pageHash: string): Promise<WPQTResponse> {
+  return apiFetch({
+    method: "POST",
+    path: `/wpqt/v1/user-pages/${pageHash}/logout`,
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getUserPageStatusRequest,
   setUpUserPageRequest,
@@ -134,4 +142,5 @@ export {
   assignTaskToUser,
   unAssignTaskFromUser,
   changeTaskStageRequest,
+  logoutUserPageRequest,
 };

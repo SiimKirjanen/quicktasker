@@ -142,6 +142,31 @@ function wpqt_register_user_page_api_routes() {
         ),
     ));
 
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/logout', array(
+        'methods' => 'POST',
+        'callback' => function( $data ) {
+                try {
+                    $sessionService = new SessionService();
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $sessionService->deleteSession($session->session_token);
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);  
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
+    ));
+
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/overview', array(
         'methods' => 'GET',
         'callback' => function( $data ) {

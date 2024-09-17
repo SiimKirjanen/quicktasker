@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowPathIcon, HomeIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathIcon,
+  HomeIcon,
+  EnvelopeIcon,
+} from "@heroicons/react/24/outline";
 import { LoadingOval } from "../../../components/Loading/Loading";
+import { ProfileDropdown } from "../Dropdown/ProfileDropdown/ProfileDropdown";
 
 type Props = {
   loading: boolean;
@@ -29,9 +34,9 @@ function NavigationBar({ loading, onRefresh = () => {} }: Props) {
         )}
       </div>
 
-      <div className="wpqt-flex wpqt-justify-end wpqt-gap-2">
-        <div>Messageas</div>
-        <div>Profile</div>
+      <div className="wpqt-flex wpqt-items-center wpqt-justify-end wpqt-gap-3">
+        <EnvelopeIcon className="wpqt-size-6" />
+        <ProfileDropdown />
       </div>
     </div>
   );

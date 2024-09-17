@@ -966,6 +966,16 @@
   height: 2.25rem;
 }
 
+.wpqt-size-8 {
+  width: 2rem;
+  height: 2rem;
+}
+
+.wpqt-size-7 {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
 .wpqt-h-\[200px\] {
   height: 200px;
 }
@@ -1287,6 +1297,10 @@
   text-align: center;
 }
 
+.wpqt-align-middle {
+  vertical-align: middle;
+}
+
 .wpqt-font-inter {
   font-family: Inter, sans-serif;
 }
@@ -1401,6 +1415,11 @@
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.wpqt-text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+
 .wpqt-line-through {
   text-decoration-line: line-through;
 }
@@ -1510,6 +1529,11 @@
 .hover\:wpqt-text-qtBlueHover:hover {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
+.hover\:wpqt-text-blue-800:hover {
+  --tw-text-opacity: 1;
+  color: rgb(30 64 175 / var(--tw-text-opacity));
 }
 
 .hover\:wpqt-underline:hover {

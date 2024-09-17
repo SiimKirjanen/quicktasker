@@ -25,7 +25,16 @@ function useSession() {
     return !!Cookies.get(`wpqt-session-token-${pageHash}`);
   };
 
-  return { setSessionCookie, getSessionCookie, isLoggedIn };
+  const deleteSessionCookie = async () => {
+    Cookies.remove(`wpqt-session-token-${pageHash}`);
+  };
+
+  return {
+    setSessionCookie,
+    getSessionCookie,
+    isLoggedIn,
+    deleteSessionCookie,
+  };
 }
 
 export { useSession };
