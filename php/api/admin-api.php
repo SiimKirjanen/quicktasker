@@ -16,6 +16,7 @@ use WPQT\Task\TaskRepository;
 use WPQT\Task\TaskService;
 use WPQT\Stage\StageService;
 use WPQT\Permission\PermissionService;
+use WPQT\RequestValidation;
 
 function validate_numeric($param, $request, $key) {
     return is_numeric($param);
@@ -63,7 +64,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -107,7 +115,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'name' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
         ),
     );
 
@@ -139,7 +154,24 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'name' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'description' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
         ),
     );
 
@@ -161,7 +193,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -212,7 +251,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -234,7 +280,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -263,7 +316,24 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'stageId' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'order' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -298,7 +368,34 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'stageId' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'name' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'description' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'pipelineId' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'freeForAll' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                ),
+            ),
         ),
     );
 
@@ -324,7 +421,29 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'name' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'description' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'freeForAll' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                ),
+            ),
         ),
     );
 
@@ -352,7 +471,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -380,7 +506,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -410,7 +543,24 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'pipelineId' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'name' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'description' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
         ),
     );
 
@@ -443,7 +593,24 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'name' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'description' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
         ),
     );
 
@@ -475,7 +642,19 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'direction' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
         ),
     );
 
@@ -504,7 +683,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -533,7 +719,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
     /*
@@ -575,7 +768,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -606,7 +806,19 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'name' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'description' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
         ),
     );
 
@@ -634,13 +846,13 @@ function wpqt_register_api_routes() {
             'args' => array(
                 'id' => array(
                     'required' => true,
-                    'validate_callback' => 'validate_numeric',
-                    'sanitize_callback' => 'sanitize_absint',
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
                 'task_id' => array(
                     'required' => true,
-                    'validate_callback' => 'validate_numeric',
-                    'sanitize_callback' => 'sanitize_absint',
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
             ),
         ),
@@ -670,13 +882,13 @@ function wpqt_register_api_routes() {
             'args' => array(
                 'id' => array(
                     'required' => true,
-                    'validate_callback' => 'validate_numeric',
-                    'sanitize_callback' => 'sanitize_absint',
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
                 'task_id' => array(
                     'required' => true,
-                    'validate_callback' => 'validate_numeric',
-                    'sanitize_callback' => 'sanitize_absint',
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
             ),
         ),
@@ -700,7 +912,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -722,7 +941,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 
@@ -744,7 +970,14 @@ function wpqt_register_api_routes() {
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            }
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
         ),
     );
 }
