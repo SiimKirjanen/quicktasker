@@ -46,7 +46,14 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
     ));
 
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/setup', array(
@@ -73,7 +80,19 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'password' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
     ));
 
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/login', array(
@@ -108,7 +127,19 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'password' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
     ));
 
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/overview', array(
@@ -132,7 +163,15 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
+
     ));
 
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/assigned-tasks', array(
@@ -150,7 +189,14 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
     ));
 
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/assignable-tasks', array(
@@ -168,7 +214,14 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
     ));
 
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)', array(
@@ -198,7 +251,19 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'task_hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
     ));
 
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/users', array(
@@ -230,7 +295,19 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'task_hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
     ));
 
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/stage', array(
@@ -262,6 +339,23 @@ function wpqt_register_user_page_api_routes() {
                     return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                 }
             },
-        'permission_callback' => '__return_true'
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'task_hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'stageId' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+            ),
+        ),
     ));
 }
