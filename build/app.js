@@ -8723,7 +8723,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function UserAssignementDropdown({
-  task
+  task,
+  onUserAdd = () => {},
+  onUserDelete = () => {}
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdown, {
     menuBtnClasses: "wpqt-inline-flex",
@@ -8741,7 +8743,9 @@ function UserAssignementDropdown({
       })]
     }),
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_User_UserAssignementSelection_UserAssignementSelection__WEBPACK_IMPORTED_MODULE_2__.UserAssignementSelection, {
-      task: task
+      task: task,
+      onUserAdd: onUserAdd,
+      onUserDelete: onUserDelete
     })
   });
 }
@@ -9831,6 +9835,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 /* harmony import */ var _common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/Toggle/Toggle */ "./src/components/common/Toggle/Toggle.tsx");
+/* harmony import */ var _Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+
+
 
 
 
@@ -9847,7 +9855,8 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
   const {
     state: {
       taskToEdit
-    }
+    },
+    modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const [taskName, setTaskName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [taskDescription, setTaskDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
@@ -9891,6 +9900,23 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
           rowsCount: 3,
           value: taskDescription,
           onChange: newValue => setTaskDescription(newValue)
+        })
+      }), taskToEdit && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
+        label: "Assigned users",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_8__.UserAssignementDropdown, {
+          task: taskToEdit,
+          onUserAdd: user => {
+            modalDispatch({
+              type: _constants__WEBPACK_IMPORTED_MODULE_9__.ADD_ASSIGNED_USER_TO_EDITING_TASK,
+              payload: user
+            });
+          },
+          onUserDelete: user => {
+            modalDispatch({
+              type: _constants__WEBPACK_IMPORTED_MODULE_9__.REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+              payload: user
+            });
+          }
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
         label: "Free for all task",
@@ -11175,7 +11201,9 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 function UserAssignementSelection({
-  task
+  task,
+  onUserAdd,
+  onUserDelete
 }) {
   const {
     state: {
@@ -11201,6 +11229,7 @@ function UserAssignementSelection({
           user
         }
       });
+      onUserAdd(user);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error("Failed to assign user to task");
@@ -11219,6 +11248,7 @@ function UserAssignementSelection({
           userId: user.id
         }
       });
+      onUserDelete(user);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error("Failed to remove user from task");
@@ -11639,6 +11669,7 @@ function Toggle({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ADD_ASSIGNED_USER_TO_EDITING_TASK: () => (/* binding */ ADD_ASSIGNED_USER_TO_EDITING_TASK),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
 /* harmony export */   CLOSE_ARCHIVE_TASK_MODAL: () => (/* binding */ CLOSE_ARCHIVE_TASK_MODAL),
 /* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
@@ -11678,6 +11709,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_SET_PIPELINE: () => (/* binding */ PIPELINE_SET_PIPELINE),
 /* harmony export */   PIPELINE_SET_PRIMARY: () => (/* binding */ PIPELINE_SET_PRIMARY),
 /* harmony export */   PIPELINE_SET_PRIMARY2: () => (/* binding */ PIPELINE_SET_PRIMARY2),
+/* harmony export */   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_EDITING_TASK),
 /* harmony export */   SET_ARCHIVE_FILTERED_PIPELINE: () => (/* binding */ SET_ARCHIVE_FILTERED_PIPELINE),
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
@@ -11720,6 +11752,8 @@ const CLOSE_PIPELINE_MODAL = "CLOSE_PIPELINE_EDIT_MODAL";
 const CLOSE_USER_MODAL = "CLOSE_USER_MODAL";
 const OPEN_NEW_USER_MODAL = "OPEN_NEW_USER_MODAL";
 const OPEN_EDIT_USER_MODAL = "OPEN_EDIT_USER_MODAL";
+const ADD_ASSIGNED_USER_TO_EDITING_TASK = "ADD_ASSIGNED_USER_TO_EDITING_TASK";
+const REMOVE_ASSIGNED_USER_FROM_EDITING_TASK = "REMOVE_ASSIGNED_USER_FROM_EDITING_TASK";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";
@@ -12967,6 +13001,7 @@ const closeModal = () => {
   return Object.assign({}, _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_1__.initialState);
 };
 const reducer = (state, action) => {
+  var _a, _b, _c, _d;
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_TASK_MODAL:
       {
@@ -12993,6 +13028,24 @@ const reducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_TASK_MODAL:
       {
         return closeModal();
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_ASSIGNED_USER_TO_EDITING_TASK:
+      {
+        const user = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          taskToEdit: Object.assign(Object.assign({}, state.taskToEdit), {
+            assigned_users: [...((_b = (_a = state.taskToEdit) === null || _a === void 0 ? void 0 : _a.assigned_users) !== null && _b !== void 0 ? _b : []), user]
+          })
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.REMOVE_ASSIGNED_USER_FROM_EDITING_TASK:
+      {
+        const user = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          taskToEdit: Object.assign(Object.assign({}, state.taskToEdit), {
+            assigned_users: ((_d = (_c = state.taskToEdit) === null || _c === void 0 ? void 0 : _c.assigned_users) !== null && _d !== void 0 ? _d : []).filter(assignedUser => assignedUser.id !== user.id)
+          })
+        });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_STAGE_MODAL:
       {

@@ -62,6 +62,7 @@ const UserModalContent = forwardRef(function UserModalContent(
   return (
     <>
       <WPQTModalTitle>User modal</WPQTModalTitle>
+
       <WPQTModalFieldSet>
         <WPQTModalField label="Name">
           <WPQTInput
@@ -70,6 +71,7 @@ const UserModalContent = forwardRef(function UserModalContent(
             onChange={(newValue: string) => setUserName(newValue)}
           />
         </WPQTModalField>
+
         <WPQTModalField label="Description">
           <WPQTTextarea
             rowsCount={3}

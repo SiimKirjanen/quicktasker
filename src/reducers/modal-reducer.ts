@@ -13,6 +13,8 @@ import {
   CLOSE_USER_MODAL,
   OPEN_NEW_USER_MODAL,
   OPEN_EDIT_USER_MODAL,
+  ADD_ASSIGNED_USER_TO_EDITING_TASK,
+  REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { Action, State, initialState } from "../providers/ModalContextProvider";
 import { Pipeline } from "../types/pipeline";
@@ -50,6 +52,30 @@ const reducer = (state: State, action: Action): State => {
     }
     case CLOSE_TASK_MODAL: {
       return closeModal();
+    }
+    case ADD_ASSIGNED_USER_TO_EDITING_TASK: {
+      const user: User = action.payload;
+
+      return {
+        ...state,
+        taskToEdit: {
+          ...state.taskToEdit!,
+          assigned_users: [...(state.taskToEdit?.assigned_users ?? []), user],
+        },
+      };
+    }
+    case REMOVE_ASSIGNED_USER_FROM_EDITING_TASK: {
+      const user: User = action.payload;
+
+      return {
+        ...state,
+        taskToEdit: {
+          ...state.taskToEdit!,
+          assigned_users: (state.taskToEdit?.assigned_users ?? []).filter(
+            (assignedUser: User) => assignedUser.id !== user.id,
+          ),
+        },
+      };
     }
     case OPEN_NEW_STAGE_MODAL: {
       const { targetPipelineId }: { targetPipelineId: string } = action.payload;

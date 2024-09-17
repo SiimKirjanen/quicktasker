@@ -17,6 +17,11 @@ import { TaskModalTabs } from "../../Tab/TaskModalTabs/TaskModalTabs";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { Toggle } from "../../common/Toggle/Toggle";
+import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
+import {
+  ADD_ASSIGNED_USER_TO_EDITING_TASK,
+  REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+} from "../../../constants";
 
 type Props = {
   addTask: (name: string, description: string, freeForAllTask: boolean) => void;
@@ -28,6 +33,7 @@ const TaskModalContent = forwardRef(
   ({ addTask, taskModalSaving, editTask }: Props, ref) => {
     const {
       state: { taskToEdit },
+      modalDispatch,
     } = useContext(ModalContext);
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
@@ -83,6 +89,26 @@ const TaskModalContent = forwardRef(
               onChange={(newValue: string) => setTaskDescription(newValue)}
             />
           </WPQTModalField>
+
+          {taskToEdit && (
+            <WPQTModalField label="Assigned users">
+              <UserAssignementDropdown
+                task={taskToEdit}
+                onUserAdd={(user) => {
+                  modalDispatch({
+                    type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
+                    payload: user,
+                  });
+                }}
+                onUserDelete={(user) => {
+                  modalDispatch({
+                    type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+                    payload: user,
+                  });
+                }}
+              />
+            </WPQTModalField>
+          )}
 
           <WPQTModalField label="Free for all task">
             <Toggle checked={freeForAllTask} handleChange={setFreeForAllTask} />

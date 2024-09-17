@@ -6,9 +6,15 @@ import { UserAssignementSelection } from "../../User/UserAssignementSelection/Us
 
 type Props = {
   task: Task;
+  onUserAdd?: (user: User) => void;
+  onUserDelete?: (user: User) => void;
 };
 
-function UserAssignementDropdown({ task }: Props) {
+function UserAssignementDropdown({
+  task,
+  onUserAdd = () => {},
+  onUserDelete = () => {},
+}: Props) {
   return (
     <WPQTDropdown
       menuBtnClasses="wpqt-inline-flex"
@@ -31,7 +37,11 @@ function UserAssignementDropdown({ task }: Props) {
         </div>
       )}
     >
-      <UserAssignementSelection task={task} />
+      <UserAssignementSelection
+        task={task}
+        onUserAdd={onUserAdd}
+        onUserDelete={onUserDelete}
+      />
     </WPQTDropdown>
   );
 }

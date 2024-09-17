@@ -17,9 +17,11 @@ import {
 
 type Props = {
   task: Task;
+  onUserAdd: (user: User) => void;
+  onUserDelete: (user: User) => void;
 };
 
-function UserAssignementSelection({ task }: Props) {
+function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
   const {
     state: { users },
   } = useContext(UserContext);
@@ -45,6 +47,7 @@ function UserAssignementSelection({ task }: Props) {
           user,
         },
       });
+      onUserAdd(user);
     } catch (error) {
       console.error(error);
       toast.error("Failed to assign user to task");
@@ -64,6 +67,7 @@ function UserAssignementSelection({ task }: Props) {
           userId: user.id,
         },
       });
+      onUserDelete(user);
     } catch (error) {
       console.error(error);
       toast.error("Failed to remove user from task");
