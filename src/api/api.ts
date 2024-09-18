@@ -346,6 +346,14 @@ function changeUserSessionStatusRequest(
   });
 }
 
+function deleteUserSessionRequest(sessionId: string): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/users/sessions/${sessionId}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getPipelineData,
   moveTaskRequest,
@@ -373,4 +381,5 @@ export {
   removeTaskFromUserRequest,
   getUserSessionsRequest,
   changeUserSessionStatusRequest,
+  deleteUserSessionRequest,
 };

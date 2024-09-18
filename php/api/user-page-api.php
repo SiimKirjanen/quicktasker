@@ -148,7 +148,7 @@ function wpqt_register_user_page_api_routes() {
                 try {
                     $sessionService = new SessionService();
                     $session = RequestValidation::validateUserPageApiRequest($data)['session'];
-                    $sessionService->deleteSession($session->session_token);
+                    $sessionService->markSessionInactive($session->session_token);
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);  
                 } catch(WPQTException $e) {

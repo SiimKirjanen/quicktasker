@@ -1114,6 +1114,10 @@
   gap: 24px;
 }
 
+.wpqt-gap-4 {
+  gap: 1rem;
+}
+
 .wpqt-gap-y-1 {
   row-gap: 0.25rem;
 }
@@ -1403,6 +1407,16 @@
 .wpqt-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.wpqt-text-green-500 {
+  --tw-text-opacity: 1;
+  color: rgb(34 197 94 / var(--tw-text-opacity));
+}
+
+.wpqt-text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
 .wpqt-line-through {

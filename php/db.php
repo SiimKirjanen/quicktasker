@@ -61,8 +61,6 @@ function wpqt_set_up_db() {
 			id int(11) NOT NULL AUTO_INCREMENT,
             name varchar(255) NOT NULL,
             description text,
-			email varchar(255),
-			phone varchar(255),
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			is_active tinyint(1) DEFAULT 1,

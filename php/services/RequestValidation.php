@@ -9,6 +9,7 @@ use WPQT\Nonce\NonceService;
 use WPQT\WPQTException;
 use WPQT\UserPage\UserPageService;
 use WPQT\Session\SessionService;
+use WPQT\User\UserRepository;
 
 class RequestValidation {
 
@@ -34,7 +35,8 @@ class RequestValidation {
         $defaults = array(
             'nonce' => true,
             'hash' => true,
-            'session' => true
+            'session' => true,
+            'userActive' => true
         );
         $args = wp_parse_args($args, $defaults);
 
@@ -54,6 +56,16 @@ class RequestValidation {
             $sessionService = new SessionService();
             $session = $sessionService->verifySessionToken($data['hash']);
             $returnValue['session'] = $session;
+        }
+
+        if ($args['userActive'] === true && isset($returnValue['session'])) {
+            $userRepo = new UserRepository();
+            $isActive = $userRepo->isUserActive($returnValue['session']->user_id);
+
+            if (!$isActive) {
+                throw new WPQTException('User is not active', true);
+            }
+            
         }
 
         return $returnValue;

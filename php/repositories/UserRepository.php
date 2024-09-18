@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class UserRepository {
-    const USER_FIELDS = "a.id, a.name, a.description, a.created_at, a.updated_at, a.email, a.phone, a.is_active";
+    const USER_FIELDS = "a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active";
     /**
      * Retrieves all users from the database.
      *
@@ -92,6 +92,31 @@ class UserRepository {
         $results = $wpdb->get_results($query);
 
         return $results;
+    }
+
+    /**
+     * Checks if a user is active.
+     *
+     * This function queries the database to determine if a user with the given ID is marked as active.
+     *
+     * @param int $userId The ID of the user to check.
+     * @return bool True if the user is active, false otherwise.
+     */
+    public function isUserActive($userId) {
+        global $wpdb;
+
+        $result = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM " . TABLE_WP_QUICK_TASKS_USERS . " WHERE id = %d AND is_active = 1",
+                $userId
+            )
+        );
+
+        if ($result > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 import {
   CHANGE_USER_SESSION_STATUS,
+  DELETE_USER_SESSION,
   SET_USER_SESSIONS,
   SET_USER_SESSIONS_SEARCH_VALUE,
 } from "../constants";
@@ -34,6 +35,16 @@ const reducer = (state: State, action: Action): State => {
           session.id === sessionId
             ? { ...session, is_active: status }
             : session,
+        ),
+      };
+    }
+    case DELETE_USER_SESSION: {
+      const sessionId: string = action.payload;
+
+      return {
+        ...state,
+        userSessions: state.userSessions.filter(
+          (session) => session.id !== sessionId,
         ),
       };
     }

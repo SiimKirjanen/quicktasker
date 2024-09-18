@@ -1,10 +1,16 @@
 import { toast } from "react-toastify";
 import { UserSession } from "../../../types/user-session";
-import { PowerIcon } from "@heroicons/react/24/outline";
-import { changeUserSessionStatusRequest } from "../../../api/api";
+import { PowerIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  changeUserSessionStatusRequest,
+  deleteUserSessionRequest,
+} from "../../../api/api";
 import { useContext } from "@wordpress/element";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
-import { CHANGE_USER_SESSION_STATUS } from "../../../constants";
+import {
+  CHANGE_USER_SESSION_STATUS,
+  DELETE_USER_SESSION,
+} from "../../../constants";
 
 type Props = {
   session: UserSession;
@@ -27,6 +33,19 @@ function UserSession({ session }: Props) {
     }
   };
 
+  const deleteSession = async () => {
+    try {
+      await deleteUserSessionRequest(session.id);
+      usersSessionDispatch({
+        type: DELETE_USER_SESSION,
+        payload: session.id,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete session");
+    }
+  };
+
   return (
     <>
       <div>
@@ -35,19 +54,30 @@ function UserSession({ session }: Props) {
       </div>
       <div>{session.created_at_utc}</div>
       <div>{session.expires_at_utc}</div>
-      <div>{isActive ? "On" : "Off"} </div>
-      <div>
+      <div
+        className={isActive ? "wpqt-text-qtTextGreen" : "wpqt-text-qtTextRed"}
+      >
+        {isActive ? "On" : "Off"}
+      </div>
+      <div className="wpqt-flex wpqt-items-center wpqt-gap-4">
         {isActive ? (
           <PowerIcon
             className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
             onClick={() => changeSessionStatus(false)}
+            title="Turn session off"
           />
         ) : (
           <PowerIcon
             className="wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer"
             onClick={() => changeSessionStatus(true)}
+            title="Turn session on"
           />
         )}
+        <TrashIcon
+          className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
+          title="Delete session"
+          onClick={deleteSession}
+        />
       </div>
     </>
   );

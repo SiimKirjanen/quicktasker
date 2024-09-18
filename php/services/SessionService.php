@@ -91,7 +91,7 @@ class SessionService {
      * @return bool Returns true if the session was successfully marked as inactive.
      * @throws WPQTException If the session could not be marked as inactive.
      */
-    public function deleteSession($sessionToken) {
+    public function markSessionInactive($sessionToken) {
         global $wpdb;
 
         $result = $wpdb->update(
@@ -106,6 +106,30 @@ class SessionService {
 
         if( $result === false ) {
             throw new WPQTException('Failed to mark session as not active', true);
+        }
+
+        return true;
+    }
+
+    /**
+     * Deletes a session from the database.
+     *
+     * @param int $sessionId The ID of the session to delete.
+     * @return bool True on successful deletion.
+     * @throws WPQTException If the session deletion fails.
+     */
+    public function deleteSession($sessionId) {
+        global $wpdb;
+
+        $result = $wpdb->delete(
+            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            array(
+                'id' => $sessionId
+            )
+        );
+
+        if( $result === false ) {
+            throw new WPQTException('Failed to delete session', true);
         }
 
         return true;
@@ -150,7 +174,7 @@ class SessionService {
      */
     public function verifySessionToken($pageHash) {
         $sessionToken = $_COOKIE['wpqt-session-token-' . $pageHash];
-        $session = $this->sessionRepository->getActiveUserSession($sessionToken);
+        $session = $this->sessionRepository->getUserSession($sessionToken);
 
         if( $session === null ) {
             throw new WPQTException('Invalid session token', true);
@@ -158,6 +182,10 @@ class SessionService {
 
         if($pageHash !== $session->page_hash) {
             throw new WPQTException('Session token does not match the page hash', true);
+        }
+
+        if( $session->is_active === '0' ) {
+            throw new WPQTException('Session is not active', true);
         }
 
         if( strtotime($session->expires_at_utc) < time() ) {

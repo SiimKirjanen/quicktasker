@@ -7716,6 +7716,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   deleteStageRequest: () => (/* binding */ deleteStageRequest),
 /* harmony export */   deleteTaskRequest: () => (/* binding */ deleteTaskRequest),
 /* harmony export */   deleteUserRequest: () => (/* binding */ deleteUserRequest),
+/* harmony export */   deleteUserSessionRequest: () => (/* binding */ deleteUserSessionRequest),
 /* harmony export */   editPipelineRequest: () => (/* binding */ editPipelineRequest),
 /* harmony export */   editStageRequest: () => (/* binding */ editStageRequest),
 /* harmony export */   editTaskRequest: () => (/* binding */ editTaskRequest),
@@ -8014,6 +8015,13 @@ function changeUserSessionStatusRequest(sessionId, status) {
     data: {
       status
     },
+    headers: getCommonHeaders()
+  });
+}
+function deleteUserSessionRequest(sessionId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/users/sessions/${sessionId}`,
+    method: "DELETE",
     headers: getCommonHeaders()
   });
 }
@@ -11438,12 +11446,6 @@ function UserListItem({
       label: "User created at",
       value: (0,_utils_date__WEBPACK_IMPORTED_MODULE_1__.formatDate)(user.created_at)
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
-      label: "Email",
-      value: "TODO"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
-      label: "Phone",
-      value: "TODO"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Assigned tasks count",
       value: "TODO"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
@@ -11540,6 +11542,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PowerIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
@@ -11601,6 +11604,18 @@ function UserSession({
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to change session status");
     }
   });
+  const deleteSession = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.deleteUserSessionRequest)(session.id);
+      usersSessionDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_5__.DELETE_USER_SESSION,
+        payload: session.id
+      });
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to delete session");
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -11613,16 +11628,24 @@ function UserSession({
       children: session.created_at_utc
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: session.expires_at_utc
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [isActive ? "On" : "Off", " "]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: isActive ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      className: isActive ? "wpqt-text-qtTextGreen" : "wpqt-text-qtTextRed",
+      children: isActive ? "On" : "Off"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-items-center wpqt-gap-4",
+      children: [isActive ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
         className: "wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer",
-        onClick: () => changeSessionStatus(false)
+        onClick: () => changeSessionStatus(false),
+        title: "Turn session off"
       }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
         className: "wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer",
-        onClick: () => changeSessionStatus(true)
-      })
+        onClick: () => changeSessionStatus(true),
+        title: "Turn session on"
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        className: "wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer",
+        title: "Delete session",
+        onClick: deleteSession
+      })]
     })]
   });
 }
@@ -11910,6 +11933,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CLOSE_TASK_MODAL: () => (/* binding */ CLOSE_TASK_MODAL),
 /* harmony export */   CLOSE_USER_MODAL: () => (/* binding */ CLOSE_USER_MODAL),
 /* harmony export */   DELETE_USER: () => (/* binding */ DELETE_USER),
+/* harmony export */   DELETE_USER_SESSION: () => (/* binding */ DELETE_USER_SESSION),
 /* harmony export */   EDIT_USER: () => (/* binding */ EDIT_USER),
 /* harmony export */   INIT_APP_STATE: () => (/* binding */ INIT_APP_STATE),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
@@ -12006,6 +12030,7 @@ const INIT_APP_STATE = "INIT_APP_STATE";
 const SET_USER_SESSIONS_SEARCH_VALUE = "SET_USER_SESSIONS_SEARCH_VALUE";
 const SET_USER_SESSIONS = "SET_USER_SESSIONS";
 const CHANGE_USER_SESSION_STATUS = "CHANGE_USER_SESSION_STATUS";
+const DELETE_USER_SESSION = "DELETE_USER_SESSION";
 
 
 /***/ }),
@@ -13718,6 +13743,13 @@ const reducer = (state, action) => {
           userSessions: state.userSessions.map(session => session.id === sessionId ? Object.assign(Object.assign({}, session), {
             is_active: status
           }) : session)
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.DELETE_USER_SESSION:
+      {
+        const sessionId = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          userSessions: state.userSessions.filter(session => session.id !== sessionId)
         });
       }
     default:

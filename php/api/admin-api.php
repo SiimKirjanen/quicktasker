@@ -994,8 +994,7 @@ function wpqt_register_api_routes() {
                     $sessionService = new SessionService();
                     $sessionService->changeSessionStatus($data['id'], $data['status']);
                  
-                    
-                    return new WP_REST_Response((new ApiResponse(true, array(), ))->toArray(), 200);
+                    return new WP_REST_Response((new ApiResponse(true, array() ))->toArray(), 200);
                 }catch(Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
@@ -1014,6 +1013,35 @@ function wpqt_register_api_routes() {
                     'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                 ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'users/sessions/(?P<id>\d+)',
+        array(
+            'methods' => 'DELETE',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $sessionService = new SessionService();
+                    $sessionService->deleteSession($data['id']);
+                 
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                }catch(Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                )
             ),
         ),
     );
