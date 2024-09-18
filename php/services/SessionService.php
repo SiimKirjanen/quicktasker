@@ -62,19 +62,7 @@ class SessionService {
     public function createSession($userId, $userPageHash) {
         global $wpdb;
 
-        $result1 = $wpdb->delete(
-            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
-            array(
-                'user_id' => $userId,
-                'page_hash' => $userPageHash
-            )
-        );
-
-        if( $result1 === false ) {
-            throw new WPQTException('Failed to delete existing session');
-        }
-
-        $result2 = $wpdb->insert(
+        $result = $wpdb->insert(
             TABLE_WP_QUICK_TASKS_USER_SESSIONS,
             array(
                 'user_id' => $userId,
@@ -85,7 +73,7 @@ class SessionService {
             )
         );
 
-        if( $result2 === false ) {
+        if( $result === false ) {
             throw new WPQTException('Failed to create new session');
         }
         
@@ -94,24 +82,60 @@ class SessionService {
 
   
     /**
-     * Deletes a session from the database based on the provided session token.
+     * Deletes a session by marking it as inactive in the database.
      *
-     * @param string $sessionToken The token of the session to be deleted.
-     * @return bool True on successful deletion.
-     * @throws WPQTException If the session deletion fails.
+     * This function updates the `is_active` field to 0 for the session
+     * identified by the provided session token.
+     *
+     * @param string $sessionToken The token of the session to be marked as inactive.
+     * @return bool Returns true if the session was successfully marked as inactive.
+     * @throws WPQTException If the session could not be marked as inactive.
      */
     public function deleteSession($sessionToken) {
         global $wpdb;
 
-        $result = $wpdb->delete(
+        $result = $wpdb->update(
             TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            array(
+                'is_active' => 0
+            ),
             array(
                 'session_token' => $sessionToken
             )
         );
 
         if( $result === false ) {
-            throw new WPQTException('Failed to delete session', true);
+            throw new WPQTException('Failed to mark session as not active', true);
+        }
+
+        return true;
+    }
+
+    /**
+     * Changes the status of a user session.
+     *
+     * This function updates the 'is_active' status of a user session in the database.
+     *
+     * @param int $sessionId The ID of the session to update.
+     * @param bool $status The new status of the session (true for active, false for inactive).
+     * @return bool Returns true on success.
+     * @throws WPQTException If the update fails.
+     */
+    public function changeSessionStatus($sessionId, $status) {
+        global $wpdb;
+
+        $result = $wpdb->update(
+            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            array(
+                'is_active' => $status
+            ),
+            array(
+                'id' => $sessionId
+            )
+        );
+
+        if( $result === false ) {
+            throw new WPQTException('Failed to change session status', true);
         }
 
         return true;
@@ -126,7 +150,7 @@ class SessionService {
      */
     public function verifySessionToken($pageHash) {
         $sessionToken = $_COOKIE['wpqt-session-token-' . $pageHash];
-        $session = $this->sessionRepository->getUserSession($sessionToken);
+        $session = $this->sessionRepository->getActiveUserSession($sessionToken);
 
         if( $session === null ) {
             throw new WPQTException('Invalid session token', true);

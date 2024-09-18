@@ -27,7 +27,7 @@ function UserList() {
   }
 
   return (
-    <div className="wpqt-grid wpqt-grid-cols-3 wpqt-gap-2">
+    <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4">
       {users.filter(filterUsers).map((user) => {
         return <UserListItem key={user.id} user={user} />;
       })}

@@ -138,6 +138,7 @@ function wpqt_set_up_db() {
 			session_token varchar(255) NOT NULL,
 			user_id int(11) NOT NULL,
 			page_hash varchar(255) NOT NULL,
+			is_active tinyint(1) DEFAULT 1,
 			created_at_utc datetime NOT NULL COMMENT 'UTC',
 			expires_at_utc datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),

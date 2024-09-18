@@ -320,10 +320,28 @@ function deleteUserRequest(user: User): Promise<WPQTResponse> {
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  User session requests
+  ==================================================================================================================================================================================================================
+*/
+
 function getUserSessionsRequest(): Promise<WPQTResponse<ServerUserSession[]>> {
   return apiFetch({
     path: `/wpqt/v1/users/sessions`,
     method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+function changeUserSessionStatusRequest(
+  sessionId: string,
+  status: boolean,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/users/sessions/${sessionId}/status`,
+    method: "PATCH",
+    data: { status },
     headers: getCommonHeaders(),
   });
 }
@@ -354,4 +372,5 @@ export {
   assignTaskToUserRequest,
   removeTaskFromUserRequest,
   getUserSessionsRequest,
+  changeUserSessionStatusRequest,
 };

@@ -10,13 +10,14 @@ function UserSessions() {
   const { filterSessions } = useUserSessionsFilter();
   return (
     <div>
-      <div className="wpqt-mb-4 wpqt-grid wpqt-grid-cols-4 wpqt-font-bold">
+      <div className="wpqt-mb-4 wpqt-grid wpqt-grid-cols-5 wpqt-font-bold">
         <div>Session owner</div>
         <div>Created at</div>
         <div>Expires at</div>
+        <div>Status</div>
         <div>Actions</div>
       </div>
-      <div className="wpqt-grid wpqt-grid-cols-4 wpqt-items-center wpqt-gap-y-4">
+      <div className="wpqt-grid wpqt-grid-cols-5 wpqt-items-center wpqt-gap-y-4">
         {userSessions.filter(filterSessions).map((session) => (
           <UserSession key={session.id} session={session} />
         ))}

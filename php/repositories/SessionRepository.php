@@ -23,6 +23,23 @@ class SessionRepository{
             )
         );
     }
+
+    /**
+     * Retrieves the active user session based on the provided session token.
+     *
+     * @param string $sessionToken The session token used to identify the active user session.
+     * @return object|null The active user session object if found, null otherwise.
+     */
+    public function getActiveUserSession($sessionToken){
+        global $wpdb;
+
+        return $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " WHERE session_token = %s AND is_active = 1",
+                $sessionToken
+            )
+        );
+    }
     /**
      * Retrieves a user session by its ID.
      *
@@ -54,7 +71,7 @@ class SessionRepository{
         global $wpdb;
 
         return $wpdb->get_results(
-            "SELECT a.id, a.user_id, a.created_at_utc, a.expires_at_utc, b.name AS user_name, b.description AS user_description FROM " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " AS a
+            "SELECT a.id, a.user_id, a.created_at_utc, a.expires_at_utc, a.is_active, b.name AS user_name, b.description AS user_description FROM " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " AS a
             INNER JOIN " . TABLE_WP_QUICK_TASKS_USERS . " AS b 
             ON a.user_id = b.id"
         );

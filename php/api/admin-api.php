@@ -18,6 +18,7 @@ use WPQT\Stage\StageService;
 use WPQT\Permission\PermissionService;
 use WPQT\RequestValidation;
 use WPQT\Session\SessionRepository;
+use WPQT\Session\SessionService;
 
 function validate_numeric($param, $request, $key) {
     return is_numeric($param);
@@ -977,6 +978,41 @@ function wpqt_register_api_routes() {
                     'required' => true,
                     'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'users/sessions/(?P<id>\d+)/status',
+        array(
+            'methods' => 'PATCH',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $sessionService = new SessionService();
+                    $sessionService->changeSessionStatus($data['id'], $data['status']);
+                 
+                    
+                    return new WP_REST_Response((new ApiResponse(true, array(), ))->toArray(), 200);
+                }catch(Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'status' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                 ),
             ),
         ),

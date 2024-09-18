@@ -7707,6 +7707,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   archiveStageTasksRequest: () => (/* binding */ archiveStageTasksRequest),
 /* harmony export */   archiveTaskRequest: () => (/* binding */ archiveTaskRequest),
 /* harmony export */   assignTaskToUserRequest: () => (/* binding */ assignTaskToUserRequest),
+/* harmony export */   changeUserSessionStatusRequest: () => (/* binding */ changeUserSessionStatusRequest),
 /* harmony export */   changeUserStatusRequest: () => (/* binding */ changeUserStatusRequest),
 /* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
@@ -7994,10 +7995,25 @@ function deleteUserRequest(user) {
     headers: getCommonHeaders()
   });
 }
+/*
+  ==================================================================================================================================================================================================================
+  User session requests
+  ==================================================================================================================================================================================================================
+*/
 function getUserSessionsRequest() {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/users/sessions`,
     method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function changeUserSessionStatusRequest(sessionId, status) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/users/sessions/${sessionId}/status`,
+    method: "PATCH",
+    data: {
+      status
+    },
     headers: getCommonHeaders()
   });
 }
@@ -11497,7 +11513,7 @@ function UserList() {
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-grid wpqt-grid-cols-3 wpqt-gap-2",
+    className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4",
     children: users.filter(filterUsers).map(user => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_5__.UserListItem, {
         user: user
@@ -11522,10 +11538,69 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PowerIcon.js");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/UserSessionsContextProvider */ "./src/providers/UserSessionsContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
 
 function UserSession({
   session
 }) {
+  const {
+    usersSessionDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useContext)(_providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserSessionsContext);
+  const isActive = session.is_active;
+  const changeSessionStatus = status => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.changeUserSessionStatusRequest)(session.id, status);
+      usersSessionDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_5__.CHANGE_USER_SESSION_STATUS,
+        payload: {
+          sessionId: session.id,
+          status
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to change session status");
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -11538,8 +11613,16 @@ function UserSession({
       children: session.created_at_utc
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: session.expires_at_utc
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [isActive ? "On" : "Off", " "]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: "Actions"
+      children: isActive ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        className: "wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer",
+        onClick: () => changeSessionStatus(false)
+      }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        className: "wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer",
+        onClick: () => changeSessionStatus(true)
+      })
     })]
   });
 }
@@ -11581,7 +11664,7 @@ function UserSessions() {
   } = (0,_hooks_useUserSessionsFilter__WEBPACK_IMPORTED_MODULE_4__.useUserSessionsFilter)();
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "wpqt-mb-4 wpqt-grid wpqt-grid-cols-4 wpqt-font-bold",
+      className: "wpqt-mb-4 wpqt-grid wpqt-grid-cols-5 wpqt-font-bold",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: "Session owner"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -11589,10 +11672,12 @@ function UserSessions() {
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: "Expires at"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        children: "Status"
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: "Actions"
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-grid wpqt-grid-cols-4 wpqt-items-center wpqt-gap-y-4",
+      className: "wpqt-grid wpqt-grid-cols-5 wpqt-items-center wpqt-gap-y-4",
       children: userSessions.filter(filterSessions).map(session => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserSession__WEBPACK_IMPORTED_MODULE_3__.UserSession, {
         session: session
       }, session.id))
@@ -11816,6 +11901,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ADD_ASSIGNED_USER_TO_EDITING_TASK: () => (/* binding */ ADD_ASSIGNED_USER_TO_EDITING_TASK),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
+/* harmony export */   CHANGE_USER_SESSION_STATUS: () => (/* binding */ CHANGE_USER_SESSION_STATUS),
 /* harmony export */   CLOSE_ARCHIVE_TASK_MODAL: () => (/* binding */ CLOSE_ARCHIVE_TASK_MODAL),
 /* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
 /* harmony export */   CLOSE_NEW_TASK_MODAL: () => (/* binding */ CLOSE_NEW_TASK_MODAL),
@@ -11919,6 +12005,7 @@ const INIT_APP_STATE = "INIT_APP_STATE";
 //User sessions reducer
 const SET_USER_SESSIONS_SEARCH_VALUE = "SET_USER_SESSIONS_SEARCH_VALUE";
 const SET_USER_SESSIONS = "SET_USER_SESSIONS";
+const CHANGE_USER_SESSION_STATUS = "CHANGE_USER_SESSION_STATUS";
 
 
 /***/ }),
@@ -13621,6 +13708,18 @@ const reducer = (state, action) => {
           userSessions
         });
       }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.CHANGE_USER_SESSION_STATUS:
+      {
+        const {
+          sessionId,
+          status
+        } = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          userSessions: state.userSessions.map(session => session.id === sessionId ? Object.assign(Object.assign({}, session), {
+            is_active: status
+          }) : session)
+        });
+      }
     default:
       {
         return state;
@@ -13751,7 +13850,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   convertUserSessionFromServer: () => (/* binding */ convertUserSessionFromServer)
 /* harmony export */ });
-const convertUserSessionFromServer = user => Object.assign({}, user);
+const convertUserSessionFromServer = user => Object.assign(Object.assign({}, user), {
+  is_active: user.is_active === "1"
+});
 
 
 /***/ }),

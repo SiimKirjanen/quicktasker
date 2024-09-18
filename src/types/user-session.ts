@@ -7,7 +7,11 @@ type BaseUserSession = {
   expires_at_utc: string;
 };
 
-type UserSession = BaseUserSession;
-type ServerUserSession = BaseUserSession;
+type UserSession = BaseUserSession & {
+  is_active: boolean;
+};
+type ServerUserSession = BaseUserSession & {
+  is_active: string;
+};
 
 export type { UserSession, ServerUserSession };

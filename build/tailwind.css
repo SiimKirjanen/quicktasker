@@ -1062,12 +1062,12 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
-.wpqt-grid-cols-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
 .wpqt-grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.wpqt-grid-cols-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .wpqt-grid-cols-\[1fr_auto_1fr\] {
@@ -1114,24 +1114,8 @@
   gap: 24px;
 }
 
-.wpqt-gap-4 {
-  gap: 1rem;
-}
-
 .wpqt-gap-y-1 {
   row-gap: 0.25rem;
-}
-
-.wpqt-gap-y-2 {
-  row-gap: 0.5rem;
-}
-
-.wpqt-gap-y-3 {
-  row-gap: 0.75rem;
-}
-
-.wpqt-gap-y-5 {
-  row-gap: 1.25rem;
 }
 
 .wpqt-gap-y-4 {
