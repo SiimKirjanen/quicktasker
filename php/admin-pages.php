@@ -43,6 +43,15 @@ function wp_quick_taks_add_admin_menu() {
 
     add_submenu_page(
         'wp-quick-tasks',
+        'User sessions',
+        'User sessions',
+        'manage_options',
+        'wp-quick-tasks#/user-sessions',
+        'wp_quick_taks_generate_app_page'
+    );
+
+    add_submenu_page(
+        'wp-quick-tasks',
         'Archive',
         'Archive',
         'manage_options',

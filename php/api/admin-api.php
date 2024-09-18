@@ -17,6 +17,7 @@ use WPQT\Task\TaskService;
 use WPQT\Stage\StageService;
 use WPQT\Permission\PermissionService;
 use WPQT\RequestValidation;
+use WPQT\Session\SessionRepository;
 
 function validate_numeric($param, $request, $key) {
     return is_numeric($param);
@@ -978,6 +979,28 @@ function wpqt_register_api_routes() {
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
             ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'users/sessions',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $sessionsRepo = new SessionRepository();
+                    $userSessions = $sessionsRepo->getUserSessions();
+                    
+                    return new WP_REST_Response((new ApiResponse(true, array(), $userSessions))->toArray(), 200);
+                }catch(Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            }
         ),
     );
 }

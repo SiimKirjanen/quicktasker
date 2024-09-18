@@ -10,6 +10,7 @@ import { WPQTResponse } from "../types/response";
 import { LogFromServer } from "../types/log";
 import { WPQTCommentFromServer } from "../types/comment";
 import { ServerUser, User } from "../types/user";
+import { ServerUserSession } from "../types/user-session";
 
 function getCommonHeaders() {
   return {
@@ -319,6 +320,14 @@ function deleteUserRequest(user: User): Promise<WPQTResponse> {
   });
 }
 
+function getUserSessionsRequest(): Promise<WPQTResponse<ServerUserSession[]>> {
+  return apiFetch({
+    path: `/wpqt/v1/users/sessions`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getPipelineData,
   moveTaskRequest,
@@ -344,4 +353,5 @@ export {
   deleteUserRequest,
   assignTaskToUserRequest,
   removeTaskFromUserRequest,
+  getUserSessionsRequest,
 };

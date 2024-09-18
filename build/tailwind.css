@@ -1114,8 +1114,28 @@
   gap: 24px;
 }
 
+.wpqt-gap-4 {
+  gap: 1rem;
+}
+
 .wpqt-gap-y-1 {
   row-gap: 0.25rem;
+}
+
+.wpqt-gap-y-2 {
+  row-gap: 0.5rem;
+}
+
+.wpqt-gap-y-3 {
+  row-gap: 0.75rem;
+}
+
+.wpqt-gap-y-5 {
+  row-gap: 1.25rem;
+}
+
+.wpqt-gap-y-4 {
+  row-gap: 1rem;
 }
 
 .wpqt-self-start {

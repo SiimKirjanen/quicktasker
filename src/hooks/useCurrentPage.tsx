@@ -3,6 +3,7 @@ import { UsersPage } from "../pages/UsersPage";
 import { PipelinePage } from "../pages/PipelinePage";
 import { ArchivePage } from "../pages/ArchivePage";
 import { OverviewPage } from "../pages/OverviewPage";
+import { UserSessionsPage } from "../pages/UserSessionsPage";
 
 const useCurrentPage = () => {
   const [currentPage, setCurrentPage] = useState(getPageFromUrl());
@@ -38,6 +39,8 @@ const getPageFromUrl = () => {
         return <PipelinePage />;
       case "#/archive":
         return <ArchivePage />;
+      case "#/user-sessions":
+        return <UserSessionsPage />;
       default:
         return <OverviewPage />;
     }
@@ -60,6 +63,7 @@ const setSubMenuItemActive = () => {
     "#/users": "#/users",
     "#/boards": "#/boards",
     "#/archive": "#/archive",
+    "#/user-sessions": "#/user-sessions",
     default: "",
   };
 
