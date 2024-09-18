@@ -25,7 +25,7 @@ function LoginPage() {
       const response = await logInUserPageRequest(pageHash, password);
       await setSessionCookie(response.data);
       userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
       handleError(error);
     }
   };

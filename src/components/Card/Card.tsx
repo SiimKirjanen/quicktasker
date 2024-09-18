@@ -60,7 +60,12 @@ function WPQTCardDataItem({
       <div>{label}:</div>
       <div className={`${valueClassName}`}>
         {valueLink ? (
-          <a href={valueLink} target="_blank" className="wpqt-text-qtTextBlue">
+          <a
+            href={valueLink}
+            target="_blank"
+            className="wpqt-text-qtTextBlue"
+            rel="noreferrer"
+          >
             {value}
           </a>
         ) : (

@@ -5173,6 +5173,7 @@ function WPQTCardDataItem({
         href: valueLink,
         target: "_blank",
         className: "wpqt-text-qtTextBlue",
+        rel: "noreferrer",
         children: value
       }) : value
     })]
@@ -6647,7 +6648,7 @@ function UserTasks() {
         title: task.name,
         description: task.description,
         onClick: () => navigate(`/user-tasks/${task.task_hash}`)
-      });
+      }, task.id);
     })
   });
 }
@@ -7339,10 +7340,14 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Moves a task from one stage to another within a list of stages.
  *
- * @param stages - The list of stages.
- * @param droppableSource - The source stage and index of the task being moved.
- * @param droppableDestination - The destination stage and index where the task will be moved to.
- * @returns The updated list of stages after moving the task.
+ * @param stages                           - The list of stages.
+ * @param droppableSource                  - The source stage and index of the task being moved.
+ * @param droppableDestination             - The destination stage and index where the task will be moved to.
+ * @param droppableSource.index
+ * @param droppableSource.droppableId
+ * @param droppableDestination.index
+ * @param droppableDestination.droppableId
+ * @return The updated list of stages after moving the task.
  */
 const moveTask = (stages, droppableSource, droppableDestination) => {
   const stagesClone = [...stages];
@@ -7357,10 +7362,10 @@ const moveTask = (stages, droppableSource, droppableDestination) => {
 /**
  * Reorders a list of tasks after a task has been moved.
  *
- * @param list - The list of tasks.
+ * @param list       - The list of tasks.
  * @param startIndex - The index of the task being moved.
- * @param endIndex - The index where the task will be moved to.
- * @returns The updated list of tasks after reordering.
+ * @param endIndex   - The index where the task will be moved to.
+ * @return The updated list of tasks after reordering.
  */
 const reorderTask = (list, startIndex, endIndex) => {
   const result = [...list];
@@ -7371,7 +7376,7 @@ const reorderTask = (list, startIndex, endIndex) => {
 /**
  * Converts a task object received from the server to a Task object.
  * @param task - The task object received from the server.
- * @returns The converted Task object.
+ * @return The converted Task object.
  */
 const convertTaskFromServer = task => Object.assign(Object.assign({}, task), {
   task_order: Number(task.task_order),

@@ -1,7 +1,7 @@
 import { Button } from "@headlessui/react";
 
 type Props = {
-  onClick: (() => {}) | (() => void);
+  onClick: () => void;
   btnText: string;
 };
 

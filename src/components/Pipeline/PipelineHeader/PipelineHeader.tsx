@@ -1,11 +1,10 @@
 import { useContext } from "@wordpress/element";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { PipelineSelectionDropdown } from "../../Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_EDIT_PIPELINE_MODAL } from "../../../constants";
 import { LoadingOval } from "../../Loading/Loading";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 function PipelineHeader() {
   const {

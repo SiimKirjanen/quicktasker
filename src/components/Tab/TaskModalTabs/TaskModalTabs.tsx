@@ -13,8 +13,8 @@ function TaskModalTabs({ task }: Props) {
     <WPQTTabs
       tabs={tabs}
       tabsContent={[
-        <CommentsTabContent taskId={task.id} />,
-        <LogsTabContent taskId={task.id} />,
+        <CommentsTabContent taskId={task.id} key={task.id} />,
+        <LogsTabContent taskId={task.id} key={task.id} />,
       ]}
     />
   );

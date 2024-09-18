@@ -6,13 +6,19 @@
   "scripts": {
     "build": "wp-scripts build && npx tailwindcss -i src/tailwind.css -o build/tailwind.css",
     "start": "concurrently \"wp-scripts start\" \"npx tailwindcss -i src/tailwind.css -o build/tailwind.css --watch\"",
-    "format": "prettier --write \"src/**/*.js\" \"src/**/*.ts\" \"src/**/*.tsx\""
+    "lint": "wp-scripts lint-js src",
+    "lint:fix": "wp-scripts lint-js src --fix",
+    "format": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\""
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@wordpress/scripts": "^28.3.0",
     "concurrently": "^8.2.2",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^3.4.6",

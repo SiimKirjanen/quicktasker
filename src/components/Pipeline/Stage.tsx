@@ -38,7 +38,7 @@ function Stage({ stage }: Props) {
       </div>
 
       <Droppable droppableId={stage.id}>
-        {(provided, snapshot) => (
+        {(provided) => (
           <div
             ref={provided.innerRef}
             className="wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto wpqt-overflow-x-hidden"

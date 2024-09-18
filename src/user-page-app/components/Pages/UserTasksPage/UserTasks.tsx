@@ -14,6 +14,7 @@ function UserTasks() {
       {assignedTasks.map((task) => {
         return (
           <WPQTCard
+            key={task.id}
             className="wpqt-cursor-pointer"
             title={task.name}
             description={task.description}

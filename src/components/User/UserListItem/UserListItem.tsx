@@ -1,9 +1,7 @@
-import { useContext } from "@wordpress/element";
 import { User } from "../../../types/user";
 import { formatDate } from "../../../utils/date";
 import { WPQTCard, WPQTCardDataItem } from "../../Card/Card";
 import { UserDropdown } from "../../Dropdown/UserDropdown/UserDropdown";
-import { AppContext } from "../../../providers/AppContextProvider";
 import { usePageLinks } from "../../../hooks/usePageLinks";
 
 type Props = {

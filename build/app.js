@@ -8184,6 +8184,7 @@ function WPQTCardDataItem({
         href: valueLink,
         target: "_blank",
         className: "wpqt-text-qtTextBlue",
+        rel: "noreferrer",
         children: value
       }) : value
     })]
@@ -10557,11 +10558,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
 /* harmony import */ var _Dropdown_PipelineSelectionDropdown_PipelineSelectionDropdown__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown */ "./src/components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown.tsx");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowPathIcon.js");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowPathIcon.js");
-
 
 
 
@@ -10676,7 +10676,7 @@ function Stage({
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
       droppableId: stage.id,
-      children: (provided, snapshot) => {
+      children: provided => {
         var _a;
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
           ref: provided.innerRef,
@@ -10741,7 +10741,7 @@ function Task({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_6__.Draggable, {
     draggableId: task.id,
     index: index,
-    children: (provided, snapshot) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({
+    children: provided => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({
       ref: provided.innerRef
     }, provided.draggableProps, provided.dragHandleProps, {
       className: "wpqt-relative wpqt-mx-3 wpqt-mb-2 wpqt-flex !wpqt-cursor-pointer wpqt-flex-col wpqt-gap-1 wpqt-rounded wpqt-border wpqt-border-gray-200 wpqt-bg-white wpqt-p-3 wpqt-shadow",
@@ -11048,9 +11048,9 @@ function TaskModalTabs({
     tabs: tabs,
     tabsContent: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsTabContent, {
       taskId: task.id
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogsTabContent__WEBPACK_IMPORTED_MODULE_3__.LogsTabContent, {
+    }, task.id), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogsTabContent__WEBPACK_IMPORTED_MODULE_3__.LogsTabContent, {
       taskId: task.id
-    })]
+    }, task.id)]
   });
 }
 
@@ -11466,11 +11466,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 
 
 
@@ -11478,20 +11476,15 @@ __webpack_require__.r(__webpack_exports__);
 
 function UsersInfo() {
   const {
-    state: {
-      users
-    }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserContext);
-  const {
     modalDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const openCreateUserModal = () => {
     modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_4__.OPEN_NEW_USER_MODAL
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.OPEN_NEW_USER_MODAL
     });
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTButton, {
       onClick: openCreateUserModal,
       btnText: "Add user"
     })
@@ -11885,7 +11878,7 @@ const setSubMenuItemActive = () => {
     "#/archive": "#/archive",
     default: ""
   };
-  const targetHash = hashMap[hash] !== undefined ? hashMap[hash] : hashMap["default"];
+  const targetHash = hashMap[hash] !== undefined ? hashMap[hash] : hashMap.default;
   submenuItems.forEach(item => {
     const link = item.querySelector("a");
     if (link && link.getAttribute("href") && link.getAttribute("href") === `admin.php?page=wp-quick-tasks${targetHash}`) {
@@ -13331,10 +13324,14 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Moves a task from one stage to another within a list of stages.
  *
- * @param stages - The list of stages.
- * @param droppableSource - The source stage and index of the task being moved.
- * @param droppableDestination - The destination stage and index where the task will be moved to.
- * @returns The updated list of stages after moving the task.
+ * @param stages                           - The list of stages.
+ * @param droppableSource                  - The source stage and index of the task being moved.
+ * @param droppableDestination             - The destination stage and index where the task will be moved to.
+ * @param droppableSource.index
+ * @param droppableSource.droppableId
+ * @param droppableDestination.index
+ * @param droppableDestination.droppableId
+ * @return The updated list of stages after moving the task.
  */
 const moveTask = (stages, droppableSource, droppableDestination) => {
   const stagesClone = [...stages];
@@ -13349,10 +13346,10 @@ const moveTask = (stages, droppableSource, droppableDestination) => {
 /**
  * Reorders a list of tasks after a task has been moved.
  *
- * @param list - The list of tasks.
+ * @param list       - The list of tasks.
  * @param startIndex - The index of the task being moved.
- * @param endIndex - The index where the task will be moved to.
- * @returns The updated list of tasks after reordering.
+ * @param endIndex   - The index where the task will be moved to.
+ * @return The updated list of tasks after reordering.
  */
 const reorderTask = (list, startIndex, endIndex) => {
   const result = [...list];
@@ -13363,7 +13360,7 @@ const reorderTask = (list, startIndex, endIndex) => {
 /**
  * Converts a task object received from the server to a Task object.
  * @param task - The task object received from the server.
- * @returns The converted Task object.
+ * @return The converted Task object.
  */
 const convertTaskFromServer = task => Object.assign(Object.assign({}, task), {
   task_order: Number(task.task_order),

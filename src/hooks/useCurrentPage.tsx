@@ -64,7 +64,7 @@ const setSubMenuItemActive = () => {
   };
 
   const targetHash =
-    hashMap[hash] !== undefined ? hashMap[hash] : hashMap["default"];
+    hashMap[hash] !== undefined ? hashMap[hash] : hashMap.default;
   submenuItems.forEach((item) => {
     const link = item.querySelector("a");
 

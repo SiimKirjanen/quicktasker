@@ -1,13 +1,9 @@
 import { useContext } from "@wordpress/element";
-import { UserContext } from "../../../providers/UserContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_NEW_USER_MODAL } from "../../../constants";
 import { WPQTButton } from "../../common/Button/Button";
 
 function UsersInfo() {
-  const {
-    state: { users },
-  } = useContext(UserContext);
   const { modalDispatch } = useContext(ModalContext);
 
   const openCreateUserModal = () => {
