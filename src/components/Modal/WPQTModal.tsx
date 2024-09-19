@@ -14,13 +14,20 @@ type Props = {
   children: React.ReactNode;
   modalOpen: boolean;
   closeModal: () => void;
+  size?: "sm" | "md" | "lg";
 };
-function WPQTModal({ modalOpen, closeModal, children }: Props) {
+function WPQTModal({ modalOpen, closeModal, children, size = "sm" }: Props) {
+  const sizeClasses = {
+    sm: "wpqt-max-w-sm",
+    md: "wpqt-max-w-lg",
+    lg: "wpqt-max-w-4xl",
+  };
+
   return (
     <Dialog
       open={modalOpen}
       as="div"
-      className="wpqt-relative wpqt-z-10 focus:wpqt-outline-none"
+      className="wpqt-relative wpqt-z-9999 focus:wpqt-outline-none"
       onClose={closeModal}
     >
       <DialogBackdrop className="wpqt-fixed wpqt-inset-0 wpqt-bg-black/40" />
@@ -28,7 +35,7 @@ function WPQTModal({ modalOpen, closeModal, children }: Props) {
         <div className="wpqt-flex wpqt-min-h-full wpqt-items-center wpqt-justify-center">
           <DialogPanel
             transition
-            className="data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-relative wpqt-w-full wpqt-max-w-md wpqt-rounded-xl wpqt-bg-white wpqt-p-6 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0"
+            className={`data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-relative wpqt-w-4/5 ${sizeClasses[size]} wpqt-rounded-xl wpqt-bg-white wpqt-p-6 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0`}
           >
             <div
               className="wpqt-absolute wpqt-right-[-20px] wpqt-top-[-20px] wpqt-flex wpqt-h-[40px] wpqt-w-[40px] wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-rounded-full wpqt-border wpqt-border-solid wpqt-bg-white wpqt-text-qtBorder"

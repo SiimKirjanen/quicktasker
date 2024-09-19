@@ -16,6 +16,9 @@ module.exports = {
       fontFamily: {
         inter: ["Inter", "sans-serif"],
       },
+      zIndex: {
+        9999: "9999",
+      },
     },
   },
   plugins: [],

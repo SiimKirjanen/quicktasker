@@ -113,6 +113,7 @@ function wpqt_set_up_db() {
             text text NOT NULL,
 			type_id int(11) NOT NULL,
 			type ENUM('task', 'user') NOT NULL,
+			is_private tinyint(1) DEFAULT 1,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";

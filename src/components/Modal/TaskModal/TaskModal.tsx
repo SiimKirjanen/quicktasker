@@ -69,7 +69,7 @@ function TaskModal() {
   };
 
   return (
-    <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal}>
+    <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal} size="lg">
       <TaskModalContent
         ref={modalContentRef}
         addTask={addTask}

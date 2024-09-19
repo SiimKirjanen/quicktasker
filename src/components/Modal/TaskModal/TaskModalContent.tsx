@@ -58,7 +58,6 @@ const TaskModalContent = forwardRef(
           })
         : addTask(taskName, taskDescription, freeForAllTask);
     };
-
     const clearContent = () => {
       setTaskName("");
       setTaskDescription("");
@@ -73,53 +72,65 @@ const TaskModalContent = forwardRef(
         <WPQTModalTitle>
           {editingTask ? "Edit task" : "Add task"}
         </WPQTModalTitle>
-        <WPQTModalFieldSet>
-          <WPQTModalField label="Name">
-            <WPQTInput
-              isAutoFocus={true}
-              value={taskName}
-              onChange={(newValue: string) => setTaskName(newValue)}
-            />
-          </WPQTModalField>
 
-          <WPQTModalField label="Description">
-            <WPQTTextarea
-              rowsCount={3}
-              value={taskDescription}
-              onChange={(newValue: string) => setTaskDescription(newValue)}
-            />
-          </WPQTModalField>
+        <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[auto_1fr] lg:wpqt-grid-cols-[auto_1fr_auto]">
+          <div>
+            <WPQTModalFieldSet>
+              <WPQTModalField label="Name">
+                <WPQTInput
+                  isAutoFocus={true}
+                  value={taskName}
+                  onChange={(newValue: string) => setTaskName(newValue)}
+                />
+              </WPQTModalField>
 
-          {taskToEdit && (
-            <WPQTModalField label="Assigned users">
-              <UserAssignementDropdown
-                task={taskToEdit}
-                onUserAdd={(user) => {
-                  modalDispatch({
-                    type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
-                    payload: user,
-                  });
-                }}
-                onUserDelete={(user) => {
-                  modalDispatch({
-                    type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
-                    payload: user,
-                  });
-                }}
-              />
-            </WPQTModalField>
+              <WPQTModalField label="Description">
+                <WPQTTextarea
+                  rowsCount={3}
+                  value={taskDescription}
+                  onChange={(newValue: string) => setTaskDescription(newValue)}
+                />
+              </WPQTModalField>
+
+              {taskToEdit && (
+                <WPQTModalField label="Assigned users">
+                  <UserAssignementDropdown
+                    task={taskToEdit}
+                    onUserAdd={(user) => {
+                      modalDispatch({
+                        type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
+                        payload: user,
+                      });
+                    }}
+                    onUserDelete={(user) => {
+                      modalDispatch({
+                        type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+                        payload: user,
+                      });
+                    }}
+                  />
+                </WPQTModalField>
+              )}
+
+              <WPQTModalField label="Free for all task">
+                <Toggle
+                  checked={freeForAllTask}
+                  handleChange={setFreeForAllTask}
+                />
+              </WPQTModalField>
+            </WPQTModalFieldSet>
+          </div>
+
+          {editingTask && (
+            <div>
+              <div>
+                <TaskModalTabs task={taskToEdit} />
+              </div>
+            </div>
           )}
 
-          <WPQTModalField label="Free for all task">
-            <Toggle checked={freeForAllTask} handleChange={setFreeForAllTask} />
-          </WPQTModalField>
-        </WPQTModalFieldSet>
-
-        {editingTask && (
-          <div>
-            <TaskModalTabs task={taskToEdit} />
-          </div>
-        )}
+          {editingTask && <div>Actions</div>}
+        </div>
         <WPQTModalFooter
           onSave={saveTask}
           saveBtnText={

@@ -1,18 +1,29 @@
-import { getTaskLogs } from "../../../api/api";
+import { toast } from "react-toastify";
+import { addLogRequest, getTaskLogs } from "../../../api/api";
 import { Log } from "../../../types/log";
-import { TabContent } from "./TabContent";
+import { TabContent, TabContentItem } from "./TabContent";
 
 type Props = {
   taskId: string;
 };
 
 function LogsTabContent({ taskId }: Props) {
+  const addLog = async (text: string) => {
+    try {
+      await addLogRequest(taskId, "task", text);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add log");
+    }
+  };
   return (
     <TabContent<Log>
       taskId={taskId}
       fetchData={getTaskLogs}
-      renderItem={(log: Log) => <div key={log.id}>{log.text}</div>}
+      onAdd={addLog}
+      renderItem={(log: Log) => <TabContentItem item={log} />}
       noDataMessage="No logs available"
+      explanation="Logs can be seen only by WordPress admins"
     />
   );
 }

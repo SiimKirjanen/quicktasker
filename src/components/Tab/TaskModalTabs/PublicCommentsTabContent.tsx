@@ -7,7 +7,7 @@ type Props = {
   taskId: string;
 };
 
-function CommentsTabContent({ taskId }: Props) {
+function PublicCommentsTabContent({ taskId }: Props) {
   const addComment = async (newEntry: string) => {
     try {
       await addTaskCommentRequest(taskId, newEntry);
@@ -24,9 +24,9 @@ function CommentsTabContent({ taskId }: Props) {
       onAdd={addComment}
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
       noDataMessage="No comments available"
-      explanation="Comments that can be added and viewed by WordPress admins."
+      explanation="Comments that can be added and viewed by both WordPress admins and QuickTasker users."
     />
   );
 }
 
-export { CommentsTabContent };
+export { PublicCommentsTabContent };

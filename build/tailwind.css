@@ -873,6 +873,10 @@
   z-index: 20;
 }
 
+.wpqt-z-9999 {
+  z-index: 9999;
+}
+
 .wpqt-order-1 {
   order: 1;
 }
@@ -888,6 +892,11 @@
 .wpqt-mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
+}
+
+.wpqt-my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .\!wpqt-mb-0 {
@@ -908,6 +917,10 @@
 
 .wpqt-mb-4 {
   margin-bottom: 1rem;
+}
+
+.wpqt-mb-6 {
+  margin-bottom: 1.5rem;
 }
 
 .wpqt-ml-auto {
@@ -998,6 +1011,10 @@
   min-height: 100%;
 }
 
+.wpqt-w-4\/5 {
+  width: 80%;
+}
+
 .wpqt-w-\[320px\] {
   width: 320px;
 }
@@ -1018,8 +1035,16 @@
   width: 100vw;
 }
 
-.wpqt-max-w-md {
-  max-width: 28rem;
+.wpqt-max-w-4xl {
+  max-width: 56rem;
+}
+
+.wpqt-max-w-lg {
+  max-width: 32rem;
+}
+
+.wpqt-max-w-sm {
+  max-width: 24rem;
 }
 
 .wpqt-flex-1 {
@@ -1074,12 +1099,20 @@
   grid-template-columns: 1fr auto 1fr;
 }
 
+.wpqt-grid-cols-\[auto_1fr_auto\] {
+  grid-template-columns: auto 1fr auto;
+}
+
 .wpqt-flex-col {
   flex-direction: column;
 }
 
 .wpqt-flex-wrap {
   flex-wrap: wrap;
+}
+
+.wpqt-place-items-center {
+  place-items: center;
 }
 
 .wpqt-items-center {
@@ -1110,12 +1143,16 @@
   gap: 0.75rem;
 }
 
-.wpqt-gap-\[24px\] {
-  gap: 24px;
-}
-
 .wpqt-gap-4 {
   gap: 1rem;
+}
+
+.wpqt-gap-7 {
+  gap: 1.75rem;
+}
+
+.wpqt-gap-\[24px\] {
+  gap: 24px;
 }
 
 .wpqt-gap-y-1 {
@@ -1279,6 +1316,10 @@
   padding-bottom: 1rem;
 }
 
+.wpqt-pb-3 {
+  padding-bottom: 0.75rem;
+}
+
 .wpqt-pr-4 {
   padding-right: 1rem;
 }
@@ -1407,16 +1448,6 @@
 .wpqt-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.wpqt-text-green-500 {
-  --tw-text-opacity: 1;
-  color: rgb(34 197 94 / var(--tw-text-opacity));
-}
-
-.wpqt-text-red-500 {
-  --tw-text-opacity: 1;
-  color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
 .wpqt-line-through {
@@ -1618,6 +1649,12 @@
   }
 }
 
+@media (min-width: 768px) {
+  .md\:wpqt-grid-cols-\[auto_1fr\] {
+    grid-template-columns: auto 1fr;
+  }
+}
+
 @media (min-width: 1024px) {
   .lg\:wpqt-order-1 {
     order: 1;
@@ -1629,6 +1666,10 @@
 
   .lg\:wpqt-grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .lg\:wpqt-grid-cols-\[auto_1fr_auto\] {
+    grid-template-columns: auto 1fr auto;
   }
 }
 
