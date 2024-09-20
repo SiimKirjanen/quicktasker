@@ -7,10 +7,10 @@ import { Log } from "../../../types/log";
 
 type Props<T> = {
   taskId: string;
-  fetchData: (taskId: string) => Promise<{ data: T[] }>;
+  fetchData: () => Promise<T[] | undefined>;
   renderItem: (item: T) => JSX.Element;
   noDataMessage: string;
-  onAdd?: (newEntry: string) => void;
+  onAdd: (text: string) => Promise<T | undefined>;
   explanation?: string;
 };
 
@@ -19,8 +19,8 @@ function TabContent<T>({
   fetchData,
   renderItem,
   noDataMessage,
-  onAdd = () => {},
   explanation,
+  onAdd,
 }: Props<T>) {
   const [data, setData] = useState<T[] | null>(null);
   const [newEntry, setNewEntry] = useState("");
@@ -30,13 +30,18 @@ function TabContent<T>({
   }, [taskId]);
 
   const loadData = async () => {
-    const response = await fetchData(taskId);
-    setData(response.data);
+    const data = await fetchData();
+    if (data) {
+      setData(data);
+    }
   };
 
-  const addEntry = () => {
-    onAdd(newEntry);
-    setNewEntry("");
+  const addEntry = async () => {
+    const entry = await onAdd(newEntry);
+    if (entry) {
+      setData((prevData) => (prevData ? [entry, ...prevData] : [entry]));
+      setNewEntry("");
+    }
   };
 
   if (data === null) {
@@ -61,12 +66,20 @@ function TabContent<T>({
         </div>
       )}
       <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center">
-        <WPQTTextarea
-          rowsCount={3}
-          value={newEntry}
-          onChange={(text) => setNewEntry(text)}
-        />
-        <WPQTButton btnText="Add" onClick={addEntry} />
+        <div>
+          <WPQTTextarea
+            rowsCount={3}
+            value={newEntry}
+            onChange={(text) => setNewEntry(text)}
+          />
+          <div className="wpqt-ml-auto wpqt-flex">
+            <WPQTButton
+              btnText="Add"
+              onClick={addEntry}
+              className="wpqt-ml-auto"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

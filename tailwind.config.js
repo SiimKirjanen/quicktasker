@@ -13,6 +13,9 @@ module.exports = {
       height: {
         "screen-minus-top-bar": "calc(100vh - 32px)",
       },
+      maxHeight: {
+        "70p": "70%",
+      },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
       },

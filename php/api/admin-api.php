@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Response\ApiResponse;
 use WPQT\Log\LogRepository;
 use WPQT\Comment\CommentRepository;
+use WPQT\Comment\CommentService;
 use WPQT\User\UserRepositry;
 use WPQT\User\UserService;
 use WPQT\Nonce\NonceService;
@@ -248,35 +249,6 @@ function wpqt_register_api_routes() {
               
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
-                } catch (Exception $e) {
-                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                }
-            },
-            'permission_callback' => function() {
-                return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            },
-            'args' => array(
-                'id' => array(
-                    'required' => true,
-                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
-                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
-                ),
-            ),
-        ),
-    );
-
-    register_rest_route(
-        'wpqt/v1',
-        'tasks/(?P<id>\d+)/comments',
-        array(
-            'methods' => 'GET',
-            'callback' => function( $data ) {
-                try {
-                    WPQTverifyApiNonce($data);
-                    $commentRepo = new CommentRepository();
-                    $taskComments = $commentRepo->getTaskComments($data['id']);
-              
-                    return new WP_REST_Response((new ApiResponse(true, array(), $taskComments))->toArray(), 200);
                 } catch (Exception $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
@@ -1119,5 +1091,88 @@ function wpqt_register_api_routes() {
     Comments endpoints
     ==================================================================================================================================================================================================================
     */
+
+    register_rest_route(
+        'wpqt/v1',
+        'comments',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $commentRepo = new CommentRepository();
+                    $comments = $commentRepo->getComments( $data->get_param('typeId'), $data->get_param('type'), $data->get_param('isPrivate') );
+              
+                    return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'typeId' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'type' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'isPrivate' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'comments',
+        array(
+            'methods' => 'POST',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $commentService = new CommentService();
+                    $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment']);
+              
+                    return new WP_REST_Response((new ApiResponse(true, array(), $newComemnt))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'comment' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'typeId' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'type' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'isPrivate' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                ),
+            ),
+        ),
+    );
 }
 

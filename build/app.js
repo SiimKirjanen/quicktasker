@@ -7703,8 +7703,8 @@ function App() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addCommentRequest: () => (/* binding */ addCommentRequest),
 /* harmony export */   addLogRequest: () => (/* binding */ addLogRequest),
-/* harmony export */   addTaskCommentRequest: () => (/* binding */ addTaskCommentRequest),
 /* harmony export */   archiveStageTasksRequest: () => (/* binding */ archiveStageTasksRequest),
 /* harmony export */   archiveTaskRequest: () => (/* binding */ archiveTaskRequest),
 /* harmony export */   assignTaskToUserRequest: () => (/* binding */ assignTaskToUserRequest),
@@ -7723,8 +7723,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editTaskRequest: () => (/* binding */ editTaskRequest),
 /* harmony export */   editUserRequest: () => (/* binding */ editUserRequest),
 /* harmony export */   getArchivedTasksRequest: () => (/* binding */ getArchivedTasksRequest),
+/* harmony export */   getComments: () => (/* binding */ getComments),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
-/* harmony export */   getTaskComments: () => (/* binding */ getTaskComments),
 /* harmony export */   getTaskLogs: () => (/* binding */ getTaskLogs),
 /* harmony export */   getUserSessionsRequest: () => (/* binding */ getUserSessionsRequest),
 /* harmony export */   moveStageRequest: () => (/* binding */ moveStageRequest),
@@ -7851,18 +7851,26 @@ function getArchivedTasksRequest() {
   Comment requests
   ==================================================================================================================================================================================================================
 */
-function getTaskComments(taskId) {
+function getComments(typeId, type, isPrivate) {
+  const queryParams = new URLSearchParams({
+    typeId,
+    type,
+    isPrivate: isPrivate.toString()
+  }).toString();
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
-    path: `/wpqt/v1/tasks/${taskId}/comments`,
+    path: `/wpqt/v1/comments?${queryParams}`,
     method: "GET",
     headers: getCommonHeaders()
   });
 }
-function addTaskCommentRequest(taskId, comment) {
+function addCommentRequest(typeId, type, isPrivate, comment) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
-    path: `/wpqt/v1/tasks/${taskId}/comments`,
+    path: `/wpqt/v1/comments`,
     data: {
-      comment
+      comment,
+      typeId,
+      type,
+      isPrivate
     },
     method: "POST",
     headers: getCommonHeaders()
@@ -10997,6 +11005,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _TabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TabContent */ "./src/components/Tab/TaskModalTabs/TabContent.tsx");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../types/enums */ "./src/types/enums.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11028,20 +11037,31 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function CommentsTabContent({
   taskId
 }) {
   const addComment = newEntry => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addTaskCommentRequest)(taskId, newEntry);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addCommentRequest)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, true, newEntry);
+      return response.data;
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add comment");
     }
   });
+  const fetchPrivateComments = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getComments)(taskId, "task", true);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get comment");
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContent, {
     taskId: taskId,
-    fetchData: _api_api__WEBPACK_IMPORTED_MODULE_2__.getTaskComments,
+    fetchData: fetchPrivateComments,
     onAdd: addComment,
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContentItem, {
       item: comment
@@ -11070,6 +11090,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _TabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TabContent */ "./src/components/Tab/TaskModalTabs/TabContent.tsx");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../types/enums */ "./src/types/enums.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11101,20 +11122,31 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function LogsTabContent({
   taskId
 }) {
   const addLog = text => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addLogRequest)(taskId, "task", text);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addLogRequest)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, text);
+      return response.data;
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add log");
     }
   });
+  const fetchLogs = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getTaskLogs)(taskId);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get log");
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContent, {
     taskId: taskId,
-    fetchData: _api_api__WEBPACK_IMPORTED_MODULE_2__.getTaskLogs,
+    fetchData: fetchLogs,
     onAdd: addLog,
     renderItem: log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContentItem, {
       item: log
@@ -11143,6 +11175,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _TabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TabContent */ "./src/components/Tab/TaskModalTabs/TabContent.tsx");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../types/enums */ "./src/types/enums.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11174,20 +11207,31 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function PublicCommentsTabContent({
   taskId
 }) {
   const addComment = newEntry => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addTaskCommentRequest)(taskId, newEntry);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addCommentRequest)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, false, newEntry);
+      return response.data;
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add comment");
     }
   });
+  const fetchComments = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getComments)(taskId, "task", false);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get comment");
+    }
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContent, {
     taskId: taskId,
-    fetchData: _api_api__WEBPACK_IMPORTED_MODULE_2__.getTaskComments,
+    fetchData: fetchComments,
     onAdd: addComment,
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContentItem, {
       item: comment
@@ -11256,8 +11300,8 @@ function TabContent({
   fetchData,
   renderItem,
   noDataMessage,
-  onAdd = () => {},
-  explanation
+  explanation,
+  onAdd
 }) {
   const [data, setData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [newEntry, setNewEntry] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
@@ -11265,13 +11309,18 @@ function TabContent({
     loadData();
   }, [taskId]);
   const loadData = () => __awaiter(this, void 0, void 0, function* () {
-    const response = yield fetchData(taskId);
-    setData(response.data);
+    const data = yield fetchData();
+    if (data) {
+      setData(data);
+    }
   });
-  const addEntry = () => {
-    onAdd(newEntry);
-    setNewEntry("");
-  };
+  const addEntry = () => __awaiter(this, void 0, void 0, function* () {
+    const entry = yield onAdd(newEntry);
+    if (entry) {
+      setData(prevData => prevData ? [entry, ...prevData] : [entry]);
+      setNewEntry("");
+    }
+  });
   if (data === null) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
@@ -11291,16 +11340,22 @@ function TabContent({
     }), data.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-my-5 wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-place-items-center wpqt-gap-4",
       children: data.map(item => renderItem(item))
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__.WPQTTextarea, {
-        rowsCount: 3,
-        value: newEntry,
-        onChange: text => setNewEntry(text)
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTButton, {
-        btnText: "Add",
-        onClick: addEntry
-      })]
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__.WPQTTextarea, {
+          rowsCount: 3,
+          value: newEntry,
+          onChange: text => setNewEntry(text)
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-ml-auto wpqt-flex",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTButton, {
+            btnText: "Add",
+            onClick: addEntry,
+            className: "wpqt-ml-auto"
+          })
+        })]
+      })
     })]
   });
 }
@@ -11995,10 +12050,11 @@ __webpack_require__.r(__webpack_exports__);
 
 function WPQTButton({
   onClick,
-  btnText
+  btnText,
+  className
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    className: "wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600",
+    className: `wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`,
     onClick: onClick,
     children: btnText
   });
@@ -13981,6 +14037,26 @@ const reducer = (state, action) => {
       }
   }
 };
+
+
+/***/ }),
+
+/***/ "./src/types/enums.tsx":
+/*!*****************************!*\
+  !*** ./src/types/enums.tsx ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WPQTTypes: () => (/* binding */ WPQTTypes)
+/* harmony export */ });
+var WPQTTypes;
+(function (WPQTTypes) {
+  WPQTTypes["Task"] = "task";
+  WPQTTypes["User"] = "user";
+})(WPQTTypes || (WPQTTypes = {}));
 
 
 /***/ }),

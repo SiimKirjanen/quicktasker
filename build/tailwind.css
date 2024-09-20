@@ -1003,8 +1003,16 @@
   height: calc(100vh - 32px);
 }
 
+.wpqt-max-h-\[300px\] {
+  max-height: 300px;
+}
+
 .wpqt-max-h-full {
   max-height: 100%;
+}
+
+.wpqt-max-h-70p {
+  max-height: 70%;
 }
 
 .wpqt-min-h-full {

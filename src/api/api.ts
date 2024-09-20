@@ -155,23 +155,32 @@ function getArchivedTasksRequest(): Promise<
   ==================================================================================================================================================================================================================
 */
 
-function getTaskComments(
-  taskId: string,
+function getComments(
+  typeId: string,
+  type: string,
+  isPrivate: boolean,
 ): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+  const queryParams = new URLSearchParams({
+    typeId,
+    type,
+    isPrivate: isPrivate.toString(),
+  }).toString();
   return apiFetch({
-    path: `/wpqt/v1/tasks/${taskId}/comments`,
+    path: `/wpqt/v1/comments?${queryParams}`,
     method: "GET",
     headers: getCommonHeaders(),
   });
 }
 
-function addTaskCommentRequest(
-  taskId: string,
+function addCommentRequest(
+  typeId: string,
+  type: string,
+  isPrivate: boolean,
   comment: string,
-): Promise<WPQTResponse> {
+): Promise<WPQTResponse<WPQTCommentFromServer>> {
   return apiFetch({
-    path: `/wpqt/v1/tasks/${taskId}/comments`,
-    data: { comment },
+    path: `/wpqt/v1/comments`,
+    data: { comment, typeId, type, isPrivate },
     method: "POST",
     headers: getCommonHeaders(),
   });
@@ -383,9 +392,9 @@ export {
   archiveTaskRequest,
   archiveStageTasksRequest,
   getArchivedTasksRequest,
-  addTaskCommentRequest,
+  addCommentRequest,
   getTaskLogs,
-  getTaskComments,
+  getComments,
   createUserRequest,
   editUserRequest,
   changeUserStatusRequest,
