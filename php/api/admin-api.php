@@ -328,9 +328,7 @@ function wpqt_register_api_routes() {
                     
                     $newTask = $taskService->createTask( $data['stageId'], array(
                         "name" => $data['name'],
-                        "description" => $data['description'],
                         "pipelineId" => $data['pipelineId'],
-                        "freeForAll" => $data['freeForAll'],
                     ) );
                     $wpdb->query('COMMIT');
 
@@ -355,20 +353,10 @@ function wpqt_register_api_routes() {
                     'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                 ),
-                'description' => array(
-                    'required' => false,
-                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
-                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
-                ),
                 'pipelineId' => array(
                     'required' => true,
                     'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
-                ),
-                'freeForAll' => array(
-                    'required' => true,
-                    'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
-                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                 ),
             ),
         ),

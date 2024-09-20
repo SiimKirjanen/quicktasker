@@ -1,5 +1,4 @@
 import {
-  OPEN_NEW_TASK_MODAL,
   OPEN_EDIT_TASK_MODAL,
   CLOSE_TASK_MODAL,
   OPEN_NEW_STAGE_MODAL,
@@ -30,16 +29,6 @@ const closeModal = () => {
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case OPEN_NEW_TASK_MODAL: {
-      const { targetStageId }: { targetStageId: string } = action.payload;
-
-      return {
-        ...state,
-        taskModalOpen: true,
-        targetStageId,
-        taskToEdit: null,
-      };
-    }
     case OPEN_EDIT_TASK_MODAL: {
       const { taskToEdit }: { taskToEdit: Task } = action.payload;
 

@@ -65,9 +65,7 @@ class TaskService {
 
         $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS, array(
             'name' => $args['name'],
-            'description' => $args['description'],
             'pipeline_id' => $args['pipelineId'],
-            'free_for_all' => $args['freeForAll'],
             'task_hash' => $this->hashService->generateTaskHash($args['name'])
         ));
 

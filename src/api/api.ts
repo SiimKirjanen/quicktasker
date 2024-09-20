@@ -92,8 +92,6 @@ function createTaskRequest(
   stageId: string,
   pipelineId: string,
   name: string,
-  description: string,
-  isFreeForAll: boolean,
 ): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     path: `/wpqt/v1/tasks`,
@@ -101,9 +99,7 @@ function createTaskRequest(
     data: {
       stageId,
       name,
-      description,
       pipelineId,
-      freeForAll: isFreeForAll,
     },
     headers: getCommonHeaders(),
   });

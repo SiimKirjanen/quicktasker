@@ -24,13 +24,12 @@ import {
 } from "../../../constants";
 
 type Props = {
-  addTask: (name: string, description: string, freeForAllTask: boolean) => void;
   taskModalSaving: boolean;
   editTask: (task: Task) => void;
 };
 
 const TaskModalContent = forwardRef(
-  ({ addTask, taskModalSaving, editTask }: Props, ref) => {
+  ({ taskModalSaving, editTask }: Props, ref) => {
     const {
       state: { taskToEdit },
       modalDispatch,
@@ -46,17 +45,16 @@ const TaskModalContent = forwardRef(
         setFreeForAllTask(taskToEdit.free_for_all);
       }
     }, [taskToEdit]);
-    const editingTask = !!taskToEdit;
 
     const saveTask = () => {
-      editingTask
-        ? editTask({
-            ...taskToEdit,
-            name: taskName,
-            description: taskDescription,
-            free_for_all: freeForAllTask,
-          })
-        : addTask(taskName, taskDescription, freeForAllTask);
+      if (taskToEdit) {
+        editTask({
+          ...taskToEdit,
+          name: taskName,
+          description: taskDescription,
+          free_for_all: freeForAllTask,
+        });
+      }
     };
     const clearContent = () => {
       setTaskName("");
@@ -67,11 +65,13 @@ const TaskModalContent = forwardRef(
       clearContent,
     }));
 
+    if (!taskToEdit) {
+      return null;
+    }
+
     return (
       <>
-        <WPQTModalTitle>
-          {editingTask ? "Edit task" : "Add task"}
-        </WPQTModalTitle>
+        <WPQTModalTitle>Edit task</WPQTModalTitle>
 
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[auto_1fr] lg:wpqt-grid-cols-[auto_1fr_auto]">
           <div>
@@ -92,25 +92,23 @@ const TaskModalContent = forwardRef(
                 />
               </WPQTModalField>
 
-              {taskToEdit && (
-                <WPQTModalField label="Assigned users">
-                  <UserAssignementDropdown
-                    task={taskToEdit}
-                    onUserAdd={(user) => {
-                      modalDispatch({
-                        type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
-                        payload: user,
-                      });
-                    }}
-                    onUserDelete={(user) => {
-                      modalDispatch({
-                        type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
-                        payload: user,
-                      });
-                    }}
-                  />
-                </WPQTModalField>
-              )}
+              <WPQTModalField label="Assigned users">
+                <UserAssignementDropdown
+                  task={taskToEdit}
+                  onUserAdd={(user) => {
+                    modalDispatch({
+                      type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
+                      payload: user,
+                    });
+                  }}
+                  onUserDelete={(user) => {
+                    modalDispatch({
+                      type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+                      payload: user,
+                    });
+                  }}
+                />
+              </WPQTModalField>
 
               <WPQTModalField label="Free for all task">
                 <Toggle
@@ -121,25 +119,17 @@ const TaskModalContent = forwardRef(
             </WPQTModalFieldSet>
           </div>
 
-          {editingTask && (
+          <div>
             <div>
-              <div>
-                <TaskModalTabs task={taskToEdit} />
-              </div>
+              <TaskModalTabs task={taskToEdit} />
             </div>
-          )}
+          </div>
 
-          {editingTask && <div>Actions</div>}
+          <div>Actions</div>
         </div>
         <WPQTModalFooter
           onSave={saveTask}
-          saveBtnText={
-            taskModalSaving
-              ? "Saving..."
-              : editingTask
-                ? "Edit task"
-                : "Add task"
-          }
+          saveBtnText={taskModalSaving ? "Saving..." : "Edit task"}
         />
       </>
     );

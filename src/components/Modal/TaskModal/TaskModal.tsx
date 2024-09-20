@@ -1,24 +1,16 @@
 import { useContext } from "@wordpress/element";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import {
-  CLOSE_TASK_MODAL,
-  PIPELINE_ADD_TASK,
-  PIPELINE_EDIT_TASK,
-} from "../../../constants";
-import { createTaskRequest, editTaskRequest } from "../../../api/api";
+import { CLOSE_TASK_MODAL, PIPELINE_EDIT_TASK } from "../../../constants";
+import { editTaskRequest } from "../../../api/api";
 import { TaskModalContent } from "./TaskModalContent";
 import { WPQTModal } from "../WPQTModal";
 import { DispatchType, useModal } from "../../../hooks/useModal";
 import { Task } from "../../../types/task";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 function TaskModal() {
   const {
-    state: { taskModalOpen, targetStageId },
+    state: { taskModalOpen },
   } = useContext(ModalContext);
-  const {
-    state: { activePipeline },
-  } = useContext(ActivePipelineContext);
 
   const {
     modalSaving,
@@ -28,30 +20,6 @@ function TaskModal() {
     handleSuccess,
     handleError,
   } = useModal(CLOSE_TASK_MODAL);
-
-  const addTask = async (
-    taskName: string,
-    taskDescription: string,
-    isFreeForAll: boolean,
-  ) => {
-    try {
-      setModalSaving(true);
-      const response = await createTaskRequest(
-        targetStageId,
-        activePipeline!.id,
-        taskName,
-        taskDescription,
-        isFreeForAll,
-      );
-      handleSuccess(
-        PIPELINE_ADD_TASK,
-        response.data,
-        DispatchType.ACTIVE_PIPELINE,
-      );
-    } catch (error) {
-      handleError(error);
-    }
-  };
 
   const editTask = async (task: Task) => {
     try {
@@ -72,7 +40,6 @@ function TaskModal() {
     <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal} size="lg">
       <TaskModalContent
         ref={modalContentRef}
-        addTask={addTask}
         editTask={editTask}
         taskModalSaving={modalSaving}
       />

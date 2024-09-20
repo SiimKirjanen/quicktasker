@@ -7798,16 +7798,14 @@ function moveTaskRequest(taskId, stageId, order) {
     headers: getCommonHeaders()
   });
 }
-function createTaskRequest(stageId, pipelineId, name, description, isFreeForAll) {
+function createTaskRequest(stageId, pipelineId, name) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/tasks`,
     method: "POST",
     data: {
       stageId,
       name,
-      description,
-      pipelineId,
-      freeForAll: isFreeForAll
+      pipelineId
     },
     headers: getCommonHeaders()
   });
@@ -9828,7 +9826,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TaskModalContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TaskModalContent */ "./src/components/Modal/TaskModal/TaskModalContent.tsx");
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
 /* harmony import */ var _hooks_useModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../hooks/useModal */ "./src/hooks/useModal.tsx");
-/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9864,19 +9861,12 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
 function TaskModal() {
   const {
     state: {
-      taskModalOpen,
-      targetStageId
+      taskModalOpen
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
-  const {
-    state: {
-      activePipeline
-    }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_8__.ActivePipelineContext);
   const {
     modalSaving,
     setModalSaving,
@@ -9885,15 +9875,6 @@ function TaskModal() {
     handleSuccess,
     handleError
   } = (0,_hooks_useModal__WEBPACK_IMPORTED_MODULE_7__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_TASK_MODAL);
-  const addTask = (taskName, taskDescription, isFreeForAll) => __awaiter(this, void 0, void 0, function* () {
-    try {
-      setModalSaving(true);
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(targetStageId, activePipeline.id, taskName, taskDescription, isFreeForAll);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_TASK, response.data, _hooks_useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.ACTIVE_PIPELINE);
-    } catch (error) {
-      handleError(error);
-    }
-  });
   const editTask = task => __awaiter(this, void 0, void 0, function* () {
     try {
       setModalSaving(true);
@@ -9909,7 +9890,6 @@ function TaskModal() {
     size: "lg",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskModalContent__WEBPACK_IMPORTED_MODULE_5__.TaskModalContent, {
       ref: modalContentRef,
-      addTask: addTask,
       editTask: editTask,
       taskModalSaving: modalSaving
     })
@@ -9953,7 +9933,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(({
-  addTask,
   taskModalSaving,
   editTask
 }, ref) => {
@@ -9973,13 +9952,14 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
       setFreeForAllTask(taskToEdit.free_for_all);
     }
   }, [taskToEdit]);
-  const editingTask = !!taskToEdit;
   const saveTask = () => {
-    editingTask ? editTask(Object.assign(Object.assign({}, taskToEdit), {
-      name: taskName,
-      description: taskDescription,
-      free_for_all: freeForAllTask
-    })) : addTask(taskName, taskDescription, freeForAllTask);
+    if (taskToEdit) {
+      editTask(Object.assign(Object.assign({}, taskToEdit), {
+        name: taskName,
+        description: taskDescription,
+        free_for_all: freeForAllTask
+      }));
+    }
   };
   const clearContent = () => {
     setTaskName("");
@@ -9988,9 +9968,12 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useImperativeHandle)(ref, () => ({
     clearContent
   }));
+  if (!taskToEdit) {
+    return null;
+  }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalTitle, {
-      children: editingTask ? "Edit task" : "Add task"
+      children: "Edit task"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[auto_1fr] lg:wpqt-grid-cols-[auto_1fr_auto]",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -10009,7 +9992,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               value: taskDescription,
               onChange: newValue => setTaskDescription(newValue)
             })
-          }), taskToEdit && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
             label: "Assigned users",
             children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_8__.UserAssignementDropdown, {
               task: taskToEdit,
@@ -10034,18 +10017,18 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             })
           })]
         })
-      }), editingTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_4__.TaskModalTabs, {
             task: taskToEdit
           })
         })
-      }), editingTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: "Actions"
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalFooter, {
       onSave: saveTask,
-      saveBtnText: taskModalSaving ? "Saving..." : editingTask ? "Edit task" : "Add task"
+      saveBtnText: taskModalSaving ? "Saving..." : "Edit task"
     })]
   });
 });
@@ -10465,8 +10448,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PlusCircleIcon.js");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PlusCircleIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/XCircleIcon.js");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10499,26 +10486,58 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
+
 function AddTask({
   stageId
 }) {
+  const [taskName, setTaskName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [showTaskInput, setShowTaskInput] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
-    modalDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
-  const openNewTaskModal = () => __awaiter(this, void 0, void 0, function* () {
-    modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_2__.OPEN_NEW_TASK_MODAL,
-      payload: {
-        targetStageId: stageId
-      }
-    });
+    state: {
+      activePipeline
+    },
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.ActivePipelineContext);
+  const createTask = () => __awaiter(this, void 0, void 0, function* () {
+    if (!taskName) {
+      return;
+    }
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.createTaskRequest)(stageId, activePipeline.id, taskName);
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_2__.PIPELINE_ADD_TASK,
+        payload: response.data
+      });
+      clearState();
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_6__.toast.error("Failed to create task");
+    }
   });
+  const clearState = () => {
+    setShowTaskInput(false);
+    setTaskName("");
+  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-sticky wpqt-bottom-0 wpqt-z-10 wpqt-order-1 wpqt-mt-2 wpqt-flex wpqt-justify-center wpqt-bg-gray-100 wpqt-py-2",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      onClick: openNewTaskModal,
+    children: showTaskInput ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-items-center wpqt-gap-2",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_3__.WPQTInput, {
+        value: taskName,
+        onChange: value => setTaskName(value)
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        className: "wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer",
+        onClick: createTask
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        className: "wpqt-icon-red wpqt-size-6 wpqt-cursor-pointer",
+        onClick: clearState
+      })]
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      onClick: () => setShowTaskInput(true),
       className: "wpqt-main-border wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-p-2 hover:wpqt-bg-white",
-      children: ["Add task", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      children: ["Add task", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
         className: "wpqt-size-6 wpqt-text-green-600"
       })]
     })
@@ -13715,17 +13734,6 @@ const closeModal = () => {
 const reducer = (state, action) => {
   var _a, _b, _c, _d;
   switch (action.type) {
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_TASK_MODAL:
-      {
-        const {
-          targetStageId
-        } = action.payload;
-        return Object.assign(Object.assign({}, state), {
-          taskModalOpen: true,
-          targetStageId,
-          taskToEdit: null
-        });
-      }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_EDIT_TASK_MODAL:
       {
         const {
@@ -33492,6 +33500,47 @@ function UserCircleIcon({
   }));
 }
 const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(UserCircleIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
+/***/ "./node_modules/@heroicons/react/24/outline/esm/XCircleIcon.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/XCircleIcon.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function XCircleIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(XCircleIcon);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
 
 /***/ }),
