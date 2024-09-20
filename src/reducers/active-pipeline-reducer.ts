@@ -227,7 +227,7 @@ const activePipelineReducer = (state: State, action: Action) => {
           if (task.id === taskId) {
             return {
               ...task,
-              assigned_users: [...(task.assigned_users || []), user],
+              assigned_users: [user, ...(task.assigned_users || [])],
             };
           }
           return task;

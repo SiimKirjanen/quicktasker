@@ -1,4 +1,4 @@
-import { useContext, useState } from "@wordpress/element";
+import { useContext, useEffect, useState } from "@wordpress/element";
 import { PIPELINE_ADD_TASK } from "../../constants";
 import { PlusCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { WPQTInput } from "../common/Input/Input";
@@ -17,6 +17,20 @@ function AddTask({ stageId }: Props) {
     state: { activePipeline },
     dispatch,
   } = useContext(ActivePipelineContext);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        createTask();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [taskName]);
 
   const createTask = async () => {
     if (!taskName) {

@@ -49,7 +49,7 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         taskToEdit: {
           ...state.taskToEdit!,
-          assigned_users: [...(state.taskToEdit?.assigned_users ?? []), user],
+          assigned_users: [user, ...(state.taskToEdit?.assigned_users ?? [])],
         },
       };
     }

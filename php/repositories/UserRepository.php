@@ -85,7 +85,8 @@ class UserRepository {
              FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
              INNER JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS b
              ON a.id = b.user_id
-             WHERE b.task_id = %d AND a.deleted = 0",
+             WHERE b.task_id = %d AND a.deleted = 0
+             ORDER BY b.created_at DESC",
             $taskId
         );
 

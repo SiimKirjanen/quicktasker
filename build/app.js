@@ -10500,6 +10500,17 @@ function AddTask({
     },
     dispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.ActivePipelineContext);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const handleKeyDown = event => {
+      if (event.key === "Enter") {
+        createTask();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [taskName]);
   const createTask = () => __awaiter(this, void 0, void 0, function* () {
     if (!taskName) {
       return;
@@ -13559,7 +13570,7 @@ const activePipelineReducer = (state, action) => {
           const updatedTasks = (_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.map(task => {
             if (task.id === taskId) {
               return Object.assign(Object.assign({}, task), {
-                assigned_users: [...(task.assigned_users || []), user]
+                assigned_users: [user, ...(task.assigned_users || [])]
               });
             }
             return task;
@@ -13754,7 +13765,7 @@ const reducer = (state, action) => {
         const user = action.payload;
         return Object.assign(Object.assign({}, state), {
           taskToEdit: Object.assign(Object.assign({}, state.taskToEdit), {
-            assigned_users: [...((_b = (_a = state.taskToEdit) === null || _a === void 0 ? void 0 : _a.assigned_users) !== null && _b !== void 0 ? _b : []), user]
+            assigned_users: [user, ...((_b = (_a = state.taskToEdit) === null || _a === void 0 ? void 0 : _a.assigned_users) !== null && _b !== void 0 ? _b : [])]
           })
         });
       }

@@ -267,7 +267,7 @@ class TaskService {
             throw new \Exception('Failed to edit task');
         }
 
-        return $this->taskRepository->getTaskById($taskId);
+        return $this->taskRepository->getTaskById($taskId, true);
     }
 
     /**

@@ -123,6 +123,15 @@ class TaskRepository {
         ) );
     }
 
+    /**
+     * Retrieves tasks by their stage IDs.
+     *
+     * This function fetches tasks from the database that are associated with the given stage IDs.
+     * It joins the tasks table with the tasks location table to get the stage IDs and orders the results by task order.
+     *
+     * @param array $stageIds An array of stage IDs to filter the tasks.
+     * @return array An array of task objects that match the given stage IDs.
+     */
     public function getTasksByStageIds($stageIds) {
         global $wpdb;
 
@@ -135,7 +144,8 @@ class TaskRepository {
              FROM " . TABLE_WP_QUICK_TASKS_TASKS . " AS a
              INNER JOIN " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " AS b
              ON a.id = b.task_id
-             WHERE b.stage_id IN ($placeholders)",
+             WHERE b.stage_id IN ($placeholders)
+             ORDER BY b.task_order",
             $stageIds
         );
 
