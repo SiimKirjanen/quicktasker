@@ -789,6 +789,37 @@ function wpqt_register_api_routes() {
         'wpqt/v1',
         'users/(?P<id>\d+)/tasks',
         array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+            
+                    $taskRepo = new TaskRepository();
+                    $userTasks = $taskRepo->getTasksAssignedToUser($data['id']);
+                   
+                    return new WP_REST_Response((new ApiResponse(true, array(), $userTasks))->toArray(), 200);
+                }catch(Exception $e) {
+    
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'users/(?P<id>\d+)/tasks',
+        array(
             'methods' => 'POST',
             'callback' => function( $data ) {
                 try {

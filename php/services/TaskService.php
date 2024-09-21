@@ -35,7 +35,7 @@ class TaskService {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT MAX(task_order) FROM " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " WHERE stage_id = %d",
+                "SELECT MAX(task_order) FROM " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " WHERE stage_id = %d AND is_archived = 0",
                 $stageId
             )
         );
@@ -177,7 +177,7 @@ class TaskService {
                 $wpdb->prepare(
                     "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
                     SET task_order = task_order - 1
-                    WHERE stage_id = %d AND task_order > %d AND task_order <= %d",
+                    WHERE stage_id = %d AND task_order > %d AND task_order <= %d AND is_archived = 0",
                     $stageId,
                     $currentOrder,
                     $newOrder
@@ -189,7 +189,7 @@ class TaskService {
                 $wpdb->prepare(
                     "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
                     SET task_order = task_order + 1
-                    WHERE stage_id = %d AND task_order < %d AND task_order >= %d",
+                    WHERE stage_id = %d AND task_order < %d AND task_order >= %d AND is_archived = 0",
                     $stageId,
                     $currentOrder,
                     $newOrder
@@ -221,7 +221,7 @@ class TaskService {
             $wpdb->prepare(
                 "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
                 SET task_order = task_order - 1
-                WHERE stage_id = %d AND task_order > %d",
+                WHERE stage_id = %d AND task_order > %d AND is_archived = 0",
                 $currentStageId,
                 $currentOrder
             )
@@ -236,7 +236,7 @@ class TaskService {
             $wpdb->prepare(
                 "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
                 SET task_order = task_order + 1
-                WHERE stage_id = %d AND task_order >= %d",
+                WHERE stage_id = %d AND task_order >= %d AND is_archived = 0",
                 $newStageId,
                 $newOrder
             )
@@ -338,7 +338,7 @@ class TaskService {
             $wpdb->prepare(
                 "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
                 SET task_order = task_order - 1
-                WHERE stage_id = %d AND task_order > %d",
+                WHERE stage_id = %d AND task_order > %d AND is_archived = 0",
                 $stageId,
                 $deletedTaskOrder
             )

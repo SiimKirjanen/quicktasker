@@ -7727,6 +7727,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
 /* harmony export */   getTaskLogs: () => (/* binding */ getTaskLogs),
 /* harmony export */   getUserSessionsRequest: () => (/* binding */ getUserSessionsRequest),
+/* harmony export */   getUserTasksRequest: () => (/* binding */ getUserTasksRequest),
 /* harmony export */   moveStageRequest: () => (/* binding */ moveStageRequest),
 /* harmony export */   moveTaskRequest: () => (/* binding */ moveTaskRequest),
 /* harmony export */   removeTaskFromUserRequest: () => (/* binding */ removeTaskFromUserRequest),
@@ -8012,6 +8013,13 @@ function deleteUserRequest(user) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/users/${user.id}`,
     method: "DELETE",
+    headers: getCommonHeaders()
+  });
+}
+function getUserTasksRequest(userId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/users/${userId}/tasks`,
+    method: "GET",
     headers: getCommonHeaders()
   });
 }
@@ -8924,7 +8932,10 @@ function UserDropdown({
       text: "User tasks",
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
         className: "wpqt-icon-blue wpqt-size-4"
-      })
+      }),
+      onClick: () => {
+        window.location.hash = `#/users/${user.id}/tasks`;
+      }
     }), userIsActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
       text: "Disable user",
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
@@ -8947,6 +8958,50 @@ function UserDropdown({
         onClick: deleteUser
       })]
     })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Dropdown/UserTaskDropdown/UserTaskDropdown.tsx":
+/*!***********************************************************************!*\
+  !*** ./src/components/Dropdown/UserTaskDropdown/UserTaskDropdown.tsx ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserTaskDropdown: () => (/* binding */ UserTaskDropdown)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EllipsisHorizontalIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserMinusIcon.js");
+/* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
+
+
+
+function UserTaskDropdown({
+  taskId,
+  onUnAssignTask
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdown, {
+    menuBtn: ({
+      active
+    }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownIcon, {
+      isActive: active,
+      IconComponent: _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_2__["default"]
+    }),
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
+      text: "Unassign from task",
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        className: "wpqt-icon-red wpqt-size-4"
+      }),
+      onClick: () => onUnAssignTask(taskId),
+      className: "!wpqt-mb-0"
+    })
   });
 }
 
@@ -9235,6 +9290,40 @@ function UserSessionsFilter() {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__.WPQTInput, {
       value: sessionsSearchValue,
       onChange: setSessionSearchValue
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Filters/UserTasksFilter/UserTasksFilter.tsx":
+/*!********************************************************************!*\
+  !*** ./src/components/Filters/UserTasksFilter/UserTasksFilter.tsx ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserTasksFilter: () => (/* binding */ UserTasksFilter)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _WPQTFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTFilter */ "./src/components/Filters/WPQTFilter.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+
+
+
+function UserTasksFilter({
+  value,
+  onValueChange
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_1__.WPQTFilter, {
+    title: "User tasks filtering",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_2__.WPQTInput, {
+      value: value,
+      onChange: onValueChange
     })
   });
 }
@@ -12392,6 +12481,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_ArchivePage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pages/ArchivePage */ "./src/pages/ArchivePage.tsx");
 /* harmony import */ var _pages_OverviewPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pages/OverviewPage */ "./src/pages/OverviewPage.tsx");
 /* harmony import */ var _pages_UserSessionsPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pages/UserSessionsPage */ "./src/pages/UserSessionsPage.tsx");
+/* harmony import */ var _pages_UserTasksPage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pages/UserTasksPage */ "./src/pages/UserTasksPage.tsx");
+
 
 
 
@@ -12422,6 +12513,13 @@ const getPageFromUrl = () => {
     hash
   } = getUrlParams();
   if (page === "wp-quick-tasks") {
+    const userTasksMatch = hash.match(/^#\/users\/(\d+)\/tasks$/);
+    if (userTasksMatch) {
+      const userId = userTasksMatch[1];
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserTasksPage__WEBPACK_IMPORTED_MODULE_7__.UserTasksPage, {
+        userId: userId
+      });
+    }
     switch (hash) {
       case "#/users":
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UsersPage__WEBPACK_IMPORTED_MODULE_2__.UsersPage, {});
@@ -12640,6 +12738,30 @@ const useUserSessionsFilter = () => {
 
 /***/ }),
 
+/***/ "./src/hooks/useUserTasksFilter.tsx":
+/*!******************************************!*\
+  !*** ./src/hooks/useUserTasksFilter.tsx ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useUserTasksFilter: () => (/* binding */ useUserTasksFilter)
+/* harmony export */ });
+const useUserTasksFilter = searchValue => {
+  const filterTasks = task => {
+    const matchesSearchValue = task.name.toLowerCase().includes(searchValue.toLowerCase()) || task.description && task.description.toLowerCase().includes(searchValue.toLowerCase());
+    return matchesSearchValue;
+  };
+  return {
+    filterTasks
+  };
+};
+
+
+/***/ }),
+
 /***/ "./src/hooks/userUserFilter.tsx":
 /*!**************************************!*\
   !*** ./src/hooks/userUserFilter.tsx ***!
@@ -12831,6 +12953,131 @@ function UserSessionsPage() {
         children: "User sessions"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filters_UserSessionsFilter_UserSessionsFilter__WEBPACK_IMPORTED_MODULE_2__.UserSessionsFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_User_UserSessions_UserSessions__WEBPACK_IMPORTED_MODULE_3__.UserSessions, {})]
     })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/pages/UserTasksPage.tsx":
+/*!*************************************!*\
+  !*** ./src/pages/UserTasksPage.tsx ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserTasksPage: () => (/* binding */ UserTasksPage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_common_Header_Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/common/Header/Header */ "./src/components/common/Header/Header.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Page/Page */ "./src/pages/Page/Page.tsx");
+/* harmony import */ var _components_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/api */ "./src/api/api.ts");
+/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/task */ "./src/utils/task.ts");
+/* harmony import */ var _components_Card_Card__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/Card/Card */ "./src/components/Card/Card.tsx");
+/* harmony import */ var _components_Filters_UserTasksFilter_UserTasksFilter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/Filters/UserTasksFilter/UserTasksFilter */ "./src/components/Filters/UserTasksFilter/UserTasksFilter.tsx");
+/* harmony import */ var _hooks_useUserTasksFilter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../hooks/useUserTasksFilter */ "./src/hooks/useUserTasksFilter.tsx");
+/* harmony import */ var _components_Dropdown_UserTaskDropdown_UserTaskDropdown__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/Dropdown/UserTaskDropdown/UserTaskDropdown */ "./src/components/Dropdown/UserTaskDropdown/UserTaskDropdown.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+function UserTasksPage({
+  userId
+}) {
+  const [userTasks, setUserTasks] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [isLoading, setIsLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
+  const [searchValue, setSearchValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const {
+    filterTasks
+  } = (0,_hooks_useUserTasksFilter__WEBPACK_IMPORTED_MODULE_10__.useUserTasksFilter)(searchValue);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    fetchUserTasks();
+  }, []);
+  const fetchUserTasks = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.getUserTasksRequest)(userId);
+      setUserTasks(response.data.map(_utils_task__WEBPACK_IMPORTED_MODULE_7__.convertTaskFromServer));
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error("Failed to fetch user tasks. Please try again");
+    } finally {
+      setIsLoading(false);
+    }
+  });
+  const unAssignTask = taskId => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.removeTaskFromUserRequest)(userId, taskId);
+      setUserTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_5__.toast.error("Failed to unassign task. Please try again");
+    }
+  });
+  if (isLoading) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.FullLoading, {});
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_3__.Page, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Header_Header__WEBPACK_IMPORTED_MODULE_2__.WPQTPageHeader, {
+      description: "Tasks assigned to user",
+      children: "User tasks"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filters_UserTasksFilter_UserTasksFilter__WEBPACK_IMPORTED_MODULE_9__.UserTasksFilter, {
+      value: searchValue,
+      onValueChange: setSearchValue
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-grid wpqt-grid-cols-4 wpqt-gap-2",
+      children: userTasks.filter(filterTasks).map(task => {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_8__.WPQTCard, {
+          title: task.name,
+          description: task.description,
+          dropdown: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_UserTaskDropdown_UserTaskDropdown__WEBPACK_IMPORTED_MODULE_11__.UserTaskDropdown, {
+            taskId: task.id,
+            onUnAssignTask: unAssignTask
+          })
+        }, task.id);
+      })
+    })]
   });
 }
 
@@ -33503,6 +33750,47 @@ function UserCircleIcon({
   }));
 }
 const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(UserCircleIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
+/***/ "./node_modules/@heroicons/react/24/outline/esm/UserMinusIcon.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/UserMinusIcon.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function UserMinusIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M22 10.5h-6m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 10.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(UserMinusIcon);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
 
 /***/ }),

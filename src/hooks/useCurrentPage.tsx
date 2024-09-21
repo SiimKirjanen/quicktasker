@@ -4,6 +4,7 @@ import { PipelinePage } from "../pages/PipelinePage";
 import { ArchivePage } from "../pages/ArchivePage";
 import { OverviewPage } from "../pages/OverviewPage";
 import { UserSessionsPage } from "../pages/UserSessionsPage";
+import { UserTasksPage } from "../pages/UserTasksPage";
 
 const useCurrentPage = () => {
   const [currentPage, setCurrentPage] = useState(getPageFromUrl());
@@ -32,6 +33,12 @@ const getPageFromUrl = () => {
   const { page, hash } = getUrlParams();
 
   if (page === "wp-quick-tasks") {
+    const userTasksMatch = hash.match(/^#\/users\/(\d+)\/tasks$/);
+    if (userTasksMatch) {
+      const userId = userTasksMatch[1];
+      return <UserTasksPage userId={userId} />;
+    }
+
     switch (hash) {
       case "#/users":
         return <UsersPage />;

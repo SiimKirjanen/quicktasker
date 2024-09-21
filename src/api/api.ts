@@ -338,6 +338,16 @@ function deleteUserRequest(user: User): Promise<WPQTResponse> {
   });
 }
 
+function getUserTasksRequest(
+  userId: string,
+): Promise<WPQTResponse<TaskFromServer[]>> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${userId}/tasks`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   User session requests
@@ -401,4 +411,5 @@ export {
   changeUserSessionStatusRequest,
   deleteUserSessionRequest,
   addLogRequest,
+  getUserTasksRequest,
 };

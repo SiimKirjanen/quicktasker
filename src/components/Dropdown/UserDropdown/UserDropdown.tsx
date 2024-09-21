@@ -82,6 +82,9 @@ function UserDropdown({ user }: Props) {
       <WPQTDropdownItem
         text="User tasks"
         icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-4" />}
+        onClick={() => {
+          window.location.hash = `#/users/${user.id}/tasks`;
+        }}
       />
 
       {userIsActive && (
