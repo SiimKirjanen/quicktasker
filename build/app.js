@@ -9496,7 +9496,7 @@ function PipelineModal() {
     try {
       setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.createPipelineRequest)(pipelineName, pipelineDescription);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_PIPELINE, response.data, _hooks_useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.ACTIVE_PIPELINE);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.PIPELINE_ADD_PIPELINE, response.data, _hooks_useModal__WEBPACK_IMPORTED_MODULE_7__.DispatchType.PIPELINES);
     } catch (error) {
       handleError(error);
     }
@@ -9972,12 +9972,11 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
     return null;
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalTitle, {
-      children: "Edit task"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[auto_1fr] lg:wpqt-grid-cols-[auto_1fr_auto]",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalFieldSet, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalFieldSet, {
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
             label: "Name",
             children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__.WPQTInput, {
@@ -10016,13 +10015,12 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               handleChange: setFreeForAllTask
             })
           })]
-        })
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "md:wpqt-pr-3",
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_4__.TaskModalTabs, {
             task: taskToEdit
           })
-        })
+        })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: "Actions"
       })]
@@ -11267,7 +11265,7 @@ function PublicCommentsTabContent({
       item: comment
     }),
     noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users."
+    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
   });
 }
 

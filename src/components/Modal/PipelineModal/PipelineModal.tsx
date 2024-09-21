@@ -38,7 +38,7 @@ function PipelineModal() {
       handleSuccess(
         PIPELINE_ADD_PIPELINE,
         response.data,
-        DispatchType.ACTIVE_PIPELINE,
+        DispatchType.PIPELINES,
       );
     } catch (error) {
       handleError(error);

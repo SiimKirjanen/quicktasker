@@ -71,10 +71,8 @@ const TaskModalContent = forwardRef(
 
     return (
       <>
-        <WPQTModalTitle>Edit task</WPQTModalTitle>
-
-        <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[auto_1fr] lg:wpqt-grid-cols-[auto_1fr_auto]">
-          <div>
+        <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
+          <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
             <WPQTModalFieldSet>
               <WPQTModalField label="Name">
                 <WPQTInput
@@ -117,10 +115,8 @@ const TaskModalContent = forwardRef(
                 />
               </WPQTModalField>
             </WPQTModalFieldSet>
-          </div>
 
-          <div>
-            <div>
+            <div className="md:wpqt-pr-3">
               <TaskModalTabs task={taskToEdit} />
             </div>
           </div>

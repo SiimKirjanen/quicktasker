@@ -41,12 +41,26 @@
   padding-bottom: 0;
 }
 
-#adminmenu #toplevel_page_wp-quick-tasks .wp-submenu li.current a,
-#adminmenu #toplevel_page_wp-quick-tasks .wp-submenu li.current {
+.wpqt-admin-page
+  #adminmenu
+  #toplevel_page_wp-quick-tasks
+  .wp-submenu
+  li.current
+  a,
+.wpqt-admin-page
+  #adminmenu
+  #toplevel_page_wp-quick-tasks
+  .wp-submenu
+  li.current {
   font-weight: normal;
   color: rgba(240, 246, 252, 0.7);
 }
-#adminmenu #toplevel_page_wp-quick-tasks .wp-submenu li.wpqt-current a {
+.wpqt-admin-page
+  #adminmenu
+  #toplevel_page_wp-quick-tasks
+  .wp-submenu
+  li.wpqt-current
+  a {
   font-weight: 600;
   color: #fff;
 }
