@@ -314,7 +314,7 @@ class TaskService {
             throw new \Exception('Failed to archive task');
         }
 
-        $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('task_id' => $taskId));
+        $result2 = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('is_archived' => 1), array('task_id' => $taskId));
 
         if ($result2 === false) {
             throw new \Exception('Failed to delete task location');

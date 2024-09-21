@@ -11752,12 +11752,6 @@ function UserListItem({
       label: "User created at",
       value: (0,_utils_date__WEBPACK_IMPORTED_MODULE_1__.formatDate)(user.created_at)
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
-      label: "Assigned tasks count",
-      value: "TODO"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
-      label: "Set up completed",
-      value: "TODO"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Status",
       value: userIsActive ? "Active" : "Disabled",
       valueClassName: userIsActive ? "wpqt-text-qtTextGreen wpqt-font-bold" : "wpqt-text-qtTextRed wpqt-font-bold"

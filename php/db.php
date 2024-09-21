@@ -78,6 +78,7 @@ function wpqt_set_up_db() {
 			task_order int(11),
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			is_archived tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id),
 			UNIQUE KEY task_id (task_id)
 		  ) $charset_collate;";

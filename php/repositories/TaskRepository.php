@@ -145,6 +145,7 @@ class TaskRepository {
              INNER JOIN " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " AS b
              ON a.id = b.task_id
              WHERE b.stage_id IN ($placeholders)
+             AND a.is_archived = 0
              ORDER BY b.task_order",
             $stageIds
         );
