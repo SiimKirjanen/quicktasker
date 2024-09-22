@@ -21,6 +21,7 @@ use WPQT\RequestValidation;
 use WPQT\Session\SessionRepository;
 use WPQT\Session\SessionService;
 use WPQT\Log\LogService;
+use WPQT\User\UserRepository;
 
 function validate_numeric($param, $request, $key) {
     return is_numeric($param);

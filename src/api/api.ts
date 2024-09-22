@@ -273,6 +273,14 @@ function archiveStageTasksRequest(stageId: string): Promise<WPQTResponse> {
   ==================================================================================================================================================================================================================
 */
 
+function getUsersRequest(): Promise<WPQTResponse<ServerUser[]>> {
+  return apiFetch({
+    path: `/wpqt/v1/users`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 function createUserRequest(
   name: string,
   description: string,
@@ -412,4 +420,5 @@ export {
   deleteUserSessionRequest,
   addLogRequest,
   getUserTasksRequest,
+  getUsersRequest,
 };

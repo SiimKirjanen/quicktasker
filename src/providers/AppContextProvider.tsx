@@ -3,13 +3,11 @@ import { reducer } from "../reducers/app-reducer";
 import { INIT_APP_STATE } from "../constants";
 
 type State = {
-  loading: boolean;
   siteURL: string;
   publicUserPageId: string;
 };
 
 const initialState: State = {
-  loading: true,
   siteURL: "",
   publicUserPageId: "",
 };

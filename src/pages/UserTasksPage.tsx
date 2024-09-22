@@ -1,8 +1,7 @@
-import { useEffect, useState } from "@wordpress/element";
+import { useContext, useEffect, useState } from "@wordpress/element";
 import { WPQTPageHeader } from "../components/common/Header/Header";
 import { Task } from "../types/task";
 import { Page } from "./Page/Page";
-import { FullLoading } from "../components/Loading/Loading";
 import { toast } from "react-toastify";
 import { getUserTasksRequest, removeTaskFromUserRequest } from "../api/api";
 import { convertTaskFromServer } from "../utils/task";
@@ -10,6 +9,8 @@ import { WPQTCard } from "../components/Card/Card";
 import { UserTasksFilter } from "../components/Filters/UserTasksFilter/UserTasksFilter";
 import { useUserTasksFilter } from "../hooks/useUserTasksFilter";
 import { UserTaskDropdown } from "../components/Dropdown/UserTaskDropdown/UserTaskDropdown";
+import { LoadingContext } from "../providers/LoadingContextProvider";
+import { SET_FULL_PAGE_LOADING } from "../constants";
 
 type Props = {
   userId: string;
@@ -17,9 +18,9 @@ type Props = {
 
 function UserTasksPage({ userId }: Props) {
   const [userTasks, setUserTasks] = useState<Task[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const { filterTasks } = useUserTasksFilter(searchValue);
+  const { loadingDispatch } = useContext(LoadingContext);
 
   useEffect(() => {
     fetchUserTasks();
@@ -27,13 +28,14 @@ function UserTasksPage({ userId }: Props) {
 
   const fetchUserTasks = async () => {
     try {
+      loadingDispatch({ type: SET_FULL_PAGE_LOADING, payload: true });
       const response = await getUserTasksRequest(userId);
       setUserTasks(response.data.map(convertTaskFromServer));
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch user tasks. Please try again");
     } finally {
-      setIsLoading(false);
+      loadingDispatch({ type: SET_FULL_PAGE_LOADING, payload: false });
     }
   };
 
@@ -49,9 +51,6 @@ function UserTasksPage({ userId }: Props) {
     }
   };
 
-  if (isLoading) {
-    return <FullLoading />;
-  }
   return (
     <Page>
       <WPQTPageHeader description="Tasks assigned to user">
