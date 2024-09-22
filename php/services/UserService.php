@@ -8,9 +8,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPQT\User\UserRepository;
 use WPQT\Hash\HashService;
+use WPQT\WPQTException;
+use WPQT\UserPage\UserPageRepository;
 
 class UserService {
     protected $userRepository;
+    protected $userPageRepository;
     protected $hashService;
 
     public function __construct() {

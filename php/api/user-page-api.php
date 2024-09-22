@@ -30,7 +30,7 @@ function wpqt_register_user_page_api_routes() {
                     $userPageRepository = new UserPageRepository();
                     $userPageService = new UserPageService();
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']);
-                    $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage);
+                    $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage->user_id);
 
                     $userPageStatus = (object)[
                         'isActiveUser' => $userPage->is_active,
@@ -66,7 +66,7 @@ function wpqt_register_user_page_api_routes() {
                     $passwordService = new PasswordService();
 
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']);
-                    $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage);
+                    $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage->user_id);
 
                     if( $hasSetupCompleted ) {
                         throw new WPQTException('User page setup has already been completed', true);

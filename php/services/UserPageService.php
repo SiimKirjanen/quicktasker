@@ -29,14 +29,8 @@ class UserPageService {
         return $userPage !== null;
     }
 
-    /**
-     * Checks if the user page setup is completed.
-     *
-     * @param object $pageUser The user page object.
-     * @return bool Returns true if the user page setup is completed, false otherwise.
-     */
-    public function checkIfUserPageSetupCompleted($pageUser) {
-        $hasPassword = $this->userService->checkIfUserHasPassword($pageUser->user_id);
+    public function checkIfUserPageSetupCompleted($userId) {
+        $hasPassword = $this->userService->checkIfUserHasPassword($userId);
 
         if( !$hasPassword ) {
             return false;

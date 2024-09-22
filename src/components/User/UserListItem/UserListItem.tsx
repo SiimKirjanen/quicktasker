@@ -28,6 +28,10 @@ function UserListItem({ user }: Props) {
         value={formatDate(user.created_at)}
       />
       <WPQTCardDataItem
+        label="Assigned tasks count"
+        value={user.assigned_tasks_count}
+      />
+      <WPQTCardDataItem
         label="Status"
         value={userIsActive ? "Active" : "Disabled"}
         valueClassName={

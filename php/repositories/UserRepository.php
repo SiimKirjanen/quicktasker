@@ -8,34 +8,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class UserRepository {
     const USER_FIELDS = "a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active";
+
     /**
-     * Retrieves all users from the database.
+     * Retrieves a list of users along with their page hash and the count of assigned tasks.
      *
-     * @return array The list of users.
+     * This method executes a SQL query to fetch user details from the database. It joins the users table
+     * with the user pages table to get the page hash and performs a subquery to count the number of tasks
+     * assigned to each user. Only users who are not marked as deleted are included in the results.
+     *
+     * @global wpdb $wpdb WordPress database abstraction object.
+     *
+     * @return array List of users with their details, page hash, and assigned tasks count.
      */
     public function getUsers() {
         global $wpdb;
-
+    
         return $wpdb->get_results(
-            "SELECT " . self::USER_FIELDS . ", b.page_hash FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
-            LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_PAGES . " AS b
-            ON a.id = b.user_id
-            WHERE a.deleted = 0"
+            "SELECT " . self::USER_FIELDS . ", b.page_hash, 
+                    (SELECT COUNT(*) FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS c WHERE c.user_id = a.id) AS assigned_tasks_count
+             FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
+             LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_PAGES . " AS b ON a.id = b.user_id
+             WHERE a.deleted = 0"
         );
     }
 
     /**
-     * Retrieves a user by their ID.
+     * Retrieves a user by their ID, including additional information such as page hash and assigned tasks count.
+     *
+     * This method queries the database to fetch user details from the `wp_quick_tasks_users` table,
+     * along with the associated page hash from the `wp_quick_tasks_user_pages` table and the count of assigned tasks
+     * from the `wp_quick_tasks_user_task` table.
      *
      * @param int $id The ID of the user to retrieve.
-     * @return object|null The user object if found, null otherwise.
+     * @return object|null The user object containing user details, page hash, and assigned tasks count, or null if no user is found.
      */
     public function getUserById($id) {
         global $wpdb;
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT " . self::USER_FIELDS . ", b.page_hash FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
+                "SELECT " . self::USER_FIELDS . ", b.page_hash, 
+                        (SELECT COUNT(*) FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS c WHERE c.user_id = a.id) AS assigned_tasks_count
+                FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
                 LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_PAGES . " AS b
                 ON a.id = b.user_id
                 WHERE a.id = %d AND a.deleted = 0",
@@ -119,5 +133,4 @@ class UserRepository {
             return false;
         }
     }
-
 }

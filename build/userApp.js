@@ -7416,9 +7416,13 @@ const getQueryParam = param => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   convertExtendedUserFromServer: () => (/* binding */ convertExtendedUserFromServer),
 /* harmony export */   convertUserFromServer: () => (/* binding */ convertUserFromServer)
 /* harmony export */ });
 const convertUserFromServer = user => Object.assign(Object.assign({}, user), {
+  is_active: user.is_active === "1"
+});
+const convertExtendedUserFromServer = user => Object.assign(Object.assign({}, user), {
   is_active: user.is_active === "1"
 });
 

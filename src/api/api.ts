@@ -9,7 +9,7 @@ import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
 import { LogFromServer } from "../types/log";
 import { WPQTCommentFromServer } from "../types/comment";
-import { ServerUser, User } from "../types/user";
+import { ServerExtendedUser, ServerUser, User } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
 
 function getCommonHeaders() {
@@ -281,6 +281,16 @@ function getUsersRequest(): Promise<WPQTResponse<ServerUser[]>> {
   });
 }
 
+function getExtendedUserRequest(
+  userId: string,
+): Promise<WPQTResponse<ServerExtendedUser>> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${userId}/extended`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 function createUserRequest(
   name: string,
   description: string,
@@ -421,4 +431,5 @@ export {
   addLogRequest,
   getUserTasksRequest,
   getUsersRequest,
+  getExtendedUserRequest,
 };

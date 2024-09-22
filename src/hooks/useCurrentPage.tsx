@@ -5,6 +5,7 @@ import { ArchivePage } from "../pages/ArchivePage";
 import { OverviewPage } from "../pages/OverviewPage";
 import { UserSessionsPage } from "../pages/UserSessionsPage";
 import { UserTasksPage } from "../pages/UserTasksPage";
+import { UserPage } from "../pages/UserPage";
 
 const useCurrentPage = () => {
   const [currentPage, setCurrentPage] = useState(getPageFromUrl());
@@ -37,6 +38,12 @@ const getPageFromUrl = () => {
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
       return <UserTasksPage userId={userId} />;
+    }
+
+    const userMatch = hash.match(/^#\/users\/(\d+)$/);
+    if (userMatch) {
+      const userId = userMatch[1];
+      return <UserPage userId={userId} />;
     }
 
     switch (hash) {

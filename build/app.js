@@ -7728,6 +7728,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editUserRequest: () => (/* binding */ editUserRequest),
 /* harmony export */   getArchivedTasksRequest: () => (/* binding */ getArchivedTasksRequest),
 /* harmony export */   getComments: () => (/* binding */ getComments),
+/* harmony export */   getExtendedUserRequest: () => (/* binding */ getExtendedUserRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
 /* harmony export */   getTaskLogs: () => (/* binding */ getTaskLogs),
 /* harmony export */   getUserSessionsRequest: () => (/* binding */ getUserSessionsRequest),
@@ -7966,6 +7967,13 @@ function archiveStageTasksRequest(stageId) {
 function getUsersRequest() {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/users`,
+    method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function getExtendedUserRequest(userId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/users/${userId}/extended`,
     method: "GET",
     headers: getCommonHeaders()
   });
@@ -8839,10 +8847,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EllipsisHorizontalIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/RectangleStackIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PowerIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/RectangleStackIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PowerIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
@@ -8935,14 +8944,22 @@ function UserDropdown({
       IconComponent: _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"]
     }),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
-      text: "Edit user",
+      text: "Full user details",
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        className: "wpqt-icon-blue wpqt-size-4"
+      }),
+      onClick: () => {
+        window.location.hash = `#/users/${user.id}`;
+      }
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
+      text: "Edit user",
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
         className: "wpqt-icon-green wpqt-size-4"
       }),
       onClick: openEditUserModal
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
       text: "User tasks",
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
         className: "wpqt-icon-blue wpqt-size-4"
       }),
       onClick: () => {
@@ -8950,7 +8967,7 @@ function UserDropdown({
       }
     }), userIsActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
       text: "Disable user",
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
         className: "wpqt-icon-red wpqt-size-4"
       }),
       className: "!wpqt-mb-0",
@@ -8958,13 +8975,13 @@ function UserDropdown({
     }), !userIsActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
         text: "Activate user",
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
           className: "wpqt-icon-green wpqt-size-4"
         }),
         onClick: () => changeUserStatus(true)
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
         text: "Delete user",
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
           className: "wpqt-icon-red wpqt-size-4"
         }),
         onClick: deleteUser
@@ -11808,6 +11825,31 @@ function UserAssignementSection({
 
 /***/ }),
 
+/***/ "./src/components/User/UserDataSection/UserDataSection.tsx":
+/*!*****************************************************************!*\
+  !*** ./src/components/User/UserDataSection/UserDataSection.tsx ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserDataSection: () => (/* binding */ UserDataSection)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function UserDataSection({
+  userData
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: JSON.stringify(userData)
+  });
+}
+
+
+/***/ }),
+
 /***/ "./src/components/User/UserListItem/UserListItem.tsx":
 /*!***********************************************************!*\
   !*** ./src/components/User/UserListItem/UserListItem.tsx ***!
@@ -11850,6 +11892,9 @@ function UserListItem({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "User created at",
       value: (0,_utils_date__WEBPACK_IMPORTED_MODULE_1__.formatDate)(user.created_at)
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
+      label: "Assigned tasks count",
+      value: user.assigned_tasks_count
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Status",
       value: userIsActive ? "Active" : "Disabled",
@@ -12495,6 +12540,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_OverviewPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pages/OverviewPage */ "./src/pages/OverviewPage.tsx");
 /* harmony import */ var _pages_UserSessionsPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pages/UserSessionsPage */ "./src/pages/UserSessionsPage.tsx");
 /* harmony import */ var _pages_UserTasksPage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pages/UserTasksPage */ "./src/pages/UserTasksPage.tsx");
+/* harmony import */ var _pages_UserPage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../pages/UserPage */ "./src/pages/UserPage.tsx");
+
 
 
 
@@ -12530,6 +12577,13 @@ const getPageFromUrl = () => {
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserTasksPage__WEBPACK_IMPORTED_MODULE_7__.UserTasksPage, {
+        userId: userId
+      });
+    }
+    const userMatch = hash.match(/^#\/users\/(\d+)$/);
+    if (userMatch) {
+      const userId = userMatch[1];
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserPage__WEBPACK_IMPORTED_MODULE_8__.UserPage, {
         userId: userId
       });
     }
@@ -12943,6 +12997,109 @@ const PipelinePage = () => {
     })
   });
 };
+
+
+/***/ }),
+
+/***/ "./src/pages/UserPage.tsx":
+/*!********************************!*\
+  !*** ./src/pages/UserPage.tsx ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserPage: () => (/* binding */ UserPage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Page/Page */ "./src/pages/Page/Page.tsx");
+/* harmony import */ var _components_common_Header_Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/common/Header/Header */ "./src/components/common/Header/Header.tsx");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _providers_LoadingContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../providers/LoadingContextProvider */ "./src/providers/LoadingContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/api */ "./src/api/api.ts");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _utils_user__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/user */ "./src/utils/user.ts");
+/* harmony import */ var _components_User_UserDataSection_UserDataSection__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/User/UserDataSection/UserDataSection */ "./src/components/User/UserDataSection/UserDataSection.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+
+
+function UserPage({
+  userId
+}) {
+  const {
+    loadingDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useContext)(_providers_LoadingContextProvider__WEBPACK_IMPORTED_MODULE_4__.LoadingContext);
+  const [userData, setUserData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useState)(null);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
+    const getUserData = () => __awaiter(this, void 0, void 0, function* () {
+      try {
+        loadingDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_FULL_PAGE_LOADING,
+          payload: true
+        });
+        const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_6__.getExtendedUserRequest)(userId);
+        setUserData((0,_utils_user__WEBPACK_IMPORTED_MODULE_8__.convertExtendedUserFromServer)(response.data));
+      } catch (error) {
+        console.error(error);
+        react_toastify__WEBPACK_IMPORTED_MODULE_7__.toast.error("Failed to get user data. Please try again");
+      } finally {
+        loadingDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_FULL_PAGE_LOADING,
+          payload: false
+        });
+      }
+    });
+    getUserData();
+  }, []);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_1__.Page, {
+    children: userData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Header_Header__WEBPACK_IMPORTED_MODULE_2__.WPQTPageHeader, {
+        description: "This is a user page",
+        children: userData.name
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_User_UserDataSection_UserDataSection__WEBPACK_IMPORTED_MODULE_9__.UserDataSection, {
+        userData: userData
+      })]
+    })
+  });
+}
 
 
 /***/ }),
@@ -14699,9 +14856,13 @@ const convertUserSessionFromServer = user => Object.assign(Object.assign({}, use
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   convertExtendedUserFromServer: () => (/* binding */ convertExtendedUserFromServer),
 /* harmony export */   convertUserFromServer: () => (/* binding */ convertUserFromServer)
 /* harmony export */ });
 const convertUserFromServer = user => Object.assign(Object.assign({}, user), {
+  is_active: user.is_active === "1"
+});
+const convertExtendedUserFromServer = user => Object.assign(Object.assign({}, user), {
   is_active: user.is_active === "1"
 });
 
@@ -33994,6 +34155,47 @@ function UserCircleIcon({
   }));
 }
 const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(UserCircleIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
+/***/ "./node_modules/@heroicons/react/24/outline/esm/UserIcon.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/UserIcon.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function UserIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(UserIcon);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
 
 /***/ }),

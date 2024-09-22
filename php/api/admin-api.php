@@ -22,6 +22,7 @@ use WPQT\Session\SessionRepository;
 use WPQT\Session\SessionService;
 use WPQT\Log\LogService;
 use WPQT\User\UserRepository;
+use WPQT\UserPage\UserPageService;
 
 function validate_numeric($param, $request, $key) {
     return is_numeric($param);
@@ -723,12 +724,30 @@ function wpqt_register_api_routes() {
 
     register_rest_route(
         'wpqt/v1',
-        'users/(?P<id>\d+)',
+        'users/(?P<id>\d+)/extended',
         array(
             'methods' => 'GET',
             'callback' => function( $data ) {
-                WPQTverifyApiNonce($data);
-                return ['s'];
+                try {
+                    WPQTverifyApiNonce($data);
+                    $userRepo = new UserRepository();
+                    $userService = new UserService();
+                    $userPageService = new UserPageService();
+                    $user = $userRepo->getUserById($data['id']);
+    
+                    if (!$user) {
+                        throw new WPQTException('Failed to get user data', true);
+                    }
+                    $user->has_password = $userService->checkIfUserHasPassword($data['id']);
+                    $user->setup_completed = $userPageService->checkIfUserPageSetupCompleted($data['id']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
+                }catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+
             },
             'permission_callback' => function() {
                 return PermissionService::hasRequiredPermissionsForPrivateAPI();

@@ -1,8 +1,20 @@
-import { ServerUser, User } from "../types/user";
+import {
+  ExtendedUser,
+  ServerExtendedUser,
+  ServerUser,
+  User,
+} from "../types/user";
 
 const convertUserFromServer = (user: ServerUser): User => ({
   ...user,
   is_active: user.is_active === "1",
 });
 
-export { convertUserFromServer };
+const convertExtendedUserFromServer = (
+  user: ServerExtendedUser,
+): ExtendedUser => ({
+  ...user,
+  is_active: user.is_active === "1",
+});
+
+export { convertUserFromServer, convertExtendedUserFromServer };

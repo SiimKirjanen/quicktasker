@@ -4,6 +4,7 @@ import {
   RectangleStackIcon,
   EllipsisHorizontalIcon,
   PowerIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
 import {
   WPQTDropdown,
@@ -75,10 +76,19 @@ function UserDropdown({ user }: Props) {
       )}
     >
       <WPQTDropdownItem
+        text="Full user details"
+        icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
+        onClick={() => {
+          window.location.hash = `#/users/${user.id}`;
+        }}
+      />
+
+      <WPQTDropdownItem
         text="Edit user"
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openEditUserModal}
       />
+
       <WPQTDropdownItem
         text="User tasks"
         icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-4" />}
