@@ -1349,6 +1349,10 @@
   text-align: center;
 }
 
+.wpqt-align-middle {
+  vertical-align: middle;
+}
+
 .wpqt-font-inter {
   font-family: Inter, sans-serif;
 }

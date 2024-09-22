@@ -24,8 +24,11 @@ class PipelineService {
     public function createPipeline($name) {
         global $wpdb;
 
+        $activePipeline = $this->pipelineRepository->getActivePipeline();
+
         $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_PIPELINES, array(
-            'name' => $name
+            'name' => $name,
+            'is_primary' => $activePipeline ? false : true
         ));
 
         if ($result == false) {

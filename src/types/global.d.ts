@@ -4,7 +4,7 @@ import { ServerUser } from "./user";
 declare global {
   interface Window {
     wpqt: {
-      initialActivePipelineId: string;
+      initialActivePipelineId: string | null;
       initialPipelines: PipelineFromServer[];
       apiNonce: string;
       initialUsers: ServerUser[];

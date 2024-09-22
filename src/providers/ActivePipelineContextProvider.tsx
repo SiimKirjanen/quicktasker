@@ -55,7 +55,9 @@ const ActivePipelineContextProvider = ({
   useEffect(() => {
     const initialActivePipelineId = window.wpqt.initialActivePipelineId;
 
-    fetchAndSetPipelineData(initialActivePipelineId, true);
+    if (initialActivePipelineId) {
+      fetchAndSetPipelineData(initialActivePipelineId, true);
+    }
   }, []);
 
   const setLoadingState = (isLoading: boolean, fullPageLoading: boolean) => {

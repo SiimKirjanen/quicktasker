@@ -10,11 +10,13 @@ import {
 import { createPipelineRequest, editPipelineRequest } from "../../../api/api";
 import { Pipeline } from "../../../types/pipeline";
 import { DispatchType, useModal } from "../../../hooks/useModal";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 function PipelineModal() {
   const {
     state: { pipelineModalOpen },
   } = useContext(ModalContext);
+  const { fetchAndSetPipelineData } = useContext(ActivePipelineContext);
   const {
     modalSaving,
     setModalSaving,
@@ -40,6 +42,7 @@ function PipelineModal() {
         response.data,
         DispatchType.PIPELINES,
       );
+      fetchAndSetPipelineData(response.data.id);
     } catch (error) {
       handleError(error);
     }

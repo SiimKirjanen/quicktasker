@@ -36,7 +36,7 @@ function wpqt_enqueue_app_assets(){
 		'apiNonce' => NonceService::createNonce( WPQT_ADMIN_API_NONCE ),
 		'siteURL' => site_url(),
 		'pluginURL' => WP_QUICK_TASKS_PLUGIN_FOLDER_URL,
-		'initialActivePipelineId' => $activePipeline->id,
+		'initialActivePipelineId' => $activePipeline ? $activePipeline->id : null,
 		'initialPipelines' => $pipelines,
 		'initialUsers' => $users,
 		'publicUserPageId' => WP_QUICK_TASKS_PUBLIC_USER_PAGE_ID

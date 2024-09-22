@@ -16,8 +16,10 @@ function App() {
         <UserContextProvider>
           <ModalContextProvider>
             <PipelinesContextProvider>
-              <LoadingContextProvider>{currentPage}</LoadingContextProvider>
-              <ToastContainer position="bottom-right" />
+              <LoadingContextProvider>
+                {currentPage}
+                <ToastContainer position="bottom-right" />
+              </LoadingContextProvider>
             </PipelinesContextProvider>
           </ModalContextProvider>
         </UserContextProvider>

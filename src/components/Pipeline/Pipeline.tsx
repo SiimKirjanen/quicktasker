@@ -12,7 +12,7 @@ import { AddStage } from "./AddStage";
 import { TaskModal } from "../Modal/TaskModal/TaskModal";
 import { StageModal } from "../Modal/StageModal/StageModal";
 import { toast } from "react-toastify";
-import { PipelineModal } from "../Modal/PipelineModal/PipelineModal";
+import { PipelineIntro } from "./PipelineIntro";
 
 const Pipeline = () => {
   const {
@@ -69,7 +69,7 @@ const Pipeline = () => {
   );
 
   if (!activePipeline) {
-    return null;
+    return <PipelineIntro />;
   }
 
   return (
@@ -85,7 +85,6 @@ const Pipeline = () => {
       />
       <TaskModal />
       <StageModal />
-      <PipelineModal />
     </div>
   );
 };
