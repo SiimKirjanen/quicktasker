@@ -16,8 +16,8 @@ function wp_quick_taks_add_admin_menu() {
 
     add_submenu_page(
         'wp-quick-tasks',
-        'Overview',
-        'Overview',
+        'Boards',
+        'Boards',
         'manage_options',
         'wp-quick-tasks',
         'wp_quick_taks_generate_app_page'
@@ -25,10 +25,10 @@ function wp_quick_taks_add_admin_menu() {
 
     add_submenu_page(
         'wp-quick-tasks',
-        'Boards',
-        'Boards',
+        'Overview',
+        'Overview',
         'manage_options',
-        'wp-quick-tasks#/boards',
+        'wp-quick-tasks#/overview',
         'wp_quick_taks_generate_app_page'
     );
 

@@ -49,14 +49,14 @@ const getPageFromUrl = () => {
     switch (hash) {
       case "#/users":
         return <UsersPage />;
-      case "#/boards":
-        return <PipelinePage />;
+      case "#/overview":
+        return <OverviewPage />;
       case "#/archive":
         return <ArchivePage />;
       case "#/user-sessions":
         return <UserSessionsPage />;
       default:
-        return <OverviewPage />;
+        return <PipelinePage />;
     }
   }
 };
@@ -75,7 +75,7 @@ const setSubMenuItemActive = () => {
 
   const hashMap: { [key: string]: string } = {
     "#/users": "#/users",
-    "#/boards": "#/boards",
+    "#/overview": "#/overview",
     "#/archive": "#/archive",
     "#/user-sessions": "#/user-sessions",
     default: "",

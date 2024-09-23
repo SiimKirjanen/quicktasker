@@ -10,16 +10,19 @@ use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
 use WPQT\Hash\HashService;
 use WPQT\Exceptions\WPQTException;
+use WPQT\Pipeline\PipelineRepository;
 
 class TaskService {
     protected $taskRepository;
     protected $stageRepository;
+    protected $pipelineRepository;
     protected $logService;
     protected $hashService;
 
     public function __construct() {
         $this->taskRepository = new TaskRepository();
         $this->stageRepository = new StageRepository();
+        $this->pipelineRepository = new PipelineRepository();
         $this->logService = new LogService();
         $this->hashService = new HashService();
     }
@@ -317,10 +320,58 @@ class TaskService {
         $result2 = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('is_archived' => 1), array('task_id' => $taskId));
 
         if ($result2 === false) {
-            throw new \Exception('Failed to delete task location');
+            throw new \Exception('Failed to archive task location');
         }
 
         $this->shiftTaskOrder($taskToArchive->task_order, $taskToArchive->stage_id);
+    }
+
+    public function restoreArchivedTask($taskId) {
+        global $wpdb;
+
+        $task = $this->taskRepository->getTaskById($taskId);
+
+        if ($task === null) {
+            throw new WPQTException('Task not found', true);
+        }
+
+        $pipeline = $this->pipelineRepository->getPipelineById($task->pipeline_id);
+
+        if (!$pipeline) {
+            throw new WPQTException('Board not found', true);
+        }
+
+        $pipelineStages = $this->stageRepository->getStagesByPipelineId($pipeline->id);
+
+        if (empty($pipelineStages)) {
+            throw new WPQTException('No stages in board', true);
+        }
+
+        $stageExists = false;
+        foreach ($pipelineStages as $stage) {
+            if ($stage->id == $task->stage_id) {
+                $stageExists = true;
+                break;
+            }
+        }
+    
+        if ($stageExists) {
+            $this->moveTask($taskId, $task->stage_id, $task->task_order);
+        }else {
+            $this->moveTask($taskId, $pipelineStages[0]->id, $task->task_order);
+        }
+        
+        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS, array('is_archived' => 0), array('id' => $taskId));
+
+        if ($result === false) {
+            throw new WPQTException('Failed to restore task');
+        }
+
+        $result2 = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('is_archived' => 0), array('task_id' => $taskId));
+
+        if ($result2 === false) {
+            throw new WPQTException('Failed to restore task location');
+        }
     }
 
     /**

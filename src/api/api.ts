@@ -135,6 +135,14 @@ function archiveTaskRequest(taskId: string): Promise<WPQTResponse> {
   });
 }
 
+function restoreArchivedTaskRequest(taskId: string): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}/archive-restore`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+  });
+}
+
 function getArchivedTasksRequest(): Promise<
   WPQTResponse<ArchivedTaskFromServer[]>
 > {
@@ -432,4 +440,5 @@ export {
   getUserTasksRequest,
   getUsersRequest,
   getExtendedUserRequest,
+  restoreArchivedTaskRequest,
 };

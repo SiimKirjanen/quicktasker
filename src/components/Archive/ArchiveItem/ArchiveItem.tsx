@@ -11,7 +11,7 @@ function ArchiveItem({ task }: Props) {
     <WPQTCard
       title={task.name}
       description={task.description}
-      dropdown={<ArchivedTaskDropdown />}
+      dropdown={<ArchivedTaskDropdown task={task} />}
     ></WPQTCard>
   );
 }

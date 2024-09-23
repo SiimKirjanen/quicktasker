@@ -1,5 +1,4 @@
 import { useContext } from "@wordpress/element";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
 import {
   EllipsisHorizontalIcon,
@@ -7,38 +6,27 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { toast } from "react-toastify";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
-import { archiveTaskRequest, deleteTaskRequest } from "../../../api/api";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
   WPQTDropdownItem,
 } from "../WPQTDropdown";
+import { useTaskActions } from "../../../hooks/useTaskActions";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 type Props = {
   task: Task;
 };
 
 function TaskControlsDropdown({ task }: Props) {
+  const { modalDispatch } = useContext(ModalContext);
+  const { deleteTask, archiveTask } = useTaskActions();
   const {
     state: { activePipeline },
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
-  const { modalDispatch } = useContext(ModalContext);
-
-  const deleteTask = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    try {
-      await deleteTaskRequest(task.id);
-      fetchAndSetPipelineData(activePipeline!.id);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete a task");
-    }
-  };
 
   const openTaskEditModal = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -49,19 +37,6 @@ function TaskControlsDropdown({ task }: Props) {
         taskToEdit: task,
       },
     });
-  };
-
-  const archiveTask = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    try {
-      await archiveTaskRequest(task.id);
-      fetchAndSetPipelineData(activePipeline!.id);
-      toast.success("Task archived successfully");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to archive a task");
-    }
   };
 
   return (
@@ -76,7 +51,12 @@ function TaskControlsDropdown({ task }: Props) {
       <WPQTDropdownItem
         text="Archive task"
         icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
-        onClick={archiveTask}
+        onClick={(e: React.MouseEvent) => {
+          e.stopPropagation();
+          archiveTask(task.id, () => {
+            fetchAndSetPipelineData(activePipeline!.id);
+          });
+        }}
       />
       <WPQTDropdownItem
         text="Edit task"
@@ -86,7 +66,12 @@ function TaskControlsDropdown({ task }: Props) {
       <WPQTDropdownItem
         text="Delete task"
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-        onClick={deleteTask}
+        onClick={async (e: React.MouseEvent) => {
+          e.stopPropagation();
+          await deleteTask(task.id, () => {
+            fetchAndSetPipelineData(activePipeline!.id);
+          });
+        }}
         className="!wpqt-mb-0"
       />
     </WPQTDropdown>

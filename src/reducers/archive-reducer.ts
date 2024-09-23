@@ -1,4 +1,5 @@
 import {
+  REMOVE_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
@@ -30,6 +31,16 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         archiveFilteredPipelineId,
+      };
+    }
+    case REMOVE_ARCHIVED_TASK: {
+      const archivedTasks = (state.archivedTasks ?? []).filter(
+        (task) => task.id !== action.payload,
+      );
+
+      return {
+        ...state,
+        archivedTasks,
       };
     }
     default: {
