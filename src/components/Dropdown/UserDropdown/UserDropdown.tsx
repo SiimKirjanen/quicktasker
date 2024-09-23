@@ -31,7 +31,8 @@ function UserDropdown({ user }: Props) {
   const { userDispatch } = useContext(UserContext);
   const userIsActive = user.is_active;
 
-  const openEditUserModal = () => {
+  const openEditUserModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
     modalDispatch({
       type: OPEN_EDIT_USER_MODAL,
       payload: user,
@@ -52,7 +53,8 @@ function UserDropdown({ user }: Props) {
     }
   };
 
-  const deleteUser = async () => {
+  const deleteUser = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
       await deleteUserRequest(user);
 
@@ -102,7 +104,10 @@ function UserDropdown({ user }: Props) {
           text="Disable user"
           icon={<PowerIcon className="wpqt-icon-red wpqt-size-4" />}
           className="!wpqt-mb-0"
-          onClick={() => changeUserStatus(false)}
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            changeUserStatus(false);
+          }}
         />
       )}
 
@@ -111,7 +116,10 @@ function UserDropdown({ user }: Props) {
           <WPQTDropdownItem
             text="Activate user"
             icon={<PowerIcon className="wpqt-icon-green wpqt-size-4" />}
-            onClick={() => changeUserStatus(true)}
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              changeUserStatus(true);
+            }}
           />
           <WPQTDropdownItem
             text="Delete user"

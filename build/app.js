@@ -8976,7 +8976,8 @@ function UserDropdown({
     userDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserContext);
   const userIsActive = user.is_active;
-  const openEditUserModal = () => {
+  const openEditUserModal = e => {
+    e.stopPropagation();
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_4__.OPEN_EDIT_USER_MODAL,
       payload: user
@@ -8994,7 +8995,8 @@ function UserDropdown({
       react_toastify__WEBPACK_IMPORTED_MODULE_6__.toast.error("Failed to disable user. Please try again");
     }
   });
-  const deleteUser = () => __awaiter(this, void 0, void 0, function* () {
+  const deleteUser = e => __awaiter(this, void 0, void 0, function* () {
+    e.stopPropagation();
     try {
       yield (0,_api_api__WEBPACK_IMPORTED_MODULE_7__.deleteUserRequest)(user);
       userDispatch({
@@ -9041,14 +9043,20 @@ function UserDropdown({
         className: "wpqt-icon-red wpqt-size-4"
       }),
       className: "!wpqt-mb-0",
-      onClick: () => changeUserStatus(false)
+      onClick: e => {
+        e.stopPropagation();
+        changeUserStatus(false);
+      }
     }), !userIsActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
         text: "Activate user",
         icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
           className: "wpqt-icon-green wpqt-size-4"
         }),
-        onClick: () => changeUserStatus(true)
+        onClick: e => {
+          e.stopPropagation();
+          changeUserStatus(true);
+        }
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
         text: "Delete user",
         icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
@@ -11990,12 +11998,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _hooks_usePageLinks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../hooks/usePageLinks */ "./src/hooks/usePageLinks.tsx");
+
 
 function UserDataSection({
   userData
 }) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: JSON.stringify(userData)
+  const {
+    userPage
+  } = (0,_hooks_usePageLinks__WEBPACK_IMPORTED_MODULE_1__.usePageLinks)();
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: ["Name: ", userData.name]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: ["Description: ", userData.description]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: ["Created at: ", userData.created_at]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: ["Setup completed: ", userData.setup_complete ? "Yes" : "No"]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: ["Assigned tasks count: ", userData.assigned_tasks_count]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: ["Is active: ", userData.is_active ? "Yes" : "No"]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+        href: userPage + "&code=" + userData.page_hash,
+        target: "_blank",
+        rel: "noreferrer",
+        children: userPage + "&code=" + userData.page_hash
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {})]
   });
 }
 
@@ -12037,6 +12069,10 @@ function UserListItem({
     dropdown: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserDropdown_UserDropdown__WEBPACK_IMPORTED_MODULE_3__.UserDropdown, {
       user: user
     }),
+    onClick: () => {
+      window.location.hash = `#/users/${user.id}`;
+    },
+    className: "wpqt-cursor-pointer",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {
       label: "Users page",
       value: "Link",
@@ -13055,7 +13091,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const useUserTasksFilter = searchValue => {
   const filterTasks = task => {
-    const matchesSearchValue = task.name.toLowerCase().includes(searchValue.toLowerCase()) || task.description && task.description.toLowerCase().includes(searchValue.toLowerCase());
+    const matchesSearchValue = task.name && task.name.toLowerCase().includes(searchValue.toLowerCase()) || task.description && task.description.toLowerCase().includes(searchValue.toLowerCase());
     return matchesSearchValue;
   };
   return {

@@ -17,6 +17,10 @@ function UserListItem({ user }: Props) {
       title={user.name}
       description={user.description}
       dropdown={<UserDropdown user={user} />}
+      onClick={() => {
+        window.location.hash = `#/users/${user.id}`;
+      }}
+      className="wpqt-cursor-pointer"
     >
       <WPQTCardDataItem
         label="Users page"
