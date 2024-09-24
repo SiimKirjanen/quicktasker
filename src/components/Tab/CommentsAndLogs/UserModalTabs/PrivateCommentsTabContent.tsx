@@ -1,19 +1,23 @@
 import { toast } from "react-toastify";
-import { addCommentRequest, getComments } from "../../../api/api";
-import { WPQTComment } from "../../../types/comment";
-import { TabContent, TabContentItem } from "./TabContent";
-import { WPQTTypes } from "../../../types/enums";
+
+import {
+  CommentsAndLogsTabContent,
+  TabContentItem,
+} from "../CommentsAndLogsTabContent";
+import { addCommentRequest, getComments } from "../../../../api/api";
+import { WPQTTypes } from "../../../../types/enums";
+import { WPQTComment } from "../../../../types/comment";
 
 type Props = {
-  taskId: string;
+  userId: string;
 };
 
-function CommentsTabContent({ taskId }: Props) {
+function PrivateCommentsTabContent({ userId }: Props) {
   const addComment = async (newEntry: string) => {
     try {
       const response = await addCommentRequest(
-        taskId,
-        WPQTTypes.Task,
+        userId,
+        WPQTTypes.User,
         true,
         newEntry,
       );
@@ -21,24 +25,24 @@ function CommentsTabContent({ taskId }: Props) {
       return response.data;
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add comment");
+      toast.error("Failed to add user comment");
     }
   };
 
   const fetchPrivateComments = async () => {
     try {
-      const response = await getComments(taskId, "task", true);
+      const response = await getComments(userId, WPQTTypes.User, true);
 
       return response.data;
     } catch (error) {
       console.error(error);
-      toast.error("Failed to get comment");
+      toast.error("Failed to load private comments");
     }
   };
 
   return (
-    <TabContent<WPQTComment>
-      taskId={taskId}
+    <CommentsAndLogsTabContent<WPQTComment>
+      typeId={userId}
       fetchData={fetchPrivateComments}
       onAdd={addComment}
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
@@ -48,4 +52,4 @@ function CommentsTabContent({ taskId }: Props) {
   );
 }
 
-export { CommentsTabContent };
+export { PrivateCommentsTabContent };

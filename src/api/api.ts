@@ -11,6 +11,7 @@ import { LogFromServer } from "../types/log";
 import { WPQTCommentFromServer } from "../types/comment";
 import { ServerExtendedUser, ServerUser, User } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
+import { WPQTTypes } from "../types/enums";
 
 function getCommonHeaders() {
   return {
@@ -199,6 +200,21 @@ function addCommentRequest(
 function getTaskLogs(taskId: string): Promise<WPQTResponse<LogFromServer[]>> {
   return apiFetch({
     path: `/wpqt/v1/tasks/${taskId}/logs`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function getLogsRequest(
+  typeId: string,
+  type: WPQTTypes,
+): Promise<WPQTResponse<LogFromServer[]>> {
+  const queryParams = new URLSearchParams({
+    typeId,
+    type,
+  });
+  return apiFetch({
+    path: `/wpqt/v1/logs?${queryParams.toString()}`,
+    method: "GET",
     headers: getCommonHeaders(),
   });
 }
@@ -441,4 +457,5 @@ export {
   getUsersRequest,
   getExtendedUserRequest,
   restoreArchivedTaskRequest,
+  getLogsRequest,
 };

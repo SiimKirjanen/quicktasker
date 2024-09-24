@@ -1,0 +1,43 @@
+import { toast } from "react-toastify";
+
+import {
+  CommentsAndLogsTabContent,
+  TabContentItem,
+} from "../CommentsAndLogsTabContent";
+import { getLogsRequest } from "../../../../api/api";
+import { WPQTTypes } from "../../../../types/enums";
+import { Log } from "../../../../types/log";
+import { useLogActions } from "../../../../hooks/actions/useLogActions";
+
+type Props = {
+  userId: string;
+};
+
+function LogsTabContent({ userId }: Props) {
+  const { addLog } = useLogActions();
+  const onAddLog = async (text: string) => {
+    return await addLog(userId, WPQTTypes.User, text);
+  };
+  const fetchLogs = async () => {
+    try {
+      const response = await getLogsRequest(userId, WPQTTypes.User);
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to get log");
+    }
+  };
+  return (
+    <CommentsAndLogsTabContent<Log>
+      typeId={userId}
+      fetchData={fetchLogs}
+      onAdd={onAddLog}
+      renderItem={(log: Log) => <TabContentItem item={log} />}
+      noDataMessage="No logs available"
+      explanation="Logs can be seen only by WordPress admins"
+    />
+  );
+}
+
+export { LogsTabContent };

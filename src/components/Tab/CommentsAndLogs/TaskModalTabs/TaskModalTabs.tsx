@@ -1,6 +1,6 @@
-import { Task } from "../../../types/task";
-import { WPQTTabs } from "../WPQTTabs";
-import { CommentsTabContent } from "./CommentsTabContent";
+import { Task } from "../../../../types/task";
+import { WPQTTabs } from "../../WPQTTabs";
+import { CommentsTabContent } from "./PrivateCommentsTabContent";
 import { LogsTabContent } from "./LogsTabContent";
 import { PublicCommentsTabContent } from "./PublicCommentsTabContent";
 

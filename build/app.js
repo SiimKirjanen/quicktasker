@@ -7729,6 +7729,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getArchivedTasksRequest: () => (/* binding */ getArchivedTasksRequest),
 /* harmony export */   getComments: () => (/* binding */ getComments),
 /* harmony export */   getExtendedUserRequest: () => (/* binding */ getExtendedUserRequest),
+/* harmony export */   getLogsRequest: () => (/* binding */ getLogsRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
 /* harmony export */   getTaskLogs: () => (/* binding */ getTaskLogs),
 /* harmony export */   getUserSessionsRequest: () => (/* binding */ getUserSessionsRequest),
@@ -7897,6 +7898,17 @@ function addCommentRequest(typeId, type, isPrivate, comment) {
 function getTaskLogs(taskId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/tasks/${taskId}/logs`,
+    headers: getCommonHeaders()
+  });
+}
+function getLogsRequest(typeId, type) {
+  const queryParams = new URLSearchParams({
+    typeId,
+    type
+  });
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/logs?${queryParams.toString()}`,
+    method: "GET",
     headers: getCommonHeaders()
   });
 }
@@ -10114,17 +10126,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
-/* harmony import */ var _Tab_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Tab/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/TaskModalTabs/TaskModalTabs.tsx");
-/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
-/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
-/* harmony import */ var _common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/Toggle/Toggle */ "./src/components/common/Toggle/Toggle.tsx");
-/* harmony import */ var _Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Toggle/Toggle */ "./src/components/common/Toggle/Toggle.tsx");
+/* harmony import */ var _Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArchiveBoxIcon.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
-/* harmony import */ var _hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../hooks/useTaskActions */ "./src/hooks/useTaskActions.ts");
-/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../hooks/useTaskActions */ "./src/hooks/useTaskActions.ts");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx");
 
 
 
@@ -10155,13 +10167,13 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
   const {
     deleteTask,
     archiveTask
-  } = (0,_hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_11__.useTaskActions)();
+  } = (0,_hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_10__.useTaskActions)();
   const {
     state: {
       activePipeline
     },
     fetchAndSetPipelineData
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_12__.ActivePipelineContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_11__.ActivePipelineContext);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (taskToEdit) {
       setTaskName(taskToEdit.name);
@@ -10196,51 +10208,51 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalFieldSet, {
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
             label: "Name",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__.WPQTInput, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_4__.WPQTInput, {
               isAutoFocus: true,
               value: taskName,
               onChange: newValue => setTaskName(newValue)
             })
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
             label: "Description",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__.WPQTTextarea, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_5__.WPQTTextarea, {
               rowsCount: 3,
               value: taskDescription,
               onChange: newValue => setTaskDescription(newValue)
             })
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
             label: "Assigned users",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_8__.UserAssignementDropdown, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_7__.UserAssignementDropdown, {
               task: taskToEdit,
               onUserAdd: user => {
                 modalDispatch({
-                  type: _constants__WEBPACK_IMPORTED_MODULE_9__.ADD_ASSIGNED_USER_TO_EDITING_TASK,
+                  type: _constants__WEBPACK_IMPORTED_MODULE_8__.ADD_ASSIGNED_USER_TO_EDITING_TASK,
                   payload: user
                 });
               },
               onUserDelete: user => {
                 modalDispatch({
-                  type: _constants__WEBPACK_IMPORTED_MODULE_9__.REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+                  type: _constants__WEBPACK_IMPORTED_MODULE_8__.REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
                   payload: user
                 });
               }
             })
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
             label: "Free for all task",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_7__.Toggle, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_6__.Toggle, {
               checked: freeForAllTask,
               handleChange: setFreeForAllTask
             })
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "md:wpqt-pr-3",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_4__.TaskModalTabs, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_12__.TaskModalTabs, {
             task: taskToEdit
           })
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_9__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
             className: "wpqt-icon-blue wpqt-size-5"
           }),
@@ -10248,12 +10260,12 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
           onClick: () => {
             archiveTask(taskToEdit.id, () => {
               modalDispatch({
-                type: _constants__WEBPACK_IMPORTED_MODULE_9__.CLOSE_TASK_MODAL
+                type: _constants__WEBPACK_IMPORTED_MODULE_8__.CLOSE_TASK_MODAL
               });
               fetchAndSetPipelineData(activePipeline.id);
             });
           }
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_9__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_14__["default"], {
             className: "wpqt-icon-red wpqt-size-5"
           }),
@@ -10261,7 +10273,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
           onClick: () => {
             deleteTask(taskToEdit.id, () => {
               modalDispatch({
-                type: _constants__WEBPACK_IMPORTED_MODULE_9__.CLOSE_TASK_MODAL
+                type: _constants__WEBPACK_IMPORTED_MODULE_8__.CLOSE_TASK_MODAL
               });
               fetchAndSetPipelineData(activePipeline.id);
             });
@@ -10368,7 +10380,7 @@ function UserModal() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModal, {
     modalOpen: userModalOpen,
     closeModal: closeModal,
-    size: "md",
+    size: "lg",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserModalContent__WEBPACK_IMPORTED_MODULE_6__.UserModalContent, {
       ref: modalContentRef,
       modalSaving: modalSaving,
@@ -10401,13 +10413,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/RectangleStackIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PowerIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/RectangleStackIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PowerIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _hooks_useUserActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../hooks/useUserActions */ "./src/hooks/useUserActions.ts");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
+/* harmony import */ var _Tab_CommentsAndLogs_UserModalTabs_UserModalTabs__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs */ "./src/components/Tab/CommentsAndLogs/UserModalTabs/UserModalTabs.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10435,6 +10448,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
+
 
 
 
@@ -10488,9 +10502,9 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3",
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_1__.WPQTModalFieldSet, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_1__.WPQTModalFieldSet, {
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_1__.WPQTModalField, {
             label: "Name",
             children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_4__.WPQTInput, {
@@ -10506,27 +10520,37 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
               onChange: newValue => setUserDescription(newValue)
             })
           })]
-        })
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_UserModalTabs_UserModalTabs__WEBPACK_IMPORTED_MODULE_10__.UserModalTabs, {
+            user: userToEdit
+          })
+        })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
-          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
             className: "wpqt-icon-blue wpqt-size-5"
           }),
           text: "User tasks",
           onClick: () => {
             window.location.hash = `#/users/${userToEdit.id}/tasks`;
+            modalDispatch({
+              type: _constants__WEBPACK_IMPORTED_MODULE_8__.CLOSE_USER_MODAL
+            });
           }
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
-          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
             className: "wpqt-icon-blue wpqt-size-5"
           }),
           text: "User details",
           onClick: () => {
             window.location.hash = `#/users/${userToEdit.id}`;
+            modalDispatch({
+              type: _constants__WEBPACK_IMPORTED_MODULE_8__.CLOSE_USER_MODAL
+            });
           }
         }), !isActiveUser && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
-          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
             className: "wpqt-icon-green wpqt-size-5"
           }),
           text: "Activate user",
@@ -10540,7 +10564,7 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
             });
           })
         }), isActiveUser && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
-          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
             className: "wpqt-icon-red wpqt-size-5"
           }),
           text: "Disable user",
@@ -10554,7 +10578,7 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
             });
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
-          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_14__["default"], {
             className: "wpqt-icon-red wpqt-size-5"
           }),
           text: "Delete user",
@@ -11446,271 +11470,16 @@ function WPQTSelect({
 
 /***/ }),
 
-/***/ "./src/components/Tab/TaskModalTabs/CommentsTabContent.tsx":
-/*!*****************************************************************!*\
-  !*** ./src/components/Tab/TaskModalTabs/CommentsTabContent.tsx ***!
-  \*****************************************************************/
+/***/ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx":
+/*!**************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx ***!
+  \**************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CommentsTabContent: () => (/* binding */ CommentsTabContent)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _TabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TabContent */ "./src/components/Tab/TaskModalTabs/TabContent.tsx");
-/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../types/enums */ "./src/types/enums.tsx");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-
-
-
-
-function CommentsTabContent({
-  taskId
-}) {
-  const addComment = newEntry => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addCommentRequest)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, true, newEntry);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add comment");
-    }
-  });
-  const fetchPrivateComments = () => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getComments)(taskId, "task", true);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get comment");
-    }
-  });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContent, {
-    taskId: taskId,
-    fetchData: fetchPrivateComments,
-    onAdd: addComment,
-    renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContentItem, {
-      item: comment
-    }),
-    noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by WordPress admins."
-  });
-}
-
-
-/***/ }),
-
-/***/ "./src/components/Tab/TaskModalTabs/LogsTabContent.tsx":
-/*!*************************************************************!*\
-  !*** ./src/components/Tab/TaskModalTabs/LogsTabContent.tsx ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LogsTabContent: () => (/* binding */ LogsTabContent)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _TabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TabContent */ "./src/components/Tab/TaskModalTabs/TabContent.tsx");
-/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../types/enums */ "./src/types/enums.tsx");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-
-
-
-
-function LogsTabContent({
-  taskId
-}) {
-  const addLog = text => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addLogRequest)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, text);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add log");
-    }
-  });
-  const fetchLogs = () => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getTaskLogs)(taskId);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get log");
-    }
-  });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContent, {
-    taskId: taskId,
-    fetchData: fetchLogs,
-    onAdd: addLog,
-    renderItem: log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContentItem, {
-      item: log
-    }),
-    noDataMessage: "No logs available",
-    explanation: "Logs can be seen only by WordPress admins"
-  });
-}
-
-
-/***/ }),
-
-/***/ "./src/components/Tab/TaskModalTabs/PublicCommentsTabContent.tsx":
-/*!***********************************************************************!*\
-  !*** ./src/components/Tab/TaskModalTabs/PublicCommentsTabContent.tsx ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   PublicCommentsTabContent: () => (/* binding */ PublicCommentsTabContent)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _TabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TabContent */ "./src/components/Tab/TaskModalTabs/TabContent.tsx");
-/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../types/enums */ "./src/types/enums.tsx");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-
-
-
-
-function PublicCommentsTabContent({
-  taskId
-}) {
-  const addComment = newEntry => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addCommentRequest)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, false, newEntry);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add comment");
-    }
-  });
-  const fetchComments = () => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getComments)(taskId, "task", false);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get comment");
-    }
-  });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContent, {
-    taskId: taskId,
-    fetchData: fetchComments,
-    onAdd: addComment,
-    renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TabContent__WEBPACK_IMPORTED_MODULE_3__.TabContentItem, {
-      item: comment
-    }),
-    noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
-  });
-}
-
-
-/***/ }),
-
-/***/ "./src/components/Tab/TaskModalTabs/TabContent.tsx":
-/*!*********************************************************!*\
-  !*** ./src/components/Tab/TaskModalTabs/TabContent.tsx ***!
-  \*********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   TabContent: () => (/* binding */ TabContent),
+/* harmony export */   CommentsAndLogsTabContent: () => (/* binding */ CommentsAndLogsTabContent),
 /* harmony export */   TabContentItem: () => (/* binding */ TabContentItem)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
@@ -11718,8 +11487,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11752,8 +11521,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-function TabContent({
-  taskId,
+function CommentsAndLogsTabContent({
+  typeId,
   fetchData,
   renderItem,
   noDataMessage,
@@ -11764,7 +11533,7 @@ function TabContent({
   const [newEntry, setNewEntry] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     loadData();
-  }, [taskId]);
+  }, [typeId]);
   const loadData = () => __awaiter(this, void 0, void 0, function* () {
     const data = yield fetchData();
     if (data) {
@@ -11800,13 +11569,13 @@ function TabContent({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__.WPQTTextarea, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_3__.WPQTTextarea, {
           rowsCount: 3,
           value: newEntry,
           onChange: text => setNewEntry(text)
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-ml-auto wpqt-flex",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTButton, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTButton, {
             btnText: "Add",
             onClick: addEntry,
             className: "wpqt-ml-auto"
@@ -11833,10 +11602,262 @@ function TabContentItem({
 
 /***/ }),
 
-/***/ "./src/components/Tab/TaskModalTabs/TaskModalTabs.tsx":
-/*!************************************************************!*\
-  !*** ./src/components/Tab/TaskModalTabs/TaskModalTabs.tsx ***!
-  \************************************************************/
+/***/ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/LogsTabContent.tsx":
+/*!*****************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/TaskModalTabs/LogsTabContent.tsx ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LogsTabContent: () => (/* binding */ LogsTabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
+/* harmony import */ var _hooks_actions_useLogActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useLogActions */ "./src/hooks/actions/useLogActions.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+function LogsTabContent({
+  taskId
+}) {
+  const {
+    addLog
+  } = (0,_hooks_actions_useLogActions__WEBPACK_IMPORTED_MODULE_5__.useLogActions)();
+  const onAddLog = text => __awaiter(this, void 0, void 0, function* () {
+    return yield addLog(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, text);
+  });
+  const fetchLogs = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getLogsRequest)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get log");
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
+    typeId: taskId,
+    fetchData: fetchLogs,
+    onAdd: onAddLog,
+    renderItem: log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
+      item: log
+    }),
+    noDataMessage: "No logs available",
+    explanation: "Logs can be seen only by WordPress admins"
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/PrivateCommentsTabContent.tsx":
+/*!****************************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/TaskModalTabs/PrivateCommentsTabContent.tsx ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CommentsTabContent: () => (/* binding */ CommentsTabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
+/* harmony import */ var _hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useCommentActions */ "./src/hooks/actions/useCommentActions.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+function CommentsTabContent({
+  taskId
+}) {
+  const {
+    addComment
+  } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__.useCommentActions)();
+  const onAddComment = newEntry => __awaiter(this, void 0, void 0, function* () {
+    return yield addComment(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, true, newEntry);
+  });
+  const fetchPrivateComments = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getComments)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, true);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get comment");
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
+    typeId: taskId,
+    fetchData: fetchPrivateComments,
+    onAdd: onAddComment,
+    renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
+      item: comment
+    }),
+    noDataMessage: "No comments available",
+    explanation: "Comments that can be added and viewed by WordPress admins."
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/PublicCommentsTabContent.tsx":
+/*!***************************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/TaskModalTabs/PublicCommentsTabContent.tsx ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PublicCommentsTabContent: () => (/* binding */ PublicCommentsTabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
+/* harmony import */ var _hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useCommentActions */ "./src/hooks/actions/useCommentActions.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+function PublicCommentsTabContent({
+  taskId
+}) {
+  const {
+    addComment
+  } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__.useCommentActions)();
+  const onAddComment = newEntry => __awaiter(this, void 0, void 0, function* () {
+    return yield addComment(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, false, newEntry);
+  });
+  const fetchComments = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getComments)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, false);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load comment");
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
+    typeId: taskId,
+    fetchData: fetchComments,
+    onAdd: onAddComment,
+    renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
+      item: comment
+    }),
+    noDataMessage: "No comments available",
+    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx":
+/*!****************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx ***!
+  \****************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -11846,10 +11867,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _WPQTTabs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTTabs */ "./src/components/Tab/WPQTTabs.tsx");
-/* harmony import */ var _CommentsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CommentsTabContent */ "./src/components/Tab/TaskModalTabs/CommentsTabContent.tsx");
-/* harmony import */ var _LogsTabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./LogsTabContent */ "./src/components/Tab/TaskModalTabs/LogsTabContent.tsx");
-/* harmony import */ var _PublicCommentsTabContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./PublicCommentsTabContent */ "./src/components/Tab/TaskModalTabs/PublicCommentsTabContent.tsx");
+/* harmony import */ var _WPQTTabs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../WPQTTabs */ "./src/components/Tab/WPQTTabs.tsx");
+/* harmony import */ var _PrivateCommentsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PrivateCommentsTabContent */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/PrivateCommentsTabContent.tsx");
+/* harmony import */ var _LogsTabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./LogsTabContent */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/LogsTabContent.tsx");
+/* harmony import */ var _PublicCommentsTabContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./PublicCommentsTabContent */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/PublicCommentsTabContent.tsx");
 
 
 
@@ -11861,12 +11882,306 @@ function TaskModalTabs({
   const tabs = ["Private comments", "Public comments", "Logs"];
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTTabs__WEBPACK_IMPORTED_MODULE_1__.WPQTTabs, {
     tabs: tabs,
-    tabsContent: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsTabContent, {
+    tabsContent: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PrivateCommentsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsTabContent, {
       taskId: task.id
     }, 1), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PublicCommentsTabContent__WEBPACK_IMPORTED_MODULE_4__.PublicCommentsTabContent, {
       taskId: task.id
     }, 2), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogsTabContent__WEBPACK_IMPORTED_MODULE_3__.LogsTabContent, {
       taskId: task.id
+    }, 3)]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/CommentsAndLogs/UserModalTabs/LogsTabContent.tsx":
+/*!*****************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/UserModalTabs/LogsTabContent.tsx ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LogsTabContent: () => (/* binding */ LogsTabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
+/* harmony import */ var _hooks_actions_useLogActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useLogActions */ "./src/hooks/actions/useLogActions.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+function LogsTabContent({
+  userId
+}) {
+  const {
+    addLog
+  } = (0,_hooks_actions_useLogActions__WEBPACK_IMPORTED_MODULE_5__.useLogActions)();
+  const onAddLog = text => __awaiter(this, void 0, void 0, function* () {
+    return yield addLog(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, text);
+  });
+  const fetchLogs = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getLogsRequest)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get log");
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
+    typeId: userId,
+    fetchData: fetchLogs,
+    onAdd: onAddLog,
+    renderItem: log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
+      item: log
+    }),
+    noDataMessage: "No logs available",
+    explanation: "Logs can be seen only by WordPress admins"
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/CommentsAndLogs/UserModalTabs/PrivateCommentsTabContent.tsx":
+/*!****************************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/UserModalTabs/PrivateCommentsTabContent.tsx ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PrivateCommentsTabContent: () => (/* binding */ PrivateCommentsTabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+function PrivateCommentsTabContent({
+  userId
+}) {
+  const addComment = newEntry => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.addCommentRequest)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, true, newEntry);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add user comment");
+    }
+  });
+  const fetchPrivateComments = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getComments)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, true);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load private comments");
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
+    typeId: userId,
+    fetchData: fetchPrivateComments,
+    onAdd: addComment,
+    renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
+      item: comment
+    }),
+    noDataMessage: "No comments available",
+    explanation: "Comments that can be added and viewed by WordPress admins."
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/CommentsAndLogs/UserModalTabs/PublicCommentsTabContent.tsx":
+/*!***************************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/UserModalTabs/PublicCommentsTabContent.tsx ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PublicCommentsTabContent: () => (/* binding */ PublicCommentsTabContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
+/* harmony import */ var _hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useCommentActions */ "./src/hooks/actions/useCommentActions.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+function PublicCommentsTabContent({
+  userId
+}) {
+  const {
+    addComment
+  } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__.useCommentActions)();
+  const onAddComment = newEntry => __awaiter(this, void 0, void 0, function* () {
+    return yield addComment(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, false, newEntry);
+  });
+  const fetchComments = () => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getComments)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, false);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load comment");
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
+    typeId: userId,
+    fetchData: fetchComments,
+    onAdd: onAddComment,
+    renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
+      item: comment
+    }),
+    noDataMessage: "No comments available",
+    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Tab/CommentsAndLogs/UserModalTabs/UserModalTabs.tsx":
+/*!****************************************************************************!*\
+  !*** ./src/components/Tab/CommentsAndLogs/UserModalTabs/UserModalTabs.tsx ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserModalTabs: () => (/* binding */ UserModalTabs)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _WPQTTabs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../WPQTTabs */ "./src/components/Tab/WPQTTabs.tsx");
+/* harmony import */ var _LogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LogsTabContent */ "./src/components/Tab/CommentsAndLogs/UserModalTabs/LogsTabContent.tsx");
+/* harmony import */ var _PrivateCommentsTabContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PrivateCommentsTabContent */ "./src/components/Tab/CommentsAndLogs/UserModalTabs/PrivateCommentsTabContent.tsx");
+/* harmony import */ var _PublicCommentsTabContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./PublicCommentsTabContent */ "./src/components/Tab/CommentsAndLogs/UserModalTabs/PublicCommentsTabContent.tsx");
+
+
+
+
+
+function UserModalTabs({
+  user
+}) {
+  const tabs = ["Private comments", "Public comments", "Logs"];
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTTabs__WEBPACK_IMPORTED_MODULE_1__.WPQTTabs, {
+    tabs: tabs,
+    tabsContent: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PrivateCommentsTabContent__WEBPACK_IMPORTED_MODULE_3__.PrivateCommentsTabContent, {
+      userId: user.id
+    }, 1), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PublicCommentsTabContent__WEBPACK_IMPORTED_MODULE_4__.PublicCommentsTabContent, {
+      userId: user.id
+    }, 2), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogsTabContent__WEBPACK_IMPORTED_MODULE_2__.LogsTabContent, {
+      userId: user.id
     }, 3)]
   });
 }
@@ -12418,7 +12733,7 @@ function UserList() {
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4",
+    className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-5",
     children: users.filter(filterUsers).map(user => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_5__.UserListItem, {
         user: user
@@ -12909,6 +13224,127 @@ const SET_USER_SESSIONS_SEARCH_VALUE = "SET_USER_SESSIONS_SEARCH_VALUE";
 const SET_USER_SESSIONS = "SET_USER_SESSIONS";
 const CHANGE_USER_SESSION_STATUS = "CHANGE_USER_SESSION_STATUS";
 const DELETE_USER_SESSION = "DELETE_USER_SESSION";
+
+
+/***/ }),
+
+/***/ "./src/hooks/actions/useCommentActions.ts":
+/*!************************************************!*\
+  !*** ./src/hooks/actions/useCommentActions.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useCommentActions: () => (/* binding */ useCommentActions)
+/* harmony export */ });
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+function useCommentActions() {
+  const addComment = (typeId, type, isPrivate, commentText) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.addCommentRequest)(typeId, type, isPrivate, commentText);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("Comment added successfully");
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to add comment");
+    }
+  });
+  return {
+    addComment
+  };
+}
+
+
+/***/ }),
+
+/***/ "./src/hooks/actions/useLogActions.ts":
+/*!********************************************!*\
+  !*** ./src/hooks/actions/useLogActions.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useLogActions: () => (/* binding */ useLogActions)
+/* harmony export */ });
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+function useLogActions() {
+  const addLog = (userId, type, text) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.addLogRequest)(userId, type, text);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to add log");
+    }
+  });
+  return {
+    addLog
+  };
+}
 
 
 /***/ }),

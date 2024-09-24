@@ -12,7 +12,7 @@ import {
   WPQTModalFieldSet,
   WPQTModalFooter,
 } from "../WPQTModal";
-import { TaskModalTabs } from "../../Tab/TaskModalTabs/TaskModalTabs";
+
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { Toggle } from "../../common/Toggle/Toggle";
@@ -26,6 +26,7 @@ import { WPQTIconButton } from "../../common/Button/Button";
 import { ArchiveBoxIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTaskActions } from "../../../hooks/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 
 type Props = {
   taskModalSaving: boolean;

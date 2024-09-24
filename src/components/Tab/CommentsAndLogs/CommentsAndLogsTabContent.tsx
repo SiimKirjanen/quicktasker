@@ -1,12 +1,12 @@
 import { useEffect, useState } from "@wordpress/element";
 import { LoadingOval } from "../../Loading/Loading";
-import { WPQTButton } from "../../common/Button/Button";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
+import { WPQTButton } from "../../common/Button/Button";
 import { WPQTComment } from "../../../types/comment";
 import { Log } from "../../../types/log";
 
 type Props<T> = {
-  taskId: string;
+  typeId: string;
   fetchData: () => Promise<T[] | undefined>;
   renderItem: (item: T) => JSX.Element;
   noDataMessage: string;
@@ -14,8 +14,8 @@ type Props<T> = {
   explanation?: string;
 };
 
-function TabContent<T>({
-  taskId,
+function CommentsAndLogsTabContent<T>({
+  typeId,
   fetchData,
   renderItem,
   noDataMessage,
@@ -27,7 +27,7 @@ function TabContent<T>({
 
   useEffect(() => {
     loadData();
-  }, [taskId]);
+  }, [typeId]);
 
   const loadData = async () => {
     const data = await fetchData();
@@ -98,4 +98,4 @@ function TabContentItem({ item }: TabContentItemProps) {
   );
 }
 
-export { TabContent, TabContentItem };
+export { CommentsAndLogsTabContent, TabContentItem };

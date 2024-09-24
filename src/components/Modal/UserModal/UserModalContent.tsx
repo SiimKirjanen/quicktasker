@@ -24,6 +24,7 @@ import {
 import { useUserActions } from "../../../hooks/useUserActions";
 import { CLOSE_USER_MODAL, DELETE_USER, EDIT_USER } from "../../../constants";
 import { UserContext } from "../../../providers/UserContextProvider";
+import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
 type Props = {
   createUser: (name: string, description: string) => void;
   editUser: (user: User) => void;
@@ -88,6 +89,9 @@ const UserModalContent = forwardRef(function UserModalContent(
               />
             </WPQTModalField>
           </WPQTModalFieldSet>
+          <div>
+            <UserModalTabs user={userToEdit} />
+          </div>
         </div>
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
           <WPQTIconButton
@@ -95,6 +99,9 @@ const UserModalContent = forwardRef(function UserModalContent(
             text="User tasks"
             onClick={() => {
               window.location.hash = `#/users/${userToEdit!.id}/tasks`;
+              modalDispatch({
+                type: CLOSE_USER_MODAL,
+              });
             }}
           />
           <WPQTIconButton
@@ -102,6 +109,9 @@ const UserModalContent = forwardRef(function UserModalContent(
             text="User details"
             onClick={() => {
               window.location.hash = `#/users/${userToEdit!.id}`;
+              modalDispatch({
+                type: CLOSE_USER_MODAL,
+              });
             }}
           />
           {!isActiveUser && (
