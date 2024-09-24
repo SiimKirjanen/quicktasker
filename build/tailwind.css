@@ -1274,6 +1274,16 @@
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.wpqt-bg-blue-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+}
+
+.wpqt-bg-blue-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(96 165 250 / var(--tw-bg-opacity));
+}
+
 .wpqt-p-1 {
   padding: 0.25rem;
 }
@@ -1621,6 +1631,11 @@
 .wpqt-group:hover .group-hover\:wpqt-text-blue-800 {
   --tw-text-opacity: 1;
   color: rgb(30 64 175 / var(--tw-text-opacity));
+}
+
+.wpqt-group:hover .group-hover\:wpqt-icon-red {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
 .data-\[closed\]\:wpqt-scale-95[data-closed] {

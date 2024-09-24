@@ -20,8 +20,7 @@ import {
 } from "../../../constants";
 import { User } from "../../../types/user";
 import { UserContext } from "../../../providers/UserContextProvider";
-import { toast } from "react-toastify";
-import { changeUserStatusRequest, deleteUserRequest } from "../../../api/api";
+import { useUserActions } from "../../../hooks/useUserActions";
 
 type Props = {
   user: User;
@@ -29,6 +28,7 @@ type Props = {
 function UserDropdown({ user }: Props) {
   const { modalDispatch } = useContext(ModalContext);
   const { userDispatch } = useContext(UserContext);
+  const { changeUserStatus, deleteUser } = useUserActions();
   const userIsActive = user.is_active;
 
   const openEditUserModal = (e: React.MouseEvent) => {
@@ -39,33 +39,23 @@ function UserDropdown({ user }: Props) {
     });
   };
 
-  const changeUserStatus = async (status: boolean) => {
-    try {
-      const response = await changeUserStatusRequest(user, status);
-
+  const onChangeUserStatus = async (status: boolean) => {
+    await changeUserStatus(user, status, () => {
       userDispatch({
         type: EDIT_USER,
-        payload: response.data,
+        payload: { ...user, is_active: status },
       });
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to disable user. Please try again");
-    }
+    });
   };
 
-  const deleteUser = async (e: React.MouseEvent) => {
+  const onDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    try {
-      await deleteUserRequest(user);
-
+    await deleteUser(user, (userId) => {
       userDispatch({
         type: DELETE_USER,
-        payload: user.id,
+        payload: userId,
       });
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete user. Please try again");
-    }
+    });
   };
 
   return (
@@ -106,7 +96,7 @@ function UserDropdown({ user }: Props) {
           className="!wpqt-mb-0"
           onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
-            changeUserStatus(false);
+            onChangeUserStatus(false);
           }}
         />
       )}
@@ -118,13 +108,13 @@ function UserDropdown({ user }: Props) {
             icon={<PowerIcon className="wpqt-icon-green wpqt-size-4" />}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
-              changeUserStatus(true);
+              onChangeUserStatus(true);
             }}
           />
           <WPQTDropdownItem
             text="Delete user"
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-            onClick={deleteUser}
+            onClick={onDeleteUser}
           />
         </>
       )}

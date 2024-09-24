@@ -4,9 +4,8 @@ import { ModalContext } from "../../../providers/ModalContextProvider";
 import { DispatchType, useModal } from "../../../hooks/useModal";
 import { ADD_USER, CLOSE_USER_MODAL, EDIT_USER } from "../../../constants";
 import { UserModalContent } from "./UserModalContent";
-import { createUserRequest, editUserRequest } from "../../../api/api";
 import { User } from "../../../types/user";
-import { toast } from "react-toastify";
+import { useUserActions } from "../../../hooks/useUserActions";
 
 function UserModal() {
   const {
@@ -18,37 +17,32 @@ function UserModal() {
     modalContentRef,
     closeModal,
     handleSuccess,
-    handleError,
   } = useModal(CLOSE_USER_MODAL);
+  const { createUser, editUser } = useUserActions();
 
-  const createUser = async (userName: string, userDescription: string) => {
-    try {
-      setModalSaving(true);
-      const response = await createUserRequest(userName, userDescription);
-      handleSuccess(ADD_USER, response.data, DispatchType.USER);
-    } catch (error) {
-      handleError(error);
-      toast.error("User creation failed. Please try again");
-    }
+  const onCreateUser = async (userName: string, userDescription: string) => {
+    setModalSaving(true);
+    await createUser(userName, userDescription, (userData) => {
+      handleSuccess(ADD_USER, userData, DispatchType.USER);
+    });
+    setModalSaving(false);
   };
 
-  const editUser = async (user: User) => {
-    try {
-      setModalSaving(true);
-      const response = await editUserRequest(user);
-      handleSuccess(EDIT_USER, response.data, DispatchType.USER);
-    } catch (error) {
-      handleError(error);
-    }
+  const onEditUser = async (user: User) => {
+    setModalSaving(true);
+    await editUser(user, (userData) => {
+      handleSuccess(EDIT_USER, userData, DispatchType.USER);
+    });
+    setModalSaving(false);
   };
 
   return (
-    <WPQTModal modalOpen={userModalOpen} closeModal={closeModal}>
+    <WPQTModal modalOpen={userModalOpen} closeModal={closeModal} size="md">
       <UserModalContent
         ref={modalContentRef}
         modalSaving={modalSaving}
-        createUser={createUser}
-        editUser={editUser}
+        createUser={onCreateUser}
+        editUser={onEditUser}
       />
     </WPQTModal>
   );

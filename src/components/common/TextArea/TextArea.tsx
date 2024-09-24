@@ -4,9 +4,9 @@ import { clsx } from "clsx";
 type Props = {
   value: string;
   onChange: (newValue: string) => void;
-  rowsCount: number;
+  rowsCount?: number;
 };
-function WPQTTextarea({ value, onChange, rowsCount }: Props) {
+function WPQTTextarea({ value, onChange, rowsCount = 3 }: Props) {
   return (
     <Textarea
       className={clsx(

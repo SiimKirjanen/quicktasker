@@ -7,17 +7,13 @@ import {
 } from "../constants";
 import { Action, State } from "../providers/UserContextProvider";
 import { ServerUser, User } from "../types/user";
-
-const transformServerUserToUser = (serverUser: ServerUser): User => ({
-  ...serverUser,
-  is_active: serverUser.is_active === "1",
-});
+import { convertUserFromServer } from "../utils/user";
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case SET_USERS: {
       const serverUsers: ServerUser[] = action.payload;
-      const users: User[] = serverUsers.map(transformServerUserToUser);
+      const users: User[] = serverUsers.map(convertUserFromServer);
 
       return {
         ...state,
@@ -26,7 +22,7 @@ const reducer = (state: State, action: Action): State => {
     }
     case ADD_USER: {
       const serverUser: ServerUser = action.payload;
-      const user: User = transformServerUserToUser(serverUser);
+      const user: User = convertUserFromServer(serverUser);
 
       return {
         ...state,
@@ -35,7 +31,7 @@ const reducer = (state: State, action: Action): State => {
     }
     case EDIT_USER: {
       const editedServerUser: ServerUser = action.payload;
-      const editedUser: User = transformServerUserToUser(editedServerUser);
+      const editedUser: User = convertUserFromServer(editedServerUser);
       const users = state.users.map((user) =>
         user.id === editedUser.id ? editedUser : user,
       );
