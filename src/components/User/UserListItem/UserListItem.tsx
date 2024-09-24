@@ -3,6 +3,9 @@ import { formatDate } from "../../../utils/date";
 import { WPQTCard, WPQTCardDataItem } from "../../Card/Card";
 import { UserDropdown } from "../../Dropdown/UserDropdown/UserDropdown";
 import { usePageLinks } from "../../../hooks/usePageLinks";
+import { useContext } from "@wordpress/element";
+import { ModalContext } from "../../../providers/ModalContextProvider";
+import { OPEN_EDIT_USER_MODAL } from "../../../constants";
 
 type Props = {
   user: User;
@@ -10,6 +13,7 @@ type Props = {
 
 function UserListItem({ user }: Props) {
   const { userPage } = usePageLinks();
+  const { modalDispatch } = useContext(ModalContext);
   const userIsActive = user.is_active;
 
   return (
@@ -18,7 +22,10 @@ function UserListItem({ user }: Props) {
       description={user.description}
       dropdown={<UserDropdown user={user} />}
       onClick={() => {
-        window.location.hash = `#/users/${user.id}`;
+        modalDispatch({
+          type: OPEN_EDIT_USER_MODAL,
+          payload: user,
+        });
       }}
       className="wpqt-cursor-pointer"
     >

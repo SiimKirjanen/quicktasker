@@ -11,7 +11,6 @@ import {
   WPQTModalField,
   WPQTModalFieldSet,
   WPQTModalFooter,
-  WPQTModalTitle,
 } from "../WPQTModal";
 import { TaskModalTabs } from "../../Tab/TaskModalTabs/TaskModalTabs";
 import { WPQTInput } from "../../common/Input/Input";
@@ -20,8 +19,13 @@ import { Toggle } from "../../common/Toggle/Toggle";
 import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
+  CLOSE_TASK_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../../../constants";
+import { WPQTIconButton } from "../../common/Button/Button";
+import { ArchiveBoxIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useTaskActions } from "../../../hooks/useTaskActions";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 type Props = {
   taskModalSaving: boolean;
@@ -37,6 +41,11 @@ const TaskModalContent = forwardRef(
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [freeForAllTask, setFreeForAllTask] = useState(false);
+    const { deleteTask, archiveTask } = useTaskActions();
+    const {
+      state: { activePipeline },
+      fetchAndSetPipelineData,
+    } = useContext(ActivePipelineContext);
 
     useEffect(() => {
       if (taskToEdit) {
@@ -121,7 +130,28 @@ const TaskModalContent = forwardRef(
             </div>
           </div>
 
-          <div>Actions</div>
+          <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
+            <WPQTIconButton
+              icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-5" />}
+              text="Archive task"
+              onClick={() => {
+                archiveTask(taskToEdit.id, () => {
+                  modalDispatch({ type: CLOSE_TASK_MODAL });
+                  fetchAndSetPipelineData(activePipeline!.id);
+                });
+              }}
+            />
+            <WPQTIconButton
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+              text="Delete task"
+              onClick={() => {
+                deleteTask(taskToEdit.id, () => {
+                  modalDispatch({ type: CLOSE_TASK_MODAL });
+                  fetchAndSetPipelineData(activePipeline!.id);
+                });
+              }}
+            />
+          </div>
         </div>
         <WPQTModalFooter
           onSave={saveTask}
