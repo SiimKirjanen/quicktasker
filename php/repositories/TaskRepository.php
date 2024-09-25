@@ -163,16 +163,25 @@ class TaskRepository {
      * @param int $userId The ID of the user.
      * @return array The tasks assigned to the user.
      */
-    public function getTasksAssignedToUser($userId) {
+    public function getTasksAssignedToUser($userId, $addAssignedUsers = false) {
         global $wpdb;
-
-        return $wpdb->get_results( $wpdb->prepare(
-            "SELECT b.* FROM ". TABLE_WP_QUICK_TASKS_USER_TASK . " AS a
-            LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS ." AS b
+    
+        $tasks = $wpdb->get_results($wpdb->prepare(
+            "SELECT b.* FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS a
+            LEFT JOIN " . TABLE_WP_QUICK_TASKS_TASKS . " AS b
             ON a.task_id = b.id
             WHERE a.user_id = %d",
             $userId
-        ) );
+        ));
+    
+        if ($addAssignedUsers) {
+            foreach ($tasks as $task) {
+                $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
+                $task->assigned_users = $users;
+            }
+        }
+    
+        return $tasks;
     }
 
     /**

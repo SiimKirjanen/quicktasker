@@ -10,7 +10,9 @@ import { UserTasksFilter } from "../components/Filters/UserTasksFilter/UserTasks
 import { useUserTasksFilter } from "../hooks/filters/useUserTasksFilter";
 import { UserTaskDropdown } from "../components/Dropdown/UserTaskDropdown/UserTaskDropdown";
 import { LoadingContext } from "../providers/LoadingContextProvider";
-import { SET_FULL_PAGE_LOADING } from "../constants";
+import { OPEN_EDIT_TASK_MODAL, SET_FULL_PAGE_LOADING } from "../constants";
+import { TaskModal } from "../components/Modal/TaskModal/TaskModal";
+import { ModalContext } from "../providers/ModalContextProvider";
 
 type Props = {
   userId: string;
@@ -21,6 +23,7 @@ function UserTasksPage({ userId }: Props) {
   const [searchValue, setSearchValue] = useState("");
   const { filterTasks } = useUserTasksFilter(searchValue);
   const { loadingDispatch } = useContext(LoadingContext);
+  const { modalDispatch } = useContext(ModalContext);
 
   useEffect(() => {
     fetchUserTasks();
@@ -61,6 +64,7 @@ function UserTasksPage({ userId }: Props) {
         {userTasks.filter(filterTasks).map((task: Task) => {
           return (
             <WPQTCard
+              className="wpqt-cursor-pointer"
               key={task.id}
               title={task.name}
               description={task.description}
@@ -70,10 +74,17 @@ function UserTasksPage({ userId }: Props) {
                   onUnAssignTask={unAssignTask}
                 />
               }
+              onClick={() => {
+                modalDispatch({
+                  type: OPEN_EDIT_TASK_MODAL,
+                  payload: { taskToEdit: task },
+                });
+              }}
             ></WPQTCard>
           );
         })}
       </div>
+      <TaskModal />
     </Page>
   );
 }

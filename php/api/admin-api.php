@@ -850,7 +850,7 @@ function wpqt_register_api_routes() {
                     WPQTverifyApiNonce($data);
             
                     $taskRepo = new TaskRepository();
-                    $userTasks = $taskRepo->getTasksAssignedToUser($data['id']);
+                    $userTasks = $taskRepo->getTasksAssignedToUser($data['id'], true);
                    
                     return new WP_REST_Response((new ApiResponse(true, array(), $userTasks))->toArray(), 200);
                 }catch(Exception $e) {

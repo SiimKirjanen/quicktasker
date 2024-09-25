@@ -14376,6 +14376,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Dropdown_UserTaskDropdown_UserTaskDropdown__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/Dropdown/UserTaskDropdown/UserTaskDropdown */ "./src/components/Dropdown/UserTaskDropdown/UserTaskDropdown.tsx");
 /* harmony import */ var _providers_LoadingContextProvider__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../providers/LoadingContextProvider */ "./src/providers/LoadingContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+/* harmony import */ var _components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../components/Modal/TaskModal/TaskModal */ "./src/components/Modal/TaskModal/TaskModal.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -14416,6 +14418,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
 function UserTasksPage({
   userId
 }) {
@@ -14427,6 +14431,9 @@ function UserTasksPage({
   const {
     loadingDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_LoadingContextProvider__WEBPACK_IMPORTED_MODULE_11__.LoadingContext);
+  const {
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_14__.ModalContext);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     fetchUserTasks();
   }, []);
@@ -14468,15 +14475,24 @@ function UserTasksPage({
       className: "wpqt-grid wpqt-grid-cols-4 wpqt-gap-2",
       children: userTasks.filter(filterTasks).map(task => {
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_7__.WPQTCard, {
+          className: "wpqt-cursor-pointer",
           title: task.name,
           description: task.description,
           dropdown: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_UserTaskDropdown_UserTaskDropdown__WEBPACK_IMPORTED_MODULE_10__.UserTaskDropdown, {
             taskId: task.id,
             onUnAssignTask: unAssignTask
-          })
+          }),
+          onClick: () => {
+            modalDispatch({
+              type: _constants__WEBPACK_IMPORTED_MODULE_12__.OPEN_EDIT_TASK_MODAL,
+              payload: {
+                taskToEdit: task
+              }
+            });
+          }
         }, task.id);
       })
-    })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_13__.TaskModal, {})]
   });
 }
 
