@@ -1,7 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { UserSession } from "./UserSession";
-import { useUserSessionsFilter } from "../../../hooks/useUserSessionsFilter";
+import { useUserSessionsFilter } from "../../../hooks/filters/useUserSessionsFilter";
 
 function UserSessions() {
   const {

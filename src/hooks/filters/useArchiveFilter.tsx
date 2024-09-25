@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
-import { ArchivedTask } from "../types/task";
-import { ArchiveContext } from "../providers/ArchiveContextProvider";
+import { ArchiveContext } from "../../providers/ArchiveContextProvider";
+import { ArchivedTask } from "../../types/task";
 
 const useArchiveFilter = () => {
   const {

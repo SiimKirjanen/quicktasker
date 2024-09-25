@@ -20,7 +20,7 @@ import {
 } from "../../../constants";
 import { User } from "../../../types/user";
 import { UserContext } from "../../../providers/UserContextProvider";
-import { useUserActions } from "../../../hooks/useUserActions";
+import { useUserActions } from "../../../hooks/actions/useUserActions";
 
 type Props = {
   user: User;

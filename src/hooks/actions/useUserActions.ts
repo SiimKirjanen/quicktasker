@@ -4,8 +4,8 @@ import {
   createUserRequest,
   deleteUserRequest,
   editUserRequest,
-} from "../api/api";
-import { ServerUser, User } from "../types/user";
+} from "../../api/api";
+import { ServerUser, User } from "../../types/user";
 
 function useUserActions() {
   const createUser = async (

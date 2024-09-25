@@ -3,7 +3,7 @@ import { UserContext } from "../../../providers/UserContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_NEW_USER_MODAL } from "../../../constants";
 import { UserListItem } from "../UserListItem/UserListItem";
-import { useUserFilter } from "../../../hooks/userUserFilter";
+import { useUserFilter } from "../../../hooks/filters/useUserFilter";
 
 function UserList() {
   const {

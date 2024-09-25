@@ -21,7 +21,7 @@ import {
   TrashIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useUserActions } from "../../../hooks/useUserActions";
+import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { CLOSE_USER_MODAL, DELETE_USER, EDIT_USER } from "../../../constants";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";

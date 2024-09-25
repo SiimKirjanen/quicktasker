@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
-import { UserContext } from "../providers/UserContextProvider";
-import { User } from "../types/user";
+import { UserContext } from "../../providers/UserContextProvider";
+import { User } from "../../types/user";
 
 const useUserFilter = () => {
   const {

@@ -24,7 +24,7 @@ import {
 } from "../../../constants";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { ArchiveBoxIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useTaskActions } from "../../../hooks/useTaskActions";
+import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 

@@ -3,7 +3,7 @@ import { WPQTButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { UserContext } from "../../../providers/UserContextProvider";
-import { useUserActions } from "../../../hooks/useUserActions";
+import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { ADD_USER } from "../../../constants";
 
 function AddUser() {

@@ -13,7 +13,7 @@ import {
   WPQTDropdownIcon,
   WPQTDropdownItem,
 } from "../WPQTDropdown";
-import { useTaskActions } from "../../../hooks/useTaskActions";
+import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 type Props = {

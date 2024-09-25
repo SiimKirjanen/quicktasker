@@ -9,7 +9,7 @@ import {
   WPQTDropdownIcon,
   WPQTDropdownItem,
 } from "../WPQTDropdown";
-import { useTaskActions } from "../../../hooks/useTaskActions";
+import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ArchivedTask } from "../../../types/task";
 import { useContext } from "@wordpress/element";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";

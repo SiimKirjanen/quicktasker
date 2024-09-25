@@ -7,7 +7,7 @@ import { getUserTasksRequest, removeTaskFromUserRequest } from "../api/api";
 import { convertTaskFromServer } from "../utils/task";
 import { WPQTCard } from "../components/Card/Card";
 import { UserTasksFilter } from "../components/Filters/UserTasksFilter/UserTasksFilter";
-import { useUserTasksFilter } from "../hooks/useUserTasksFilter";
+import { useUserTasksFilter } from "../hooks/filters/useUserTasksFilter";
 import { UserTaskDropdown } from "../components/Dropdown/UserTaskDropdown/UserTaskDropdown";
 import { LoadingContext } from "../providers/LoadingContextProvider";
 import { SET_FULL_PAGE_LOADING } from "../constants";

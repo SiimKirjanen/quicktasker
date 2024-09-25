@@ -8192,7 +8192,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
 /* harmony import */ var _ArchiveItem_ArchiveItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ArchiveItem/ArchiveItem */ "./src/components/Archive/ArchiveItem/ArchiveItem.tsx");
-/* harmony import */ var _hooks_useArchiveFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/useArchiveFilter */ "./src/hooks/useArchiveFilter.tsx");
+/* harmony import */ var _hooks_filters_useArchiveFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/filters/useArchiveFilter */ "./src/hooks/filters/useArchiveFilter.tsx");
 
 
 
@@ -8206,7 +8206,7 @@ function ArchiveItems() {
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__.ArchiveContext);
   const {
     filterArchive
-  } = (0,_hooks_useArchiveFilter__WEBPACK_IMPORTED_MODULE_4__.useArchiveFilter)();
+  } = (0,_hooks_filters_useArchiveFilter__WEBPACK_IMPORTED_MODULE_4__.useArchiveFilter)();
   if (!archivedTasks) {
     return null;
   }
@@ -8313,7 +8313,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowUturnUpIcon.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
-/* harmony import */ var _hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../hooks/useTaskActions */ "./src/hooks/useTaskActions.ts");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
@@ -8358,7 +8358,7 @@ function ArchivedTaskDropdown({
   const {
     deleteTask,
     restoreArchivedTask
-  } = (0,_hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_2__.useTaskActions)();
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_2__.useTaskActions)();
   const {
     archiveDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_4__.ArchiveContext);
@@ -8759,7 +8759,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
-/* harmony import */ var _hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/useTaskActions */ "./src/hooks/useTaskActions.ts");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -8805,7 +8805,7 @@ function TaskControlsDropdown({
   const {
     deleteTask,
     archiveTask
-  } = (0,_hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_5__.useTaskActions)();
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_5__.useTaskActions)();
   const {
     state: {
       activePipeline
@@ -8940,7 +8940,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
-/* harmony import */ var _hooks_useUserActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/useUserActions */ "./src/hooks/useUserActions.ts");
+/* harmony import */ var _hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/actions/useUserActions */ "./src/hooks/actions/useUserActions.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -8988,7 +8988,7 @@ function UserDropdown({
   const {
     changeUserStatus,
     deleteUser
-  } = (0,_hooks_useUserActions__WEBPACK_IMPORTED_MODULE_6__.useUserActions)();
+  } = (0,_hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_6__.useUserActions)();
   const userIsActive = user.is_active;
   const openEditUserModal = e => {
     e.stopPropagation();
@@ -10134,7 +10134,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArchiveBoxIcon.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
-/* harmony import */ var _hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../hooks/useTaskActions */ "./src/hooks/useTaskActions.ts");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
 /* harmony import */ var _Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx");
 
@@ -10167,7 +10167,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
   const {
     deleteTask,
     archiveTask
-  } = (0,_hooks_useTaskActions__WEBPACK_IMPORTED_MODULE_10__.useTaskActions)();
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_10__.useTaskActions)();
   const {
     state: {
       activePipeline
@@ -10310,7 +10310,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/useModal */ "./src/hooks/useModal.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _UserModalContent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UserModalContent */ "./src/components/Modal/UserModal/UserModalContent.tsx");
-/* harmony import */ var _hooks_useUserActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../hooks/useUserActions */ "./src/hooks/useUserActions.ts");
+/* harmony import */ var _hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../hooks/actions/useUserActions */ "./src/hooks/actions/useUserActions.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10362,7 +10362,7 @@ function UserModal() {
   const {
     createUser,
     editUser
-  } = (0,_hooks_useUserActions__WEBPACK_IMPORTED_MODULE_7__.useUserActions)();
+  } = (0,_hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_7__.useUserActions)();
   const onCreateUser = (userName, userDescription) => __awaiter(this, void 0, void 0, function* () {
     setModalSaving(true);
     yield createUser(userName, userDescription, userData => {
@@ -10417,7 +10417,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserIcon.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PowerIcon.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
-/* harmony import */ var _hooks_useUserActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../hooks/useUserActions */ "./src/hooks/useUserActions.ts");
+/* harmony import */ var _hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../hooks/actions/useUserActions */ "./src/hooks/actions/useUserActions.ts");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
 /* harmony import */ var _Tab_CommentsAndLogs_UserModalTabs_UserModalTabs__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs */ "./src/components/Tab/CommentsAndLogs/UserModalTabs/UserModalTabs.tsx");
@@ -10477,7 +10477,7 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
   const {
     changeUserStatus,
     deleteUser
-  } = (0,_hooks_useUserActions__WEBPACK_IMPORTED_MODULE_7__.useUserActions)();
+  } = (0,_hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_7__.useUserActions)();
   const {
     userDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_9__.UserContext);
@@ -12292,7 +12292,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 /* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
-/* harmony import */ var _hooks_useUserActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/useUserActions */ "./src/hooks/useUserActions.ts");
+/* harmony import */ var _hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/actions/useUserActions */ "./src/hooks/actions/useUserActions.ts");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -12338,7 +12338,7 @@ function AddUser() {
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserContext);
   const {
     createUser
-  } = (0,_hooks_useUserActions__WEBPACK_IMPORTED_MODULE_6__.useUserActions)();
+  } = (0,_hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_6__.useUserActions)();
   const onCreateUser = () => __awaiter(this, void 0, void 0, function* () {
     yield createUser(userName, userDescription, userData => {
       userDispatch({
@@ -12699,7 +12699,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../UserListItem/UserListItem */ "./src/components/User/UserListItem/UserListItem.tsx");
-/* harmony import */ var _hooks_userUserFilter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/userUserFilter */ "./src/hooks/userUserFilter.tsx");
+/* harmony import */ var _hooks_filters_useUserFilter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/filters/useUserFilter */ "./src/hooks/filters/useUserFilter.tsx");
 
 
 
@@ -12718,7 +12718,7 @@ function UserList() {
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
   const {
     filterUsers
-  } = (0,_hooks_userUserFilter__WEBPACK_IMPORTED_MODULE_6__.useUserFilter)();
+  } = (0,_hooks_filters_useUserFilter__WEBPACK_IMPORTED_MODULE_6__.useUserFilter)();
   const openCreateUserModal = () => {
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_4__.OPEN_NEW_USER_MODAL
@@ -12888,7 +12888,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/UserSessionsContextProvider */ "./src/providers/UserSessionsContextProvider.tsx");
 /* harmony import */ var _UserSession__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UserSession */ "./src/components/User/UserSessions/UserSession.tsx");
-/* harmony import */ var _hooks_useUserSessionsFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/useUserSessionsFilter */ "./src/hooks/useUserSessionsFilter.tsx");
+/* harmony import */ var _hooks_filters_useUserSessionsFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/filters/useUserSessionsFilter */ "./src/hooks/filters/useUserSessionsFilter.tsx");
 
 
 
@@ -12902,7 +12902,7 @@ function UserSessions() {
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserSessionsContext);
   const {
     filterSessions
-  } = (0,_hooks_useUserSessionsFilter__WEBPACK_IMPORTED_MODULE_4__.useUserSessionsFilter)();
+  } = (0,_hooks_filters_useUserSessionsFilter__WEBPACK_IMPORTED_MODULE_4__.useUserSessionsFilter)();
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-mb-4 wpqt-grid wpqt-grid-cols-5 wpqt-font-bold",
@@ -13349,10 +13349,187 @@ function useLogActions() {
 
 /***/ }),
 
-/***/ "./src/hooks/useArchiveFilter.tsx":
-/*!****************************************!*\
-  !*** ./src/hooks/useArchiveFilter.tsx ***!
-  \****************************************/
+/***/ "./src/hooks/actions/useTaskActions.ts":
+/*!*********************************************!*\
+  !*** ./src/hooks/actions/useTaskActions.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useTaskActions: () => (/* binding */ useTaskActions)
+/* harmony export */ });
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+const useTaskActions = () => {
+  const deleteTask = (taskId, callback) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.deleteTaskRequest)(taskId);
+      if (callback) callback();
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("Task deleted successfully");
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to delete a task");
+    }
+  });
+  const archiveTask = (taskId, callback) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.archiveTaskRequest)(taskId);
+      if (callback) callback();
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("Task archived successfully");
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to archive a task");
+    }
+  });
+  const restoreArchivedTask = (taskId, callback) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.restoreArchivedTaskRequest)(taskId);
+      if (callback) callback();
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("Task restored successfully");
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to restore a task");
+    }
+  });
+  return {
+    deleteTask,
+    archiveTask,
+    restoreArchivedTask
+  };
+};
+
+
+/***/ }),
+
+/***/ "./src/hooks/actions/useUserActions.ts":
+/*!*********************************************!*\
+  !*** ./src/hooks/actions/useUserActions.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useUserActions: () => (/* binding */ useUserActions)
+/* harmony export */ });
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+function useUserActions() {
+  const createUser = (userName, userDescription, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.createUserRequest)(userName, userDescription);
+      if (callback) callback(response.data);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("User created successfully");
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("User creation failed. Please try again");
+    }
+  });
+  const editUser = (user, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.editUserRequest)(user);
+      if (callback) callback(response.data);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("User edited successfully");
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("User edit failed. Please try again");
+    }
+  });
+  const changeUserStatus = (user, status, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.changeUserStatusRequest)(user, status);
+      if (callback) callback(response.data);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("User status changed successfully");
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to change user status. Please try again");
+    }
+  });
+  const deleteUser = (user, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.deleteUserRequest)(user);
+      if (callback) callback(user.id);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("User deleted successfully");
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to delete user. Please try again");
+    }
+  });
+  return {
+    createUser,
+    editUser,
+    changeUserStatus,
+    deleteUser
+  };
+}
+
+
+/***/ }),
+
+/***/ "./src/hooks/filters/useArchiveFilter.tsx":
+/*!************************************************!*\
+  !*** ./src/hooks/filters/useArchiveFilter.tsx ***!
+  \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -13362,7 +13539,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
+/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
 
 
 const useArchiveFilter = () => {
@@ -13379,6 +13556,98 @@ const useArchiveFilter = () => {
   };
   return {
     filterArchive
+  };
+};
+
+
+/***/ }),
+
+/***/ "./src/hooks/filters/useUserFilter.tsx":
+/*!*********************************************!*\
+  !*** ./src/hooks/filters/useUserFilter.tsx ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useUserFilter: () => (/* binding */ useUserFilter)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
+
+
+const useUserFilter = () => {
+  const {
+    state: {
+      usersSearchValue
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_1__.UserContext);
+  const filterUsers = user => {
+    const matchesSearchValue = user.name.toLowerCase().includes(usersSearchValue.toLowerCase()) || user.description && user.description.toLowerCase().includes(usersSearchValue.toLowerCase());
+    return matchesSearchValue;
+  };
+  return {
+    filterUsers
+  };
+};
+
+
+/***/ }),
+
+/***/ "./src/hooks/filters/useUserSessionsFilter.tsx":
+/*!*****************************************************!*\
+  !*** ./src/hooks/filters/useUserSessionsFilter.tsx ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useUserSessionsFilter: () => (/* binding */ useUserSessionsFilter)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../providers/UserSessionsContextProvider */ "./src/providers/UserSessionsContextProvider.tsx");
+
+
+const useUserSessionsFilter = () => {
+  const {
+    state: {
+      sessionsSearchValue
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_1__.UserSessionsContext);
+  const filterSessions = userSession => {
+    const matchesSearchValue = userSession.user_name.toLowerCase().includes(sessionsSearchValue.toLowerCase()) || userSession.user_description && userSession.user_description.toLowerCase().includes(sessionsSearchValue.toLowerCase());
+    return matchesSearchValue;
+  };
+  return {
+    filterSessions
+  };
+};
+
+
+/***/ }),
+
+/***/ "./src/hooks/filters/useUserTasksFilter.tsx":
+/*!**************************************************!*\
+  !*** ./src/hooks/filters/useUserTasksFilter.tsx ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useUserTasksFilter: () => (/* binding */ useUserTasksFilter)
+/* harmony export */ });
+const useUserTasksFilter = searchValue => {
+  const filterTasks = task => {
+    const matchesSearchValue = task.name && task.name.toLowerCase().includes(searchValue.toLowerCase()) || task.description && task.description.toLowerCase().includes(searchValue.toLowerCase());
+    return matchesSearchValue;
+  };
+  return {
+    filterTasks
   };
 };
 
@@ -13633,275 +13902,6 @@ function usePageLinks() {
     userPage
   };
 }
-
-
-/***/ }),
-
-/***/ "./src/hooks/useTaskActions.ts":
-/*!*************************************!*\
-  !*** ./src/hooks/useTaskActions.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useTaskActions: () => (/* binding */ useTaskActions)
-/* harmony export */ });
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/api */ "./src/api/api.ts");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-
-const useTaskActions = () => {
-  const deleteTask = (taskId, callback) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.deleteTaskRequest)(taskId);
-      if (callback) callback();
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("Task deleted successfully");
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to delete a task");
-    }
-  });
-  const archiveTask = (taskId, callback) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.archiveTaskRequest)(taskId);
-      if (callback) callback();
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("Task archived successfully");
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to archive a task");
-    }
-  });
-  const restoreArchivedTask = (taskId, callback) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.restoreArchivedTaskRequest)(taskId);
-      if (callback) callback();
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("Task restored successfully");
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to restore a task");
-    }
-  });
-  return {
-    deleteTask,
-    archiveTask,
-    restoreArchivedTask
-  };
-};
-
-
-/***/ }),
-
-/***/ "./src/hooks/useUserActions.ts":
-/*!*************************************!*\
-  !*** ./src/hooks/useUserActions.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useUserActions: () => (/* binding */ useUserActions)
-/* harmony export */ });
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/api */ "./src/api/api.ts");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-
-function useUserActions() {
-  const createUser = (userName, userDescription, callback) => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.createUserRequest)(userName, userDescription);
-      if (callback) callback(response.data);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("User created successfully");
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("User creation failed. Please try again");
-    }
-  });
-  const editUser = (user, callback) => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.editUserRequest)(user);
-      if (callback) callback(response.data);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("User edited successfully");
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("User edit failed. Please try again");
-    }
-  });
-  const changeUserStatus = (user, status, callback) => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.changeUserStatusRequest)(user, status);
-      if (callback) callback(response.data);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("User status changed successfully");
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to change user status. Please try again");
-    }
-  });
-  const deleteUser = (user, callback) => __awaiter(this, void 0, void 0, function* () {
-    try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.deleteUserRequest)(user);
-      if (callback) callback(user.id);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("User deleted successfully");
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to delete user. Please try again");
-    }
-  });
-  return {
-    createUser,
-    editUser,
-    changeUserStatus,
-    deleteUser
-  };
-}
-
-
-/***/ }),
-
-/***/ "./src/hooks/useUserSessionsFilter.tsx":
-/*!*********************************************!*\
-  !*** ./src/hooks/useUserSessionsFilter.tsx ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useUserSessionsFilter: () => (/* binding */ useUserSessionsFilter)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/UserSessionsContextProvider */ "./src/providers/UserSessionsContextProvider.tsx");
-
-
-const useUserSessionsFilter = () => {
-  const {
-    state: {
-      sessionsSearchValue
-    }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_1__.UserSessionsContext);
-  const filterSessions = userSession => {
-    const matchesSearchValue = userSession.user_name.toLowerCase().includes(sessionsSearchValue.toLowerCase()) || userSession.user_description && userSession.user_description.toLowerCase().includes(sessionsSearchValue.toLowerCase());
-    return matchesSearchValue;
-  };
-  return {
-    filterSessions
-  };
-};
-
-
-/***/ }),
-
-/***/ "./src/hooks/useUserTasksFilter.tsx":
-/*!******************************************!*\
-  !*** ./src/hooks/useUserTasksFilter.tsx ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useUserTasksFilter: () => (/* binding */ useUserTasksFilter)
-/* harmony export */ });
-const useUserTasksFilter = searchValue => {
-  const filterTasks = task => {
-    const matchesSearchValue = task.name && task.name.toLowerCase().includes(searchValue.toLowerCase()) || task.description && task.description.toLowerCase().includes(searchValue.toLowerCase());
-    return matchesSearchValue;
-  };
-  return {
-    filterTasks
-  };
-};
-
-
-/***/ }),
-
-/***/ "./src/hooks/userUserFilter.tsx":
-/*!**************************************!*\
-  !*** ./src/hooks/userUserFilter.tsx ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useUserFilter: () => (/* binding */ useUserFilter)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
-
-
-const useUserFilter = () => {
-  const {
-    state: {
-      usersSearchValue
-    }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_1__.UserContext);
-  const filterUsers = user => {
-    const matchesSearchValue = user.name.toLowerCase().includes(usersSearchValue.toLowerCase()) || user.description && user.description.toLowerCase().includes(usersSearchValue.toLowerCase());
-    return matchesSearchValue;
-  };
-  return {
-    filterUsers
-  };
-};
 
 
 /***/ }),
@@ -14208,7 +14208,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/task */ "./src/utils/task.ts");
 /* harmony import */ var _components_Card_Card__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/Card/Card */ "./src/components/Card/Card.tsx");
 /* harmony import */ var _components_Filters_UserTasksFilter_UserTasksFilter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/Filters/UserTasksFilter/UserTasksFilter */ "./src/components/Filters/UserTasksFilter/UserTasksFilter.tsx");
-/* harmony import */ var _hooks_useUserTasksFilter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../hooks/useUserTasksFilter */ "./src/hooks/useUserTasksFilter.tsx");
+/* harmony import */ var _hooks_filters_useUserTasksFilter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../hooks/filters/useUserTasksFilter */ "./src/hooks/filters/useUserTasksFilter.tsx");
 /* harmony import */ var _components_Dropdown_UserTaskDropdown_UserTaskDropdown__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/Dropdown/UserTaskDropdown/UserTaskDropdown */ "./src/components/Dropdown/UserTaskDropdown/UserTaskDropdown.tsx");
 /* harmony import */ var _providers_LoadingContextProvider__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../providers/LoadingContextProvider */ "./src/providers/LoadingContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
@@ -14259,7 +14259,7 @@ function UserTasksPage({
   const [searchValue, setSearchValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const {
     filterTasks
-  } = (0,_hooks_useUserTasksFilter__WEBPACK_IMPORTED_MODULE_9__.useUserTasksFilter)(searchValue);
+  } = (0,_hooks_filters_useUserTasksFilter__WEBPACK_IMPORTED_MODULE_9__.useUserTasksFilter)(searchValue);
   const {
     loadingDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_LoadingContextProvider__WEBPACK_IMPORTED_MODULE_11__.LoadingContext);

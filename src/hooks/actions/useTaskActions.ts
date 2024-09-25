@@ -3,7 +3,7 @@ import {
   archiveTaskRequest,
   deleteTaskRequest,
   restoreArchivedTaskRequest,
-} from "../api/api";
+} from "../../api/api";
 
 const useTaskActions = () => {
   const deleteTask = async (taskId: string, callback?: () => void) => {

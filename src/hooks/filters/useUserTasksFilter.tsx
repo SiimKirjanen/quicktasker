@@ -1,4 +1,4 @@
-import { Task } from "../types/task";
+import { Task } from "../../types/task";
 
 const useUserTasksFilter = (searchValue: string) => {
   const filterTasks = (task: Task) => {

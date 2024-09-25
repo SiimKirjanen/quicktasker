@@ -5,7 +5,7 @@ import { DispatchType, useModal } from "../../../hooks/useModal";
 import { ADD_USER, CLOSE_USER_MODAL, EDIT_USER } from "../../../constants";
 import { UserModalContent } from "./UserModalContent";
 import { User } from "../../../types/user";
-import { useUserActions } from "../../../hooks/useUserActions";
+import { useUserActions } from "../../../hooks/actions/useUserActions";
 
 function UserModal() {
   const {
