@@ -5371,49 +5371,6 @@ function Loading({
 
 /***/ }),
 
-/***/ "./src/components/Select/WPQTSelect.tsx":
-/*!**********************************************!*\
-  !*** ./src/components/Select/WPQTSelect.tsx ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   WPQTSelect: () => (/* binding */ WPQTSelect)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/select/select.js");
-
-
-function WPQTSelect({
-  options,
-  selectedOptionValue,
-  onSelectionChange,
-  allSelector = true
-}) {
-  const handleChange = event => {
-    const selectedValue = event.target.value;
-    onSelectionChange(selectedValue);
-  };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Select, {
-    name: "pipeline-filtering",
-    value: selectedOptionValue,
-    onChange: handleChange,
-    children: [allSelector && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
-      value: "",
-      children: "All boards"
-    }), options.map(option => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
-      value: option.value,
-      children: option.label
-    }, option.value))]
-  });
-}
-
-
-/***/ }),
-
 /***/ "./src/components/Tooltip/WPQTTooltip.tsx":
 /*!************************************************!*\
   !*** ./src/components/Tooltip/WPQTTooltip.tsx ***!
@@ -5630,6 +5587,49 @@ function WPQTInput({
     className: "wpqt-border-1 wpqt-block wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25",
     value: value,
     onChange: e => onChange(e.target.value)
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/common/Select/WPQTSelect.tsx":
+/*!*****************************************************!*\
+  !*** ./src/components/common/Select/WPQTSelect.tsx ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WPQTSelect: () => (/* binding */ WPQTSelect)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/select/select.js");
+
+
+function WPQTSelect({
+  options,
+  selectedOptionValue,
+  onSelectionChange,
+  allSelector = true
+}) {
+  const handleChange = event => {
+    const selectedValue = event.target.value;
+    onSelectionChange(selectedValue);
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Select, {
+    name: "pipeline-filtering",
+    value: selectedOptionValue,
+    onChange: handleChange,
+    children: [allSelector && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+      value: "",
+      children: "All boards"
+    }), options.map(option => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+      value: option.value,
+      children: option.label
+    }, option.value))]
   });
 }
 
@@ -6486,7 +6486,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../utils/task */ "./src/utils/task.ts");
 /* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
 /* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _components_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../components/Select/WPQTSelect */ "./src/components/Select/WPQTSelect.tsx");
+/* harmony import */ var _components_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../components/common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6608,7 +6608,7 @@ function TaskPage() {
           onClick: assignTask,
           btnText: "Assign task"
         }), stageOptions && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_8__.WPQTSelect, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_8__.WPQTSelect, {
             options: stageOptions,
             onSelectionChange: changeTaskStage,
             selectedOptionValue: task.stage_id,

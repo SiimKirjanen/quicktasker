@@ -12,7 +12,10 @@ import { useParams } from "react-router-dom";
 import { convertTaskFromServer } from "../../../../utils/task";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { WPQTButton } from "../../../../components/common/Button/Button";
-import { WPQTSelect, Option } from "../../../../components/Select/WPQTSelect";
+import {
+  WPQTSelect,
+  Option,
+} from "../../../../components/common/Select/WPQTSelect";
 
 function TaskPage() {
   const {

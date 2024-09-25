@@ -38,12 +38,12 @@ function useUserActions() {
   };
 
   const changeUserStatus = async (
-    user: User,
+    userId: string,
     status: boolean,
     callback?: (userData: ServerUser) => void,
   ) => {
     try {
-      const response = await changeUserStatusRequest(user, status);
+      const response = await changeUserStatusRequest(userId, status);
       if (callback) callback(response.data);
       toast.success("User status changed successfully");
     } catch (error) {
@@ -53,12 +53,12 @@ function useUserActions() {
   };
 
   const deleteUser = async (
-    user: User,
+    userId: string,
     callback?: (userId: string) => void,
   ) => {
     try {
-      await deleteUserRequest(user);
-      if (callback) callback(user.id);
+      await deleteUserRequest(userId);
+      if (callback) callback(userId);
       toast.success("User deleted successfully");
     } catch (error) {
       console.error(error);

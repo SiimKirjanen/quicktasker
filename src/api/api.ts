@@ -337,11 +337,11 @@ function editUserRequest(user: User): Promise<WPQTResponse<ServerUser>> {
 }
 
 function changeUserStatusRequest(
-  user: User,
+  userId: string,
   status: boolean,
 ): Promise<WPQTResponse<ServerUser>> {
   return apiFetch({
-    path: `/wpqt/v1/users/${user.id}/status`,
+    path: `/wpqt/v1/users/${userId}/status`,
     method: "PATCH",
     data: { status },
     headers: getCommonHeaders(),
@@ -372,9 +372,9 @@ function removeTaskFromUserRequest(
   });
 }
 
-function deleteUserRequest(user: User): Promise<WPQTResponse> {
+function deleteUserRequest(userId: string): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/users/${user.id}`,
+    path: `/wpqt/v1/users/${userId}`,
     method: "DELETE",
     headers: getCommonHeaders(),
   });

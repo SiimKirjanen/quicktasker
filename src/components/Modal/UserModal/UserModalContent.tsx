@@ -95,20 +95,20 @@ const UserModalContent = forwardRef(function UserModalContent(
         </div>
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
           <WPQTIconButton
-            icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-5" />}
-            text="User tasks"
+            icon={<UserIcon className="wpqt-icon-blue wpqt-size-5" />}
+            text="User details"
             onClick={() => {
-              window.location.hash = `#/users/${userToEdit!.id}/tasks`;
+              window.location.hash = `#/users/${userToEdit!.id}`;
               modalDispatch({
                 type: CLOSE_USER_MODAL,
               });
             }}
           />
           <WPQTIconButton
-            icon={<UserIcon className="wpqt-icon-blue wpqt-size-5" />}
-            text="User details"
+            icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-5" />}
+            text="User tasks"
             onClick={() => {
-              window.location.hash = `#/users/${userToEdit!.id}`;
+              window.location.hash = `#/users/${userToEdit!.id}/tasks`;
               modalDispatch({
                 type: CLOSE_USER_MODAL,
               });
@@ -119,7 +119,7 @@ const UserModalContent = forwardRef(function UserModalContent(
               icon={<PowerIcon className="wpqt-icon-green wpqt-size-5" />}
               text="Activate user"
               onClick={async () => {
-                await changeUserStatus(userToEdit!, true, (userData) => {
+                await changeUserStatus(userToEdit!.id, true, (userData) => {
                   userDispatch({
                     type: EDIT_USER,
                     payload: { ...userData },
@@ -134,7 +134,7 @@ const UserModalContent = forwardRef(function UserModalContent(
               icon={<PowerIcon className="wpqt-icon-red wpqt-size-5" />}
               text="Disable user"
               onClick={async () => {
-                await changeUserStatus(userToEdit!, false, (userData) => {
+                await changeUserStatus(userToEdit!.id, false, (userData) => {
                   userDispatch({
                     type: EDIT_USER,
                     payload: { ...userData },
@@ -148,7 +148,7 @@ const UserModalContent = forwardRef(function UserModalContent(
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
             text="Delete user"
             onClick={async () => {
-              await deleteUser(userToEdit!, (userId) => {
+              await deleteUser(userToEdit!.id, (userId) => {
                 userDispatch({
                   type: DELETE_USER,
                   payload: userId,

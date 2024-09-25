@@ -40,7 +40,7 @@ function UserDropdown({ user }: Props) {
   };
 
   const onChangeUserStatus = async (status: boolean) => {
-    await changeUserStatus(user, status, () => {
+    await changeUserStatus(user.id, status, () => {
       userDispatch({
         type: EDIT_USER,
         payload: { ...user, is_active: status },
@@ -50,7 +50,7 @@ function UserDropdown({ user }: Props) {
 
   const onDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await deleteUser(user, (userId) => {
+    await deleteUser(user.id, (userId) => {
       userDispatch({
         type: DELETE_USER,
         payload: userId,
@@ -68,7 +68,7 @@ function UserDropdown({ user }: Props) {
       )}
     >
       <WPQTDropdownItem
-        text="Full user details"
+        text="User details"
         icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={() => {
           window.location.hash = `#/users/${user.id}`;

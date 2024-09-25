@@ -7,7 +7,7 @@ import { getExtendedUserRequest } from "../api/api";
 import { ExtendedUser } from "../types/user";
 import { toast } from "react-toastify";
 import { convertExtendedUserFromServer } from "../utils/user";
-import { UserDataSection } from "../components/User/UserDataSection/UserDataSection";
+import { UserDetails } from "../components/User/UserDetails/UserDetails";
 
 type Props = {
   userId: string;
@@ -32,6 +32,15 @@ function UserPage({ userId }: Props) {
     getUserData();
   }, []);
 
+  const onChangeStatus = async (status: boolean) => {
+    setUserData((prevData) => {
+      if (prevData) {
+        return { ...prevData, is_active: status };
+      }
+      return prevData;
+    });
+  };
+
   return (
     <Page>
       {userData && (
@@ -39,7 +48,7 @@ function UserPage({ userId }: Props) {
           <WPQTPageHeader description="This is a user page">
             {userData.name}
           </WPQTPageHeader>
-          <UserDataSection userData={userData} />
+          <UserDetails data={userData} changeStatus={onChangeStatus} />
         </>
       )}
     </Page>

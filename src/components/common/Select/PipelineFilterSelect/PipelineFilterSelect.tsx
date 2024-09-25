@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "@wordpress/element";
 import { WPQTSelect } from "../WPQTSelect";
-import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
-import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
-import { SET_ARCHIVE_FILTERED_PIPELINE } from "../../../constants";
+import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
+import { ArchiveContext } from "../../../../providers/ArchiveContextProvider";
+import { SET_ARCHIVE_FILTERED_PIPELINE } from "../../../../constants";
 
 function PipelineFilterSelect() {
   const {
