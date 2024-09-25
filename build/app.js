@@ -10275,7 +10275,9 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               modalDispatch({
                 type: _constants__WEBPACK_IMPORTED_MODULE_8__.CLOSE_TASK_MODAL
               });
-              fetchAndSetPipelineData(activePipeline.id);
+              if (activePipeline) {
+                fetchAndSetPipelineData(activePipeline.id);
+              }
             });
           }
         })]
@@ -11652,7 +11654,7 @@ function CommentsTabContent({
       return response.data;
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to get comment");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
@@ -11662,8 +11664,8 @@ function CommentsTabContent({
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: comment
     }),
-    noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by WordPress admins."
+    noDataMessage: "No notes available",
+    explanation: "Notes that can be added and viewed only by WordPress admins."
   });
 }
 
@@ -11736,7 +11738,7 @@ function PublicCommentsTabContent({
       return response.data;
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load comment");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
@@ -11746,8 +11748,8 @@ function PublicCommentsTabContent({
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: comment
     }),
-    noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
+    noDataMessage: "No notes available",
+    explanation: "Notes that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
   });
 }
 
@@ -11779,7 +11781,7 @@ __webpack_require__.r(__webpack_exports__);
 function TaskModalTabs({
   task
 }) {
-  const tabs = ["Private comments", "Public comments", "Logs"];
+  const tabs = ["Private notes", "Public notes", "Logs"];
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTTabs__WEBPACK_IMPORTED_MODULE_1__.WPQTTabs, {
     tabs: tabs,
     tabsContent: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PrivateCommentsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsTabContent, {
@@ -11937,7 +11939,7 @@ function PrivateCommentsTabContent({
       return response.data;
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add user comment");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add private note");
     }
   });
   const fetchPrivateComments = () => __awaiter(this, void 0, void 0, function* () {
@@ -11946,7 +11948,7 @@ function PrivateCommentsTabContent({
       return response.data;
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load private comments");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load private notes");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
@@ -11956,8 +11958,8 @@ function PrivateCommentsTabContent({
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: comment
     }),
-    noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by WordPress admins."
+    noDataMessage: "No notes available",
+    explanation: "Notes that can be added and viewed only by WordPress admins."
   });
 }
 
@@ -12030,7 +12032,7 @@ function PublicCommentsTabContent({
       return response.data;
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load comment");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
@@ -12040,8 +12042,8 @@ function PublicCommentsTabContent({
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: comment
     }),
-    noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
+    noDataMessage: "No notes available",
+    explanation: "Notes that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
   });
 }
 
@@ -12073,7 +12075,7 @@ __webpack_require__.r(__webpack_exports__);
 function UserModalTabs({
   user
 }) {
-  const tabs = ["Private comments", "Public comments", "Logs"];
+  const tabs = ["Private notes", "Public notes", "Logs"];
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTTabs__WEBPACK_IMPORTED_MODULE_1__.WPQTTabs, {
     tabs: tabs,
     tabsContent: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PrivateCommentsTabContent__WEBPACK_IMPORTED_MODULE_3__.PrivateCommentsTabContent, {
@@ -12127,7 +12129,7 @@ function WPQTTab({
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Tab, {
     as: "div",
-    className: "wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-pb-3 wpqt-text-center data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500",
+    className: "wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-pb-[10px] wpqt-text-center wpqt-text-lg data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500",
     children: children
   });
 }

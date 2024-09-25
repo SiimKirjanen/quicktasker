@@ -170,7 +170,8 @@ class TaskRepository {
             "SELECT b.* FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS a
             LEFT JOIN " . TABLE_WP_QUICK_TASKS_TASKS . " AS b
             ON a.task_id = b.id
-            WHERE a.user_id = %d",
+            WHERE a.user_id = %d
+            AND b.is_archived = 0",
             $userId
         ));
     

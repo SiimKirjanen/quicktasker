@@ -25,7 +25,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
       return response.data;
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add user comment");
+      toast.error("Failed to add private note");
     }
   };
 
@@ -36,7 +36,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
       return response.data;
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load private comments");
+      toast.error("Failed to load private notes");
     }
   };
 
@@ -46,8 +46,8 @@ function PrivateCommentsTabContent({ userId }: Props) {
       fetchData={fetchPrivateComments}
       onAdd={addComment}
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
-      noDataMessage="No comments available"
-      explanation="Comments that can be added and viewed by WordPress admins."
+      noDataMessage="No notes available"
+      explanation="Notes that can be added and viewed only by WordPress admins."
     />
   );
 }

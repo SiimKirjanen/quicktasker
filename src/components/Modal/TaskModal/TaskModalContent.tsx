@@ -148,7 +148,9 @@ const TaskModalContent = forwardRef(
               onClick={() => {
                 deleteTask(taskToEdit.id, () => {
                   modalDispatch({ type: CLOSE_TASK_MODAL });
-                  fetchAndSetPipelineData(activePipeline!.id);
+                  if (activePipeline) {
+                    fetchAndSetPipelineData(activePipeline.id);
+                  }
                 });
               }}
             />

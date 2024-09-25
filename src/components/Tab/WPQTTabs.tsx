@@ -25,7 +25,7 @@ function WPQTTab({ children }: { children: React.ReactNode }) {
   return (
     <Tab
       as="div"
-      className="wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-pb-3 wpqt-text-center data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500"
+      className="wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-pb-[10px] wpqt-text-center wpqt-text-lg data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500"
     >
       {children}
     </Tab>
