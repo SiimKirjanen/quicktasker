@@ -81,8 +81,14 @@ const setSubMenuItemActive = () => {
     default: "",
   };
 
-  const targetHash =
-    hashMap[hash] !== undefined ? hashMap[hash] : hashMap.default;
+  let targetHash = hashMap.default;
+
+  if (hashMap[hash] !== undefined) {
+    targetHash = hashMap[hash];
+  } else if (/^#\/users(\/\d+)?(\/tasks)?$/.test(hash)) {
+    targetHash = "#/users";
+  }
+
   submenuItems.forEach((item) => {
     const link = item.querySelector("a");
 
