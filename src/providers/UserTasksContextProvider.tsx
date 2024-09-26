@@ -14,11 +14,13 @@ import { LoadingContext } from "./LoadingContextProvider";
 const initialState: State = {
   tasks: [],
   searchValue: "",
+  filteredPipelineId: "",
 };
 
 type State = {
   tasks: Task[];
   searchValue: string;
+  filteredPipelineId: string;
 };
 
 type Action = {

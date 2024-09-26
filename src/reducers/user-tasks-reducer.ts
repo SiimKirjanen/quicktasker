@@ -1,4 +1,9 @@
-import { EDIT_USER_TASK, REMOVE_USER_TASK, SET_USER_TASKS } from "../constants";
+import {
+  EDIT_USER_TASK,
+  REMOVE_USER_TASK,
+  SET_USER_TASKS,
+  SET_USER_TASKS_FILTERED_PIPELINE,
+} from "../constants";
 import { Action, State } from "../providers/UserTasksContextProvider";
 import { TaskFromServer } from "../types/task";
 import { convertTaskFromServer } from "../utils/task";
@@ -34,6 +39,14 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         tasks: updatedTasks,
+      };
+    }
+    case SET_USER_TASKS_FILTERED_PIPELINE: {
+      const filteredPipelineId = action.payload;
+
+      return {
+        ...state,
+        filteredPipelineId,
       };
     }
     default:

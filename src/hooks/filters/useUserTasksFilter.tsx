@@ -4,7 +4,7 @@ import { UserTasksContext } from "../../providers/UserTasksContextProvider";
 
 const useUserTasksFilter = () => {
   const {
-    state: { searchValue },
+    state: { searchValue, filteredPipelineId },
   } = useContext(UserTasksContext);
 
   const filterTasks = (task: Task) => {
@@ -14,7 +14,10 @@ const useUserTasksFilter = () => {
       (task.description &&
         task.description.toLowerCase().includes(searchValue.toLowerCase()));
 
-    return matchesSearchValue;
+    const matchesPipelineId =
+      !filteredPipelineId || task.pipeline_id === filteredPipelineId;
+
+    return matchesSearchValue && matchesPipelineId;
   };
 
   return {

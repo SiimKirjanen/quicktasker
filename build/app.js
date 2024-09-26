@@ -9291,7 +9291,8 @@ __webpack_require__.r(__webpack_exports__);
 function ArchiveFilter() {
   const {
     state: {
-      archiveSearchValue
+      archiveSearchValue,
+      archiveFilteredPipelineId
     },
     archiveDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_2__.ArchiveContext);
@@ -9301,13 +9302,22 @@ function ArchiveFilter() {
       payload: event.target.value
     });
   };
+  const onSelectionChange = selection => {
+    archiveDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_ARCHIVE_FILTERED_PIPELINE,
+      payload: selection
+    });
+  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_4__.WPQTFilter, {
     title: "Archive filtering",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_6__.Input, {
       type: "text",
       value: archiveSearchValue,
       onChange: setArchiveSearchValue
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_5__.PipelineFilterSelect, {})]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_5__.PipelineFilterSelect, {
+      selectedOptionValue: archiveFilteredPipelineId,
+      selectionChange: onSelectionChange
+    })]
   });
 }
 
@@ -9434,6 +9444,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _providers_UserTasksContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/UserTasksContextProvider */ "./src/providers/UserTasksContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _common_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Select/PipelineFilterSelect/PipelineFilterSelect */ "./src/components/common/Select/PipelineFilterSelect/PipelineFilterSelect.tsx");
+
 
 
 
@@ -9443,7 +9455,8 @@ __webpack_require__.r(__webpack_exports__);
 function UserTasksFilter() {
   const {
     state: {
-      searchValue
+      searchValue,
+      filteredPipelineId
     },
     userTasksDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useContext)(_providers_UserTasksContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserTasksContext);
@@ -9453,12 +9466,21 @@ function UserTasksFilter() {
       payload: value
     });
   };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_1__.WPQTFilter, {
+  const onPipelineChange = pipelineId => {
+    userTasksDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_USER_TASKS_FILTERED_PIPELINE,
+      payload: pipelineId
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_1__.WPQTFilter, {
     title: "User tasks filtering",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_2__.WPQTInput, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_2__.WPQTInput, {
       value: searchValue,
       onChange: onValueChange
-    })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_6__.PipelineFilterSelect, {
+      selectedOptionValue: filteredPipelineId,
+      selectionChange: onPipelineChange
+    })]
   });
 }
 
@@ -13130,40 +13152,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _WPQTSelect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
 /* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
-/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
 
 
 
 
-
-
-function PipelineFilterSelect() {
+function PipelineFilterSelect({
+  selectedOptionValue,
+  selectionChange
+}) {
   const {
     state: {
       pipelines
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_3__.PipelinesContext);
-  const {
-    state: {
-      archiveFilteredPipelineId
-    },
-    archiveDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_4__.ArchiveContext);
   const pipelineOptions = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useMemo)(() => pipelines.map(pipeline => ({
     value: pipeline.id,
     label: pipeline.name
   })), [pipelines]);
-  const setPipelineFilter = selection => {
-    archiveDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_ARCHIVE_FILTERED_PIPELINE,
-      payload: selection
-    });
-  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTSelect__WEBPACK_IMPORTED_MODULE_2__.WPQTSelect, {
     options: pipelineOptions,
-    selectedOptionValue: archiveFilteredPipelineId,
-    onSelectionChange: setPipelineFilter
+    selectedOptionValue: selectedOptionValue,
+    onSelectionChange: selectionChange
   });
 }
 
@@ -13345,6 +13354,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_USER_SESSIONS: () => (/* binding */ SET_USER_SESSIONS),
 /* harmony export */   SET_USER_SESSIONS_SEARCH_VALUE: () => (/* binding */ SET_USER_SESSIONS_SEARCH_VALUE),
 /* harmony export */   SET_USER_TASKS: () => (/* binding */ SET_USER_TASKS),
+/* harmony export */   SET_USER_TASKS_FILTERED_PIPELINE: () => (/* binding */ SET_USER_TASKS_FILTERED_PIPELINE),
 /* harmony export */   SET_USER_TASKS_SEARCH_VALUE: () => (/* binding */ SET_USER_TASKS_SEARCH_VALUE)
 /* harmony export */ });
 //Pipeline reducer constants
@@ -13412,6 +13422,7 @@ const SET_USER_TASKS = "SET_USER_TASKS";
 const SET_USER_TASKS_SEARCH_VALUE = "SET_USER_TASKS_SEARCH_VALUE";
 const REMOVE_USER_TASK = "REMOVE_USER_TASK";
 const EDIT_USER_TASK = "EDIT_USER_TASK";
+const SET_USER_TASKS_FILTERED_PIPELINE = "SET_USER_TASKS_FILTERED_PIPELINE";
 
 
 /***/ }),
@@ -13848,12 +13859,14 @@ __webpack_require__.r(__webpack_exports__);
 const useUserTasksFilter = () => {
   const {
     state: {
-      searchValue
+      searchValue,
+      filteredPipelineId
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserTasksContextProvider__WEBPACK_IMPORTED_MODULE_1__.UserTasksContext);
   const filterTasks = task => {
     const matchesSearchValue = task.name && task.name.toLowerCase().includes(searchValue.toLowerCase()) || task.description && task.description.toLowerCase().includes(searchValue.toLowerCase());
-    return matchesSearchValue;
+    const matchesPipelineId = !filteredPipelineId || task.pipeline_id === filteredPipelineId;
+    return matchesSearchValue && matchesPipelineId;
   };
   return {
     filterTasks
@@ -15369,7 +15382,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 const initialState = {
   tasks: [],
-  searchValue: ""
+  searchValue: "",
+  filteredPipelineId: ""
 };
 const UserTasksContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -16159,6 +16173,13 @@ const reducer = (state, action) => {
         });
         return Object.assign(Object.assign({}, state), {
           tasks: updatedTasks
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USER_TASKS_FILTERED_PIPELINE:
+      {
+        const filteredPipelineId = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          filteredPipelineId
         });
       }
     default:
