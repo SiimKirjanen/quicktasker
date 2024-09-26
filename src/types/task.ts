@@ -7,6 +7,7 @@ type BaseTask = {
   name: string;
   description: string;
   task_hash: string;
+  created_at: string;
 };
 
 type Task = BaseTask & {

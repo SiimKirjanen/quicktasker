@@ -51,8 +51,7 @@ function UserPageContent() {
         <Route path="/" element={<HomePage />} />
         <Route path="/user-tasks" element={<UserTasksPage />} />
         <Route path="/assignable-tasks" element={<AssignableTasksPage />} />
-        <Route path="/user-tasks/:taskHash" element={<TaskPage />} />
-        <Route path="/assignable-tasks/:taskHash" element={<TaskPage />} />
+        <Route path="/tasks/:taskHash" element={<TaskPage />} />
       </Routes>
     </Router>
   );

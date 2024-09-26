@@ -4,7 +4,7 @@ import { ServerUserPageStatus } from "../types/user-page-status";
 import { UserSession } from "../types/user-session";
 import { UserPageOverview } from "../types/user-page-overview";
 import { TaskFromServer } from "../../types/task";
-import { StageFromServer } from "../../types/stage";
+import { UserPageTaskResponse } from "../types/user-page-task-response";
 
 function getCommonHeaders() {
   return {
@@ -80,7 +80,7 @@ function getAssignableTasksRequest(
 function getTaskDataRequest(
   pageHash: string,
   taskHash: string,
-): Promise<WPQTResponse<{ task: TaskFromServer; stages: StageFromServer[] }>> {
+): Promise<WPQTResponse<UserPageTaskResponse>> {
   return apiFetch({
     method: "GET",
     path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}`,
@@ -114,7 +114,7 @@ function changeTaskStageRequest(
   pageHash: string,
   taskHash: string,
   stageId: string,
-): Promise<WPQTResponse<{ task: TaskFromServer; stages: StageFromServer[] }>> {
+): Promise<WPQTResponse<UserPageTaskResponse>> {
   return apiFetch({
     method: "PATCH",
     path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/stage`,

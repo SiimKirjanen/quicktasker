@@ -29,10 +29,11 @@ function AssignebaleTasksPageContent() {
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-2 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4">
           {assignableTasks.map((task) => (
             <WPQTCard
+              key={task.task_hash}
               className="wpqt-cursor-pointer"
               title={task.name}
               description={task.description}
-              onClick={() => navigate(`/assignable-tasks/${task.task_hash}`)}
+              onClick={() => navigate(`/tasks/${task.task_hash}`)}
             ></WPQTCard>
           ))}
         </div>
