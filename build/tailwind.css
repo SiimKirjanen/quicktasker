@@ -1333,8 +1333,8 @@
   padding-bottom: 1rem;
 }
 
-.wpqt-pb-\[30px\] {
-  padding-bottom: 30px;
+.wpqt-pb-\[10px\] {
+  padding-bottom: 10px;
 }
 
 .wpqt-pr-4 {
@@ -1347,10 +1347,6 @@
 
 .wpqt-pt-3 {
   padding-top: 0.75rem;
-}
-
-.wpqt-pb-\[10px\] {
-  padding-bottom: 10px;
 }
 
 .wpqt-text-center {

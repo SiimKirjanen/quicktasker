@@ -1,14 +1,21 @@
 import { WPQTFilter } from "../WPQTFilter";
 import { WPQTInput } from "../../common/Input/Input";
+import { useContext } from "@wordpress/element";
+import { UserTasksContext } from "../../../providers/UserTasksContextProvider";
+import { SET_USER_TASKS_SEARCH_VALUE } from "../../../constants";
 
-type Props = {
-  value: string;
-  onValueChange: (value: string) => void;
-};
-function UserTasksFilter({ value, onValueChange }: Props) {
+function UserTasksFilter() {
+  const {
+    state: { searchValue },
+    userTasksDispatch,
+  } = useContext(UserTasksContext);
+
+  const onValueChange = (value: string) => {
+    userTasksDispatch({ type: SET_USER_TASKS_SEARCH_VALUE, payload: value });
+  };
   return (
     <WPQTFilter title="User tasks filtering">
-      <WPQTInput value={value} onChange={onValueChange} />
+      <WPQTInput value={searchValue} onChange={onValueChange} />
     </WPQTFilter>
   );
 }

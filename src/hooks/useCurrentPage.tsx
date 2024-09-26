@@ -4,7 +4,7 @@ import { PipelinePage } from "../pages/PipelinePage";
 import { ArchivePage } from "../pages/ArchivePage";
 import { OverviewPage } from "../pages/OverviewPage";
 import { UserSessionsPage } from "../pages/UserSessionsPage";
-import { UserTasksPage } from "../pages/UserTasksPage";
+import { UserTasksPage } from "../pages/UserTasksPage/UserTasksPage";
 import { UserPage } from "../pages/UserPage";
 
 const useCurrentPage = () => {

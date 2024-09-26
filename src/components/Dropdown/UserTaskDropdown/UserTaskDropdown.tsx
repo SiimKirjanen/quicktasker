@@ -25,7 +25,10 @@ function UserTaskDropdown({ taskId, onUnAssignTask }: Props) {
       <WPQTDropdownItem
         text="Unassign from task"
         icon={<UserMinusIcon className="wpqt-icon-red wpqt-size-4" />}
-        onClick={() => onUnAssignTask(taskId)}
+        onClick={(e) => {
+          e.stopPropagation();
+          onUnAssignTask(taskId);
+        }}
         className="!wpqt-mb-0"
       />
     </WPQTDropdown>

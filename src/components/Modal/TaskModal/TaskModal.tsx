@@ -5,9 +5,12 @@ import { editTaskRequest } from "../../../api/api";
 import { TaskModalContent } from "./TaskModalContent";
 import { WPQTModal } from "../WPQTModal";
 import { DispatchType, useModal } from "../../../hooks/useModal";
-import { Task } from "../../../types/task";
+import { Task, TaskFromServer } from "../../../types/task";
 
-function TaskModal() {
+type Props = {
+  editTaskCallback?: (task: TaskFromServer) => void;
+};
+function TaskModal({ editTaskCallback }: Props) {
   const {
     state: { taskModalOpen },
   } = useContext(ModalContext);
@@ -31,6 +34,9 @@ function TaskModal() {
         response.data,
         DispatchType.ACTIVE_PIPELINE,
       );
+      if (editTaskCallback) {
+        editTaskCallback(response.data);
+      }
     } catch (error) {
       handleError(error);
     }
