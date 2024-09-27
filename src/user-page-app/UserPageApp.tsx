@@ -19,7 +19,10 @@ function UserPageApp() {
     <ErrorBoundary>
       <UserPageAppContextProvider>
         <UserPageContent />
-        <ToastContainer position="bottom-center" />
+        <ToastContainer
+          position="bottom-center"
+          toastClassName="wpqt-bottom-[60px] lg:wpqt-bottom-[20px]"
+        />
       </UserPageAppContextProvider>
     </ErrorBoundary>
   );

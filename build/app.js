@@ -11166,7 +11166,7 @@ function PipelineHeader() {
     return null;
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-py-4",
+    className: "wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-py-5",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-items-center wpqt-gap-2",
@@ -13200,16 +13200,17 @@ function WPQTSelect({
   options,
   selectedOptionValue,
   onSelectionChange,
-  allSelector = true
+  allSelector = true,
+  className
 }) {
   const handleChange = event => {
     const selectedValue = event.target.value;
     onSelectionChange(selectedValue);
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Select, {
-    name: "pipeline-filtering",
     value: selectedOptionValue,
     onChange: handleChange,
+    className: `wpqt-p-2 ${className}`,
     children: [allSelector && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
       value: "",
       children: "All boards"

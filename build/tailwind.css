@@ -865,6 +865,14 @@
   top: 12px;
 }
 
+.wpqt-bottom-\[80px\] {
+  bottom: 80px;
+}
+
+.wpqt-bottom-\[60px\] {
+  bottom: 60px;
+}
+
 .wpqt-z-10 {
   z-index: 10;
 }
@@ -1333,6 +1341,16 @@
   padding-bottom: 1rem;
 }
 
+.wpqt-py-5 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.wpqt-py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
 .wpqt-pb-\[10px\] {
   padding-bottom: 10px;
 }
@@ -1347,6 +1365,18 @@
 
 .wpqt-pt-3 {
   padding-top: 0.75rem;
+}
+
+.wpqt-pb-5 {
+  padding-bottom: 1.25rem;
+}
+
+.wpqt-pt-4 {
+  padding-top: 1rem;
+}
+
+.wpqt-pt-5 {
+  padding-top: 1.25rem;
 }
 
 .wpqt-text-center {
@@ -1686,6 +1716,18 @@
 }
 
 @media (min-width: 768px) {
+  .md\:wpqt-bottom-5 {
+    bottom: 1.25rem;
+  }
+
+  .md\:wpqt-bottom-\[100px\] {
+    bottom: 100px;
+  }
+
+  .md\:wpqt-bottom-\[80px\] {
+    bottom: 80px;
+  }
+
   .md\:wpqt-grid-cols-\[1fr_auto\] {
     grid-template-columns: 1fr auto;
   }
@@ -1696,6 +1738,10 @@
 }
 
 @media (min-width: 1024px) {
+  .lg\:wpqt-bottom-\[20px\] {
+    bottom: 20px;
+  }
+
   .lg\:wpqt-order-1 {
     order: 1;
   }

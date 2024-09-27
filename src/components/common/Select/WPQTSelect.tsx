@@ -9,6 +9,7 @@ type Props = {
   selectedOptionValue: string;
   onSelectionChange: (selectedValue: string) => void;
   allSelector?: boolean;
+  className?: string;
 };
 
 function WPQTSelect({
@@ -16,6 +17,7 @@ function WPQTSelect({
   selectedOptionValue,
   onSelectionChange,
   allSelector = true,
+  className,
 }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
@@ -24,9 +26,9 @@ function WPQTSelect({
 
   return (
     <Select
-      name="pipeline-filtering"
       value={selectedOptionValue}
       onChange={handleChange}
+      className={`wpqt-p-2 ${className}`}
     >
       {allSelector && <option value="">All boards</option>}
       {options.map((option) => (

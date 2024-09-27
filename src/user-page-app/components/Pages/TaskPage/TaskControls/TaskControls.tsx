@@ -1,4 +1,8 @@
-import { UserMinusIcon, UserPlusIcon } from "@heroicons/react/24/outline";
+import {
+  UserMinusIcon,
+  UserPlusIcon,
+  ChatBubbleLeftIcon,
+} from "@heroicons/react/24/outline";
 import { WPQTIconButton } from "../../../../../components/common/Button/Button";
 import { useContext } from "@wordpress/element";
 import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
@@ -6,6 +10,8 @@ import { Task } from "../../../../../types/task";
 import { User } from "../../../../../types/user";
 import { useTaskActions } from "../../../../hooks/actions/useTaskActions";
 import { useNavigate } from "react-router-dom";
+import { UserPageTaskContext } from "../../../../providers/UserPageTaskContextProvider";
+import { UPDATE_USER_PAGE_TASK_DATA } from "../../../../constants";
 
 type Props = {
   task: Task | null;
@@ -14,6 +20,7 @@ function TaskControls({ task }: Props) {
   const {
     state: { pageHash, userId },
   } = useContext(UserPageAppContext);
+  const { userTaskDispatch } = useContext(UserPageTaskContext);
   const { assignToTask, unAssignFromTask } = useTaskActions();
   const navigate = useNavigate();
 
@@ -26,7 +33,9 @@ function TaskControls({ task }: Props) {
   }
 
   const onAssignToTask = async () => {
-    await assignToTask(pageHash, task.task_hash, () => {});
+    await assignToTask(pageHash, task.task_hash, (data) => {
+      userTaskDispatch({ type: UPDATE_USER_PAGE_TASK_DATA, payload: data });
+    });
   };
 
   const onUnassignFromTask = async () => {
@@ -42,6 +51,13 @@ function TaskControls({ task }: Props) {
           icon={<UserMinusIcon className="wpqt-icon-red wpqt-size-5" />}
           text="Unassign from task"
           onClick={onUnassignFromTask}
+        />
+      )}
+      {isAssignedToTask && (
+        <WPQTIconButton
+          icon={<ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />}
+          text="Manage comments"
+          onClick={() => {}}
         />
       )}
       {!isAssignedToTask && (

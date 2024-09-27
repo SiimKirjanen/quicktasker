@@ -1,7 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { PageContentWrap, PageWrap } from "../Page/Page";
 import { useParams } from "react-router-dom";
-import { TaskDetaials } from "./TaskDetails/TaskDetails";
+import { TaskDetails } from "./TaskDetails/TaskDetails";
 import { TaskControls } from "./TaskControls/TaskControls";
 import {
   UserPageTaskContext,
@@ -27,9 +27,11 @@ function TaskPageContent() {
   return (
     <PageWrap loading={loading} onRefresh={loadTask}>
       <PageContentWrap>
-        <TaskDetaials task={task} />
-        <TaskStageSelect task={task} />
-        <TaskControls task={task} />
+        <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
+          <TaskDetails task={task} />
+          <TaskStageSelect task={task} />
+          <TaskControls task={task} />
+        </div>
       </PageContentWrap>
     </PageWrap>
   );
