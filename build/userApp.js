@@ -5174,6 +5174,7 @@ function WPQTCardDataItem({
         target: "_blank",
         className: "wpqt-text-qtTextBlue",
         rel: "noreferrer",
+        onClick: e => e.stopPropagation(),
         children: value
       }) : value
     })]
@@ -6512,13 +6513,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserMinusIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserPlusIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserMinusIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserPlusIcon.js");
 /* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
 /* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../hooks/actions/useTaskActions */ "./src/user-page-app/hooks/actions/useTaskActions.ts");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6552,6 +6554,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function TaskControls({
   task
 }) {
@@ -6562,8 +6565,10 @@ function TaskControls({
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserPageAppContext);
   const {
-    assignToTask
+    assignToTask,
+    unAssignFromTask
   } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__.useTaskActions)();
+  const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_5__.useNavigate)();
   const isAssignedToTask = task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId);
   if (task === null) {
     return null;
@@ -6571,16 +6576,21 @@ function TaskControls({
   const onAssignToTask = () => __awaiter(this, void 0, void 0, function* () {
     yield assignToTask(pageHash, task.task_hash, () => {});
   });
+  const onUnassignFromTask = () => __awaiter(this, void 0, void 0, function* () {
+    yield unAssignFromTask(pageHash, task.task_hash, () => {
+      navigate(`/`);
+    });
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-mt-5 wpqt-flex wpqt-gap-2",
     children: [isAssignedToTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTIconButton, {
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
         className: "wpqt-icon-red wpqt-size-5"
       }),
       text: "Unassign from task",
-      onClick: () => {}
+      onClick: onUnassignFromTask
     }), !isAssignedToTask && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTIconButton, {
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
         className: "wpqt-icon-green wpqt-size-5"
       }),
       text: "Assing to task",
@@ -6984,6 +6994,15 @@ function useTaskActions() {
       handleError(error);
     }
   });
+  const unAssignFromTask = (pageHash, taskHash, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_1__.unAssignTaskFromUser)(pageHash, taskHash);
+      if (callback) callback(response.data);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.success("Task unassigned successfully");
+    } catch (error) {
+      handleError(error);
+    }
+  });
   const changeTaskStage = (taskHash, stageId, pageHash, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_1__.changeTaskStageRequest)(pageHash, taskHash, stageId);
@@ -6995,7 +7014,8 @@ function useTaskActions() {
   });
   return {
     assignToTask,
-    changeTaskStage
+    changeTaskStage,
+    unAssignFromTask
   };
 }
 

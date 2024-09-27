@@ -30,6 +30,10 @@ function wpqt_register_user_page_api_routes() {
                     $userPageRepository = new UserPageRepository();
                     $userPageService = new UserPageService();
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']);
+
+                    if($userPage === null) {
+                        throw new WPQTException('User page not found', true);
+                    }
                     $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage->user_id);
 
                     $userPageStatus = (object)[
@@ -301,11 +305,10 @@ function wpqt_register_user_page_api_routes() {
                     $permissionService = new PermissionService();
                     $taskId = $taskRepository->getTaskByHash($data['task_hash'])->id;
                   
-                    if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $taskId)) {
-                        throw new WPQTException('Not allowed', true);
-                    }
-
                     if ($data->get_method() === 'POST') {
+                        if(!$permissionService->checkIfUserCanBeAssignedToTask($session->user_id, $taskId)) {
+                            throw new WPQTException('Not allowed to assign', true);
+                        }
                         $userService->assignTaskToUser($session->user_id, $taskId);
                     } elseif ($data->get_method() === 'DELETE') {
                         $userService->removeTaskFromUser($session->user_id, $taskId);

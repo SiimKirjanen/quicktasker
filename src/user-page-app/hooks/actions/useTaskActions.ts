@@ -3,6 +3,7 @@ import { TaskFromServer } from "../../../types/task";
 import {
   assignTaskToUser,
   changeTaskStageRequest,
+  unAssignTaskFromUser,
 } from "../../api/user-page-api";
 import { useErrorHandler } from "../useErrorHandler";
 import { UserPageTaskResponse } from "../../types/user-page-task-response";
@@ -19,6 +20,20 @@ function useTaskActions() {
       const response = await assignTaskToUser(pageHash, taskHash);
       if (callback) callback(response.data);
       toast.success("Task assigned successfully");
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const unAssignFromTask = async (
+    pageHash: string,
+    taskHash: string,
+    callback?: (task: TaskFromServer) => void,
+  ) => {
+    try {
+      const response = await unAssignTaskFromUser(pageHash, taskHash);
+      if (callback) callback(response.data);
+      toast.success("Task unassigned successfully");
     } catch (error) {
       handleError(error);
     }
@@ -43,7 +58,7 @@ function useTaskActions() {
     }
   };
 
-  return { assignToTask, changeTaskStage };
+  return { assignToTask, changeTaskStage, unAssignFromTask };
 }
 
 export { useTaskActions };

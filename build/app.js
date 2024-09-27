@@ -8286,6 +8286,7 @@ function WPQTCardDataItem({
         target: "_blank",
         className: "wpqt-text-qtTextBlue",
         rel: "noreferrer",
+        onClick: e => e.stopPropagation(),
         children: value
       }) : value
     })]

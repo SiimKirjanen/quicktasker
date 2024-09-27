@@ -197,9 +197,8 @@ class TaskRepository {
         return $wpdb->get_results( $wpdb->prepare(
             "SELECT a.* FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
             LEFT JOIN ". TABLE_WP_QUICK_TASKS_USER_TASK ." AS b
-            ON a.id = b.task_id AND b.user_id = %d
-            WHERE b.user_id IS NULL AND a.is_archived = 0 AND a.free_for_all = 1",
-            $userId
+            ON a.id = b.task_id
+            WHERE b.task_id IS NULL AND a.is_archived = 0 AND a.free_for_all = 1"
         ) );
     }
 }

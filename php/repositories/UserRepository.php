@@ -119,6 +119,33 @@ class UserRepository {
     }
 
     /**
+     * Check if a user is assigned to a specific task.
+     *
+     * This method checks the database to determine if a user has been assigned to a specific task.
+     *
+     * @param int $userId The ID of the user.
+     * @param int $taskId The ID of the task.
+     * @return bool True if the user is assigned to the task, false otherwise.
+     */
+    public function checkIfUserHasAssignedToTask($userId, $taskId) {
+        global $wpdb;
+
+        $result = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " WHERE user_id = %d AND task_id = %d",
+                $userId,
+                $taskId
+            )
+        );
+
+        if ($result > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Checks if a user is active.
      *
      * This function queries the database to determine if a user with the given ID is marked as active.

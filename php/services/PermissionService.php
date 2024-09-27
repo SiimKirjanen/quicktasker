@@ -5,16 +5,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\User\UserService;
 use WPQT\Task\TaskRepository;
+use WPQT\User\UserRepository; 
 
 class PermissionService {
-
-    protected $userService;
+    protected $userRepository;
     protected $taskRepository;
 
     public function __construct() {
-        $this->userService = new UserService();
+        $this->userRepository = new UserRepository();
         $this->taskRepository = new TaskRepository();
     }
     /**
@@ -36,14 +35,47 @@ class PermissionService {
     public function checkIfUserIsAllowedToViewTask($userId, $taskId) {
         global $wpdb;
 
-        $isAssignedToUser = $this->userService->checkIfUserHasAssignedToTask($userId, $taskId);
+        $assignedUsers = $this->userRepository->getAssignedUsersByTaskId($taskId);
         $task = $this->taskRepository->getTaskById($taskId);
+        $isAssignedToTask = false;
 
-        if ($isAssignedToUser === true || $task->free_for_all === '1') {
+        foreach ($assignedUsers as $user) {
+            if ($user->id === $userId) {
+                $isAssignedToTask = true;
+                break;
+            }
+        }
+
+        if ($isAssignedToTask === true || ($task->free_for_all === '1' && count($assignedUsers) === 0) ) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * Checks if a user can be assigned to a specific task.
+     *
+     * This method verifies whether a user can be assigned to a task based on the task's
+     * properties and the current assigned users. If the task is marked as 'free for all'
+     * and there are no users currently assigned, the user can be assigned to the task.
+     *
+     * @param int $userId The ID of the user to check.
+     * @param int $taskId The ID of the task to check.
+     * @return bool True if the user can be assigned to the task, false otherwise.
+     */
+    public function checkIfUserCanBeAssignedToTask($userId, $taskId) {
+        global $wpdb;
+
+        $assignedUsers = $this->userRepository->getAssignedUsersByTaskId($taskId);
+        $task = $this->taskRepository->getTaskById($taskId);
+
+        if ($task->free_for_all === '1' && count($assignedUsers) === 0) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     /**
@@ -56,10 +88,10 @@ class PermissionService {
     public function checkIfUserIsAllowedToEditTask($userId, $taskId) {
         global $wpdb;
 
-        $isAssignedToUser = $this->userService->checkIfUserHasAssignedToTask($userId, $taskId);
+        $isAssignedToUser = $this->userRepository->checkIfUserHasAssignedToTask($userId, $taskId);
         $task = $this->taskRepository->getTaskById($taskId);
 
-        if ($isAssignedToUser === true || $task->free_for_all === '1') {
+        if ($isAssignedToUser === true) {
             return true;
         } else {
             return false;
