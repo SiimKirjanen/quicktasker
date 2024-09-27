@@ -1,11 +1,11 @@
 import { useEffect, useState } from "@wordpress/element";
-import { UsersPage } from "../pages/UsersPage";
-import { PipelinePage } from "../pages/PipelinePage";
-import { ArchivePage } from "../pages/ArchivePage";
+import { UsersPage } from "../pages/UsersPage/UsersPage";
+import { PipelinePage } from "../pages/PipelinePage/PipelinePage";
+import { ArchivePage } from "../pages/ArchivePage/ArchivePage";
 import { OverviewPage } from "../pages/OverviewPage";
-import { UserSessionsPage } from "../pages/UserSessionsPage";
 import { UserTasksPage } from "../pages/UserTasksPage/UserTasksPage";
 import { UserPage } from "../pages/UserPage";
+import { UserSessionsPage } from "../pages/UserSessionsPage/UserSessionsPage";
 
 const useCurrentPage = () => {
   const [currentPage, setCurrentPage] = useState(getPageFromUrl());

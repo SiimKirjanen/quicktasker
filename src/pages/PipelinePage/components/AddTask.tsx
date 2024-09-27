@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
-import { PIPELINE_ADD_TASK } from "../../constants";
+import { PIPELINE_ADD_TASK } from "../../../constants";
 import { PlusCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { WPQTInput } from "../common/Input/Input";
-import { createTaskRequest } from "../../api/api";
-import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
+import { WPQTInput } from "../../../components/common/Input/Input";
+import { createTaskRequest } from "../../../api/api";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { toast } from "react-toastify";
 
 type Props = {

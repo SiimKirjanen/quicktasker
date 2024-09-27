@@ -1,10 +1,10 @@
 import { useContext, useState } from "@wordpress/element";
-import { WPQTButton } from "../../common/Button/Button";
-import { WPQTInput } from "../../common/Input/Input";
-import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { UserContext } from "../../../providers/UserContextProvider";
-import { useUserActions } from "../../../hooks/actions/useUserActions";
-import { ADD_USER } from "../../../constants";
+import { useUserActions } from "../../../../hooks/actions/useUserActions";
+import { UserContext } from "../../../../providers/UserContextProvider";
+import { ADD_USER } from "../../../../constants";
+import { WPQTInput } from "../../../../components/common/Input/Input";
+import { WPQTTextarea } from "../../../../components/common/TextArea/TextArea";
+import { WPQTButton } from "../../../../components/common/Button/Button";
 
 function AddUser() {
   const [showInput, setShowInput] = useState(false);

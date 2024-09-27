@@ -4,13 +4,13 @@ import {
   DraggableLocation,
   DropResult,
 } from "@hello-pangea/dnd";
-import { Pipeline } from "../../types/pipeline";
-import { moveTaskRequest } from "../../api/api";
+import { Pipeline } from "../../../types/pipeline";
+import { moveTaskRequest } from "../../../api/api";
 import { Stage } from "./Stage";
-import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { AddStage } from "./AddStage";
-import { TaskModal } from "../Modal/TaskModal/TaskModal";
-import { StageModal } from "../Modal/StageModal/StageModal";
+import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
+import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { toast } from "react-toastify";
 import { PipelineIntro } from "./PipelineIntro";
 

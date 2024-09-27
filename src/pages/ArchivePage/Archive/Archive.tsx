@@ -1,9 +1,9 @@
 import { useContext } from "@wordpress/element";
-import { ArchiveContext } from "../../providers/ArchiveContextProvider";
-import { Loading } from "../Loading/Loading";
-import { ArchiveFilter } from "../Filters/ArchiveFilter/ArchiveFilter";
+import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
+import { Loading } from "../../../components/Loading/Loading";
+import { ArchiveFilter } from "../../../components/Filter/ArchiveFilter/ArchiveFilter";
 import { ArchiveItems } from "./ArchiveItems/ArchiveItems";
-import { ArchiveTaskModal } from "../Modal/ArchiveTaskModal/ArchiveTaskModal";
+import { ArchiveTaskModal } from "../../../components/Modal/ArchiveTaskModal/ArchiveTaskModal";
 
 function Archive() {
   const {

@@ -1,6 +1,6 @@
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { Page } from "../Page/Page";
-import { UserTasksFilter } from "../../components/Filters/UserTasksFilter/UserTasksFilter";
+import { UserTasksFilter } from "../../components/Filter/UserTasksFilter/UserTasksFilter";
 import { UserTasksContextProvider } from "../../providers/UserTasksContextProvider";
 import { UserTasks } from "./UserTasks";
 

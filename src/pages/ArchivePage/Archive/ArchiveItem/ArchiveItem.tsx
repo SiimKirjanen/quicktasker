@@ -1,6 +1,6 @@
-import { ArchivedTask } from "../../../types/task";
-import { ArchivedTaskDropdown } from "../../Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown";
-import { WPQTCard } from "../../Card/Card";
+import { WPQTCard } from "../../../../components/Card/Card";
+import { ArchivedTaskDropdown } from "../../../../components/Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown";
+import { ArchivedTask } from "../../../../types/task";
 
 type Props = {
   task: ArchivedTask;

@@ -1,9 +1,9 @@
 import { useContext } from "@wordpress/element";
-import { UserContext } from "../../../providers/UserContextProvider";
-import { ModalContext } from "../../../providers/ModalContextProvider";
-import { OPEN_NEW_USER_MODAL } from "../../../constants";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { UserContext } from "../../../../providers/UserContextProvider";
+import { useUserFilter } from "../../../../hooks/filters/useUserFilter";
+import { OPEN_NEW_USER_MODAL } from "../../../../constants";
 import { UserListItem } from "../UserListItem/UserListItem";
-import { useUserFilter } from "../../../hooks/filters/useUserFilter";
 
 function UserList() {
   const {

@@ -1,7 +1,7 @@
-import { Archive } from "../components/Archive/Archive";
-import { Page } from "./Page/Page";
-import { ArchiveContextProvider } from "../providers/ArchiveContextProvider";
-import { WPQTPageHeader } from "../components/common/Header/Header";
+import { Page } from "../Page/Page";
+import { ArchiveContextProvider } from "../../providers/ArchiveContextProvider";
+import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { Archive } from "./Archive/Archive";
 
 function ArchivePage() {
   return (
