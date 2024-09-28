@@ -5962,8 +5962,8 @@ function ProfileDropdown() {
   } = (0,_hooks_useSession__WEBPACK_IMPORTED_MODULE_6__.useSession)();
   const logOut = () => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.logoutUserPageRequest)(pageHash);
       yield deleteSessionCookie();
+      yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.logoutUserPageRequest)(pageHash);
       loadUserPageStatus();
     } catch (error) {
       handleError(error);

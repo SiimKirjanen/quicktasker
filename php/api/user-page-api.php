@@ -150,9 +150,11 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'POST',
         'callback' => function( $data ) {
                 try {
+                    RequestValidation::validateUserPageApiRequest($data, array('session' => false));
                     $sessionService = new SessionService();
-                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
-                    $sessionService->markSessionInactive($session->session_token);
+                    
+                    $sessionToken = $_COOKIE['wpqt-session-token-' . $data['hash']];
+                    $sessionService->markSessionInactive($sessionToken);
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);  
                 } catch(WPQTException $e) {

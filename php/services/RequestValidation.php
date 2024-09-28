@@ -48,7 +48,7 @@ class RequestValidation {
         if ($args['hash'] === true) {
             $userPageService = new UserPageService();
             if( !$userPageService->checkIfUserPageHashExists($data['hash']) ) {
-                throw new WPQTException('User page hash does not exist', true);
+                throw new WPQTException('User page does not exist', true);
             }
         }
 

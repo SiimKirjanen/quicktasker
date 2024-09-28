@@ -23,8 +23,8 @@ function ProfileDropdown() {
 
   const logOut = async () => {
     try {
-      await logoutUserPageRequest(pageHash);
       await deleteSessionCookie();
+      await logoutUserPageRequest(pageHash);
       loadUserPageStatus();
     } catch (error) {
       handleError(error);
