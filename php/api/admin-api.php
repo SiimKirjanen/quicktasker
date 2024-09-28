@@ -978,13 +978,20 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
+                global $wpdb;
+                
                 try {
                     WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+
                     $userService = new UserService();
                     $userService->resetUserPassword($data['id']);
-
+                    
+                    $wpdb->query('COMMIT');
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 }catch(Exception $e) {
+                    $wpdb->query('ROLLBACK');
+
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },

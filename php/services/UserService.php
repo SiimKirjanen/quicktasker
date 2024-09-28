@@ -217,12 +217,17 @@ class UserService {
         return true;
     }
 
+
     /**
-     * Resets the password for a user by setting it to null in the database.
+     * Resets the password for a given user.
+     *
+     * This method will set the user's password to null and delete all user sessions.
+     * It first checks if the user has a password set. If not, it throws an exception.
+     * If the password reset or session deletion fails, it throws an exception.
      *
      * @param int $userId The ID of the user whose password is to be reset.
-     * @return bool Returns true if the password was successfully reset.
-     * @throws \Exception If the password reset operation fails.
+     * @return bool Returns true if the password and sessions are successfully reset.
+     * @throws \Exception If the user does not have a password set, or if the password reset or session deletion fails.
      */
     public function resetUserPassword($userId) {
         global $wpdb;
@@ -243,6 +248,15 @@ class UserService {
 
         if (!$result) {
             throw new \Exception('Failed to reset a user password');
+        }
+
+        $result2 = $wpdb->delete(
+            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            array('user_id' => $userId)
+        );
+
+        if ($result2 === false) {
+            throw new \Exception('Failed to reset a user sessions');
         }
 
         return true;

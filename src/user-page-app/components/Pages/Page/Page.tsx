@@ -23,4 +23,15 @@ function PageContentWrap({ children }: Props) {
   return <div className="wpqt-p-4">{children}</div>;
 }
 
-export { PageWrap, PageContentWrap };
+type PageScreenMiddleProps = {
+  children: React.ReactNode;
+};
+function PageScreenMiddle({ children }: PageScreenMiddleProps) {
+  return (
+    <div className="wpqt-flex wpqt-h-screen wpqt-flex-col wpqt-items-center wpqt-justify-center">
+      {children}
+    </div>
+  );
+}
+
+export { PageWrap, PageContentWrap, PageScreenMiddle };

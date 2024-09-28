@@ -10,6 +10,7 @@ import { WPQTInput } from "../../../../components/common/Input/Input";
 import { WPQTLabel } from "../../../../components/common/Form/Label";
 import { WPQTButton } from "../../../../components/common/Button/Button";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
+import { PageScreenMiddle } from "../Page/Page";
 
 function LoginPage() {
   const {
@@ -30,7 +31,7 @@ function LoginPage() {
     }
   };
   return (
-    <div className="wpqt-flex wpqt-h-screen wpqt-flex-col wpqt-items-center wpqt-justify-center">
+    <PageScreenMiddle>
       <h2>Hello {userName}</h2>
       <p>Plese log in to continue</p>
       <form>
@@ -45,7 +46,7 @@ function LoginPage() {
           </WPQTField>
         </WPQTFieldSet>
       </form>
-    </div>
+    </PageScreenMiddle>
   );
 }
 

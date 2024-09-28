@@ -14,20 +14,6 @@ import { LoginPage } from "./components/Pages/LoginPage/LoginPage";
 import { AssignableTasksPage } from "./components/Pages/AssignableTasksPage/AssignableTasksPage";
 import { TaskPage } from "./components/Pages/TaskPage/TaskPage";
 
-function UserPageApp() {
-  return (
-    <ErrorBoundary>
-      <UserPageAppContextProvider>
-        <UserPageContent />
-        <ToastContainer
-          position="bottom-center"
-          toastClassName="wpqt-bottom-[60px] lg:wpqt-bottom-[20px]"
-        />
-      </UserPageAppContextProvider>
-    </ErrorBoundary>
-  );
-}
-
 function UserPageContent() {
   const {
     state: { initialLoading, isActiveUser, setupCompleted, isLoggedIn },
@@ -57,6 +43,20 @@ function UserPageContent() {
         <Route path="/tasks/:taskHash" element={<TaskPage />} />
       </Routes>
     </Router>
+  );
+}
+
+function UserPageApp() {
+  return (
+    <ErrorBoundary>
+      <UserPageAppContextProvider>
+        <UserPageContent />
+        <ToastContainer
+          position="bottom-center"
+          toastClassName="wpqt-bottom-[60px] lg:wpqt-bottom-[20px]"
+        />
+      </UserPageAppContextProvider>
+    </ErrorBoundary>
   );
 }
 
