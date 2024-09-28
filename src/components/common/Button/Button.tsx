@@ -32,8 +32,8 @@ function WPQTIconButton({
       className="wpqt-main-border wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white"
       onClick={onClick}
     >
-      {text}
       {icon}
+      {text}
     </div>
   );
 }

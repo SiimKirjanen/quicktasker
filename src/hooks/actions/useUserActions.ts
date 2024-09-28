@@ -4,6 +4,7 @@ import {
   createUserRequest,
   deleteUserRequest,
   editUserRequest,
+  resetUserPasswordRequest,
 } from "../../api/api";
 import { ServerUser, User } from "../../types/user";
 
@@ -66,7 +67,27 @@ function useUserActions() {
     }
   };
 
-  return { createUser, editUser, changeUserStatus, deleteUser };
+  const resetUserPassword = async (
+    userId: string,
+    callback?: (userId: string) => void,
+  ) => {
+    try {
+      await resetUserPasswordRequest(userId);
+      if (callback) callback(userId);
+      toast.success("User password reset successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to reset user password. Please try again");
+    }
+  };
+
+  return {
+    createUser,
+    editUser,
+    changeUserStatus,
+    deleteUser,
+    resetUserPassword,
+  };
 }
 
 export { useUserActions };

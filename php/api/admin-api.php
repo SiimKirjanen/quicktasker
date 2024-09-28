@@ -974,6 +974,35 @@ function wpqt_register_api_routes() {
 
     register_rest_route(
         'wpqt/v1',
+        'users/(?P<id>\d+)/password-reset',
+        array(
+            'methods' => 'PATCH',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $userService = new UserService();
+                    $userService->resetUserPassword($data['id']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                }catch(Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
         'users/(?P<id>\d+)/status',
         array(
             'methods' => 'PATCH',

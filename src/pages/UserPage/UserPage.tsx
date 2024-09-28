@@ -1,13 +1,14 @@
-import { Page } from "./Page/Page";
-import { WPQTPageHeader } from "../components/common/Header/Header";
+import { Page } from "../Page/Page";
+import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { useContext, useEffect, useState } from "@wordpress/element";
-import { LoadingContext } from "../providers/LoadingContextProvider";
-import { SET_FULL_PAGE_LOADING } from "../constants";
-import { getExtendedUserRequest } from "../api/api";
-import { ExtendedUser } from "../types/user";
+import { LoadingContext } from "../../providers/LoadingContextProvider";
+import { SET_FULL_PAGE_LOADING } from "../../constants";
+import { getExtendedUserRequest } from "../../api/api";
+import { ExtendedUser } from "../../types/user";
 import { toast } from "react-toastify";
-import { convertExtendedUserFromServer } from "../utils/user";
-import { UserDetails } from "../components/User/UserDetails/UserDetails";
+import { convertExtendedUserFromServer } from "../../utils/user";
+import { UserDetails } from "./components/UserDetails/UserDetails";
+import { UserControls } from "./components/UserControls/UserControls";
 
 type Props = {
   userId: string;
@@ -40,6 +41,14 @@ function UserPage({ userId }: Props) {
       return prevData;
     });
   };
+  const onChangeSetUpStatus = async (status: boolean) => {
+    setUserData((prevData) => {
+      if (prevData) {
+        return { ...prevData, setup_completed: status };
+      }
+      return prevData;
+    });
+  };
 
   return (
     <Page>
@@ -48,7 +57,12 @@ function UserPage({ userId }: Props) {
           <WPQTPageHeader description="This is a user page">
             {userData.name}
           </WPQTPageHeader>
-          <UserDetails data={userData} changeStatus={onChangeStatus} />
+          <UserDetails data={userData} />
+          <UserControls
+            data={userData}
+            changeStatus={onChangeStatus}
+            changeSetUpStatus={onChangeSetUpStatus}
+          />
         </>
       )}
     </Page>

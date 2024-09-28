@@ -390,6 +390,14 @@ function getUserTasksRequest(
   });
 }
 
+function resetUserPasswordRequest(userId: string): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${userId}/password-reset`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   User session requests
@@ -458,4 +466,5 @@ export {
   getExtendedUserRequest,
   restoreArchivedTaskRequest,
   getLogsRequest,
+  resetUserPasswordRequest,
 };

@@ -216,4 +216,35 @@ class UserService {
 
         return true;
     }
+
+    /**
+     * Resets the password for a user by setting it to null in the database.
+     *
+     * @param int $userId The ID of the user whose password is to be reset.
+     * @return bool Returns true if the password was successfully reset.
+     * @throws \Exception If the password reset operation fails.
+     */
+    public function resetUserPassword($userId) {
+        global $wpdb;
+
+        $hasPassword = $this->checkIfUserHasPassword($userId);
+
+        if (!$hasPassword) {
+            throw new \Exception('Cannot reset user password if it is not set');
+        }
+
+        $result = $wpdb->update(
+            TABLE_WP_QUICK_TASKS_USERS,
+            array(
+                'password' => null,
+            ),
+            array('id' => $userId)
+        );
+
+        if (!$result) {
+            throw new \Exception('Failed to reset a user password');
+        }
+
+        return true;
+    }
 }

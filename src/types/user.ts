@@ -16,12 +16,12 @@ type ServerUser = BaseUser & {
 type ServerExtendedUser = BaseUser & {
   is_active: string;
   has_password: boolean;
-  setup_complete: boolean;
+  setup_completed: boolean;
 };
 type ExtendedUser = BaseUser & {
   is_active: boolean;
   has_password: boolean;
-  setup_complete: boolean;
+  setup_completed: boolean;
 };
 
 export type { User, ServerUser, ExtendedUser, ServerExtendedUser };

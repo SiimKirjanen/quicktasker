@@ -1,10 +1,7 @@
-import { useContext } from "@wordpress/element";
 import { usePageLinks } from "../../../../hooks/usePageLinks";
 import { User } from "../../../../types/user";
-import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
 import { UserDropdown } from "../../../../components/Dropdown/UserDropdown/UserDropdown";
-import { OPEN_EDIT_USER_MODAL } from "../../../../constants";
 import { formatDate } from "../../../../utils/date";
 
 type Props = {
@@ -13,7 +10,6 @@ type Props = {
 
 function UserListItem({ user }: Props) {
   const { userPage } = usePageLinks();
-  const { modalDispatch } = useContext(ModalContext);
   const userIsActive = user.is_active;
 
   return (
@@ -22,10 +18,7 @@ function UserListItem({ user }: Props) {
       description={user.description}
       dropdown={<UserDropdown user={user} />}
       onClick={() => {
-        modalDispatch({
-          type: OPEN_EDIT_USER_MODAL,
-          payload: user,
-        });
+        window.location.hash = `#/users/${user.id}`;
       }}
       className="wpqt-cursor-pointer"
     >
@@ -37,10 +30,6 @@ function UserListItem({ user }: Props) {
       <WPQTCardDataItem
         label="User created at"
         value={formatDate(user.created_at)}
-      />
-      <WPQTCardDataItem
-        label="Assigned tasks count"
-        value={user.assigned_tasks_count}
       />
       <WPQTCardDataItem
         label="Status"
