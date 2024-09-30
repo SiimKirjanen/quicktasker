@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Comment\CommentRepository;
+use WPQT\WPQTException;
 
 class CommentService {
     protected $commentRepository;
@@ -15,30 +16,35 @@ class CommentService {
         $this->commentRepository = new CommentRepository();
     }
 
+  
     /**
      * Creates a new comment in the database.
      *
      * @param int $typeId The ID of the type associated with the comment.
      * @param string $type The type of the comment.
-     * @param bool $isPrivate Indicates whether the comment is private.
+     * @param bool $isPrivate Indicates if the comment is private.
      * @param string $text The text content of the comment.
+     * @param int $userId The ID of the user creating the comment.
+     * @param boolean $isAdminComment Is comment created by WordPress admin.
      * 
-     * @return mixed The newly created comment object.
+     * @return mixed The created comment object.
      * 
      * @throws \Exception If the comment could not be added to the database.
      */
-    public function createComment($typeId, $type, $isPrivate, $text ) {
+    public function createComment($typeId, $type, $isPrivate, $text, $userId, $isAdminComment = false) {
         global $wpdb;
 
         $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_COMMENTS, array(
             'type_id' => $typeId,
             'type' => $type,
             'is_private' => $isPrivate,
-            'text' => $text
+            'text' => $text,
+            'author_id' => $userId,
+            'is_admin_comment' => $isAdminComment
         ));
 
         if( $result === false ) {
-            throw new \Exception('Failed to add a comment');
+            throw new WPQTException('Failed to add a comment');
         }
 
         $commentId = $wpdb->insert_id;

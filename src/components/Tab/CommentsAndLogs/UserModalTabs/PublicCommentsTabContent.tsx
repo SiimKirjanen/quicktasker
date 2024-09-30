@@ -7,6 +7,7 @@ import { getComments } from "../../../../api/api";
 import { WPQTComment } from "../../../../types/comment";
 import { WPQTTypes } from "../../../../types/enums";
 import { useCommentActions } from "../../../../hooks/actions/useCommentActions";
+import { convertCommentFromServer } from "../../../../utils/comment";
 
 type Props = {
   userId: string;
@@ -16,14 +17,23 @@ function PublicCommentsTabContent({ userId }: Props) {
   const { addComment } = useCommentActions();
 
   const onAddComment = async (newEntry: string) => {
-    return await addComment(userId, WPQTTypes.User, false, newEntry);
+    const connemntFromServer = await addComment(
+      userId,
+      WPQTTypes.User,
+      false,
+      newEntry,
+    );
+
+    if (connemntFromServer) {
+      return convertCommentFromServer(connemntFromServer);
+    }
   };
 
   const fetchComments = async () => {
     try {
       const response = await getComments(userId, WPQTTypes.User, false);
 
-      return response.data;
+      return response.data.map(convertCommentFromServer);
     } catch (error) {
       console.error(error);
       toast.error("Failed to load notes");

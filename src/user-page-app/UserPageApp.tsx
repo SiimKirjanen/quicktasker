@@ -13,6 +13,7 @@ import { SetUpPage } from "./components/Pages/SetUpPage/SetUpPage";
 import { LoginPage } from "./components/Pages/LoginPage/LoginPage";
 import { AssignableTasksPage } from "./components/Pages/AssignableTasksPage/AssignableTasksPage";
 import { TaskPage } from "./components/Pages/TaskPage/TaskPage";
+import { CommentsPage } from "./components/Pages/CommentsPage/CommentsPage";
 
 function UserPageContent() {
   const {
@@ -41,6 +42,7 @@ function UserPageContent() {
         <Route path="/user-tasks" element={<UserTasksPage />} />
         <Route path="/assignable-tasks" element={<AssignableTasksPage />} />
         <Route path="/tasks/:taskHash" element={<TaskPage />} />
+        <Route path="/tasks/:taskHash/comments" element={<CommentsPage />} />
       </Routes>
     </Router>
   );

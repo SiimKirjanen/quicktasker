@@ -5,6 +5,7 @@ import { UserSession } from "../types/user-session";
 import { UserPageOverview } from "../types/user-page-overview";
 import { TaskFromServer } from "../../types/task";
 import { UserPageTaskResponse } from "../types/user-page-task-response";
+import { WPQTCommentFromServer } from "../../types/comment";
 
 function getCommonHeaders() {
   return {
@@ -131,6 +132,30 @@ function logoutUserPageRequest(pageHash: string): Promise<WPQTResponse> {
   });
 }
 
+function getTaskCommentsRequest(
+  pageHash: string,
+  taskHash: string,
+): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/comments`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function addTaskCommentRequest(
+  pageHash: string,
+  taskHash: string,
+  comment: string,
+): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+  return apiFetch({
+    method: "POST",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/comments`,
+    data: { comment },
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getUserPageStatusRequest,
   setUpUserPageRequest,
@@ -143,4 +168,6 @@ export {
   unAssignTaskFromUser,
   changeTaskStageRequest,
   logoutUserPageRequest,
+  getTaskCommentsRequest,
+  addTaskCommentRequest,
 };

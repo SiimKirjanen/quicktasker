@@ -5,7 +5,7 @@
 	Description: TODO.
 	Author: Siim Kirjanen
 	Author URI: https://github.com/SiimKirjanen
-	Text Domain: quick-tasker
+	Text Domain: quicktasker
 	Version: 1.0.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28

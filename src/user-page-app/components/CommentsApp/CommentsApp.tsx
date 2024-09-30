@@ -1,0 +1,63 @@
+import { useEffect, useRef, useState } from "@wordpress/element";
+import { WPQTComment } from "../../../types/comment";
+import { WPQTTextarea } from "../../../components/common/TextArea/TextArea";
+import { WPQTIconButton } from "../../../components/common/Button/Button";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+
+type Props = {
+  comments: WPQTComment[];
+  addComments: (comment: string) => void;
+};
+function CommentsApp({ comments, addComments }: Props) {
+  const [comment, setComment] = useState("");
+  const commentsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (commentsContainerRef.current) {
+      commentsContainerRef.current.scrollTo({
+        top: commentsContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [comments]);
+
+  const saveComment = () => {
+    addComments(comment);
+    setComment("");
+  };
+
+  return (
+    <div>
+      <div
+        ref={commentsContainerRef}
+        className="wpqt-comments-app-height wpqt-overflow-y-auto"
+      >
+        <div className="wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-justify-items-center wpqt-gap-x-8 wpqt-gap-y-8">
+          {comments.map((comment) => {
+            return <CommentItem key={comment.id} comment={comment} />;
+          })}
+        </div>
+      </div>
+      <div className="wpqt-fixed wpqt-bottom-[92px]">
+        <WPQTTextarea value={comment} onChange={setComment} />
+        <WPQTIconButton
+          text="Add comment"
+          onClick={saveComment}
+          icon={<ChatBubbleLeftIcon className="wpqt-icon-green wpqt-size-5" />}
+        />
+      </div>
+    </div>
+  );
+}
+
+function CommentItem({ comment }: { comment: WPQTComment }) {
+  return (
+    <>
+      <div>{comment.author_name}</div>
+      <div className="wpqt-break-all">{comment.text}</div>
+      <div>{comment.created_at}</div>
+    </>
+  );
+}
+
+export { CommentsApp };

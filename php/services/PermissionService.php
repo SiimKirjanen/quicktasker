@@ -89,7 +89,6 @@ class PermissionService {
         global $wpdb;
 
         $isAssignedToUser = $this->userRepository->checkIfUserHasAssignedToTask($userId, $taskId);
-        $task = $this->taskRepository->getTaskById($taskId);
 
         if ($isAssignedToUser === true) {
             return true;

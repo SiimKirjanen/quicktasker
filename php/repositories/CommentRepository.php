@@ -38,15 +38,27 @@ class CommentRepository {
      */
     public function getComments($typeId, $type, $isPrivate) {
         global $wpdb;
-
-        return $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_COMMENTS . " WHERE type_id = %d AND type = %s AND is_private = %d",
-                $typeId,
-                $type,
-                $isPrivate
-            )
-        );
-    } 
+    
+        $comments_table = TABLE_WP_QUICK_TASKS_COMMENTS;
+        $users_table = TABLE_WP_QUICK_TASKS_USERS;
+        $wp_users_table = $wpdb->users;
+    
+        $query = "
+            SELECT comments.*, 
+                   CASE 
+                       WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
+                       ELSE users.name 
+                   END AS author_name
+            FROM $comments_table comments
+            LEFT JOIN $users_table users ON comments.author_id = users.id AND comments.is_admin_comment = 0
+            LEFT JOIN $wp_users_table wp_users ON comments.author_id = wp_users.ID AND comments.is_admin_comment = 1
+            WHERE comments.type_id = %d AND comments.type = %s AND comments.is_private = %d
+            ORDER BY comments.created_at
+        ";
+    
+        $prepared_query = $wpdb->prepare($query, $typeId, $type, $isPrivate);
+    
+        return $wpdb->get_results($prepared_query);
+    }
     
 }

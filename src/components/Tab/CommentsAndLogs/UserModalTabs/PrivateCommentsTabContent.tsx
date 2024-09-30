@@ -7,6 +7,7 @@ import {
 import { addCommentRequest, getComments } from "../../../../api/api";
 import { WPQTTypes } from "../../../../types/enums";
 import { WPQTComment } from "../../../../types/comment";
+import { convertCommentFromServer } from "../../../../utils/comment";
 
 type Props = {
   userId: string;
@@ -22,7 +23,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
         newEntry,
       );
 
-      return response.data;
+      return convertCommentFromServer(response.data);
     } catch (error) {
       console.error(error);
       toast.error("Failed to add private note");
@@ -33,7 +34,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
     try {
       const response = await getComments(userId, WPQTTypes.User, true);
 
-      return response.data;
+      return response.data.map(convertCommentFromServer);
     } catch (error) {
       console.error(error);
       toast.error("Failed to load private notes");

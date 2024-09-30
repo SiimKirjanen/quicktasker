@@ -3,9 +3,16 @@ type BaseComment = {
   text: string;
   type: "task" | "user";
   type_id: string;
+  author_id: string;
+  author_name: string;
+  created_at: string;
 };
 
-type WPQTComment = BaseComment;
-type WPQTCommentFromServer = BaseComment;
+type WPQTComment = BaseComment & {
+  is_admin_comment: boolean;
+};
+type WPQTCommentFromServer = BaseComment & {
+  is_admin_comment: string;
+};
 
 export type { WPQTComment, WPQTCommentFromServer };

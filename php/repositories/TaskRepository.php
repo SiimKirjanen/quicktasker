@@ -67,6 +67,16 @@ class TaskRepository {
         return $task;
     }
 
+    /**
+     * Retrieves a task by its hash value.
+     *
+     * This function fetches a task from the database using the provided hash value.
+     * Optionally, it can also fetch and include the users assigned to the task.
+     *
+     * @param string $hash The hash value of the task to retrieve.
+     * @param bool $addAssignedUsers Optional. Whether to include assigned users in the result. Default false.
+     * @return object|null The task object if found, null otherwise. If $addAssignedUsers is true, the task object will include an 'assigned_users' property containing the assigned users.
+     */
     public function getTaskByHash($hash, $addAssignedUsers = false) {
         global $wpdb;
 

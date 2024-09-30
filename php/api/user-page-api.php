@@ -19,6 +19,8 @@ use WPQT\RequestValidation;
 use WPQT\Permission\PermissionService;
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskService;
+use WPQT\Comment\CommentRepository;
+use WPQT\Comment\CommentService;
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
@@ -290,6 +292,97 @@ function wpqt_register_user_page_api_routes() {
                 'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
             ),
             'task_hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
+    ));
+
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/comments', array(
+        'methods' => 'GET',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $taskRepository = new TaskRepository();
+                    $permissionService = new PermissionService();
+                    $commentRepository = new CommentRepository();
+
+                    $task = $taskRepository->getTaskByHash($data['task_hash']);
+
+                    if($task === null) {
+                        throw new WPQTException('Task not found', true);
+                    }
+                    if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id)) {
+                        throw new WPQTException('Not allowed', true);
+                    }
+
+                    $comments = $commentRepository->getComments($task->id, 'task', false);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'task_hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
+    ));
+
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/comments', array(
+        'methods' => 'POST',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $taskRepository = new TaskRepository();
+                    $permissionService = new PermissionService();
+                    $commentService = new CommentService();
+                    $commentRepository = new CommentRepository();
+
+                    $task = $taskRepository->getTaskByHash($data['task_hash']);
+
+                    if($task === null) {
+                        throw new WPQTException('Task not found', true);
+                    }
+                    if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id)) {
+                        throw new WPQTException('Not allowed', true);
+                    }
+                    $commentService->createComment($task->id, 'task', false, $data['comment'], $session->user_id, false);
+                    
+                    $comments = $commentRepository->getComments($task->id, 'task', false);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'task_hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'comment' => array(
                 'required' => true,
                 'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                 'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),

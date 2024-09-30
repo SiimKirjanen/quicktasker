@@ -1,5 +1,5 @@
 {
-  "name": "wp-quick-tasks",
+  "name": "quicktasker",
   "version": "1.0.0",
   "description": "",
   "main": "./src/landing/index.js",

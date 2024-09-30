@@ -3,6 +3,7 @@ import { TaskFromServer } from "../../../types/task";
 import {
   assignTaskToUser,
   changeTaskStageRequest,
+  getTaskDataRequest,
   unAssignTaskFromUser,
 } from "../../api/user-page-api";
 import { useErrorHandler } from "../useErrorHandler";
@@ -10,6 +11,19 @@ import { UserPageTaskResponse } from "../../types/user-page-task-response";
 
 function useTaskActions() {
   const { handleError } = useErrorHandler();
+
+  const getTask = async (
+    pageHash: string,
+    taskHash: string,
+    callback?: (data: UserPageTaskResponse) => void,
+  ) => {
+    try {
+      const response = await getTaskDataRequest(pageHash, taskHash);
+      if (callback) callback(response.data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const assignToTask = async (
     pageHash: string,
@@ -58,7 +72,7 @@ function useTaskActions() {
     }
   };
 
-  return { assignToTask, changeTaskStage, unAssignFromTask };
+  return { getTask, assignToTask, changeTaskStage, unAssignFromTask };
 }
 
 export { useTaskActions };

@@ -56,8 +56,10 @@ function TaskControls({ task }: Props) {
       {isAssignedToTask && (
         <WPQTIconButton
           icon={<ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />}
-          text="Manage comments"
-          onClick={() => {}}
+          text="Manage task comments"
+          onClick={() => {
+            navigate(`/tasks/${task.task_hash}/comments`);
+          }}
         />
       )}
       {!isAssignedToTask && (

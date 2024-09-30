@@ -1284,7 +1284,8 @@ function wpqt_register_api_routes() {
                 try {
                     WPQTverifyApiNonce($data);
                     $commentService = new CommentService();
-                    $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment']);
+                    $adminId = get_current_user_id();
+                    $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment'], $adminId, true);
               
                     return new WP_REST_Response((new ApiResponse(true, array(), $newComemnt))->toArray(), 200);
                 } catch (Exception $e) {

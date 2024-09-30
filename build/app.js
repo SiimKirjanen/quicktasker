@@ -10878,6 +10878,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
 /* harmony import */ var _hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useCommentActions */ "./src/hooks/actions/useCommentActions.ts");
+/* harmony import */ var _utils_comment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../utils/comment */ "./src/utils/comment.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10911,6 +10912,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function CommentsTabContent({
   taskId
 }) {
@@ -10918,12 +10920,15 @@ function CommentsTabContent({
     addComment
   } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__.useCommentActions)();
   const onAddComment = newEntry => __awaiter(this, void 0, void 0, function* () {
-    return yield addComment(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, true, newEntry);
+    const response = yield addComment(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, true, newEntry);
+    if (response) {
+      return (0,_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer)(response);
+    }
   });
   const fetchPrivateComments = () => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getComments)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, true);
-      return response.data;
+      return response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
@@ -10962,6 +10967,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
 /* harmony import */ var _hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useCommentActions */ "./src/hooks/actions/useCommentActions.ts");
+/* harmony import */ var _utils_comment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../utils/comment */ "./src/utils/comment.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10995,6 +11001,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function PublicCommentsTabContent({
   taskId
 }) {
@@ -11002,12 +11009,15 @@ function PublicCommentsTabContent({
     addComment
   } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__.useCommentActions)();
   const onAddComment = newEntry => __awaiter(this, void 0, void 0, function* () {
-    return yield addComment(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, false, newEntry);
+    const response = yield addComment(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, false, newEntry);
+    if (response) {
+      return (0,_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer)(response);
+    }
   });
   const fetchComments = () => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getComments)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, false);
-      return response.data;
+      return response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
@@ -11170,6 +11180,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
+/* harmony import */ var _utils_comment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../utils/comment */ "./src/utils/comment.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11202,13 +11213,14 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function PrivateCommentsTabContent({
   userId
 }) {
   const addComment = newEntry => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.addCommentRequest)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, true, newEntry);
-      return response.data;
+      return (0,_utils_comment__WEBPACK_IMPORTED_MODULE_5__.convertCommentFromServer)(response.data);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to add private note");
@@ -11217,7 +11229,7 @@ function PrivateCommentsTabContent({
   const fetchPrivateComments = () => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getComments)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, true);
-      return response.data;
+      return response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_5__.convertCommentFromServer);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load private notes");
@@ -11256,6 +11268,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
 /* harmony import */ var _hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useCommentActions */ "./src/hooks/actions/useCommentActions.ts");
+/* harmony import */ var _utils_comment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../utils/comment */ "./src/utils/comment.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11289,6 +11302,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function PublicCommentsTabContent({
   userId
 }) {
@@ -11296,12 +11310,15 @@ function PublicCommentsTabContent({
     addComment
   } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__.useCommentActions)();
   const onAddComment = newEntry => __awaiter(this, void 0, void 0, function* () {
-    return yield addComment(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, false, newEntry);
+    const connemntFromServer = yield addComment(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, false, newEntry);
+    if (connemntFromServer) {
+      return (0,_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer)(connemntFromServer);
+    }
   });
   const fetchComments = () => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getComments)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, false);
-      return response.data;
+      return response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
@@ -16268,6 +16285,24 @@ var WPQTTypes;
   WPQTTypes["Task"] = "task";
   WPQTTypes["User"] = "user";
 })(WPQTTypes || (WPQTTypes = {}));
+
+
+/***/ }),
+
+/***/ "./src/utils/comment.ts":
+/*!******************************!*\
+  !*** ./src/utils/comment.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   convertCommentFromServer: () => (/* binding */ convertCommentFromServer)
+/* harmony export */ });
+const convertCommentFromServer = comment => Object.assign(Object.assign({}, comment), {
+  is_admin_comment: comment.is_admin_comment === "1"
+});
 
 
 /***/ }),
