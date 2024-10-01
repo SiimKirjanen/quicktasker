@@ -156,6 +156,28 @@ function addTaskCommentRequest(
   });
 }
 
+function getUserCommentsRequest(
+  pageHash: string,
+): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/user/comments`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function addUserCommentRequest(
+  pageHash: string,
+  comment: string,
+): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+  return apiFetch({
+    method: "POST",
+    path: `/wpqt/v1/user-pages/${pageHash}/user/comments`,
+    data: { comment },
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getUserPageStatusRequest,
   setUpUserPageRequest,
@@ -170,4 +192,6 @@ export {
   logoutUserPageRequest,
   getTaskCommentsRequest,
   addTaskCommentRequest,
+  getUserCommentsRequest,
+  addUserCommentRequest,
 };

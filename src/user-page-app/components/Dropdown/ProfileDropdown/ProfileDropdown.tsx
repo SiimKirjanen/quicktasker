@@ -12,6 +12,7 @@ import { useContext } from "@wordpress/element";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSession } from "../../../hooks/useSession";
+import { useNavigate } from "react-router-dom";
 
 function ProfileDropdown() {
   const {
@@ -20,6 +21,7 @@ function ProfileDropdown() {
   } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const { deleteSessionCookie } = useSession();
+  const navigate = useNavigate();
 
   const logOut = async () => {
     try {
@@ -46,7 +48,11 @@ function ProfileDropdown() {
       <WPQTDropdownItem
         text="View profile"
         icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
+        onClick={() => {
+          navigate("/user/profile");
+        }}
       />
+
       <WPQTDropdownItem
         text="Log out"
         icon={

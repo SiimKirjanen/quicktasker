@@ -2,7 +2,9 @@ import { useContext } from "@wordpress/element";
 import { WPQTComment, WPQTCommentFromServer } from "../../../types/comment";
 import {
   addTaskCommentRequest,
+  addUserCommentRequest,
   getTaskCommentsRequest,
+  getUserCommentsRequest,
 } from "../../api/user-page-api";
 import { useErrorHandler } from "../useErrorHandler";
 import { UserPageAppContext } from "../../providers/UserPageAppContextProvider";
@@ -40,7 +42,32 @@ function useCommentActions() {
     }
   };
 
-  return { loadTaskComments, addTaskComment };
+  const loadUserComments = async (
+    callback: (comments: WPQTComment[]) => void,
+  ) => {
+    try {
+      const response = await getUserCommentsRequest(pageHash);
+      const comments = response.data.map(convertCommentFromServer);
+      callback(comments);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const addUserComment = async (
+    commentText: string,
+    callback: (comments: WPQTComment[]) => void,
+  ) => {
+    try {
+      const response = await addUserCommentRequest(pageHash, commentText);
+      const comments = response.data.map(convertCommentFromServer);
+      callback(comments);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  return { loadTaskComments, addTaskComment, loadUserComments, addUserComment };
 }
 
 export { useCommentActions };

@@ -13,7 +13,9 @@ import { SetUpPage } from "./components/Pages/SetUpPage/SetUpPage";
 import { LoginPage } from "./components/Pages/LoginPage/LoginPage";
 import { AssignableTasksPage } from "./components/Pages/AssignableTasksPage/AssignableTasksPage";
 import { TaskPage } from "./components/Pages/TaskPage/TaskPage";
-import { CommentsPage } from "./components/Pages/CommentsPage/CommentsPage";
+import { TaskCommentsPage } from "./components/Pages/TaskCommentsPage/TaskCommentsPage";
+import { PprofilePage } from "./components/Pages/ProfilePage/ProfilePage";
+import { UserCommentsPage } from "./components/Pages/UserCommentsPage/UserCommentsPage";
 
 function UserPageContent() {
   const {
@@ -39,10 +41,15 @@ function UserPageContent() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/user/profile" element={<PprofilePage />} />
         <Route path="/user-tasks" element={<UserTasksPage />} />
         <Route path="/assignable-tasks" element={<AssignableTasksPage />} />
         <Route path="/tasks/:taskHash" element={<TaskPage />} />
-        <Route path="/tasks/:taskHash/comments" element={<CommentsPage />} />
+        <Route
+          path="/tasks/:taskHash/comments"
+          element={<TaskCommentsPage />}
+        />
+        <Route path="/user/comments" element={<UserCommentsPage />} />
       </Routes>
     </Router>
   );

@@ -390,6 +390,65 @@ function wpqt_register_user_page_api_routes() {
         ),
     ));
 
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/user/comments', array(
+        'methods' => 'GET',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $commentRepository = new CommentRepository();
+                    
+                    $userComments = $commentRepository->getComments($session->user_id, 'user', false);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $userComments))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
+    ));
+
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/user/comments', array(
+        'methods' => 'POST',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $commentRepository = new CommentRepository();
+                    $commentService = new CommentService();
+                    
+                    $commentService->createComment($session->user_id, 'user', false, $data['comment'], $session->user_id, false);
+                    $userComments = $commentRepository->getComments($session->user_id, 'user', false);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $userComments))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'comment' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
+    ));
+
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/users', array(
         'methods' => 'POST, DELETE',
         'callback' => function( $data ) {

@@ -11,7 +11,7 @@ import { UserPageTaskResponse } from "../../../types/user-page-task-response";
 import { convertTaskFromServer } from "../../../../utils/task";
 import { convertCommentFromServer } from "../../../../utils/comment";
 
-function CommentsPage() {
+function TaskCommentsPage() {
   const {
     state: { pageHash },
   } = useContext(UserPageAppContext);
@@ -57,4 +57,4 @@ function CommentsPage() {
   );
 }
 
-export { CommentsPage };
+export { TaskCommentsPage };
