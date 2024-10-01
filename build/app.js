@@ -12788,7 +12788,7 @@ function usePageLinks() {
       publicUserPageId
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_1__.AppContext);
-  const userPage = siteURL + `?page=${publicUserPageId}`;
+  const userPage = siteURL + `/wpqt?page=${publicUserPageId}&page_id=wpqt`;
   return {
     userPage
   };

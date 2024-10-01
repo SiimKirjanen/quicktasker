@@ -24,6 +24,18 @@ function wpqt_style_overrides() {
     }
 }
 
+add_action('template_redirect', 'wpqt_custom_http_status_code');
+function wpqt_custom_http_status_code() {
+	$locationService = new LocationService();
+
+    if ( $locationService->isWPQTPublicUserPage() ) {
+		global $wp_query;
+        $wp_query->is_404 = false;
+        status_header(200);
+    }
+}
+
+
 add_action( 'after_setup_theme', 'wpqt_remove_unnecessary_tags_and_more' );
 function wpqt_remove_unnecessary_tags_and_more(){
     $locationService = new LocationService();

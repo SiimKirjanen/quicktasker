@@ -5,7 +5,7 @@ function usePageLinks() {
   const {
     state: { siteURL, publicUserPageId },
   } = useContext(AppContext);
-  const userPage = siteURL + `?page=${publicUserPageId}`;
+  const userPage = siteURL + `/wpqt?page=${publicUserPageId}&page_id=wpqt`;
 
   return {
     userPage,
