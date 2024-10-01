@@ -23,9 +23,6 @@ function FullLoading() {
   return (
     <div className="wpqt-flex wpqt-h-screen-minus-top-bar wpqt-flex-col wpqt-items-center wpqt-justify-center">
       <LoadingOval />
-      <div className="wpqt-mt-4 wpqt-text-xl wpqt-font-semibold">
-        Loading...
-      </div>
     </div>
   );
 }

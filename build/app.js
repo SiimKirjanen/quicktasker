@@ -9435,12 +9435,9 @@ function LoadingOval({
   });
 }
 function FullLoading() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-flex wpqt-h-screen-minus-top-bar wpqt-flex-col wpqt-items-center wpqt-justify-center",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LoadingOval, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mt-4 wpqt-text-xl wpqt-font-semibold",
-      children: "Loading..."
-    })]
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LoadingOval, {})
   });
 }
 function Loading({

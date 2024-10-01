@@ -1,8 +1,8 @@
 import {
-  UserCircleIcon,
   UserIcon,
   ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import {
   WPQTDropdown,
   WPQTDropdownItem,
@@ -40,7 +40,7 @@ function ProfileDropdown() {
       menuBtn={({ active }) => (
         <div>
           <UserCircleIcon
-            className={`wpqt-size-9 ${active ? "wpqt-text-blue-800" : ""} hover:wpqt-text-blue-800`}
+            className={`wpqt-icon-blue wpqt-size-11 ${active ? "wpqt-text-blue-900" : ""} hover:wpqt-text-blue-900`}
           />
         </div>
       )}
