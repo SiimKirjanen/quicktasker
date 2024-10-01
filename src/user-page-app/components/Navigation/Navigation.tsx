@@ -32,7 +32,12 @@ function NavigationBar({ loading, onRefresh = () => {} }: Props) {
       </div>
 
       <div className="wpqt-flex wpqt-items-center wpqt-justify-end wpqt-gap-3">
-        <EnvelopeIcon className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer" />
+        <EnvelopeIcon
+          className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer"
+          onClick={() => {
+            navigate("/notifications");
+          }}
+        />
         <ProfileDropdown />
       </div>
     </div>

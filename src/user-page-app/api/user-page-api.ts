@@ -178,6 +178,16 @@ function addUserCommentRequest(
   });
 }
 
+function getUserPageCommentsRequest(
+  pageHash: string,
+): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/comments`,
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getUserPageStatusRequest,
   setUpUserPageRequest,
@@ -194,4 +204,5 @@ export {
   addTaskCommentRequest,
   getUserCommentsRequest,
   addUserCommentRequest,
+  getUserPageCommentsRequest,
 };

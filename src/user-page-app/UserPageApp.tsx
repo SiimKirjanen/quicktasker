@@ -16,6 +16,8 @@ import { TaskPage } from "./components/Pages/TaskPage/TaskPage";
 import { TaskCommentsPage } from "./components/Pages/TaskCommentsPage/TaskCommentsPage";
 import { PprofilePage } from "./components/Pages/ProfilePage/ProfilePage";
 import { UserCommentsPage } from "./components/Pages/UserCommentsPage/UserCommentsPage";
+import { UserPageNotificationsContextProvider } from "./providers/UserPageNotificationsContextProvider";
+import { NotificationsPage } from "./components/Pages/NotificationsPage/NotificationsPage";
 
 function UserPageContent() {
   const {
@@ -45,6 +47,7 @@ function UserPageContent() {
         <Route path="/user-tasks" element={<UserTasksPage />} />
         <Route path="/assignable-tasks" element={<AssignableTasksPage />} />
         <Route path="/tasks/:taskHash" element={<TaskPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
         <Route
           path="/tasks/:taskHash/comments"
           element={<TaskCommentsPage />}
@@ -59,11 +62,13 @@ function UserPageApp() {
   return (
     <ErrorBoundary>
       <UserPageAppContextProvider>
-        <UserPageContent />
-        <ToastContainer
-          position="bottom-center"
-          toastClassName="wpqt-bottom-[60px] lg:wpqt-bottom-[20px]"
-        />
+        <UserPageNotificationsContextProvider>
+          <UserPageContent />
+          <ToastContainer
+            position="bottom-center"
+            toastClassName="wpqt-bottom-[60px] lg:wpqt-bottom-[20px]"
+          />
+        </UserPageNotificationsContextProvider>
       </UserPageAppContextProvider>
     </ErrorBoundary>
   );

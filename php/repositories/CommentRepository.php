@@ -6,7 +6,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+use WPQT\Task\TaskRepository;
+
 class CommentRepository {
+
+    protected $taskRepository;
+
+    public function __construct() {
+        $this->taskRepository = new TaskRepository();
+    }
     /**
      * Retrieves a comment by its ID.
      *
@@ -59,6 +67,35 @@ class CommentRepository {
         $prepared_query = $wpdb->prepare($query, $typeId, $type, $isPrivate);
     
         return $wpdb->get_results($prepared_query);
+    }
+
+    public function getCommentsRelatedtoTasksAssignedToUser($userId) {
+        global $wpdb;
+
+        $query = "
+            SELECT comments.*, tasks.name AS subject_name, tasks.task_hash AS subject_hash
+            FROM " . TABLE_WP_QUICK_TASKS_COMMENTS . " AS comments
+            JOIN " . TABLE_WP_QUICK_TASKS_TASKS . " AS tasks ON comments.type_id = tasks.id
+            JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS task_users ON tasks.id = task_users.task_id
+            WHERE task_users.user_id = %d
+            AND comments.type = 'task'
+         ";
+
+        $comments = $wpdb->get_results($wpdb->prepare($query, $userId));
+
+        return $comments;
+    }
+
+    public function getCommentsRelatedToUser($userId) {
+        global $wpdb;
+
+        //Fetch comments related to user
+        $userComments = $this->getComments($userId, 'user', 0);
+
+        //Fetch comments related to tasks assigned to user
+        $tasksComments = $this->getCommentsRelatedtoTasksAssignedToUser($userId);
+
+        return array_merge($userComments, $tasksComments);
     }
     
 }
