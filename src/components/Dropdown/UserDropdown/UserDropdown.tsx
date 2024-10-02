@@ -70,7 +70,8 @@ function UserDropdown({ user }: Props) {
       <WPQTDropdownItem
         text="User details"
         icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           window.location.hash = `#/users/${user.id}`;
         }}
       />
@@ -84,7 +85,8 @@ function UserDropdown({ user }: Props) {
       <WPQTDropdownItem
         text="User tasks"
         icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-4" />}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           window.location.hash = `#/users/${user.id}/tasks`;
         }}
       />

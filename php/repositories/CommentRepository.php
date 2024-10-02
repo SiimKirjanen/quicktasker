@@ -78,6 +78,7 @@ class CommentRepository {
             JOIN " . TABLE_WP_QUICK_TASKS_TASKS . " AS tasks ON comments.type_id = tasks.id
             JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS task_users ON tasks.id = task_users.task_id
             WHERE task_users.user_id = %d
+            AND tasks.is_archived = 0
             AND comments.type = 'task'
             AND comments.is_private = 0
          ";

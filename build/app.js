@@ -8910,7 +8910,8 @@ function UserDropdown({
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
         className: "wpqt-icon-blue wpqt-size-4"
       }),
-      onClick: () => {
+      onClick: e => {
+        e.stopPropagation();
         window.location.hash = `#/users/${user.id}`;
       }
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
@@ -8924,7 +8925,8 @@ function UserDropdown({
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
         className: "wpqt-icon-blue wpqt-size-4"
       }),
-      onClick: () => {
+      onClick: e => {
+        e.stopPropagation();
         window.location.hash = `#/users/${user.id}/tasks`;
       }
     }), userIsActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
