@@ -13,11 +13,13 @@ import { UserPageAppContext } from "../../../providers/UserPageAppContextProvide
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSession } from "../../../hooks/useSession";
 import { useNavigate } from "react-router-dom";
+import { SET_USER_LOGGED_IN } from "../../../constants";
 
 function ProfileDropdown() {
   const {
     state: { pageHash },
     loadUserPageStatus,
+    userPageAppDispatch,
   } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const { deleteSessionCookie } = useSession();
@@ -27,6 +29,7 @@ function ProfileDropdown() {
     try {
       await deleteSessionCookie();
       await logoutUserPageRequest(pageHash);
+      userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: false });
       loadUserPageStatus();
     } catch (error) {
       handleError(error);

@@ -60,14 +60,14 @@ const UserPageNotificationsContextProvider = ({
     React.Reducer<State, Action>
   >(reducer, initialState);
   const {
-    state: { pageHash },
+    state: { pageHash, isLoggedIn },
   } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const { getStoredComments } = useLocalStorage();
 
   useEffect(() => {
     checkNewComments();
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,7 +77,7 @@ const UserPageNotificationsContextProvider = ({
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [isLoggedIn]);
 
   const setLoading = (loading: boolean) => {
     userPageNotificationsDispatch({
@@ -87,6 +87,9 @@ const UserPageNotificationsContextProvider = ({
   };
 
   const checkNewComments = async () => {
+    if (!isLoggedIn) {
+      return;
+    }
     try {
       setLoading(true);
       const storedComments = await getStoredComments();

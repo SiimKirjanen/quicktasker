@@ -6135,9 +6135,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowRightStartOnRectangleIcon.js");
-/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/UserCircleIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowRightStartOnRectangleIcon.js");
+/* harmony import */ var _heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/solid */ "./node_modules/@heroicons/react/24/solid/esm/UserCircleIcon.js");
 /* harmony import */ var _components_Dropdown_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../components/Dropdown/WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
 /* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
@@ -6145,7 +6145,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
 /* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
 /* harmony import */ var _hooks_useSession__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/useSession */ "./src/user-page-app/hooks/useSession.tsx");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../constants */ "./src/user-page-app/constants.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6183,12 +6184,14 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function ProfileDropdown() {
   const {
     state: {
       pageHash
     },
-    loadUserPageStatus
+    loadUserPageStatus,
+    userPageAppDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageAppContext);
   const {
     handleError
@@ -6196,11 +6199,15 @@ function ProfileDropdown() {
   const {
     deleteSessionCookie
   } = (0,_hooks_useSession__WEBPACK_IMPORTED_MODULE_6__.useSession)();
-  const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useNavigate)();
+  const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.useNavigate)();
   const logOut = () => __awaiter(this, void 0, void 0, function* () {
     try {
       yield deleteSessionCookie();
       yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.logoutUserPageRequest)(pageHash);
+      userPageAppDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_7__.SET_USER_LOGGED_IN,
+        payload: false
+      });
       loadUserPageStatus();
     } catch (error) {
       handleError(error);
@@ -6212,13 +6219,13 @@ function ProfileDropdown() {
     menuBtn: ({
       active
     }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_solid__WEBPACK_IMPORTED_MODULE_9__["default"], {
         className: `wpqt-icon-blue wpqt-size-11 ${active ? "wpqt-text-blue-900" : ""} hover:wpqt-text-blue-900`
       })
     }),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
       text: "View profile",
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
         className: "wpqt-icon-blue wpqt-size-4"
       }),
       onClick: () => {
@@ -6226,7 +6233,7 @@ function ProfileDropdown() {
       }
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdownItem, {
       text: "Log out",
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
         className: "wpqt-icon-blue wpqt-size-4"
       }),
       className: "!wpqt-mb-0",
@@ -8479,7 +8486,8 @@ const UserPageNotificationsContextProvider = ({
   const [state, userPageNotificationsDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_user_page_notifications_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
   const {
     state: {
-      pageHash
+      pageHash,
+      isLoggedIn
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageAppContext);
   const {
@@ -8490,7 +8498,7 @@ const UserPageNotificationsContextProvider = ({
   } = (0,_hooks_useLocalStorage__WEBPACK_IMPORTED_MODULE_6__.useLocalStorage)();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     checkNewComments();
-  }, []);
+  }, [isLoggedIn]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const interval = setInterval(() => {
       checkNewComments();
@@ -8498,7 +8506,7 @@ const UserPageNotificationsContextProvider = ({
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [isLoggedIn]);
   const setLoading = loading => {
     userPageNotificationsDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_8__.CHANGE_USER_PAGE_NOTIFICATIONS_LOADING,
@@ -8506,6 +8514,9 @@ const UserPageNotificationsContextProvider = ({
     });
   };
   const checkNewComments = () => __awaiter(void 0, void 0, void 0, function* () {
+    if (!isLoggedIn) {
+      return;
+    }
     try {
       setLoading(true);
       const storedComments = yield getStoredComments();
