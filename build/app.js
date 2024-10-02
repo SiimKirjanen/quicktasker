@@ -8884,7 +8884,7 @@ function UserDropdown({
       userDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_4__.EDIT_USER,
         payload: Object.assign(Object.assign({}, user), {
-          is_active: status
+          is_active: status ? "1" : "0"
         })
       });
     });
@@ -12686,11 +12686,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const DispatchType = {
-  ACTIVE_PIPELINE: "ACTIVE_PIPELINE",
-  PIPELINES: "PIPELINES",
-  USER: "USER"
-};
+var DispatchType;
+(function (DispatchType) {
+  DispatchType["ACTIVE_PIPELINE"] = "ACTIVE_PIPELINE";
+  DispatchType["PIPELINES"] = "PIPELINES";
+  DispatchType["USER"] = "USER";
+})(DispatchType || (DispatchType = {}));
 const useModal = closeActionType => {
   const [modalSaving, setModalSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

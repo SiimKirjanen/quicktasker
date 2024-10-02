@@ -43,7 +43,7 @@ function UserDropdown({ user }: Props) {
     await changeUserStatus(user.id, status, () => {
       userDispatch({
         type: EDIT_USER,
-        payload: { ...user, is_active: status },
+        payload: { ...user, is_active: status ? "1" : "0" },
       });
     });
   };

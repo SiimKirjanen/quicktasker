@@ -4,13 +4,19 @@ import { ActivePipelineContext } from "../providers/ActivePipelineContextProvide
 import { PipelinesContext } from "../providers/PipelinesContextProvider";
 import { UserContext } from "../providers/UserContextProvider";
 
-const DispatchType = {
-  ACTIVE_PIPELINE: "ACTIVE_PIPELINE",
-  PIPELINES: "PIPELINES",
-  USER: "USER",
-};
+enum DispatchType {
+  ACTIVE_PIPELINE = "ACTIVE_PIPELINE",
+  PIPELINES = "PIPELINES",
+  USER = "USER",
+}
 
-export const useModal = (closeActionType: string) => {
+type ModalCloseActionType =
+  | "CLOSE_TASK_MODAL"
+  | "CLOSE_USER_MODAL"
+  | "CLOSE_STAGE_MODAL"
+  | "CLOSE_PIPELINE_EDIT_MODAL";
+
+export const useModal = (closeActionType: ModalCloseActionType) => {
   const [modalSaving, setModalSaving] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modalContentRef = useRef<any>(null);
@@ -34,7 +40,11 @@ export const useModal = (closeActionType: string) => {
     }
   };
 
-  const handleSuccess = (type: string, payload: any, dispatchType: string) => {
+  const handleSuccess = (
+    type: string,
+    payload: any,
+    dispatchType: DispatchType,
+  ) => {
     let dispatchFunction;
 
     switch (dispatchType) {

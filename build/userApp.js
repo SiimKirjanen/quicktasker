@@ -7907,6 +7907,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 
 function useErrorHandler() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = error => {
     if (error.messages && Array.isArray(error.messages) && error.messages.length > 0) {
       const errorMessage = error.messages.join(", ");

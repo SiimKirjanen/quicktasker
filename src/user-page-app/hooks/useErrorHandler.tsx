@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 
 function useErrorHandler() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = (error: any) => {
     if (
       error.messages &&

@@ -14,6 +14,7 @@ import {
   SET_FULL_PAGE_LOADING,
   SET_USER_TASKS,
   SET_USER_TASKS_FILTERED_PIPELINE,
+  SET_USER_TASKS_SEARCH_VALUE,
 } from "../constants";
 import { LoadingContext } from "./LoadingContextProvider";
 
@@ -33,7 +34,8 @@ type Action =
   | { type: typeof SET_USER_TASKS; payload: TaskFromServer[] }
   | { type: typeof REMOVE_USER_TASK; payload: string }
   | { type: typeof EDIT_USER_TASK; payload: TaskFromServer }
-  | { type: typeof SET_USER_TASKS_FILTERED_PIPELINE; payload: string };
+  | { type: typeof SET_USER_TASKS_FILTERED_PIPELINE; payload: string }
+  | { type: typeof SET_USER_TASKS_SEARCH_VALUE; payload: string };
 
 type Dispatch = (action: Action) => void;
 
