@@ -15,6 +15,7 @@ function TaskCommentsPage() {
   const {
     state: { pageHash },
   } = useContext(UserPageAppContext);
+
   const { taskHash } = useParams<{ taskHash: string }>();
   const [loading, setLoading] = useState(true);
   const [task, setTask] = useState<Task | null>(null);

@@ -1,16 +1,20 @@
-import { useEffect, useRef, useState } from "@wordpress/element";
+import { useContext, useEffect, useRef, useState } from "@wordpress/element";
 import { WPQTComment } from "../../../types/comment";
 import { WPQTTextarea } from "../../../components/common/TextArea/TextArea";
 import { WPQTIconButton } from "../../../components/common/Button/Button";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { UserPageNotificationsContext } from "../../providers/UserPageNotificationsContextProvider";
 
 type Props = {
   comments: WPQTComment[];
   addComments: (comment: string) => void;
 };
 function CommentsApp({ comments, addComments }: Props) {
+  const { checkNewComments } = useContext(UserPageNotificationsContext);
   const [comment, setComment] = useState("");
   const commentsContainerRef = useRef<HTMLDivElement>(null);
+  const { storeComments } = useLocalStorage();
 
   useEffect(() => {
     if (commentsContainerRef.current) {
@@ -21,9 +25,20 @@ function CommentsApp({ comments, addComments }: Props) {
     }
   }, [comments]);
 
+  useEffect(() => {
+    if (comments && comments.length > 0) {
+      storeSeenComments();
+    }
+  }, [comments]);
+
   const saveComment = () => {
     addComments(comment);
     setComment("");
+  };
+
+  const storeSeenComments = async () => {
+    await storeComments(comments);
+    await checkNewComments();
   };
 
   return (

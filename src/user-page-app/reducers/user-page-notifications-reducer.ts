@@ -11,7 +11,6 @@ const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS: {
       const newComments = action.payload;
-      console.log(JSON.stringify(newComments));
 
       return {
         ...state,

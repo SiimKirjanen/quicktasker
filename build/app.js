@@ -16295,11 +16295,15 @@ var WPQTTypes;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   convertCommentFromServer: () => (/* binding */ convertCommentFromServer)
+/* harmony export */   convertCommentFromServer: () => (/* binding */ convertCommentFromServer),
+/* harmony export */   filterNewComments: () => (/* binding */ filterNewComments)
 /* harmony export */ });
 const convertCommentFromServer = comment => Object.assign(Object.assign({}, comment), {
   is_admin_comment: comment.is_admin_comment === "1"
 });
+const filterNewComments = (comments, storedComments) => {
+  return comments.filter(comment => !storedComments.find(c => c.id === comment.id));
+};
 
 
 /***/ }),

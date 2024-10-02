@@ -1,4 +1,4 @@
-import { useContext } from "@wordpress/element";
+import { useContext, useEffect } from "@wordpress/element";
 import { UserPageNotificationsContext } from "../../../providers/UserPageNotificationsContextProvider";
 import { PageContentWrap, PageWrap } from "../Page/Page";
 import { NotificationItem } from "./components/NotificationItem";
@@ -20,6 +20,9 @@ function NotificationsPage() {
     state: { newComments, loading },
     checkNewComments,
   } = useContext(UserPageNotificationsContext);
+  useEffect(() => {
+    checkNewComments();
+  }, []);
 
   const groupedComments = newComments.reduce<GroupedComments>(
     (acc, comment) => {

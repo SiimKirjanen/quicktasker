@@ -79,6 +79,7 @@ class CommentRepository {
             JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS task_users ON tasks.id = task_users.task_id
             WHERE task_users.user_id = %d
             AND comments.type = 'task'
+            AND comments.is_private = 0
          ";
 
         $comments = $wpdb->get_results($wpdb->prepare($query, $userId));

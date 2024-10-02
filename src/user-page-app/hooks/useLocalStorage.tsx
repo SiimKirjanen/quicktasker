@@ -1,6 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { UserPageAppContext } from "../providers/UserPageAppContextProvider";
 import { WPQTComment } from "../../types/comment";
+import { filterNewComments } from "../../utils/comment";
 
 const WPQT_STORED_COMMENTS_KEY = "wpqt-stored-comments";
 
@@ -17,10 +18,14 @@ function useLocalStorage() {
     return storedComments ? JSON.parse(storedComments) : [];
   };
 
-  const storeComments = (comments: WPQTComment[]) => {
+  const storeComments = async (comments: WPQTComment[]) => {
+    const storedComments = await getStoredComments();
+    const newComments = filterNewComments(comments, storedComments);
+    const updatedComments = [...storedComments, ...newComments];
+
     localStorage.setItem(
       `${WPQT_STORED_COMMENTS_KEY}-${pageHash}`,
-      JSON.stringify(comments),
+      JSON.stringify(updatedComments),
     );
   };
 

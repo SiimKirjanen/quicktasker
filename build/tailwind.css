@@ -1585,6 +1585,16 @@
   color: rgb(29 78 216 / var(--tw-text-opacity));
 }
 
+.wpqt-icon-yellow {
+  --tw-text-opacity: 1;
+  color: rgb(250 204 21 / var(--tw-text-opacity));
+}
+
+.wpqt-icon-yellow:hover {
+  --tw-text-opacity: 1;
+  color: rgb(234 179 8 / var(--tw-text-opacity));
+}
+
 .wpqt-icon-gray {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));

@@ -10,7 +10,10 @@ import { getUserPageCommentsRequest } from "../api/user-page-api";
 import { UserPageAppContext } from "./UserPageAppContextProvider";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { convertCommentFromServer } from "../../utils/comment";
+import {
+  convertCommentFromServer,
+  filterNewComments,
+} from "../../utils/comment";
 import {
   CHANGE_USER_PAGE_NOTIFICATIONS_LOADING,
   SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS,
@@ -38,14 +41,14 @@ type Dispatch = (action: Action) => void;
 type UserPageNotificationsContextType = {
   state: State;
   userPageNotificationsDispatch: Dispatch;
-  checkNewComments: () => void;
+  checkNewComments: () => Promise<void>;
 };
 
 const UserPageNotificationsContext =
   createContext<UserPageNotificationsContextType>({
     state: initialState,
     userPageNotificationsDispatch: () => {},
-    checkNewComments: () => {},
+    checkNewComments: async () => {},
   });
 
 const UserPageNotificationsContextProvider = ({
@@ -66,6 +69,16 @@ const UserPageNotificationsContextProvider = ({
     checkNewComments();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkNewComments();
+    }, 30000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   const setLoading = (loading: boolean) => {
     userPageNotificationsDispatch({
       type: CHANGE_USER_PAGE_NOTIFICATIONS_LOADING,
@@ -78,9 +91,8 @@ const UserPageNotificationsContextProvider = ({
       setLoading(true);
       const storedComments = await getStoredComments();
       const response = await getUserPageCommentsRequest(pageHash);
-      const newComments = response.data
-        .map(convertCommentFromServer)
-        .filter((comment) => !storedComments.find((c) => c.id === comment.id));
+      const comments = response.data.map(convertCommentFromServer);
+      const newComments = filterNewComments(comments, storedComments);
 
       userPageNotificationsDispatch({
         type: SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS,

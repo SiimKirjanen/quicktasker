@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowPathIcon, HomeIcon } from "@heroicons/react/24/outline";
-import { EnvelopeIcon } from "@heroicons/react/24/solid";
+import { EnvelopeIcon, EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 import { LoadingOval } from "../../../components/Loading/Loading";
 import { ProfileDropdown } from "../Dropdown/ProfileDropdown/ProfileDropdown";
+import { useContext } from "@wordpress/element";
+import { UserPageNotificationsContext } from "../../providers/UserPageNotificationsContextProvider";
 
 type Props = {
   loading: boolean;
@@ -32,15 +34,37 @@ function NavigationBar({ loading, onRefresh = () => {} }: Props) {
       </div>
 
       <div className="wpqt-flex wpqt-items-center wpqt-justify-end wpqt-gap-3">
+        <NotificationIcon />
+        <ProfileDropdown />
+      </div>
+    </div>
+  );
+}
+
+function NotificationIcon() {
+  const navigate = useNavigate();
+  const {
+    state: { newComments },
+  } = useContext(UserPageNotificationsContext);
+
+  return (
+    <>
+      {newComments.length > 0 ? (
+        <EnvelopeOpenIcon
+          className="wpqt-icon-yellow wpqt-size-6 wpqt-cursor-pointer"
+          onClick={() => {
+            navigate("/notifications");
+          }}
+        />
+      ) : (
         <EnvelopeIcon
           className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer"
           onClick={() => {
             navigate("/notifications");
           }}
         />
-        <ProfileDropdown />
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 
