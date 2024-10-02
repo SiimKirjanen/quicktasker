@@ -4,7 +4,7 @@ import {
   useEffect,
   useReducer,
 } from "@wordpress/element";
-import { Task } from "../../types/task";
+import { Task, TaskFromServer } from "../../types/task";
 import { reducer } from "../reducers/user-page-task-reducer";
 import { UserPageAppContext } from "./UserPageAppContextProvider";
 import { getTaskDataRequest } from "../api/user-page-api";
@@ -13,7 +13,9 @@ import { Stage } from "../../types/stage";
 import {
   SET_USER_PAGE_TASK_DATA,
   SET_USER_PAGE_TASK_LOADING,
+  UPDATE_USER_PAGE_TASK_DATA,
 } from "../constants";
+import { UserPageTaskResponse } from "../types/user-page-task-response";
 
 const initialState: State = {
   task: null,
@@ -27,10 +29,10 @@ type State = {
   loading: boolean;
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | { type: typeof SET_USER_PAGE_TASK_DATA; payload: UserPageTaskResponse }
+  | { type: typeof UPDATE_USER_PAGE_TASK_DATA; payload: TaskFromServer }
+  | { type: typeof SET_USER_PAGE_TASK_LOADING; payload: boolean };
 
 type Dispatch = (action: Action) => void;
 

@@ -6,9 +6,15 @@ import {
 } from "@wordpress/element";
 import { getUserTasksRequest } from "../api/api";
 import { toast } from "react-toastify";
-import { Task } from "../types/task";
+import { Task, TaskFromServer } from "../types/task";
 import { reducer } from "../reducers/user-tasks-reducer";
-import { SET_FULL_PAGE_LOADING, SET_USER_TASKS } from "../constants";
+import {
+  EDIT_USER_TASK,
+  REMOVE_USER_TASK,
+  SET_FULL_PAGE_LOADING,
+  SET_USER_TASKS,
+  SET_USER_TASKS_FILTERED_PIPELINE,
+} from "../constants";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -23,10 +29,11 @@ type State = {
   filteredPipelineId: string;
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | { type: typeof SET_USER_TASKS; payload: TaskFromServer[] }
+  | { type: typeof REMOVE_USER_TASK; payload: string }
+  | { type: typeof EDIT_USER_TASK; payload: TaskFromServer }
+  | { type: typeof SET_USER_TASKS_FILTERED_PIPELINE; payload: string };
 
 type Dispatch = (action: Action) => void;
 

@@ -1,7 +1,12 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { Pipeline } from "../types/pipeline";
+import { Pipeline, PipelineFromServer } from "../types/pipeline";
 import { reducer } from "../reducers/pipelines-reducer";
-import { PIPELINES_SET } from "../constants";
+import {
+  PIPELINE_ADD_PIPELINE,
+  PIPELINE_EDIT_PIPELINE,
+  PIPELINE_SET_PRIMARY,
+  PIPELINES_SET,
+} from "../constants";
 
 const initialState: State = {
   pipelines: [],
@@ -11,10 +16,11 @@ type State = {
   pipelines: Pipeline[];
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | { type: typeof PIPELINES_SET; payload: PipelineFromServer[] }
+  | { type: typeof PIPELINE_ADD_PIPELINE; payload: PipelineFromServer }
+  | { type: typeof PIPELINE_EDIT_PIPELINE; payload: Pipeline }
+  | { type: typeof PIPELINE_SET_PRIMARY; payload: string };
 
 type Dispatch = (action: Action) => void;
 

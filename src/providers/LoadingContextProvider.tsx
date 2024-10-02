@@ -1,5 +1,6 @@
 import { createContext, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/loading-reducer";
+import { SET_FULL_PAGE_LOADING } from "../constants";
 
 const initialState: State = {
   fullPageLoading: false,
@@ -9,10 +10,7 @@ type State = {
   fullPageLoading: boolean;
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action = { type: typeof SET_FULL_PAGE_LOADING; payload: boolean };
 
 type Dispatch = (action: Action) => void;
 

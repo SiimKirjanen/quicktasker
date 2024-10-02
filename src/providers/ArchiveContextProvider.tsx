@@ -8,7 +8,13 @@ import { ArchivedTask } from "../types/task";
 import { getArchivedTasksRequest } from "../api/api";
 import { toast } from "react-toastify";
 import { reducer } from "../reducers/archive-reducer";
-import { SET_ARCHIVE_TASKS, SET_FULL_PAGE_LOADING } from "../constants";
+import {
+  REMOVE_ARCHIVED_TASK,
+  SET_ARCHIVE_FILTERED_PIPELINE,
+  SET_ARCHIVE_SEARCH_VALUE,
+  SET_ARCHIVE_TASKS,
+  SET_FULL_PAGE_LOADING,
+} from "../constants";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -25,10 +31,11 @@ type State = {
   archiveFilteredPipelineId: string;
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | { type: typeof SET_ARCHIVE_TASKS; payload: ArchivedTask[] }
+  | { type: typeof SET_ARCHIVE_SEARCH_VALUE; payload: string }
+  | { type: typeof SET_ARCHIVE_FILTERED_PIPELINE; payload: string }
+  | { type: typeof REMOVE_ARCHIVED_TASK; payload: string };
 
 type Dispatch = (action: Action) => void;
 

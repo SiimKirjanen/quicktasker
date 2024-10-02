@@ -4,7 +4,7 @@ import {
   useEffect,
   useReducer,
 } from "@wordpress/element";
-import { Task } from "../../types/task";
+import { Task, TaskFromServer } from "../../types/task";
 import { reducer } from "../reducers/user-assigned-tasks-reducer";
 import { getAssignedTasksRequest } from "../api/user-page-api";
 import { UserPageAppContext } from "./UserPageAppContextProvider";
@@ -21,10 +21,9 @@ type State = {
   assignedTasks: Task[];
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | { type: typeof SET_ASSIGNED_TASKS; payload: TaskFromServer[] }
+  | { type: typeof SET_ASSIGNED_TASKS_LOADING; payload: boolean };
 
 type Dispatch = (action: Action) => void;
 

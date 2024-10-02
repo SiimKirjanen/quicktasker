@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/user-page-app-reducer";
-import { SET_USER_PAGE_STATUS } from "../constants";
+import { SET_USER_LOGGED_IN, SET_USER_PAGE_STATUS } from "../constants";
 import { getUserPageStatusRequest } from "../api/user-page-api";
 import { useSession } from "../hooks/useSession";
 import { getQueryParam } from "../../utils/url";
@@ -26,10 +26,18 @@ type State = {
   userName: string;
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | {
+      type: typeof SET_USER_PAGE_STATUS;
+      payload: {
+        isActiveUser: string;
+        isLoggedIn: boolean;
+        setupCompleted: boolean;
+        userId: string;
+        userName: string;
+      };
+    }
+  | { type: typeof SET_USER_LOGGED_IN; payload: boolean };
 
 type Dispatch = (action: Action) => void;
 

@@ -12,6 +12,7 @@ const DispatchType = {
 
 export const useModal = (closeActionType: string) => {
   const [modalSaving, setModalSaving] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modalContentRef = useRef<any>(null);
   const { modalDispatch } = useContext(ModalContext);
   const { dispatch: activePipelineDispatch } = useContext(
@@ -62,6 +63,7 @@ export const useModal = (closeActionType: string) => {
     closeModal();
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = (error: any) => {
     setModalSaving(false);
     console.error(error);

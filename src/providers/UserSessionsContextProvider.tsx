@@ -5,9 +5,15 @@ import {
   useReducer,
 } from "@wordpress/element";
 import { reducer } from "../reducers/user-sessions-reducer";
-import { UserSession } from "../types/user-session";
+import { ServerUserSession, UserSession } from "../types/user-session";
 import { getUserSessionsRequest } from "../api/api";
-import { SET_FULL_PAGE_LOADING, SET_USER_SESSIONS } from "../constants";
+import {
+  CHANGE_USER_SESSION_STATUS,
+  DELETE_USER_SESSION,
+  SET_FULL_PAGE_LOADING,
+  SET_USER_SESSIONS,
+  SET_USER_SESSIONS_SEARCH_VALUE,
+} from "../constants";
 import { toast } from "react-toastify";
 import { LoadingContext } from "./LoadingContextProvider";
 
@@ -23,10 +29,14 @@ type State = {
   userSessions: UserSession[];
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | { type: typeof SET_USER_SESSIONS_SEARCH_VALUE; payload: string }
+  | { type: typeof SET_USER_SESSIONS; payload: ServerUserSession[] }
+  | {
+      type: typeof CHANGE_USER_SESSION_STATUS;
+      payload: { sessionId: string; status: boolean };
+    }
+  | { type: typeof DELETE_USER_SESSION; payload: string };
 
 type Dispatch = (action: Action) => void;
 

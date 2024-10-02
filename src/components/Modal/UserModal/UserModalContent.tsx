@@ -32,7 +32,7 @@ type Props = {
 };
 
 const UserModalContent = forwardRef(function UserModalContent(
-  { createUser, editUser, modalSaving }: Props,
+  { createUser, modalSaving }: Props,
   ref,
 ) {
   const {

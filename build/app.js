@@ -10391,7 +10391,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forwardRef)(function UserModalContent({
   createUser,
-  editUser,
   modalSaving
 }, ref) {
   const {
@@ -12694,6 +12693,7 @@ const DispatchType = {
 };
 const useModal = closeActionType => {
   const [modalSaving, setModalSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modalContentRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   const {
     modalDispatch
@@ -12747,6 +12747,7 @@ const useModal = closeActionType => {
     });
     closeModal();
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = error => {
     setModalSaving(false);
     console.error(error);
@@ -13455,6 +13456,9 @@ function PipelineHeader() {
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const openEditPipelineModal = () => {
+    if (!activePipeline) {
+      return;
+    }
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_3__.OPEN_EDIT_PIPELINE_MODAL,
       payload: {
@@ -14652,6 +14656,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Card_Card__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/Card/Card */ "./src/components/Card/Card.tsx");
 /* harmony import */ var _components_Dropdown_UserDropdown_UserDropdown__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/Dropdown/UserDropdown/UserDropdown */ "./src/components/Dropdown/UserDropdown/UserDropdown.tsx");
 /* harmony import */ var _utils_date__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../utils/date */ "./src/utils/date.ts");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
+
+
+
 
 
 
@@ -14663,6 +14674,9 @@ function UserListItem({
   const {
     userPage
   } = (0,_hooks_usePageLinks__WEBPACK_IMPORTED_MODULE_1__.usePageLinks)();
+  const {
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_6__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__.ModalContext);
   const userIsActive = user.is_active;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCard, {
     title: user.name,
@@ -14671,7 +14685,10 @@ function UserListItem({
       user: user
     }),
     onClick: () => {
-      window.location.hash = `#/users/${user.id}`;
+      modalDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_7__.OPEN_EDIT_USER_MODAL,
+        payload: user
+      });
     },
     className: "wpqt-cursor-pointer",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_2__.WPQTCardDataItem, {

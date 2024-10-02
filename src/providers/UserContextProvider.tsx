@@ -1,7 +1,13 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { User } from "../types/user";
+import { ServerUser, User } from "../types/user";
 import { reducer } from "../reducers/user-reducer";
-import { SET_USERS } from "../constants";
+import {
+  ADD_USER,
+  DELETE_USER,
+  EDIT_USER,
+  SET_USERS,
+  SET_USERS_SEARCH_VALUE,
+} from "../constants";
 import { getUsersRequest } from "../api/api";
 import { toast } from "react-toastify";
 
@@ -15,10 +21,12 @@ type State = {
   usersSearchValue: string;
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | { type: typeof SET_USERS; payload: ServerUser[] }
+  | { type: typeof ADD_USER; payload: ServerUser }
+  | { type: typeof EDIT_USER; payload: ServerUser }
+  | { type: typeof DELETE_USER; payload: string }
+  | { type: typeof SET_USERS_SEARCH_VALUE; payload: string };
 
 type Dispatch = (action: Action) => void;
 

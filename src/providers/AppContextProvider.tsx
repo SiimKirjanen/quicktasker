@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { reducer } from "../reducers/app-reducer";
-import { INIT_APP_STATE } from "../constants";
+import { INIT_APP_STATE, SET_SITE_URL } from "../constants";
 
 type State = {
   siteURL: string;
@@ -12,10 +12,12 @@ const initialState: State = {
   publicUserPageId: "",
 };
 
-type Action = {
-  type: string;
-  payload?: any;
-};
+type Action =
+  | {
+      type: typeof INIT_APP_STATE;
+      payload: { siteURL: string; publicUserPageId: string };
+    }
+  | { type: typeof SET_SITE_URL; payload: string };
 
 type Dispatch = (action: Action) => void;
 
