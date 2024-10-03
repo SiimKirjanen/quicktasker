@@ -873,26 +873,6 @@
   top: 12px;
 }
 
-.wpqt-left-0 {
-  left: 0px;
-}
-
-.wpqt-right-0 {
-  right: 0px;
-}
-
-.wpqt-bottom-\[30px\] {
-  bottom: 30px;
-}
-
-.wpqt-top-\[30px\] {
-  top: 30px;
-}
-
-.wpqt-top-\[60px\] {
-  top: 60px;
-}
-
 .wpqt-z-10 {
   z-index: 10;
 }
@@ -920,11 +900,6 @@
 .wpqt-mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
-}
-
-.wpqt-my-5 {
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
 }
 
 .wpqt-my-6 {
@@ -984,20 +959,8 @@
   margin-top: 20px;
 }
 
-.wpqt-mt-\[60px\] {
-  margin-top: 60px;
-}
-
-.wpqt-mt-12 {
-  margin-top: 3rem;
-}
-
 .wpqt-mt-\[8vh\] {
   margin-top: 8vh;
-}
-
-.wpqt-mt-\[30px\] {
-  margin-top: 30px;
 }
 
 .wpqt-block {
@@ -1046,6 +1009,11 @@
   height: 2.25rem;
 }
 
+.wpqt-size-7 {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
 .wpqt-h-\[200px\] {
   height: 200px;
 }
@@ -1072,10 +1040,6 @@
 
 .wpqt-max-h-full {
   max-height: 100%;
-}
-
-.wpqt-min-h-full {
-  min-height: 100%;
 }
 
 .wpqt-w-4\/5 {
@@ -1127,10 +1091,6 @@
 }
 
 .wpqt-flex-grow-0 {
-  flex-grow: 0;
-}
-
-.wpqt-grow-0 {
   flex-grow: 0;
 }
 
@@ -1307,16 +1267,16 @@
   border-width: 0px;
 }
 
+.wpqt-border-b {
+  border-bottom-width: 1px;
+}
+
 .wpqt-border-r {
   border-right-width: 1px;
 }
 
 .wpqt-border-t {
   border-top-width: 1px;
-}
-
-.wpqt-border-b {
-  border-bottom-width: 1px;
 }
 
 .wpqt-border-solid {
@@ -1341,35 +1301,20 @@
   border-color: transparent;
 }
 
-.wpqt-border-gray-500 {
-  --tw-border-opacity: 1;
-  border-color: rgb(107 114 128 / var(--tw-border-opacity));
-}
-
-.wpqt-border-gray-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(156 163 175 / var(--tw-border-opacity));
-}
-
-.wpqt-border-gray-300 {
-  --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
-}
-
 .wpqt-border-y-gray-300 {
   --tw-border-opacity: 1;
   border-top-color: rgb(209 213 219 / var(--tw-border-opacity));
   border-bottom-color: rgb(209 213 219 / var(--tw-border-opacity));
 }
 
-.wpqt-border-r-gray-300 {
-  --tw-border-opacity: 1;
-  border-right-color: rgb(209 213 219 / var(--tw-border-opacity));
-}
-
 .wpqt-border-b-gray-300 {
   --tw-border-opacity: 1;
   border-bottom-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
+.wpqt-border-r-gray-300 {
+  --tw-border-opacity: 1;
+  border-right-color: rgb(209 213 219 / var(--tw-border-opacity));
 }
 
 .wpqt-bg-black\/40 {
@@ -1412,14 +1357,6 @@
   padding: 1rem;
 }
 
-.wpqt-p-6 {
-  padding: 1.5rem;
-}
-
-.wpqt-p-7 {
-  padding: 1.75rem;
-}
-
 .wpqt-p-8 {
   padding: 2rem;
 }
@@ -1457,21 +1394,6 @@
 .wpqt-py-5 {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
-}
-
-.wpqt-py-8 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-.wpqt-py-\[30px\] {
-  padding-top: 30px;
-  padding-bottom: 30px;
-}
-
-.wpqt-py-\[60px\] {
-  padding-top: 60px;
-  padding-bottom: 60px;
 }
 
 .wpqt-pb-\[10px\] {
@@ -1606,16 +1528,6 @@
 .wpqt-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.wpqt-text-blue-600 {
-  --tw-text-opacity: 1;
-  color: rgb(37 99 235 / var(--tw-text-opacity));
-}
-
-.wpqt-text-blue-700 {
-  --tw-text-opacity: 1;
-  color: rgb(29 78 216 / var(--tw-text-opacity));
 }
 
 .wpqt-line-through {
@@ -1852,24 +1764,8 @@
   outline-width: 2px;
 }
 
-.data-\[focus\]\:wpqt-outline-1[data-focus] {
-  outline-width: 1px;
-}
-
 .data-\[focus\]\:wpqt--outline-offset-2[data-focus] {
   outline-offset: -2px;
-}
-
-.data-\[focus\]\:wpqt--outline-offset-1[data-focus] {
-  outline-offset: -1px;
-}
-
-.data-\[focus\]\:wpqt-outline-white\/25[data-focus] {
-  outline-color: rgb(255 255 255 / 0.25);
-}
-
-.data-\[focus\]\:wpqt-outline-gray-400[data-focus] {
-  outline-color: #9ca3af;
 }
 
 .data-\[focus\]\:wpqt-outline-gray-300[data-focus] {
@@ -1905,16 +1801,12 @@
     order: 2;
   }
 
-  .lg\:wpqt-grid-cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .lg\:wpqt-grid-cols-5 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
   .lg\:wpqt-grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:wpqt-grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .lg\:wpqt-border-b {

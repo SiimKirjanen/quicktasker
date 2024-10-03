@@ -50,7 +50,7 @@ function PipelineHeader() {
           <LoadingOval width="24" height="24" />
         ) : (
           <ArrowPathIcon
-            className="wpqt-size-5 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+            className="wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
             onClick={() => fetchAndSetPipelineData(activePipeline.id)}
           />
         )}

@@ -11,7 +11,8 @@ function LoadingOval({ width = "80", height = "80" }: LoadingOverProps) {
       visible={true}
       height={height}
       width={width}
-      color="#4fa94d"
+      color="#1d4ed8"
+      secondaryColor="#2563eb"
       ariaLabel="oval-loading"
       wrapperStyle={{}}
       wrapperClass=""

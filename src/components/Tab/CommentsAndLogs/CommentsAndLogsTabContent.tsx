@@ -4,7 +4,7 @@ import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTComment } from "../../../types/comment";
 import { Log } from "../../../types/log";
-import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 
 type Props<T> = {
   typeId: string;
@@ -25,16 +25,19 @@ function CommentsAndLogsTabContent<T>({
 }: Props<T>) {
   const [data, setData] = useState<T[] | null>(null);
   const [newEntry, setNewEntry] = useState("");
+  const [loadingComments, setLoadingComments] = useState(true);
 
   useEffect(() => {
     loadData();
   }, [typeId]);
 
   const loadData = async () => {
+    setLoadingComments(true);
     const data = await fetchData();
     if (data) {
       setData(data);
     }
+    setLoadingComments(false);
   };
 
   const addEntry = async () => {
@@ -68,6 +71,12 @@ function CommentsAndLogsTabContent<T>({
           {data.map((item) => renderItem(item))}
         </div>
       )}
+      <div className="wpqt-mb-3 wpqt-flex wpqt-justify-center">
+        <CommentsRefresh
+          isLoading={loadingComments}
+          refreshComemnts={loadData}
+        />
+      </div>
       <div className="wpqt-flex wpqt-justify-center">
         <div>
           <WPQTTextarea
@@ -84,6 +93,25 @@ function CommentsAndLogsTabContent<T>({
         </div>
       </div>
     </div>
+  );
+}
+
+type CommentsRefreshProps = {
+  isLoading: boolean;
+  refreshComemnts: () => void;
+};
+function CommentsRefresh({ isLoading, refreshComemnts }: CommentsRefreshProps) {
+  return (
+    <>
+      {isLoading ? (
+        <LoadingOval width="32" height="32" />
+      ) : (
+        <ArrowPathIcon
+          className="wpqt-icon-blue wpqt-size-8 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+          onClick={refreshComemnts}
+        />
+      )}
+    </>
   );
 }
 

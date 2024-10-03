@@ -9430,7 +9430,8 @@ function LoadingOval({
     visible: true,
     height: height,
     width: width,
-    color: "#4fa94d",
+    color: "#1d4ed8",
+    secondaryColor: "#2563eb",
     ariaLabel: "oval-loading",
     wrapperStyle: {},
     wrapperClass: ""
@@ -10662,6 +10663,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowPathIcon.js");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10705,14 +10707,17 @@ function CommentsAndLogsTabContent({
 }) {
   const [data, setData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [newEntry, setNewEntry] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [loadingComments, setLoadingComments] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     loadData();
   }, [typeId]);
   const loadData = () => __awaiter(this, void 0, void 0, function* () {
+    setLoadingComments(true);
     const data = yield fetchData();
     if (data) {
       setData(data);
     }
+    setLoadingComments(false);
   });
   const addEntry = () => __awaiter(this, void 0, void 0, function* () {
     const entry = yield onAdd(newEntry);
@@ -10741,6 +10746,12 @@ function CommentsAndLogsTabContent({
       className: "wpqt-my-6 wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-place-items-center wpqt-gap-4",
       children: data.map(item => renderItem(item))
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-mb-3 wpqt-flex wpqt-justify-center",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CommentsRefresh, {
+        isLoading: loadingComments,
+        refreshComemnts: loadData
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_3__.WPQTTextarea, {
@@ -10757,6 +10768,20 @@ function CommentsAndLogsTabContent({
         })]
       })
     })]
+  });
+}
+function CommentsRefresh({
+  isLoading,
+  refreshComemnts
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    children: isLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_2__.LoadingOval, {
+      width: "32",
+      height: "32"
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      className: "wpqt-icon-blue wpqt-size-8 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover",
+      onClick: refreshComemnts
+    })
   });
 }
 function TabContentItem({
@@ -13510,7 +13535,7 @@ function PipelineHeader() {
         width: "24",
         height: "24"
       }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
-        className: "wpqt-size-5 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover",
+        className: "wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover",
         onClick: () => fetchAndSetPipelineData(activePipeline.id)
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_PipelineSelectionDropdown_PipelineSelectionDropdown__WEBPACK_IMPORTED_MODULE_6__.PipelineSelectionDropdown, {})]
     })]

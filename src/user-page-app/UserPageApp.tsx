@@ -18,6 +18,7 @@ import { PprofilePage } from "./components/Pages/ProfilePage/ProfilePage";
 import { UserCommentsPage } from "./components/Pages/UserCommentsPage/UserCommentsPage";
 import { UserPageNotificationsContextProvider } from "./providers/UserPageNotificationsContextProvider";
 import { NotificationsPage } from "./components/Pages/NotificationsPage/NotificationsPage";
+import { LoadingPage } from "./components/Pages/LoadingPage/LoadingPage";
 
 function UserPageContent() {
   const {
@@ -25,7 +26,7 @@ function UserPageContent() {
   } = useContext(UserPageAppContext);
 
   if (initialLoading) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
   if (!isActiveUser) {
     return <ErrorPage />;
