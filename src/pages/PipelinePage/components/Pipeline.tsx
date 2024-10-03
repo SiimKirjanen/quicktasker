@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "@wordpress/element";
+import { useCallback, useContext, useEffect } from "@wordpress/element";
 import {
   DragDropContext,
   DraggableLocation,
@@ -13,12 +13,24 @@ import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { toast } from "react-toastify";
 import { PipelineIntro } from "./PipelineIntro";
+import { REFETCH_ACTIVE_PIPELINE_INTERVAL } from "../../../constants";
 
 const Pipeline = () => {
   const {
     state: { activePipeline },
     dispatch,
+    fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
+
+  useEffect(() => {
+    const refetchDataInterval = setInterval(() => {
+      if (activePipeline) {
+        fetchAndSetPipelineData(activePipeline.id);
+      }
+    }, REFETCH_ACTIVE_PIPELINE_INTERVAL);
+
+    return () => clearInterval(refetchDataInterval);
+  }, [activePipeline]);
 
   const dispatchMove = (
     source: DraggableLocation,

@@ -7,8 +7,8 @@ import {
   Fieldset,
   Label,
 } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { WPQTButton } from "../common/Button/Button";
+import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { WPQTIconButton } from "../common/Button/Button";
 
 type Props = {
   children: React.ReactNode;
@@ -35,7 +35,7 @@ function WPQTModal({ modalOpen, closeModal, children, size = "sm" }: Props) {
         <div className="wpqt-mt-[8vh] wpqt-flex wpqt-justify-center">
           <DialogPanel
             transition
-            className={`data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-relative wpqt-mt-[20px] wpqt-w-4/5 ${sizeClasses[size]} wpqt-rounded-xl wpqt-bg-white wpqt-p-7 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0`}
+            className={`data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-relative wpqt-mt-[20px] wpqt-w-4/5 ${sizeClasses[size]} wpqt-rounded-xl wpqt-bg-white wpqt-p-8 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0`}
           >
             <div
               className="wpqt-group wpqt-absolute wpqt-right-[-20px] wpqt-top-[-20px] wpqt-flex wpqt-h-[40px] wpqt-w-[40px] wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-rounded-full wpqt-border wpqt-border-solid wpqt-bg-white wpqt-text-qtBorder"
@@ -63,7 +63,7 @@ function WPQTModalTitle({ children }: { children: React.ReactNode }) {
 }
 
 function WPQTModalFieldSet({ children }: { children: React.ReactNode }) {
-  return <Fieldset className="wpqt-mb-3">{children}</Fieldset>;
+  return <Fieldset>{children}</Fieldset>;
 }
 
 function WPQTModalField({
@@ -92,7 +92,11 @@ function WPQTModalFooter({
 }) {
   return (
     <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
-      <WPQTButton onClick={onSave} btnText={saveBtnText} />
+      <WPQTIconButton
+        text={saveBtnText}
+        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-5" />}
+        onClick={onSave}
+      />
     </div>
   );
 }

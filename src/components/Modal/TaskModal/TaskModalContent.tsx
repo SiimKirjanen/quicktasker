@@ -158,7 +158,7 @@ const TaskModalContent = forwardRef(
         </div>
         <WPQTModalFooter
           onSave={saveTask}
-          saveBtnText={taskModalSaving ? "Saving..." : "Edit task"}
+          saveBtnText={taskModalSaving ? "Saving..." : "Save"}
         />
       </>
     );

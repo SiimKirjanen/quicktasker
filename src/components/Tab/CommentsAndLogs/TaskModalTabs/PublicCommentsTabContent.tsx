@@ -31,7 +31,7 @@ function PublicCommentsTabContent({ taskId }: Props) {
       return response.data.map(convertCommentFromServer);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load notes");
+      toast.error("Failed to load comments");
     }
   };
 
@@ -41,8 +41,8 @@ function PublicCommentsTabContent({ taskId }: Props) {
       fetchData={fetchComments}
       onAdd={onAddComment}
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
-      noDataMessage="No notes available"
-      explanation="Notes that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
+      noDataMessage="No comments available"
+      explanation="Comments that can be added and viewed by both WordPress admins and QuickTasker users who have assigned to the task."
     />
   );
 }

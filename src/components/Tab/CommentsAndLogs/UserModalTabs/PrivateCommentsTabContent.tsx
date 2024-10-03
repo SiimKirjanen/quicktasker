@@ -37,7 +37,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
       return response.data.map(convertCommentFromServer);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load private notes");
+      toast.error("Failed to load private comments");
     }
   };
 
@@ -47,8 +47,8 @@ function PrivateCommentsTabContent({ userId }: Props) {
       fetchData={fetchPrivateComments}
       onAdd={addComment}
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
-      noDataMessage="No notes available"
-      explanation="Notes that can be added and viewed only by WordPress admins."
+      noDataMessage="No comments available"
+      explanation="Comments that can be added and viewed only by WordPress admins."
     />
   );
 }

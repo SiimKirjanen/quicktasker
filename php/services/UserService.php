@@ -84,7 +84,7 @@ class UserService {
             array('id' => $userId)
         );
 
-        if (!$result) {
+        if ($result === false) {
             throw new \Exception('Failed to update a user');
         }
 

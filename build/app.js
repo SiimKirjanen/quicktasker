@@ -8131,7 +8131,7 @@ function WPQTCard({
 }) {
   const hasDropdown = dropdown !== undefined;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-relative wpqt-flex wpqt-flex-col wpqt-rounded wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-3", hasDropdown && "wpqt-pr-[24px]", className),
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-relative wpqt-flex wpqt-flex-col wpqt-rounded wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-4", hasDropdown && "wpqt-pr-[24px]", className),
     onClick: onClick,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-mb-2",
@@ -10211,7 +10211,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalFooter, {
       onSave: saveTask,
-      saveBtnText: taskModalSaving ? "Saving..." : "Edit task"
+      saveBtnText: taskModalSaving ? "Saving..." : "Save"
     })]
   });
 });
@@ -10289,16 +10289,8 @@ function UserModal() {
     handleSuccess
   } = (0,_hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_5__.CLOSE_USER_MODAL);
   const {
-    createUser,
     editUser
   } = (0,_hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_7__.useUserActions)();
-  const onCreateUser = (userName, userDescription) => __awaiter(this, void 0, void 0, function* () {
-    setModalSaving(true);
-    yield createUser(userName, userDescription, userData => {
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_5__.ADD_USER, userData, _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.USER);
-    });
-    setModalSaving(false);
-  });
   const onEditUser = user => __awaiter(this, void 0, void 0, function* () {
     setModalSaving(true);
     yield editUser(user, userData => {
@@ -10313,7 +10305,6 @@ function UserModal() {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserModalContent__WEBPACK_IMPORTED_MODULE_6__.UserModalContent, {
       ref: modalContentRef,
       modalSaving: modalSaving,
-      createUser: onCreateUser,
       editUser: onEditUser
     })
   });
@@ -10390,8 +10381,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forwardRef)(function UserModalContent({
-  createUser,
-  modalSaving
+  modalSaving,
+  editUser
 }, ref) {
   const {
     state: {
@@ -10416,12 +10407,17 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
       setIsActiveUser(userToEdit.is_active);
     }
   }, [userToEdit]);
-  const saveUser = () => {
-    createUser(userName, userDescription);
-  };
   const clearContent = () => {
     setUserName("");
     setUserDescription("");
+  };
+  const saveUser = () => {
+    if (userToEdit) {
+      editUser(Object.assign(Object.assign({}, userToEdit), {
+        name: userName,
+        description: userDescription
+      }));
+    }
   };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useImperativeHandle)(ref, () => ({
     clearContent
@@ -10449,6 +10445,7 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
             })
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-mt-5",
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_UserModalTabs_UserModalTabs__WEBPACK_IMPORTED_MODULE_10__.UserModalTabs, {
             user: userToEdit
           })
@@ -10457,7 +10454,7 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
         className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
-            className: "wpqt-icon-blue wpqt-size-5"
+            className: "wpqt-icon-blue wpqt-size-4"
           }),
           text: "User details",
           onClick: () => {
@@ -10525,7 +10522,7 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_1__.WPQTModalFooter, {
       onSave: saveUser,
-      saveBtnText: modalSaving ? "Saving..." : "Edit user"
+      saveBtnText: modalSaving ? "Saving..." : "Save"
     })]
   });
 });
@@ -10555,6 +10552,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/field/field.js");
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/XMarkIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 
 
@@ -10584,7 +10582,7 @@ function WPQTModal({
         className: "wpqt-mt-[8vh] wpqt-flex wpqt-justify-center",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.DialogPanel, {
           transition: true,
-          className: `data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-relative wpqt-mt-[20px] wpqt-w-4/5 ${sizeClasses[size]} wpqt-rounded-xl wpqt-bg-white wpqt-p-7 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0`,
+          className: `data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-relative wpqt-mt-[20px] wpqt-w-4/5 ${sizeClasses[size]} wpqt-rounded-xl wpqt-bg-white wpqt-p-8 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0`,
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
             className: "wpqt-group wpqt-absolute wpqt-right-[-20px] wpqt-top-[-20px] wpqt-flex wpqt-h-[40px] wpqt-w-[40px] wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-rounded-full wpqt-border wpqt-border-solid wpqt-bg-white wpqt-text-qtBorder",
             onClick: closeModal,
@@ -10610,7 +10608,6 @@ function WPQTModalFieldSet({
   children
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.Fieldset, {
-    className: "wpqt-mb-3",
     children: children
   });
 }
@@ -10632,9 +10629,12 @@ function WPQTModalFooter({
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTButton, {
-      onClick: onSave,
-      btnText: saveBtnText
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTIconButton, {
+      text: saveBtnText,
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        className: "wpqt-icon-green wpqt-size-5"
+      }),
+      onClick: onSave
     })
   });
 }
@@ -10661,6 +10661,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
 /* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10688,6 +10689,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
+
 
 
 
@@ -10730,27 +10732,27 @@ function CommentsAndLogsTabContent({
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     children: [explanation && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mb-3 wpqt-text-center",
+      className: "wpqt-mb-3 wpqt-text-center wpqt-font-semibold",
       children: explanation
     }), data.length === 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mb-3 wpqt-text-center",
       children: noDataMessage
     }), data.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-my-5 wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-place-items-center wpqt-gap-4",
+      className: "wpqt-my-6 wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-place-items-center wpqt-gap-4",
       children: data.map(item => renderItem(item))
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center",
+      className: "wpqt-flex wpqt-justify-center",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_3__.WPQTTextarea, {
           rowsCount: 3,
           value: newEntry,
-          onChange: text => setNewEntry(text)
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "wpqt-ml-auto wpqt-flex",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTButton, {
-            btnText: "Add",
-            onClick: addEntry,
-            className: "wpqt-ml-auto"
+          onChange: text => setNewEntry(text),
+          className: "wpqt-mb-4"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
+          text: "Add comment",
+          onClick: addEntry,
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            className: "wpqt-icon-blue wpqt-size-5"
           })
         })]
       })
@@ -10929,7 +10931,7 @@ function CommentsTabContent({
       return response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer);
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load comments");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
@@ -10939,8 +10941,8 @@ function CommentsTabContent({
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: comment
     }),
-    noDataMessage: "No notes available",
-    explanation: "Notes that can be added and viewed only by WordPress admins."
+    noDataMessage: "No comments available",
+    explanation: "Comments that can be added and viewed only by WordPress admins."
   });
 }
 
@@ -11018,7 +11020,7 @@ function PublicCommentsTabContent({
       return response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer);
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load comments");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
@@ -11028,8 +11030,8 @@ function PublicCommentsTabContent({
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: comment
     }),
-    noDataMessage: "No notes available",
-    explanation: "Notes that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
+    noDataMessage: "No comments available",
+    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have assigned to the task."
   });
 }
 
@@ -11230,7 +11232,7 @@ function PrivateCommentsTabContent({
       return response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_5__.convertCommentFromServer);
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load private notes");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load private comments");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
@@ -11240,8 +11242,8 @@ function PrivateCommentsTabContent({
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: comment
     }),
-    noDataMessage: "No notes available",
-    explanation: "Notes that can be added and viewed only by WordPress admins."
+    noDataMessage: "No comments available",
+    explanation: "Comments that can be added and viewed only by WordPress admins."
   });
 }
 
@@ -11319,7 +11321,7 @@ function PublicCommentsTabContent({
       return response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer);
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load notes");
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error("Failed to load comments");
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
@@ -11329,8 +11331,8 @@ function PublicCommentsTabContent({
     renderItem: comment => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: comment
     }),
-    noDataMessage: "No notes available",
-    explanation: "Notes that can be added and viewed by both WordPress admins and QuickTasker users who have access to the task."
+    noDataMessage: "No comments available",
+    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker user"
   });
 }
 
@@ -11400,7 +11402,7 @@ function WPQTTabs({
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabGroup, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabList, {
-      className: "wpqt-mb-6 wpqt-flex",
+      className: "wpqt-mb-6 wpqt-flex wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-b-gray-300",
       children: tabs.map(tab => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(WPQTTab, {
         children: tab
       }, tab))
@@ -11776,7 +11778,7 @@ function WPQTInput({
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Input, {
     autoFocus: isAutoFocus,
-    className: "wpqt-border-1 wpqt-block wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25",
+    className: "wpqt-block wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300",
     value: value,
     onChange: e => onChange(e.target.value)
   });
@@ -11894,10 +11896,11 @@ __webpack_require__.r(__webpack_exports__);
 function WPQTTextarea({
   value,
   onChange,
-  rowsCount = 3
+  rowsCount = 3,
+  className
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.Textarea, {
-    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-border-1 wpqt-mb-2 wpqt-block wpqt-resize-none wpqt-rounded-lg wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", "focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-white/25"),
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-border-1 wpqt-mb-2 wpqt-block wpqt-resize-none wpqt-rounded-lg wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", `focus:wpqt-shadow-none focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`),
     rows: rowsCount,
     value: value,
     onChange: e => onChange(e.target.value)
@@ -11992,6 +11995,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_SET_PIPELINE: () => (/* binding */ PIPELINE_SET_PIPELINE),
 /* harmony export */   PIPELINE_SET_PRIMARY: () => (/* binding */ PIPELINE_SET_PRIMARY),
 /* harmony export */   PIPELINE_SET_PRIMARY2: () => (/* binding */ PIPELINE_SET_PRIMARY2),
+/* harmony export */   REFETCH_ACTIVE_PIPELINE_INTERVAL: () => (/* binding */ REFETCH_ACTIVE_PIPELINE_INTERVAL),
 /* harmony export */   REMOVE_ARCHIVED_TASK: () => (/* binding */ REMOVE_ARCHIVED_TASK),
 /* harmony export */   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_EDITING_TASK),
 /* harmony export */   REMOVE_USER_TASK: () => (/* binding */ REMOVE_USER_TASK),
@@ -12074,6 +12078,8 @@ const SET_USER_TASKS_SEARCH_VALUE = "SET_USER_TASKS_SEARCH_VALUE";
 const REMOVE_USER_TASK = "REMOVE_USER_TASK";
 const EDIT_USER_TASK = "EDIT_USER_TASK";
 const SET_USER_TASKS_FILTERED_PIPELINE = "SET_USER_TASKS_FILTERED_PIPELINE";
+//Timers
+const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 
 
 /***/ }),
@@ -13302,7 +13308,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _Stage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Stage */ "./src/pages/PipelinePage/components/Stage.tsx");
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
@@ -13311,6 +13317,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../components/Modal/StageModal/StageModal */ "./src/components/Modal/StageModal/StageModal.tsx");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _PipelineIntro__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./PipelineIntro */ "./src/pages/PipelinePage/components/PipelineIntro.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -13349,14 +13356,24 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 const Pipeline = () => {
   var _a, _b;
   const {
     state: {
       activePipeline
     },
-    dispatch
+    dispatch,
+    fetchAndSetPipelineData
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__.ActivePipelineContext);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const refetchDataInterval = setInterval(() => {
+      if (activePipeline) {
+        fetchAndSetPipelineData(activePipeline.id);
+      }
+    }, _constants__WEBPACK_IMPORTED_MODULE_10__.REFETCH_ACTIVE_PIPELINE_INTERVAL);
+    return () => clearInterval(refetchDataInterval);
+  }, [activePipeline]);
   const dispatchMove = (source, destination) => {
     if (source.droppableId === destination.droppableId) {
       dispatch({
@@ -13399,7 +13416,7 @@ const Pipeline = () => {
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_10__.DragDropContext, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_11__.DragDropContext, {
       onDragEnd: onDragEnd,
       children: (_a = activePipeline.stages) === null || _a === void 0 ? void 0 : _a.map(stage => {
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_3__.Stage, {
@@ -14764,7 +14781,7 @@ function UserList() {
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-5",
+    className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-3",
     children: users.filter(filterUsers).map(user => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_6__.UserListItem, {
         user: user
@@ -35223,6 +35240,47 @@ function ArrowUturnUpIcon({
   }));
 }
 const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(ArrowUturnUpIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
+/***/ "./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function ChatBubbleLeftIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(ChatBubbleLeftIcon);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
 
 /***/ }),

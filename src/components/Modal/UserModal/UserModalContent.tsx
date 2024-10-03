@@ -26,13 +26,12 @@ import { CLOSE_USER_MODAL, DELETE_USER, EDIT_USER } from "../../../constants";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
 type Props = {
-  createUser: (name: string, description: string) => void;
   editUser: (user: User) => void;
   modalSaving: boolean;
 };
 
 const UserModalContent = forwardRef(function UserModalContent(
-  { createUser, modalSaving }: Props,
+  { modalSaving, editUser }: Props,
   ref,
 ) {
   const {
@@ -53,13 +52,19 @@ const UserModalContent = forwardRef(function UserModalContent(
     }
   }, [userToEdit]);
 
-  const saveUser = () => {
-    createUser(userName, userDescription);
-  };
-
   const clearContent = () => {
     setUserName("");
     setUserDescription("");
+  };
+
+  const saveUser = () => {
+    if (userToEdit) {
+      editUser({
+        ...userToEdit,
+        name: userName,
+        description: userDescription,
+      });
+    }
   };
 
   useImperativeHandle(ref, () => ({
@@ -89,13 +94,13 @@ const UserModalContent = forwardRef(function UserModalContent(
               />
             </WPQTModalField>
           </WPQTModalFieldSet>
-          <div>
+          <div className="wpqt-mt-5">
             <UserModalTabs user={userToEdit} />
           </div>
         </div>
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
           <WPQTIconButton
-            icon={<UserIcon className="wpqt-icon-blue wpqt-size-5" />}
+            icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
             text="User details"
             onClick={() => {
               window.location.hash = `#/users/${userToEdit!.id}`;
@@ -163,7 +168,7 @@ const UserModalContent = forwardRef(function UserModalContent(
       </div>
       <WPQTModalFooter
         onSave={saveUser}
-        saveBtnText={modalSaving ? "Saving..." : "Edit user"}
+        saveBtnText={modalSaving ? "Saving..." : "Save"}
       />
     </>
   );

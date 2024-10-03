@@ -7,7 +7,7 @@ type Props = {
 function WPQTTabs({ tabs, tabsContent }: Props) {
   return (
     <TabGroup>
-      <TabList className="wpqt-mb-6 wpqt-flex">
+      <TabList className="wpqt-mb-6 wpqt-flex wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-b-gray-300">
         {tabs.map((tab) => (
           <WPQTTab key={tab}>{tab}</WPQTTab>
         ))}

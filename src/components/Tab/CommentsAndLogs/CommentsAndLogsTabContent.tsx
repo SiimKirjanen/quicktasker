@@ -1,9 +1,10 @@
 import { useEffect, useState } from "@wordpress/element";
 import { LoadingOval } from "../../Loading/Loading";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { WPQTButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTComment } from "../../../types/comment";
 import { Log } from "../../../types/log";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 
 type Props<T> = {
   typeId: string;
@@ -55,30 +56,31 @@ function CommentsAndLogsTabContent<T>({
   return (
     <div>
       {explanation && (
-        <div className="wpqt-mb-3 wpqt-text-center">{explanation}</div>
+        <div className="wpqt-mb-3 wpqt-text-center wpqt-font-semibold">
+          {explanation}
+        </div>
       )}
       {data.length === 0 && (
         <div className="wpqt-mb-3 wpqt-text-center">{noDataMessage}</div>
       )}
       {data.length > 0 && (
-        <div className="wpqt-my-5 wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-place-items-center wpqt-gap-4">
+        <div className="wpqt-my-6 wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-place-items-center wpqt-gap-4">
           {data.map((item) => renderItem(item))}
         </div>
       )}
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center">
+      <div className="wpqt-flex wpqt-justify-center">
         <div>
           <WPQTTextarea
             rowsCount={3}
             value={newEntry}
             onChange={(text) => setNewEntry(text)}
+            className="wpqt-mb-4"
           />
-          <div className="wpqt-ml-auto wpqt-flex">
-            <WPQTButton
-              btnText="Add"
-              onClick={addEntry}
-              className="wpqt-ml-auto"
-            />
-          </div>
+          <WPQTIconButton
+            text="Add comment"
+            onClick={addEntry}
+            icon={<ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />}
+          />
         </div>
       </div>
     </div>
