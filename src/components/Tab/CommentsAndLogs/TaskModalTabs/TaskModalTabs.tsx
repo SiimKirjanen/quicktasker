@@ -8,7 +8,7 @@ type Props = {
   task: Task;
 };
 function TaskModalTabs({ task }: Props) {
-  const tabs = ["Private notes", "Public notes", "Logs"];
+  const tabs = ["Private comments", "Public comments", "Logs"];
 
   return (
     <WPQTTabs
