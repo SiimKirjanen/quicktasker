@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "@wordpress/element";
+import { useContext, useEffect, useRef, useState } from "@wordpress/element";
 import { PIPELINE_ADD_TASK } from "../../../constants";
 import { PlusCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { WPQTInput } from "../../../components/common/Input/Input";
@@ -13,6 +13,7 @@ type Props = {
 function AddTask({ stageId }: Props) {
   const [taskName, setTaskName] = useState("");
   const [showTaskInput, setShowTaskInput] = useState(false);
+  const componentRef = useRef<HTMLDivElement | null>(null);
   const {
     state: { activePipeline },
     dispatch,
@@ -32,8 +33,26 @@ function AddTask({ stageId }: Props) {
     };
   }, [taskName]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        componentRef.current &&
+        !componentRef.current.contains(event.target as Node)
+      ) {
+        clearState();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const createTask = async () => {
     if (!taskName) {
+      toast.error("Task name is required");
       return;
     }
     try {
@@ -59,20 +78,24 @@ function AddTask({ stageId }: Props) {
   };
 
   return (
-    <div className="wpqt-sticky wpqt-bottom-0 wpqt-z-10 wpqt-order-1 wpqt-mt-2 wpqt-flex wpqt-justify-center wpqt-bg-gray-100 wpqt-py-2">
+    <div
+      ref={componentRef}
+      className="wpqt-sticky wpqt-bottom-0 wpqt-z-10 wpqt-order-1 wpqt-mt-2 wpqt-flex wpqt-justify-center wpqt-bg-gray-100 wpqt-py-2"
+    >
       {showTaskInput ? (
-        <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
+        <div className="wpqt-flex wpqt-items-center wpqt-gap-3">
           <WPQTInput
             value={taskName}
             onChange={(value) => setTaskName(value)}
-          />
-          <PlusCircleIcon
-            className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer"
-            onClick={createTask}
+            className="wpqt-mb-0"
           />
           <XCircleIcon
             className="wpqt-icon-red wpqt-size-6 wpqt-cursor-pointer"
             onClick={clearState}
+          />
+          <PlusCircleIcon
+            className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer"
+            onClick={createTask}
           />
         </div>
       ) : (

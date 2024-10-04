@@ -4,9 +4,9 @@ type WPQTPageHeaderProps = {
 };
 function WPQTPageHeader({ children, description = null }: WPQTPageHeaderProps) {
   return (
-    <div>
+    <div className="wpqt-mb-6">
       <h1>{children}</h1>
-      {description && <p>{description}</p>}
+      {description && <div>{description}</div>}
     </div>
   );
 }

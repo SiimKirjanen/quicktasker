@@ -4,13 +4,12 @@ import { UserPageAppContext } from "../../../providers/UserPageAppContextProvide
 import { useSession } from "../../../hooks/useSession";
 import { SET_USER_LOGGED_IN } from "../../../constants";
 import { WPQTFieldSet } from "../../../../components/common/Form/FieldSet";
-import { WPQTLegend } from "../../../../components/common/Form/Legend";
 import { WPQTField } from "../../../../components/common/Form/Field";
 import { WPQTInput } from "../../../../components/common/Input/Input";
-import { WPQTLabel } from "../../../../components/common/Form/Label";
 import { WPQTButton } from "../../../../components/common/Button/Button";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { PageScreenMiddle } from "../Page/Page";
+import { toast } from "react-toastify";
 
 function LoginPage() {
   const {
@@ -22,6 +21,10 @@ function LoginPage() {
   const { handleError } = useErrorHandler();
 
   const login = async () => {
+    if (!password) {
+      toast.error("Please enter a password");
+      return;
+    }
     try {
       const response = await logInUserPageRequest(pageHash, password);
       await setSessionCookie(response.data);
@@ -36,12 +39,10 @@ function LoginPage() {
       <p>Plese log in to continue</p>
       <form>
         <WPQTFieldSet>
-          <WPQTLegend>Log in</WPQTLegend>
           <WPQTField>
-            <WPQTLabel>Enter password</WPQTLabel>
             <WPQTInput value={password} onChange={setPassword} />
           </WPQTField>
-          <WPQTField>
+          <WPQTField className="wpqt-flex wpqt-justify-center">
             <WPQTButton btnText="Login" onClick={login} />
           </WPQTField>
         </WPQTFieldSet>

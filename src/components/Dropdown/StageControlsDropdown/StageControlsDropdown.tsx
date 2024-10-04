@@ -114,6 +114,9 @@ function StageControlsDropdown({ stage }: Props) {
         text="Archive all stage tasks"
         icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={archiveAllStageTasks}
+        disabled={stageTasksLenght === 0}
+        id={`item-dropdown-${stage.id}-archive`}
+        tooltipText="No tasks to archive on the stage"
       />
 
       <WPQTDropdownItem
@@ -123,6 +126,7 @@ function StageControlsDropdown({ stage }: Props) {
         disabled={stageTasksLenght > 0}
         className="!wpqt-mb-0"
         id={`item-dropdown-${stage.id}`}
+        tooltipText="Stage can be deleted when there are no tasks on it"
       />
     </WPQTDropdown>
   );

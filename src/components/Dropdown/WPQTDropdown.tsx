@@ -55,6 +55,7 @@ type WPQTDropdownItemProps = {
   className?: string;
   disabled?: boolean;
   id?: string;
+  tooltipText?: string;
 };
 function WPQTDropdownItem({
   text,
@@ -63,12 +64,13 @@ function WPQTDropdownItem({
   className,
   disabled = false,
   id = "",
+  tooltipText = "",
 }: WPQTDropdownItemProps) {
-  const tooltipAttributes: React.HTMLAttributes<HTMLDivElement> = disabled
+  const showTooltip = tooltipText !== "" && id !== "";
+  const tooltipAttributes: React.HTMLAttributes<HTMLDivElement> = showTooltip
     ? {
         "data-tooltip-id": id,
-        "data-tooltip-content":
-          "Stage can be deleted when there are no tasks on it.",
+        "data-tooltip-content": tooltipText,
         "data-tooltip-position-strategy": "fixed",
         "data-tooltip-variant": "info",
       }

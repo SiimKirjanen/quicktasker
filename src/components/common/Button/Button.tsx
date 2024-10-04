@@ -21,15 +21,17 @@ type WPQTIconButtonProps = {
   icon: React.ReactNode;
   text: string;
   onClick: () => void;
+  className?: string;
 };
 function WPQTIconButton({
   icon,
   text,
   onClick = () => {},
+  className,
 }: WPQTIconButtonProps) {
   return (
     <div
-      className="wpqt-main-border wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white"
+      className={`wpqt-main-border wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${className}`}
       onClick={onClick}
     >
       {icon}

@@ -92,6 +92,7 @@ function CommentsAndLogsTabContent<T>({
             <WPQTIconButton
               text="Add comment"
               onClick={addEntry}
+              className="wpqt-float-right"
               icon={
                 <ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />
               }

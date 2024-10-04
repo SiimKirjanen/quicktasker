@@ -34,22 +34,26 @@ function HomePage() {
   };
 
   return (
-    <PageWrap loading={loading} onRefresh={getOverviewData}>
+    <PageWrap
+      loading={loading}
+      onRefresh={getOverviewData}
+      className="wpqt-flex wpqt-items-center wpqt-justify-center"
+    >
       <PageContentWrap>
-        <h1>Overview</h1>
-        <div>Assigned tasks: {overview?.assignedTasksCount}</div>
+        <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-gap-2">
+          <div>Assigned tasks: {overview?.assignedTasksCount}</div>
+          <WPQTButton
+            btnText="See assigned taks"
+            onClick={() => navigate("/user-tasks")}
+            className="wpqt-mb-4"
+          ></WPQTButton>
 
-        <WPQTButton
-          btnText="See assigned taks"
-          onClick={() => navigate("/user-tasks")}
-        ></WPQTButton>
-
-        <div>Assignable tasks: {overview?.assignableTaskCount}</div>
-
-        <WPQTButton
-          btnText="See assignable tasks"
-          onClick={() => navigate("/assignable-tasks")}
-        ></WPQTButton>
+          <div>Assignable tasks: {overview?.assignableTaskCount}</div>
+          <WPQTButton
+            btnText="See assignable tasks"
+            onClick={() => navigate("/assignable-tasks")}
+          ></WPQTButton>
+        </div>
       </PageContentWrap>
     </PageWrap>
   );

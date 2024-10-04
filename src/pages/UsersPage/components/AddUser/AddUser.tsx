@@ -4,7 +4,9 @@ import { UserContext } from "../../../../providers/UserContextProvider";
 import { ADD_USER } from "../../../../constants";
 import { WPQTInput } from "../../../../components/common/Input/Input";
 import { WPQTTextarea } from "../../../../components/common/TextArea/TextArea";
-import { WPQTButton } from "../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../components/common/Button/Button";
+import { UserPlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 
 function AddUser() {
   const [showInput, setShowInput] = useState(false);
@@ -14,6 +16,10 @@ function AddUser() {
   const { createUser } = useUserActions();
 
   const onCreateUser = async () => {
+    if (!userName) {
+      toast.error("User name is required");
+      return;
+    }
     await createUser(userName, userDescription, (userData) => {
       userDispatch({ type: ADD_USER, payload: userData });
       clearStatus();
@@ -27,16 +33,44 @@ function AddUser() {
   };
 
   return (
-    <div>
+    <div className="wpqt-mb-6">
       {showInput ? (
-        <div>
-          <WPQTInput value={userName} onChange={setUserName} />
-          <WPQTTextarea value={userDescription} onChange={setUserDescription} />
-          <WPQTButton btnText="Save" onClick={onCreateUser} />
-          <WPQTButton btnText="Close" onClick={clearStatus} />
+        <div className="wpqt-w-1/4">
+          <label className="wpqt-mb-2 wpqt-block wpqt-font-semibold">
+            User name
+          </label>
+          <WPQTInput
+            value={userName}
+            onChange={setUserName}
+            className="wpqt-w-full"
+          />
+          <label className="wpqt-mb-2 wpqt-block wpqt-font-semibold">
+            User description
+          </label>
+          <WPQTTextarea
+            value={userDescription}
+            onChange={setUserDescription}
+            className="wpqt-w-full"
+          />
+          <div className="wpqt-flex wpqt-justify-end wpqt-gap-3">
+            <WPQTIconButton
+              text="Cancel"
+              onClick={clearStatus}
+              icon={<XMarkIcon className="wpqt-icon-red wpqt-size-5" />}
+            />
+            <WPQTIconButton
+              text="Add"
+              onClick={onCreateUser}
+              icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
+            />
+          </div>
         </div>
       ) : (
-        <WPQTButton onClick={() => setShowInput(true)} btnText="Add user" />
+        <WPQTIconButton
+          text="Add user"
+          onClick={() => setShowInput(true)}
+          icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
+        />
       )}
     </div>
   );

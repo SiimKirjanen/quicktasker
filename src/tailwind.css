@@ -10,6 +10,7 @@
   }
   .wpqt-user-app-content-height {
     height: calc(100vh - 93px);
+    box-sizing: border-box;
   }
   .wpqt-comments-app-height {
     height: calc(100vh - 93px - 340px);

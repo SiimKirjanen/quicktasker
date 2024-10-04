@@ -59,7 +59,7 @@ function ProfileDropdown() {
       <WPQTDropdownItem
         text="Log out"
         icon={
-          <ArrowRightStartOnRectangleIcon className="wpqt-icon-blue wpqt-size-4" />
+          <ArrowRightStartOnRectangleIcon className="wpqt-icon-red wpqt-size-4" />
         }
         className="!wpqt-mb-0"
         onClick={logOut}

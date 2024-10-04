@@ -23,8 +23,8 @@ function UsersPage() {
   }, []);
   return (
     <Page>
-      <WPQTPageHeader description="This is a users page">
-        User page
+      <WPQTPageHeader description="Create and manage users">
+        QuickTasker users page
       </WPQTPageHeader>
       <AddUser />
       <UserFilter />
