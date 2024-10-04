@@ -11,8 +11,9 @@ type Props<T> = {
   fetchData: () => Promise<T[] | undefined>;
   renderItem: (item: T) => JSX.Element;
   noDataMessage: string;
-  onAdd: (text: string) => Promise<T | undefined>;
+  onAdd?: (text: string) => Promise<T | undefined>;
   explanation?: string;
+  enableAdd?: boolean;
 };
 
 function CommentsAndLogsTabContent<T>({
@@ -21,7 +22,8 @@ function CommentsAndLogsTabContent<T>({
   renderItem,
   noDataMessage,
   explanation,
-  onAdd,
+  onAdd = async () => undefined,
+  enableAdd = false,
 }: Props<T>) {
   const [data, setData] = useState<T[] | null>(null);
   const [newEntry, setNewEntry] = useState("");
@@ -43,7 +45,7 @@ function CommentsAndLogsTabContent<T>({
   const addEntry = async () => {
     const entry = await onAdd(newEntry);
     if (entry) {
-      setData((prevData) => (prevData ? [entry, ...prevData] : [entry]));
+      setData((prevData) => (prevData ? [...prevData, entry] : [entry]));
       setNewEntry("");
     }
   };
@@ -67,7 +69,7 @@ function CommentsAndLogsTabContent<T>({
         <div className="wpqt-mb-3 wpqt-text-center">{noDataMessage}</div>
       )}
       {data.length > 0 && (
-        <div className="wpqt-my-6 wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-place-items-center wpqt-gap-4">
+        <div className="wpqt-mb-[28px] wpqt-mt-[56px] wpqt-grid wpqt-grid-cols-[0.3fr_1fr_0.3fr] wpqt-place-items-center wpqt-gap-8">
           {data.map((item) => renderItem(item))}
         </div>
       )}
@@ -77,21 +79,26 @@ function CommentsAndLogsTabContent<T>({
           refreshComemnts={loadData}
         />
       </div>
-      <div className="wpqt-flex wpqt-justify-center">
-        <div>
-          <WPQTTextarea
-            rowsCount={3}
-            value={newEntry}
-            onChange={(text) => setNewEntry(text)}
-            className="wpqt-mb-4"
-          />
-          <WPQTIconButton
-            text="Add comment"
-            onClick={addEntry}
-            icon={<ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />}
-          />
+
+      {enableAdd && (
+        <div className="wpqt-flex wpqt-justify-center">
+          <div className="wpqt-w-2/3">
+            <WPQTTextarea
+              rowsCount={3}
+              value={newEntry}
+              onChange={(text) => setNewEntry(text)}
+              className="wpqt-mb-4 wpqt-w-full"
+            />
+            <WPQTIconButton
+              text="Add comment"
+              onClick={addEntry}
+              icon={
+                <ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />
+              }
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -119,11 +126,15 @@ type TabContentItemProps = {
   item: WPQTComment | Log;
 };
 function TabContentItem({ item }: TabContentItemProps) {
+  // Type guard to check if item is WPQTComment
+  const isWPQTComment = (item: WPQTComment | Log): item is WPQTComment => {
+    return (item as WPQTComment).author_name !== undefined;
+  };
   return (
     <>
-      <div>Siim</div>
+      <div>{isWPQTComment(item) ? item.author_name : "System"}</div>
       <div>{item.text}</div>
-      <div>2031</div>
+      <div>{item.created_at}</div>
     </>
   );
 }

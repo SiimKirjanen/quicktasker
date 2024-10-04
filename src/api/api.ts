@@ -219,19 +219,6 @@ function getLogsRequest(
   });
 }
 
-function addLogRequest(
-  typeId: string,
-  type: string,
-  text: string,
-): Promise<WPQTResponse<LogFromServer>> {
-  return apiFetch({
-    path: `/wpqt/v1/logs`,
-    method: "POST",
-    data: { typeId, type, text },
-    headers: getCommonHeaders(),
-  });
-}
-
 /*
   ==================================================================================================================================================================================================================
   Stage requests
@@ -460,7 +447,6 @@ export {
   getUserSessionsRequest,
   changeUserSessionStatusRequest,
   deleteUserSessionRequest,
-  addLogRequest,
   getUserTasksRequest,
   getUsersRequest,
   getExtendedUserRequest,

@@ -902,11 +902,6 @@
   margin-right: 0.75rem;
 }
 
-.wpqt-my-6 {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
 .\!wpqt-mb-0 {
   margin-bottom: 0px !important;
 }
@@ -929,6 +924,10 @@
 
 .wpqt-mb-6 {
   margin-bottom: 1.5rem;
+}
+
+.wpqt-mb-\[28px\] {
+  margin-bottom: 28px;
 }
 
 .wpqt-ml-auto {
@@ -957,6 +956,10 @@
 
 .wpqt-mt-\[20px\] {
   margin-top: 20px;
+}
+
+.wpqt-mt-\[56px\] {
+  margin-top: 56px;
 }
 
 .wpqt-mt-\[8vh\] {
@@ -1009,11 +1012,6 @@
   height: 2.25rem;
 }
 
-.wpqt-size-7 {
-  width: 1.75rem;
-  height: 1.75rem;
-}
-
 .wpqt-h-\[200px\] {
   height: 200px;
 }
@@ -1040,6 +1038,10 @@
 
 .wpqt-max-h-full {
   max-height: 100%;
+}
+
+.wpqt-w-2\/3 {
+  width: 66.666667%;
 }
 
 .wpqt-w-4\/5 {
@@ -1126,6 +1128,10 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.wpqt-grid-cols-\[0\.3fr_1fr_0\.3fr\] {
+  grid-template-columns: 0.3fr 1fr 0.3fr;
+}
+
 .wpqt-grid-cols-\[1fr_auto_1fr\] {
   grid-template-columns: 1fr auto 1fr;
 }
@@ -1184,6 +1190,10 @@
 
 .wpqt-gap-7 {
   gap: 1.75rem;
+}
+
+.wpqt-gap-8 {
+  gap: 2rem;
 }
 
 .wpqt-gap-\[24px\] {

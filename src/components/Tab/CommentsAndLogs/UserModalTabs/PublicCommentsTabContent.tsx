@@ -48,6 +48,7 @@ function PublicCommentsTabContent({ userId }: Props) {
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
       noDataMessage="No comments available"
       explanation="Comments that can be added and viewed by both WordPress admins and QuickTasker user"
+      enableAdd={true}
     />
   );
 }

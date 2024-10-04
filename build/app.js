@@ -7708,7 +7708,6 @@ function App() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addCommentRequest: () => (/* binding */ addCommentRequest),
-/* harmony export */   addLogRequest: () => (/* binding */ addLogRequest),
 /* harmony export */   archiveStageTasksRequest: () => (/* binding */ archiveStageTasksRequest),
 /* harmony export */   archiveTaskRequest: () => (/* binding */ archiveTaskRequest),
 /* harmony export */   assignTaskToUserRequest: () => (/* binding */ assignTaskToUserRequest),
@@ -7910,18 +7909,6 @@ function getLogsRequest(typeId, type) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/logs?${queryParams.toString()}`,
     method: "GET",
-    headers: getCommonHeaders()
-  });
-}
-function addLogRequest(typeId, type, text) {
-  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
-    path: `/wpqt/v1/logs`,
-    method: "POST",
-    data: {
-      typeId,
-      type,
-      text
-    },
     headers: getCommonHeaders()
   });
 }
@@ -10703,7 +10690,10 @@ function CommentsAndLogsTabContent({
   renderItem,
   noDataMessage,
   explanation,
-  onAdd
+  onAdd = () => __awaiter(this, void 0, void 0, function* () {
+    return undefined;
+  }),
+  enableAdd = false
 }) {
   const [data, setData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [newEntry, setNewEntry] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
@@ -10722,7 +10712,7 @@ function CommentsAndLogsTabContent({
   const addEntry = () => __awaiter(this, void 0, void 0, function* () {
     const entry = yield onAdd(newEntry);
     if (entry) {
-      setData(prevData => prevData ? [entry, ...prevData] : [entry]);
+      setData(prevData => prevData ? [...prevData, entry] : [entry]);
       setNewEntry("");
     }
   });
@@ -10743,7 +10733,7 @@ function CommentsAndLogsTabContent({
       className: "wpqt-mb-3 wpqt-text-center",
       children: noDataMessage
     }), data.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-my-6 wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-place-items-center wpqt-gap-4",
+      className: "wpqt-mb-[28px] wpqt-mt-[56px] wpqt-grid wpqt-grid-cols-[0.3fr_1fr_0.3fr] wpqt-place-items-center wpqt-gap-8",
       children: data.map(item => renderItem(item))
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mb-3 wpqt-flex wpqt-justify-center",
@@ -10751,14 +10741,15 @@ function CommentsAndLogsTabContent({
         isLoading: loadingComments,
         refreshComemnts: loadData
       })
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    }), enableAdd && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-w-2/3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_3__.WPQTTextarea, {
           rowsCount: 3,
           value: newEntry,
           onChange: text => setNewEntry(text),
-          className: "wpqt-mb-4"
+          className: "wpqt-mb-4 wpqt-w-full"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
           text: "Add comment",
           onClick: addEntry,
@@ -10787,13 +10778,17 @@ function CommentsRefresh({
 function TabContentItem({
   item
 }) {
+  // Type guard to check if item is WPQTComment
+  const isWPQTComment = item => {
+    return item.author_name !== undefined;
+  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: "Siim"
+      children: isWPQTComment(item) ? item.author_name : "System"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: item.text
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: "2031"
+      children: item.created_at
     })]
   });
 }
@@ -10818,7 +10813,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
-/* harmony import */ var _hooks_actions_useLogActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useLogActions */ "./src/hooks/actions/useLogActions.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10851,16 +10845,9 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
 function LogsTabContent({
   taskId
 }) {
-  const {
-    addLog
-  } = (0,_hooks_actions_useLogActions__WEBPACK_IMPORTED_MODULE_5__.useLogActions)();
-  const onAddLog = text => __awaiter(this, void 0, void 0, function* () {
-    return yield addLog(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task, text);
-  });
   const fetchLogs = () => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getLogsRequest)(taskId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.Task);
@@ -10873,7 +10860,6 @@ function LogsTabContent({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
     typeId: taskId,
     fetchData: fetchLogs,
-    onAdd: onAddLog,
     renderItem: log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: log
     }),
@@ -10967,7 +10953,8 @@ function CommentsTabContent({
       item: comment
     }),
     noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed only by WordPress admins."
+    explanation: "Comments that can be added and viewed only by WordPress admins.",
+    enableAdd: true
   });
 }
 
@@ -11056,7 +11043,8 @@ function PublicCommentsTabContent({
       item: comment
     }),
     noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have assigned to the task."
+    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have assigned to the task.",
+    enableAdd: true
   });
 }
 
@@ -11121,7 +11109,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CommentsAndLogsTabContent */ "./src/components/Tab/CommentsAndLogs/CommentsAndLogsTabContent.tsx");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/enums */ "./src/types/enums.tsx");
-/* harmony import */ var _hooks_actions_useLogActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useLogActions */ "./src/hooks/actions/useLogActions.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11154,16 +11141,9 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
 function LogsTabContent({
   userId
 }) {
-  const {
-    addLog
-  } = (0,_hooks_actions_useLogActions__WEBPACK_IMPORTED_MODULE_5__.useLogActions)();
-  const onAddLog = text => __awaiter(this, void 0, void 0, function* () {
-    return yield addLog(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, text);
-  });
   const fetchLogs = () => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getLogsRequest)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User);
@@ -11176,7 +11156,6 @@ function LogsTabContent({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.CommentsAndLogsTabContent, {
     typeId: userId,
     fetchData: fetchLogs,
-    onAdd: onAddLog,
     renderItem: log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsAndLogsTabContent__WEBPACK_IMPORTED_MODULE_2__.TabContentItem, {
       item: log
     }),
@@ -11268,7 +11247,8 @@ function PrivateCommentsTabContent({
       item: comment
     }),
     noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed only by WordPress admins."
+    explanation: "Comments that can be added and viewed only by WordPress admins.",
+    enableAdd: true
   });
 }
 
@@ -11357,7 +11337,8 @@ function PublicCommentsTabContent({
       item: comment
     }),
     noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker user"
+    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker user",
+    enableAdd: true
   });
 }
 
@@ -12164,66 +12145,6 @@ function useCommentActions() {
   });
   return {
     addComment
-  };
-}
-
-
-/***/ }),
-
-/***/ "./src/hooks/actions/useLogActions.ts":
-/*!********************************************!*\
-  !*** ./src/hooks/actions/useLogActions.ts ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useLogActions: () => (/* binding */ useLogActions)
-/* harmony export */ });
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-
-function useLogActions() {
-  const addLog = (userId, type, text) => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.addLogRequest)(userId, type, text);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to add log");
-    }
-  });
-  return {
-    addLog
   };
 }
 

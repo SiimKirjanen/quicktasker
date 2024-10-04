@@ -1191,45 +1191,6 @@ function wpqt_register_api_routes() {
         ),
     );
 
-    register_rest_route(
-        'wpqt/v1',
-        'logs',
-        array(
-            'methods' => 'POST',
-            'callback' => function( $data ) {
-                try {
-                    WPQTverifyApiNonce($data);
-                    $logService = new LogService();
-                    $newLog = $logService->log($data['text'], $data['type'], $data['typeId']);
-                    
-                    return new WP_REST_Response((new ApiResponse(true, array(), $newLog))->toArray(), 200);
-                }catch(Exception $e) {
-                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                }
-            },
-            'permission_callback' => function() {
-                return PermissionService::hasRequiredPermissionsForPrivateAPI();
-            },
-            'args' => array(
-                'text' => array(
-                    'required' => true,
-                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
-                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
-                ),
-                'type' => array(
-                    'required' => true,
-                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
-                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
-                ),
-                'typeId' => array(
-                    'required' => true,
-                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
-                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
-                )
-            ),
-        ),
-    );
-
     /*
     ==================================================================================================================================================================================================================
     Comments endpoints

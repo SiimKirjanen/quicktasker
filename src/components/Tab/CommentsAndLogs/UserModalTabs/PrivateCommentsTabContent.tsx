@@ -49,6 +49,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
       noDataMessage="No comments available"
       explanation="Comments that can be added and viewed only by WordPress admins."
+      enableAdd={true}
     />
   );
 }
