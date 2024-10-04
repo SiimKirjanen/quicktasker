@@ -6,6 +6,7 @@ import { UserPageOverview } from "../types/user-page-overview";
 import { TaskFromServer } from "../../types/task";
 import { UserPageTaskResponse } from "../types/user-page-task-response";
 import { WPQTCommentFromServer } from "../../types/comment";
+import { UserPageUserResponse } from "../types/user-page-user-response";
 
 function getCommonHeaders() {
   return {
@@ -188,6 +189,16 @@ function getUserPageCommentsRequest(
   });
 }
 
+function getUserPageUserDataRequest(
+  pageHash: string,
+): Promise<WPQTResponse<UserPageUserResponse>> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/user`,
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getUserPageStatusRequest,
   setUpUserPageRequest,
@@ -205,4 +216,5 @@ export {
   getUserCommentsRequest,
   addUserCommentRequest,
   getUserPageCommentsRequest,
+  getUserPageUserDataRequest,
 };

@@ -5749,7 +5749,10 @@ function UserPageContent() {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_LoadingPage_LoadingPage__WEBPACK_IMPORTED_MODULE_17__.LoadingPage, {});
   }
   if (!isActiveUser) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_ErrorPage_ErrorPage__WEBPACK_IMPORTED_MODULE_7__.ErrorPage, {});
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_ErrorPage_ErrorPage__WEBPACK_IMPORTED_MODULE_7__.ErrorPage, {
+      errorTitle: "User is not active",
+      errorDescription: "Your user is not active. Please contact your administrator."
+    });
   }
   if (!setupCompleted) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pages_SetUpPage_SetUpPage__WEBPACK_IMPORTED_MODULE_8__.SetUpPage, {});
@@ -5824,6 +5827,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getUserCommentsRequest: () => (/* binding */ getUserCommentsRequest),
 /* harmony export */   getUserPageCommentsRequest: () => (/* binding */ getUserPageCommentsRequest),
 /* harmony export */   getUserPageStatusRequest: () => (/* binding */ getUserPageStatusRequest),
+/* harmony export */   getUserPageUserDataRequest: () => (/* binding */ getUserPageUserDataRequest),
 /* harmony export */   logInUserPageRequest: () => (/* binding */ logInUserPageRequest),
 /* harmony export */   logoutUserPageRequest: () => (/* binding */ logoutUserPageRequest),
 /* harmony export */   setUpUserPageRequest: () => (/* binding */ setUpUserPageRequest),
@@ -5960,6 +5964,13 @@ function getUserPageCommentsRequest(pageHash) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     method: "GET",
     path: `/wpqt/v1/user-pages/${pageHash}/comments`,
+    headers: getCommonHeaders()
+  });
+}
+function getUserPageUserDataRequest(pageHash) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/user`,
     headers: getCommonHeaders()
   });
 }
@@ -6380,12 +6391,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
 
-function ErrorPage() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-      children: "Page not found"
-    })
+
+function ErrorPage({
+  errorTitle,
+  errorDescription
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_1__.PageScreenMiddle, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+      children: errorTitle
+    }), errorDescription && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      children: errorDescription
+    })]
   });
 }
 
@@ -6828,15 +6846,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
-/* harmony import */ var _components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/ProfileActions/ProfileActions */ "./src/user-page-app/components/Pages/ProfilePage/components/ProfileActions/ProfileActions.tsx");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/UserPageUserContextProvider */ "./src/user-page-app/providers/UserPageUserContextProvider.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
+/* harmony import */ var _components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/ProfileActions/ProfileActions */ "./src/user-page-app/components/Pages/ProfilePage/components/ProfileActions/ProfileActions.tsx");
+/* harmony import */ var _components_UserDetails_UserDetails__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/UserDetails/UserDetails */ "./src/user-page-app/components/Pages/ProfilePage/components/UserDetails/UserDetails.tsx");
+
+
+
 
 
 
 function PprofilePage() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_1__.PageWrap, {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_1__.PageContentWrap, {
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_2__.ProfileActions, {})
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserPageUserContextProvider, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ProfilePageContent, {})
+  });
+}
+function ProfilePageContent() {
+  const {
+    state: {
+      loading,
+      user
+    },
+    loadUserData
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserPageUserContext);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_3__.PageWrap, {
+    loading: loading,
+    onRefresh: loadUserData,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_3__.PageContentWrap, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_UserDetails_UserDetails__WEBPACK_IMPORTED_MODULE_5__.UserDetails, {
+          user: user
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_4__.ProfileActions, {})]
+      })
     })
   });
 }
@@ -6876,6 +6920,48 @@ function ProfileActions() {
       onClick: () => {
         navigate(`/user/comments`);
       }
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/user-page-app/components/Pages/ProfilePage/components/UserDetails/UserDetails.tsx":
+/*!***********************************************************************************************!*\
+  !*** ./src/user-page-app/components/Pages/ProfilePage/components/UserDetails/UserDetails.tsx ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserDetails: () => (/* binding */ UserDetails)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../../components/common/DataDisplay/DataDisplay */ "./src/components/common/DataDisplay/DataDisplay.tsx");
+
+
+function UserDetails({
+  user
+}) {
+  if (!user) {
+    return null;
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-mb-4",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_1__.DataDisplay, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_1__.DisplayRow, {
+        label: "Name",
+        children: user.name
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_1__.DisplayRow, {
+        label: "Description",
+        children: user.description
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_1__.DisplayRow, {
+        label: "Assigned tasks count",
+        children: user.assigned_tasks_count
+      })]
     })
   });
 }
@@ -7675,6 +7761,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_USER_PAGE_STATUS: () => (/* binding */ SET_USER_PAGE_STATUS),
 /* harmony export */   SET_USER_PAGE_TASK_DATA: () => (/* binding */ SET_USER_PAGE_TASK_DATA),
 /* harmony export */   SET_USER_PAGE_TASK_LOADING: () => (/* binding */ SET_USER_PAGE_TASK_LOADING),
+/* harmony export */   SET_USER_PAGE_USER_DATA: () => (/* binding */ SET_USER_PAGE_USER_DATA),
+/* harmony export */   SET_USER_PAGE_USER_LOADING: () => (/* binding */ SET_USER_PAGE_USER_LOADING),
 /* harmony export */   UPDATE_USER_PAGE_TASK_DATA: () => (/* binding */ UPDATE_USER_PAGE_TASK_DATA)
 /* harmony export */ });
 // User page reducer constants
@@ -7694,6 +7782,9 @@ const UPDATE_USER_PAGE_TASK_DATA = "UPDATE_USER_PAGE_TASK_DATA";
 //User page notifications reducer constants
 const SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS = "SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS";
 const CHANGE_USER_PAGE_NOTIFICATIONS_LOADING = "CHANGE_USER_PAGE_NOTIFICATIONS_LOADING";
+// User page user reducer constants
+const SET_USER_PAGE_USER_DATA = "SET_USER_PAGE_USER_DATA";
+const SET_USER_PAGE_USER_LOADING = "SET_USER_PAGE_USER_LOADING";
 
 
 /***/ }),
@@ -8669,6 +8760,120 @@ const UserPageTaskContextProvider = ({
 
 /***/ }),
 
+/***/ "./src/user-page-app/providers/UserPageUserContextProvider.tsx":
+/*!*********************************************************************!*\
+  !*** ./src/user-page-app/providers/UserPageUserContextProvider.tsx ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserPageUserContext: () => (/* binding */ UserPageUserContext),
+/* harmony export */   UserPageUserContextProvider: () => (/* binding */ UserPageUserContextProvider)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _reducers_user_page_user_recuder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/user-page-user-recuder */ "./src/user-page-app/reducers/user-page-user-recuder.ts");
+/* harmony import */ var _UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
+/* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
+/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../constants */ "./src/user-page-app/constants.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+const initialState = {
+  user: null,
+  loading: true
+};
+const UserPageUserContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
+  state: initialState,
+  useUserPageUserDispatch: () => {},
+  loadUserData: () => {}
+});
+const UserPageUserContextProvider = ({
+  children
+}) => {
+  const [state, useUserPageUserDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_user_page_user_recuder__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
+  const {
+    state: {
+      pageHash
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserPageAppContext);
+  const {
+    handleError
+  } = (0,_hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_4__.useErrorHandler)();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (pageHash) {
+      loadUserData();
+    }
+  }, []);
+  const loadUserData = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+      useUserPageUserDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_USER_PAGE_USER_LOADING,
+        payload: true
+      });
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_5__.getUserPageUserDataRequest)(pageHash);
+      useUserPageUserDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_USER_PAGE_USER_DATA,
+        payload: response.data
+      });
+    } catch (error) {
+      handleError(error);
+    } finally {
+      useUserPageUserDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_USER_PAGE_USER_LOADING,
+        payload: false
+      });
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserPageUserContext.Provider, {
+    value: {
+      state,
+      useUserPageUserDispatch,
+      loadUserData
+    },
+    children: children
+  });
+};
+
+
+/***/ }),
+
 /***/ "./src/user-page-app/reducers/user-assignable-tasks-reducer.ts":
 /*!*********************************************************************!*\
   !*** ./src/user-page-app/reducers/user-assignable-tasks-reducer.ts ***!
@@ -8882,6 +9087,47 @@ const reducer = (state, action) => {
       {
         return Object.assign(Object.assign({}, state), {
           loading: action.payload
+        });
+      }
+    default:
+      return state;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./src/user-page-app/reducers/user-page-user-recuder.ts":
+/*!**************************************************************!*\
+  !*** ./src/user-page-app/reducers/user-page-user-recuder.ts ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reducer: () => (/* binding */ reducer)
+/* harmony export */ });
+/* harmony import */ var _utils_user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/user */ "./src/utils/user.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants */ "./src/user-page-app/constants.ts");
+
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_1__.SET_USER_PAGE_USER_DATA:
+      {
+        const {
+          user
+        } = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          user: (0,_utils_user__WEBPACK_IMPORTED_MODULE_0__.convertUserFromServer)(user)
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_1__.SET_USER_PAGE_USER_LOADING:
+      {
+        const loading = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          loading
         });
       }
     default:

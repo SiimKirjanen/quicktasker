@@ -21,6 +21,7 @@ use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskService;
 use WPQT\Comment\CommentRepository;
 use WPQT\Comment\CommentService;
+use WPQT\User\UserRepository;
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
@@ -563,6 +564,34 @@ function wpqt_register_user_page_api_routes() {
                 'required' => true,
                 'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                 'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+            ),
+        ),
+    ));
+
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/user', array(
+        'methods' => 'GET',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $userRepository = new UserRepository();
+                    $user = $userRepository->getUserById($session->user_id);
+                    $data = (object)[
+                        'user' => $user,
+                    ];
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
             ),
         ),
     ));

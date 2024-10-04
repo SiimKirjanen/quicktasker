@@ -29,7 +29,12 @@ function UserPageContent() {
     return <LoadingPage />;
   }
   if (!isActiveUser) {
-    return <ErrorPage />;
+    return (
+      <ErrorPage
+        errorTitle="User is not active"
+        errorDescription="Your user is not active. Please contact your administrator."
+      />
+    );
   }
 
   if (!setupCompleted) {

@@ -1,8 +1,16 @@
-function ErrorPage() {
+import { PageScreenMiddle } from "../Page/Page";
+
+type Props = {
+  errorTitle: string;
+  errorDescription?: string;
+};
+
+function ErrorPage({ errorTitle, errorDescription }: Props) {
   return (
-    <div>
-      <h1>Page not found</h1>
-    </div>
+    <PageScreenMiddle>
+      <h2>{errorTitle}</h2>
+      {errorDescription && <p>{errorDescription}</p>}
+    </PageScreenMiddle>
   );
 }
 
