@@ -1,20 +1,19 @@
 import { useContext } from "@wordpress/element";
-import { WPQTModal } from "../WPQTModal";
-import { ModalContext } from "../../../providers/ModalContextProvider";
-import { PipelineModalContent } from "./PipelineModalContent";
+import { WPQTModal } from "../../WPQTModal";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { PipelineModalContent } from "./AddPipelineModalContent";
 import {
   CLOSE_PIPELINE_MODAL,
   PIPELINE_ADD_PIPELINE,
-  PIPELINE_EDIT_PIPELINE,
-} from "../../../constants";
-import { createPipelineRequest, editPipelineRequest } from "../../../api/api";
-import { Pipeline } from "../../../types/pipeline";
-import { DispatchType, useModal } from "../../../hooks/useModal";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+} from "../../../../constants";
+import { createPipelineRequest } from "../../../../api/api";
 
-function PipelineModal() {
+import { DispatchType, useModal } from "../../../../hooks/useModal";
+import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
+
+function AddPipelineModal() {
   const {
-    state: { pipelineModalOpen },
+    state: { newPipelineModalOpen },
   } = useContext(ModalContext);
   const { fetchAndSetPipelineData } = useContext(ActivePipelineContext);
   const {
@@ -48,26 +47,10 @@ function PipelineModal() {
     }
   };
 
-  const editPipeline = async (pipeline: Pipeline) => {
-    try {
-      setModalSaving(true);
-      const response = await editPipelineRequest(pipeline);
-
-      handleSuccess(
-        PIPELINE_EDIT_PIPELINE,
-        response.data,
-        DispatchType.ACTIVE_PIPELINE,
-      );
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
   return (
-    <WPQTModal modalOpen={pipelineModalOpen} closeModal={closeModal}>
+    <WPQTModal modalOpen={newPipelineModalOpen} closeModal={closeModal}>
       <PipelineModalContent
         ref={modalContentRef}
-        editPipeline={editPipeline}
         addPipeline={addPipeline}
         modalSaving={modalSaving}
         setModalSaving={setModalSaving}
@@ -76,4 +59,4 @@ function PipelineModal() {
   );
 }
 
-export { PipelineModal };
+export { AddPipelineModal };

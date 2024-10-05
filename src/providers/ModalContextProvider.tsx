@@ -30,6 +30,7 @@ const initialState: State = {
   stageToEdit: null,
   targetPipelineId: "",
   pipelineModalOpen: false,
+  newPipelineModalOpen: false,
   pipelineToEdit: null,
   archiveTaskModalOpen: false,
   archiveModalTask: null,
@@ -45,6 +46,7 @@ type State = {
   stageToEdit: Stage | null;
   targetPipelineId: string;
   pipelineModalOpen: boolean;
+  newPipelineModalOpen: boolean;
   pipelineToEdit: Pipeline | null;
   archiveTaskModalOpen: boolean;
   archiveModalTask: ArchivedTask | null;

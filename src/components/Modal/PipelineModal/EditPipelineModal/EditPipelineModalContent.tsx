@@ -5,32 +5,30 @@ import {
   useImperativeHandle,
   useState,
 } from "@wordpress/element";
-import { Pipeline } from "../../../types/pipeline";
-import { ModalContext } from "../../../providers/ModalContextProvider";
+import { Pipeline } from "../../../../types/pipeline";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
 import {
   WPQTModalField,
   WPQTModalFieldSet,
   WPQTModalFooter,
   WPQTModalTitle,
-} from "../WPQTModal";
-import { WPQTInput } from "../../common/Input/Input";
-import { WPQTTextarea } from "../../common/TextArea/TextArea";
+} from "../../WPQTModal";
+import { WPQTInput } from "../../../common/Input/Input";
+import { WPQTTextarea } from "../../../common/TextArea/TextArea";
 
 type Props = {
   editPipeline: (pipeline: Pipeline) => void;
-  addPipeline: (name: string, description: string) => void;
   modalSaving: boolean;
   setModalSaving: (value: boolean) => void;
 };
 
 const PipelineModalContent = forwardRef(
-  ({ editPipeline, addPipeline, modalSaving }: Props, ref) => {
+  ({ editPipeline, modalSaving }: Props, ref) => {
     const {
       state: { pipelineToEdit },
     } = useContext(ModalContext);
     const [pipelineName, setPipelineName] = useState("");
     const [pipelineDescription, setPipelineDescription] = useState("");
-    const editingPipeline = !!pipelineToEdit;
 
     useEffect(() => {
       if (pipelineToEdit) {
@@ -40,13 +38,13 @@ const PipelineModalContent = forwardRef(
     }, [pipelineToEdit]);
 
     const savePipeline = () => {
-      editingPipeline
-        ? editPipeline({
-            ...pipelineToEdit,
-            name: pipelineName,
-            description: pipelineDescription,
-          })
-        : addPipeline(pipelineName, pipelineDescription);
+      if (pipelineToEdit) {
+        editPipeline({
+          ...pipelineToEdit,
+          name: pipelineName,
+          description: pipelineDescription,
+        });
+      }
     };
 
     const clearContent = () => {
@@ -60,9 +58,7 @@ const PipelineModalContent = forwardRef(
 
     return (
       <>
-        <WPQTModalTitle>
-          {editingPipeline ? "Edit board" : "Add board"}
-        </WPQTModalTitle>
+        <WPQTModalTitle>Edit board</WPQTModalTitle>
         <WPQTModalFieldSet>
           <WPQTModalField label="Name">
             <WPQTInput
@@ -81,13 +77,7 @@ const PipelineModalContent = forwardRef(
         </WPQTModalFieldSet>
         <WPQTModalFooter
           onSave={savePipeline}
-          saveBtnText={
-            modalSaving
-              ? "Saving..."
-              : editingPipeline
-                ? "Edit board"
-                : "Add board"
-          }
+          saveBtnText={modalSaving ? "Saving..." : "Edit board"}
         />
       </>
     );

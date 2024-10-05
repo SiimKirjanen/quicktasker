@@ -12,6 +12,7 @@ use WPQT\User\UserRepositry;
 use WPQT\User\UserService;
 use WPQT\Nonce\NonceService;
 use WPQT\Pipeline\PipelineRepository;
+use WPQT\Customfield\CustomFieldRepository;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Task\TaskRepository;
 use WPQT\Task\TaskService;
@@ -1276,6 +1277,48 @@ function wpqt_register_api_routes() {
                     'required' => true,
                     'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                ),
+            ),
+        ),
+    );
+
+
+    /*
+    ==================================================================================================================================================================================================================
+    Custom Fields endpoints
+    ==================================================================================================================================================================================================================
+    */
+
+    register_rest_route(
+        'wpqt/v1',
+        'custom-fields',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $customFieldRepo = new CustomFieldRepository();
+
+                    $customFields = $customFieldRepo->getCustomFields($data['entityId'], $data['entityType']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $customFields))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'entityType' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'entityId' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
             ),
         ),

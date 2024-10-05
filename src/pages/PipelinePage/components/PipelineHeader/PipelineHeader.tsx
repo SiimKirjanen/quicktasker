@@ -1,6 +1,5 @@
 import { useContext } from "@wordpress/element";
-
-import { PencilSquareIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { Cog8ToothIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { OPEN_EDIT_PIPELINE_MODAL } from "../../../../constants";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
@@ -35,8 +34,8 @@ function PipelineHeader() {
       <div>
         <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
           <div className="wpqt-text-lg">{activePipeline.name}</div>
-          <PencilSquareIcon
-            className="wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer"
+          <Cog8ToothIcon
+            className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer wpqt-text-gray-400 hover:wpqt-text-qtBlueHover"
             onClick={openEditPipelineModal}
           />
         </div>

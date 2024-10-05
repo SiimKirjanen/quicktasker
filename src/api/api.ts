@@ -12,6 +12,7 @@ import { WPQTCommentFromServer } from "../types/comment";
 import { ServerExtendedUser, ServerUser, User } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
 import { WPQTTypes } from "../types/enums";
+import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 
 function getCommonHeaders() {
   return {
@@ -419,6 +420,28 @@ function deleteUserSessionRequest(sessionId: string): Promise<WPQTResponse> {
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Custom Field requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getCustomFieldsRequest(
+  entityId: string,
+  entityType: CustomFieldEntityType,
+): Promise<WPQTResponse<CustomField[]>> {
+  const queryParams = new URLSearchParams({
+    entityId,
+    entityType,
+  }).toString();
+
+  return apiFetch({
+    path: `/wpqt/v1/custom-fields?${queryParams}`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getPipelineData,
   moveTaskRequest,
@@ -453,4 +476,5 @@ export {
   restoreArchivedTaskRequest,
   getLogsRequest,
   resetUserPasswordRequest,
+  getCustomFieldsRequest,
 };

@@ -90,8 +90,7 @@ const reducer = (state: State, action: Action): State => {
     case OPEN_NEW_PIPELINE_MODAL: {
       return {
         ...state,
-        pipelineModalOpen: true,
-        pipelineToEdit: null,
+        newPipelineModalOpen: true,
       };
     }
     case OPEN_EDIT_PIPELINE_MODAL: {

@@ -7727,6 +7727,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editUserRequest: () => (/* binding */ editUserRequest),
 /* harmony export */   getArchivedTasksRequest: () => (/* binding */ getArchivedTasksRequest),
 /* harmony export */   getComments: () => (/* binding */ getComments),
+/* harmony export */   getCustomFieldsRequest: () => (/* binding */ getCustomFieldsRequest),
 /* harmony export */   getExtendedUserRequest: () => (/* binding */ getExtendedUserRequest),
 /* harmony export */   getLogsRequest: () => (/* binding */ getLogsRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
@@ -8084,6 +8085,22 @@ function deleteUserSessionRequest(sessionId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/users/sessions/${sessionId}`,
     method: "DELETE",
+    headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Custom Field requests
+  ==================================================================================================================================================================================================================
+*/
+function getCustomFieldsRequest(entityId, entityType) {
+  const queryParams = new URLSearchParams({
+    entityId,
+    entityType
+  }).toString();
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/custom-fields?${queryParams}`,
+    method: "GET",
     headers: getCommonHeaders()
   });
 }
@@ -9542,28 +9559,28 @@ function ArchiveTaskModalContent() {
 
 /***/ }),
 
-/***/ "./src/components/Modal/PipelineModal/PipelineModal.tsx":
-/*!**************************************************************!*\
-  !*** ./src/components/Modal/PipelineModal/PipelineModal.tsx ***!
-  \**************************************************************/
+/***/ "./src/components/Modal/PipelineModal/AddPipelineModal/AddPipelineModal.tsx":
+/*!**********************************************************************************!*\
+  !*** ./src/components/Modal/PipelineModal/AddPipelineModal/AddPipelineModal.tsx ***!
+  \**********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   PipelineModal: () => (/* binding */ PipelineModal)
+/* harmony export */   AddPipelineModal: () => (/* binding */ AddPipelineModal)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _PipelineModalContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./PipelineModalContent */ "./src/components/Modal/PipelineModal/PipelineModalContent.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _hooks_useModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../hooks/useModal */ "./src/hooks/useModal.tsx");
-/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _AddPipelineModalContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./AddPipelineModalContent */ "./src/components/Modal/PipelineModal/AddPipelineModal/AddPipelineModalContent.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _hooks_useModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../hooks/useModal */ "./src/hooks/useModal.tsx");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9600,10 +9617,10 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-function PipelineModal() {
+function AddPipelineModal() {
   const {
     state: {
-      pipelineModalOpen
+      newPipelineModalOpen
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
   const {
@@ -9627,6 +9644,159 @@ function PipelineModal() {
       handleError(error);
     }
   });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModal, {
+    modalOpen: newPipelineModalOpen,
+    closeModal: closeModal,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddPipelineModalContent__WEBPACK_IMPORTED_MODULE_4__.PipelineModalContent, {
+      ref: modalContentRef,
+      addPipeline: addPipeline,
+      modalSaving: modalSaving,
+      setModalSaving: setModalSaving
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Modal/PipelineModal/AddPipelineModal/AddPipelineModalContent.tsx":
+/*!*****************************************************************************************!*\
+  !*** ./src/components/Modal/PipelineModal/AddPipelineModal/AddPipelineModalContent.tsx ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PipelineModalContent: () => (/* binding */ PipelineModalContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+
+
+
+
+
+const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(({
+  addPipeline,
+  modalSaving
+}, ref) => {
+  const [pipelineName, setPipelineName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [pipelineDescription, setPipelineDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const savePipeline = () => {
+    addPipeline(pipelineName, pipelineDescription);
+  };
+  const clearContent = () => {
+    setPipelineName("");
+    setPipelineDescription("");
+  };
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useImperativeHandle)(ref, () => ({
+    clearContent
+  }));
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModalTitle, {
+      children: "Add board"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModalFieldSet, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModalField, {
+        label: "Name",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_3__.WPQTInput, {
+          isAutoFocus: true,
+          value: pipelineName,
+          onChange: newValue => setPipelineName(newValue)
+        })
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModalField, {
+        label: "Description",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__.WPQTTextarea, {
+          rowsCount: 3,
+          value: pipelineDescription,
+          onChange: newValue => setPipelineDescription(newValue)
+        })
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModalFooter, {
+      onSave: savePipeline,
+      saveBtnText: modalSaving ? "Saving..." : "Add board"
+    })]
+  });
+});
+
+
+/***/ }),
+
+/***/ "./src/components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal.tsx":
+/*!************************************************************************************!*\
+  !*** ./src/components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal.tsx ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   EditPipelineModal: () => (/* binding */ EditPipelineModal)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _EditPipelineModalContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./EditPipelineModalContent */ "./src/components/Modal/PipelineModal/EditPipelineModal/EditPipelineModalContent.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _hooks_useModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../hooks/useModal */ "./src/hooks/useModal.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+function EditPipelineModal() {
+  const {
+    state: {
+      pipelineModalOpen
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
+  const {
+    modalSaving,
+    setModalSaving,
+    modalContentRef,
+    closeModal,
+    handleSuccess,
+    handleError
+  } = (0,_hooks_useModal__WEBPACK_IMPORTED_MODULE_7__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_5__.CLOSE_PIPELINE_MODAL);
   const editPipeline = pipeline => __awaiter(this, void 0, void 0, function* () {
     try {
       setModalSaving(true);
@@ -9639,10 +9809,10 @@ function PipelineModal() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModal, {
     modalOpen: pipelineModalOpen,
     closeModal: closeModal,
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PipelineModalContent__WEBPACK_IMPORTED_MODULE_4__.PipelineModalContent, {
+    size: "lg",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_EditPipelineModalContent__WEBPACK_IMPORTED_MODULE_4__.PipelineModalContent, {
       ref: modalContentRef,
       editPipeline: editPipeline,
-      addPipeline: addPipeline,
       modalSaving: modalSaving,
       setModalSaving: setModalSaving
     })
@@ -9652,10 +9822,10 @@ function PipelineModal() {
 
 /***/ }),
 
-/***/ "./src/components/Modal/PipelineModal/PipelineModalContent.tsx":
-/*!*********************************************************************!*\
-  !*** ./src/components/Modal/PipelineModal/PipelineModalContent.tsx ***!
-  \*********************************************************************/
+/***/ "./src/components/Modal/PipelineModal/EditPipelineModal/EditPipelineModalContent.tsx":
+/*!*******************************************************************************************!*\
+  !*** ./src/components/Modal/PipelineModal/EditPipelineModal/EditPipelineModalContent.tsx ***!
+  \*******************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9667,10 +9837,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
-/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
-/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 
 
 
@@ -9679,7 +9849,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(({
   editPipeline,
-  addPipeline,
   modalSaving
 }, ref) => {
   const {
@@ -9689,7 +9858,6 @@ const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
   const [pipelineName, setPipelineName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [pipelineDescription, setPipelineDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const editingPipeline = !!pipelineToEdit;
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (pipelineToEdit) {
       setPipelineName(pipelineToEdit.name);
@@ -9697,10 +9865,12 @@ const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
     }
   }, [pipelineToEdit]);
   const savePipeline = () => {
-    editingPipeline ? editPipeline(Object.assign(Object.assign({}, pipelineToEdit), {
-      name: pipelineName,
-      description: pipelineDescription
-    })) : addPipeline(pipelineName, pipelineDescription);
+    if (pipelineToEdit) {
+      editPipeline(Object.assign(Object.assign({}, pipelineToEdit), {
+        name: pipelineName,
+        description: pipelineDescription
+      }));
+    }
   };
   const clearContent = () => {
     setPipelineName("");
@@ -9711,7 +9881,7 @@ const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
   }));
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalTitle, {
-      children: editingPipeline ? "Edit board" : "Add board"
+      children: "Edit board"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalFieldSet, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
         label: "Name",
@@ -9730,7 +9900,7 @@ const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalFooter, {
       onSave: savePipeline,
-      saveBtnText: modalSaving ? "Saving..." : editingPipeline ? "Edit board" : "Add board"
+      saveBtnText: modalSaving ? "Saving..." : "Edit board"
     })]
   });
 });
@@ -13009,8 +13179,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Page/Page */ "./src/pages/Page/Page.tsx");
 /* harmony import */ var _components_Pipeline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Pipeline */ "./src/pages/PipelinePage/components/Pipeline.tsx");
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
-/* harmony import */ var _components_Modal_PipelineModal_PipelineModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Modal/PipelineModal/PipelineModal */ "./src/components/Modal/PipelineModal/PipelineModal.tsx");
+/* harmony import */ var _components_Modal_PipelineModal_AddPipelineModal_AddPipelineModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Modal/PipelineModal/AddPipelineModal/AddPipelineModal */ "./src/components/Modal/PipelineModal/AddPipelineModal/AddPipelineModal.tsx");
 /* harmony import */ var _components_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/PipelineHeader/PipelineHeader */ "./src/pages/PipelinePage/components/PipelineHeader/PipelineHeader.tsx");
+/* harmony import */ var _components_Modal_PipelineModal_EditPipelineModal_EditPipelineModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal */ "./src/components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal.tsx");
+
 
 
 
@@ -13020,7 +13192,7 @@ __webpack_require__.r(__webpack_exports__);
 const PipelinePage = () => {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_3__.ActivePipelineContextProvider, {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_1__.Page, {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_5__.PipelineHeader, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline__WEBPACK_IMPORTED_MODULE_2__["default"], {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_PipelineModal_PipelineModal__WEBPACK_IMPORTED_MODULE_4__.PipelineModal, {})]
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_5__.PipelineHeader, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline__WEBPACK_IMPORTED_MODULE_2__["default"], {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_PipelineModal_AddPipelineModal_AddPipelineModal__WEBPACK_IMPORTED_MODULE_4__.AddPipelineModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_PipelineModal_EditPipelineModal_EditPipelineModal__WEBPACK_IMPORTED_MODULE_6__.EditPipelineModal, {})]
     })
   });
 };
@@ -13419,7 +13591,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/Cog8ToothIcon.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowPathIcon.js");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
@@ -13468,7 +13640,7 @@ function PipelineHeader() {
           className: "wpqt-text-lg",
           children: activePipeline.name
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          className: "wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer",
+          className: "wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer wpqt-text-gray-400 hover:wpqt-text-qtBlueHover",
           onClick: openEditPipelineModal
         })]
       }), activePipeline.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -15136,6 +15308,7 @@ const initialState = {
   stageToEdit: null,
   targetPipelineId: "",
   pipelineModalOpen: false,
+  newPipelineModalOpen: false,
   pipelineToEdit: null,
   archiveTaskModalOpen: false,
   archiveModalTask: null,
@@ -15972,8 +16145,7 @@ const reducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_NEW_PIPELINE_MODAL:
       {
         return Object.assign(Object.assign({}, state), {
-          pipelineModalOpen: true,
-          pipelineToEdit: null
+          newPipelineModalOpen: true
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_EDIT_PIPELINE_MODAL:
