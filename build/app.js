@@ -14745,13 +14745,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
-/* harmony import */ var _hooks_filters_useUserFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../hooks/filters/useUserFilter */ "./src/hooks/filters/useUserFilter.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
-/* harmony import */ var _UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../UserListItem/UserListItem */ "./src/pages/UsersPage/components/UserListItem/UserListItem.tsx");
-
-
+/* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
+/* harmony import */ var _hooks_filters_useUserFilter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../hooks/filters/useUserFilter */ "./src/hooks/filters/useUserFilter.tsx");
+/* harmony import */ var _UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../UserListItem/UserListItem */ "./src/pages/UsersPage/components/UserListItem/UserListItem.tsx");
 
 
 
@@ -14762,30 +14758,14 @@ function UserList() {
     state: {
       users
     }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserContext);
-  const {
-    modalDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_2__.ModalContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserContext);
   const {
     filterUsers
-  } = (0,_hooks_filters_useUserFilter__WEBPACK_IMPORTED_MODULE_4__.useUserFilter)();
-  const openCreateUserModal = () => {
-    modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_5__.OPEN_NEW_USER_MODAL
-    });
-  };
-  if (!users.length) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: ["No users found ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-        onClick: openCreateUserModal,
-        children: "Add"
-      })]
-    });
-  }
+  } = (0,_hooks_filters_useUserFilter__WEBPACK_IMPORTED_MODULE_3__.useUserFilter)();
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-3",
     children: users.filter(filterUsers).map(user => {
-      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_6__.UserListItem, {
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserListItem_UserListItem__WEBPACK_IMPORTED_MODULE_4__.UserListItem, {
         user: user
       }, user.id);
     })

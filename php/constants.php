@@ -11,29 +11,31 @@ global $wpdb;
 Directories, URL
 ==================================================================================================================================================================================================================
 */
-define('WP_QUICK_TASKS_PLUGIN_FOLDER_DIR', plugin_dir_path( dirname( __FILE__ ) ));
-define('WP_QUICK_TASKS_PLUGIN_MAIN_FILE', WP_QUICK_TASKS_PLUGIN_FOLDER_DIR . '/wp-quick-tasks.php');
-define('WP_QUICK_TASKS_PLUGIN_FOLDER_URL', plugin_dir_url( dirname( __FILE__ ) ));
-define('WP_QUICK_TASKS_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
+define('WP_QUICKTASKER_PLUGIN_FOLDER_DIR', plugin_dir_path( dirname( __FILE__ ) ));
+define('WP_QUICKTASKER_PLUGIN_MAIN_FILE', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/quicktasker.php');
+define('WP_QUICKTASKER_PLUGIN_FOLDER_URL', plugin_dir_url( dirname( __FILE__ ) ));
+define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 
 /*
 ==================================================================================================================================================================================================================
 DB constants
 ==================================================================================================================================================================================================================
 */
-define('WP_QUICK_TASKS_DB_VERSION', "1.36");
+define('WP_QUICKTASKER_DB_VERSION', "1.41");
 
-define('TABLE_WP_QUICK_TASKS_USERS', $wpdb->prefix . "wpqt_users");
-define('TABLE_WP_QUICK_TASKS_PIPELINES', $wpdb->prefix . "wpqt_pipelines");
-define('TABLE_WP_QUICK_TASKS_PIPELINE_STAGES', $wpdb->prefix . "wpqt_pipeline_stages");
-define('TABLE_WP_QUICK_TASKS_TASKS', $wpdb->prefix . "wpqt_tasks");
-define('TABLE_WP_QUICK_TASKS_TASKS_LOCATION', $wpdb->prefix . "wpqt_tasks_location");
-define('TABLE_WP_QUICK_TASKS_STAGES_LOCATION', $wpdb->prefix . "wpqt_stages_location");
-define('TABLE_WP_QUICK_TASKS_LOGS', $wpdb->prefix . "wpqt_logs");
-define('TABLE_WP_QUICK_TASKS_COMMENTS', $wpdb->prefix . "wpqt_comments");
-define('TABLE_WP_QUICK_TASKS_USER_PAGES', $wpdb->prefix . "wpqt_user_pages");
-define('TABLE_WP_QUICK_TASKS_USER_SESSIONS', $wpdb->prefix . "wpqt_user_sessions");
-define('TABLE_WP_QUICK_TASKS_USER_TASK', $wpdb->prefix . "wpqt_user_task");
+define('TABLE_WP_QUICKTASKER_USERS', $wpdb->prefix . "quicktasker_users");
+define('TABLE_WP_QUICKTASKER_PIPELINES', $wpdb->prefix . "quicktasker_pipelines");
+define('TABLE_WP_QUICKTASKER_PIPELINE_STAGES', $wpdb->prefix . "quicktasker_pipeline_stages");
+define('TABLE_WP_QUICKTASKER_TASKS', $wpdb->prefix . "quicktasker_tasks");
+define('TABLE_WP_QUICKTASKER_TASKS_LOCATION', $wpdb->prefix . "quicktasker_tasks_location");
+define('TABLE_WP_QUICKTASKER_STAGES_LOCATION', $wpdb->prefix . "quicktasker_stages_location");
+define('TABLE_WP_QUICKTASKS_LOGS', $wpdb->prefix . "quicktasker_logs");
+define('TABLE_WP_QUICKTASKER_COMMENTS', $wpdb->prefix . "quicktasker_comments");
+define('TABLE_WP_QUICKTASKER_USER_PAGES', $wpdb->prefix . "quicktasker_user_pages");
+define('TABLE_WP_QUICKTASKER_USER_SESSIONS', $wpdb->prefix . "quicktasker_user_sessions");
+define('TABLE_WP_QUICKTASKER_USER_TASK', $wpdb->prefix . "quicktasker_user_task");
+define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS', $wpdb->prefix . "quicktasker_custom_fields");
+define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES', $wpdb->prefix . "quicktasker_custom_fields_values");
 
 /*
 ==================================================================================================================================================================================================================

@@ -15,9 +15,9 @@ function wpqt_set_up_db() {
 	$wp_quick_taks_db_current_version = get_option( "wp_quick_taks_db_current_version" );
     $charset_collate = $wpdb->get_charset_collate() . ' ENGINE = innoDB';
 
-	if ( WP_QUICK_TASKS_DB_VERSION != $wp_quick_taks_db_current_version ) {
+	if ( WP_QUICKTASKER_DB_VERSION != $wp_quick_taks_db_current_version ) {
 
-        $sql = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_PIPELINES . " (
+        $sql = "CREATE TABLE " . TABLE_WP_QUICKTASKER_PIPELINES . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             name varchar(255) NOT NULL,
             description text,
@@ -29,7 +29,7 @@ function wpqt_set_up_db() {
 	  
 		dbDelta( $sql );  
 
-        $sql2 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . " (
+        $sql2 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             pipeline_id int(11) NOT NULL,
             name varchar(255) NOT NULL,
@@ -41,7 +41,7 @@ function wpqt_set_up_db() {
 	  
 		dbDelta( $sql2 );
           
-        $sql3 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_TASKS . " (
+        $sql3 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_TASKS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			pipeline_id int(11) NOT NULL,
             name varchar(255) NOT NULL,
@@ -57,7 +57,7 @@ function wpqt_set_up_db() {
 	  
 		dbDelta( $sql3 ); 
 
-        $sql4 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USERS . " (
+        $sql4 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_USERS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             name varchar(255) NOT NULL,
             description text,
@@ -71,7 +71,7 @@ function wpqt_set_up_db() {
 	  
 		dbDelta( $sql4 ); 
 
-		$sql5 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " (
+		$sql5 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             stage_id int(11) NOT NULL,
 			task_id int(11) NOT NULL,
@@ -85,7 +85,7 @@ function wpqt_set_up_db() {
 		
 		dbDelta( $sql5 ); 
 	  
-		$sql6 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " (
+		$sql6 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			pipeline_id int(11) NOT NULL,
             stage_id int(11) NOT NULL,
@@ -98,7 +98,7 @@ function wpqt_set_up_db() {
 
 		dbDelta( $sql6 ); 
 
-		$sql7 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_LOGS . " (
+		$sql7 = "CREATE TABLE " . TABLE_WP_QUICKTASKS_LOGS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             text text NOT NULL,
 			type_id int(11) NOT NULL,
@@ -109,7 +109,7 @@ function wpqt_set_up_db() {
 
 		  dbDelta( $sql7 ); 
 
-		  $sql8 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_COMMENTS . " (
+		  $sql8 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_COMMENTS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             text text NOT NULL,
 			type_id int(11) NOT NULL,
@@ -123,7 +123,7 @@ function wpqt_set_up_db() {
 
 		  dbDelta( $sql8 ); 
 
-		  $sql9 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USER_PAGES . " (
+		  $sql9 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_USER_PAGES . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			user_id int(11) NOT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
@@ -135,7 +135,7 @@ function wpqt_set_up_db() {
 
 		  dbDelta( $sql9 ); 
 
-		  $sql10 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " (
+		  $sql10 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_USER_SESSIONS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			session_token varchar(255) NOT NULL,
 			user_id int(11) NOT NULL,
@@ -149,7 +149,7 @@ function wpqt_set_up_db() {
 
 		  dbDelta( $sql10 ); 
 
-		  $sql11 = "CREATE TABLE " . TABLE_WP_QUICK_TASKS_USER_TASK . " (
+		  $sql11 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_USER_TASK . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			user_id int(11) NOT NULL,
 			task_id int(11) NOT NULL,
@@ -159,9 +159,34 @@ function wpqt_set_up_db() {
 			UNIQUE KEY unique_user_task (user_id, task_id)
 		  ) $charset_collate;";
 
-		  dbDelta( $sql11 ); 
+		  dbDelta( $sql11 );
+		  
+		  $sql12 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+			name varchar(255) NOT NULL,
+			description text,
+			type ENUM('text', 'select', 'checkbox', 'radio', 'datetime', 'file') NOT NULL,
+			entity_type ENUM('task', 'user', 'pipeline', 'users') NOT NULL,
+			entity_id int(11) NOT NULL,
+			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id)
+		  ) $charset_collate;";
 
-		update_option( "wp_quick_taks_db_current_version", WP_QUICK_TASKS_DB_VERSION );
+		  dbDelta( $sql12 );
+
+		  $sql13 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+			custom_field_id int(11) NOT NULL,
+			value text,
+			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id)
+		  ) $charset_collate;";
+
+		  dbDelta( $sql13 );
+
+		update_option( "wp_quick_taks_db_current_version", WP_QUICKTASKER_DB_VERSION );
 	}
 }
 

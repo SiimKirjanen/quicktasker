@@ -63,7 +63,7 @@ class SessionService {
         global $wpdb;
 
         $result = $wpdb->insert(
-            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            TABLE_WP_QUICKTASKER_USER_SESSIONS,
             array(
                 'user_id' => $userId,
                 'page_hash' => $userPageHash,
@@ -95,7 +95,7 @@ class SessionService {
         global $wpdb;
 
         $result = $wpdb->update(
-            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            TABLE_WP_QUICKTASKER_USER_SESSIONS,
             array(
                 'is_active' => 0
             ),
@@ -122,7 +122,7 @@ class SessionService {
         global $wpdb;
 
         $result = $wpdb->delete(
-            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            TABLE_WP_QUICKTASKER_USER_SESSIONS,
             array(
                 'id' => $sessionId
             )
@@ -149,7 +149,7 @@ class SessionService {
         global $wpdb;
 
         $result = $wpdb->update(
-            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            TABLE_WP_QUICKTASKER_USER_SESSIONS,
             array(
                 'is_active' => $status
             ),

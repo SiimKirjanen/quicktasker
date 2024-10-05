@@ -41,7 +41,7 @@ class StageService {
             throw new Exception('Required fields are missing');
         }
 
-        $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array(
+        $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
             'pipeline_id' => $pipelineId,
             'name' => $args['name'],
             'description' => $args['description']
@@ -70,7 +70,7 @@ class StageService {
     private function addStageLocation($pipelineId, $stageId, $stageOrder) {
         global $wpdb;
 
-        $wpdb->insert(TABLE_WP_QUICK_TASKS_STAGES_LOCATION, array(
+        $wpdb->insert(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
             'pipeline_id' => $pipelineId,
             'stage_id' => $stageId,
             'stage_order' => $stageOrder
@@ -91,7 +91,7 @@ class StageService {
             throw new \Exception('Required fields are missing');
         }
 
-        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array(
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
             'name' => $args['name'],
             'description' => $args['description']
         ), array('id' => $stageId));
@@ -162,7 +162,7 @@ class StageService {
         if ( $currentOrder < $newOrder) {
             $result = $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " SET stage_order = stage_order - 1 WHERE pipeline_id = %d AND stage_order > %d AND stage_order <= %d",
+                    "UPDATE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " SET stage_order = stage_order - 1 WHERE pipeline_id = %d AND stage_order > %d AND stage_order <= %d",
                     $pipelineId,
                     $currentOrder,
                     $newOrder
@@ -176,7 +176,7 @@ class StageService {
         } else {
             $result = $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " SET stage_order = stage_order + 1 WHERE pipeline_id = %d AND stage_order >= %d AND stage_order < %d",
+                    "UPDATE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " SET stage_order = stage_order + 1 WHERE pipeline_id = %d AND stage_order >= %d AND stage_order < %d",
                     $pipelineId,
                     $newOrder,
                     $currentOrder
@@ -188,7 +188,7 @@ class StageService {
             }
         }
 
-        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_STAGES_LOCATION, array(
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
             'stage_order' => $newOrder
         ), array('stage_id' => $stageId, 'pipeline_id' => $pipelineId));
 
@@ -214,13 +214,13 @@ class StageService {
         }
 
         // Delete the stage from the pipeline stages table
-        $result = $wpdb->delete(TABLE_WP_QUICK_TASKS_PIPELINE_STAGES, array('id' => $stageId));
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array('id' => $stageId));
         if( $result === false ) {
             throw new \Exception('Failed to delete the stage.');
         }
 
         // Delete the stage from the stages location table
-        $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_STAGES_LOCATION, array('stage_id' => $stageId));
+        $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array('stage_id' => $stageId));
         if( $result2 === false ) {
             throw new \Exception('Failed to delete the stage.');
         }
@@ -239,8 +239,8 @@ class StageService {
         global $wpdb;
 
         $sql = "
-            UPDATE " . TABLE_WP_QUICK_TASKS_TASKS . " AS a
-            INNER JOIN " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " AS b
+            UPDATE " . TABLE_WP_QUICKTASKER_TASKS . " AS a
+            INNER JOIN " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " AS b
             ON a.id = b.task_id
             SET a.is_archived = 1
             WHERE b.stage_id = %d
@@ -252,7 +252,7 @@ class StageService {
             throw new \Exception('Failed to archive tasks');
         }
 
-        $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('stage_id' => $stageId));
+        $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('stage_id' => $stageId));
 
         if ($result2 === false) {
             throw new \Exception('Failed to delete task location');

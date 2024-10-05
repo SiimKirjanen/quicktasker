@@ -38,7 +38,7 @@ class TaskService {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT MAX(task_order) FROM " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " WHERE stage_id = %d AND is_archived = 0",
+                "SELECT MAX(task_order) FROM " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " WHERE stage_id = %d AND is_archived = 0",
                 $stageId
             )
         );
@@ -66,7 +66,7 @@ class TaskService {
             throw new \Exception('createTask required fields are missing');
         }
 
-        $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS, array(
+        $result = $wpdb->insert(TABLE_WP_QUICKTASKER_TASKS, array(
             'name' => $args['name'],
             'pipeline_id' => $args['pipelineId'],
             'task_hash' => $this->hashService->generateTaskHash($args['name'])
@@ -96,7 +96,7 @@ class TaskService {
     public function addTaskLocation($taskId, $stageId, $taskOrder) {
         global $wpdb;
 
-        $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array(
+        $result = $wpdb->insert(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array(
             'task_id' => $taskId,
             'stage_id' => $stageId,
             'task_order' => $taskOrder
@@ -138,7 +138,7 @@ class TaskService {
 
         // Update the stage_id and task_order of the moved task
         $rowsUpdated = $wpdb->update(
-            TABLE_WP_QUICK_TASKS_TASKS_LOCATION,
+            TABLE_WP_QUICKTASKER_TASKS_LOCATION,
             array(
                 'stage_id' => $newStageId,
                 'task_order' => $newOrder,
@@ -178,7 +178,7 @@ class TaskService {
             // Moving down within the same stage
             $result = $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                    "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
                     SET task_order = task_order - 1
                     WHERE stage_id = %d AND task_order > %d AND task_order <= %d AND is_archived = 0",
                     $stageId,
@@ -190,7 +190,7 @@ class TaskService {
             // Moving up within the same stage
             $result = $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                    "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
                     SET task_order = task_order + 1
                     WHERE stage_id = %d AND task_order < %d AND task_order >= %d AND is_archived = 0",
                     $stageId,
@@ -222,7 +222,7 @@ class TaskService {
         // Decrement the task order of tasks in the current stage
         $result1 = $wpdb->query(
             $wpdb->prepare(
-                "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
                 SET task_order = task_order - 1
                 WHERE stage_id = %d AND task_order > %d AND is_archived = 0",
                 $currentStageId,
@@ -237,7 +237,7 @@ class TaskService {
         // Increment the task order of tasks in the new stage
         $result2 = $wpdb->query(
             $wpdb->prepare(
-                "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
                 SET task_order = task_order + 1
                 WHERE stage_id = %d AND task_order >= %d AND is_archived = 0",
                 $newStageId,
@@ -264,7 +264,7 @@ class TaskService {
 
         $args = wp_parse_args($args, $defaults);
 
-        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS, $args, array('id' => $taskId));
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, $args, array('id' => $taskId));
 
         if ($result === false) {
             throw new \Exception('Failed to edit task');
@@ -284,13 +284,13 @@ class TaskService {
         global $wpdb;
 
         $taskToDelete = $this->taskRepository->getTaskById($taskId);
-        $result = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS, array('id' => $taskId));
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS, array('id' => $taskId));
 
         if ($result === false) {
             throw new \Exception('Failed to delete task');
         }
 
-        $result2 = $wpdb->delete(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('task_id' => $taskId));
+        $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('task_id' => $taskId));
 
         if ($result2 === false) {
             throw new \Exception('Failed to delete task location');
@@ -311,13 +311,13 @@ class TaskService {
         global $wpdb;
 
         $taskToArchive = $this->taskRepository->getTaskById($taskId);
-        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS, array('is_archived' => 1), array('id' => $taskId));
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_archived' => 1), array('id' => $taskId));
 
         if ($result === false) {
             throw new \Exception('Failed to archive task');
         }
 
-        $result2 = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('is_archived' => 1), array('task_id' => $taskId));
+        $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 1), array('task_id' => $taskId));
 
         if ($result2 === false) {
             throw new \Exception('Failed to archive task location');
@@ -361,13 +361,13 @@ class TaskService {
             $this->moveTask($taskId, $pipelineStages[0]->id, $task->task_order);
         }
         
-        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS, array('is_archived' => 0), array('id' => $taskId));
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_archived' => 0), array('id' => $taskId));
 
         if ($result === false) {
             throw new WPQTException('Failed to restore task');
         }
 
-        $result2 = $wpdb->update(TABLE_WP_QUICK_TASKS_TASKS_LOCATION, array('is_archived' => 0), array('task_id' => $taskId));
+        $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 0), array('task_id' => $taskId));
 
         if ($result2 === false) {
             throw new WPQTException('Failed to restore task location');
@@ -387,7 +387,7 @@ class TaskService {
 
         $result = $wpdb->query(
             $wpdb->prepare(
-                "UPDATE " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . "
+                "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
                 SET task_order = task_order - 1
                 WHERE stage_id = %d AND task_order > %d AND is_archived = 0",
                 $stageId,

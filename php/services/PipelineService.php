@@ -26,7 +26,7 @@ class PipelineService {
 
         $activePipeline = $this->pipelineRepository->getActivePipeline();
 
-        $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_PIPELINES, array(
+        $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINES, array(
             'name' => $name,
             'is_primary' => $activePipeline ? false : true
         ));
@@ -60,7 +60,7 @@ class PipelineService {
             throw new \Exception('Required fields are missing');
         }
 
-        $result = $wpdb->update(TABLE_WP_QUICK_TASKS_PIPELINES, array(
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINES, array(
             'name' => $args['name'],
             'description' => $args['description']
         ), array(
@@ -86,7 +86,7 @@ class PipelineService {
 
         $result = $wpdb->query(
             $wpdb->prepare(
-                "UPDATE " . TABLE_WP_QUICK_TASKS_PIPELINES . "
+                "UPDATE " . TABLE_WP_QUICKTASKER_PIPELINES . "
                  SET is_primary = CASE
                      WHEN id = %d THEN 1
                      ELSE 0

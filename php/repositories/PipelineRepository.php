@@ -18,7 +18,7 @@ class PipelineRepository {
         global $wpdb;
 
         return $wpdb->get_results(
-            "SELECT * FROM ". TABLE_WP_QUICK_TASKS_PIPELINES,
+            "SELECT * FROM ". TABLE_WP_QUICKTASKER_PIPELINES,
          );
     }
 
@@ -32,7 +32,7 @@ class PipelineRepository {
         global $wpdb;
 
         return $wpdb->get_row( $wpdb->prepare(
-            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_PIPELINES . "
+            "SELECT * FROM " . TABLE_WP_QUICKTASKER_PIPELINES . "
             WHERE id = %d",
             $id
         ) );
@@ -47,7 +47,7 @@ class PipelineRepository {
         global $wpdb;
 
         return $wpdb->get_row(
-            "SELECT * FROM ". TABLE_WP_QUICK_TASKS_PIPELINES . " WHERE is_primary = 1"
+            "SELECT * FROM ". TABLE_WP_QUICKTASKER_PIPELINES . " WHERE is_primary = 1"
         );
     }
 

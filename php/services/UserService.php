@@ -33,7 +33,7 @@ class UserService {
         global $wpdb;
 
         $result = $wpdb->insert(
-            TABLE_WP_QUICK_TASKS_USERS,
+            TABLE_WP_QUICKTASKER_USERS,
             array(
                 'name' => $args['name'],
                 'description' => $args['description'],
@@ -48,7 +48,7 @@ class UserService {
         $pageHash = $this->hashService->generateUserPageHash($args['name']);
 
         $result2 = $wpdb->insert(
-            TABLE_WP_QUICK_TASKS_USER_PAGES,
+            TABLE_WP_QUICKTASKER_USER_PAGES,
             array(
                 'user_id' => $newUserId,
                 'page_hash' => $pageHash,
@@ -76,7 +76,7 @@ class UserService {
         global $wpdb;
 
         $result = $wpdb->update(
-            TABLE_WP_QUICK_TASKS_USERS,
+            TABLE_WP_QUICKTASKER_USERS,
             array(
                 'name' => $args['name'],
                 'description' => $args['description'],
@@ -103,7 +103,7 @@ class UserService {
         global $wpdb;
 
         $result = $wpdb->update(
-            TABLE_WP_QUICK_TASKS_USERS,
+            TABLE_WP_QUICKTASKER_USERS,
             array(
                 'is_active' => $status,
             ),
@@ -128,7 +128,7 @@ class UserService {
         global $wpdb;
 
         $result = $wpdb->update(
-            TABLE_WP_QUICK_TASKS_USERS,
+            TABLE_WP_QUICKTASKER_USERS,
             array(
                 'deleted' => 1,
             ),
@@ -153,7 +153,7 @@ class UserService {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM " . TABLE_WP_QUICK_TASKS_USERS . " WHERE id = %d AND password IS NOT NULL",
+                "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_USERS . " WHERE id = %d AND password IS NOT NULL",
                 $userId
             )
         );
@@ -177,7 +177,7 @@ class UserService {
         global $wpdb;
 
         $result = $wpdb->insert(
-            TABLE_WP_QUICK_TASKS_USER_TASK,
+            TABLE_WP_QUICKTASKER_USER_TASK,
             array(
                 'user_id' => $userId,
                 'task_id' => $taskId,
@@ -203,7 +203,7 @@ class UserService {
         global $wpdb;
 
         $result = $wpdb->delete(
-            TABLE_WP_QUICK_TASKS_USER_TASK,
+            TABLE_WP_QUICKTASKER_USER_TASK,
             array(
                 'user_id' => $userId,
                 'task_id' => $taskId,
@@ -239,7 +239,7 @@ class UserService {
         }
 
         $result = $wpdb->update(
-            TABLE_WP_QUICK_TASKS_USERS,
+            TABLE_WP_QUICKTASKER_USERS,
             array(
                 'password' => null,
             ),
@@ -251,7 +251,7 @@ class UserService {
         }
 
         $result2 = $wpdb->delete(
-            TABLE_WP_QUICK_TASKS_USER_SESSIONS,
+            TABLE_WP_QUICKTASKER_USER_SESSIONS,
             array('user_id' => $userId)
         );
 

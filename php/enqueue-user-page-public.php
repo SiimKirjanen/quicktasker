@@ -20,16 +20,16 @@ function wpqt_enqueue_user_public_page(){
 	$pipelineRepo = new PipelineRepository();
 	$userRepo = new UserRepository();
 
-	$build_asset = require(WP_QUICK_TASKS_PLUGIN_FOLDER_DIR . '/build/userApp.asset.php');
+	$build_asset = require(WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/build/userApp.asset.php');
 	$dependencies = array_merge(array('wp-element', 'wp-api-fetch'), $build_asset['dependencies']);
 
-	wp_enqueue_style( 'wpqt-tailwind', WP_QUICK_TASKS_PLUGIN_FOLDER_URL . '/build/tailwind.css');
-    wp_enqueue_script('wpqt-script', WP_QUICK_TASKS_PLUGIN_FOLDER_URL . '/build/userApp.js', $dependencies, $build_asset['version'], true);
+	wp_enqueue_style( 'wpqt-tailwind', WP_QUICKTASKER_PLUGIN_FOLDER_URL . '/build/tailwind.css');
+    wp_enqueue_script('wpqt-script', WP_QUICKTASKER_PLUGIN_FOLDER_URL . '/build/userApp.js', $dependencies, $build_asset['version'], true);
 
 	wp_localize_script('wpqt-script', 'wpqt_user', array(
 		'userApiNonce' => NonceService::createNonce( WPQT_USER_API_NONCE ),
 		'siteURL' => site_url(),
-		'pluginURL' => WP_QUICK_TASKS_PLUGIN_FOLDER_URL,
+		'pluginURL' => WP_QUICKTASKER_PLUGIN_FOLDER_URL,
 	));
 
     wp_enqueue_style( 'wpqt-user-page-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap', array(), null );

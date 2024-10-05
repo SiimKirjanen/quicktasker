@@ -18,7 +18,7 @@ class SessionRepository{
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " WHERE session_token = %s",
+                "SELECT * FROM " . TABLE_WP_QUICKTASKER_USER_SESSIONS . " WHERE session_token = %s",
                 $sessionToken
             )
         );
@@ -35,7 +35,7 @@ class SessionRepository{
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " WHERE session_token = %s AND is_active = 1",
+                "SELECT * FROM " . TABLE_WP_QUICKTASKER_USER_SESSIONS . " WHERE session_token = %s AND is_active = 1",
                 $sessionToken
             )
         );
@@ -51,7 +51,7 @@ class SessionRepository{
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " WHERE id = %d",
+                "SELECT * FROM " . TABLE_WP_QUICKTASKER_USER_SESSIONS . " WHERE id = %d",
                 $sessionId
             )
         );
@@ -71,8 +71,8 @@ class SessionRepository{
         global $wpdb;
 
         return $wpdb->get_results(
-            "SELECT a.id, a.user_id, a.created_at_utc, a.expires_at_utc, a.is_active, b.name AS user_name, b.description AS user_description FROM " . TABLE_WP_QUICK_TASKS_USER_SESSIONS . " AS a
-            INNER JOIN " . TABLE_WP_QUICK_TASKS_USERS . " AS b 
+            "SELECT a.id, a.user_id, a.created_at_utc, a.expires_at_utc, a.is_active, b.name AS user_name, b.description AS user_description FROM " . TABLE_WP_QUICKTASKER_USER_SESSIONS . " AS a
+            INNER JOIN " . TABLE_WP_QUICKTASKER_USERS . " AS b 
             ON a.user_id = b.id"
         );
     }

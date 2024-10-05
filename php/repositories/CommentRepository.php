@@ -19,7 +19,7 @@ class CommentRepository {
      * Retrieves a comment by its ID.
      *
      * This function uses the global $wpdb object to query the database for a comment
-     * with the specified ID from the TABLE_WP_QUICK_TASKS_COMMENTS table.
+     * with the specified ID from the TABLE_WP_QUICKTASKER_COMMENTS table.
      *
      * @param int $commentId The ID of the comment to retrieve.
      * @return object|null The comment object if found, null otherwise.
@@ -29,7 +29,7 @@ class CommentRepository {
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_COMMENTS . " WHERE id = %d",
+                "SELECT * FROM " . TABLE_WP_QUICKTASKER_COMMENTS . " WHERE id = %d",
                 $commentId
             )
         );
@@ -47,8 +47,8 @@ class CommentRepository {
     public function getComments($typeId, $type, $isPrivate) {
         global $wpdb;
     
-        $comments_table = TABLE_WP_QUICK_TASKS_COMMENTS;
-        $users_table = TABLE_WP_QUICK_TASKS_USERS;
+        $comments_table = TABLE_WP_QUICKTASKER_COMMENTS;
+        $users_table = TABLE_WP_QUICKTASKER_USERS;
         $wp_users_table = $wpdb->users;
     
         $query = "
@@ -74,9 +74,9 @@ class CommentRepository {
 
         $query = "
             SELECT comments.*, tasks.name AS subject_name, tasks.task_hash AS subject_hash
-            FROM " . TABLE_WP_QUICK_TASKS_COMMENTS . " AS comments
-            JOIN " . TABLE_WP_QUICK_TASKS_TASKS . " AS tasks ON comments.type_id = tasks.id
-            JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS task_users ON tasks.id = task_users.task_id
+            FROM " . TABLE_WP_QUICKTASKER_COMMENTS . " AS comments
+            JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS tasks ON comments.type_id = tasks.id
+            JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS task_users ON tasks.id = task_users.task_id
             WHERE task_users.user_id = %d
             AND tasks.is_archived = 0
             AND comments.type = 'task'

@@ -24,7 +24,7 @@ class TaskRepository {
         global $wpdb;
     
         return $wpdb->get_results(
-            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_TASKS
+            "SELECT * FROM " . TABLE_WP_QUICKTASKER_TASKS
         );
     }
 
@@ -37,7 +37,7 @@ class TaskRepository {
         global $wpdb;
     
         return $wpdb->get_results(
-            "SELECT * FROM " . TABLE_WP_QUICK_TASKS_TASKS . " WHERE is_archived = 1"
+            "SELECT * FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE is_archived = 1"
         );
     }
 
@@ -52,8 +52,8 @@ class TaskRepository {
         global $wpdb;
 
         $task = $wpdb->get_row( $wpdb->prepare(
-            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
-            LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS_LOCATION ." AS b
+            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b
             ON a.id = b.task_id
             WHERE a.id = %d",
             $id
@@ -81,8 +81,8 @@ class TaskRepository {
         global $wpdb;
 
         $task = $wpdb->get_row( $wpdb->prepare(
-            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
-            LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS_LOCATION ." AS b
+            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b
             ON a.id = b.task_id
             WHERE a.task_hash = %s",
             $hash
@@ -106,8 +106,8 @@ class TaskRepository {
         global $wpdb;
 
         return $wpdb->get_results( $wpdb->prepare(
-            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
-            LEFT JOIN ". TABLE_WP_QUICK_TASKS_TASKS_LOCATION ." AS b
+            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b
             ON a.id = b.task_id
             WHERE b.stage_id = %d
             AND a.is_archived = 0
@@ -127,7 +127,7 @@ class TaskRepository {
         global $wpdb;
 
         return $wpdb->get_row( $wpdb->prepare(
-            "SELECT * FROM ". TABLE_WP_QUICK_TASKS_TASKS_LOCATION ."
+            "SELECT * FROM ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ."
             WHERE task_id = %d AND stage_id = %d",
             $taskId,
             $stageId
@@ -152,8 +152,8 @@ class TaskRepository {
         // Prepare the SQL query
         $sql = $wpdb->prepare(
             "SELECT a.*, b.stage_id 
-             FROM " . TABLE_WP_QUICK_TASKS_TASKS . " AS a
-             INNER JOIN " . TABLE_WP_QUICK_TASKS_TASKS_LOCATION . " AS b
+             FROM " . TABLE_WP_QUICKTASKER_TASKS . " AS a
+             INNER JOIN " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " AS b
              ON a.id = b.task_id
              WHERE b.stage_id IN ($placeholders)
              AND a.is_archived = 0
@@ -177,8 +177,8 @@ class TaskRepository {
         global $wpdb;
     
         $tasks = $wpdb->get_results($wpdb->prepare(
-            "SELECT b.* FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS a
-            LEFT JOIN " . TABLE_WP_QUICK_TASKS_TASKS . " AS b
+            "SELECT b.* FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS a
+            LEFT JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS b
             ON a.task_id = b.id
             WHERE a.user_id = %d
             AND b.is_archived = 0",
@@ -205,8 +205,8 @@ class TaskRepository {
         global $wpdb;
     
         return $wpdb->get_results( $wpdb->prepare(
-            "SELECT a.* FROM ". TABLE_WP_QUICK_TASKS_TASKS . " AS a
-            LEFT JOIN ". TABLE_WP_QUICK_TASKS_USER_TASK ." AS b
+            "SELECT a.* FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICKTASKER_USER_TASK ." AS b
             ON a.id = b.task_id
             WHERE b.task_id IS NULL AND a.is_archived = 0 AND a.free_for_all = 1"
         ) );

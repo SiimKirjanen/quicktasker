@@ -56,7 +56,7 @@ class PasswordService {
         $passwordHash = $this->createPasswordHash($password);
        
         $rowsUpdated = $wpdb->update(
-            TABLE_WP_QUICK_TASKS_USERS,
+            TABLE_WP_QUICKTASKER_USERS,
             array(
                 'password' => $passwordHash,
             ),

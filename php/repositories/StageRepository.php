@@ -15,8 +15,8 @@ class StageRepository {
         global $wpdb;
 
         return $wpdb->get_results( $wpdb->prepare(
-            "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . " AS a
-            INNER JOIN " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " AS b
+            "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . " AS a
+            INNER JOIN " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " AS b
             ON a.id = b.stage_id
             WHERE a.pipeline_id = %d
             ORDER BY b.stage_order",
@@ -34,8 +34,8 @@ class StageRepository {
         global $wpdb;
 
         return $wpdb->get_row( $wpdb->prepare(
-            "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICK_TASKS_PIPELINE_STAGES . " AS a
-            INNER JOIN " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " AS b
+            "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . " AS a
+            INNER JOIN " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " AS b
             ON a.id = b.stage_id
             WHERE a.id = %d",
             $stageId
@@ -53,7 +53,7 @@ class StageRepository {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT MAX(stage_order) FROM " . TABLE_WP_QUICK_TASKS_STAGES_LOCATION . " WHERE pipeline_id = %d",
+                "SELECT MAX(stage_order) FROM " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " WHERE pipeline_id = %d",
                 $pipelineId
             )
         );

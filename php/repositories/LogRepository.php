@@ -21,7 +21,7 @@ class LogRepository {
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_LOGS . " WHERE id = %d",
+                "SELECT * FROM " . TABLE_WP_QUICKTASKS_LOGS . " WHERE id = %d",
                 $logId
             )
         );
@@ -38,7 +38,7 @@ class LogRepository {
 
         return $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICK_TASKS_LOGS . " WHERE type = %s AND type_id = %d",
+                "SELECT * FROM " . TABLE_WP_QUICKTASKS_LOGS . " WHERE type = %s AND type_id = %d",
                 $type, $typeId
             )
         );

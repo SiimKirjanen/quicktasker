@@ -34,7 +34,7 @@ class CommentService {
     public function createComment($typeId, $type, $isPrivate, $text, $userId, $isAdminComment = false) {
         global $wpdb;
 
-        $result = $wpdb->insert(TABLE_WP_QUICK_TASKS_COMMENTS, array(
+        $result = $wpdb->insert(TABLE_WP_QUICKTASKER_COMMENTS, array(
             'type_id' => $typeId,
             'type' => $type,
             'is_private' => $isPrivate,

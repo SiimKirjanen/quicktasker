@@ -26,12 +26,12 @@ class UserRepository {
         return $wpdb->get_results(
             "SELECT " . self::USER_FIELDS . ", b.page_hash, 
                     (SELECT COUNT(*)
-                     FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS c
-                     JOIN " . TABLE_WP_QUICK_TASKS_TASKS . " AS d
+                     FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
+                     JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d
                      ON c.task_id = d.id
                      WHERE c.user_id = a.id AND d.is_archived = 0) AS assigned_tasks_count
-             FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
-             LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_PAGES . " AS b ON a.id = b.user_id
+             FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
+             LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b ON a.id = b.user_id
              WHERE a.deleted = 0"
         );
     }
@@ -41,8 +41,8 @@ class UserRepository {
      *
      * This function performs a query to fetch user details from the database, including:
      * - User fields defined in the constant `USER_FIELDS`
-     * - Page hash from the `TABLE_WP_QUICK_TASKS_USER_PAGES` table
-     * - Count of assigned tasks from the `TABLE_WP_QUICK_TASKS_USER_TASK` and `TABLE_WP_QUICK_TASKS_TASKS` tables
+     * - Page hash from the `TABLE_WP_QUICKTASKER_USER_PAGES` table
+     * - Count of assigned tasks from the `TABLE_WP_QUICKTASKER_USER_TASK` and `TABLE_WP_QUICKTASKER_TASKS` tables
      *
      * @param int $id The ID of the user to retrieve.
      * @return object|null The user object containing the requested information, or null if the user is not found.
@@ -54,12 +54,12 @@ class UserRepository {
             $wpdb->prepare(
                 "SELECT " . self::USER_FIELDS . ", b.page_hash, 
                         (SELECT COUNT(*)
-                         FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS c
-                         JOIN " . TABLE_WP_QUICK_TASKS_TASKS . " AS d
+                         FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
+                         JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d
                          ON c.task_id = d.id
                          WHERE c.user_id = a.id AND d.is_archived = 0) AS assigned_tasks_count
-                FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
-                LEFT JOIN " . TABLE_WP_QUICK_TASKS_USER_PAGES . " AS b
+                FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
+                LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b
                 ON a.id = b.user_id
                 WHERE a.id = %d AND a.deleted = 0",
                 $id
@@ -81,8 +81,8 @@ class UserRepository {
 
         $sql = $wpdb->prepare(
             "SELECT " . self::USER_FIELDS . ", b.task_id
-             FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
-             INNER JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS b 
+             FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
+             INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b 
              ON a.id = b.user_id
              WHERE b.task_id IN ($placeholders) AND a.deleted = 0",
             $taskIds
@@ -105,8 +105,8 @@ class UserRepository {
 
         $query = $wpdb->prepare(
             "SELECT DISTINCT " . self::USER_FIELDS . "
-             FROM " . TABLE_WP_QUICK_TASKS_USERS . " AS a
-             INNER JOIN " . TABLE_WP_QUICK_TASKS_USER_TASK . " AS b
+             FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
+             INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b
              ON a.id = b.user_id
              WHERE b.task_id = %d AND a.deleted = 0
              ORDER BY b.created_at DESC",
@@ -132,7 +132,7 @@ class UserRepository {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM " . TABLE_WP_QUICK_TASKS_USER_TASK . " WHERE user_id = %d AND task_id = %d",
+                "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " WHERE user_id = %d AND task_id = %d",
                 $userId,
                 $taskId
             )
@@ -158,7 +158,7 @@ class UserRepository {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM " . TABLE_WP_QUICK_TASKS_USERS . " WHERE id = %d AND is_active = 1",
+                "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_USERS . " WHERE id = %d AND is_active = 1",
                 $userId
             )
         );
