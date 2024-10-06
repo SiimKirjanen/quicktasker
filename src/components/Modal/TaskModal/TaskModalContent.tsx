@@ -134,6 +134,7 @@ const TaskModalContent = forwardRef(
                 <CustomFieldsInModalWrap
                   entityId={taskToEdit.id}
                   entityType={CustomFieldEntityType.Task}
+                  pipelineId={activePipeline!.id}
                 />
               </div>
             </div>

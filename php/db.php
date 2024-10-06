@@ -167,7 +167,7 @@ function wpqt_set_up_db() {
 			description text,
 			type ENUM('text', 'select', 'checkbox', 'radio', 'datetime', 'file') NOT NULL,
 			entity_type ENUM('task', 'user', 'pipeline', 'users') NOT NULL,
-			entity_id int(11) NOT NULL,
+			entity_id int(11) DEFAULT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			is_deleted tinyint(1) DEFAULT 0,

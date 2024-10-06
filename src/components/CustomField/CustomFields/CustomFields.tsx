@@ -9,11 +9,15 @@ function CustomFields() {
   } = useContext(CustomFieldsContext);
 
   if (loading) {
-    return <LoadingOval width="36" height="36" />;
+    return (
+      <div className="wpqt-flex wpqt-justify-center">
+        <LoadingOval width="36" height="36" />
+      </div>
+    );
   }
 
   return (
-    <div className="wpqt-grid wpqt-grid-cols-2 wpqt-gap-2">
+    <div className="wpqt-flex wpqt-flex-col">
       {customFields.map((customField) => (
         <CustomField key={customField.id} data={customField} />
       ))}

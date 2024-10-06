@@ -20,6 +20,7 @@ import {
   OPEN_NEW_USER_MODAL,
   OPEN_EDIT_USER_MODAL,
   CLOSE_USER_MODAL,
+  CHANGE_USER_SETTINGS_MODAL_OPEN,
 } from "../constants";
 
 const initialState: State = {
@@ -36,6 +37,7 @@ const initialState: State = {
   archiveModalTask: null,
   userModalOpen: false,
   userToEdit: null,
+  userSettingsModalOpen: false,
 };
 
 type State = {
@@ -52,6 +54,7 @@ type State = {
   archiveModalTask: ArchivedTask | null;
   userModalOpen: boolean;
   userToEdit: User | null;
+  userSettingsModalOpen: boolean;
 };
 
 type Action =
@@ -72,6 +75,7 @@ type Action =
   | { type: typeof CLOSE_ARCHIVE_TASK_MODAL }
   | { type: typeof OPEN_NEW_USER_MODAL }
   | { type: typeof OPEN_EDIT_USER_MODAL; payload: User }
+  | { type: typeof CHANGE_USER_SETTINGS_MODAL_OPEN; payload: boolean }
   | { type: typeof CLOSE_USER_MODAL };
 
 type ModalDispatch = (action: Action) => void;

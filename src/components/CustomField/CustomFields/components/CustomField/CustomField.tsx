@@ -30,7 +30,7 @@ function TextCustomField({ data }: Props) {
   const [value, setValue] = useState("");
 
   return (
-    <div className="wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center">
+    <div className="wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center">
       <CustomFieldTitle name={data.name} description={data.description} />
       <WPQTInput value={value} onChange={setValue} />
     </div>
@@ -46,7 +46,7 @@ function CheckboxCustomField({ data }: Props) {
       <input
         type="checkbox"
         checked={value}
-        className="!wpqt-block"
+        className="!wpqt-mb-3 !wpqt-block"
         onChange={(e) => setValue(e.target.checked)}
       />
     </div>

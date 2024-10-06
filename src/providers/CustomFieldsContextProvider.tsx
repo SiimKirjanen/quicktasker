@@ -42,10 +42,12 @@ const CustomFieldsContextProvider = ({
   children,
   entityId,
   entityType,
+  pipelineId = null,
 }: {
   children: React.ReactNode;
   entityId: string;
   entityType: CustomFieldEntityType;
+  pipelineId?: string | null;
 }) => {
   const [state, customFieldsDispatch] = useReducer(reducer, initialState);
 
@@ -56,7 +58,11 @@ const CustomFieldsContextProvider = ({
   const fetchCustomFields = async () => {
     try {
       customFieldsDispatch({ type: SET_CUSTOM_FIELD_LOADING, payload: true });
-      const response = await getCustomFieldsRequest(entityId, entityType);
+      const response = await getCustomFieldsRequest(
+        entityId,
+        entityType,
+        pipelineId,
+      );
       customFieldsDispatch({ type: SET_CUSTOM_FIELDS, payload: response.data });
     } catch (error) {
       console.error(error);

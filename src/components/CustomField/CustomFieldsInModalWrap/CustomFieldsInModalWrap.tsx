@@ -8,11 +8,12 @@ import { CustomFieldEntityType } from "../../../types/custom-field";
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.User]: "Add custom fields to this user only",
-  [CustomFieldEntityType.Users]: "Add custom fields to all users",
+  [CustomFieldEntityType.Users]:
+    "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings",
   [CustomFieldEntityType.Pipeline]:
     "Add custom fields to all tasks in this board",
   [CustomFieldEntityType.Task]:
-    "Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to the board settings.",
+    "Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to that board settings",
 };
 
 const titles: { [key in CustomFieldEntityType]: string } = {
@@ -25,8 +26,13 @@ const titles: { [key in CustomFieldEntityType]: string } = {
 type Props = {
   entityId: string;
   entityType: CustomFieldEntityType;
+  pipelineId?: string | null;
 };
-function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
+function CustomFieldsInModalWrap({
+  entityId,
+  entityType,
+  pipelineId = null,
+}: Props) {
   const {
     state: { is_customFields },
   } = useContext(AppContext);
@@ -41,6 +47,7 @@ function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
           <CustomFieldsContextProvider
             entityId={entityId}
             entityType={entityType}
+            pipelineId={pipelineId}
           >
             <CustomFieldCreation
               entityId={entityId}

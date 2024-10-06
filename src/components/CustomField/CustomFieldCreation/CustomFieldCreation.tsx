@@ -86,7 +86,7 @@ function CustomFieldCreation({ entityId, entityType, description }: Props) {
         </div>
       )}
 
-      <div className="wpqt-flex wpqt-gap-3">
+      <div className="wpqt-flex wpqt-justify-end wpqt-gap-3">
         <WPQTIconButton
           text={isCreationOpen ? "Cancel" : "Add new custom field"}
           onClick={() => setIsCreationOpen(!isCreationOpen)}

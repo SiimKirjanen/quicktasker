@@ -43,7 +43,7 @@ function TaskModal({ editTaskCallback }: Props) {
   };
 
   return (
-    <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal} size="xl">
+    <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal} size="lg">
       <TaskModalContent
         ref={modalContentRef}
         editTask={editTask}

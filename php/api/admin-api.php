@@ -1300,7 +1300,7 @@ function wpqt_register_api_routes() {
                     WPQTverifyApiNonce($data);
                     $customFieldRepo = new CustomFieldRepository();
 
-                    $customFields = $customFieldRepo->getCustomFields($data['entityId'], $data['entityType']);
+                    $customFields = $customFieldRepo->getRelatedCustomFields($data['entityId'], $data['entityType'], $data['pipelineId']);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $customFields))->toArray(), 200);
                 } catch (Exception $e) {
@@ -1318,6 +1318,11 @@ function wpqt_register_api_routes() {
                 ),
                 'entityId' => array(
                     'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'pipelineId' => array(
+                    'required' => false,
                     'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
@@ -1353,8 +1358,8 @@ function wpqt_register_api_routes() {
                 ),
                 'entityId' => array(
                     'required' => true,
-                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
-                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                 ),
                 'name' => array(
                     'required' => true,

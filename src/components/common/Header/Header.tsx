@@ -1,12 +1,20 @@
 type WPQTPageHeaderProps = {
   children: React.ReactNode;
   description?: string | null;
+  icon?: React.ReactNode;
 };
-function WPQTPageHeader({ children, description = null }: WPQTPageHeaderProps) {
+function WPQTPageHeader({
+  children,
+  description = null,
+  icon = null,
+}: WPQTPageHeaderProps) {
   return (
-    <div className="wpqt-mb-6">
-      <h1>{children}</h1>
-      {description && <div>{description}</div>}
+    <div className="wpqt-mb-6 wpqt-inline-grid wpqt-grid-cols-[auto_auto] wpqt-items-center wpqt-gap-2">
+      <div>
+        <h1>{children}</h1>
+        {description && <div>{description}</div>}
+      </div>
+      <div>{icon}</div>
     </div>
   );
 }

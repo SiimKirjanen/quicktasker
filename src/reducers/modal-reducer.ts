@@ -14,6 +14,7 @@ import {
   OPEN_EDIT_USER_MODAL,
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+  CHANGE_USER_SETTINGS_MODAL_OPEN,
 } from "../constants";
 import { Action, State, initialState } from "../providers/ModalContextProvider";
 import { Pipeline } from "../types/pipeline";
@@ -133,6 +134,17 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case CLOSE_USER_MODAL: {
+      return closeModal();
+    }
+    case CHANGE_USER_SETTINGS_MODAL_OPEN: {
+      const open: boolean = action.payload;
+
+      if (open) {
+        return {
+          ...state,
+          userSettingsModalOpen: true,
+        };
+      }
       return closeModal();
     }
     default:
