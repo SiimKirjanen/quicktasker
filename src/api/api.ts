@@ -442,6 +442,21 @@ function getCustomFieldsRequest(
   });
 }
 
+function addCustomFieldRequest(
+  entityId: string,
+  entityType: CustomFieldEntityType,
+  type: string,
+  name: string,
+  description: string,
+): Promise<WPQTResponse<CustomField>> {
+  return apiFetch({
+    path: `/wpqt/v1/custom-fields`,
+    method: "POST",
+    data: { entityId, entityType, type, name, description },
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getPipelineData,
   moveTaskRequest,
@@ -477,4 +492,5 @@ export {
   getLogsRequest,
   resetUserPasswordRequest,
   getCustomFieldsRequest,
+  addCustomFieldRequest,
 };

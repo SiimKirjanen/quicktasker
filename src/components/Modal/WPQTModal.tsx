@@ -14,13 +14,14 @@ type Props = {
   children: React.ReactNode;
   modalOpen: boolean;
   closeModal: () => void;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
 };
 function WPQTModal({ modalOpen, closeModal, children, size = "sm" }: Props) {
   const sizeClasses = {
     sm: "wpqt-max-w-sm",
     md: "wpqt-max-w-lg",
     lg: "wpqt-max-w-4xl",
+    xl: "wpqt-max-w-6xl",
   };
 
   return (

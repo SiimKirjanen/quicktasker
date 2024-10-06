@@ -29,7 +29,7 @@ function UserModal() {
   };
 
   return (
-    <WPQTModal modalOpen={userModalOpen} closeModal={closeModal} size="lg">
+    <WPQTModal modalOpen={userModalOpen} closeModal={closeModal} size="xl">
       <UserModalContent
         ref={modalContentRef}
         modalSaving={modalSaving}

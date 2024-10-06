@@ -35,7 +35,7 @@
     @apply wpqt-text-yellow-400 hover:wpqt-text-yellow-500;
   }
   .wpqt-icon-gray {
-    @apply wpqt-text-gray-300 hover:wpqt-text-gray-400;
+    @apply wpqt-text-gray-400;
   }
 }
 

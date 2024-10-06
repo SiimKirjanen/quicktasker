@@ -5,11 +5,13 @@ import { INIT_APP_STATE, SET_SITE_URL } from "../constants";
 type State = {
   siteURL: string;
   publicUserPageId: string;
+  is_customFields: boolean;
 };
 
 const initialState: State = {
   siteURL: "",
   publicUserPageId: "",
+  is_customFields: true,
 };
 
 type Action =

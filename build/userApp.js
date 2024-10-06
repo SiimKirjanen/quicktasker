@@ -5592,12 +5592,14 @@ function WPQTInput({
   value,
   onChange,
   isAutoFocus,
-  className
+  className,
+  disabled = false
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Input, {
     autoFocus: isAutoFocus,
     className: `wpqt-mb-3 wpqt-block wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,
     value: value,
+    disabled: disabled,
     onChange: e => onChange(e.target.value)
   });
 }
@@ -5626,7 +5628,7 @@ function WPQTSelect({
   selectedOptionValue,
   onSelectionChange,
   allSelector = true,
-  className
+  className = ""
 }) {
   const handleChange = event => {
     const selectedValue = event.target.value;
@@ -5635,7 +5637,7 @@ function WPQTSelect({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Select, {
     value: selectedOptionValue,
     onChange: handleChange,
-    className: `wpqt-p-2 ${className}`,
+    className: `!wpqt-rounded-lg !wpqt-border !wpqt-border-solid !wpqt-border-qtBorder !wpqt-px-2 !wpqt-py-1 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,
     children: [allSelector && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
       value: "",
       children: "All boards"

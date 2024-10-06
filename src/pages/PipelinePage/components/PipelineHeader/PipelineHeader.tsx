@@ -35,7 +35,7 @@ function PipelineHeader() {
         <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
           <div className="wpqt-text-lg">{activePipeline.name}</div>
           <Cog8ToothIcon
-            className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer wpqt-text-gray-400 hover:wpqt-text-qtBlueHover"
+            className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
             onClick={openEditPipelineModal}
           />
         </div>

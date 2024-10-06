@@ -11,10 +11,11 @@ import {
   WPQTModalField,
   WPQTModalFieldSet,
   WPQTModalFooter,
-  WPQTModalTitle,
 } from "../../WPQTModal";
 import { WPQTInput } from "../../../common/Input/Input";
 import { WPQTTextarea } from "../../../common/TextArea/TextArea";
+import { CustomFieldEntityType } from "../../../../types/custom-field";
+import { CustomFieldsInModalWrap } from "../../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 
 type Props = {
   editPipeline: (pipeline: Pipeline) => void;
@@ -22,7 +23,7 @@ type Props = {
   setModalSaving: (value: boolean) => void;
 };
 
-const PipelineModalContent = forwardRef(
+const EditPipelineModalContent = forwardRef(
   ({ editPipeline, modalSaving }: Props, ref) => {
     const {
       state: { pipelineToEdit },
@@ -56,25 +57,37 @@ const PipelineModalContent = forwardRef(
       clearContent,
     }));
 
+    if (!pipelineToEdit) return null;
+
     return (
       <>
-        <WPQTModalTitle>Edit board</WPQTModalTitle>
-        <WPQTModalFieldSet>
-          <WPQTModalField label="Name">
-            <WPQTInput
-              isAutoFocus={true}
-              value={pipelineName}
-              onChange={(newValue: string) => setPipelineName(newValue)}
-            />
-          </WPQTModalField>
-          <WPQTModalField label="Description">
-            <WPQTTextarea
-              rowsCount={3}
-              value={pipelineDescription}
-              onChange={(newValue: string) => setPipelineDescription(newValue)}
-            />
-          </WPQTModalField>
-        </WPQTModalFieldSet>
+        <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 md:wpqt-grid-cols-[auto_1fr]">
+          <div>
+            <WPQTModalFieldSet>
+              <WPQTModalField label="Name">
+                <WPQTInput
+                  isAutoFocus={true}
+                  value={pipelineName}
+                  onChange={(newValue: string) => setPipelineName(newValue)}
+                />
+              </WPQTModalField>
+              <WPQTModalField label="Description">
+                <WPQTTextarea
+                  rowsCount={3}
+                  value={pipelineDescription}
+                  onChange={(newValue: string) =>
+                    setPipelineDescription(newValue)
+                  }
+                />
+              </WPQTModalField>
+            </WPQTModalFieldSet>
+          </div>
+
+          <CustomFieldsInModalWrap
+            entityId={pipelineToEdit.id}
+            entityType={CustomFieldEntityType.Pipeline}
+          />
+        </div>
         <WPQTModalFooter
           onSave={savePipeline}
           saveBtnText={modalSaving ? "Saving..." : "Edit board"}
@@ -84,4 +97,4 @@ const PipelineModalContent = forwardRef(
   },
 );
 
-export { PipelineModalContent };
+export { EditPipelineModalContent };

@@ -24,6 +24,7 @@ use WPQT\Session\SessionService;
 use WPQT\Log\LogService;
 use WPQT\User\UserRepository;
 use WPQT\UserPage\UserPageService;
+use WPQT\Customfield\CustomFieldService;
 
 function validate_numeric($param, $request, $key) {
     return is_numeric($param);
@@ -1319,6 +1320,56 @@ function wpqt_register_api_routes() {
                     'required' => true,
                     'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'custom-fields',
+        array(
+            'methods' => 'POST',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $customFieldService = new CustomFieldService();
+
+                    $customField = $customFieldService->createCustomField($data['name'], $data['description'], $data['type'], $data['entityType'], $data['entityId']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $customField))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'entityType' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'entityId' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'name' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'description' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'type' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                 ),
             ),
         ),

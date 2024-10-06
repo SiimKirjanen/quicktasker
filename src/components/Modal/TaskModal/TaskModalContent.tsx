@@ -27,6 +27,8 @@ import { ArchiveBoxIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
+import { CustomFieldEntityType } from "../../../types/custom-field";
+import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 
 type Props = {
   taskModalSaving: boolean;
@@ -83,48 +85,58 @@ const TaskModalContent = forwardRef(
       <>
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
           <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
-            <WPQTModalFieldSet>
-              <WPQTModalField label="Name">
-                <WPQTInput
-                  isAutoFocus={true}
-                  value={taskName}
-                  onChange={(newValue: string) => setTaskName(newValue)}
-                />
-              </WPQTModalField>
+            <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[auto_1fr]">
+              <WPQTModalFieldSet>
+                <WPQTModalField label="Name">
+                  <WPQTInput
+                    isAutoFocus={true}
+                    value={taskName}
+                    onChange={(newValue: string) => setTaskName(newValue)}
+                  />
+                </WPQTModalField>
 
-              <WPQTModalField label="Description">
-                <WPQTTextarea
-                  rowsCount={3}
-                  value={taskDescription}
-                  onChange={(newValue: string) => setTaskDescription(newValue)}
-                />
-              </WPQTModalField>
+                <WPQTModalField label="Description">
+                  <WPQTTextarea
+                    rowsCount={3}
+                    value={taskDescription}
+                    onChange={(newValue: string) =>
+                      setTaskDescription(newValue)
+                    }
+                  />
+                </WPQTModalField>
 
-              <WPQTModalField label="Assigned users">
-                <UserAssignementDropdown
-                  task={taskToEdit}
-                  onUserAdd={(user) => {
-                    modalDispatch({
-                      type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
-                      payload: user,
-                    });
-                  }}
-                  onUserDelete={(user) => {
-                    modalDispatch({
-                      type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
-                      payload: user,
-                    });
-                  }}
-                />
-              </WPQTModalField>
+                <WPQTModalField label="Assigned users">
+                  <UserAssignementDropdown
+                    task={taskToEdit}
+                    onUserAdd={(user) => {
+                      modalDispatch({
+                        type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
+                        payload: user,
+                      });
+                    }}
+                    onUserDelete={(user) => {
+                      modalDispatch({
+                        type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+                        payload: user,
+                      });
+                    }}
+                  />
+                </WPQTModalField>
 
-              <WPQTModalField label="Free for all task">
-                <Toggle
-                  checked={freeForAllTask}
-                  handleChange={setFreeForAllTask}
+                <WPQTModalField label="Free for all task">
+                  <Toggle
+                    checked={freeForAllTask}
+                    handleChange={setFreeForAllTask}
+                  />
+                </WPQTModalField>
+              </WPQTModalFieldSet>
+              <div>
+                <CustomFieldsInModalWrap
+                  entityId={taskToEdit.id}
+                  entityType={CustomFieldEntityType.Task}
                 />
-              </WPQTModalField>
-            </WPQTModalFieldSet>
+              </div>
+            </div>
 
             <div className="md:wpqt-pr-3">
               <TaskModalTabs task={taskToEdit} />

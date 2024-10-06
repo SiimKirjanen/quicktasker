@@ -3,7 +3,6 @@ import {
   WPQTModalField,
   WPQTModalFieldSet,
   WPQTModalFooter,
-  WPQTModalTitle,
 } from "../../WPQTModal";
 import { WPQTInput } from "../../../common/Input/Input";
 import { WPQTTextarea } from "../../../common/TextArea/TextArea";
@@ -34,7 +33,6 @@ const PipelineModalContent = forwardRef(
 
     return (
       <>
-        <WPQTModalTitle>Add board</WPQTModalTitle>
         <WPQTModalFieldSet>
           <WPQTModalField label="Name">
             <WPQTInput

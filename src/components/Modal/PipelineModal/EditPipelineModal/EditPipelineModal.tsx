@@ -1,7 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { WPQTModal } from "../../WPQTModal";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
-import { PipelineModalContent } from "./EditPipelineModalContent";
+import { EditPipelineModalContent } from "./EditPipelineModalContent";
 import {
   CLOSE_PIPELINE_MODAL,
   PIPELINE_EDIT_PIPELINE,
@@ -40,7 +40,7 @@ function EditPipelineModal() {
 
   return (
     <WPQTModal modalOpen={pipelineModalOpen} closeModal={closeModal} size="lg">
-      <PipelineModalContent
+      <EditPipelineModalContent
         ref={modalContentRef}
         editPipeline={editPipeline}
         modalSaving={modalSaving}

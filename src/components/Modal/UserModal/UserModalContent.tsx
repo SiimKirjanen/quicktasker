@@ -25,6 +25,8 @@ import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { CLOSE_USER_MODAL, DELETE_USER, EDIT_USER } from "../../../constants";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
+import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
+import { CustomFieldEntityType } from "../../../types/custom-field";
 type Props = {
   editUser: (user: User) => void;
   modalSaving: boolean;
@@ -77,23 +79,34 @@ const UserModalContent = forwardRef(function UserModalContent(
     <>
       <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
         <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
-          <WPQTModalFieldSet>
-            <WPQTModalField label="Name">
-              <WPQTInput
-                isAutoFocus={true}
-                value={userName}
-                onChange={(newValue: string) => setUserName(newValue)}
-              />
-            </WPQTModalField>
+          <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 md:wpqt-grid-cols-[auto_1fr]">
+            <div>
+              <WPQTModalFieldSet>
+                <WPQTModalField label="Name">
+                  <WPQTInput
+                    isAutoFocus={true}
+                    value={userName}
+                    onChange={(newValue: string) => setUserName(newValue)}
+                  />
+                </WPQTModalField>
 
-            <WPQTModalField label="Description">
-              <WPQTTextarea
-                rowsCount={3}
-                value={userDescription}
-                onChange={(newValue: string) => setUserDescription(newValue)}
-              />
-            </WPQTModalField>
-          </WPQTModalFieldSet>
+                <WPQTModalField label="Description">
+                  <WPQTTextarea
+                    rowsCount={3}
+                    value={userDescription}
+                    onChange={(newValue: string) =>
+                      setUserDescription(newValue)
+                    }
+                  />
+                </WPQTModalField>
+              </WPQTModalFieldSet>
+            </div>
+            <CustomFieldsInModalWrap
+              entityId={userToEdit!.id}
+              entityType={CustomFieldEntityType.User}
+            />
+          </div>
+
           <div className="wpqt-mt-5">
             <UserModalTabs user={userToEdit} />
           </div>

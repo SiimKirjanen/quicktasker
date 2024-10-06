@@ -38,14 +38,16 @@ class CustomFieldRepository {
      * @param string $entityType The type of the entity to retrieve custom fields for.
      * @return array|null An array of custom fields or null if none found.
      */
-    public function getCustomFields($entityId, $entityType) {
+    public function getCustomFields($entityId, $entityType, $isDeleted = false) {
         global $wpdb;
+
+        $isDeletedCondition = $isDeleted ? 1 : 0;
 
         $query = $wpdb->prepare(
             "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at
             FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
-            WHERE entity_id = %d AND entity_type = %s",
-            $entityId, $entityType
+            WHERE entity_id = %d AND entity_type = %s AND is_deleted = %d",
+            $entityId, $entityType, $isDeletedCondition
         );
 
         return $wpdb->get_results($query);
