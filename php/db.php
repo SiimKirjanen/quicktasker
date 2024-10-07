@@ -179,7 +179,7 @@ function wpqt_set_up_db() {
 		  $sql13 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			custom_field_id int(11) NOT NULL,
-			value text,
+			value TEXT,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id)

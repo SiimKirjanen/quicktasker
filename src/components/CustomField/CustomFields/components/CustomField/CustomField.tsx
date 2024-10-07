@@ -1,6 +1,7 @@
 import { useContext, useState } from "@wordpress/element";
 import {
   CustomField,
+  CustomFieldEntityType,
   CustomFieldType,
 } from "../../../../../types/custom-field";
 import { WPQTInput } from "../../../../common/Input/Input";
@@ -46,6 +47,10 @@ function CustomFieldActions({ data }: CustomFieldActionsProps) {
   } = useContext(CustomFieldsContext);
   const { markCustomFieldAsDeleted } = useCustomFieldActions();
   const isAllowedToDelete = data.entity_type === locationOfCustomFields;
+  const entityTypeDisplay =
+    data.entity_type === CustomFieldEntityType.Pipeline
+      ? "board"
+      : data.entity_type;
 
   const onDelete = async () => {
     if (!isAllowedToDelete) {
@@ -65,7 +70,7 @@ function CustomFieldActions({ data }: CustomFieldActionsProps) {
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
         {...(!isAllowedToDelete && {
           tooltipId: `custom-field-${data.id}`,
-          tooltipText: `This custom field is inherited from ${data.entity_type} settings and is not deletable here`,
+          tooltipText: `This custom field is inherited from ${entityTypeDisplay} settings and is not deletable here`,
         })}
       />
     </div>

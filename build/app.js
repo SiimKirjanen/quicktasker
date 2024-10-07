@@ -8665,6 +8665,7 @@ function CustomFieldActions({
     markCustomFieldAsDeleted
   } = (0,_hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_6__.useCustomFieldActions)();
   const isAllowedToDelete = data.entity_type === locationOfCustomFields;
+  const entityTypeDisplay = data.entity_type === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Pipeline ? "board" : data.entity_type;
   const onDelete = () => __awaiter(this, void 0, void 0, function* () {
     if (!isAllowedToDelete) {
       return;
@@ -8686,7 +8687,7 @@ function CustomFieldActions({
       })
     }, !isAllowedToDelete && {
       tooltipId: `custom-field-${data.id}`,
-      tooltipText: `This custom field is inherited from ${data.entity_type} settings and is not deletable here`
+      tooltipText: `This custom field is inherited from ${entityTypeDisplay} settings and is not deletable here`
     }))
   });
 }
