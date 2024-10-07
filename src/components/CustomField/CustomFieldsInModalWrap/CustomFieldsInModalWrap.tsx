@@ -7,13 +7,23 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
-  [CustomFieldEntityType.User]: "Add custom fields to this user only",
+  [CustomFieldEntityType.User]: "Add custom fields to this user only.",
   [CustomFieldEntityType.Users]:
-    "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings",
+    "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.",
   [CustomFieldEntityType.Pipeline]:
-    "Add custom fields to all tasks in this board",
+    "Add custom fields to all tasks in this board.",
   [CustomFieldEntityType.Task]:
-    "Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to that board settings",
+    "Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to board settings.",
+};
+
+const existingFieldsDescriptions: { [key in CustomFieldEntityType]: string } = {
+  [CustomFieldEntityType.User]: "Add custom fields to this user only.",
+  [CustomFieldEntityType.Users]:
+    "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.",
+  [CustomFieldEntityType.Pipeline]:
+    "Add custom fields to all tasks in this board.",
+  [CustomFieldEntityType.Task]:
+    "Custom fields applied to this task, including both task-specific and board-level fields.",
 };
 
 const titles: { [key in CustomFieldEntityType]: string } = {
@@ -39,6 +49,7 @@ function CustomFieldsInModalWrap({
 
   const creationDescription = descriptions[entityType];
   const customFieldsTitle = titles[entityType];
+  const customFieldsDescription = existingFieldsDescriptions[entityType];
 
   return (
     <>
@@ -55,6 +66,9 @@ function CustomFieldsInModalWrap({
               description={creationDescription}
             />
             <h2 className="wpqt-text-center">{customFieldsTitle}</h2>
+            <div className="wpqt-mb-4 wpqt-text-center">
+              {customFieldsDescription}
+            </div>
             <CustomFields />
           </CustomFieldsContextProvider>
         </div>

@@ -1,9 +1,14 @@
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import {
   CustomField,
   CustomFieldType,
 } from "../../../../../types/custom-field";
 import { WPQTInput } from "../../../../common/Input/Input";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { WPQTIconButton } from "../../../../common/Button/Button";
+import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
+import { useCustomFieldActions } from "../../../../../hooks/actions/useCustomFieldActions";
+import { DELETE_CUSTOM_FIELD } from "../../../../../constants";
 
 type Props = {
   data: CustomField;
@@ -23,7 +28,48 @@ function CustomField({ data }: Props) {
     }
   }
 
-  return customFieldElement;
+  return (
+    <>
+      {customFieldElement}
+      <CustomFieldActions data={data} />
+    </>
+  );
+}
+
+type CustomFieldActionsProps = {
+  data: CustomField;
+};
+function CustomFieldActions({ data }: CustomFieldActionsProps) {
+  const {
+    state: { locationOfCustomFields },
+    customFieldsDispatch,
+  } = useContext(CustomFieldsContext);
+  const { markCustomFieldAsDeleted } = useCustomFieldActions();
+  const isAllowedToDelete = data.entity_type === locationOfCustomFields;
+
+  const onDelete = async () => {
+    if (!isAllowedToDelete) {
+      return;
+    }
+
+    await markCustomFieldAsDeleted(data.id, () => {
+      customFieldsDispatch({ type: DELETE_CUSTOM_FIELD, payload: data.id });
+    });
+  };
+
+  return (
+    <div className="wpqt-flex wpqt-items-center wpqt-justify-center">
+      <WPQTIconButton
+        onClick={onDelete}
+        className={`${!isAllowedToDelete ? "!wpqt-cursor-not-allowed" : ""}`}
+        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+        {...(!isAllowedToDelete && {
+          tooltipId: `custom-field-${data.id}`,
+          tooltipText: `This custom field is inherited from ${data.entity_type} settings and is not deletable here`,
+        })}
+      />
+    </div>
+  );
 }
 
 function TextCustomField({ data }: Props) {

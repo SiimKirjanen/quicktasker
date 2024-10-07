@@ -1,4 +1,5 @@
 import { Button } from "@headlessui/react";
+import { WPQTTooltip } from "../../Tooltip/WPQTTooltip";
 
 type Props = {
   onClick: () => void;
@@ -19,23 +20,39 @@ function WPQTButton({ onClick, btnText, className }: Props) {
 
 type WPQTIconButtonProps = {
   icon: React.ReactNode;
-  text: string;
+  text?: string;
   onClick: () => void;
   className?: string;
+  tooltipId?: string;
+  tooltipText?: string;
 };
 function WPQTIconButton({
   icon,
   text,
   onClick = () => {},
   className,
+  tooltipId,
+  tooltipText,
 }: WPQTIconButtonProps) {
+  const showTooltip = tooltipText && tooltipId;
+  const tooltipAttributes: React.HTMLAttributes<HTMLDivElement> = showTooltip
+    ? {
+        "data-tooltip-id": tooltipId,
+        "data-tooltip-content": tooltipText,
+        "data-tooltip-position-strategy": "fixed",
+        "data-tooltip-variant": "info",
+      }
+    : {};
+
   return (
     <div
+      {...tooltipAttributes}
       className={`wpqt-main-border wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${className}`}
       onClick={onClick}
     >
       {icon}
-      {text}
+      {text && <span className="wpqt-whitespace-nowrap">{text}</span>}
+      {showTooltip && <WPQTTooltip id={tooltipId} />}
     </div>
   );
 }

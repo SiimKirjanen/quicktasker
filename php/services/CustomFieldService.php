@@ -49,4 +49,34 @@ class CustomFieldService {
 
         return $this->customFieldRepository->getCustomFieldById($customFieldId);
     }
+
+    /**
+     * Marks a custom field as deleted in the database.
+     *
+     * This function updates the 'is_deleted' status of a custom field to 1,
+     * effectively marking it as deleted.
+     *
+     * @param int $customFieldId The ID of the custom field to be marked as deleted.
+     * @return bool Returns true if the custom field was successfully marked as deleted.
+     * @throws WPQTException If the update operation fails.
+     */
+    public function markCustomFieldAsDeleted($customFieldId) {
+        global $wpdb;
+
+        $result = $wpdb->update(
+            TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
+            array(
+                'is_deleted' => 1
+            ),
+            array(
+                'id' => $customFieldId
+            )
+        );
+
+        if( $result === false ) {
+            throw new WPQTException('Failed to mark the custom field as deleted');
+        }
+
+        return true;
+    }
 }

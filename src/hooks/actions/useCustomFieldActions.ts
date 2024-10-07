@@ -1,5 +1,8 @@
 import { toast } from "react-toastify";
-import { addCustomFieldRequest } from "../../api/api";
+import {
+  addCustomFieldRequest,
+  markCustomFieldAsDeletedRequest,
+} from "../../api/api";
 import {
   CustomField,
   CustomFieldEntityType,
@@ -29,9 +32,22 @@ function useCustomFieldActions() {
       toast.error("Failed to add a custom field");
     }
   };
+  const markCustomFieldAsDeleted = async (
+    customFieldId: string,
+    callback?: () => void,
+  ) => {
+    try {
+      await markCustomFieldAsDeletedRequest(customFieldId);
+      if (callback) callback();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to mark custom field as deleted");
+    }
+  };
 
   return {
     addCustomField,
+    markCustomFieldAsDeleted,
   };
 }
 

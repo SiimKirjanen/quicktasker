@@ -5,23 +5,29 @@ import { toast } from "react-toastify";
 import { getCustomFieldsRequest } from "../api/api";
 import {
   ADD_CUSTOM_FIELD,
+  DELETE_CUSTOM_FIELD,
   SET_CUSTOM_FIELD_LOADING,
   SET_CUSTOM_FIELDS,
+  SET_CUSTOM_FIELDS_LOCATION,
 } from "../constants";
 
 const initialState: State = {
   customFields: [],
   loading: true,
+  locationOfCustomFields: null,
 };
 
 type State = {
   customFields: CustomField[];
   loading: boolean;
+  locationOfCustomFields: CustomFieldEntityType | null;
 };
 
 type Action =
   | { type: typeof SET_CUSTOM_FIELD_LOADING; payload: boolean }
   | { type: typeof ADD_CUSTOM_FIELD; payload: CustomField }
+  | { type: typeof SET_CUSTOM_FIELDS_LOCATION; payload: CustomFieldEntityType }
+  | { type: typeof DELETE_CUSTOM_FIELD; payload: string }
   | { type: typeof SET_CUSTOM_FIELDS; payload: CustomField[] };
 
 type Dispatch = (action: Action) => void;
@@ -54,6 +60,13 @@ const CustomFieldsContextProvider = ({
   useEffect(() => {
     fetchCustomFields();
   }, []);
+
+  useEffect(() => {
+    customFieldsDispatch({
+      type: SET_CUSTOM_FIELDS_LOCATION,
+      payload: entityType,
+    });
+  }, [entityType]);
 
   const fetchCustomFields = async () => {
     try {

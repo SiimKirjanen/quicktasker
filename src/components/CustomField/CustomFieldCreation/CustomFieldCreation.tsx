@@ -55,9 +55,9 @@ function CustomFieldCreation({ entityId, entityType, description }: Props) {
     setIsCreationOpen(false);
   };
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center">
-      <h2>Create Custom Fields</h2>
-      <div className="wpqt-mb-4">{description}</div>
+    <div className="wpqt-mb-6 wpqt-flex wpqt-flex-col wpqt-items-center">
+      <h2>Custom Fields</h2>
+      <div className="wpqt-mb-4 wpqt-text-center">{description}</div>
 
       {isCreationOpen && (
         <div className="wpqt-flex wpqt-gap-4">

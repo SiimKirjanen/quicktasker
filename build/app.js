@@ -7736,6 +7736,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getUserSessionsRequest: () => (/* binding */ getUserSessionsRequest),
 /* harmony export */   getUserTasksRequest: () => (/* binding */ getUserTasksRequest),
 /* harmony export */   getUsersRequest: () => (/* binding */ getUsersRequest),
+/* harmony export */   markCustomFieldAsDeletedRequest: () => (/* binding */ markCustomFieldAsDeletedRequest),
 /* harmony export */   moveStageRequest: () => (/* binding */ moveStageRequest),
 /* harmony export */   moveTaskRequest: () => (/* binding */ moveTaskRequest),
 /* harmony export */   removeTaskFromUserRequest: () => (/* binding */ removeTaskFromUserRequest),
@@ -8122,6 +8123,13 @@ function addCustomFieldRequest(entityId, entityType, type, name, description) {
     headers: getCommonHeaders()
   });
 }
+function markCustomFieldAsDeletedRequest(customFieldId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/custom-fields/${customFieldId}`,
+    method: "DELETE",
+    headers: getCommonHeaders()
+  });
+}
 
 
 /***/ }),
@@ -8300,11 +8308,11 @@ function CustomFieldCreation({
     setIsCreationOpen(false);
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-items-center",
+    className: "wpqt-mb-6 wpqt-flex wpqt-flex-col wpqt-items-center",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
-      children: "Create Custom Fields"
+      children: "Custom Fields"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mb-4",
+      className: "wpqt-mb-4 wpqt-text-center",
       children: description
     }), isCreationOpen && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-gap-4",
@@ -8422,10 +8430,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const descriptions = {
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.User]: "Add custom fields to this user only",
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Users]: "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings",
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Pipeline]: "Add custom fields to all tasks in this board",
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Task]: "Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to that board settings"
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.User]: "Add custom fields to this user only.",
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Users]: "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.",
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Pipeline]: "Add custom fields to all tasks in this board.",
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Task]: "Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to board settings."
+};
+const existingFieldsDescriptions = {
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.User]: "Add custom fields to this user only.",
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Users]: "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.",
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Pipeline]: "Add custom fields to all tasks in this board.",
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Task]: "Custom fields applied to this task, including both task-specific and board-level fields."
 };
 const titles = {
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.User]: "User custom fields",
@@ -8445,6 +8459,7 @@ function CustomFieldsInModalWrap({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_6__.AppContext);
   const creationDescription = descriptions[entityType];
   const customFieldsTitle = titles[entityType];
+  const customFieldsDescription = existingFieldsDescriptions[entityType];
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: is_customFields ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_2__.CustomFieldsContextProvider, {
@@ -8458,6 +8473,9 @@ function CustomFieldsInModalWrap({
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
           className: "wpqt-text-center",
           children: customFieldsTitle
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-mb-4 wpqt-text-center",
+          children: customFieldsDescription
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomFields_CustomFields__WEBPACK_IMPORTED_MODULE_4__.CustomFields, {})]
       })
     }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -8490,6 +8508,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
 /* harmony import */ var _components_CustomField_CustomField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/CustomField/CustomField */ "./src/components/CustomField/CustomFields/components/CustomField/CustomField.tsx");
 /* harmony import */ var _providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/CustomFieldsContextProvider */ "./src/providers/CustomFieldsContextProvider.tsx");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EyeIcon.js");
+
+
 
 
 
@@ -8502,6 +8524,7 @@ function CustomFields() {
       customFields
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_4__.CustomFieldsContext);
+  const [isOpen, setIsOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   if (loading) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
@@ -8511,11 +8534,34 @@ function CustomFields() {
       })
     });
   }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-flex wpqt-flex-col",
-    children: customFields.map(customField => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_CustomField_CustomField__WEBPACK_IMPORTED_MODULE_3__.CustomField, {
-      data: customField
-    }, customField.id))
+  if (!isOpen) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-justify-center",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
+        text: "Show custom fields",
+        onClick: () => setIsOpen(true),
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          className: "wpqt-icon-blue wpqt-size-5"
+        })
+      })
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-grid wpqt-grid-cols-2 md:wpqt-grid-cols-[1fr_minmax(100px,_auto)]",
+      children: customFields.map(customField => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_CustomField_CustomField__WEBPACK_IMPORTED_MODULE_3__.CustomField, {
+        data: customField
+      }, customField.id))
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-justify-center",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
+        text: "Close custom fields",
+        onClick: () => setIsOpen(false),
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          className: "wpqt-icon-red wpqt-size-5"
+        })
+      })
+    })]
   });
 }
 
@@ -8539,6 +8585,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../types/custom-field */ "./src/types/custom-field.ts");
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../providers/CustomFieldsContextProvider */ "./src/providers/CustomFieldsContextProvider.tsx");
+/* harmony import */ var _hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../hooks/actions/useCustomFieldActions */ "./src/hooks/actions/useCustomFieldActions.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
 
 
 
@@ -8563,7 +8646,49 @@ function CustomField({
         break;
       }
   }
-  return customFieldElement;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    children: [customFieldElement, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CustomFieldActions, {
+      data: data
+    })]
+  });
+}
+function CustomFieldActions({
+  data
+}) {
+  const {
+    state: {
+      locationOfCustomFields
+    },
+    customFieldsDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_5__.CustomFieldsContext);
+  const {
+    markCustomFieldAsDeleted
+  } = (0,_hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_6__.useCustomFieldActions)();
+  const isAllowedToDelete = data.entity_type === locationOfCustomFields;
+  const onDelete = () => __awaiter(this, void 0, void 0, function* () {
+    if (!isAllowedToDelete) {
+      return;
+    }
+    yield markCustomFieldAsDeleted(data.id, () => {
+      customFieldsDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_7__.DELETE_CUSTOM_FIELD,
+        payload: data.id
+      });
+    });
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-flex wpqt-items-center wpqt-justify-center",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, Object.assign({
+      onClick: onDelete,
+      className: `${!isAllowedToDelete ? "!wpqt-cursor-not-allowed" : ""}`,
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        className: "wpqt-icon-red wpqt-size-4"
+      })
+    }, !isAllowedToDelete && {
+      tooltipId: `custom-field-${data.id}`,
+      tooltipText: `This custom field is inherited from ${data.entity_type} settings and is not deletable here`
+    }))
+  });
 }
 function TextCustomField({
   data
@@ -10631,7 +10756,7 @@ function TaskModal({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_6__.WPQTModal, {
     modalOpen: taskModalOpen,
     closeModal: closeModal,
-    size: "lg",
+    size: "xl",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskModalContent__WEBPACK_IMPORTED_MODULE_5__.TaskModalContent, {
       ref: modalContentRef,
       editTask: editTask,
@@ -10744,7 +10869,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[auto_1fr]",
+          className: "wpqt-mb-5 wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[auto_1fr]",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalFieldSet, {
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_3__.WPQTModalField, {
               label: "Name",
@@ -10921,7 +11046,7 @@ function UserModal() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_2__.WPQTModal, {
     modalOpen: userModalOpen,
     closeModal: closeModal,
-    size: "lg",
+    size: "xl",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserModalContent__WEBPACK_IMPORTED_MODULE_6__.UserModalContent, {
       ref: modalContentRef,
       modalSaving: modalSaving,
@@ -12363,7 +12488,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
+/* harmony import */ var _Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Tooltip/WPQTTooltip */ "./src/components/Tooltip/WPQTTooltip.tsx");
+
 
 
 function WPQTButton({
@@ -12371,7 +12498,7 @@ function WPQTButton({
   btnText,
   className
 }) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Button, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.Button, {
     className: `wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`,
     onClick: onClick,
     children: btnText
@@ -12381,13 +12508,27 @@ function WPQTIconButton({
   icon,
   text,
   onClick = () => {},
-  className
+  className,
+  tooltipId,
+  tooltipText
 }) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+  const showTooltip = tooltipText && tooltipId;
+  const tooltipAttributes = showTooltip ? {
+    "data-tooltip-id": tooltipId,
+    "data-tooltip-content": tooltipText,
+    "data-tooltip-position-strategy": "fixed",
+    "data-tooltip-variant": "info"
+  } : {};
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, tooltipAttributes, {
     className: `wpqt-main-border wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${className}`,
     onClick: onClick,
-    children: [icon, text]
-  });
+    children: [icon, text && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+      className: "wpqt-whitespace-nowrap",
+      children: text
+    }), showTooltip && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_1__.WPQTTooltip, {
+      id: tooltipId
+    })]
+  }));
 }
 
 
@@ -12722,6 +12863,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
 /* harmony export */   SET_CUSTOM_FIELDS: () => (/* binding */ SET_CUSTOM_FIELDS),
+/* harmony export */   SET_CUSTOM_FIELDS_LOCATION: () => (/* binding */ SET_CUSTOM_FIELDS_LOCATION),
 /* harmony export */   SET_CUSTOM_FIELD_LOADING: () => (/* binding */ SET_CUSTOM_FIELD_LOADING),
 /* harmony export */   SET_FULL_PAGE_LOADING: () => (/* binding */ SET_FULL_PAGE_LOADING),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
@@ -12806,6 +12948,7 @@ const ADD_CUSTOM_FIELD = "ADD_CUSTOM_FIELD";
 const EDIT_CUSTOM_FIELD = "EDIT_CUSTOM_FIELD";
 const DELETE_CUSTOM_FIELD = "DELETE_CUSTOM_FIELD";
 const SET_CUSTOM_FIELD_LOADING = "SET_CUSTOM_FIELD_LOADING";
+const SET_CUSTOM_FIELDS_LOCATION = "SET_CUSTOM_FIELDS_LOCATION";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 
@@ -12925,8 +13068,18 @@ function useCustomFieldActions() {
       react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to add a custom field");
     }
   });
+  const markCustomFieldAsDeleted = (customFieldId, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.markCustomFieldAsDeletedRequest)(customFieldId);
+      if (callback) callback();
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to mark custom field as deleted");
+    }
+  });
   return {
-    addCustomField
+    addCustomField,
+    markCustomFieldAsDeleted
   };
 }
 
@@ -15912,7 +16065,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 const initialState = {
   customFields: [],
-  loading: true
+  loading: true,
+  locationOfCustomFields: null
 };
 const CustomFieldsContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -15929,6 +16083,12 @@ const CustomFieldsContextProvider = ({
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     fetchCustomFields();
   }, []);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    customFieldsDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELDS_LOCATION,
+      payload: entityType
+    });
+  }, [entityType]);
   const fetchCustomFields = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
       customFieldsDispatch({
@@ -16794,6 +16954,21 @@ const reducer = (state, action) => {
         const customField = action.payload;
         return Object.assign(Object.assign({}, state), {
           customFields: [...state.customFields, customField]
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_FIELDS_LOCATION:
+      {
+        const locationOfCustomFields = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          locationOfCustomFields
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.DELETE_CUSTOM_FIELD:
+      {
+        const customFieldId = action.payload;
+        const customFields = state.customFields.filter(customField => customField.id !== customFieldId);
+        return Object.assign(Object.assign({}, state), {
+          customFields
         });
       }
     default:

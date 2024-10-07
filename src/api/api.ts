@@ -462,6 +462,16 @@ function addCustomFieldRequest(
   });
 }
 
+function markCustomFieldAsDeletedRequest(
+  customFieldId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/custom-fields/${customFieldId}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   getPipelineData,
   moveTaskRequest,
@@ -498,4 +508,5 @@ export {
   resetUserPasswordRequest,
   getCustomFieldsRequest,
   addCustomFieldRequest,
+  markCustomFieldAsDeletedRequest,
 };
