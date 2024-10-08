@@ -1,6 +1,7 @@
 import {
   ADD_CUSTOM_FIELD,
   DELETE_CUSTOM_FIELD,
+  SET_CUSTOM_FIELD_INITIAL_DATA,
   SET_CUSTOM_FIELD_LOADING,
   SET_CUSTOM_FIELDS,
   SET_CUSTOM_FIELDS_LOCATION,
@@ -16,6 +17,16 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         loading,
+      };
+    }
+    case SET_CUSTOM_FIELD_INITIAL_DATA: {
+      const { entityId, entityType } = action.payload;
+
+      return {
+        ...state,
+        entityId,
+        entityType,
+        locationOfCustomFields: entityType,
       };
     }
     case SET_CUSTOM_FIELDS: {

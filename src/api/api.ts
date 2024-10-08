@@ -472,6 +472,19 @@ function markCustomFieldAsDeletedRequest(
   });
 }
 
+function updateCustomFieldValueRequest(
+  customFieldId: string,
+  value: string,
+  entityId: string,
+  entityType: "user" | "task",
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/custom-fields/${customFieldId}/value`,
+    method: "PATCH",
+    data: { value, entityId: String(entityId), entityType },
+    headers: getCommonHeaders(),
+  });
+}
 export {
   getPipelineData,
   moveTaskRequest,
@@ -509,4 +522,5 @@ export {
   getCustomFieldsRequest,
   addCustomFieldRequest,
   markCustomFieldAsDeletedRequest,
+  updateCustomFieldValueRequest,
 };

@@ -46,7 +46,7 @@ class CustomFieldRepository {
     /**
      * Retrieves custom fields for a given entity.
      *
-     * @param int $entityId The ID of the entity to retrieve custom fields for.
+     * @param int|'null' $entityId The ID of the entity to retrieve custom fields for.
      * @param string $entityType The type of the entity to retrieve custom fields for.
      * @return array|null An array of custom fields or null if none found.
      */
@@ -55,11 +55,19 @@ class CustomFieldRepository {
         $columns = implode(', ', self::PUBLIC_TABLE_COLUMNS);
         $isDeletedCondition = $isDeleted ? 1 : 0;
 
-        $query = $wpdb->prepare(
-            "SELECT {$columns} FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
-            WHERE entity_id = %s AND entity_type = %s AND is_deleted = %d",
-            $entityId, $entityType, $isDeletedCondition
-        );
+        if($entityId === "null") {
+            $query = $wpdb->prepare(
+                "SELECT {$columns} FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                WHERE entity_id IS NULL AND entity_type = %s AND is_deleted = %d",
+                $entityType, $isDeletedCondition
+            );
+        } else {
+            $query = $wpdb->prepare(
+                "SELECT {$columns} FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                WHERE entity_id = %s AND entity_type = %s AND is_deleted = %d",
+                $entityId, $entityType, $isDeletedCondition
+            );
+        }
 
         return $wpdb->get_results($query);
     }
@@ -73,33 +81,49 @@ class CustomFieldRepository {
         return $this->getCustomFields($entityId, $entityType);
     }
 
+    /**
+     * Retrieves custom fields related to a specific task and pipeline.
+     *
+     * This function fetches custom fields and their values associated with a given task ID and pipeline ID.
+     * It joins the custom fields table with the custom field values table to get the relevant data.
+     *
+     * @param int $taskId The ID of the task for which to retrieve custom fields.
+     * @param int $pipelineId The ID of the pipeline for which to retrieve custom fields.
+     * @return array|null An array of custom fields and their values, or null if no results are found.
+     */
     public function getTaskRelatedCustomFields($taskId, $pipelineId) {
         global $wpdb;
-        $columns = implode(', ', self::PUBLIC_TABLE_COLUMNS);
 
         $query = $wpdb->prepare(
-            "SELECT {$columns} FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . " 
-            WHERE (entity_id = %d AND entity_type = 'task') 
-            OR (entity_id = %d AND entity_type = 'pipeline') 
-            AND is_deleted = 0", 
-            $taskId, $pipelineId
+            "SELECT custom_fields.*, custom_field_values.value 
+             FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . " custom_fields
+             LEFT JOIN " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES . " custom_field_values
+             ON custom_fields.id = custom_field_values.custom_field_id 
+             AND custom_field_values.entity_id = %d 
+             AND custom_field_values.entity_type = 'task'
+             WHERE (custom_fields.entity_id = %d AND custom_fields.entity_type = 'task' AND custom_fields.is_deleted = 0) 
+             OR (custom_fields.entity_id = %d AND custom_fields.entity_type = 'pipeline' AND custom_fields.is_deleted = 0)",
+            $taskId, $taskId, $pipelineId
         );
-        
+    
         return $wpdb->get_results($query);
     }
 
     public function getUserRelatedCustomFields($userId) {
         global $wpdb;
-        $columns = implode(', ', self::PUBLIC_TABLE_COLUMNS);
 
         $query = $wpdb->prepare(
-            "SELECT {$columns} FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . " 
-            WHERE (entity_id = %d AND entity_type = 'user') 
-            OR ( entity_type = 'users') 
-            AND is_deleted = 0", 
-            $userId
+            "SELECT custom_fields.*, custom_field_values.value 
+             FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . " custom_fields
+             LEFT JOIN " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES . " custom_field_values
+             ON custom_fields.id = custom_field_values.custom_field_id 
+             AND custom_field_values.entity_id = %d 
+             AND custom_field_values.entity_type = 'user'
+             WHERE (custom_fields.entity_id = %d AND custom_fields.entity_type = 'user' AND custom_fields.is_deleted = 0) 
+             OR (custom_fields.entity_id IS NULL AND custom_fields.entity_type = 'users' AND custom_fields.is_deleted = 0)",
+             $userId, $userId
         );
-
+    
         return $wpdb->get_results($query);
     }
 }

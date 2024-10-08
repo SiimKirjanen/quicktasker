@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import {
   addCustomFieldRequest,
   markCustomFieldAsDeletedRequest,
+  updateCustomFieldValueRequest,
 } from "../../api/api";
 import {
   CustomField,
@@ -45,9 +46,31 @@ function useCustomFieldActions() {
     }
   };
 
+  const updateCustomFieldValue = async (
+    customFieldId: string,
+    value: string,
+    entityId: string,
+    entityType: "user" | "task",
+    callback?: () => void,
+  ) => {
+    try {
+      await updateCustomFieldValueRequest(
+        customFieldId,
+        value,
+        entityId,
+        entityType,
+      );
+      if (callback) callback();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update custom field value");
+    }
+  };
+
   return {
     addCustomField,
     markCustomFieldAsDeleted,
+    updateCustomFieldValue,
   };
 }
 

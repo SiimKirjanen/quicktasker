@@ -1137,6 +1137,10 @@
   transform-origin: top;
 }
 
+.\!wpqt-cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+
 .\!wpqt-cursor-pointer {
   cursor: pointer !important;
 }
@@ -1147,10 +1151,6 @@
 
 .wpqt-cursor-pointer {
   cursor: pointer;
-}
-
-.\!wpqt-cursor-not-allowed {
-  cursor: not-allowed !important;
 }
 
 .wpqt-resize-none {

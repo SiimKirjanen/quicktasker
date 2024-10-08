@@ -6,6 +6,7 @@ import { getCustomFieldsRequest } from "../api/api";
 import {
   ADD_CUSTOM_FIELD,
   DELETE_CUSTOM_FIELD,
+  SET_CUSTOM_FIELD_INITIAL_DATA,
   SET_CUSTOM_FIELD_LOADING,
   SET_CUSTOM_FIELDS,
   SET_CUSTOM_FIELDS_LOCATION,
@@ -14,12 +15,16 @@ import {
 const initialState: State = {
   customFields: [],
   loading: true,
+  entityId: "",
+  entityType: null,
   locationOfCustomFields: null,
 };
 
 type State = {
   customFields: CustomField[];
   loading: boolean;
+  entityId: string;
+  entityType: CustomFieldEntityType | null;
   locationOfCustomFields: CustomFieldEntityType | null;
 };
 
@@ -27,6 +32,13 @@ type Action =
   | { type: typeof SET_CUSTOM_FIELD_LOADING; payload: boolean }
   | { type: typeof ADD_CUSTOM_FIELD; payload: CustomField }
   | { type: typeof SET_CUSTOM_FIELDS_LOCATION; payload: CustomFieldEntityType }
+  | {
+      type: typeof SET_CUSTOM_FIELD_INITIAL_DATA;
+      payload: {
+        entityId: string;
+        entityType: CustomFieldEntityType;
+      };
+    }
   | { type: typeof DELETE_CUSTOM_FIELD; payload: string }
   | { type: typeof SET_CUSTOM_FIELDS; payload: CustomField[] };
 
@@ -63,10 +75,10 @@ const CustomFieldsContextProvider = ({
 
   useEffect(() => {
     customFieldsDispatch({
-      type: SET_CUSTOM_FIELDS_LOCATION,
-      payload: entityType,
+      type: SET_CUSTOM_FIELD_INITIAL_DATA,
+      payload: { entityType, entityId },
     });
-  }, [entityType]);
+  }, [entityType, entityId]);
 
   const fetchCustomFields = async () => {
     try {

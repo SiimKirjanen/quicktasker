@@ -23,6 +23,7 @@ type CustomField = {
   entity_id: string;
   created_at: string;
   updated_at: string;
+  value?: string;
 };
 
 export { CustomFieldType, CustomFieldEntityType, type CustomField };

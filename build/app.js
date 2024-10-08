@@ -7742,7 +7742,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   removeTaskFromUserRequest: () => (/* binding */ removeTaskFromUserRequest),
 /* harmony export */   resetUserPasswordRequest: () => (/* binding */ resetUserPasswordRequest),
 /* harmony export */   restoreArchivedTaskRequest: () => (/* binding */ restoreArchivedTaskRequest),
-/* harmony export */   setPipelinePrimaryRequest: () => (/* binding */ setPipelinePrimaryRequest)
+/* harmony export */   setPipelinePrimaryRequest: () => (/* binding */ setPipelinePrimaryRequest),
+/* harmony export */   updateCustomFieldValueRequest: () => (/* binding */ updateCustomFieldValueRequest)
 /* harmony export */ });
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
@@ -8127,6 +8128,18 @@ function markCustomFieldAsDeletedRequest(customFieldId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/custom-fields/${customFieldId}`,
     method: "DELETE",
+    headers: getCommonHeaders()
+  });
+}
+function updateCustomFieldValueRequest(customFieldId, value, entityId, entityType) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/custom-fields/${customFieldId}/value`,
+    method: "PATCH",
+    data: {
+      value,
+      entityId: String(entityId),
+      entityType
+    },
     headers: getCommonHeaders()
   });
 }
@@ -8585,7 +8598,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../types/custom-field */ "./src/types/custom-field.ts");
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../providers/CustomFieldsContextProvider */ "./src/providers/CustomFieldsContextProvider.tsx");
 /* harmony import */ var _hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../hooks/actions/useCustomFieldActions */ "./src/hooks/actions/useCustomFieldActions.ts");
@@ -8629,47 +8643,31 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 function CustomField({
   data
 }) {
-  let customFieldElement;
-  switch (data.type) {
-    case _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldType.Text:
-      {
-        customFieldElement = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TextCustomField, {
-          data: data
-        });
-        break;
-      }
-    case _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldType.Checkbox:
-      {
-        customFieldElement = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CheckboxCustomField, {
-          data: data
-        });
-        break;
-      }
-  }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [customFieldElement, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CustomFieldActions, {
-      data: data
-    })]
-  });
-}
-function CustomFieldActions({
-  data
-}) {
+  const [value, setValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const {
     state: {
-      locationOfCustomFields
+      locationOfCustomFields,
+      entityId
     },
     customFieldsDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_5__.CustomFieldsContext);
   const {
+    updateCustomFieldValue,
     markCustomFieldAsDeleted
   } = (0,_hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_6__.useCustomFieldActions)();
-  const isAllowedToDelete = data.entity_type === locationOfCustomFields;
-  const entityTypeDisplay = data.entity_type === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Pipeline ? "board" : data.entity_type;
-  const onDelete = () => __awaiter(this, void 0, void 0, function* () {
-    if (!isAllowedToDelete) {
-      return;
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (data.value) {
+      setValue(data.value);
     }
+  }, [data.value]);
+  const handleSave = () => __awaiter(this, void 0, void 0, function* () {
+    if (locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.User || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Task) {
+      yield updateCustomFieldValue(data.id, value, entityId, locationOfCustomFields);
+    } else {
+      console.error("Invalid entity type for saving custom field value");
+    }
+  });
+  const handleDelete = () => __awaiter(this, void 0, void 0, function* () {
     yield markCustomFieldAsDeleted(data.id, () => {
       customFieldsDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_7__.DELETE_CUSTOM_FIELD,
@@ -8677,24 +8675,77 @@ function CustomFieldActions({
       });
     });
   });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-flex wpqt-items-center wpqt-justify-center",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, Object.assign({
-      onClick: onDelete,
-      className: `${!isAllowedToDelete ? "!wpqt-cursor-not-allowed" : ""}`,
+  let customFieldElement;
+  switch (data.type) {
+    case _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldType.Text:
+      {
+        customFieldElement = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TextCustomField, {
+          data: data,
+          value: value,
+          onChange: setValue
+        });
+        break;
+      }
+    case _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldType.Checkbox:
+      {
+        customFieldElement = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CheckboxCustomField, {
+          data: data,
+          value: value,
+          onChange: setValue
+        });
+        break;
+      }
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    children: [customFieldElement, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CustomFieldActions, {
+      data: data,
+      locationOfCustomFields: locationOfCustomFields,
+      onSave: handleSave,
+      onDelete: handleDelete
+    })]
+  });
+}
+function CustomFieldActions({
+  data,
+  onSave,
+  locationOfCustomFields,
+  onDelete
+}) {
+  const isAllowedToDelete = data.entity_type === locationOfCustomFields;
+  const isAllowedToSave = locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Task || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.User;
+  const entityTypeDisplay = data.entity_type === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Pipeline ? "board" : data.entity_type;
+  const handleDelete = () => __awaiter(this, void 0, void 0, function* () {
+    if (!isAllowedToDelete) {
+      return;
+    }
+    onDelete();
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2",
+    children: [isAllowedToSave && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
+      onClick: onSave,
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        className: "wpqt-icon-green wpqt-size-4"
+      }),
+      tooltipId: `custom-field-${data.id}-update`,
+      tooltipText: "Edit custom field value"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, Object.assign({
+      onClick: handleDelete,
+      className: `${!isAllowedToDelete ? "!wpqt-cursor-not-allowed" : ""}`,
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
         className: "wpqt-icon-red wpqt-size-4"
       })
     }, !isAllowedToDelete && {
-      tooltipId: `custom-field-${data.id}`,
-      tooltipText: `This custom field is inherited from ${entityTypeDisplay} settings and is not deletable here`
-    }))
+      tooltipId: `custom-field-${data.id}-delete`,
+      tooltipText: `This custom field is inherited from ${entityTypeDisplay} settings and cant be deleted here`
+    }))]
   });
 }
 function TextCustomField({
-  data
+  data,
+  value,
+  onChange
 }) {
-  const [value, setValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CustomFieldTitle, {
@@ -8702,14 +8753,15 @@ function TextCustomField({
       description: data.description
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_3__.WPQTInput, {
       value: value,
-      onChange: setValue
+      onChange: onChange
     })]
   });
 }
 function CheckboxCustomField({
-  data
+  data,
+  value,
+  onChange
 }) {
-  const [value, setValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CustomFieldTitle, {
@@ -8717,9 +8769,9 @@ function CheckboxCustomField({
       description: data.description
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
       type: "checkbox",
-      checked: value,
+      checked: value === "true",
       className: "!wpqt-mb-3 !wpqt-block",
-      onChange: e => setValue(e.target.checked)
+      onChange: e => onChange(e.target.checked ? "true" : "false")
     })]
   });
 }
@@ -12865,6 +12917,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
 /* harmony export */   SET_CUSTOM_FIELDS: () => (/* binding */ SET_CUSTOM_FIELDS),
 /* harmony export */   SET_CUSTOM_FIELDS_LOCATION: () => (/* binding */ SET_CUSTOM_FIELDS_LOCATION),
+/* harmony export */   SET_CUSTOM_FIELD_INITIAL_DATA: () => (/* binding */ SET_CUSTOM_FIELD_INITIAL_DATA),
 /* harmony export */   SET_CUSTOM_FIELD_LOADING: () => (/* binding */ SET_CUSTOM_FIELD_LOADING),
 /* harmony export */   SET_FULL_PAGE_LOADING: () => (/* binding */ SET_FULL_PAGE_LOADING),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
@@ -12950,6 +13003,7 @@ const EDIT_CUSTOM_FIELD = "EDIT_CUSTOM_FIELD";
 const DELETE_CUSTOM_FIELD = "DELETE_CUSTOM_FIELD";
 const SET_CUSTOM_FIELD_LOADING = "SET_CUSTOM_FIELD_LOADING";
 const SET_CUSTOM_FIELDS_LOCATION = "SET_CUSTOM_FIELDS_LOCATION";
+const SET_CUSTOM_FIELD_INITIAL_DATA = "SET_CUSTOM_FIELD_INITIAL_DATA";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 
@@ -13078,9 +13132,19 @@ function useCustomFieldActions() {
       react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to mark custom field as deleted");
     }
   });
+  const updateCustomFieldValue = (customFieldId, value, entityId, entityType, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.updateCustomFieldValueRequest)(customFieldId, value, entityId, entityType);
+      if (callback) callback();
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to update custom field value");
+    }
+  });
   return {
     addCustomField,
-    markCustomFieldAsDeleted
+    markCustomFieldAsDeleted,
+    updateCustomFieldValue
   };
 }
 
@@ -16067,6 +16131,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 const initialState = {
   customFields: [],
   loading: true,
+  entityId: "",
+  entityType: null,
   locationOfCustomFields: null
 };
 const CustomFieldsContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
@@ -16086,10 +16152,13 @@ const CustomFieldsContextProvider = ({
   }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     customFieldsDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELDS_LOCATION,
-      payload: entityType
+      type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELD_INITIAL_DATA,
+      payload: {
+        entityType,
+        entityId
+      }
     });
-  }, [entityType]);
+  }, [entityType, entityId]);
   const fetchCustomFields = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
       customFieldsDispatch({
@@ -16941,6 +17010,18 @@ const reducer = (state, action) => {
         const loading = action.payload;
         return Object.assign(Object.assign({}, state), {
           loading
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_FIELD_INITIAL_DATA:
+      {
+        const {
+          entityId,
+          entityType
+        } = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          entityId,
+          entityType,
+          locationOfCustomFields: entityType
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_FIELDS:
