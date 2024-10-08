@@ -6,7 +6,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+use WPQT\Task\TaskRepository;
+
 class CustomFieldRepository {
+
+    protected $taskRepository;
+
+    public function __construct() {
+        $this->taskRepository = new TaskRepository();
+    }
 
     const PUBLIC_TABLE_COLUMNS = [
         'id',
@@ -72,9 +80,9 @@ class CustomFieldRepository {
         return $wpdb->get_results($query);
     }
 
-    public function getRelatedCustomFields($entityId, $entityType, $pipelineId) {
+    public function getRelatedCustomFields($entityId, $entityType) {
         if($entityType === 'task') {
-            return $this->getTaskRelatedCustomFields($entityId, $pipelineId);
+            return $this->getTaskRelatedCustomFields($entityId);
         }else if($entityType === 'user') {
             return $this->getUserRelatedCustomFields($entityId);
         }
@@ -82,17 +90,18 @@ class CustomFieldRepository {
     }
 
     /**
-     * Retrieves custom fields related to a specific task and pipeline.
+     * Retrieves custom fields related to a specific task and its pipeline.
      *
      * This function fetches custom fields and their values associated with a given task ID and pipeline ID.
      * It joins the custom fields table with the custom field values table to get the relevant data.
      *
      * @param int $taskId The ID of the task for which to retrieve custom fields.
-     * @param int $pipelineId The ID of the pipeline for which to retrieve custom fields.
      * @return array|null An array of custom fields and their values, or null if no results are found.
      */
-    public function getTaskRelatedCustomFields($taskId, $pipelineId) {
+    public function getTaskRelatedCustomFields($taskId) {
         global $wpdb;
+
+        $task = $this->taskRepository->getTaskById($taskId);
 
         $query = $wpdb->prepare(
             "SELECT custom_fields.*, custom_field_values.value 
@@ -103,7 +112,7 @@ class CustomFieldRepository {
              AND custom_field_values.entity_type = 'task'
              WHERE (custom_fields.entity_id = %d AND custom_fields.entity_type = 'task' AND custom_fields.is_deleted = 0) 
              OR (custom_fields.entity_id = %d AND custom_fields.entity_type = 'pipeline' AND custom_fields.is_deleted = 0)",
-            $taskId, $taskId, $pipelineId
+            $taskId, $taskId, $task->pipeline_id
         );
     
         return $wpdb->get_results($query);

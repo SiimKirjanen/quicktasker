@@ -8096,14 +8096,11 @@ function deleteUserSessionRequest(sessionId) {
   Custom Field requests
   ==================================================================================================================================================================================================================
 */
-function getCustomFieldsRequest(entityId, entityType, pipelineId) {
+function getCustomFieldsRequest(entityId, entityType) {
   const queryParams = new URLSearchParams({
     entityId,
     entityType
   });
-  if (pipelineId !== null) {
-    queryParams.append("pipelineId", pipelineId);
-  }
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/custom-fields?${queryParams.toString()}`,
     method: "GET",
@@ -8468,8 +8465,7 @@ const titles = {
 };
 function CustomFieldsInModalWrap({
   entityId,
-  entityType,
-  pipelineId = null
+  entityType
 }) {
   const {
     state: {
@@ -8484,7 +8480,6 @@ function CustomFieldsInModalWrap({
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_2__.CustomFieldsContextProvider, {
         entityId: entityId,
         entityType: entityType,
-        pipelineId: pipelineId,
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomFieldCreation_CustomFieldCreation__WEBPACK_IMPORTED_MODULE_3__.CustomFieldCreation, {
           description: creationDescription
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
@@ -11037,8 +11032,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
             children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_14__.CustomFieldsInModalWrap, {
               entityId: taskToEdit.id,
-              entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_13__.CustomFieldEntityType.Task,
-              pipelineId: activePipeline.id
+              entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_13__.CustomFieldEntityType.Task
             })
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -16214,8 +16208,7 @@ const CustomFieldsContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.c
 const CustomFieldsContextProvider = ({
   children,
   entityId,
-  entityType,
-  pipelineId = null
+  entityType
 }) => {
   const [state, customFieldsDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_custom_fields_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
@@ -16236,7 +16229,7 @@ const CustomFieldsContextProvider = ({
         type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELD_LOADING,
         payload: true
       });
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.getCustomFieldsRequest)(entityId, entityType, pipelineId);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.getCustomFieldsRequest)(entityId, entityType);
       customFieldsDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELDS,
         payload: response.data

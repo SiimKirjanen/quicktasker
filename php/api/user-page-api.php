@@ -22,6 +22,7 @@ use WPQT\Task\TaskService;
 use WPQT\Comment\CommentRepository;
 use WPQT\Comment\CommentService;
 use WPQT\User\UserRepository;
+use WPQT\CustomField\CustomFieldRepository;
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
@@ -267,6 +268,7 @@ function wpqt_register_user_page_api_routes() {
                     $taskRepository = new TaskRepository();
                     $permissionService = new PermissionService();
                     $stageRepository = new StageRepository();
+                    $customFieldRepository = new CustomFieldRepository();
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);
                    
                     if(!$permissionService->checkIfUserIsAllowedToViewTask($session->user_id, $task->id)) {
@@ -275,7 +277,8 @@ function wpqt_register_user_page_api_routes() {
 
                     $data = (object)[
                         'task' => $task,
-                        'stages' => $stageRepository->getStagesByPipelineId($task->pipeline_id)
+                        'stages' => $stageRepository->getStagesByPipelineId($task->pipeline_id),
+                        'customFields' => $customFieldRepository->getRelatedCustomFields($task->id, 'task')
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);
@@ -574,9 +577,11 @@ function wpqt_register_user_page_api_routes() {
                 try {
                     $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                     $userRepository = new UserRepository();
-                    $user = $userRepository->getUserById($session->user_id);
+                    $customFieldRepository = new CustomFieldRepository();
+
                     $data = (object)[
-                        'user' => $user,
+                        'user' => $userRepository->getUserById($session->user_id),
+                        'customFields' => $customFieldRepository->getRelatedCustomFields($session->user_id, 'user')
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);
@@ -595,4 +600,50 @@ function wpqt_register_user_page_api_routes() {
             ),
         ),
     ));
+
+    /* register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/custom-fields', array(
+        'methods' => 'GET',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+
+                    if($data['entityType'] === 'task') {
+                        $permissionService = new PermissionService();
+                        if(!$permissionService->checkIfUserIsAllowedToViewTask($session->user_id, $data['entityId'])) {
+                            throw new WPQTException('Not allowed to view task custom fields', true);
+                        }
+                    } else {
+                        if($session->user_id !== $data['entityId']) {
+                            throw new WPQTException('Entity ID and session user mismatch', true);
+                        }
+                    } 
+                    $customFieldRepository = new CustomFieldRepository();
+                    $customFields = $customFieldRepository->getRelatedCustomFields($data['entityId'], $data['entityType']);
+                  
+                    return new WP_REST_Response((new ApiResponse(true, array(), $customFields))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'entityId' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'entityType' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateUserPageCustomFieldEntityType'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+        ),
+    )); */
 }

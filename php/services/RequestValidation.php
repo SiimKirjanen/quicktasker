@@ -146,4 +146,14 @@ class RequestValidation {
     public static function sanitizeBooleanParam($param, $request, $key) {
         return rest_sanitize_boolean($param);
     }
+
+    /**
+     * Validates if the provided parameter is a valid custom field entity type for a user page.
+     *
+     * @param string $param The parameter to validate.
+     * @return bool Returns true if the parameter is 'task' or 'user', false otherwise.
+     */
+    public static function validateUserPageCustomFieldEntityType($param) {
+        return in_array($param, array('task', 'user'));
+    }
 }

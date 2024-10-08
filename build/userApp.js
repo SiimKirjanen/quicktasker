@@ -5707,6 +5707,38 @@ function WPQTTextarea({
 
 /***/ }),
 
+/***/ "./src/types/custom-field.ts":
+/*!***********************************!*\
+  !*** ./src/types/custom-field.ts ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CustomFieldEntityType: () => (/* binding */ CustomFieldEntityType),
+/* harmony export */   CustomFieldType: () => (/* binding */ CustomFieldType)
+/* harmony export */ });
+var CustomFieldType;
+(function (CustomFieldType) {
+  CustomFieldType["Text"] = "text";
+  CustomFieldType["Select"] = "select";
+  CustomFieldType["Checkbox"] = "checkbox";
+  CustomFieldType["Radio"] = "radio";
+  CustomFieldType["Datetime"] = "datetime";
+  CustomFieldType["File"] = "file";
+})(CustomFieldType || (CustomFieldType = {}));
+var CustomFieldEntityType;
+(function (CustomFieldEntityType) {
+  CustomFieldEntityType["User"] = "user";
+  CustomFieldEntityType["Pipeline"] = "pipeline";
+  CustomFieldEntityType["Users"] = "users";
+  CustomFieldEntityType["Task"] = "task";
+})(CustomFieldEntityType || (CustomFieldEntityType = {}));
+
+
+/***/ }),
+
 /***/ "./src/user-page-app/UserPageApp.tsx":
 /*!*******************************************!*\
   !*** ./src/user-page-app/UserPageApp.tsx ***!
@@ -5997,6 +6029,28 @@ function getUserPageUserDataRequest(pageHash) {
     headers: getCommonHeaders()
   });
 }
+/*
+  ==================================================================================================================================================================================================================
+  Custom Field requests
+  ==================================================================================================================================================================================================================
+*/
+/* function getCustomFieldsRequest(
+  pageHash: string,
+  entityId: string,
+  entityType: CustomFieldEntityType.Task | CustomFieldEntityType.User,
+): Promise<WPQTResponse<CustomField[]>> {
+  const queryParams = new URLSearchParams({
+    entityId,
+    entityType,
+  });
+
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/custom-fields?${queryParams.toString()}`,
+    headers: getCommonHeaders(),
+  });
+}
+ */
 
 
 /***/ }),
@@ -6127,6 +6181,47 @@ function CommentItem({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: comment.created_at
     })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/user-page-app/components/CustomField/CustomFieldsWrap/CustomFieldsWrap.tsx":
+/*!****************************************************************************************!*\
+  !*** ./src/user-page-app/components/CustomField/CustomFieldsWrap/CustomFieldsWrap.tsx ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CustomFieldsWrap: () => (/* binding */ CustomFieldsWrap)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
+
+
+
+function CustomFieldsWrap({
+  customFields
+}) {
+  const {
+    state: {
+      cf
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserPageAppContext);
+  if (!cf) {
+    return null;
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3",
+    children: customFields.map(cf => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: cf.name
+    }, cf.id))
   });
 }
 
@@ -6875,6 +6970,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
 /* harmony import */ var _components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/ProfileActions/ProfileActions */ "./src/user-page-app/components/Pages/ProfilePage/components/ProfileActions/ProfileActions.tsx");
 /* harmony import */ var _components_UserDetails_UserDetails__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/UserDetails/UserDetails */ "./src/user-page-app/components/Pages/ProfilePage/components/UserDetails/UserDetails.tsx");
+/* harmony import */ var _CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../CustomField/CustomFieldsWrap/CustomFieldsWrap */ "./src/user-page-app/components/CustomField/CustomFieldsWrap/CustomFieldsWrap.tsx");
+/* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../types/custom-field */ "./src/types/custom-field.ts");
+
+
 
 
 
@@ -6890,10 +6989,14 @@ function ProfilePageContent() {
   const {
     state: {
       loading,
-      user
+      user,
+      customFields
     },
     loadUserData
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserPageUserContext);
+  if (!user) {
+    return null;
+  }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_3__.PageWrap, {
     loading: loading,
     onRefresh: loadUserData,
@@ -6902,6 +7005,10 @@ function ProfilePageContent() {
         className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_UserDetails_UserDetails__WEBPACK_IMPORTED_MODULE_5__.UserDetails, {
           user: user
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_6__.CustomFieldsWrap, {
+          entityId: user.id,
+          entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.User,
+          customFields: customFields
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_4__.ProfileActions, {})]
       })
     })
@@ -7432,11 +7539,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _TaskDetails_TaskDetails__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TaskDetails/TaskDetails */ "./src/user-page-app/components/Pages/TaskPage/TaskDetails/TaskDetails.tsx");
 /* harmony import */ var _TaskControls_TaskControls__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TaskControls/TaskControls */ "./src/user-page-app/components/Pages/TaskPage/TaskControls/TaskControls.tsx");
 /* harmony import */ var _providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/UserPageTaskContextProvider */ "./src/user-page-app/providers/UserPageTaskContextProvider.tsx");
 /* harmony import */ var _TaskStageSelect_TaskStageSelect__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TaskStageSelect/TaskStageSelect */ "./src/user-page-app/components/Pages/TaskPage/TaskStageSelect/TaskStageSelect.tsx");
+/* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../types/custom-field */ "./src/types/custom-field.ts");
+/* harmony import */ var _CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../CustomField/CustomFieldsWrap/CustomFieldsWrap */ "./src/user-page-app/components/CustomField/CustomFieldsWrap/CustomFieldsWrap.tsx");
+
+
 
 
 
@@ -7448,7 +7559,7 @@ __webpack_require__.r(__webpack_exports__);
 function TaskPage() {
   const {
     taskHash
-  } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useParams)();
+  } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.useParams)();
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserPageTaskContextProvider, {
     taskHash: taskHash,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TaskPageContent, {})
@@ -7458,10 +7569,14 @@ function TaskPageContent() {
   const {
     state: {
       loading,
-      task
+      task,
+      customFields
     },
     loadTask
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserPageTaskContext);
+  if (!task) {
+    return null;
+  }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_2__.PageWrap, {
     loading: loading,
     onRefresh: loadTask,
@@ -7472,6 +7587,10 @@ function TaskPageContent() {
           task: task
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskStageSelect_TaskStageSelect__WEBPACK_IMPORTED_MODULE_6__.TaskStageSelect, {
           task: task
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_8__.CustomFieldsWrap, {
+          entityId: task.id,
+          entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_7__.CustomFieldEntityType.Task,
+          customFields: customFields
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskControls_TaskControls__WEBPACK_IMPORTED_MODULE_4__.TaskControls, {
           task: task
         })]
@@ -8478,7 +8597,8 @@ const initialState = {
   isLoggedIn: false,
   pageHash: (0,_utils_url__WEBPACK_IMPORTED_MODULE_6__.getQueryParam)("code") || "",
   userId: "",
-  userName: ""
+  userName: "",
+  cf: true
 };
 const UserPageAppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -8722,6 +8842,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 const initialState = {
   task: null,
   taskStages: [],
+  customFields: [],
   loading: true
 };
 const UserPageTaskContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
@@ -8757,7 +8878,8 @@ const UserPageTaskContextProvider = ({
           type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_USER_PAGE_TASK_DATA,
           payload: {
             task: response.data.task,
-            stages: response.data.stages
+            stages: response.data.stages,
+            customFields: response.data.customFields
           }
         });
       } catch (error) {
@@ -8840,6 +8962,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 const initialState = {
   user: null,
+  customFields: [],
   loading: true
 };
 const UserPageUserContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
@@ -9140,10 +9263,12 @@ const reducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_1__.SET_USER_PAGE_USER_DATA:
       {
         const {
-          user
+          user,
+          customFields
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
-          user: (0,_utils_user__WEBPACK_IMPORTED_MODULE_0__.convertUserFromServer)(user)
+          user: (0,_utils_user__WEBPACK_IMPORTED_MODULE_0__.convertUserFromServer)(user),
+          customFields
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_1__.SET_USER_PAGE_USER_LOADING:

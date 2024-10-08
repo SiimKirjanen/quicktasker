@@ -199,6 +199,28 @@ function getUserPageUserDataRequest(
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Custom Field requests
+  ==================================================================================================================================================================================================================
+*/
+/* function getCustomFieldsRequest(
+  pageHash: string,
+  entityId: string,
+  entityType: CustomFieldEntityType.Task | CustomFieldEntityType.User,
+): Promise<WPQTResponse<CustomField[]>> {
+  const queryParams = new URLSearchParams({
+    entityId,
+    entityType,
+  });
+
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-pages/${pageHash}/custom-fields?${queryParams.toString()}`,
+    headers: getCommonHeaders(),
+  });
+}
+ */
 export {
   getUserPageStatusRequest,
   setUpUserPageRequest,

@@ -8,6 +8,8 @@ import {
   UserPageTaskContextProvider,
 } from "../../../providers/UserPageTaskContextProvider";
 import { TaskStageSelect } from "./TaskStageSelect/TaskStageSelect";
+import { CustomFieldEntityType } from "../../../../types/custom-field";
+import { CustomFieldsWrap } from "../../CustomField/CustomFieldsWrap/CustomFieldsWrap";
 
 function TaskPage() {
   const { taskHash } = useParams<{ taskHash: string }>();
@@ -21,15 +23,24 @@ function TaskPage() {
 
 function TaskPageContent() {
   const {
-    state: { loading, task },
+    state: { loading, task, customFields },
     loadTask,
   } = useContext(UserPageTaskContext);
+
+  if (!task) {
+    return null;
+  }
   return (
     <PageWrap loading={loading} onRefresh={loadTask}>
       <PageContentWrap>
         <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
           <TaskDetails task={task} />
           <TaskStageSelect task={task} />
+          <CustomFieldsWrap
+            entityId={task.id}
+            entityType={CustomFieldEntityType.Task}
+            customFields={customFields}
+          />
           <TaskControls task={task} />
         </div>
       </PageContentWrap>

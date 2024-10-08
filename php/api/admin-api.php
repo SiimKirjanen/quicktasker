@@ -1300,7 +1300,7 @@ function wpqt_register_api_routes() {
                     WPQTverifyApiNonce($data);
                     $customFieldRepo = new CustomFieldRepository();
 
-                    $customFields = $customFieldRepo->getRelatedCustomFields($data['entityId'], $data['entityType'], $data['pipelineId']);
+                    $customFields = $customFieldRepo->getRelatedCustomFields($data['entityId'], $data['entityType']);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $customFields))->toArray(), 200);
                 } catch (Exception $e) {

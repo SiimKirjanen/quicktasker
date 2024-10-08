@@ -16,16 +16,19 @@ import {
   UPDATE_USER_PAGE_TASK_DATA,
 } from "../constants";
 import { UserPageTaskResponse } from "../types/user-page-task-response";
+import { CustomField } from "../../types/custom-field";
 
 const initialState: State = {
   task: null,
   taskStages: [],
+  customFields: [],
   loading: true,
 };
 
 type State = {
   task: Task | null;
   taskStages: Stage[];
+  customFields: CustomField[];
   loading: boolean;
 };
 
@@ -78,6 +81,7 @@ const UserPageTaskContextProvider = ({
           payload: {
             task: response.data.task,
             stages: response.data.stages,
+            customFields: response.data.customFields,
           },
         });
       } catch (error) {

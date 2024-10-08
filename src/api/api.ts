@@ -429,16 +429,11 @@ function deleteUserSessionRequest(sessionId: string): Promise<WPQTResponse> {
 function getCustomFieldsRequest(
   entityId: string,
   entityType: CustomFieldEntityType,
-  pipelineId: string | null,
 ): Promise<WPQTResponse<CustomField[]>> {
   const queryParams = new URLSearchParams({
     entityId,
     entityType,
   });
-
-  if (pipelineId !== null) {
-    queryParams.append("pipelineId", pipelineId);
-  }
 
   return apiFetch({
     path: `/wpqt/v1/custom-fields?${queryParams.toString()}`,

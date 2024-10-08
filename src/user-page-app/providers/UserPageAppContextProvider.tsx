@@ -14,6 +14,7 @@ const initialState: State = {
   pageHash: getQueryParam("code") || "",
   userId: "",
   userName: "",
+  cf: true,
 };
 
 type State = {
@@ -24,6 +25,7 @@ type State = {
   pageHash: string;
   userId: string;
   userName: string;
+  cf: boolean;
 };
 
 type Action =

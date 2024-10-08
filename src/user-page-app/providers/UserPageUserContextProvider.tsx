@@ -14,14 +14,17 @@ import {
   SET_USER_PAGE_USER_LOADING,
 } from "../constants";
 import { UserPageUserResponse } from "../types/user-page-user-response";
+import { CustomField } from "../../types/custom-field";
 
 const initialState: State = {
   user: null,
+  customFields: [],
   loading: true,
 };
 
 type State = {
   user: User | null;
+  customFields: CustomField[];
   loading: boolean;
 };
 

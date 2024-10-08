@@ -38,11 +38,7 @@ type Props = {
   entityType: CustomFieldEntityType;
   pipelineId?: string | null;
 };
-function CustomFieldsInModalWrap({
-  entityId,
-  entityType,
-  pipelineId = null,
-}: Props) {
+function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
   const {
     state: { is_customFields },
   } = useContext(AppContext);
@@ -58,7 +54,6 @@ function CustomFieldsInModalWrap({
           <CustomFieldsContextProvider
             entityId={entityId}
             entityType={entityType}
-            pipelineId={pipelineId}
           >
             <CustomFieldCreation description={creationDescription} />
             <h2 className="wpqt-text-center">{customFieldsTitle}</h2>
