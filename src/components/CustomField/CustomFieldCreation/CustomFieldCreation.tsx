@@ -1,8 +1,5 @@
 import { PlusCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import {
-  CustomFieldEntityType,
-  CustomFieldType,
-} from "../../../types/custom-field";
+import { CustomFieldType } from "../../../types/custom-field";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { useContext, useState } from "@wordpress/element";
@@ -13,18 +10,19 @@ import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvi
 import { ADD_CUSTOM_FIELD } from "../../../constants";
 
 type Props = {
-  entityId: string;
-  entityType: CustomFieldEntityType;
   description: string;
 };
-function CustomFieldCreation({ entityId, entityType, description }: Props) {
+function CustomFieldCreation({ description }: Props) {
   const [customFieldName, setCustomFieldName] = useState("");
   const [customFieldDescription, setCustomFieldDescription] = useState("");
   const [isCreationOpen, setIsCreationOpen] = useState(false);
   const [selectedCustomFieldType, setSelectedCustomFieldType] =
     useState<CustomFieldType>(CustomFieldType.Text);
   const { addCustomField } = useCustomFieldActions();
-  const { customFieldsDispatch } = useContext(CustomFieldsContext);
+  const {
+    state: { entityId, entityType },
+    customFieldsDispatch,
+  } = useContext(CustomFieldsContext);
 
   const customFieldTypeOptions: Option[] = [
     { value: CustomFieldType.Text, label: "Text" },
@@ -32,6 +30,10 @@ function CustomFieldCreation({ entityId, entityType, description }: Props) {
   ];
 
   const createCustomField = async () => {
+    if (!entityId || !entityType) {
+      console.error("Entity ID or Entity Type is missing");
+      return;
+    }
     await addCustomField(
       entityId,
       entityType,

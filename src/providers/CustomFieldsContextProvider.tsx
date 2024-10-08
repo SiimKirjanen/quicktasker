@@ -9,7 +9,6 @@ import {
   SET_CUSTOM_FIELD_INITIAL_DATA,
   SET_CUSTOM_FIELD_LOADING,
   SET_CUSTOM_FIELDS,
-  SET_CUSTOM_FIELDS_LOCATION,
 } from "../constants";
 
 const initialState: State = {
@@ -17,7 +16,6 @@ const initialState: State = {
   loading: true,
   entityId: "",
   entityType: null,
-  locationOfCustomFields: null,
 };
 
 type State = {
@@ -25,13 +23,11 @@ type State = {
   loading: boolean;
   entityId: string;
   entityType: CustomFieldEntityType | null;
-  locationOfCustomFields: CustomFieldEntityType | null;
 };
 
 type Action =
   | { type: typeof SET_CUSTOM_FIELD_LOADING; payload: boolean }
   | { type: typeof ADD_CUSTOM_FIELD; payload: CustomField }
-  | { type: typeof SET_CUSTOM_FIELDS_LOCATION; payload: CustomFieldEntityType }
   | {
       type: typeof SET_CUSTOM_FIELD_INITIAL_DATA;
       payload: {

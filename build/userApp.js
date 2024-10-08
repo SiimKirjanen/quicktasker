@@ -5361,11 +5361,16 @@ function FullLoading() {
   });
 }
 function Loading({
-  className
+  className,
+  ovalSize
 }) {
+  const ovalProps = ovalSize ? {
+    width: ovalSize,
+    height: ovalSize
+  } : {};
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: `wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center ${className}`,
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LoadingOval, {})
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LoadingOval, Object.assign({}, ovalProps))
   });
 }
 

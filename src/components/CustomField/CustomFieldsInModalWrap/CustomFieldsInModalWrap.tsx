@@ -60,11 +60,7 @@ function CustomFieldsInModalWrap({
             entityType={entityType}
             pipelineId={pipelineId}
           >
-            <CustomFieldCreation
-              entityId={entityId}
-              entityType={entityType}
-              description={creationDescription}
-            />
+            <CustomFieldCreation description={creationDescription} />
             <h2 className="wpqt-text-center">{customFieldsTitle}</h2>
             <div className="wpqt-mb-4 wpqt-text-center">
               {customFieldsDescription}

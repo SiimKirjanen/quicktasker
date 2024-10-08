@@ -5,11 +5,10 @@ import {
   CustomFieldType,
 } from "../../../../../types/custom-field";
 import { WPQTInput } from "../../../../common/Input/Input";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { WPQTIconButton } from "../../../../common/Button/Button";
 import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
 import { useCustomFieldActions } from "../../../../../hooks/actions/useCustomFieldActions";
 import { DELETE_CUSTOM_FIELD } from "../../../../../constants";
+import { CustomFieldActions } from "../CustomFieldActions/CustomFieldActions";
 
 type Props = {
   data: CustomField;
@@ -18,11 +17,12 @@ type Props = {
 function CustomField({ data }: Props) {
   const [value, setValue] = useState("");
   const {
-    state: { locationOfCustomFields, entityId },
+    state: { entityType, entityId },
     customFieldsDispatch,
   } = useContext(CustomFieldsContext);
   const { updateCustomFieldValue, markCustomFieldAsDeleted } =
     useCustomFieldActions();
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     if (data.value) {
@@ -32,24 +32,23 @@ function CustomField({ data }: Props) {
 
   const handleSave = async () => {
     if (
-      locationOfCustomFields === CustomFieldEntityType.User ||
-      locationOfCustomFields === CustomFieldEntityType.Task
+      entityType === CustomFieldEntityType.User ||
+      entityType === CustomFieldEntityType.Task
     ) {
-      await updateCustomFieldValue(
-        data.id,
-        value,
-        entityId,
-        locationOfCustomFields,
-      );
+      setActionLoading(true);
+      await updateCustomFieldValue(data.id, value, entityId, entityType);
+      setActionLoading(false);
     } else {
       console.error("Invalid entity type for saving custom field value");
     }
   };
 
   const handleDelete = async () => {
+    setActionLoading(true);
     await markCustomFieldAsDeleted(data.id, () => {
       customFieldsDispatch({ type: DELETE_CUSTOM_FIELD, payload: data.id });
     });
+    setActionLoading(false);
   };
 
   let customFieldElement;
@@ -74,62 +73,12 @@ function CustomField({ data }: Props) {
       {customFieldElement}
       <CustomFieldActions
         data={data}
-        locationOfCustomFields={locationOfCustomFields}
+        locationOfCustomFields={entityType}
         onSave={handleSave}
         onDelete={handleDelete}
+        actionLoading={actionLoading}
       />
     </>
-  );
-}
-
-type CustomFieldActionsProps = {
-  data: CustomField;
-  locationOfCustomFields: CustomFieldEntityType | null;
-  onSave: () => void;
-  onDelete: () => void;
-};
-function CustomFieldActions({
-  data,
-  onSave,
-  locationOfCustomFields,
-  onDelete,
-}: CustomFieldActionsProps) {
-  const isAllowedToDelete = data.entity_type === locationOfCustomFields;
-  const isAllowedToSave =
-    locationOfCustomFields === CustomFieldEntityType.Task ||
-    locationOfCustomFields === CustomFieldEntityType.User;
-  const entityTypeDisplay =
-    data.entity_type === CustomFieldEntityType.Pipeline
-      ? "board"
-      : data.entity_type;
-
-  const handleDelete = async () => {
-    if (!isAllowedToDelete) {
-      return;
-    }
-    onDelete();
-  };
-
-  return (
-    <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2">
-      {isAllowedToSave && (
-        <WPQTIconButton
-          onClick={onSave}
-          icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
-          tooltipId={`custom-field-${data.id}-update`}
-          tooltipText="Edit custom field value"
-        />
-      )}
-      <WPQTIconButton
-        onClick={handleDelete}
-        className={`${!isAllowedToDelete ? "!wpqt-cursor-not-allowed" : ""}`}
-        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-        {...(!isAllowedToDelete && {
-          tooltipId: `custom-field-${data.id}-delete`,
-          tooltipText: `This custom field is inherited from ${entityTypeDisplay} settings and cant be deleted here`,
-        })}
-      />
-    </div>
   );
 }
 

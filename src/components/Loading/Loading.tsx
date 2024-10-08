@@ -28,12 +28,20 @@ function FullLoading() {
   );
 }
 
-function Loading({ className }: { className?: string }) {
+function Loading({
+  className,
+  ovalSize,
+}: {
+  className?: string;
+  ovalSize?: string;
+}) {
+  const ovalProps = ovalSize ? { width: ovalSize, height: ovalSize } : {};
+
   return (
     <div
       className={`wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center ${className}`}
     >
-      <LoadingOval />
+      <LoadingOval {...ovalProps} />
     </div>
   );
 }
