@@ -42,7 +42,6 @@ function SetUpPage() {
 
   return (
     <PageScreenMiddle>
-      <h2>Set Up Page</h2>
       <p>Hello {userName}. Please complete setup</p>
       <form>
         <WPQTFieldSet>

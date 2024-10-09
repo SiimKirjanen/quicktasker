@@ -70,6 +70,7 @@ function CustomField({ data }: Props) {
 
   return (
     <>
+      <div></div>
       {customFieldElement}
       <CustomFieldActions
         data={data}
@@ -89,7 +90,7 @@ type TextCustomFieldProps = {
 };
 function TextCustomField({ data, value, onChange }: TextCustomFieldProps) {
   return (
-    <div className="wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center">
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center">
       <CustomFieldTitle name={data.name} description={data.description} />
       <WPQTInput value={value} onChange={onChange} />
     </div>
@@ -107,12 +108,12 @@ function CheckboxCustomField({
   onChange,
 }: CheckboxCustomFieldProps) {
   return (
-    <div className="wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center">
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-center">
       <CustomFieldTitle name={data.name} description={data.description} />
       <input
         type="checkbox"
         checked={value === "true"}
-        className="!wpqt-mb-3 !wpqt-block"
+        className="!wpqt-block"
         onChange={(e) => onChange(e.target.checked ? "true" : "false")}
       />
     </div>
@@ -134,4 +135,4 @@ function CustomFieldTitle({ name, description = "" }: CustomFieldTitleProps) {
   );
 }
 
-export { CustomField };
+export { CustomField, CustomFieldTitle };

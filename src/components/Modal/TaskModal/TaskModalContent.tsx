@@ -138,7 +138,7 @@ const TaskModalContent = forwardRef(
               </div>
             </div>
 
-            <div className="md:wpqt-pr-3">
+            <div className="wpqt-mt-7 md:wpqt-pr-3">
               <TaskModalTabs task={taskToEdit} />
             </div>
           </div>

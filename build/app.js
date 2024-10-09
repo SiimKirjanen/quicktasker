@@ -8560,7 +8560,7 @@ function CustomFields() {
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-grid wpqt-grid-cols-2 md:wpqt-grid-cols-[1fr_minmax(100px,_auto)]",
+      className: "wpqt-my-6 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3",
       children: customFields.map(customField => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_CustomField_CustomField__WEBPACK_IMPORTED_MODULE_3__.CustomField, {
         data: customField
       }, customField.id))
@@ -8685,7 +8685,8 @@ function CustomFieldActions({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CustomField: () => (/* binding */ CustomField)
+/* harmony export */   CustomField: () => (/* binding */ CustomField),
+/* harmony export */   CustomFieldTitle: () => (/* binding */ CustomFieldTitle)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
@@ -8794,7 +8795,7 @@ function CustomField({
       }
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [customFieldElement, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomFieldActions_CustomFieldActions__WEBPACK_IMPORTED_MODULE_7__.CustomFieldActions, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {}), customFieldElement, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomFieldActions_CustomFieldActions__WEBPACK_IMPORTED_MODULE_7__.CustomFieldActions, {
       data: data,
       locationOfCustomFields: entityType,
       onSave: handleSave,
@@ -8809,7 +8810,7 @@ function TextCustomField({
   onChange
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center",
+    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CustomFieldTitle, {
       name: data.name,
       description: data.description
@@ -8825,14 +8826,14 @@ function CheckboxCustomField({
   onChange
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center",
+    className: "wpqt-flex wpqt-flex-col wpqt-items-center",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CustomFieldTitle, {
       name: data.name,
       description: data.description
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
       type: "checkbox",
       checked: value === "true",
-      className: "!wpqt-mb-3 !wpqt-block",
+      className: "!wpqt-block",
       onChange: e => onChange(e.target.checked ? "true" : "false")
     })]
   });
@@ -11036,7 +11037,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             })
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "md:wpqt-pr-3",
+          className: "wpqt-mt-7 md:wpqt-pr-3",
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_12__.TaskModalTabs, {
             task: taskToEdit
           })
@@ -11321,7 +11322,7 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forw
             entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_12__.CustomFieldEntityType.User
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "wpqt-mt-5",
+          className: "wpqt-mt-7",
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_UserModalTabs_UserModalTabs__WEBPACK_IMPORTED_MODULE_10__.UserModalTabs, {
             user: userToEdit
           })
@@ -14301,7 +14302,7 @@ function AddTask({
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Input_Input__WEBPACK_IMPORTED_MODULE_3__.WPQTInput, {
         value: taskName,
         onChange: value => setTaskName(value),
-        className: "wpqt-mb-0"
+        className: "!wpqt-mb-0"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
         className: "wpqt-icon-red wpqt-size-6 wpqt-cursor-pointer",
         onClick: clearState

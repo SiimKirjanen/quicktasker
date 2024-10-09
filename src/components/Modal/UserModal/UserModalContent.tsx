@@ -107,7 +107,7 @@ const UserModalContent = forwardRef(function UserModalContent(
             />
           </div>
 
-          <div className="wpqt-mt-5">
+          <div className="wpqt-mt-7">
             <UserModalTabs user={userToEdit} />
           </div>
         </div>

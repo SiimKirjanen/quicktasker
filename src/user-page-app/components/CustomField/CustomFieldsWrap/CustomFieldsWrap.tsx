@@ -4,6 +4,8 @@ import {
   CustomFieldEntityType,
 } from "../../../../types/custom-field";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
+import { CustomField as CustomFieldComponent } from "../CustomField/CustomField";
+import { useCustomFieldActions } from "../../../hooks/actions/useCustomFieldActions";
 
 type Props = {
   entityId: string;
@@ -11,10 +13,18 @@ type Props = {
   customFields: CustomField[];
 };
 
-function CustomFieldsWrap({ customFields }: Props) {
+function CustomFieldsWrap({ entityId, entityType, customFields }: Props) {
   const {
     state: { cf },
   } = useContext(UserPageAppContext);
+  const { updateCustomFieldValue } = useCustomFieldActions();
+
+  const saveCustomFieldValueChange = async (
+    customFieldId: string,
+    value: string,
+  ) => {
+    await updateCustomFieldValue(entityId, entityType, customFieldId, value);
+  };
 
   if (!cf) {
     return null;
@@ -23,7 +33,11 @@ function CustomFieldsWrap({ customFields }: Props) {
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
       {customFields.map((cf) => (
-        <div key={cf.id}>{cf.name}</div>
+        <CustomFieldComponent
+          key={cf.id}
+          data={cf}
+          saveCustomFieldValueChange={saveCustomFieldValueChange}
+        ></CustomFieldComponent>
       ))}
     </div>
   );

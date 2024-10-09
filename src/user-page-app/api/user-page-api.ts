@@ -7,6 +7,7 @@ import { TaskFromServer } from "../../types/task";
 import { UserPageTaskResponse } from "../types/user-page-task-response";
 import { WPQTCommentFromServer } from "../../types/comment";
 import { UserPageUserResponse } from "../types/user-page-user-response";
+import { CustomFieldEntityType } from "../../types/custom-field";
 
 function getCommonHeaders() {
   return {
@@ -204,23 +205,22 @@ function getUserPageUserDataRequest(
   Custom Field requests
   ==================================================================================================================================================================================================================
 */
-/* function getCustomFieldsRequest(
+
+function updateCustomFieldValueRequest(
   pageHash: string,
   entityId: string,
   entityType: CustomFieldEntityType.Task | CustomFieldEntityType.User,
-): Promise<WPQTResponse<CustomField[]>> {
-  const queryParams = new URLSearchParams({
-    entityId,
-    entityType,
-  });
-
+  customFieldId: string,
+  value: string,
+): Promise<WPQTResponse> {
   return apiFetch({
-    method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/custom-fields?${queryParams.toString()}`,
+    method: "PATCH",
+    path: `/wpqt/v1/user-pages/${pageHash}/custom-fields/${customFieldId}`,
+    data: { entityId, entityType, customFieldId, value },
     headers: getCommonHeaders(),
   });
 }
- */
+
 export {
   getUserPageStatusRequest,
   setUpUserPageRequest,
@@ -239,4 +239,5 @@ export {
   addUserCommentRequest,
   getUserPageCommentsRequest,
   getUserPageUserDataRequest,
+  updateCustomFieldValueRequest,
 };

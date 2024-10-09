@@ -87,7 +87,7 @@ function AddTask({ stageId }: Props) {
           <WPQTInput
             value={taskName}
             onChange={(value) => setTaskName(value)}
-            className="wpqt-mb-0"
+            className="!wpqt-mb-0"
           />
           <XCircleIcon
             className="wpqt-icon-red wpqt-size-6 wpqt-cursor-pointer"

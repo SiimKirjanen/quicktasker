@@ -33,7 +33,7 @@ function CustomFields() {
 
   return (
     <>
-      <div className="wpqt-grid wpqt-grid-cols-2 md:wpqt-grid-cols-[1fr_minmax(100px,_auto)]">
+      <div className="wpqt-my-6 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3">
         {customFields.map((customField) => (
           <CustomField key={customField.id} data={customField} />
         ))}

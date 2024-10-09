@@ -906,16 +906,13 @@
   margin-right: 0.75rem;
 }
 
+.wpqt-my-6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
 .\!wpqt-mb-0 {
   margin-bottom: 0px !important;
-}
-
-.\!wpqt-mb-3 {
-  margin-bottom: 0.75rem !important;
-}
-
-.wpqt-mb-0 {
-  margin-bottom: 0px;
 }
 
 .wpqt-mb-1 {
@@ -968,6 +965,10 @@
 
 .wpqt-mt-5 {
   margin-top: 1.25rem;
+}
+
+.wpqt-mt-7 {
+  margin-top: 1.75rem;
 }
 
 .wpqt-mt-\[20px\] {
@@ -1161,10 +1162,6 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
-.wpqt-grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .wpqt-grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -1175,6 +1172,10 @@
 
 .wpqt-grid-cols-\[0\.3fr_1fr_0\.3fr\] {
   grid-template-columns: 0.3fr 1fr 0.3fr;
+}
+
+.wpqt-grid-cols-\[100px_1fr_100px\] {
+  grid-template-columns: 100px 1fr 100px;
 }
 
 .wpqt-grid-cols-\[1fr_auto_1fr\] {
@@ -1863,10 +1864,6 @@
 @media (min-width: 768px) {
   .md\:wpqt-grid-cols-\[1fr_auto\] {
     grid-template-columns: 1fr auto;
-  }
-
-  .md\:wpqt-grid-cols-\[1fr_minmax\(100px\2c _auto\)\] {
-    grid-template-columns: 1fr minmax(100px, auto);
   }
 
   .md\:wpqt-grid-cols-\[auto_1fr\] {
