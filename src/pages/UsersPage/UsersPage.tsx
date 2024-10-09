@@ -1,4 +1,5 @@
 import { UserModal } from "../../components/Modal/UserModal/UserModal";
+import { __ } from "@wordpress/i18n";
 import { Page } from "../Page/Page";
 import { UserFilter } from "../../components/Filter/UserFilter/UserFilter";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
@@ -31,7 +32,7 @@ function UsersPage() {
   return (
     <Page>
       <WPQTPageHeader
-        description="Create and manage users"
+        description={__("Create and manage users", "quicktasker")}
         icon={
           <Cog8ToothIcon
             className="wpqt-icon-gray wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
@@ -44,7 +45,7 @@ function UsersPage() {
           />
         }
       >
-        QuickTasker users page
+        {__("QuickTasker users page", "quicktasker")}
       </WPQTPageHeader>
       <AddUser />
       <UserFilter />

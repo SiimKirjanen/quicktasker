@@ -6,6 +6,7 @@ import {
   PowerIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
+import { __ } from "@wordpress/i18n";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
@@ -68,7 +69,7 @@ function UserDropdown({ user }: Props) {
       )}
     >
       <WPQTDropdownItem
-        text="User details"
+        text={__("User details", "quicktasker")}
         icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={(e) => {
           e.stopPropagation();
@@ -77,13 +78,13 @@ function UserDropdown({ user }: Props) {
       />
 
       <WPQTDropdownItem
-        text="Edit user"
+        text={__("Edit user", "quicktasker")}
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openEditUserModal}
       />
 
       <WPQTDropdownItem
-        text="User tasks"
+        text={__("User tasks", "quicktasker")}
         icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={(e) => {
           e.stopPropagation();
@@ -93,7 +94,7 @@ function UserDropdown({ user }: Props) {
 
       {userIsActive && (
         <WPQTDropdownItem
-          text="Disable user"
+          text={__("Disable user", "quicktasker")}
           icon={<PowerIcon className="wpqt-icon-red wpqt-size-4" />}
           className="!wpqt-mb-0"
           onClick={(e: React.MouseEvent) => {
@@ -106,7 +107,7 @@ function UserDropdown({ user }: Props) {
       {!userIsActive && (
         <>
           <WPQTDropdownItem
-            text="Activate user"
+            text={__("Activate user", "quicktasker")}
             icon={<PowerIcon className="wpqt-icon-green wpqt-size-4" />}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
@@ -114,7 +115,7 @@ function UserDropdown({ user }: Props) {
             }}
           />
           <WPQTDropdownItem
-            text="Delete user"
+            text={__("Delete user", "quicktasker")}
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
             onClick={onDeleteUser}
           />

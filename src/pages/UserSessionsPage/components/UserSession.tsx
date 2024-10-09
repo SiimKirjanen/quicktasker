@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { __ } from "@wordpress/i18n";
 import { UserSession } from "../../../types/user-session";
 import { PowerIcon, TrashIcon } from "@heroicons/react/24/outline";
 import {
@@ -29,7 +30,7 @@ function UserSession({ session }: Props) {
       });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to change session status");
+      toast.error(__("Failed to change session status", "quicktasker"));
     }
   };
 
@@ -42,7 +43,7 @@ function UserSession({ session }: Props) {
       });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete session");
+      toast.error(__("Failed to delete session", "quicktasker"));
     }
   };
 
@@ -57,25 +58,25 @@ function UserSession({ session }: Props) {
       <div
         className={isActive ? "wpqt-text-qtTextGreen" : "wpqt-text-qtTextRed"}
       >
-        {isActive ? "On" : "Off"}
+        {isActive ? __("On", "quicktasker") : __("Off", "quicktasker")}
       </div>
       <div className="wpqt-flex wpqt-items-center wpqt-gap-4">
         {isActive ? (
           <PowerIcon
             className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
             onClick={() => changeSessionStatus(false)}
-            title="Turn session off"
+            title={__("Turn session off", "quicktasker")}
           />
         ) : (
           <PowerIcon
             className="wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer"
             onClick={() => changeSessionStatus(true)}
-            title="Turn session on"
+            title={__("Turn session on", "quicktasker")}
           />
         )}
         <TrashIcon
           className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
-          title="Delete session"
+          title={__("Delete session", "quicktasker")}
           onClick={deleteSession}
         />
       </div>

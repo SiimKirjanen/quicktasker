@@ -1,3 +1,4 @@
+import { __ } from "@wordpress/i18n";
 import { Page } from "../Page/Page";
 import { ArchiveContextProvider } from "../../providers/ArchiveContextProvider";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
@@ -7,8 +8,10 @@ function ArchivePage() {
   return (
     <ArchiveContextProvider>
       <Page>
-        <WPQTPageHeader description="This is a archive page">
-          Archive
+        <WPQTPageHeader
+          description={__("Archived tasks management page.", "quicktasker")}
+        >
+          {__("Archive", "quicktasker")}
         </WPQTPageHeader>
         <Archive />
       </Page>

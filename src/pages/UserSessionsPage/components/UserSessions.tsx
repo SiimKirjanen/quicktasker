@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { UserSession } from "./UserSession";
 import { useUserSessionsFilter } from "../../../hooks/filters/useUserSessionsFilter";
@@ -11,11 +12,11 @@ function UserSessions() {
   return (
     <div>
       <div className="wpqt-mb-4 wpqt-grid wpqt-grid-cols-5 wpqt-font-bold">
-        <div>Session owner</div>
-        <div>Created at</div>
-        <div>Expires at</div>
-        <div>Status</div>
-        <div>Actions</div>
+        <div>{__("Session owner", "quicktasker")}</div>
+        <div>{__("Created at", "quicktasker")}</div>
+        <div>{__("Expires at", "quicktasker")}</div>
+        <div>{__("Status", "quicktasker")}</div>
+        <div>{__("Actions", "quicktasker")}</div>
       </div>
       <div className="wpqt-grid wpqt-grid-cols-5 wpqt-items-center wpqt-gap-y-4">
         {userSessions.filter(filterSessions).map((session) => (

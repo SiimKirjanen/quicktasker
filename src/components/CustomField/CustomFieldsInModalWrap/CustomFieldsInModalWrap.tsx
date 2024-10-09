@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { CustomFieldsContextProvider } from "../../../providers/CustomFieldsContextProvider";
 import { CustomFieldCreation } from "../CustomFieldCreation/CustomFieldCreation";
 import { CustomFields } from "../CustomFields/CustomFields";
@@ -7,30 +8,48 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
-  [CustomFieldEntityType.User]: "Add custom fields to this user only.",
-  [CustomFieldEntityType.Users]:
+  [CustomFieldEntityType.User]: __(
+    "Add custom fields to this user only.",
+    "quicktasker",
+  ),
+  [CustomFieldEntityType.Users]: __(
     "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.",
-  [CustomFieldEntityType.Pipeline]:
+    "quicktasker",
+  ),
+  [CustomFieldEntityType.Pipeline]: __(
     "Add custom fields to all tasks in this board.",
-  [CustomFieldEntityType.Task]:
+    "quicktasker",
+  ),
+  [CustomFieldEntityType.Task]: __(
     "Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to board settings.",
+    "quicktasker",
+  ),
 };
 
 const existingFieldsDescriptions: { [key in CustomFieldEntityType]: string } = {
-  [CustomFieldEntityType.User]: "Add custom fields to this user only.",
-  [CustomFieldEntityType.Users]:
+  [CustomFieldEntityType.User]: __(
+    "Add custom fields to this user only.",
+    "quicktasker",
+  ),
+  [CustomFieldEntityType.Users]: __(
     "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.",
-  [CustomFieldEntityType.Pipeline]:
+    "quicktasker",
+  ),
+  [CustomFieldEntityType.Pipeline]: __(
     "Add custom fields to all tasks in this board.",
-  [CustomFieldEntityType.Task]:
+    "quicktasker",
+  ),
+  [CustomFieldEntityType.Task]: __(
     "Custom fields applied to this task, including both task-specific and board-level fields.",
+    "quicktasker",
+  ),
 };
 
 const titles: { [key in CustomFieldEntityType]: string } = {
-  [CustomFieldEntityType.User]: "User custom fields",
-  [CustomFieldEntityType.Users]: "Users custom fields",
-  [CustomFieldEntityType.Pipeline]: "Board custom feilds",
-  [CustomFieldEntityType.Task]: "Task custom fields",
+  [CustomFieldEntityType.User]: __("User custom fields", "quicktasker"),
+  [CustomFieldEntityType.Users]: __("Users custom fields", "quicktasker"),
+  [CustomFieldEntityType.Pipeline]: __("Board custom fields", "quicktasker"),
+  [CustomFieldEntityType.Task]: __("Task custom fields", "quicktasker"),
 };
 
 type Props = {
@@ -66,8 +85,8 @@ function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
       ) : (
         <div>
           <CustomFieldsAd
-            title="Board custom fields"
-            description="Add board custom fields"
+            title={__("Board custom fields", "quicktasker")}
+            description={__("Add board custom fields", "quicktasker")}
           />
         </div>
       )}

@@ -4,6 +4,7 @@ import {
   TrashIcon,
   KeyIcon,
 } from "@heroicons/react/24/outline";
+import { __ } from "@wordpress/i18n";
 import { WPQTIconButton } from "../../../../components/common/Button/Button";
 import { useUserActions } from "../../../../hooks/actions/useUserActions";
 import { ExtendedUser } from "../../../../types/user";
@@ -25,7 +26,7 @@ function UserControls({ data, changeStatus, changeSetUpStatus }: Props) {
     <div className="wpqt-mt-5 wpqt-flex wpqt-gap-2">
       <WPQTIconButton
         icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-5" />}
-        text="User tasks"
+        text={__("User tasks", "quicktasker")}
         onClick={() => {
           window.location.hash = `#/users/${data.id}/tasks`;
         }}
@@ -33,7 +34,7 @@ function UserControls({ data, changeStatus, changeSetUpStatus }: Props) {
       {!isUserActive && (
         <WPQTIconButton
           icon={<PowerIcon className="wpqt-icon-green wpqt-size-5" />}
-          text="Activate user"
+          text={__("Activate user", "quicktasker")}
           onClick={async () => {
             await changeUserStatus(data.id, true, (userData) => {
               userDispatch({
@@ -48,7 +49,7 @@ function UserControls({ data, changeStatus, changeSetUpStatus }: Props) {
       {isUserActive && (
         <WPQTIconButton
           icon={<PowerIcon className="wpqt-icon-red wpqt-size-5" />}
-          text="Disable user"
+          text={__("Disable user", "quicktasker")}
           onClick={async () => {
             await changeUserStatus(data.id, false, (userData) => {
               userDispatch({
@@ -62,7 +63,7 @@ function UserControls({ data, changeStatus, changeSetUpStatus }: Props) {
       )}
       <WPQTIconButton
         icon={<KeyIcon className="wpqt-icon-red wpqt-size-5" />}
-        text="Reset password"
+        text={__("Reset password", "quicktasker")}
         onClick={async () => {
           await resetUserPassword(data.id, () => {
             changeSetUpStatus(false);
@@ -71,7 +72,7 @@ function UserControls({ data, changeStatus, changeSetUpStatus }: Props) {
       />
       <WPQTIconButton
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-        text="Delete user"
+        text={__("Delete user", "quicktasker")}
         onClick={async () => {
           await deleteUser(data.id, (userId) => {
             userDispatch({

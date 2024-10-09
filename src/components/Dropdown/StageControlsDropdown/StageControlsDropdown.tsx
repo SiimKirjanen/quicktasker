@@ -3,6 +3,7 @@ import {
   deleteStageRequest,
   moveStageRequest,
 } from "../../../api/api";
+import { __, sprintf } from "@wordpress/i18n";
 import { useContext } from "@wordpress/element";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import {
@@ -50,7 +51,7 @@ function StageControlsDropdown({ stage }: Props) {
       dispatch({ type: PIPELINE_DELETE_STAGE, payload: stage.id });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete a stage");
+      toast.error(__("Failed to delete a stage", "quicktasker"));
     }
   };
 
@@ -69,7 +70,7 @@ function StageControlsDropdown({ stage }: Props) {
       fetchAndSetPipelineData(activePipeline!.id);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to move a stage");
+      toast.error(__("Failed to move a stage", "quicktasker"));
     }
   };
 
@@ -77,10 +78,17 @@ function StageControlsDropdown({ stage }: Props) {
     try {
       await archiveStageTasksRequest(stage.id);
       fetchAndSetPipelineData(activePipeline!.id);
-      toast.success(`Archived all ${stage.name} tasks`);
+      toast.success(
+        sprintf(__("Archived all %s tasks", "quicktasker"), stage.name),
+      );
     } catch (error) {
       console.error(error);
-      toast.error(`Failed to archive stage ${stage.name} tasks`);
+      toast.error(
+        sprintf(
+          __("Failed to archive stage %s tasks", "quicktasker"),
+          stage.name,
+        ),
+      );
     }
   };
 
@@ -92,7 +100,7 @@ function StageControlsDropdown({ stage }: Props) {
     >
       {showMoveLeft && (
         <WPQTDropdownItem
-          text="Move left"
+          text={__("Move left", "quicktasker")}
           icon={<ChevronLeftIcon className="wpqt-icon-blue wpqt-size-4" />}
           onClick={() => moveStage("left")}
         />
@@ -100,33 +108,36 @@ function StageControlsDropdown({ stage }: Props) {
 
       {showMoveRight && (
         <WPQTDropdownItem
-          text="Move right"
+          text={__("Move right", "quicktasker")}
           icon={<ChevronRightIcon className="wpqt-icon-blue wpqt-size-4" />}
           onClick={() => moveStage("right")}
         />
       )}
       <WPQTDropdownItem
-        text="Edit stage"
+        text={__("Edit stage", "quicktasker")}
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openStageEditModal}
       />
       <WPQTDropdownItem
-        text="Archive all stage tasks"
+        text={__("Archive all stage tasks", "quicktasker")}
         icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={archiveAllStageTasks}
         disabled={stageTasksLenght === 0}
         id={`item-dropdown-${stage.id}-archive`}
-        tooltipText="No tasks to archive on the stage"
+        tooltipText={__("No tasks to archive on the stage", "quicktasker")}
       />
 
       <WPQTDropdownItem
-        text="Delete stage"
+        text={__("Delete stage", "quicktasker")}
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
         onClick={deleteStage}
         disabled={stageTasksLenght > 0}
         className="!wpqt-mb-0"
         id={`item-dropdown-${stage.id}`}
-        tooltipText="Stage can be deleted when there are no tasks on it"
+        tooltipText={__(
+          "Stage can be deleted when there are no tasks on it",
+          "quicktasker",
+        )}
       />
     </WPQTDropdown>
   );

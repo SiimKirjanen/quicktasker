@@ -1,4 +1,5 @@
 import { usePageLinks } from "../../../../hooks/usePageLinks";
+import { __ } from "@wordpress/i18n";
 import { User } from "../../../../types/user";
 import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
 import { UserDropdown } from "../../../../components/Dropdown/UserDropdown/UserDropdown";
@@ -31,17 +32,21 @@ function UserListItem({ user }: Props) {
       className="wpqt-cursor-pointer"
     >
       <WPQTCardDataItem
-        label="Users page"
+        label={__("Users page", "quicktasker")}
         value={"Link"}
         valueLink={userPage + "&code=" + user.page_hash}
       />
       <WPQTCardDataItem
-        label="User created at"
+        label={__("User created at", "quicktasker")}
         value={formatDate(user.created_at)}
       />
       <WPQTCardDataItem
-        label="Status"
-        value={userIsActive ? "Active" : "Disabled"}
+        label={__("Status", "quicktasker")}
+        value={
+          userIsActive
+            ? __("Active", "quicktasker")
+            : __("Disabled", "quicktasker")
+        }
         valueClassName={
           userIsActive
             ? "wpqt-text-qtTextGreen wpqt-font-bold"

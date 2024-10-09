@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import {
   DragDropContext,
   DraggableLocation,
@@ -74,7 +75,7 @@ const Pipeline = () => {
       } catch (error) {
         console.error(error);
         dispatchMove(destination, source);
-        toast.error("Failed to move a task");
+        toast.error(__("Failed to move a task", "quicktasker"));
       }
     },
     [activePipeline],

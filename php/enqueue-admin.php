@@ -39,4 +39,7 @@ function wpqt_enqueue_app_assets(){
 		'initialUsers' => $users,
 		'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID
 	));
+
+	// Set script translations
+    wp_set_script_translations( 'wpqt-script', 'quicktasker', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/languages' );
 }

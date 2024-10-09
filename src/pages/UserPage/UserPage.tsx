@@ -1,4 +1,5 @@
 import { Page } from "../Page/Page";
+import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { useContext, useEffect, useState } from "@wordpress/element";
 import { LoadingContext } from "../../providers/LoadingContextProvider";
@@ -25,7 +26,9 @@ function UserPage({ userId }: Props) {
         setUserData(convertExtendedUserFromServer(response.data));
       } catch (error) {
         console.error(error);
-        toast.error("Failed to get user data. Please try again");
+        toast.error(
+          __("Failed to get user data. Please try again", "quicktasker"),
+        );
       } finally {
         loadingDispatch({ type: SET_FULL_PAGE_LOADING, payload: false });
       }
@@ -54,7 +57,7 @@ function UserPage({ userId }: Props) {
     <Page>
       {userData && (
         <>
-          <WPQTPageHeader description="This is a user page">
+          <WPQTPageHeader description={__("User details", "quicktasker")}>
             {userData.name}
           </WPQTPageHeader>
           <UserDetails data={userData} />

@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { PIPELINE_ADD_TASK } from "../../../constants";
 import { PlusCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { WPQTInput } from "../../../components/common/Input/Input";
@@ -52,7 +53,7 @@ function AddTask({ stageId }: Props) {
 
   const createTask = async () => {
     if (!taskName) {
-      toast.error("Task name is required");
+      toast.error(__("Task name is required", "quicktasker"));
       return;
     }
     try {
@@ -68,7 +69,7 @@ function AddTask({ stageId }: Props) {
       clearState();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to create task");
+      toast.error(__("Failed to create task", "quicktasker"));
     }
   };
 
@@ -103,7 +104,7 @@ function AddTask({ stageId }: Props) {
           onClick={() => setShowTaskInput(true)}
           className="wpqt-main-border wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-p-2 hover:wpqt-bg-white"
         >
-          Add task
+          {__("Add task", "quicktasker")}
           <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
         </div>
       )}

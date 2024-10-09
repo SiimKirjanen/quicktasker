@@ -1,4 +1,5 @@
 import { PlusCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { __ } from "@wordpress/i18n";
 import { CustomFieldType } from "../../../types/custom-field";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
@@ -58,24 +59,24 @@ function CustomFieldCreation({ description }: Props) {
   };
   return (
     <div className="wpqt-mb-6 wpqt-flex wpqt-flex-col wpqt-items-center">
-      <h2>Custom Fields</h2>
+      <h2>{__("Custom Fields", "quicktasker")}</h2>
       <div className="wpqt-mb-4 wpqt-text-center">{description}</div>
 
       {isCreationOpen && (
         <div className="wpqt-flex wpqt-gap-4">
           <div>
-            <div className="wpqt-mb-2">Name</div>
+            <div className="wpqt-mb-2">{__("Name", "quicktasker")}</div>
             <WPQTInput value={customFieldName} onChange={setCustomFieldName} />
           </div>
           <div>
-            <div className="wpqt-mb-2">Description</div>
+            <div className="wpqt-mb-2">{__("Description", "quicktasker")}</div>
             <WPQTTextarea
               value={customFieldDescription}
               onChange={setCustomFieldDescription}
             />
           </div>
           <div>
-            <div className="wpqt-mb-2">Type</div>
+            <div className="wpqt-mb-2">{__("Type", "quicktasker")}</div>
             <WPQTSelect
               selectedOptionValue={selectedCustomFieldType}
               options={customFieldTypeOptions}
@@ -90,7 +91,11 @@ function CustomFieldCreation({ description }: Props) {
 
       <div className="wpqt-flex wpqt-justify-end wpqt-gap-3">
         <WPQTIconButton
-          text={isCreationOpen ? "Cancel" : "Add new custom field"}
+          text={
+            isCreationOpen
+              ? __("Cancel", "quicktasker")
+              : __("Add new custom field", "quicktasker")
+          }
           onClick={() => setIsCreationOpen(!isCreationOpen)}
           icon={
             isCreationOpen ? (
@@ -102,7 +107,7 @@ function CustomFieldCreation({ description }: Props) {
         />
         {isCreationOpen && (
           <WPQTIconButton
-            text="Add"
+            text={__("Add", "quicktasker")}
             onClick={createCustomField}
             icon={<PlusCircleIcon className="wpqt-icon-green wpqt-size-5" />}
           />

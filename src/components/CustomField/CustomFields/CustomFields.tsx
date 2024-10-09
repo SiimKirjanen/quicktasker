@@ -1,4 +1,5 @@
 import { useContext, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { LoadingOval } from "../../Loading/Loading";
 import { CustomField } from "./components/CustomField/CustomField";
 import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
@@ -23,7 +24,7 @@ function CustomFields() {
     return (
       <div className="wpqt-flex wpqt-justify-center">
         <WPQTIconButton
-          text="Show custom fields"
+          text={__("Show custom fields", "quicktasker")}
           onClick={() => setIsOpen(true)}
           icon={<EyeIcon className="wpqt-icon-blue wpqt-size-5" />}
         />
@@ -40,7 +41,7 @@ function CustomFields() {
       </div>
       <div className="wpqt-flex wpqt-justify-center">
         <WPQTIconButton
-          text="Close custom fields"
+          text={__("Close custom fields", "quicktasker")}
           onClick={() => setIsOpen(false)}
           icon={<EyeIcon className="wpqt-icon-red wpqt-size-5" />}
         />

@@ -7,6 +7,7 @@ import {
   WPQTDropdownIcon,
   WPQTDropdownItem,
 } from "../WPQTDropdown";
+import { __ } from "@wordpress/i18n";
 
 type Props = {
   taskId: string;
@@ -23,7 +24,7 @@ function UserTaskDropdown({ taskId, onUnAssignTask }: Props) {
       )}
     >
       <WPQTDropdownItem
-        text="Unassign from task"
+        text={__("Unassign from task", "quicktasker")}
         icon={<UserMinusIcon className="wpqt-icon-red wpqt-size-4" />}
         onClick={(e) => {
           e.stopPropagation();

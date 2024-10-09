@@ -1,3 +1,4 @@
+import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { UserSessionsFilter } from "../../components/Filter/UserSessionsFilter/UserSessionsFilter";
 import { UserSessions } from "./components/UserSessions";
@@ -8,7 +9,7 @@ function UserSessionsPage() {
   return (
     <UserSessionsContextProvider>
       <Page>
-        <WPQTPageHeader>User sessions</WPQTPageHeader>
+        <WPQTPageHeader>{__("User sessions", "quicktasker")}</WPQTPageHeader>
         <UserSessionsFilter />
         <UserSessions />
       </Page>

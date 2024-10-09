@@ -5643,11 +5643,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
-/* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../types/custom-field */ "./src/types/custom-field.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../types/custom-field */ "./src/types/custom-field.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -5680,6 +5682,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function CustomFieldActions({
   data,
   onSave,
@@ -5688,8 +5691,8 @@ function CustomFieldActions({
   actionLoading
 }) {
   const isAllowedToDelete = data.entity_type === locationOfCustomFields;
-  const isAllowedToSave = locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.Task || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.User;
-  const entityTypeDisplay = data.entity_type === _types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.Pipeline ? "board" : data.entity_type;
+  const isAllowedToSave = locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Task || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.User;
+  const entityTypeDisplay = data.entity_type === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Pipeline ? "board" : data.entity_type;
   const handleDelete = () => __awaiter(this, void 0, void 0, function* () {
     if (!isAllowedToDelete) {
       return;
@@ -5697,28 +5700,28 @@ function CustomFieldActions({
     onDelete();
   });
   if (actionLoading) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.Loading, {
       ovalSize: "24"
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2",
-    children: [isAllowedToSave && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_2__.WPQTIconButton, {
+    children: [isAllowedToSave && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
       onClick: onSave,
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__["default"], {
         className: "wpqt-icon-green wpqt-size-4"
       }),
       tooltipId: `custom-field-${data.id}-update`,
-      tooltipText: "Edit custom field value"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_2__.WPQTIconButton, Object.assign({
+      tooltipText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Edit custom field value", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, Object.assign({
       onClick: handleDelete,
       className: `${!isAllowedToDelete ? "!wpqt-cursor-not-allowed" : ""}`,
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
         className: "wpqt-icon-red wpqt-size-4"
       })
     }, !isAllowedToDelete && {
       tooltipId: `custom-field-${data.id}-delete`,
-      tooltipText: `This custom field is inherited from ${entityTypeDisplay} settings and cant be deleted here`
+      tooltipText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("This custom field is inherited from %s settings and can't be deleted here", "quicktasker"), entityTypeDisplay)
     }))]
   });
 }
@@ -18284,6 +18287,17 @@ module.exports = window["wp"]["apiFetch"];
 
 "use strict";
 module.exports = window["wp"]["element"];
+
+/***/ }),
+
+/***/ "@wordpress/i18n":
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["i18n"];
 
 /***/ }),
 

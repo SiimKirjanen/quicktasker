@@ -1,4 +1,5 @@
 import { useContext, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { useUserActions } from "../../../../hooks/actions/useUserActions";
 import { UserContext } from "../../../../providers/UserContextProvider";
 import { ADD_USER } from "../../../../constants";
@@ -37,7 +38,7 @@ function AddUser() {
       {showInput ? (
         <div className="wpqt-w-1/4">
           <label className="wpqt-mb-2 wpqt-block wpqt-font-semibold">
-            User name
+            {__("User name", "quicktasker")}
           </label>
           <WPQTInput
             value={userName}
@@ -45,7 +46,7 @@ function AddUser() {
             className="wpqt-w-full"
           />
           <label className="wpqt-mb-2 wpqt-block wpqt-font-semibold">
-            User description
+            {__("User description", "quicktasker")}
           </label>
           <WPQTTextarea
             value={userDescription}
@@ -54,12 +55,12 @@ function AddUser() {
           />
           <div className="wpqt-flex wpqt-justify-end wpqt-gap-3">
             <WPQTIconButton
-              text="Cancel"
+              text={__("Cancel", "quicktasker")}
               onClick={clearStatus}
               icon={<XMarkIcon className="wpqt-icon-red wpqt-size-5" />}
             />
             <WPQTIconButton
-              text="Add"
+              text={__("Add", "quicktasker")}
               onClick={onCreateUser}
               icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
             />
@@ -67,7 +68,7 @@ function AddUser() {
         </div>
       ) : (
         <WPQTIconButton
-          text="Add user"
+          text={__("Add User", "quicktasker")}
           onClick={() => setShowInput(true)}
           icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
         />

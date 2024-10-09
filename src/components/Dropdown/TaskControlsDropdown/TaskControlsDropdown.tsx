@@ -1,5 +1,6 @@
 import { useContext } from "@wordpress/element";
 import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
+import { __ } from "@wordpress/i18n";
 import {
   EllipsisHorizontalIcon,
   ArchiveBoxIcon,
@@ -49,7 +50,7 @@ function TaskControlsDropdown({ task }: Props) {
       )}
     >
       <WPQTDropdownItem
-        text="Archive task"
+        text={__("Archive task", "quicktasker")}
         icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={(e: React.MouseEvent) => {
           e.stopPropagation();
@@ -59,12 +60,12 @@ function TaskControlsDropdown({ task }: Props) {
         }}
       />
       <WPQTDropdownItem
-        text="Edit task"
+        text={__("Edit task", "quicktasker")}
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openTaskEditModal}
       />
       <WPQTDropdownItem
-        text="Delete task"
+        text={__("Delete task", "quicktasker")}
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
         onClick={async (e: React.MouseEvent) => {
           e.stopPropagation();

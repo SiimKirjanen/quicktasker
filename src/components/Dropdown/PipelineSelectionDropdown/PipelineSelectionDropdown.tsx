@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { MenuItem } from "@headlessui/react";
 import { setPipelinePrimaryRequest } from "../../../api/api";
@@ -39,7 +40,7 @@ function PipelineSelectionDropdown() {
       });
     } catch (e) {
       console.error(e);
-      toast.error("Failed to set primary board");
+      toast.error(__("Failed to set primary board", "quicktasker"));
     }
   };
 
@@ -62,7 +63,7 @@ function PipelineSelectionDropdown() {
       )}
     >
       <div className="wpqt-mb-4 wpqt-text-center wpqt-font-bold">
-        Change board
+        {__("Change board", "quicktasker")}
       </div>
       {pipelines.map((existingPipeline) => {
         const isPrimary = existingPipeline.is_primary;
@@ -101,7 +102,7 @@ function PipelineSelectionDropdown() {
           className="wpqt-mt-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2"
           onClick={openPipelineModal}
         >
-          <div>Add new board</div>
+          <div>{__("Add new board", "quicktasker")}</div>
           <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
         </div>
       </MenuItem>

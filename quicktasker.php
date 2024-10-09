@@ -6,6 +6,7 @@
 	Author: Siim Kirjanen
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
+	Domain Path: /languages
 	Version: 1.0.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28

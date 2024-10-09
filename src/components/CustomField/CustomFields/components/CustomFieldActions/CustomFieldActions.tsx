@@ -1,4 +1,5 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { __, sprintf } from "@wordpress/i18n";
 import {
   CustomField,
   CustomFieldEntityType,
@@ -47,7 +48,7 @@ function CustomFieldActions({
           onClick={onSave}
           icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
           tooltipId={`custom-field-${data.id}-update`}
-          tooltipText="Edit custom field value"
+          tooltipText={__("Edit custom field value", "quicktasker")}
         />
       )}
       <WPQTIconButton
@@ -56,7 +57,13 @@ function CustomFieldActions({
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
         {...(!isAllowedToDelete && {
           tooltipId: `custom-field-${data.id}-delete`,
-          tooltipText: `This custom field is inherited from ${entityTypeDisplay} settings and cant be deleted here`,
+          tooltipText: sprintf(
+            __(
+              "This custom field is inherited from %s settings and can't be deleted here",
+              "quicktasker",
+            ),
+            entityTypeDisplay,
+          ),
         })}
       />
     </div>

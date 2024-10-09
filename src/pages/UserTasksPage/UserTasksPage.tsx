@@ -1,4 +1,5 @@
 import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { __ } from "@wordpress/i18n";
 import { Page } from "../Page/Page";
 import { UserTasksFilter } from "../../components/Filter/UserTasksFilter/UserTasksFilter";
 import { UserTasksContextProvider } from "../../providers/UserTasksContextProvider";
@@ -12,8 +13,10 @@ function UserTasksPage({ userId }: Props) {
   return (
     <UserTasksContextProvider userId={userId}>
       <Page>
-        <WPQTPageHeader description="Tasks assigned to user">
-          User tasks
+        <WPQTPageHeader
+          description={__("Tasks assigned to user", "quicktasker")}
+        >
+          {__("User tasks", "quicktasker")}
         </WPQTPageHeader>
         <UserTasksFilter />
         <UserTasks userId={userId} />

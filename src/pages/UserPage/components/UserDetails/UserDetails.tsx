@@ -1,3 +1,4 @@
+import { __ } from "@wordpress/i18n";
 import { ExtendedUser } from "../../../../types/user";
 import { usePageLinks } from "../../../../hooks/usePageLinks";
 
@@ -16,17 +17,25 @@ function UserDetails({ data }: Props) {
   return (
     <div>
       <DataDisplay>
-        <DisplayRow label="Name">{data.name}</DisplayRow>
-        <DisplayRow label="Description">{data.description}</DisplayRow>
-        <DisplayRow label="Created at">{data.created_at}</DisplayRow>
-        <DisplayRow label="Setup completed">
-          {data.setup_completed ? "Yes" : "No"}
+        <DisplayRow label={__("Name", "quicktasker")}>{data.name}</DisplayRow>
+        <DisplayRow label={__("Description", "quicktasker")}>
+          {data.description}
         </DisplayRow>
-        <DisplayRow label="Assigned tasks count">
+        <DisplayRow label={__("Created at", "quicktasker")}>
+          {data.created_at}
+        </DisplayRow>
+        <DisplayRow label={__("Setup completed", "quicktasker")}>
+          {data.setup_completed
+            ? __("Yes", "quicktasker")
+            : __("No", "quicktasker")}
+        </DisplayRow>
+        <DisplayRow label={__("Assigned tasks count", "quicktasker")}>
           {data.assigned_tasks_count}
         </DisplayRow>
-        <DisplayRow label="Is active">{isActive ? "Yes" : "No"}</DisplayRow>
-        <DisplayRow label="User Page">
+        <DisplayRow label={__("Is active", "quicktasker")}>
+          {isActive ? __("Yes", "quicktasker") : __("No", "quicktasker")}
+        </DisplayRow>
+        <DisplayRow label={__("User Page", "quicktasker")}>
           <a
             href={userPage + "&code=" + data.page_hash}
             target="_blank"

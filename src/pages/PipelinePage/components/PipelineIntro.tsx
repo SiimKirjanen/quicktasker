@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_NEW_PIPELINE_MODAL } from "../../../constants";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
@@ -18,7 +19,7 @@ function PipelineIntro() {
         className="wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2"
       >
         <PlusCircleIcon className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer" />
-        <span>Add your first Board</span>
+        <span>{__("Add your first Board", "quicktasker")}</span>
       </div>
     </div>
   );

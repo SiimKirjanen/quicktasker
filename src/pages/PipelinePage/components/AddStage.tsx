@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_NEW_STAGE_MODAL } from "../../../constants";
@@ -25,7 +26,9 @@ function AddStage({ pipelineId, stagesLength = 0 }: Props) {
           onClick={openNewStageModal}
         >
           <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
-          <div className="wpqt-whitespace-nowrap">Add first stage</div>
+          <div className="wpqt-whitespace-nowrap">
+            {__("Add first stage", "quicktasker")}
+          </div>
         </div>
       </div>
     );
@@ -37,7 +40,9 @@ function AddStage({ pipelineId, stagesLength = 0 }: Props) {
       onClick={openNewStageModal}
     >
       <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
-      <div className="wpqt-whitespace-nowrap">Add stage</div>
+      <div className="wpqt-whitespace-nowrap">
+        {__("Add stage", "quicktasker")}
+      </div>
     </div>
   );
 }
