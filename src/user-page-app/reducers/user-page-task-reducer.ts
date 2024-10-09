@@ -18,6 +18,7 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         task: convertTaskFromServer(data.task),
         taskStages: data.stages.map(convertStageFromServer),
+        customFields: data.customFields,
       };
     }
     case UPDATE_USER_PAGE_TASK_DATA: {

@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowPathIcon, HomeIcon } from "@heroicons/react/24/outline";
-import { EnvelopeIcon, EnvelopeOpenIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowPathIcon,
+  BellIcon,
+  HomeIcon,
+  BellAlertIcon,
+} from "@heroicons/react/24/outline";
 import { LoadingOval } from "../../../components/Loading/Loading";
 import { ProfileDropdown } from "../Dropdown/ProfileDropdown/ProfileDropdown";
 import { useContext } from "@wordpress/element";
@@ -50,14 +54,14 @@ function NotificationIcon() {
   return (
     <>
       {newComments.length > 0 ? (
-        <EnvelopeOpenIcon
-          className="wpqt-icon-yellow wpqt-size-6 wpqt-cursor-pointer"
+        <BellAlertIcon
+          className="wpqt-icon-red wpqt-size-6 wpqt-animate-bellShake wpqt-cursor-pointer"
           onClick={() => {
             navigate("/notifications");
           }}
         />
       ) : (
-        <EnvelopeIcon
+        <BellIcon
           className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer"
           onClick={() => {
             navigate("/notifications");

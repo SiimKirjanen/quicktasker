@@ -45,7 +45,10 @@ function NotificationsPage() {
   return (
     <PageWrap loading={loading} onRefresh={checkNewComments}>
       <PageContentWrap>
-        <p>You have {newComments.length} new comments</p>
+        <p>
+          You have {newComments.length} new{" "}
+          {newComments.length === 1 ? "comment" : "comments"}
+        </p>
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-2 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4">
           {Object.values(groupedComments).map((notification) => (
             <NotificationItem

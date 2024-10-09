@@ -22,6 +22,22 @@ module.exports = {
       zIndex: {
         9999: "9999",
       },
+      animation: {
+        bellShake: "bellShake 0.82s cubic-bezier(.36,.07,.19,.97) both",
+      },
+      keyframes: {
+        bellShake: {
+          "0%": { transform: "rotate(0deg)" },
+          "15%": { transform: "rotate(5deg)" },
+          "30%": { transform: "rotate(-5deg)" },
+          "45%": { transform: "rotate(4deg)" },
+          "60%": { transform: "rotate(-4deg)" },
+          "75%": { transform: "rotate(2deg)" },
+          "85%": { transform: "rotate(-2deg)" },
+          "92%": { transform: "rotate(1deg)" },
+          "100%": { transform: "rotate(0deg)" },
+        },
+      },
     },
   },
   plugins: [],
