@@ -35,7 +35,7 @@ function TextCustomField({ data, onHandleChange }: TextCustomFieldProps) {
   };
 
   return (
-    <div>
+    <div className="wpqt-text-center">
       <CustomFieldTitle name={data.name} description={data.description} />
       <WPQTInput value={value} onChange={onChange} />
     </div>
@@ -57,7 +57,7 @@ function CheckboxCustomField({
     onHandleChange(e.target.checked ? "true" : "false");
   };
   return (
-    <div>
+    <div className="wpqt-text-center">
       <CustomFieldTitle name={data.name} description={data.description} />
       <input type="checkbox" checked={isChecked} onChange={onChange} />
     </div>

@@ -12,25 +12,44 @@ function TaskDetails({ task }: Props) {
   if (!task) {
     return null;
   }
+  const rowClasses =
+    "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-2 wpqt-text-xl";
+
   return (
-    <div>
-      <h2 className="wpqt-mb-2 wpqt-text-lg">
+    <div className="wpqt-my-4">
+      <h2 className="wpqt-text-xl2 wpqt-mb-8 wpqt-text-center">
         {__("Task Details", "quicktasker")}
       </h2>
       <DataDisplay>
-        <DisplayRow label={__("Name", "quicktasker")}>{task.name}</DisplayRow>
-        <DisplayRow label={__("Description", "quicktasker")}>
-          {task.description}
+        <DisplayRow label={__("Name", "quicktasker")} className={rowClasses}>
+          {task.name}
         </DisplayRow>
-        <DisplayRow label={__("Created at", "quicktasker")}>
+        {task.description && (
+          <DisplayRow
+            label={__("Description", "quicktasker")}
+            className={rowClasses}
+          >
+            {task.description}
+          </DisplayRow>
+        )}
+        <DisplayRow
+          label={__("Created at", "quicktasker")}
+          className={rowClasses}
+        >
           {task.created_at}
         </DisplayRow>
-        <DisplayRow label={__("Free for all", "quicktasker")}>
+        <DisplayRow
+          label={__("Free for all", "quicktasker")}
+          className={rowClasses}
+        >
           {task.free_for_all
             ? __("Yes", "quicktasker")
             : __("No", "quicktasker")}
         </DisplayRow>
-        <DisplayRow label={__("Assigned users", "quicktasker")}>
+        <DisplayRow
+          label={__("Assigned users", "quicktasker")}
+          className={rowClasses}
+        >
           {task.assigned_users.map((user) => user.name).join(", ")}
         </DisplayRow>
       </DataDisplay>

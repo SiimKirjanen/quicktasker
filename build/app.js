@@ -12750,13 +12750,14 @@ function DataDisplay({
 }
 function DisplayRow({
   children,
-  label
+  label,
+  className = ""
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-mb-2",
+    className: `wpqt-mb-2 ${className}`,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
       className: "wpqt-font-bold",
-      children: [label, ": "]
+      children: [label, " "]
     }), children]
   });
 }

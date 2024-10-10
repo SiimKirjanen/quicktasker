@@ -26,7 +26,7 @@ function CustomFieldsWrap({ entityId, entityType, customFields }: Props) {
     await updateCustomFieldValue(entityId, entityType, customFieldId, value);
   };
 
-  if (!cf) {
+  if (!cf || !customFields) {
     return null;
   }
 

@@ -7,7 +7,7 @@ function ProfileActions() {
   const navigate = useNavigate();
 
   return (
-    <div className="wpqt-flex wpqt-gap-3">
+    <div className="wpqt-mt-4 wpqt-flex wpqt-gap-3">
       <WPQTIconButton
         icon={<ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />}
         text={__("Manage user comments", "quicktasker")}

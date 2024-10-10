@@ -533,6 +533,7 @@ function wpqt_register_user_page_api_routes() {
                     $permissionService = new PermissionService();
                     $stageRepository = new StageRepository();
                     $taskService = new TaskService();
+                    $customFieldRepository = new CustomFieldRepository();
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);
                    
                     if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id)) {
@@ -541,8 +542,9 @@ function wpqt_register_user_page_api_routes() {
                     $taskService->moveTask($task->id, $data['stageId'], 0);
 
                     $data = (object)[
-                        'task' => $task,
-                        'stages' => $stageRepository->getStagesByPipelineId($task->pipeline_id)
+                        'task' => $taskRepository->getTaskByHash($data['task_hash'], true),
+                        'stages' => $stageRepository->getStagesByPipelineId($task->pipeline_id),
+                        'customFields' => $customFieldRepository->getRelatedCustomFields($session->user_id, 'user')                    
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);

@@ -76,7 +76,7 @@ function UserPageApp() {
           <UserPageContent />
           <ToastContainer
             position="bottom-center"
-            toastClassName="wpqt-bottom-[60px] lg:wpqt-bottom-[20px]"
+            toastClassName="wpqt-bottom-[80px] lg:wpqt-bottom-[20px]"
           />
         </UserPageNotificationsContextProvider>
       </UserPageAppContextProvider>
