@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { __ } from "@wordpress/i18n";
 import { TaskFromServer } from "../../../types/task";
 import {
   assignTaskToUser,
@@ -32,8 +33,8 @@ function useTaskActions() {
   ) => {
     try {
       const response = await assignTaskToUser(pageHash, taskHash);
+      toast.success(__("Task assigned successfully", "quicktasker"));
       if (callback) callback(response.data);
-      toast.success("Task assigned successfully");
     } catch (error) {
       handleError(error);
     }
@@ -46,8 +47,8 @@ function useTaskActions() {
   ) => {
     try {
       const response = await unAssignTaskFromUser(pageHash, taskHash);
+      toast.success(__("Task unassigned successfully", "quicktasker"));
       if (callback) callback(response.data);
-      toast.success("Task unassigned successfully");
     } catch (error) {
       handleError(error);
     }
@@ -65,8 +66,8 @@ function useTaskActions() {
         taskHash,
         stageId,
       );
+      toast.success(__("Task stage changed successfully", "quicktasker"));
       if (callback) callback(response.data);
-      toast.success("Task stage changed successfully");
     } catch (error) {
       handleError(error);
     }

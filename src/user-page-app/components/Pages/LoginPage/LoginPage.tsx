@@ -10,6 +10,7 @@ import { WPQTButton } from "../../../../components/common/Button/Button";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { PageScreenMiddle } from "../Page/Page";
 import { toast } from "react-toastify";
+import { __, sprintf } from "@wordpress/i18n";
 
 function LoginPage() {
   const {
@@ -22,7 +23,7 @@ function LoginPage() {
 
   const login = async () => {
     if (!password) {
-      toast.error("Please enter a password");
+      toast.error(__("Please enter a password", "quicktasker"));
       return;
     }
     try {
@@ -35,15 +36,15 @@ function LoginPage() {
   };
   return (
     <PageScreenMiddle>
-      <h2>Hello {userName}</h2>
-      <p>Plese log in to continue</p>
+      <h2>{sprintf(__("Hello %s", "quicktasker"), userName)}</h2>
+      <p>{__("Please log in to continue", "quicktasker")}</p>
       <form>
         <WPQTFieldSet>
           <WPQTField>
             <WPQTInput value={password} onChange={setPassword} />
           </WPQTField>
           <WPQTField className="wpqt-flex wpqt-justify-center">
-            <WPQTButton btnText="Login" onClick={login} />
+            <WPQTButton btnText={__("Login", "quicktasker")} onClick={login} />
           </WPQTField>
         </WPQTFieldSet>
       </form>

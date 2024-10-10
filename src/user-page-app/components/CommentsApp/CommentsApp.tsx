@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { WPQTComment } from "../../../types/comment";
 import { WPQTTextarea } from "../../../components/common/TextArea/TextArea";
 import { WPQTIconButton } from "../../../components/common/Button/Button";
@@ -56,7 +57,7 @@ function CommentsApp({ comments, addComments }: Props) {
       <div className="wpqt-fixed wpqt-bottom-[92px]">
         <WPQTTextarea value={comment} onChange={setComment} />
         <WPQTIconButton
-          text="Add comment"
+          text={__("Add comment", "quicktasker")}
           onClick={saveComment}
           icon={<ChatBubbleLeftIcon className="wpqt-icon-green wpqt-size-5" />}
         />

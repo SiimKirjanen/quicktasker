@@ -2,6 +2,7 @@ import {
   UserIcon,
   ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
+import { __ } from "@wordpress/i18n";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import {
   WPQTDropdown,
@@ -49,7 +50,7 @@ function ProfileDropdown() {
       )}
     >
       <WPQTDropdownItem
-        text="View profile"
+        text={__("View profile", "quicktasker")}
         icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={() => {
           navigate("/user/profile");
@@ -57,7 +58,7 @@ function ProfileDropdown() {
       />
 
       <WPQTDropdownItem
-        text="Log out"
+        text={__("Log out", "quicktasker")}
         icon={
           <ArrowRightStartOnRectangleIcon className="wpqt-icon-red wpqt-size-4" />
         }

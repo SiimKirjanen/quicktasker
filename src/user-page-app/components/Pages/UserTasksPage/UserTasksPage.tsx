@@ -5,6 +5,7 @@ import {
 } from "../../../providers/UserAssignedTasksContextProvider";
 import { PageContentWrap, PageWrap } from "../Page/Page";
 import { UserTasks } from "./UserTasks";
+import { __ } from "@wordpress/i18n";
 
 function UserTasksPage() {
   return (
@@ -23,7 +24,7 @@ function UserTaskPageContent() {
   return (
     <PageWrap loading={loading} onRefresh={loadAssignedTasks}>
       <PageContentWrap>
-        <h1>Assigned Tasks</h1>
+        <h1>{__("Assigned Tasks", "quicktasker")}</h1>
         <UserTasks />
       </PageContentWrap>
     </PageWrap>

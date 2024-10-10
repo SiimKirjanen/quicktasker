@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { getOverviewRequest } from "../../../api/user-page-api";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { PageContentWrap, PageWrap } from "../Page/Page";
@@ -41,16 +42,22 @@ function HomePage() {
     >
       <PageContentWrap>
         <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-gap-2">
-          <div>Assigned tasks: {overview?.assignedTasksCount}</div>
+          <div>
+            {__("Assigned tasks:", "quicktasker")}{" "}
+            {overview?.assignedTasksCount}
+          </div>
           <WPQTButton
-            btnText="See assigned taks"
+            btnText={__("See assigned tasks", "quicktasker")}
             onClick={() => navigate("/user-tasks")}
             className="wpqt-mb-4"
           ></WPQTButton>
 
-          <div>Assignable tasks: {overview?.assignableTaskCount}</div>
+          <div>
+            {__("Assignable tasks:", "quicktasker")}{" "}
+            {overview?.assignableTaskCount}
+          </div>
           <WPQTButton
-            btnText="See assignable tasks"
+            btnText={__("See assignable tasks", "quicktasker")}
             onClick={() => navigate("/assignable-tasks")}
           ></WPQTButton>
         </div>

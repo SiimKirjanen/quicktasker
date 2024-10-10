@@ -4,6 +4,7 @@ import { updateCustomFieldValueRequest } from "../../api/user-page-api";
 import { UserPageAppContext } from "../../providers/UserPageAppContextProvider";
 import { useErrorHandler } from "../useErrorHandler";
 import { toast } from "react-toastify";
+import { __ } from "@wordpress/i18n";
 
 function useCustomFieldActions() {
   const {
@@ -26,7 +27,7 @@ function useCustomFieldActions() {
         customFieldId,
         value,
       );
-      toast.success("Custom field value updated");
+      toast.success(__("Custom field value updated", "quicktasker"));
       if (callback) callback();
     } catch (error) {
       handleError(error);

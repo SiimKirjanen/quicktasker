@@ -1,4 +1,5 @@
 import { useContext, useEffect } from "@wordpress/element";
+import { __, sprintf } from "@wordpress/i18n";
 import { UserPageNotificationsContext } from "../../../providers/UserPageNotificationsContextProvider";
 import { PageContentWrap, PageWrap } from "../Page/Page";
 import { NotificationItem } from "./components/NotificationItem";
@@ -46,8 +47,13 @@ function NotificationsPage() {
     <PageWrap loading={loading} onRefresh={checkNewComments}>
       <PageContentWrap>
         <p>
-          You have {newComments.length} new{" "}
-          {newComments.length === 1 ? "comment" : "comments"}
+          {sprintf(
+            __("You have %d new %s", "quicktasker"),
+            newComments.length,
+            newComments.length === 1
+              ? __("comment", "quicktasker")
+              : __("comments", "quicktasker"),
+          )}
         </p>
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-2 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4">
           {Object.values(groupedComments).map((notification) => (

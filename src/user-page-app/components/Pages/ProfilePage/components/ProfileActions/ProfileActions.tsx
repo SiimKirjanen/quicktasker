@@ -1,6 +1,7 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { WPQTIconButton } from "../../../../../../components/common/Button/Button";
 import { useNavigate } from "react-router-dom";
+import { __ } from "@wordpress/i18n";
 
 function ProfileActions() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function ProfileActions() {
     <div className="wpqt-flex wpqt-gap-3">
       <WPQTIconButton
         icon={<ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />}
-        text="Manage user comments"
+        text={__("Manage user comments", "quicktasker")}
         onClick={() => {
           navigate(`/user/comments`);
         }}

@@ -19,6 +19,7 @@ import { UserCommentsPage } from "./components/Pages/UserCommentsPage/UserCommen
 import { UserPageNotificationsContextProvider } from "./providers/UserPageNotificationsContextProvider";
 import { NotificationsPage } from "./components/Pages/NotificationsPage/NotificationsPage";
 import { LoadingPage } from "./components/Pages/LoadingPage/LoadingPage";
+import { __ } from "@wordpress/i18n";
 
 function UserPageContent() {
   const {
@@ -31,8 +32,11 @@ function UserPageContent() {
   if (!isActiveUser) {
     return (
       <ErrorPage
-        errorTitle="User is not active"
-        errorDescription="Your user is not active. Please contact your administrator."
+        errorTitle={__("User is not active", "quicktasker")}
+        errorDescription={__(
+          "Your user is not active. Please contact site administrator.",
+          "quicktasker",
+        )}
       />
     );
   }

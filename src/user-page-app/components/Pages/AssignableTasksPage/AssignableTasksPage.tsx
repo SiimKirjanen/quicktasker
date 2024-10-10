@@ -1,6 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { useNavigate } from "react-router-dom";
 import { PageContentWrap, PageWrap } from "../Page/Page";
+import { __ } from "@wordpress/i18n";
 import {
   UserAssignableTasksContext,
   UserAssignableTasksContextProvider,
@@ -25,7 +26,7 @@ function AssignebaleTasksPageContent() {
   return (
     <PageWrap loading={loading} onRefresh={loadAssignableTasks}>
       <PageContentWrap>
-        <h1>Assignable tasks</h1>
+        <h1>{__("Assignable tasks", "quicktasker")}</h1>
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-2 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4">
           {assignableTasks.map((task) => (
             <WPQTCard

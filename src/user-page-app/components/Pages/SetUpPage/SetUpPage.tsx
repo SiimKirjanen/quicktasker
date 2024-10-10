@@ -8,6 +8,7 @@ import { WPQTField } from "../../../../components/common/Form/Field";
 import { WPQTLabel } from "../../../../components/common/Form/Label";
 import { WPQTButton } from "../../../../components/common/Button/Button";
 import { WPQTInput } from "../../../../components/common/Input/Input";
+import { __, sprintf } from "@wordpress/i18n";
 
 function SetUpPage() {
   const {
@@ -20,7 +21,7 @@ function SetUpPage() {
 
   useEffect(() => {
     if (password !== passwordRepeat) {
-      setValidationError("Passwords do not match");
+      setValidationError(__("Passwords do not match", "quicktasker"));
     } else {
       setValidationError("");
     }
@@ -42,22 +43,30 @@ function SetUpPage() {
 
   return (
     <PageScreenMiddle>
-      <p>Hello {userName}. Please complete setup</p>
+      <p>
+        {sprintf(
+          __("Hello %s. Please complete setup", "quicktasker"),
+          userName,
+        )}
+      </p>
       <form>
         <WPQTFieldSet>
           <WPQTField>
-            <WPQTLabel>Enter your password</WPQTLabel>
+            <WPQTLabel>{__("Enter your password", "quicktasker")}</WPQTLabel>
             <WPQTInput value={password} onChange={setPassword} />
           </WPQTField>
           <WPQTField>
-            <WPQTLabel>Repeat your password</WPQTLabel>
+            <WPQTLabel>{__("Repeat your password", "quicktasker")}</WPQTLabel>
             <WPQTInput value={passwordRepeat} onChange={setPasswordRepeat} />
           </WPQTField>
           {validationError && (
             <div className="wpqt-text-qtTextRed">{validationError}</div>
           )}
           <WPQTField>
-            <WPQTButton btnText="Setup" onClick={submitSetup} />
+            <WPQTButton
+              btnText={__("Setup", "quicktasker")}
+              onClick={submitSetup}
+            />
           </WPQTField>
         </WPQTFieldSet>
       </form>
