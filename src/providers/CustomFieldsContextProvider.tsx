@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import { reducer } from "../reducers/custom-fields-reducer";
 import { toast } from "react-toastify";
@@ -81,7 +82,7 @@ const CustomFieldsContextProvider = ({
       customFieldsDispatch({ type: SET_CUSTOM_FIELDS, payload: response.data });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch custom fields");
+      toast.error(__("Failed to fetch custom fields", "quicktasker"));
     } finally {
       customFieldsDispatch({ type: SET_CUSTOM_FIELD_LOADING, payload: false });
     }

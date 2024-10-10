@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { __ } from "@wordpress/i18n";
 import {
   changeUserStatusRequest,
   createUserRequest,
@@ -17,10 +18,10 @@ function useUserActions() {
     try {
       const response = await createUserRequest(userName, userDescription);
       if (callback) callback(response.data);
-      toast.success("User created successfully");
+      toast.success(__("User created successfully", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("User creation failed. Please try again");
+      toast.error(__("User creation failed. Please try again", "quicktasker"));
     }
   };
 
@@ -31,10 +32,10 @@ function useUserActions() {
     try {
       const response = await editUserRequest(user);
       if (callback) callback(response.data);
-      toast.success("User edited successfully");
+      toast.success(__("User edited successfully", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("User edit failed. Please try again");
+      toast.error(__("User edit failed. Please try again", "quicktasker"));
     }
   };
 
@@ -46,10 +47,12 @@ function useUserActions() {
     try {
       const response = await changeUserStatusRequest(userId, status);
       if (callback) callback(response.data);
-      toast.success("User status changed successfully");
+      toast.success(__("User status changed successfully", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to change user status. Please try again");
+      toast.error(
+        __("Failed to change user status. Please try again", "quicktasker"),
+      );
     }
   };
 
@@ -60,10 +63,10 @@ function useUserActions() {
     try {
       await deleteUserRequest(userId);
       if (callback) callback(userId);
-      toast.success("User deleted successfully");
+      toast.success(__("User deleted successfully", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete user. Please try again");
+      toast.error(__("Failed to delete user. Please try again", "quicktasker"));
     }
   };
 
@@ -74,10 +77,12 @@ function useUserActions() {
     try {
       await resetUserPasswordRequest(userId);
       if (callback) callback(userId);
-      toast.success("User password reset successfully");
+      toast.success(__("User password reset successfully", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to reset user password. Please try again");
+      toast.error(
+        __("Failed to reset user password. Please try again", "quicktasker"),
+      );
     }
   };
 

@@ -4,6 +4,7 @@ import {
   useEffect,
   useReducer,
 } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { getUserTasksRequest } from "../api/api";
 import { toast } from "react-toastify";
 import { Task, TaskFromServer } from "../types/task";
@@ -75,7 +76,7 @@ const UserTasksContextProvider = ({
       userTasksDispatch({ type: SET_USER_TASKS, payload: response.data });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch users");
+      toast.error(__("Failed to fetch user tasks", "quicktasker"));
     } finally {
       loadingDispatch({ type: SET_FULL_PAGE_LOADING, payload: false });
     }

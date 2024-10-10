@@ -1,4 +1,5 @@
 import { User } from "../../../types/user";
+import { __ } from "@wordpress/i18n";
 import { Task } from "../../../types/task";
 import { useContext, useState } from "@wordpress/element";
 import { UserContext } from "../../../providers/UserContextProvider";
@@ -50,7 +51,7 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
       onUserAdd(user);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to assign user to task");
+      toast.error(__("Failed to assign user", "quicktasker"));
     } finally {
       setLoading(false);
     }
@@ -70,7 +71,7 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
       onUserDelete(user);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to remove user from task");
+      toast.error(__("Failed to remove user", "quicktasker"));
     } finally {
       setLoading(false);
     }
@@ -79,19 +80,19 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
   return (
     <div className="wpqt-flex wpqt-w-[320px] wpqt-flex-col">
       <UserAssignementSection
-        sectionTitle="Assigned users"
+        sectionTitle={__("Assigned users", "quicktasker")}
         users={task.assigned_users}
         onItemSelect={removeUser}
         ActionIcon={MinusIcon}
         actionIconClasses="wpqt-icon-red"
-        noUsersText="No users assigned"
+        noUsersText={__("No users assigned", "quicktasker")}
       />
       <UserAssignementSection
-        sectionTitle="Assign a user"
+        sectionTitle={__("Assign a user", "quicktasker")}
         users={availableUsers}
         onItemSelect={assignUser}
         actionIconClasses="wpqt-icon-green"
-        noUsersText="No users available to assign"
+        noUsersText={__("No users available to assign", "quicktasker")}
       />
       {loading && (
         <div className="wpqt-flex wpqt-justify-center">

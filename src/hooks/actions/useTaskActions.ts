@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { __ } from "@wordpress/i18n";
 import {
   archiveTaskRequest,
   deleteTaskRequest,
@@ -11,10 +12,10 @@ const useTaskActions = () => {
     try {
       await deleteTaskRequest(taskId);
       if (callback) callback();
-      toast.success("Task deleted successfully");
+      toast.success(__("Task deleted successfully", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete a task");
+      toast.error(__("Failed to delete a task", "quicktasker"));
     }
   };
 
@@ -22,10 +23,10 @@ const useTaskActions = () => {
     try {
       await archiveTaskRequest(taskId);
       if (callback) callback();
-      toast.success("Task archived successfully");
+      toast.success(__("Task archived successfully", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to archive a task");
+      toast.error(__("Failed to archive a task", "quicktasker"));
     }
   };
 
@@ -33,10 +34,10 @@ const useTaskActions = () => {
     try {
       await restoreArchivedTaskRequest(taskId);
       if (callback) callback();
-      toast.success("Task restored successfully");
+      toast.success(__("Task restored successfully", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to restore a task");
+      toast.error(__("Failed to restore a task", "quicktasker"));
     }
   };
 
@@ -48,10 +49,10 @@ const useTaskActions = () => {
     try {
       await removeTaskFromUserRequest(userId, taskId);
       if (callback) callback();
-      toast.success("Task unassigned successfully");
+      toast.success(__("Task has been unassigned", "quicktasker"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to unassign task. Please try again");
+      toast.error(__("Task unassignment failed. Try again", "quicktasker"));
     }
   };
 

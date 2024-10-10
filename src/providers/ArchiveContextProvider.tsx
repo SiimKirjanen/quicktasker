@@ -4,6 +4,7 @@ import {
   useEffect,
   useReducer,
 } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { ArchivedTask } from "../types/task";
 import { getArchivedTasksRequest } from "../api/api";
 import { toast } from "react-toastify";
@@ -72,7 +73,7 @@ const ArchiveContextProvider = ({
       archiveDispatch({ type: SET_ARCHIVE_TASKS, payload: data });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch archived tasks");
+      toast.error(__("Failed to fetch archived tasks", "quicktasker"));
     } finally {
       loadingDispatch({
         type: SET_FULL_PAGE_LOADING,

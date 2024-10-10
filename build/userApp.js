@@ -6012,6 +6012,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 class ErrorBoundary extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
@@ -6036,7 +6039,7 @@ class ErrorBoundary extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Comp
     if (this.state.hasError) {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-h-screen wpqt-items-center wpqt-justify-center wpqt-text-center wpqt-text-lg",
-        children: ["Something went wrong. Please refresh the page. ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("br", {}), (_a = this.state.error) === null || _a === void 0 ? void 0 : _a.message]
+        children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Something went wrong. Please refresh the page.", "quicktasker"), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("br", {}), (_a = this.state.error) === null || _a === void 0 ? void 0 : _a.message]
       });
     }
     return this.props.children;
@@ -6602,7 +6605,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   useCustomFieldActions: () => (/* binding */ useCustomFieldActions)
 /* harmony export */ });
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6632,32 +6637,33 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 };
 
 
+
 function useCustomFieldActions() {
   const addCustomField = (entityId, entityType, type, name, description, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.addCustomFieldRequest)(entityId, entityType, type, name, description);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addCustomFieldRequest)(entityId, entityType, type, name, description);
       if (callback) callback(response.data);
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to add a custom field");
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Failed to add a custom field", "quicktasker"));
     }
   });
   const markCustomFieldAsDeleted = (customFieldId, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.markCustomFieldAsDeletedRequest)(customFieldId);
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.markCustomFieldAsDeletedRequest)(customFieldId);
       if (callback) callback();
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to mark custom field as deleted");
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Failed to mark custom field as deleted", "quicktasker"));
     }
   });
   const updateCustomFieldValue = (customFieldId, value, entityId, entityType, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_1__.updateCustomFieldValueRequest)(customFieldId, value, entityId, entityType);
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.updateCustomFieldValueRequest)(customFieldId, value, entityId, entityType);
       if (callback) callback();
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error("Failed to update custom field value");
+      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Failed to update custom field value", "quicktasker"));
     }
   });
   return {
@@ -6686,10 +6692,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _reducers_custom_fields_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/custom-fields-reducer */ "./src/reducers/custom-fields-reducer.ts");
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../api/api */ "./src/api/api.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _reducers_custom_fields_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducers/custom-fields-reducer */ "./src/reducers/custom-fields-reducer.ts");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../api/api */ "./src/api/api.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6723,6 +6731,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 const initialState = {
   customFields: [],
   loading: true,
@@ -6739,13 +6748,13 @@ const CustomFieldsContextProvider = ({
   entityId,
   entityType
 }) => {
-  const [state, customFieldsDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_custom_fields_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
+  const [state, customFieldsDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_custom_fields_reducer__WEBPACK_IMPORTED_MODULE_3__.reducer, initialState);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     fetchCustomFields();
   }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     customFieldsDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELD_INITIAL_DATA,
+      type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_CUSTOM_FIELD_INITIAL_DATA,
       payload: {
         entityType,
         entityId
@@ -6755,20 +6764,20 @@ const CustomFieldsContextProvider = ({
   const fetchCustomFields = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
       customFieldsDispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELD_LOADING,
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_CUSTOM_FIELD_LOADING,
         payload: true
       });
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_4__.getCustomFieldsRequest)(entityId, entityType);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_5__.getCustomFieldsRequest)(entityId, entityType);
       customFieldsDispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELDS,
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_CUSTOM_FIELDS,
         payload: response.data
       });
     } catch (error) {
       console.error(error);
-      react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error("Failed to fetch custom fields");
+      react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Failed to fetch custom fields", "quicktasker"));
     } finally {
       customFieldsDispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_FIELD_LOADING,
+        type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_CUSTOM_FIELD_LOADING,
         payload: false
       });
     }

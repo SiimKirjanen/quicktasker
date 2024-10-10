@@ -1,4 +1,5 @@
 import { Component } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 
 interface Props {
   children: React.ReactNode;
@@ -27,7 +28,8 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="wpqt-flex wpqt-h-screen wpqt-items-center wpqt-justify-center wpqt-text-center wpqt-text-lg">
-          Something went wrong. Please refresh the page. <br />
+          {__("Something went wrong. Please refresh the page.", "quicktasker")}
+          <br />
           {this.state.error?.message}
         </div>
       );

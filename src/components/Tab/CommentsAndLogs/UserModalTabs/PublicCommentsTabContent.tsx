@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { __ } from "@wordpress/i18n";
 import {
   CommentsAndLogsTabContent,
   TabContentItem,
@@ -36,7 +37,7 @@ function PublicCommentsTabContent({ userId }: Props) {
       return response.data.map(convertCommentFromServer);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load comments");
+      toast.error(__("Failed to load comments", "quicktasker"));
     }
   };
 
@@ -46,8 +47,11 @@ function PublicCommentsTabContent({ userId }: Props) {
       fetchData={fetchComments}
       onAdd={onAddComment}
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
-      noDataMessage="No comments available"
-      explanation="Comments that can be added and viewed by both WordPress admins and QuickTasker user"
+      noDataMessage={__("No comments available", "quicktasker")}
+      explanation={__(
+        "Comments that can be added and viewed by both WordPress admins and QuickTasker user",
+        "quicktasker",
+      )}
       enableAdd={true}
     />
   );

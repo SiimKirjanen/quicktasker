@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   useState,
 } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
 import {
@@ -87,7 +88,7 @@ const TaskModalContent = forwardRef(
           <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
             <div className="wpqt-mb-5 wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[auto_1fr]">
               <WPQTModalFieldSet>
-                <WPQTModalField label="Name">
+                <WPQTModalField label={__("Name", "quicktasker")}>
                   <WPQTInput
                     isAutoFocus={true}
                     value={taskName}
@@ -95,7 +96,7 @@ const TaskModalContent = forwardRef(
                   />
                 </WPQTModalField>
 
-                <WPQTModalField label="Description">
+                <WPQTModalField label={__("Description", "quicktasker")}>
                   <WPQTTextarea
                     rowsCount={3}
                     value={taskDescription}
@@ -105,7 +106,7 @@ const TaskModalContent = forwardRef(
                   />
                 </WPQTModalField>
 
-                <WPQTModalField label="Assigned users">
+                <WPQTModalField label={__("Assigned users", "quicktasker")}>
                   <UserAssignementDropdown
                     task={taskToEdit}
                     onUserAdd={(user) => {
@@ -123,7 +124,7 @@ const TaskModalContent = forwardRef(
                   />
                 </WPQTModalField>
 
-                <WPQTModalField label="Free for all task">
+                <WPQTModalField label={__("Free for all task", "quicktasker")}>
                   <Toggle
                     checked={freeForAllTask}
                     handleChange={setFreeForAllTask}
@@ -146,7 +147,7 @@ const TaskModalContent = forwardRef(
           <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
             <WPQTIconButton
               icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-5" />}
-              text="Archive task"
+              text={__("Archive task", "quicktasker")}
               onClick={() => {
                 archiveTask(taskToEdit.id, () => {
                   modalDispatch({ type: CLOSE_TASK_MODAL });
@@ -156,7 +157,7 @@ const TaskModalContent = forwardRef(
             />
             <WPQTIconButton
               icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-              text="Delete task"
+              text={__("Delete task", "quicktasker")}
               onClick={() => {
                 deleteTask(taskToEdit.id, () => {
                   modalDispatch({ type: CLOSE_TASK_MODAL });
@@ -170,7 +171,11 @@ const TaskModalContent = forwardRef(
         </div>
         <WPQTModalFooter
           onSave={saveTask}
-          saveBtnText={taskModalSaving ? "Saving..." : "Save"}
+          saveBtnText={
+            taskModalSaving
+              ? __("Saving...", "quicktasker")
+              : __("Save", "quicktasker")
+          }
         />
       </>
     );

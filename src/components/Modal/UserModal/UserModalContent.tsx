@@ -10,6 +10,7 @@ import {
   useImperativeHandle,
   useState,
 } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { User } from "../../../types/user";
 import { WPQTInput } from "../../common/Input/Input";
@@ -82,7 +83,7 @@ const UserModalContent = forwardRef(function UserModalContent(
           <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 md:wpqt-grid-cols-[auto_1fr]">
             <div>
               <WPQTModalFieldSet>
-                <WPQTModalField label="Name">
+                <WPQTModalField label={__("Name", "quicktasker")}>
                   <WPQTInput
                     isAutoFocus={true}
                     value={userName}
@@ -90,7 +91,7 @@ const UserModalContent = forwardRef(function UserModalContent(
                   />
                 </WPQTModalField>
 
-                <WPQTModalField label="Description">
+                <WPQTModalField label={__("Description", "quicktasker")}>
                   <WPQTTextarea
                     rowsCount={3}
                     value={userDescription}
@@ -114,7 +115,7 @@ const UserModalContent = forwardRef(function UserModalContent(
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
           <WPQTIconButton
             icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
-            text="User details"
+            text={__("User details", "quicktasker")}
             onClick={() => {
               window.location.hash = `#/users/${userToEdit!.id}`;
               modalDispatch({
@@ -124,7 +125,7 @@ const UserModalContent = forwardRef(function UserModalContent(
           />
           <WPQTIconButton
             icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-5" />}
-            text="User tasks"
+            text={__("User tasks", "quicktasker")}
             onClick={() => {
               window.location.hash = `#/users/${userToEdit!.id}/tasks`;
               modalDispatch({
@@ -135,7 +136,7 @@ const UserModalContent = forwardRef(function UserModalContent(
           {!isActiveUser && (
             <WPQTIconButton
               icon={<PowerIcon className="wpqt-icon-green wpqt-size-5" />}
-              text="Activate user"
+              text={__("Activate user", "quicktasker")}
               onClick={async () => {
                 await changeUserStatus(userToEdit!.id, true, (userData) => {
                   userDispatch({
@@ -150,7 +151,7 @@ const UserModalContent = forwardRef(function UserModalContent(
           {isActiveUser && (
             <WPQTIconButton
               icon={<PowerIcon className="wpqt-icon-red wpqt-size-5" />}
-              text="Disable user"
+              text={__("Disable user", "quicktasker")}
               onClick={async () => {
                 await changeUserStatus(userToEdit!.id, false, (userData) => {
                   userDispatch({
@@ -164,7 +165,7 @@ const UserModalContent = forwardRef(function UserModalContent(
           )}
           <WPQTIconButton
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-            text="Delete user"
+            text={__("Delete user", "quicktasker")}
             onClick={async () => {
               await deleteUser(userToEdit!.id, (userId) => {
                 userDispatch({
@@ -181,7 +182,11 @@ const UserModalContent = forwardRef(function UserModalContent(
       </div>
       <WPQTModalFooter
         onSave={saveUser}
-        saveBtnText={modalSaving ? "Saving..." : "Save"}
+        saveBtnText={
+          modalSaving
+            ? __("Saving...", "quicktasker")
+            : __("Save", "quicktasker")
+        }
       />
     </>
   );

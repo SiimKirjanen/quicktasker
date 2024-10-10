@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { WPQTFilter } from "../WPQTFilter";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { SET_USER_SESSIONS_SEARCH_VALUE } from "../../../constants";
@@ -18,7 +19,7 @@ function UserSessionsFilter() {
   };
 
   return (
-    <WPQTFilter title="Session filtering">
+    <WPQTFilter title={__("Session filtering", "quicktasker")}>
       <WPQTInput value={sessionsSearchValue} onChange={setSessionSearchValue} />
     </WPQTFilter>
   );

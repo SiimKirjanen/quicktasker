@@ -1,5 +1,6 @@
 import { Input } from "@headlessui/react";
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import {
   SET_ARCHIVE_FILTERED_PIPELINE,
@@ -31,7 +32,7 @@ function ArchiveFilter() {
   };
 
   return (
-    <WPQTFilter title="Archive filtering">
+    <WPQTFilter title={__("Archive filtering", "quicktasker")}>
       <Input
         type="text"
         value={archiveSearchValue}

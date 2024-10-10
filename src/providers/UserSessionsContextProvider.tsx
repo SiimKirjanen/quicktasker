@@ -4,6 +4,7 @@ import {
   useEffect,
   useReducer,
 } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { reducer } from "../reducers/user-sessions-reducer";
 import { ServerUserSession, UserSession } from "../types/user-session";
 import { getUserSessionsRequest } from "../api/api";
@@ -75,7 +76,7 @@ const UserSessionsContextProvider = ({
       });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch user sessions");
+      toast.error(__("Failed to fetch user sessions", "quicktasker"));
     } finally {
       loadingDispatch({ type: SET_FULL_PAGE_LOADING, payload: false });
     }

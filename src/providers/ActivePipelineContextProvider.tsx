@@ -4,6 +4,7 @@ import {
   useEffect,
   useContext,
 } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { Pipeline, PipelineFromServer } from "../types/pipeline";
 import {
   PIPELINE_ADD_STAGE,
@@ -125,7 +126,9 @@ const ActivePipelineContextProvider = ({
       dispatch({ type: PIPELINE_SET_PIPELINE, payload: pipeline });
     } catch (e) {
       console.error(e);
-      toast.error("Unable to load the board. Please try again later.");
+      toast.error(
+        __("Unable to load the board. Please try again later.", "quicktasker"),
+      );
     } finally {
       setLoadingState(false, fullPageLoading);
     }

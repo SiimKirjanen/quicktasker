@@ -1,5 +1,6 @@
 import { Input } from "@headlessui/react";
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { SET_USERS_SEARCH_VALUE } from "../../../constants";
 import { WPQTFilter } from "../WPQTFilter";
@@ -20,7 +21,7 @@ function UserFilter() {
   };
 
   return (
-    <WPQTFilter title="User filtering">
+    <WPQTFilter title={__("User filtering", "quicktasker")}>
       <Input
         type="text"
         value={usersSearchValue}

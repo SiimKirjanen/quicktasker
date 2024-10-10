@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { __ } from "@wordpress/i18n";
 import {
   addCustomFieldRequest,
   markCustomFieldAsDeletedRequest,
@@ -30,7 +31,7 @@ function useCustomFieldActions() {
       if (callback) callback(response.data);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add a custom field");
+      toast.error(__("Failed to add a custom field", "quicktasker"));
     }
   };
   const markCustomFieldAsDeleted = async (
@@ -42,7 +43,7 @@ function useCustomFieldActions() {
       if (callback) callback();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to mark custom field as deleted");
+      toast.error(__("Failed to mark custom field as deleted", "quicktasker"));
     }
   };
 
@@ -63,7 +64,7 @@ function useCustomFieldActions() {
       if (callback) callback();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to update custom field value");
+      toast.error(__("Failed to update custom field value", "quicktasker"));
     }
   };
 

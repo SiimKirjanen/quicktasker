@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { ServerUser, User } from "../types/user";
 import { reducer } from "../reducers/user-reducer";
 import {
@@ -60,7 +61,7 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
       userDispatch({ type: SET_USERS, payload: response.data });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch users");
+      toast.error(__("Failed to fetch users", "quicktasker"));
     }
   };
 

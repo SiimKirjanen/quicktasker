@@ -3,12 +3,17 @@ import { WPQTTabs } from "../../WPQTTabs";
 import { LogsTabContent } from "./LogsTabContent";
 import { PrivateCommentsTabContent } from "./PrivateCommentsTabContent";
 import { PublicCommentsTabContent } from "./PublicCommentsTabContent";
+import { __ } from "@wordpress/i18n";
 
 type Props = {
   user: User;
 };
 function UserModalTabs({ user }: Props) {
-  const tabs = ["Private comments", "Public comments", "Logs"];
+  const tabs = [
+    __("Private comments", "quicktasker"),
+    __("Public comments", "quicktasker"),
+    __("Logs", "quicktasker"),
+  ];
 
   return (
     <WPQTTabs

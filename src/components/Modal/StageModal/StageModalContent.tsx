@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   useState,
 } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage } from "../../../types/stage";
 import {
@@ -61,17 +62,19 @@ const StageModalContent = forwardRef(
     return (
       <>
         <WPQTModalTitle>
-          {editingStage ? "Edit task" : "Add Stage"}
+          {editingStage
+            ? __("Edit Stage", "quicktasker")
+            : __("Add Stage", "quicktasker")}
         </WPQTModalTitle>
         <WPQTModalFieldSet>
-          <WPQTModalField label="Name">
+          <WPQTModalField label={__("Name", "quicktasker")}>
             <WPQTInput
               isAutoFocus={true}
               value={stageName}
               onChange={(newValue: string) => setStageName(newValue)}
             />
           </WPQTModalField>
-          <WPQTModalField label="Description">
+          <WPQTModalField label={__("Description", "quicktasker")}>
             <WPQTTextarea
               rowsCount={3}
               value={stageDescription}
@@ -83,10 +86,10 @@ const StageModalContent = forwardRef(
           onSave={saveStage}
           saveBtnText={
             stageModalSaving
-              ? "Saving..."
+              ? __("Saving...", "quicktasker")
               : editingStage
-                ? "Edit stage"
-                : "Add stage"
+                ? __("Save changes", "quicktasker")
+                : __("Add stage", "quicktasker")
           }
         />
       </>

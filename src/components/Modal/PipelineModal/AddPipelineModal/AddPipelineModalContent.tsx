@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import {
   WPQTModalField,
   WPQTModalFieldSet,
@@ -34,14 +35,14 @@ const PipelineModalContent = forwardRef(
     return (
       <>
         <WPQTModalFieldSet>
-          <WPQTModalField label="Name">
+          <WPQTModalField label={__("Name", "quicktasker")}>
             <WPQTInput
               isAutoFocus={true}
               value={pipelineName}
               onChange={(newValue: string) => setPipelineName(newValue)}
             />
           </WPQTModalField>
-          <WPQTModalField label="Description">
+          <WPQTModalField label={__("Description", "quicktasker")}>
             <WPQTTextarea
               rowsCount={3}
               value={pipelineDescription}
@@ -51,7 +52,11 @@ const PipelineModalContent = forwardRef(
         </WPQTModalFieldSet>
         <WPQTModalFooter
           onSave={savePipeline}
-          saveBtnText={modalSaving ? "Saving..." : "Add board"}
+          saveBtnText={
+            modalSaving
+              ? __("Saving...", "quicktasker")
+              : __("Add board", "quicktasker")
+          }
         />
       </>
     );

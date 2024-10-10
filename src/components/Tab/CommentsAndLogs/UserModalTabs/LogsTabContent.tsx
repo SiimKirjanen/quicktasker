@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-
+import { __ } from "@wordpress/i18n";
 import {
   CommentsAndLogsTabContent,
   TabContentItem,
@@ -20,7 +20,7 @@ function LogsTabContent({ userId }: Props) {
       return response.data;
     } catch (error) {
       console.error(error);
-      toast.error("Failed to get log");
+      toast.error(__("Failed to load log", "quicktasker"));
     }
   };
   return (
@@ -28,8 +28,11 @@ function LogsTabContent({ userId }: Props) {
       typeId={userId}
       fetchData={fetchLogs}
       renderItem={(log: Log) => <TabContentItem item={log} />}
-      noDataMessage="No logs available"
-      explanation="Logs can be seen only by WordPress admins"
+      noDataMessage={__("No logs available", "quicktasker")}
+      explanation={__(
+        "Logs can be seen only by WordPress admins",
+        "quicktasker",
+      )}
     />
   );
 }

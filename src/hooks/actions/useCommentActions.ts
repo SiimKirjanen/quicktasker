@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { __ } from "@wordpress/i18n";
 import { addCommentRequest } from "../../api/api";
 import { WPQTTypes } from "../../types/enums";
 
@@ -16,12 +17,12 @@ function useCommentActions() {
         isPrivate,
         commentText,
       );
-      toast.success("Comment added successfully");
+      toast.success(__("Comment added successfully", "quicktasker"));
 
       return response.data;
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add comment");
+      toast.error(__("Failed to add comment", "quicktasker"));
     }
   };
   return {

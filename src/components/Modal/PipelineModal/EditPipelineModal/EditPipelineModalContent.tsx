@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   useState,
 } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { Pipeline } from "../../../../types/pipeline";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import {
@@ -64,14 +65,14 @@ const EditPipelineModalContent = forwardRef(
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 md:wpqt-grid-cols-[auto_1fr]">
           <div>
             <WPQTModalFieldSet>
-              <WPQTModalField label="Name">
+              <WPQTModalField label={__("Name", "quicktasker")}>
                 <WPQTInput
                   isAutoFocus={true}
                   value={pipelineName}
                   onChange={(newValue: string) => setPipelineName(newValue)}
                 />
               </WPQTModalField>
-              <WPQTModalField label="Description">
+              <WPQTModalField label={__("Description", "quicktasker")}>
                 <WPQTTextarea
                   rowsCount={3}
                   value={pipelineDescription}
@@ -90,7 +91,11 @@ const EditPipelineModalContent = forwardRef(
         </div>
         <WPQTModalFooter
           onSave={savePipeline}
-          saveBtnText={modalSaving ? "Saving..." : "Edit board"}
+          saveBtnText={
+            modalSaving
+              ? __("Saving...", "quicktasker")
+              : __("Edit board", "quicktasker")
+          }
         />
       </>
     );

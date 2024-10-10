@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-
+import { __ } from "@wordpress/i18n";
 import {
   CommentsAndLogsTabContent,
   TabContentItem,
@@ -26,7 +26,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
       return convertCommentFromServer(response.data);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add private note");
+      toast.error(__("Failed to add private comment", "quicktasker"));
     }
   };
 
@@ -37,7 +37,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
       return response.data.map(convertCommentFromServer);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load private comments");
+      toast.error(__("Failed to load private comments", "quicktasker"));
     }
   };
 
@@ -47,8 +47,11 @@ function PrivateCommentsTabContent({ userId }: Props) {
       fetchData={fetchPrivateComments}
       onAdd={addComment}
       renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
-      noDataMessage="No comments available"
-      explanation="Comments that can be added and viewed only by WordPress admins."
+      noDataMessage={__("No comments available", "quicktasker")}
+      explanation={__(
+        "Comments that can be added and viewed only by WordPress admins.",
+        "quicktasker",
+      )}
       enableAdd={true}
     />
   );

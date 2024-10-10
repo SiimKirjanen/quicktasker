@@ -1,4 +1,5 @@
 import { WPQTFilter } from "../WPQTFilter";
+import { __ } from "@wordpress/i18n";
 import { WPQTInput } from "../../common/Input/Input";
 import { useContext } from "@wordpress/element";
 import { UserTasksContext } from "../../../providers/UserTasksContextProvider";
@@ -24,7 +25,7 @@ function UserTasksFilter() {
     });
   };
   return (
-    <WPQTFilter title="User tasks filtering">
+    <WPQTFilter title={__("User tasks filtering", "quicktasker")}>
       <WPQTInput value={searchValue} onChange={onValueChange} />
       <PipelineFilterSelect
         selectedOptionValue={filteredPipelineId}
