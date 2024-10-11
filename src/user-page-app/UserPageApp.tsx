@@ -20,11 +20,13 @@ import { UserPageNotificationsContextProvider } from "./providers/UserPageNotifi
 import { NotificationsPage } from "./components/Pages/NotificationsPage/NotificationsPage";
 import { LoadingPage } from "./components/Pages/LoadingPage/LoadingPage";
 import { __ } from "@wordpress/i18n";
+import { useSession } from "./hooks/useSession";
 
 function UserPageContent() {
   const {
-    state: { initialLoading, isActiveUser, setupCompleted, isLoggedIn },
+    state: { initialLoading, isActiveUser, setupCompleted },
   } = useContext(UserPageAppContext);
+  const { isLoggedIn } = useSession();
 
   if (initialLoading) {
     return <LoadingPage />;
@@ -45,7 +47,7 @@ function UserPageContent() {
     return <SetUpPage />;
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn()) {
     return <LoginPage />;
   }
 
@@ -76,7 +78,7 @@ function UserPageApp() {
           <UserPageContent />
           <ToastContainer
             position="bottom-center"
-            toastClassName="wpqt-bottom-[80px] lg:wpqt-bottom-[20px]"
+            toastClassName="wpqt-bottom-[80px]  lg:wpqt-bottom-[20px]"
           />
         </UserPageNotificationsContextProvider>
       </UserPageAppContextProvider>

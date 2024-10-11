@@ -16,8 +16,14 @@ import {
 } from "../../utils/comment";
 import {
   CHANGE_USER_PAGE_NOTIFICATIONS_LOADING,
+  CHECK_NEW_COMMENTS_INTERVAL,
+  SESSION_EXPIRE_NOTIFICATION_TRESHOLD,
+  SESSION_NOTIFICATION_CHECK_INTERVAL,
   SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS,
 } from "../constants";
+import { useSession } from "../hooks/useSession";
+import { toast } from "react-toastify";
+import { __, sprintf } from "@wordpress/i18n";
 
 const initialState: State = {
   newComments: [],
@@ -60,24 +66,32 @@ const UserPageNotificationsContextProvider = ({
     React.Reducer<State, Action>
   >(reducer, initialState);
   const {
-    state: { pageHash, isLoggedIn },
+    state: { pageHash },
   } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const { getStoredComments } = useLocalStorage();
-
-  useEffect(() => {
-    checkNewComments();
-  }, [isLoggedIn]);
+  const { isLoggedIn, getSessionTimeLeft } = useSession();
 
   useEffect(() => {
     const interval = setInterval(() => {
       checkNewComments();
-    }, 30000);
+    }, CHECK_NEW_COMMENTS_INTERVAL);
+    checkNewComments();
 
     return () => {
       clearInterval(interval);
     };
-  }, [isLoggedIn]);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      sessionExpireTimeCheck();
+    }, SESSION_NOTIFICATION_CHECK_INTERVAL);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const setLoading = (loading: boolean) => {
     userPageNotificationsDispatch({
@@ -86,8 +100,25 @@ const UserPageNotificationsContextProvider = ({
     });
   };
 
+  const sessionExpireTimeCheck = () => {
+    if (!isLoggedIn()) {
+      return;
+    }
+
+    const timeLeft = getSessionTimeLeft(pageHash);
+
+    if (timeLeft && timeLeft <= SESSION_EXPIRE_NOTIFICATION_TRESHOLD) {
+      toast.info(
+        sprintf(
+          __("Your session is about to expire in %s minutes", "quicktasker"),
+          timeLeft,
+        ),
+      );
+    }
+  };
+
   const checkNewComments = async () => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn()) {
       return;
     }
     try {
