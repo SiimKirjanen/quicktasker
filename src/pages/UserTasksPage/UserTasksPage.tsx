@@ -1,8 +1,8 @@
-import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { __ } from "@wordpress/i18n";
-import { Page } from "../Page/Page";
+import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { UserTasksFilter } from "../../components/Filter/UserTasksFilter/UserTasksFilter";
 import { UserTasksContextProvider } from "../../providers/UserTasksContextProvider";
+import { Page } from "../Page/Page";
 import { UserTasks } from "./UserTasks";
 
 type Props = {

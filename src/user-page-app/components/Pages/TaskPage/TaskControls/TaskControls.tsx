@@ -1,17 +1,17 @@
 import {
+  ChatBubbleLeftIcon,
   UserMinusIcon,
   UserPlusIcon,
-  ChatBubbleLeftIcon,
 } from "@heroicons/react/24/outline";
-import { WPQTIconButton } from "../../../../../components/common/Button/Button";
 import { useContext } from "@wordpress/element";
-import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
+import { useNavigate } from "react-router-dom";
+import { WPQTIconButton } from "../../../../../components/common/Button/Button";
 import { Task } from "../../../../../types/task";
 import { User } from "../../../../../types/user";
-import { useTaskActions } from "../../../../hooks/actions/useTaskActions";
-import { useNavigate } from "react-router-dom";
-import { UserPageTaskContext } from "../../../../providers/UserPageTaskContextProvider";
 import { UPDATE_USER_PAGE_TASK_DATA } from "../../../../constants";
+import { useTaskActions } from "../../../../hooks/actions/useTaskActions";
+import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
+import { UserPageTaskContext } from "../../../../providers/UserPageTaskContextProvider";
 
 type Props = {
   task: Task | null;

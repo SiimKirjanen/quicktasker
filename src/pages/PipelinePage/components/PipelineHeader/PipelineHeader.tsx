@@ -1,10 +1,10 @@
+import { ArrowPathIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
-import { Cog8ToothIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
-import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { PipelineSelectionDropdown } from "../../../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
+import { LoadingOval } from "../../../../components/Loading/Loading";
 import { OPEN_EDIT_PIPELINE_MODAL } from "../../../../constants";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
-import { LoadingOval } from "../../../../components/Loading/Loading";
-import { PipelineSelectionDropdown } from "../../../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
 
 function PipelineHeader() {
   const {

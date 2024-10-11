@@ -1,6 +1,6 @@
 import { __ } from "@wordpress/i18n";
-import { ExtendedUser } from "../../../../types/user";
 import { usePageLinks } from "../../../../hooks/usePageLinks";
+import { ExtendedUser } from "../../../../types/user";
 
 import {
   DataDisplay,

@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { reducer } from "../reducers/app-reducer";
 import { INIT_APP_STATE, SET_SITE_URL } from "../constants";
+import { reducer } from "../reducers/app-reducer";
 
 type State = {
   siteURL: string;
@@ -56,4 +56,4 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export { AppContextProvider, AppContext, type State, type Action };
+export { AppContext, AppContextProvider, type Action, type State };

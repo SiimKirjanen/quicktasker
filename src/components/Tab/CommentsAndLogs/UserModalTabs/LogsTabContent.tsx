@@ -1,12 +1,12 @@
-import { toast } from "react-toastify";
 import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
+import { getLogsRequest } from "../../../../api/api";
+import { WPQTTypes } from "../../../../types/enums";
+import { Log } from "../../../../types/log";
 import {
   CommentsAndLogsTabContent,
   TabContentItem,
 } from "../CommentsAndLogsTabContent";
-import { getLogsRequest } from "../../../../api/api";
-import { WPQTTypes } from "../../../../types/enums";
-import { Log } from "../../../../types/log";
 
 type Props = {
   userId: string;

@@ -1,7 +1,7 @@
-import { UserSession } from "../types/user-session";
-import Cookies from "js-cookie";
 import { useContext } from "@wordpress/element";
+import Cookies from "js-cookie";
 import { UserPageAppContext } from "../providers/UserPageAppContextProvider";
+import { UserSession } from "../types/user-session";
 
 function useSession() {
   const {

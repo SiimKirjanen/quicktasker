@@ -7,7 +7,7 @@ import {
   Fieldset,
   Label,
 } from "@headlessui/react";
-import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { WPQTIconButton } from "../common/Button/Button";
 
 type Props = {
@@ -104,8 +104,8 @@ function WPQTModalFooter({
 
 export {
   WPQTModal,
-  WPQTModalTitle,
-  WPQTModalFieldSet,
   WPQTModalField,
+  WPQTModalFieldSet,
   WPQTModalFooter,
+  WPQTModalTitle,
 };

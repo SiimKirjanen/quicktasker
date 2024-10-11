@@ -1,9 +1,9 @@
+import { __ } from "@wordpress/i18n";
 import { User } from "../../../../types/user";
 import { WPQTTabs } from "../../WPQTTabs";
 import { LogsTabContent } from "./LogsTabContent";
 import { PrivateCommentsTabContent } from "./PrivateCommentsTabContent";
 import { PublicCommentsTabContent } from "./PublicCommentsTabContent";
-import { __ } from "@wordpress/i18n";
 
 type Props = {
   user: User;

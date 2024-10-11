@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
-import { ArchiveContext } from "../../../../providers/ArchiveContextProvider";
 import { useArchiveFilter } from "../../../../hooks/filters/useArchiveFilter";
+import { ArchiveContext } from "../../../../providers/ArchiveContextProvider";
 import { ArchiveItem } from "../ArchiveItem/ArchiveItem";
 
 function ArchiveItems() {

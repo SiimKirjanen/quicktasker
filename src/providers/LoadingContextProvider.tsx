@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "@wordpress/element";
-import { reducer } from "../reducers/loading-reducer";
 import { SET_FULL_PAGE_LOADING } from "../constants";
+import { reducer } from "../reducers/loading-reducer";
 
 const initialState: State = {
   fullPageLoading: false,
@@ -41,4 +41,4 @@ const LoadingContextProvider = ({
   );
 };
 
-export { LoadingContextProvider, LoadingContext, type State, type Action };
+export { LoadingContext, LoadingContextProvider, type Action, type State };

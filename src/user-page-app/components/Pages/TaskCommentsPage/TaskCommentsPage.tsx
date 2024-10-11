@@ -1,15 +1,15 @@
+import { useContext, useEffect, useState } from "@wordpress/element";
 import { useParams } from "react-router-dom";
+import { WPQTComment } from "../../../../types/comment";
+import { Task } from "../../../../types/task";
+import { convertCommentFromServer } from "../../../../utils/comment";
+import { convertTaskFromServer } from "../../../../utils/task";
+import { useCommentActions } from "../../../hooks/actions/useCommentActions";
+import { useTaskActions } from "../../../hooks/actions/useTaskActions";
+import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
+import { UserPageTaskResponse } from "../../../types/user-page-task-response";
 import { CommentsApp } from "../../CommentsApp/CommentsApp";
 import { PageContentWrap, PageWrap } from "../Page/Page";
-import { useContext, useEffect, useState } from "@wordpress/element";
-import { WPQTComment } from "../../../../types/comment";
-import { useCommentActions } from "../../../hooks/actions/useCommentActions";
-import { Task } from "../../../../types/task";
-import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
-import { useTaskActions } from "../../../hooks/actions/useTaskActions";
-import { UserPageTaskResponse } from "../../../types/user-page-task-response";
-import { convertTaskFromServer } from "../../../../utils/task";
-import { convertCommentFromServer } from "../../../../utils/comment";
 
 function TaskCommentsPage() {
   const {

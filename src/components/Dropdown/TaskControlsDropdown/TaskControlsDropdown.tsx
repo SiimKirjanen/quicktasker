@@ -1,12 +1,14 @@
-import { useContext } from "@wordpress/element";
-import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
-import { __ } from "@wordpress/i18n";
 import {
-  EllipsisHorizontalIcon,
   ArchiveBoxIcon,
+  EllipsisHorizontalIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
+import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
+import { useTaskActions } from "../../../hooks/actions/useTaskActions";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
 import {
@@ -14,8 +16,6 @@ import {
   WPQTDropdownIcon,
   WPQTDropdownItem,
 } from "../WPQTDropdown";
-import { useTaskActions } from "../../../hooks/actions/useTaskActions";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 type Props = {
   task: Task;

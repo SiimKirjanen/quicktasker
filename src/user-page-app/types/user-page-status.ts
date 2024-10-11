@@ -14,4 +14,4 @@ type ServerUserPageStatus = BaseUserPageStatus & {
   setupCompleted: boolean;
 };
 
-export type { UserPageStatus, ServerUserPageStatus };
+export type { ServerUserPageStatus, UserPageStatus };

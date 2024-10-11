@@ -2,12 +2,12 @@ import {
   EllipsisHorizontalIcon,
   UserMinusIcon,
 } from "@heroicons/react/24/outline";
+import { __ } from "@wordpress/i18n";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
   WPQTDropdownItem,
 } from "../WPQTDropdown";
-import { __ } from "@wordpress/i18n";
 
 type Props = {
   taskId: string;

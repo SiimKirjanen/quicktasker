@@ -1,10 +1,10 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { reducer } from "../reducers/user-page-app-reducer";
-import { SET_USER_LOGGED_IN, SET_USER_PAGE_STATUS } from "../constants";
-import { getUserPageStatusRequest } from "../api/user-page-api";
-import { useSession } from "../hooks/useSession";
 import { getQueryParam } from "../../utils/url";
+import { getUserPageStatusRequest } from "../api/user-page-api";
+import { SET_USER_LOGGED_IN, SET_USER_PAGE_STATUS } from "../constants";
 import { useErrorHandler } from "../hooks/useErrorHandler";
+import { useSession } from "../hooks/useSession";
+import { reducer } from "../reducers/user-page-app-reducer";
 
 const initialState: State = {
   initialLoading: true,
@@ -99,8 +99,8 @@ const UserPageAppContextProvider = ({
 };
 
 export {
-  UserPageAppContextProvider,
   UserPageAppContext,
-  type State,
+  UserPageAppContextProvider,
   type Action,
+  type State,
 };

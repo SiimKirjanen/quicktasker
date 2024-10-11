@@ -1,5 +1,5 @@
-import { toast } from "react-toastify";
 import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
 import {
   archiveTaskRequest,
   deleteTaskRequest,

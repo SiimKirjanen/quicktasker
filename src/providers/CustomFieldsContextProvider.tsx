@@ -1,7 +1,5 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { CustomField, CustomFieldEntityType } from "../types/custom-field";
-import { reducer } from "../reducers/custom-fields-reducer";
 import { toast } from "react-toastify";
 import { getCustomFieldsRequest } from "../api/api";
 import {
@@ -11,6 +9,8 @@ import {
   SET_CUSTOM_FIELD_LOADING,
   SET_CUSTOM_FIELDS,
 } from "../constants";
+import { reducer } from "../reducers/custom-fields-reducer";
+import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 
 const initialState: State = {
   customFields: [],
@@ -98,8 +98,8 @@ const CustomFieldsContextProvider = ({
 };
 
 export {
-  CustomFieldsContextProvider,
   CustomFieldsContext,
-  type State,
+  CustomFieldsContextProvider,
   type Action,
+  type State,
 };

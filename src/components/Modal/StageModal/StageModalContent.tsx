@@ -8,14 +8,14 @@ import {
 import { __ } from "@wordpress/i18n";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage } from "../../../types/stage";
+import { WPQTInput } from "../../common/Input/Input";
+import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import {
   WPQTModalField,
   WPQTModalFieldSet,
   WPQTModalFooter,
   WPQTModalTitle,
 } from "../WPQTModal";
-import { WPQTInput } from "../../common/Input/Input";
-import { WPQTTextarea } from "../../common/TextArea/TextArea";
 
 type Props = {
   editStage: (stage: Stage) => void;

@@ -1,14 +1,14 @@
 import { PlusCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { ADD_CUSTOM_FIELD } from "../../../constants";
+import { useCustomFieldActions } from "../../../hooks/actions/useCustomFieldActions";
+import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
 import { CustomFieldType } from "../../../types/custom-field";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
-import { useContext, useState } from "@wordpress/element";
-import { WPQTSelect, Option } from "../../common/Select/WPQTSelect";
-import { useCustomFieldActions } from "../../../hooks/actions/useCustomFieldActions";
+import { Option, WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
-import { ADD_CUSTOM_FIELD } from "../../../constants";
 
 type Props = {
   description: string;

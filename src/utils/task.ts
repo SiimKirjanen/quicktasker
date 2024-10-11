@@ -69,4 +69,4 @@ const convertTaskFromServer = (task: TaskFromServer): Task => ({
     : [], // Default to an empty array if assigned_users is undefined
 });
 
-export { moveTask, reorderTask, convertTaskFromServer };
+export { convertTaskFromServer, moveTask, reorderTask };

@@ -1,17 +1,17 @@
 import { useContext } from "@wordpress/element";
 import { WPQTCard } from "../../components/Card/Card";
 import { UserTaskDropdown } from "../../components/Dropdown/UserTaskDropdown/UserTaskDropdown";
-import { useUserTasksFilter } from "../../hooks/filters/useUserTasksFilter";
-import { Task, TaskFromServer } from "../../types/task";
-import { ModalContext } from "../../providers/ModalContextProvider";
+import { TaskModal } from "../../components/Modal/TaskModal/TaskModal";
 import {
   EDIT_USER_TASK,
   OPEN_EDIT_TASK_MODAL,
   REMOVE_USER_TASK,
 } from "../../constants";
-import { UserTasksContext } from "../../providers/UserTasksContextProvider";
 import { useTaskActions } from "../../hooks/actions/useTaskActions";
-import { TaskModal } from "../../components/Modal/TaskModal/TaskModal";
+import { useUserTasksFilter } from "../../hooks/filters/useUserTasksFilter";
+import { ModalContext } from "../../providers/ModalContextProvider";
+import { UserTasksContext } from "../../providers/UserTasksContextProvider";
+import { Task, TaskFromServer } from "../../types/task";
 
 type Props = {
   userId: string;

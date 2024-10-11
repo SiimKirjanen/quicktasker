@@ -1,7 +1,7 @@
 import { useContext } from "@wordpress/element";
-import { UserPageAppContext } from "../providers/UserPageAppContextProvider";
 import { WPQTComment } from "../../types/comment";
 import { filterNewComments } from "../../utils/comment";
+import { UserPageAppContext } from "../providers/UserPageAppContextProvider";
 
 const WPQT_STORED_COMMENTS_KEY = "wpqt-stored-comments";
 

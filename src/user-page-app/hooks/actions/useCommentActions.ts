@@ -1,14 +1,14 @@
 import { useContext } from "@wordpress/element";
 import { WPQTComment, WPQTCommentFromServer } from "../../../types/comment";
+import { convertCommentFromServer } from "../../../utils/comment";
 import {
   addTaskCommentRequest,
   addUserCommentRequest,
   getTaskCommentsRequest,
   getUserCommentsRequest,
 } from "../../api/user-page-api";
-import { useErrorHandler } from "../useErrorHandler";
 import { UserPageAppContext } from "../../providers/UserPageAppContextProvider";
-import { convertCommentFromServer } from "../../../utils/comment";
+import { useErrorHandler } from "../useErrorHandler";
 
 function useCommentActions() {
   const {

@@ -1,14 +1,14 @@
-import { toast } from "react-toastify";
 import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
+import { getComments } from "../../../../api/api";
+import { useCommentActions } from "../../../../hooks/actions/useCommentActions";
+import { WPQTComment } from "../../../../types/comment";
+import { WPQTTypes } from "../../../../types/enums";
+import { convertCommentFromServer } from "../../../../utils/comment";
 import {
   CommentsAndLogsTabContent,
   TabContentItem,
 } from "../CommentsAndLogsTabContent";
-import { getComments } from "../../../../api/api";
-import { WPQTComment } from "../../../../types/comment";
-import { WPQTTypes } from "../../../../types/enums";
-import { useCommentActions } from "../../../../hooks/actions/useCommentActions";
-import { convertCommentFromServer } from "../../../../utils/comment";
 
 type Props = {
   userId: string;

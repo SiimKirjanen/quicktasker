@@ -21,4 +21,4 @@ type FullPipelineDataFromServer = {
   pipelines: PipelineFromServer[];
 };
 
-export type { Pipeline, PipelineFromServer, FullPipelineDataFromServer };
+export type { FullPipelineDataFromServer, Pipeline, PipelineFromServer };

@@ -1,26 +1,26 @@
+import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
+import { Route, HashRouter as Router, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import ErrorBoundary from "../components/ErrorBoundary/ErrorBoundary";
+import { AssignableTasksPage } from "./components/Pages/AssignableTasksPage/AssignableTasksPage";
+import { ErrorPage } from "./components/Pages/ErrorPage/ErrorPage";
+import { HomePage } from "./components/Pages/HomePage/HomePage";
+import { LoadingPage } from "./components/Pages/LoadingPage/LoadingPage";
+import { LoginPage } from "./components/Pages/LoginPage/LoginPage";
+import { NotificationsPage } from "./components/Pages/NotificationsPage/NotificationsPage";
+import { PprofilePage } from "./components/Pages/ProfilePage/ProfilePage";
+import { SetUpPage } from "./components/Pages/SetUpPage/SetUpPage";
+import { TaskCommentsPage } from "./components/Pages/TaskCommentsPage/TaskCommentsPage";
+import { TaskPage } from "./components/Pages/TaskPage/TaskPage";
+import { UserCommentsPage } from "./components/Pages/UserCommentsPage/UserCommentsPage";
+import { UserTasksPage } from "./components/Pages/UserTasksPage/UserTasksPage";
+import { useSession } from "./hooks/useSession";
 import {
   UserPageAppContext,
   UserPageAppContextProvider,
 } from "./providers/UserPageAppContextProvider";
-import ErrorBoundary from "../components/ErrorBoundary/ErrorBoundary";
-import { ToastContainer } from "react-toastify";
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import { HomePage } from "./components/Pages/HomePage/HomePage";
-import { UserTasksPage } from "./components/Pages/UserTasksPage/UserTasksPage";
-import { useContext } from "@wordpress/element";
-import { ErrorPage } from "./components/Pages/ErrorPage/ErrorPage";
-import { SetUpPage } from "./components/Pages/SetUpPage/SetUpPage";
-import { LoginPage } from "./components/Pages/LoginPage/LoginPage";
-import { AssignableTasksPage } from "./components/Pages/AssignableTasksPage/AssignableTasksPage";
-import { TaskPage } from "./components/Pages/TaskPage/TaskPage";
-import { TaskCommentsPage } from "./components/Pages/TaskCommentsPage/TaskCommentsPage";
-import { PprofilePage } from "./components/Pages/ProfilePage/ProfilePage";
-import { UserCommentsPage } from "./components/Pages/UserCommentsPage/UserCommentsPage";
 import { UserPageNotificationsContextProvider } from "./providers/UserPageNotificationsContextProvider";
-import { NotificationsPage } from "./components/Pages/NotificationsPage/NotificationsPage";
-import { LoadingPage } from "./components/Pages/LoadingPage/LoadingPage";
-import { __ } from "@wordpress/i18n";
-import { useSession } from "./hooks/useSession";
 
 function UserPageContent() {
   const {

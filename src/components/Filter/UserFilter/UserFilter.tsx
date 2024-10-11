@@ -1,8 +1,8 @@
 import { Input } from "@headlessui/react";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { UserContext } from "../../../providers/UserContextProvider";
 import { SET_USERS_SEARCH_VALUE } from "../../../constants";
+import { UserContext } from "../../../providers/UserContextProvider";
 import { WPQTFilter } from "../WPQTFilter";
 
 function UserFilter() {

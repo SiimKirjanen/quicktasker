@@ -8,14 +8,14 @@ import { Task, TaskFromServer } from "../../types/task";
 
 import { UserPageAppContext } from "./UserPageAppContextProvider";
 
-import { useErrorHandler } from "../hooks/useErrorHandler";
-import { reducer } from "../reducers/user-assignable-tasks-reducer";
 import { getAssignableTasksRequest } from "../api/user-page-api";
 import {
   REMOVE_ASSIGNABLE_TASK,
   SET_ASSIGNABLE_TASKS,
   SET_ASSIGNABLE_TASKS_LOADING,
 } from "../constants";
+import { useErrorHandler } from "../hooks/useErrorHandler";
+import { reducer } from "../reducers/user-assignable-tasks-reducer";
 
 const initialState: State = {
   loading: true,
@@ -96,8 +96,8 @@ const UserAssignableTasksContextProvider = ({
 };
 
 export {
-  UserAssignableTasksContextProvider,
   UserAssignableTasksContext,
-  type State,
+  UserAssignableTasksContextProvider,
   type Action,
+  type State,
 };

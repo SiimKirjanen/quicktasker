@@ -1,13 +1,13 @@
 import apiFetch from "@wordpress/api-fetch";
-import { WPQTResponse } from "../../types/response";
-import { ServerUserPageStatus } from "../types/user-page-status";
-import { UserSession } from "../types/user-session";
-import { UserPageOverview } from "../types/user-page-overview";
-import { TaskFromServer } from "../../types/task";
-import { UserPageTaskResponse } from "../types/user-page-task-response";
 import { WPQTCommentFromServer } from "../../types/comment";
-import { UserPageUserResponse } from "../types/user-page-user-response";
 import { CustomFieldEntityType } from "../../types/custom-field";
+import { WPQTResponse } from "../../types/response";
+import { TaskFromServer } from "../../types/task";
+import { UserPageOverview } from "../types/user-page-overview";
+import { ServerUserPageStatus } from "../types/user-page-status";
+import { UserPageTaskResponse } from "../types/user-page-task-response";
+import { UserPageUserResponse } from "../types/user-page-user-response";
+import { UserSession } from "../types/user-session";
 
 function getCommonHeaders() {
   return {
@@ -222,22 +222,22 @@ function updateCustomFieldValueRequest(
 }
 
 export {
-  getUserPageStatusRequest,
-  setUpUserPageRequest,
-  logInUserPageRequest,
-  getOverviewRequest,
-  getAssignedTasksRequest,
-  getAssignableTasksRequest,
-  getTaskDataRequest,
-  assignTaskToUser,
-  unAssignTaskFromUser,
-  changeTaskStageRequest,
-  logoutUserPageRequest,
-  getTaskCommentsRequest,
   addTaskCommentRequest,
-  getUserCommentsRequest,
   addUserCommentRequest,
+  assignTaskToUser,
+  changeTaskStageRequest,
+  getAssignableTasksRequest,
+  getAssignedTasksRequest,
+  getOverviewRequest,
+  getTaskCommentsRequest,
+  getTaskDataRequest,
+  getUserCommentsRequest,
   getUserPageCommentsRequest,
+  getUserPageStatusRequest,
   getUserPageUserDataRequest,
+  logInUserPageRequest,
+  logoutUserPageRequest,
+  setUpUserPageRequest,
+  unAssignTaskFromUser,
   updateCustomFieldValueRequest,
 };

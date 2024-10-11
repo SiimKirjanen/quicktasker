@@ -4,19 +4,19 @@ import {
   useEffect,
   useReducer,
 } from "@wordpress/element";
-import { Task, TaskFromServer } from "../../types/task";
-import { reducer } from "../reducers/user-page-task-reducer";
-import { UserPageAppContext } from "./UserPageAppContextProvider";
-import { getTaskDataRequest } from "../api/user-page-api";
-import { useErrorHandler } from "../hooks/useErrorHandler";
+import { CustomField } from "../../types/custom-field";
 import { Stage } from "../../types/stage";
+import { Task, TaskFromServer } from "../../types/task";
+import { getTaskDataRequest } from "../api/user-page-api";
 import {
   SET_USER_PAGE_TASK_DATA,
   SET_USER_PAGE_TASK_LOADING,
   UPDATE_USER_PAGE_TASK_DATA,
 } from "../constants";
+import { useErrorHandler } from "../hooks/useErrorHandler";
+import { reducer } from "../reducers/user-page-task-reducer";
 import { UserPageTaskResponse } from "../types/user-page-task-response";
-import { CustomField } from "../../types/custom-field";
+import { UserPageAppContext } from "./UserPageAppContextProvider";
 
 const initialState: State = {
   task: null,
@@ -100,8 +100,8 @@ const UserPageTaskContextProvider = ({
 };
 
 export {
-  UserPageTaskContextProvider,
   UserPageTaskContext,
-  type State,
+  UserPageTaskContextProvider,
   type Action,
+  type State,
 };

@@ -1,23 +1,23 @@
+import { MenuItem } from "@headlessui/react";
+import {
+  PlusCircleIcon,
+  StarIcon as StarIconOutline,
+} from "@heroicons/react/24/outline";
+import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/solid";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
-import { MenuItem } from "@headlessui/react";
-import { setPipelinePrimaryRequest } from "../../../api/api";
+import { clsx } from "clsx";
 import { toast } from "react-toastify";
+import { setPipelinePrimaryRequest } from "../../../api/api";
 import {
   OPEN_NEW_PIPELINE_MODAL,
   PIPELINE_SET_PRIMARY,
 } from "../../../constants";
-import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/solid";
-import {
-  StarIcon as StarIconOutline,
-  PlusCircleIcon,
-} from "@heroicons/react/24/outline";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { Pipeline } from "../../../types/pipeline";
-import { clsx } from "clsx";
-import { WPQTDropdown } from "../WPQTDropdown";
 import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
+import { Pipeline } from "../../../types/pipeline";
+import { WPQTDropdown } from "../WPQTDropdown";
 
 function PipelineSelectionDropdown() {
   const {

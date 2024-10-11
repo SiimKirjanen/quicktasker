@@ -1,15 +1,15 @@
-import { WPQTModal } from "../WPQTModal";
 import { useContext } from "@wordpress/element";
-import { ModalContext } from "../../../providers/ModalContextProvider";
+import { createNewStageRequest, editStageRequest } from "../../../api/api";
 import {
   CLOSE_STAGE_MODAL,
   PIPELINE_ADD_STAGE,
   PIPELINE_EDIT_STAGE,
 } from "../../../constants";
-import { StageModalContent } from "./StageModalContent";
-import { createNewStageRequest, editStageRequest } from "../../../api/api";
-import { Stage } from "../../../types/stage";
 import { DispatchType, useModal } from "../../../hooks/useModal";
+import { ModalContext } from "../../../providers/ModalContextProvider";
+import { Stage } from "../../../types/stage";
+import { WPQTModal } from "../WPQTModal";
+import { StageModalContent } from "./StageModalContent";
 
 function StageModal() {
   const {

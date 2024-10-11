@@ -27,14 +27,6 @@ use WPQT\Stage\StageRepository;
 use WPQT\UserPage\UserPageService;
 use WPQT\Customfield\CustomFieldService;
 
-function validate_numeric($param, $request, $key) {
-    return is_numeric($param);
-}
-
-function sanitize_absint($param, $request, $key) {
-    return absint($param);
-}
-
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
     NonceService::verifyNonce($nonce, WPQT_ADMIN_API_NONCE);

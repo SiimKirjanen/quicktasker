@@ -1,11 +1,12 @@
 import {
   createContext,
-  useReducer,
-  useEffect,
   useContext,
+  useEffect,
+  useReducer,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { Pipeline, PipelineFromServer } from "../types/pipeline";
+import { toast } from "react-toastify";
+import { getPipelineData } from "../api/api";
 import {
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
@@ -22,12 +23,11 @@ import {
   SET_FULL_PAGE_LOADING,
 } from "../constants";
 import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
-import { getPipelineData } from "../api/api";
-import { toast } from "react-toastify";
-import { LoadingContext } from "./LoadingContextProvider";
-import { TaskFromServer } from "../types/task";
+import { Pipeline, PipelineFromServer } from "../types/pipeline";
 import { Stage } from "../types/stage";
+import { TaskFromServer } from "../types/task";
 import { User } from "../types/user";
+import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState = {
   loading: false,
@@ -144,8 +144,8 @@ const ActivePipelineContextProvider = ({
 };
 
 export {
-  ActivePipelineContextProvider,
   ActivePipelineContext,
-  type State,
+  ActivePipelineContextProvider,
   type Action,
+  type State,
 };

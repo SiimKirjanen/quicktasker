@@ -1,10 +1,10 @@
+import { ArrowPathIcon, ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "@wordpress/element";
-import { LoadingOval } from "../../Loading/Loading";
-import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTComment } from "../../../types/comment";
 import { Log } from "../../../types/log";
-import { ChatBubbleLeftIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { LoadingOval } from "../../Loading/Loading";
+import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTTextarea } from "../../common/TextArea/TextArea";
 
 type Props<T> = {
   typeId: string;

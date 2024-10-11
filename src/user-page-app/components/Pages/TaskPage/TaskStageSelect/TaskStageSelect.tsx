@@ -1,10 +1,10 @@
 import { useContext, useState } from "@wordpress/element";
-import { Task } from "../../../../../types/task";
-import { UserPageTaskContext } from "../../../../providers/UserPageTaskContextProvider";
-import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
-import { StageSelectionModal } from "../../../Modal/StageSelectionModal/StageSelectionModal";
-import { WPQTButton } from "../../../../../components/common/Button/Button";
 import { __, sprintf } from "@wordpress/i18n";
+import { WPQTButton } from "../../../../../components/common/Button/Button";
+import { Task } from "../../../../../types/task";
+import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
+import { UserPageTaskContext } from "../../../../providers/UserPageTaskContextProvider";
+import { StageSelectionModal } from "../../../Modal/StageSelectionModal/StageSelectionModal";
 
 type Props = {
   task: Task | null;

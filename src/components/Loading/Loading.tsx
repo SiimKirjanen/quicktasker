@@ -46,4 +46,4 @@ function Loading({
   );
 }
 
-export { FullLoading, LoadingOval, Loading };
+export { FullLoading, Loading, LoadingOval };

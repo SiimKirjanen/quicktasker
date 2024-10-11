@@ -26,4 +26,4 @@ type CustomField = {
   value?: string;
 };
 
-export { CustomFieldType, CustomFieldEntityType, type CustomField };
+export { CustomFieldEntityType, CustomFieldType, type CustomField };

@@ -17,4 +17,4 @@ const convertExtendedUserFromServer = (
   is_active: user.is_active === "1",
 });
 
-export { convertUserFromServer, convertExtendedUserFromServer };
+export { convertExtendedUserFromServer, convertUserFromServer };

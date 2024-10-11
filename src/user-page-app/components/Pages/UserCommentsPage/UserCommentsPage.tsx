@@ -1,8 +1,8 @@
 import { useEffect, useState } from "@wordpress/element";
-import { CommentsApp } from "../../CommentsApp/CommentsApp";
-import { PageContentWrap, PageWrap } from "../Page/Page";
 import { WPQTComment } from "../../../../types/comment";
 import { useCommentActions } from "../../../hooks/actions/useCommentActions";
+import { CommentsApp } from "../../CommentsApp/CommentsApp";
+import { PageContentWrap, PageWrap } from "../Page/Page";
 
 function UserCommentsPage() {
   const [userComments, setUserComments] = useState<WPQTComment[]>([]);

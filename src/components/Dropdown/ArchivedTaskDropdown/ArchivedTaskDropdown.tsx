@@ -1,19 +1,19 @@
 import {
-  EllipsisHorizontalIcon,
-  TrashIcon,
-  EyeIcon,
   ArrowUturnUpIcon,
+  EllipsisHorizontalIcon,
+  EyeIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
+import { useContext } from "@wordpress/element";
+import { REMOVE_ARCHIVED_TASK } from "../../../constants";
+import { useTaskActions } from "../../../hooks/actions/useTaskActions";
+import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
+import { ArchivedTask } from "../../../types/task";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
   WPQTDropdownItem,
 } from "../WPQTDropdown";
-import { useTaskActions } from "../../../hooks/actions/useTaskActions";
-import { ArchivedTask } from "../../../types/task";
-import { useContext } from "@wordpress/element";
-import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
-import { REMOVE_ARCHIVED_TASK } from "../../../constants";
 
 type Props = {
   task: ArchivedTask;

@@ -1,7 +1,7 @@
 import { Task } from "../../../../types/task";
 import { WPQTTabs } from "../../WPQTTabs";
-import { CommentsTabContent } from "./PrivateCommentsTabContent";
 import { LogsTabContent } from "./LogsTabContent";
+import { CommentsTabContent } from "./PrivateCommentsTabContent";
 import { PublicCommentsTabContent } from "./PublicCommentsTabContent";
 
 type Props = {

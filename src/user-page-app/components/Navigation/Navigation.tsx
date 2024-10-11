@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router-dom";
 import {
   ArrowPathIcon,
+  BellAlertIcon,
   BellIcon,
   HomeIcon,
-  BellAlertIcon,
 } from "@heroicons/react/24/outline";
-import { LoadingOval } from "../../../components/Loading/Loading";
-import { ProfileDropdown } from "../Dropdown/ProfileDropdown/ProfileDropdown";
 import { useContext } from "@wordpress/element";
+import { useNavigate } from "react-router-dom";
+import { LoadingOval } from "../../../components/Loading/Loading";
 import { UserPageNotificationsContext } from "../../providers/UserPageNotificationsContextProvider";
+import { ProfileDropdown } from "../Dropdown/ProfileDropdown/ProfileDropdown";
 
 type Props = {
   loading: boolean;

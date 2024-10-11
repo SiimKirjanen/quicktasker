@@ -1,18 +1,18 @@
 import apiFetch from "@wordpress/api-fetch";
+import { WPQTCommentFromServer } from "../types/comment";
+import { CustomField, CustomFieldEntityType } from "../types/custom-field";
+import { WPQTTypes } from "../types/enums";
+import { LogFromServer } from "../types/log";
 import {
   FullPipelineDataFromServer,
   Pipeline,
   PipelineFromServer,
 } from "../types/pipeline";
-import { ArchivedTaskFromServer, Task, TaskFromServer } from "../types/task";
-import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { WPQTResponse } from "../types/response";
-import { LogFromServer } from "../types/log";
-import { WPQTCommentFromServer } from "../types/comment";
+import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
+import { ArchivedTaskFromServer, Task, TaskFromServer } from "../types/task";
 import { ServerExtendedUser, ServerUser, User } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
-import { WPQTTypes } from "../types/enums";
-import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 
 function getCommonHeaders() {
   return {
@@ -481,41 +481,41 @@ function updateCustomFieldValueRequest(
   });
 }
 export {
-  getPipelineData,
-  moveTaskRequest,
-  createTaskRequest,
-  createNewStageRequest,
-  deleteStageRequest,
-  createPipelineRequest,
-  editTaskRequest,
-  editStageRequest,
-  moveStageRequest,
-  editPipelineRequest,
-  setPipelinePrimaryRequest,
-  deleteTaskRequest,
-  archiveTaskRequest,
-  archiveStageTasksRequest,
-  getArchivedTasksRequest,
   addCommentRequest,
-  getTaskLogs,
-  getComments,
-  createUserRequest,
-  editUserRequest,
-  changeUserStatusRequest,
-  deleteUserRequest,
-  assignTaskToUserRequest,
-  removeTaskFromUserRequest,
-  getUserSessionsRequest,
-  changeUserSessionStatusRequest,
-  deleteUserSessionRequest,
-  getUserTasksRequest,
-  getUsersRequest,
-  getExtendedUserRequest,
-  restoreArchivedTaskRequest,
-  getLogsRequest,
-  resetUserPasswordRequest,
-  getCustomFieldsRequest,
   addCustomFieldRequest,
+  archiveStageTasksRequest,
+  archiveTaskRequest,
+  assignTaskToUserRequest,
+  changeUserSessionStatusRequest,
+  changeUserStatusRequest,
+  createNewStageRequest,
+  createPipelineRequest,
+  createTaskRequest,
+  createUserRequest,
+  deleteStageRequest,
+  deleteTaskRequest,
+  deleteUserRequest,
+  deleteUserSessionRequest,
+  editPipelineRequest,
+  editStageRequest,
+  editTaskRequest,
+  editUserRequest,
+  getArchivedTasksRequest,
+  getComments,
+  getCustomFieldsRequest,
+  getExtendedUserRequest,
+  getLogsRequest,
+  getPipelineData,
+  getTaskLogs,
+  getUserSessionsRequest,
+  getUsersRequest,
+  getUserTasksRequest,
   markCustomFieldAsDeletedRequest,
+  moveStageRequest,
+  moveTaskRequest,
+  removeTaskFromUserRequest,
+  resetUserPasswordRequest,
+  restoreArchivedTaskRequest,
+  setPipelinePrimaryRequest,
   updateCustomFieldValueRequest,
 };

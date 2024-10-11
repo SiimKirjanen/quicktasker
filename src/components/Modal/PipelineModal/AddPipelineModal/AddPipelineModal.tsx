@@ -1,12 +1,12 @@
 import { useContext } from "@wordpress/element";
-import { WPQTModal } from "../../WPQTModal";
-import { ModalContext } from "../../../../providers/ModalContextProvider";
-import { PipelineModalContent } from "./AddPipelineModalContent";
+import { createPipelineRequest } from "../../../../api/api";
 import {
   CLOSE_PIPELINE_MODAL,
   PIPELINE_ADD_PIPELINE,
 } from "../../../../constants";
-import { createPipelineRequest } from "../../../../api/api";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { WPQTModal } from "../../WPQTModal";
+import { PipelineModalContent } from "./AddPipelineModalContent";
 
 import { DispatchType, useModal } from "../../../../hooks/useModal";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";

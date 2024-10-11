@@ -1,12 +1,12 @@
 import { forwardRef, useImperativeHandle, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { WPQTInput } from "../../../common/Input/Input";
+import { WPQTTextarea } from "../../../common/TextArea/TextArea";
 import {
   WPQTModalField,
   WPQTModalFieldSet,
   WPQTModalFooter,
 } from "../../WPQTModal";
-import { WPQTInput } from "../../../common/Input/Input";
-import { WPQTTextarea } from "../../../common/TextArea/TextArea";
 
 type Props = {
   addPipeline: (name: string, description: string) => void;

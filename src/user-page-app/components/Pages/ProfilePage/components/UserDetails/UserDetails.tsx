@@ -1,9 +1,9 @@
+import { __ } from "@wordpress/i18n";
 import {
   DataDisplay,
   DisplayRow,
 } from "../../../../../../components/common/DataDisplay/DataDisplay";
 import { User } from "../../../../../../types/user";
-import { __ } from "@wordpress/i18n";
 
 type Props = {
   user: User | null;

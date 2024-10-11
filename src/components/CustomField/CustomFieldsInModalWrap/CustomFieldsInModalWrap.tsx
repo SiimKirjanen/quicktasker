@@ -1,11 +1,11 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldsContextProvider } from "../../../providers/CustomFieldsContextProvider";
+import { CustomFieldEntityType } from "../../../types/custom-field";
 import { CustomFieldCreation } from "../CustomFieldCreation/CustomFieldCreation";
 import { CustomFields } from "../CustomFields/CustomFields";
 import { CustomFieldsAd } from "../CustomFieldsAd/CustomFieldsAd";
-import { AppContext } from "../../../providers/AppContextProvider";
-import { CustomFieldEntityType } from "../../../types/custom-field";
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.User]: __(

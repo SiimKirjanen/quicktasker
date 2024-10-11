@@ -1,11 +1,11 @@
-import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
-import { AppContextProvider } from "./providers/AppContextProvider";
-import { ModalContextProvider } from "./providers/ModalContextProvider";
-import { UserContextProvider } from "./providers/UserContextProvider";
 import { ToastContainer } from "react-toastify";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import { useCurrentPage } from "./hooks/useCurrentPage";
-import { PipelinesContextProvider } from "./providers/PipelinesContextProvider";
+import { AppContextProvider } from "./providers/AppContextProvider";
 import { LoadingContextProvider } from "./providers/LoadingContextProvider";
+import { ModalContextProvider } from "./providers/ModalContextProvider";
+import { PipelinesContextProvider } from "./providers/PipelinesContextProvider";
+import { UserContextProvider } from "./providers/UserContextProvider";
 
 function App() {
   const currentPage = useCurrentPage();

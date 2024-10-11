@@ -1,27 +1,27 @@
 import {
-  TrashIcon,
-  PencilSquareIcon,
-  RectangleStackIcon,
   EllipsisHorizontalIcon,
+  PencilSquareIcon,
   PowerIcon,
+  RectangleStackIcon,
+  TrashIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { __ } from "@wordpress/i18n";
-import {
-  WPQTDropdown,
-  WPQTDropdownIcon,
-  WPQTDropdownItem,
-} from "../WPQTDropdown";
 import { useContext } from "@wordpress/element";
-import { ModalContext } from "../../../providers/ModalContextProvider";
+import { __ } from "@wordpress/i18n";
 import {
   DELETE_USER,
   EDIT_USER,
   OPEN_EDIT_USER_MODAL,
 } from "../../../constants";
-import { User } from "../../../types/user";
-import { UserContext } from "../../../providers/UserContextProvider";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
+import { ModalContext } from "../../../providers/ModalContextProvider";
+import { UserContext } from "../../../providers/UserContextProvider";
+import { User } from "../../../types/user";
+import {
+  WPQTDropdown,
+  WPQTDropdownIcon,
+  WPQTDropdownItem,
+} from "../WPQTDropdown";
 
 type Props = {
   user: User;

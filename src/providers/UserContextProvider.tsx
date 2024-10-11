@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { ServerUser, User } from "../types/user";
-import { reducer } from "../reducers/user-reducer";
+import { toast } from "react-toastify";
+import { getUsersRequest } from "../api/api";
 import {
   ADD_USER,
   DELETE_USER,
@@ -9,8 +9,8 @@ import {
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
 } from "../constants";
-import { getUsersRequest } from "../api/api";
-import { toast } from "react-toastify";
+import { reducer } from "../reducers/user-reducer";
+import { ServerUser, User } from "../types/user";
 
 const initialState: State = {
   users: [],
@@ -72,4 +72,4 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export { UserContextProvider, UserContext, type State, type Action };
+export { UserContext, UserContextProvider, type Action, type State };

@@ -1,24 +1,24 @@
 import {
+  ArchiveBoxIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  Cog8ToothIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
+import { useContext } from "@wordpress/element";
+import { __, sprintf } from "@wordpress/i18n";
+import { toast } from "react-toastify";
+import {
   archiveStageTasksRequest,
   deleteStageRequest,
   moveStageRequest,
 } from "../../../api/api";
-import { __, sprintf } from "@wordpress/i18n";
-import { useContext } from "@wordpress/element";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import {
   OPEN_STAGE_EDIT_MODAL,
   PIPELINE_DELETE_STAGE,
 } from "../../../constants";
-import {
-  Cog8ToothIcon,
-  ArchiveBoxIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  PencilSquareIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
-import { toast } from "react-toastify";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage, StageChangeDirection } from "../../../types/stage";
 import {

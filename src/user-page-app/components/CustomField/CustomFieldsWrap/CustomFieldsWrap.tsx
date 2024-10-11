@@ -3,9 +3,9 @@ import {
   CustomField,
   CustomFieldEntityType,
 } from "../../../../types/custom-field";
+import { useCustomFieldActions } from "../../../hooks/actions/useCustomFieldActions";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { CustomField as CustomFieldComponent } from "../CustomField/CustomField";
-import { useCustomFieldActions } from "../../../hooks/actions/useCustomFieldActions";
 
 type Props = {
   entityId: string;

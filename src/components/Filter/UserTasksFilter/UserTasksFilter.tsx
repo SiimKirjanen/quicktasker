@@ -1,13 +1,13 @@
-import { WPQTFilter } from "../WPQTFilter";
-import { __ } from "@wordpress/i18n";
-import { WPQTInput } from "../../common/Input/Input";
 import { useContext } from "@wordpress/element";
-import { UserTasksContext } from "../../../providers/UserTasksContextProvider";
+import { __ } from "@wordpress/i18n";
 import {
   SET_USER_TASKS_FILTERED_PIPELINE,
   SET_USER_TASKS_SEARCH_VALUE,
 } from "../../../constants";
+import { UserTasksContext } from "../../../providers/UserTasksContextProvider";
+import { WPQTInput } from "../../common/Input/Input";
 import { PipelineFilterSelect } from "../../common/Select/PipelineFilterSelect/PipelineFilterSelect";
+import { WPQTFilter } from "../WPQTFilter";
 
 function UserTasksFilter() {
   const {

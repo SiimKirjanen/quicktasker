@@ -1,8 +1,9 @@
 import {
-  WPQTModalField,
-  WPQTModalFieldSet,
-  WPQTModalFooter,
-} from "../WPQTModal";
+  PowerIcon,
+  RectangleStackIcon,
+  TrashIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import {
   forwardRef,
   useContext,
@@ -11,23 +12,22 @@ import {
   useState,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { CLOSE_USER_MODAL, DELETE_USER, EDIT_USER } from "../../../constants";
+import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { UserContext } from "../../../providers/UserContextProvider";
+import { CustomFieldEntityType } from "../../../types/custom-field";
 import { User } from "../../../types/user";
+import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { WPQTIconButton } from "../../common/Button/Button";
-import {
-  PowerIcon,
-  RectangleStackIcon,
-  TrashIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
-import { useUserActions } from "../../../hooks/actions/useUserActions";
-import { CLOSE_USER_MODAL, DELETE_USER, EDIT_USER } from "../../../constants";
-import { UserContext } from "../../../providers/UserContextProvider";
-import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
-import { CustomFieldEntityType } from "../../../types/custom-field";
+import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
+import {
+  WPQTModalField,
+  WPQTModalFieldSet,
+  WPQTModalFooter,
+} from "../WPQTModal";
 type Props = {
   editUser: (user: User) => void;
   modalSaving: boolean;

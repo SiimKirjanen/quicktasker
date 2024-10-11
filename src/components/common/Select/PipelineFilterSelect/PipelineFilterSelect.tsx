@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "@wordpress/element";
-import { WPQTSelect } from "../WPQTSelect";
 import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
+import { WPQTSelect } from "../WPQTSelect";
 
 type Props = {
   selectedOptionValue: string;

@@ -1,20 +1,20 @@
-import { UserModal } from "../../components/Modal/UserModal/UserModal";
-import { __ } from "@wordpress/i18n";
-import { Page } from "../Page/Page";
-import { UserFilter } from "../../components/Filter/UserFilter/UserFilter";
-import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect } from "@wordpress/element";
-import { UserContext } from "../../providers/UserContextProvider";
-import { LoadingContext } from "../../providers/LoadingContextProvider";
+import { __ } from "@wordpress/i18n";
+import { UserFilter } from "../../components/Filter/UserFilter/UserFilter";
+import { UserModal } from "../../components/Modal/UserModal/UserModal";
+import { UsersSettingsModal } from "../../components/Modal/UsersSettingsModal/UsersSettingsModal";
+import { WPQTPageHeader } from "../../components/common/Header/Header";
 import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   SET_FULL_PAGE_LOADING,
 } from "../../constants";
+import { LoadingContext } from "../../providers/LoadingContextProvider";
+import { ModalContext } from "../../providers/ModalContextProvider";
+import { UserContext } from "../../providers/UserContextProvider";
+import { Page } from "../Page/Page";
 import { AddUser } from "./components/AddUser/AddUser";
 import { UserList } from "./components/UserList/UserList";
-import { Cog8ToothIcon } from "@heroicons/react/24/outline";
-import { ModalContext } from "../../providers/ModalContextProvider";
-import { UsersSettingsModal } from "../../components/Modal/UsersSettingsModal/UsersSettingsModal";
 
 function UsersPage() {
   const { updateUsers } = useContext(UserContext);

@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
-import { setUpUserPageRequest } from "../../../api/user-page-api";
-import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
-import { useErrorHandler } from "../../../hooks/useErrorHandler";
-import { PageScreenMiddle } from "../Page/Page";
-import { WPQTFieldSet } from "../../../../components/common/Form/FieldSet";
-import { WPQTField } from "../../../../components/common/Form/Field";
-import { WPQTLabel } from "../../../../components/common/Form/Label";
-import { WPQTButton } from "../../../../components/common/Button/Button";
-import { WPQTInput } from "../../../../components/common/Input/Input";
 import { __, sprintf } from "@wordpress/i18n";
+import { WPQTButton } from "../../../../components/common/Button/Button";
+import { WPQTField } from "../../../../components/common/Form/Field";
+import { WPQTFieldSet } from "../../../../components/common/Form/FieldSet";
+import { WPQTLabel } from "../../../../components/common/Form/Label";
+import { WPQTInput } from "../../../../components/common/Input/Input";
+import { setUpUserPageRequest } from "../../../api/user-page-api";
+import { useErrorHandler } from "../../../hooks/useErrorHandler";
+import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
+import { PageScreenMiddle } from "../Page/Page";
 
 function SetUpPage() {
   const {

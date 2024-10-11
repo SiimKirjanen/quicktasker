@@ -1,16 +1,16 @@
 import {
+  KeyIcon,
   PowerIcon,
   RectangleStackIcon,
   TrashIcon,
-  KeyIcon,
 } from "@heroicons/react/24/outline";
+import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTIconButton } from "../../../../components/common/Button/Button";
-import { useUserActions } from "../../../../hooks/actions/useUserActions";
-import { ExtendedUser } from "../../../../types/user";
-import { useContext } from "@wordpress/element";
-import { UserContext } from "../../../../providers/UserContextProvider";
 import { DELETE_USER, EDIT_USER } from "../../../../constants";
+import { useUserActions } from "../../../../hooks/actions/useUserActions";
+import { UserContext } from "../../../../providers/UserContextProvider";
+import { ExtendedUser } from "../../../../types/user";
 
 type Props = {
   data: ExtendedUser;

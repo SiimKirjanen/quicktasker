@@ -1,7 +1,7 @@
 import { __ } from "@wordpress/i18n";
-import { Page } from "../Page/Page";
-import { ArchiveContextProvider } from "../../providers/ArchiveContextProvider";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { ArchiveContextProvider } from "../../providers/ArchiveContextProvider";
+import { Page } from "../Page/Page";
 import { Archive } from "./Archive/Archive";
 
 function ArchivePage() {

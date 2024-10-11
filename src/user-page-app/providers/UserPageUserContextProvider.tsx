@@ -4,17 +4,17 @@ import {
   useEffect,
   useReducer,
 } from "@wordpress/element";
+import { CustomField } from "../../types/custom-field";
 import { User } from "../../types/user";
-import { reducer } from "../reducers/user-page-user-recuder";
-import { UserPageAppContext } from "./UserPageAppContextProvider";
-import { useErrorHandler } from "../hooks/useErrorHandler";
 import { getUserPageUserDataRequest } from "../api/user-page-api";
 import {
   SET_USER_PAGE_USER_DATA,
   SET_USER_PAGE_USER_LOADING,
 } from "../constants";
+import { useErrorHandler } from "../hooks/useErrorHandler";
+import { reducer } from "../reducers/user-page-user-recuder";
 import { UserPageUserResponse } from "../types/user-page-user-response";
-import { CustomField } from "../../types/custom-field";
+import { UserPageAppContext } from "./UserPageAppContextProvider";
 
 const initialState: State = {
   user: null,
@@ -96,8 +96,8 @@ const UserPageUserContextProvider = ({
 };
 
 export {
-  UserPageUserContextProvider,
   UserPageUserContext,
-  type State,
+  UserPageUserContextProvider,
   type Action,
+  type State,
 };

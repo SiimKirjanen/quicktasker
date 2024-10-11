@@ -1,15 +1,15 @@
 import { useContext } from "@wordpress/element";
-import { PageContentWrap, PageWrap } from "../Page/Page";
 import { useParams } from "react-router-dom";
-import { TaskDetails } from "./TaskDetails/TaskDetails";
-import { TaskControls } from "./TaskControls/TaskControls";
+import { CustomFieldEntityType } from "../../../../types/custom-field";
 import {
   UserPageTaskContext,
   UserPageTaskContextProvider,
 } from "../../../providers/UserPageTaskContextProvider";
-import { TaskStageSelect } from "./TaskStageSelect/TaskStageSelect";
-import { CustomFieldEntityType } from "../../../../types/custom-field";
 import { CustomFieldsWrap } from "../../CustomField/CustomFieldsWrap/CustomFieldsWrap";
+import { PageContentWrap, PageWrap } from "../Page/Page";
+import { TaskControls } from "./TaskControls/TaskControls";
+import { TaskDetails } from "./TaskDetails/TaskDetails";
+import { TaskStageSelect } from "./TaskStageSelect/TaskStageSelect";
 
 function TaskPage() {
   const { taskHash } = useParams<{ taskHash: string }>();

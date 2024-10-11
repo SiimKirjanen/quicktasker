@@ -1,20 +1,20 @@
 import {
-  UserIcon,
   ArrowRightStartOnRectangleIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
-import { __ } from "@wordpress/i18n";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
+import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
+import { useNavigate } from "react-router-dom";
 import {
   WPQTDropdown,
   WPQTDropdownItem,
 } from "../../../../components/Dropdown/WPQTDropdown";
 import { logoutUserPageRequest } from "../../../api/user-page-api";
-import { useContext } from "@wordpress/element";
-import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
+import { SET_USER_LOGGED_IN } from "../../../constants";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSession } from "../../../hooks/useSession";
-import { useNavigate } from "react-router-dom";
-import { SET_USER_LOGGED_IN } from "../../../constants";
+import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 
 function ProfileDropdown() {
   const {

@@ -10,4 +10,4 @@ function formatDate(
   return date.toLocaleDateString(undefined, options);
 }
 
-export { parseDate, formatDate };
+export { formatDate, parseDate };

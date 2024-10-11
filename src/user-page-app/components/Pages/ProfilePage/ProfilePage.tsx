@@ -1,13 +1,13 @@
 import { useContext } from "@wordpress/element";
+import { CustomFieldEntityType } from "../../../../types/custom-field";
 import {
   UserPageUserContext,
   UserPageUserContextProvider,
 } from "../../../providers/UserPageUserContextProvider";
+import { CustomFieldsWrap } from "../../CustomField/CustomFieldsWrap/CustomFieldsWrap";
 import { PageContentWrap, PageWrap } from "../Page/Page";
 import { ProfileActions } from "./components/ProfileActions/ProfileActions";
 import { UserDetails } from "./components/UserDetails/UserDetails";
-import { CustomFieldsWrap } from "../../CustomField/CustomFieldsWrap/CustomFieldsWrap";
-import { CustomFieldEntityType } from "../../../../types/custom-field";
 
 function PprofilePage() {
   return (

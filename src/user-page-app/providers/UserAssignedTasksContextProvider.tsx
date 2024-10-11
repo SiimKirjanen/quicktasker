@@ -5,11 +5,11 @@ import {
   useReducer,
 } from "@wordpress/element";
 import { Task, TaskFromServer } from "../../types/task";
-import { reducer } from "../reducers/user-assigned-tasks-reducer";
 import { getAssignedTasksRequest } from "../api/user-page-api";
-import { UserPageAppContext } from "./UserPageAppContextProvider";
 import { SET_ASSIGNED_TASKS, SET_ASSIGNED_TASKS_LOADING } from "../constants";
 import { useErrorHandler } from "../hooks/useErrorHandler";
+import { reducer } from "../reducers/user-assigned-tasks-reducer";
+import { UserPageAppContext } from "./UserPageAppContextProvider";
 
 const initialState: State = {
   loading: true,
@@ -88,8 +88,8 @@ const UserAssignedTasksContextProvider = ({
 };
 
 export {
-  UserAssignedTasksContextProvider,
   UserAssignedTasksContext,
-  type State,
+  UserAssignedTasksContextProvider,
   type Action,
+  type State,
 };

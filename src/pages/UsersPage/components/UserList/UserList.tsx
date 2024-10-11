@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
-import { UserContext } from "../../../../providers/UserContextProvider";
 import { useUserFilter } from "../../../../hooks/filters/useUserFilter";
+import { UserContext } from "../../../../providers/UserContextProvider";
 import { UserListItem } from "../UserListItem/UserListItem";
 
 function UserList() {

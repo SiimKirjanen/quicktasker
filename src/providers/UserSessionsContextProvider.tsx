@@ -5,8 +5,7 @@ import {
   useReducer,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { reducer } from "../reducers/user-sessions-reducer";
-import { ServerUserSession, UserSession } from "../types/user-session";
+import { toast } from "react-toastify";
 import { getUserSessionsRequest } from "../api/api";
 import {
   CHANGE_USER_SESSION_STATUS,
@@ -15,7 +14,8 @@ import {
   SET_USER_SESSIONS,
   SET_USER_SESSIONS_SEARCH_VALUE,
 } from "../constants";
-import { toast } from "react-toastify";
+import { reducer } from "../reducers/user-sessions-reducer";
+import { ServerUserSession, UserSession } from "../types/user-session";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState = {
@@ -92,8 +92,8 @@ const UserSessionsContextProvider = ({
 };
 
 export {
-  UserSessionsContextProvider,
   UserSessionsContext,
-  type State,
+  UserSessionsContextProvider,
   type Action,
+  type State,
 };

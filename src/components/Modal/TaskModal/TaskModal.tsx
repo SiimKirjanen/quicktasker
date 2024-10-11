@@ -1,11 +1,11 @@
 import { useContext } from "@wordpress/element";
-import { ModalContext } from "../../../providers/ModalContextProvider";
-import { CLOSE_TASK_MODAL, PIPELINE_EDIT_TASK } from "../../../constants";
 import { editTaskRequest } from "../../../api/api";
-import { TaskModalContent } from "./TaskModalContent";
-import { WPQTModal } from "../WPQTModal";
+import { CLOSE_TASK_MODAL, PIPELINE_EDIT_TASK } from "../../../constants";
 import { DispatchType, useModal } from "../../../hooks/useModal";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task, TaskFromServer } from "../../../types/task";
+import { WPQTModal } from "../WPQTModal";
+import { TaskModalContent } from "./TaskModalContent";
 
 type Props = {
   editTaskCallback?: (task: TaskFromServer) => void;

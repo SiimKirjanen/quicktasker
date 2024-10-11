@@ -6,17 +6,17 @@ import {
   useState,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { Pipeline } from "../../../../types/pipeline";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { CustomFieldEntityType } from "../../../../types/custom-field";
+import { Pipeline } from "../../../../types/pipeline";
+import { WPQTInput } from "../../../common/Input/Input";
+import { WPQTTextarea } from "../../../common/TextArea/TextArea";
+import { CustomFieldsInModalWrap } from "../../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import {
   WPQTModalField,
   WPQTModalFieldSet,
   WPQTModalFooter,
 } from "../../WPQTModal";
-import { WPQTInput } from "../../../common/Input/Input";
-import { WPQTTextarea } from "../../../common/TextArea/TextArea";
-import { CustomFieldEntityType } from "../../../../types/custom-field";
-import { CustomFieldsInModalWrap } from "../../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 
 type Props = {
   editPipeline: (pipeline: Pipeline) => void;

@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
-import { Task } from "../../types/task";
 import { UserTasksContext } from "../../providers/UserTasksContextProvider";
+import { Task } from "../../types/task";
 
 const useUserTasksFilter = () => {
   const {

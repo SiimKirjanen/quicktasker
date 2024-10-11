@@ -5,10 +5,8 @@ import {
   useReducer,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { getUserTasksRequest } from "../api/api";
 import { toast } from "react-toastify";
-import { Task, TaskFromServer } from "../types/task";
-import { reducer } from "../reducers/user-tasks-reducer";
+import { getUserTasksRequest } from "../api/api";
 import {
   EDIT_USER_TASK,
   REMOVE_USER_TASK,
@@ -17,6 +15,8 @@ import {
   SET_USER_TASKS_FILTERED_PIPELINE,
   SET_USER_TASKS_SEARCH_VALUE,
 } from "../constants";
+import { reducer } from "../reducers/user-tasks-reducer";
+import { Task, TaskFromServer } from "../types/task";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -91,4 +91,4 @@ const UserTasksContextProvider = ({
   );
 };
 
-export { UserTasksContextProvider, UserTasksContext, type State, type Action };
+export { UserTasksContext, UserTasksContextProvider, type Action, type State };

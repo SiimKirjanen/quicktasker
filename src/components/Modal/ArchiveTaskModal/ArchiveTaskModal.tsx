@@ -1,8 +1,8 @@
 import { useContext } from "@wordpress/element";
-import { WPQTModal } from "../WPQTModal";
 import { CLOSE_ARCHIVE_TASK_MODAL } from "../../../constants";
-import { ArchiveTaskModalContent } from "./ArchiveTaskModalContent";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { WPQTModal } from "../WPQTModal";
+import { ArchiveTaskModalContent } from "./ArchiveTaskModalContent";
 
 function ArchiveTaskModal() {
   const {

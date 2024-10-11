@@ -1,10 +1,10 @@
+import { EyeIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { LoadingOval } from "../../Loading/Loading";
-import { CustomField } from "./components/CustomField/CustomField";
 import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
 import { WPQTIconButton } from "../../common/Button/Button";
-import { EyeIcon } from "@heroicons/react/24/outline";
+import { LoadingOval } from "../../Loading/Loading";
+import { CustomField } from "./components/CustomField/CustomField";
 
 function CustomFields() {
   const {

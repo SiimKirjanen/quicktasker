@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext, useRef, useState } from "@wordpress/element";
-import { ModalContext } from "../providers/ModalContextProvider";
 import { ActivePipelineContext } from "../providers/ActivePipelineContextProvider";
+import { ModalContext } from "../providers/ModalContextProvider";
 import { PipelinesContext } from "../providers/PipelinesContextProvider";
 import { UserContext } from "../providers/UserContextProvider";
 

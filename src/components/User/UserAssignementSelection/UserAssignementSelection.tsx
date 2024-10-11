@@ -1,20 +1,20 @@
-import { User } from "../../../types/user";
-import { __ } from "@wordpress/i18n";
-import { Task } from "../../../types/task";
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
-import { UserContext } from "../../../providers/UserContextProvider";
+import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
 import {
   assignTaskToUserRequest,
   removeTaskFromUserRequest,
 } from "../../../api/api";
-import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
-import { toast } from "react-toastify";
-import { LoadingOval } from "../../Loading/Loading";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import {
   PIPELINE_ADD_USER_TO_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
 } from "../../../constants";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import { UserContext } from "../../../providers/UserContextProvider";
+import { Task } from "../../../types/task";
+import { User } from "../../../types/user";
+import { LoadingOval } from "../../Loading/Loading";
 
 type Props = {
   task: Task;

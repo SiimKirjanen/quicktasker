@@ -4,16 +4,14 @@ import {
   useEffect,
   useReducer,
 } from "@wordpress/element";
+import { __, sprintf } from "@wordpress/i18n";
+import { toast } from "react-toastify";
 import { WPQTComment } from "../../types/comment";
-import { reducer } from "../reducers/user-page-notifications-reducer";
-import { getUserPageCommentsRequest } from "../api/user-page-api";
-import { UserPageAppContext } from "./UserPageAppContextProvider";
-import { useErrorHandler } from "../hooks/useErrorHandler";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 import {
   convertCommentFromServer,
   filterNewComments,
 } from "../../utils/comment";
+import { getUserPageCommentsRequest } from "../api/user-page-api";
 import {
   CHANGE_USER_PAGE_NOTIFICATIONS_LOADING,
   CHECK_NEW_COMMENTS_INTERVAL,
@@ -21,9 +19,11 @@ import {
   SESSION_NOTIFICATION_CHECK_INTERVAL,
   SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS,
 } from "../constants";
+import { useErrorHandler } from "../hooks/useErrorHandler";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useSession } from "../hooks/useSession";
-import { toast } from "react-toastify";
-import { __, sprintf } from "@wordpress/i18n";
+import { reducer } from "../reducers/user-page-notifications-reducer";
+import { UserPageAppContext } from "./UserPageAppContextProvider";
 
 const initialState: State = {
   newComments: [],
@@ -149,8 +149,8 @@ const UserPageNotificationsContextProvider = ({
 };
 
 export {
-  UserPageNotificationsContextProvider,
   UserPageNotificationsContext,
-  type State,
+  UserPageNotificationsContextProvider,
   type Action,
+  type State,
 };

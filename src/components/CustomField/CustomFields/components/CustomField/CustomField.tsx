@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
+import { DELETE_CUSTOM_FIELD } from "../../../../../constants";
+import { useCustomFieldActions } from "../../../../../hooks/actions/useCustomFieldActions";
+import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
 import {
   CustomField,
   CustomFieldEntityType,
   CustomFieldType,
 } from "../../../../../types/custom-field";
 import { WPQTInput } from "../../../../common/Input/Input";
-import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
-import { useCustomFieldActions } from "../../../../../hooks/actions/useCustomFieldActions";
-import { DELETE_CUSTOM_FIELD } from "../../../../../constants";
 import { CustomFieldActions } from "../CustomFieldActions/CustomFieldActions";
 
 type Props = {

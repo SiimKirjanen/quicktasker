@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
-import { WPQTModalTitle } from "../WPQTModal";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { WPQTModalTitle } from "../WPQTModal";
 
 function ArchiveTaskModalContent() {
   const {

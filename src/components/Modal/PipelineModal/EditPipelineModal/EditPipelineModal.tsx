@@ -1,14 +1,14 @@
 import { useContext } from "@wordpress/element";
-import { WPQTModal } from "../../WPQTModal";
-import { ModalContext } from "../../../../providers/ModalContextProvider";
-import { EditPipelineModalContent } from "./EditPipelineModalContent";
+import { editPipelineRequest } from "../../../../api/api";
 import {
   CLOSE_PIPELINE_MODAL,
   PIPELINE_EDIT_PIPELINE,
 } from "../../../../constants";
-import { editPipelineRequest } from "../../../../api/api";
-import { Pipeline } from "../../../../types/pipeline";
 import { DispatchType, useModal } from "../../../../hooks/useModal";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { Pipeline } from "../../../../types/pipeline";
+import { WPQTModal } from "../../WPQTModal";
+import { EditPipelineModalContent } from "./EditPipelineModalContent";
 
 function EditPipelineModal() {
   const {

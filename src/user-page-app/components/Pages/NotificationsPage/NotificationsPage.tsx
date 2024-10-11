@@ -68,4 +68,4 @@ function NotificationsPage() {
   );
 }
 
-export { NotificationsPage, type NotificationItemType, type GroupedComments };
+export { NotificationsPage, type GroupedComments, type NotificationItemType };

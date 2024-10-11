@@ -5,10 +5,8 @@ import {
   useReducer,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { ArchivedTask } from "../types/task";
-import { getArchivedTasksRequest } from "../api/api";
 import { toast } from "react-toastify";
-import { reducer } from "../reducers/archive-reducer";
+import { getArchivedTasksRequest } from "../api/api";
 import {
   REMOVE_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
@@ -16,6 +14,8 @@ import {
   SET_ARCHIVE_TASKS,
   SET_FULL_PAGE_LOADING,
 } from "../constants";
+import { reducer } from "../reducers/archive-reducer";
+import { ArchivedTask } from "../types/task";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -89,4 +89,4 @@ const ArchiveContextProvider = ({
   );
 };
 
-export { ArchiveContextProvider, ArchiveContext, type State, type Action };
+export { ArchiveContext, ArchiveContextProvider, type Action, type State };

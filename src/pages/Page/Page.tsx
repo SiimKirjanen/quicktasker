@@ -1,6 +1,6 @@
 import { useContext } from "@wordpress/element";
-import { LoadingContext } from "../../providers/LoadingContextProvider";
 import { FullLoading } from "../../components/Loading/Loading";
+import { LoadingContext } from "../../providers/LoadingContextProvider";
 
 type Props = {
   children: React.ReactNode;

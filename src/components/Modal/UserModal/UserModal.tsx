@@ -1,11 +1,11 @@
 import { useContext } from "@wordpress/element";
-import { WPQTModal } from "../WPQTModal";
-import { ModalContext } from "../../../providers/ModalContextProvider";
-import { DispatchType, useModal } from "../../../hooks/useModal";
 import { CLOSE_USER_MODAL, EDIT_USER } from "../../../constants";
-import { UserModalContent } from "./UserModalContent";
-import { User } from "../../../types/user";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
+import { DispatchType, useModal } from "../../../hooks/useModal";
+import { ModalContext } from "../../../providers/ModalContextProvider";
+import { User } from "../../../types/user";
+import { WPQTModal } from "../WPQTModal";
+import { UserModalContent } from "./UserModalContent";
 
 function UserModal() {
   const {

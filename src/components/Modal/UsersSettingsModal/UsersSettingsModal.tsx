@@ -1,9 +1,9 @@
 import { useContext } from "@wordpress/element";
-import { WPQTModal } from "../WPQTModal";
-import { ModalContext } from "../../../providers/ModalContextProvider";
 import { CHANGE_USER_SETTINGS_MODAL_OPEN } from "../../../constants";
-import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
+import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
+import { WPQTModal } from "../WPQTModal";
 function UsersSettingsModal() {
   const {
     state: { userSettingsModalOpen },

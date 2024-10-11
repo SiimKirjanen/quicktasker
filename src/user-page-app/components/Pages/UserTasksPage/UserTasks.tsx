@@ -1,7 +1,7 @@
 import { useContext } from "@wordpress/element";
-import { UserAssignedTasksContext } from "../../../providers/UserAssignedTasksContextProvider";
-import { WPQTCard } from "../../../../components/Card/Card";
 import { useNavigate } from "react-router-dom";
+import { WPQTCard } from "../../../../components/Card/Card";
+import { UserAssignedTasksContext } from "../../../providers/UserAssignedTasksContextProvider";
 
 function UserTasks() {
   const {

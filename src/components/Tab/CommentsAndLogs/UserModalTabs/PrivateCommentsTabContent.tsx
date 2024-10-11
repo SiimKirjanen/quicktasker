@@ -1,13 +1,13 @@
-import { toast } from "react-toastify";
 import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
+import { addCommentRequest, getComments } from "../../../../api/api";
+import { WPQTComment } from "../../../../types/comment";
+import { WPQTTypes } from "../../../../types/enums";
+import { convertCommentFromServer } from "../../../../utils/comment";
 import {
   CommentsAndLogsTabContent,
   TabContentItem,
 } from "../CommentsAndLogsTabContent";
-import { addCommentRequest, getComments } from "../../../../api/api";
-import { WPQTTypes } from "../../../../types/enums";
-import { WPQTComment } from "../../../../types/comment";
-import { convertCommentFromServer } from "../../../../utils/comment";
 
 type Props = {
   userId: string;

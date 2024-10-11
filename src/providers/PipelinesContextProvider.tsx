@@ -1,12 +1,12 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { Pipeline, PipelineFromServer } from "../types/pipeline";
-import { reducer } from "../reducers/pipelines-reducer";
 import {
   PIPELINE_ADD_PIPELINE,
   PIPELINE_EDIT_PIPELINE,
   PIPELINE_SET_PRIMARY,
   PIPELINES_SET,
 } from "../constants";
+import { reducer } from "../reducers/pipelines-reducer";
+import { Pipeline, PipelineFromServer } from "../types/pipeline";
 
 const initialState: State = {
   pipelines: [],
@@ -54,4 +54,4 @@ const PipelinesContextProvider = ({
   );
 };
 
-export { PipelinesContextProvider, PipelinesContext, type State, type Action };
+export { PipelinesContext, PipelinesContextProvider, type Action, type State };

@@ -1,12 +1,12 @@
-import { usePageLinks } from "../../../../hooks/usePageLinks";
+import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { User } from "../../../../types/user";
 import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
 import { UserDropdown } from "../../../../components/Dropdown/UserDropdown/UserDropdown";
-import { formatDate } from "../../../../utils/date";
-import { ModalContext } from "../../../../providers/ModalContextProvider";
-import { useContext } from "@wordpress/element";
 import { OPEN_EDIT_USER_MODAL } from "../../../../constants";
+import { usePageLinks } from "../../../../hooks/usePageLinks";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { User } from "../../../../types/user";
+import { formatDate } from "../../../../utils/date";
 
 type Props = {
   user: User;

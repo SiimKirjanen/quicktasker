@@ -1,10 +1,10 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { Task } from "../../../../types/task";
 import { useContext } from "@wordpress/element";
-import { ModalContext } from "../../../../providers/ModalContextProvider";
-import { OPEN_EDIT_TASK_MODAL } from "../../../../constants";
 import { TaskControlsDropdown } from "../../../../components/Dropdown/TaskControlsDropdown/TaskControlsDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
+import { OPEN_EDIT_TASK_MODAL } from "../../../../constants";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { Task } from "../../../../types/task";
 
 type Props = {
   task: Task;

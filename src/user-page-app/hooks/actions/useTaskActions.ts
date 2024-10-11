@@ -1,5 +1,5 @@
-import { toast } from "react-toastify";
 import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
 import { TaskFromServer } from "../../../types/task";
 import {
   assignTaskToUser,
@@ -7,8 +7,8 @@ import {
   getTaskDataRequest,
   unAssignTaskFromUser,
 } from "../../api/user-page-api";
-import { useErrorHandler } from "../useErrorHandler";
 import { UserPageTaskResponse } from "../../types/user-page-task-response";
+import { useErrorHandler } from "../useErrorHandler";
 
 function useTaskActions() {
   const { handleError } = useErrorHandler();

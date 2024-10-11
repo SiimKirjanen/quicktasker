@@ -1,15 +1,15 @@
-import { Page } from "../Page/Page";
-import { __ } from "@wordpress/i18n";
-import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { useContext, useEffect, useState } from "@wordpress/element";
-import { LoadingContext } from "../../providers/LoadingContextProvider";
-import { SET_FULL_PAGE_LOADING } from "../../constants";
-import { getExtendedUserRequest } from "../../api/api";
-import { ExtendedUser } from "../../types/user";
+import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
+import { getExtendedUserRequest } from "../../api/api";
+import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { SET_FULL_PAGE_LOADING } from "../../constants";
+import { LoadingContext } from "../../providers/LoadingContextProvider";
+import { ExtendedUser } from "../../types/user";
 import { convertExtendedUserFromServer } from "../../utils/user";
-import { UserDetails } from "./components/UserDetails/UserDetails";
+import { Page } from "../Page/Page";
 import { UserControls } from "./components/UserControls/UserControls";
+import { UserDetails } from "./components/UserDetails/UserDetails";
 
 type Props = {
   userId: string;

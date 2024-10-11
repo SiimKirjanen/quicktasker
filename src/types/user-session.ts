@@ -14,4 +14,4 @@ type ServerUserSession = BaseUserSession & {
   is_active: string;
 };
 
-export type { UserSession, ServerUserSession };
+export type { ServerUserSession, UserSession };

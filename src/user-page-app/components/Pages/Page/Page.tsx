@@ -37,4 +37,4 @@ function PageScreenMiddle({ children }: PageScreenMiddleProps) {
   );
 }
 
-export { PageWrap, PageContentWrap, PageScreenMiddle };
+export { PageContentWrap, PageScreenMiddle, PageWrap };

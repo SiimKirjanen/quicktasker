@@ -1,11 +1,11 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import {
   UserAssignedTasksContext,
   UserAssignedTasksContextProvider,
 } from "../../../providers/UserAssignedTasksContextProvider";
 import { PageContentWrap, PageWrap } from "../Page/Page";
 import { UserTasks } from "./UserTasks";
-import { __ } from "@wordpress/i18n";
 
 function UserTasksPage() {
   return (

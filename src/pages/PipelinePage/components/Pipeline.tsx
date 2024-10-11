@@ -1,20 +1,20 @@
-import { useCallback, useContext, useEffect } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import {
   DragDropContext,
   DraggableLocation,
   DropResult,
 } from "@hello-pangea/dnd";
-import { Pipeline } from "../../../types/pipeline";
-import { moveTaskRequest } from "../../../api/api";
-import { Stage } from "./Stage";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
-import { AddStage } from "./AddStage";
-import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
-import { StageModal } from "../../../components/Modal/StageModal/StageModal";
+import { useCallback, useContext, useEffect } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { PipelineIntro } from "./PipelineIntro";
+import { moveTaskRequest } from "../../../api/api";
+import { StageModal } from "../../../components/Modal/StageModal/StageModal";
+import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
 import { REFETCH_ACTIVE_PIPELINE_INTERVAL } from "../../../constants";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import { Pipeline } from "../../../types/pipeline";
+import { AddStage } from "./AddStage";
+import { PipelineIntro } from "./PipelineIntro";
+import { Stage } from "./Stage";
 
 const Pipeline = () => {
   const {

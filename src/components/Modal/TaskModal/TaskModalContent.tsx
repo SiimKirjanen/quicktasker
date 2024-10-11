@@ -14,22 +14,22 @@ import {
   WPQTModalFooter,
 } from "../WPQTModal";
 
-import { WPQTInput } from "../../common/Input/Input";
-import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { Toggle } from "../../common/Toggle/Toggle";
-import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
+import { ArchiveBoxIcon, TrashIcon } from "@heroicons/react/24/outline";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CLOSE_TASK_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../../../constants";
-import { WPQTIconButton } from "../../common/Button/Button";
-import { ArchiveBoxIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
-import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 import { CustomFieldEntityType } from "../../../types/custom-field";
+import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTInput } from "../../common/Input/Input";
+import { WPQTTextarea } from "../../common/TextArea/TextArea";
+import { Toggle } from "../../common/Toggle/Toggle";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
+import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
+import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 
 type Props = {
   taskModalSaving: boolean;

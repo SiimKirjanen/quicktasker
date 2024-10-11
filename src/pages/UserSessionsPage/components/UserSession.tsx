@@ -1,17 +1,17 @@
-import { toast } from "react-toastify";
-import { __ } from "@wordpress/i18n";
-import { UserSession } from "../../../types/user-session";
 import { PowerIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
 import {
   changeUserSessionStatusRequest,
   deleteUserSessionRequest,
 } from "../../../api/api";
-import { useContext } from "@wordpress/element";
-import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import {
   CHANGE_USER_SESSION_STATUS,
   DELETE_USER_SESSION,
 } from "../../../constants";
+import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
+import { UserSession } from "../../../types/user-session";
 
 type Props = {
   session: UserSession;

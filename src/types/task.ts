@@ -28,4 +28,4 @@ type ArchivedTask = BaseArchivedTask;
 
 type ArchivedTaskFromServer = BaseArchivedTask;
 
-export type { Task, TaskFromServer, ArchivedTaskFromServer, ArchivedTask };
+export type { ArchivedTask, ArchivedTaskFromServer, Task, TaskFromServer };

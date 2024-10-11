@@ -24,4 +24,4 @@ type ExtendedUser = BaseUser & {
   setup_completed: boolean;
 };
 
-export type { User, ServerUser, ExtendedUser, ServerExtendedUser };
+export type { ExtendedUser, ServerExtendedUser, ServerUser, User };

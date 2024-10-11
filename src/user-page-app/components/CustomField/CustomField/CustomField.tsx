@@ -1,7 +1,7 @@
 import { useCallback, useState } from "@wordpress/element";
 import { WPQTInput } from "../../../../components/common/Input/Input";
-import { CustomField, CustomFieldType } from "../../../../types/custom-field";
 import { CustomFieldTitle } from "../../../../components/CustomField/CustomFields/components/CustomField/CustomField";
+import { CustomField, CustomFieldType } from "../../../../types/custom-field";
 import { debounce } from "../../../../utils/debounce";
 
 type Props = {

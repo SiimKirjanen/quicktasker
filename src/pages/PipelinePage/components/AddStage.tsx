@@ -1,8 +1,8 @@
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import { ModalContext } from "../../../providers/ModalContextProvider";
 import { OPEN_NEW_STAGE_MODAL } from "../../../constants";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 
 type Props = { pipelineId: string; stagesLength: number | undefined };
 
