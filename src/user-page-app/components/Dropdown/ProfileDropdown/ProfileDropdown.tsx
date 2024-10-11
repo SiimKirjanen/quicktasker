@@ -28,12 +28,13 @@ function ProfileDropdown() {
 
   const logOut = async () => {
     try {
-      await deleteSessionCookie();
       await logoutUserPageRequest(pageHash);
+      await deleteSessionCookie();
       userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: false });
       loadUserPageStatus();
     } catch (error) {
       handleError(error);
+      loadUserPageStatus();
     }
   };
 

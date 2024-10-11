@@ -7081,7 +7081,7 @@ function UserPageApp() {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_UserPageNotificationsContextProvider__WEBPACK_IMPORTED_MODULE_19__.UserPageNotificationsContextProvider, {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserPageContent, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_3__.ToastContainer, {
           position: "bottom-center",
-          toastClassName: "wpqt-bottom-[80px]  lg:wpqt-bottom-[20px]"
+          toastClassName: "wpqt-bottom-[80px] lg:wpqt-bottom-[20px]"
         })]
       })
     })
@@ -7678,8 +7678,8 @@ function ProfileDropdown() {
   const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.useNavigate)();
   const logOut = () => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield deleteSessionCookie();
       yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_4__.logoutUserPageRequest)(pageHash);
+      yield deleteSessionCookie();
       userPageAppDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_USER_LOGGED_IN,
         payload: false
@@ -7687,6 +7687,7 @@ function ProfileDropdown() {
       loadUserPageStatus();
     } catch (error) {
       handleError(error);
+      loadUserPageStatus();
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_Dropdown_WPQTDropdown__WEBPACK_IMPORTED_MODULE_3__.WPQTDropdown, {

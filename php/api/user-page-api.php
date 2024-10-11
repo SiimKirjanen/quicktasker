@@ -19,6 +19,7 @@ use WPQT\RequestValidation;
 use WPQT\Permission\PermissionService;
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskService;
+use WPQT\Log\LogService;
 use WPQT\Comment\CommentRepository;
 use WPQT\Comment\CommentService;
 use WPQT\User\UserRepository;
@@ -73,6 +74,7 @@ function wpqt_register_user_page_api_routes() {
                     $userPageRepository = new UserPageRepository();
                     $userPageService = new UserPageService();
                     $passwordService = new PasswordService();
+                    $logService = new LogService();
 
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']);
                     $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage->user_id);
@@ -81,6 +83,7 @@ function wpqt_register_user_page_api_routes() {
                         throw new WPQTException('User page setup has already been completed', true);
                     }
                     $passwordService->storePassword($userPage->user_id, $data['password']);
+                    $logService->log('User page setup completed', WP_QT_LOG_TYPE_USER, $userPage->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $userPage->user_id);
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 } catch(WPQTException $e) {
@@ -112,6 +115,7 @@ function wpqt_register_user_page_api_routes() {
                     $passwordService = new PasswordService();
                     $sessionService = new SessionService();
                     $userPageRepository = new UserPageRepository();
+                    $logService = new LogService();
 
                     if($data['password'] === null) {
                         throw new WPQTException('Password is required');
@@ -125,6 +129,7 @@ function wpqt_register_user_page_api_routes() {
                     
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']);
                     $userSession = $sessionService->createSession($userPage->user_id, $data['hash']);
+                    $logService->log('User logged in', WP_QT_LOG_TYPE_USER, $userPage->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $userPage->user_id);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                         'sessionToken' => $userSession->session_token,
@@ -155,11 +160,14 @@ function wpqt_register_user_page_api_routes() {
         'methods' => 'POST',
         'callback' => function( $data ) {
                 try {
-                    RequestValidation::validateUserPageApiRequest($data, array('session' => false));
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                     $sessionService = new SessionService();
+                    $logService = new LogService();
                     
                     $sessionToken = $_COOKIE['wpqt-session-token-' . $data['hash']];
                     $sessionService->markSessionInactive($sessionToken);
+
+                    $logService->log('User logged out', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);  
                 } catch(WPQTException $e) {
@@ -355,6 +363,7 @@ function wpqt_register_user_page_api_routes() {
                     $permissionService = new PermissionService();
                     $commentService = new CommentService();
                     $commentRepository = new CommentRepository();
+                    $logService = new LogService();
 
                     $task = $taskRepository->getTaskByHash($data['task_hash']);
 
@@ -365,7 +374,7 @@ function wpqt_register_user_page_api_routes() {
                         throw new WPQTException('Not allowed', true);
                     }
                     $commentService->createComment($task->id, 'task', false, $data['comment'], $session->user_id, false);
-                    
+                    $logService->log('User posted a comment on '. $task->name . ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                     $comments = $commentRepository->getComments($task->id, 'task', false);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
@@ -454,9 +463,11 @@ function wpqt_register_user_page_api_routes() {
                     $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                     $commentRepository = new CommentRepository();
                     $commentService = new CommentService();
+                    $logService = new LogService();
                     
                     $commentService->createComment($session->user_id, 'user', false, $data['comment'], $session->user_id, false);
                     $userComments = $commentRepository->getComments($session->user_id, 'user', false);
+                    $logService->log('User posted a comment on its profile', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $userComments))->toArray(), 200);
                 } catch(WPQTException $e) {
@@ -488,15 +499,24 @@ function wpqt_register_user_page_api_routes() {
                     $userService = new UserService();
                     $taskRepository = new TaskRepository();
                     $permissionService = new PermissionService();
-                    $taskId = $taskRepository->getTaskByHash($data['task_hash'])->id;
+                    $userPageRepository = new UserPageRepository();
+                    $logService = new LogService();
+
+                    $task = $taskRepository->getTaskByHash($data['task_hash']);
+                    $taskId = $task->id;
+                    $userPage = $userPageRepository->getPageUserByHash($data['hash']); 
                   
                     if ($data->get_method() === 'POST') {
                         if(!$permissionService->checkIfUserCanBeAssignedToTask($session->user_id, $taskId)) {
                             throw new WPQTException('Not allowed to assign', true);
                         }
                         $userService->assignTaskToUser($session->user_id, $taskId);
+                        $logService->log('User assigned itself to ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log('User ' . $userPage->name . ' assigned itself', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                     } elseif ($data->get_method() === 'DELETE') {
                         $userService->removeTaskFromUser($session->user_id, $taskId);
+                        $logService->log('User unassigned itself from ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log('User ' . $userPage->name . ' unassigned itself', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                     }
 
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);
@@ -528,18 +548,25 @@ function wpqt_register_user_page_api_routes() {
         'callback' => function( $data ) {
                 try {
                     $session = RequestValidation::validateUserPageApiRequest($data)['session'];
-                    $userService = new UserService();
                     $taskRepository = new TaskRepository();
                     $permissionService = new PermissionService();
                     $stageRepository = new StageRepository();
                     $taskService = new TaskService();
                     $customFieldRepository = new CustomFieldRepository();
+                    $logService = new LogService();
+                    $userPageRepository = new UserPageRepository();
+
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);
                    
                     if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id)) {
                         throw new WPQTException('Not allowed', true);
                     }
-                    $taskService->moveTask($task->id, $data['stageId'], 0);
+                    $moveInfo = $taskService->moveTask($task->id, $data['stageId'], 0);
+                    $stage = $stageRepository->getStageById($moveInfo->newStageId);
+                    $userPage = $userPageRepository->getPageUserByHash($data['hash']); 
+
+                    $logService->log('User ' . $userPage->name . ' changed task stage to ' . $stage->name, WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                    $logService->log('User changed task ' . $task->name . ' stage to ' . $stage->name, WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
 
                     $data = (object)[
                         'task' => $taskRepository->getTaskByHash($data['task_hash'], true),

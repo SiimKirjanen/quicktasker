@@ -156,7 +156,7 @@ class TaskService {
   
         return (object)[
             'oldStageId' => $currentStageId,
-            'newStageId' => $$newStageId,
+            'newStageId' => $newStageId,
             'stageChanged' => $stageChanged,
         ];
     }

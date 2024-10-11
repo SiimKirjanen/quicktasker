@@ -48,6 +48,7 @@ define('WP_QT_LOG_TYPE_PIPELINE', "pipeline");
 define('WP_QT_LOG_TYPE_STAGE', "stage");
 define('WP_QT_LOG_TYPE_USER', "user");
 define('WP_QT_LOG_CREATED_BY_ADMIN', "admin");
+define('WP_QT_LOG_CREATED_BY_QUICKTASKER_USER', "quicktasker_user");
 
 /*
 
