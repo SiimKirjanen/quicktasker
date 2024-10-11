@@ -9,19 +9,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\User\UserRepository;
 use WPQT\Hash\HashService;
 use WPQT\WPQTException;
-use WPQT\UserPage\UserPageRepository;
+use WPQT\Task\TaskRepository;
 
 class UserService {
     protected $userRepository;
-    protected $userPageRepository;
+    protected $taskRepository;
     protected $hashService;
 
     public function __construct() {
         $this->userRepository = new UserRepository();
         $this->hashService = new HashService();
+        $this->taskRepository = new TaskRepository();
     }
 
- 
     /**
      * Creates a new user.
      *
@@ -165,13 +165,17 @@ class UserService {
         }
     }
 
+
     /**
      * Assigns a task to a user.
      *
-     * @param int $userId The ID of the user.
-     * @param int $taskId The ID of the task.
-     * @return bool True if the user is successfully assigned to the task, false otherwise.
-     * @throws \Exception If failed to assign a user to a task.
+     * This method inserts a record into the `TABLE_WP_QUICKTASKER_USER_TASK` table
+     * to associate a user with a task. If the insertion fails, an exception is thrown.
+     *
+     * @param int $userId The ID of the user to whom the task is being assigned.
+     * @param int $taskId The ID of the task being assigned to the user.
+     * @return mixed The task details retrieved from the task repository.
+     * @throws \Exception If the task assignment fails.
      */
     public function assignTaskToUser($userId, $taskId) {
         global $wpdb;
@@ -188,16 +192,19 @@ class UserService {
             throw new \Exception('Failed to assign a task to a user');
         }
 
-        return true;
+        return $this->taskRepository->getTaskById($taskId);
     }
 
+
     /**
-     * Removes a user from a task.
+     * Removes a task from a user.
      *
-     * @param int $userId The ID of the user to be removed.
-     * @param int $taskId The ID of the task from which the user will be removed.
-     * @return bool Returns true if the user was successfully removed from the task, otherwise throws an exception.
-     * @throws \Exception If failed to remove a user from a task.
+     * This function deletes the association between a user and a task in the database.
+     *
+     * @param int $userId The ID of the user.
+     * @param int $taskId The ID of the task.
+     * @return mixed The task details after removal.
+     * @throws \Exception If the task could not be removed from the user.
      */
     public function removeTaskFromUser($userId, $taskId) {
         global $wpdb;
@@ -214,7 +221,7 @@ class UserService {
             throw new \Exception('Failed to remove a user from a task');
         }
 
-        return true;
+        return $this->taskRepository->getTaskById($taskId);
     }
 
 

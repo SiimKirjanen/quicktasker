@@ -24,13 +24,15 @@ class LogService {
      * @return mixed The log entry retrieved by its ID.
      * @throws \Exception If the log entry could not be added to the database.
      */
-    public function log($text, $type, $typeId) {
+    public function log($text, $type, $typeId, $createdBy, $userId = null,) {
         global $wpdb;
 
         $result = $wpdb->insert(TABLE_WP_QUICKTASKS_LOGS, array(
             'text' => $text,
             'type' => $type,
-            'type_id' => $typeId
+            'type_id' => $typeId,
+            'user_id' => $userId,
+            'created_by' => $createdBy,
         ));
 
         if( $result === false ) {

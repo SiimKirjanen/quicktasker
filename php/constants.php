@@ -21,7 +21,7 @@ define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 DB constants
 ==================================================================================================================================================================================================================
 */
-define('WP_QUICKTASKER_DB_VERSION', "1.50");
+define('WP_QUICKTASKER_DB_VERSION', "1.52");
 
 define('TABLE_WP_QUICKTASKER_USERS', $wpdb->prefix . "quicktasker_users");
 define('TABLE_WP_QUICKTASKER_PIPELINES', $wpdb->prefix . "quicktasker_pipelines");
@@ -44,6 +44,10 @@ Log constants
 */
 
 define('WP_QT_LOG_TYPE_TASK', "task");
+define('WP_QT_LOG_TYPE_PIPELINE', "pipeline");
+define('WP_QT_LOG_TYPE_STAGE', "stage");
+define('WP_QT_LOG_TYPE_USER', "user");
+define('WP_QT_LOG_CREATED_BY_ADMIN', "admin");
 
 /*
 

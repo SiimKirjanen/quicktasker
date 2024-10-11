@@ -259,7 +259,5 @@ class StageService {
         }
 
         return true;
-
-
     }
 }

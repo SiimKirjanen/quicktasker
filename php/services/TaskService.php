@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Log\LogService;
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
 use WPQT\Hash\HashService;
@@ -16,14 +15,12 @@ class TaskService {
     protected $taskRepository;
     protected $stageRepository;
     protected $pipelineRepository;
-    protected $logService;
     protected $hashService;
 
     public function __construct() {
         $this->taskRepository = new TaskRepository();
         $this->stageRepository = new StageRepository();
         $this->pipelineRepository = new PipelineRepository();
-        $this->logService = new LogService();
         $this->hashService = new HashService();
     }
 
@@ -156,12 +153,12 @@ class TaskService {
         if ($rowsUpdated === false) {
             throw new WPQTException('Failed to move task');
         }
-        if($stageChanged) {
-            $newStage = $this->stageRepository->getStageById($newStageId);
-            $this->logService->log('Task moved to a ' . $newStage->name, WP_QT_LOG_TYPE_TASK, $taskId);
-        }
-
-        return $rowsUpdated;
+  
+        return (object)[
+            'oldStageId' => $currentStageId,
+            'newStageId' => $$newStageId,
+            'stageChanged' => $stageChanged,
+        ];
     }
     
     /**
@@ -270,7 +267,7 @@ class TaskService {
         if ($result === false) {
             throw new \Exception('Failed to edit task');
         }
-
+        
         return $this->taskRepository->getTaskById($taskId, true);
     }
 
