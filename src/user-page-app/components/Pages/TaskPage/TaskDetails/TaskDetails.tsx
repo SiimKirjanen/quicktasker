@@ -16,7 +16,7 @@ function TaskDetails({ task }: Props) {
     "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-2 wpqt-text-xl";
 
   return (
-    <div className="wpqt-my-4">
+    <div className="wpqt-mb-4">
       <h2 className="wpqt-text-xl2 wpqt-mb-8 wpqt-text-center">
         {__("Task Details", "quicktasker")}
       </h2>

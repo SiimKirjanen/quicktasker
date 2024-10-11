@@ -7435,6 +7435,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../types/custom-field */ "./src/types/custom-field.ts");
 /* harmony import */ var _components_CustomField_CustomFields_components_CustomField_CustomField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/CustomField/CustomFields/components/CustomField/CustomField */ "./src/components/CustomField/CustomFields/components/CustomField/CustomField.tsx");
+/* harmony import */ var _utils_debounce__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../utils/debounce */ "./src/utils/debounce.ts");
+
 
 
 
@@ -7469,9 +7471,12 @@ function TextCustomField({
   onHandleChange
 }) {
   const [value, setValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(data.value || "");
+  const debouncedHandleChange = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)((0,_utils_debounce__WEBPACK_IMPORTED_MODULE_5__.debounce)(newValue => {
+    onHandleChange(newValue);
+  }, 600), [onHandleChange]);
   const onChange = newValue => {
     setValue(newValue);
-    onHandleChange(newValue);
+    debouncedHandleChange(newValue);
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-text-center",
@@ -8596,7 +8601,7 @@ function UserDetails({
   }
   const rowClasses = "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-2 wpqt-text-xl";
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-my-4",
+    className: "wpqt-mb-4",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
       className: "wpqt-text-xl2 wpqt-mb-8 wpqt-text-center",
       children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("User details", "quicktasker")
@@ -9023,7 +9028,7 @@ function TaskDetails({
   }
   const rowClasses = "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-2 wpqt-text-xl";
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-my-4",
+    className: "wpqt-mb-4",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
       className: "wpqt-text-xl2 wpqt-mb-8 wpqt-text-center",
       children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task Details", "quicktasker")
@@ -9565,9 +9570,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
 /* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
 /* harmony import */ var _useErrorHandler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9599,8 +9601,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
-
 function useCustomFieldActions() {
   const {
     state: {
@@ -9613,7 +9613,6 @@ function useCustomFieldActions() {
   const updateCustomFieldValue = (entityId, entityType, customFieldId, value, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
       yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_1__.updateCustomFieldValueRequest)(pageHash, entityId, entityType, customFieldId, value);
-      react_toastify__WEBPACK_IMPORTED_MODULE_4__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Custom field value updated", "quicktasker"));
       if (callback) callback();
     } catch (error) {
       handleError(error);
@@ -10949,6 +10948,31 @@ const convertCommentFromServer = comment => Object.assign(Object.assign({}, comm
 const filterNewComments = (comments, storedComments) => {
   return comments.filter(comment => !storedComments.find(c => c.id === comment.id));
 };
+
+
+/***/ }),
+
+/***/ "./src/utils/debounce.ts":
+/*!*******************************!*\
+  !*** ./src/utils/debounce.ts ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   debounce: () => (/* binding */ debounce)
+/* harmony export */ });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function debounce(func, wait) {
+  let timeout;
+  return (...args) => {
+    if (timeout !== undefined) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 
 /***/ }),

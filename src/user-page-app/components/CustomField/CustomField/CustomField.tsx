@@ -1,7 +1,8 @@
-import { useState } from "@wordpress/element";
+import { useCallback, useState } from "@wordpress/element";
 import { WPQTInput } from "../../../../components/common/Input/Input";
 import { CustomField, CustomFieldType } from "../../../../types/custom-field";
 import { CustomFieldTitle } from "../../../../components/CustomField/CustomFields/components/CustomField/CustomField";
+import { debounce } from "../../../../utils/debounce";
 
 type Props = {
   data: CustomField;
@@ -29,9 +30,16 @@ type TextCustomFieldProps = {
 function TextCustomField({ data, onHandleChange }: TextCustomFieldProps) {
   const [value, setValue] = useState(data.value || "");
 
+  const debouncedHandleChange = useCallback(
+    debounce((newValue: string) => {
+      onHandleChange(newValue);
+    }, 600),
+    [onHandleChange],
+  );
+
   const onChange = (newValue: string) => {
     setValue(newValue);
-    onHandleChange(newValue);
+    debouncedHandleChange(newValue);
   };
 
   return (
