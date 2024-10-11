@@ -206,17 +206,33 @@ function wpqt_insert_initial_data() {
 		$pipelines = $pipeRepo->getPipelines();
 
 	if( !count($pipelines) ) {
-		$newPipeId = $pipeService->createPipeline("Pipeline")->id;
+		$newPipeId = $pipeService->createPipeline("QuickTasker Food")->id;
 		$pipeService->markPipelineAsPrimary($newPipeId);
-		$firstStageId = $stageService->createStage($newPipeId, array('name' => 'Stage 1'))->id;
-		$secondStageId = $stageService->createStage($newPipeId, array('name' => 'Stage 2'))->id;
-		$stageService->createStage($newPipeId, array('name' => 'Stage 3'));
-		$stageService->createStage($newPipeId, array('name' => 'Stage 4'));
+		$firstStageId = $stageService->createStage($newPipeId, array('name' => 'Order Received'))->id;
+		$secondStageId = $stageService->createStage($newPipeId, array('name' => 'Preparing Order'))->id;
+		$thirdStageId = $stageService->createStage($newPipeId, array('name' => 'Out for Delivery'))->id;
+		$stageService->createStage($newPipeId, array('name' => 'Delivered'));
 
-		$taskService->createTask($firstStageId, array('name' => 'Task 1', 'pipelineId' => $newPipeId));
-		$taskService->createTask($firstStageId, array('name' => 'Task 2', 'pipelineId' => $newPipeId));
-		$taskService->createTask($secondStageId, array('name' => 'Task 3', 'pipelineId' => $newPipeId));
-		$taskService->createTask($secondStageId, array('name' => 'Task 4', 'pipelineId' => $newPipeId));
+		$taskService->createTask($firstStageId, array(
+            'name' => 'Order #1001',
+            'description' => 'Large pizza and a soda.',
+            'pipelineId' => $newPipeId
+        ));
+        $taskService->createTask($firstStageId, array(
+            'name' => 'Order #1002',
+            'description' => 'Burger and fries.',
+            'pipelineId' => $newPipeId
+        ));
+        $taskService->createTask($secondStageId, array(
+            'name' => 'Order #1003',
+            'description' => 'Tacos and nachos.',
+            'pipelineId' => $newPipeId
+        ));
+        $taskService->createTask($thirdStageId, array(
+            'name' => 'Order #1004',
+            'description' => 'Steak dinner with mashed potatoes.',
+            'pipelineId' => $newPipeId
+        ));
 
 		$wpdb->query('COMMIT');
 	}
