@@ -35,8 +35,12 @@ class PermissionService {
     public function checkIfUserIsAllowedToViewTask($userId, $taskId) {
         global $wpdb;
 
-        $assignedUsers = $this->userRepository->getAssignedUsersByTaskId($taskId);
         $task = $this->taskRepository->getTaskById($taskId);
+        if($task->is_archived === '1') {
+            return false;
+        }
+
+        $assignedUsers = $this->userRepository->getAssignedUsersByTaskId($taskId);
         $isAssignedToTask = false;
 
         foreach ($assignedUsers as $user) {
@@ -67,8 +71,12 @@ class PermissionService {
     public function checkIfUserCanBeAssignedToTask($userId, $taskId) {
         global $wpdb;
 
-        $assignedUsers = $this->userRepository->getAssignedUsersByTaskId($taskId);
         $task = $this->taskRepository->getTaskById($taskId);
+        if($task->is_archived === '1') {
+            return false;
+        }
+        $assignedUsers = $this->userRepository->getAssignedUsersByTaskId($taskId);
+        
 
         if ($task->free_for_all === '1' && count($assignedUsers) === 0) {
             return true;
@@ -87,6 +95,11 @@ class PermissionService {
      */
     public function checkIfUserIsAllowedToEditTask($userId, $taskId) {
         global $wpdb;
+
+        $task = $this->taskRepository->getTaskById($taskId);
+        if($task->is_archived === '1') {
+            return false;
+        }
 
         $isAssignedToUser = $this->userRepository->checkIfUserHasAssignedToTask($userId, $taskId);
 
