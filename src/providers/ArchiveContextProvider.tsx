@@ -15,7 +15,7 @@ import {
   SET_FULL_PAGE_LOADING,
 } from "../constants";
 import { reducer } from "../reducers/archive-reducer";
-import { ArchivedTask } from "../types/task";
+import { Task, TaskFromServer } from "../types/task";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -26,14 +26,14 @@ const initialState: State = {
 };
 
 type State = {
-  archivedTasks: ArchivedTask[] | null;
+  archivedTasks: Task[] | null;
   archiveLoading: boolean;
   archiveSearchValue: string;
   archiveFilteredPipelineId: string;
 };
 
 type Action =
-  | { type: typeof SET_ARCHIVE_TASKS; payload: ArchivedTask[] }
+  | { type: typeof SET_ARCHIVE_TASKS; payload: TaskFromServer[] }
   | { type: typeof SET_ARCHIVE_SEARCH_VALUE; payload: string }
   | { type: typeof SET_ARCHIVE_FILTERED_PIPELINE; payload: string }
   | { type: typeof REMOVE_ARCHIVED_TASK; payload: string };

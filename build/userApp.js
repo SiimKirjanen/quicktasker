@@ -11104,6 +11104,7 @@ const reorderTask = (list, startIndex, endIndex) => {
 const convertTaskFromServer = task => Object.assign(Object.assign({}, task), {
   task_order: Number(task.task_order),
   free_for_all: task.free_for_all === "1",
+  is_archived: task.is_archived === "1",
   assigned_users: task.assigned_users ? task.assigned_users.map(user => Object.assign({}, (0,_user__WEBPACK_IMPORTED_MODULE_0__.convertUserFromServer)(user))) : []
 });
 

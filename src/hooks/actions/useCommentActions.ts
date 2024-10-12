@@ -17,7 +17,7 @@ function useCommentActions() {
         isPrivate,
         commentText,
       );
-      toast.success(__("Comment added successfully", "quicktasker"));
+      toast.success(__("Comment added", "quicktasker"));
 
       return response.data;
     } catch (error) {

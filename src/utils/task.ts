@@ -62,6 +62,7 @@ const convertTaskFromServer = (task: TaskFromServer): Task => ({
   ...task,
   task_order: Number(task.task_order),
   free_for_all: task.free_for_all === "1",
+  is_archived: task.is_archived === "1",
   assigned_users: task.assigned_users
     ? task.assigned_users.map((user: ServerUser) => ({
         ...convertUserFromServer(user),

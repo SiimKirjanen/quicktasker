@@ -1,13 +1,13 @@
 import { useContext } from "@wordpress/element";
 import { ArchiveContext } from "../../providers/ArchiveContextProvider";
-import { ArchivedTask } from "../../types/task";
+import { Task } from "../../types/task";
 
 const useArchiveFilter = () => {
   const {
     state: { archiveSearchValue, archiveFilteredPipelineId },
   } = useContext(ArchiveContext);
 
-  const filterArchive = (archivedTask: ArchivedTask) => {
+  const filterArchive = (archivedTask: Task) => {
     const matchesSearchValue =
       archivedTask.name
         .toLowerCase()

@@ -5,16 +5,17 @@ import {
   SET_ARCHIVE_TASKS,
 } from "../constants";
 import { Action, State } from "../providers/ArchiveContextProvider";
-import { ArchivedTaskFromServer } from "../types/task";
+import { TaskFromServer } from "../types/task";
+import { convertTaskFromServer } from "../utils/task";
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case SET_ARCHIVE_TASKS: {
-      const archivedTasks: ArchivedTaskFromServer[] = action.payload;
+      const archivedTasks: TaskFromServer[] = action.payload;
 
       return {
         ...state,
-        archivedTasks,
+        archivedTasks: archivedTasks.map(convertTaskFromServer),
       };
     }
     case SET_ARCHIVE_SEARCH_VALUE: {

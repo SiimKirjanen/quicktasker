@@ -14,18 +14,14 @@ type Task = BaseTask & {
   task_order: number;
   free_for_all: boolean;
   assigned_users: User[];
+  is_archived: boolean;
 };
 
 type TaskFromServer = BaseTask & {
   task_order: string;
   free_for_all: string;
   assigned_users: ServerUser[];
+  is_archived: string;
 };
 
-type BaseArchivedTask = Omit<BaseTask, "stage_id">;
-
-type ArchivedTask = BaseArchivedTask;
-
-type ArchivedTaskFromServer = BaseArchivedTask;
-
-export type { ArchivedTask, ArchivedTaskFromServer, Task, TaskFromServer };
+export type { Task, TaskFromServer };

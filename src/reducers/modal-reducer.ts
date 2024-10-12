@@ -19,7 +19,7 @@ import {
 import { Action, State, initialState } from "../providers/ModalContextProvider";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
-import { ArchivedTask, Task } from "../types/task";
+import { Task } from "../types/task";
 import { User } from "../types/user";
 
 const closeModal = () => {
@@ -107,7 +107,7 @@ const reducer = (state: State, action: Action): State => {
       return closeModal();
     }
     case OPEN_ARCHIVE_TASK_MODAL: {
-      const archiveTask: ArchivedTask = action.payload;
+      const archiveTask: Task = action.payload;
 
       return {
         ...state,

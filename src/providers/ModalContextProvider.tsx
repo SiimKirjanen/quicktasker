@@ -20,7 +20,7 @@ import {
 import { reducer } from "../reducers/modal-reducer";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
-import { ArchivedTask, Task } from "../types/task";
+import { Task } from "../types/task";
 import { User } from "../types/user";
 
 const initialState: State = {
@@ -51,7 +51,7 @@ type State = {
   newPipelineModalOpen: boolean;
   pipelineToEdit: Pipeline | null;
   archiveTaskModalOpen: boolean;
-  archiveModalTask: ArchivedTask | null;
+  archiveModalTask: Task | null;
   userModalOpen: boolean;
   userToEdit: User | null;
   userSettingsModalOpen: boolean;
@@ -71,7 +71,7 @@ type Action =
       payload: { pipelineToEdit: Pipeline };
     }
   | { type: typeof CLOSE_PIPELINE_MODAL }
-  | { type: typeof OPEN_ARCHIVE_TASK_MODAL; payload: ArchivedTask }
+  | { type: typeof OPEN_ARCHIVE_TASK_MODAL; payload: Task }
   | { type: typeof CLOSE_ARCHIVE_TASK_MODAL }
   | { type: typeof OPEN_NEW_USER_MODAL }
   | { type: typeof OPEN_EDIT_USER_MODAL; payload: User }

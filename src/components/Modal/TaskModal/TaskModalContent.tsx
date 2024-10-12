@@ -14,14 +14,20 @@ import {
   WPQTModalFooter,
 } from "../WPQTModal";
 
-import { ArchiveBoxIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  ArchiveBoxIcon,
+  ArrowUturnUpIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CLOSE_TASK_MODAL,
+  REMOVE_ARCHIVED_TASK,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
@@ -45,11 +51,13 @@ const TaskModalContent = forwardRef(
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [freeForAllTask, setFreeForAllTask] = useState(false);
-    const { deleteTask, archiveTask } = useTaskActions();
+    const { deleteTask, archiveTask, restoreArchivedTask } = useTaskActions();
     const {
       state: { activePipeline },
       fetchAndSetPipelineData,
     } = useContext(ActivePipelineContext);
+    const { archiveDispatch } = useContext(ArchiveContext);
+    const isTaskArchived = taskToEdit?.is_archived;
 
     useEffect(() => {
       if (taskToEdit) {
@@ -145,16 +153,35 @@ const TaskModalContent = forwardRef(
           </div>
 
           <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
-            <WPQTIconButton
-              icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-5" />}
-              text={__("Archive task", "quicktasker")}
-              onClick={() => {
-                archiveTask(taskToEdit.id, () => {
-                  modalDispatch({ type: CLOSE_TASK_MODAL });
-                  fetchAndSetPipelineData(activePipeline!.id);
-                });
-              }}
-            />
+            {isTaskArchived ? (
+              <WPQTIconButton
+                icon={
+                  <ArrowUturnUpIcon className="wpqt-icon-green wpqt-size-5" />
+                }
+                text={__("Restore task", "quicktasker")}
+                onClick={() => {
+                  restoreArchivedTask(taskToEdit.id, () => {
+                    modalDispatch({ type: CLOSE_TASK_MODAL });
+                    archiveDispatch({
+                      type: REMOVE_ARCHIVED_TASK,
+                      payload: taskToEdit.id,
+                    });
+                  });
+                }}
+              />
+            ) : (
+              <WPQTIconButton
+                icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-5" />}
+                text={__("Archive task", "quicktasker")}
+                onClick={() => {
+                  archiveTask(taskToEdit.id, () => {
+                    modalDispatch({ type: CLOSE_TASK_MODAL });
+                    fetchAndSetPipelineData(activePipeline!.id);
+                  });
+                }}
+              />
+            )}
+
             <WPQTIconButton
               icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
               text={__("Delete task", "quicktasker")}

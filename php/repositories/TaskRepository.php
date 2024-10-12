@@ -28,17 +28,34 @@ class TaskRepository {
         );
     }
 
+
     /**
-     * Retrieves the archived tasks from the database.
+     * Retrieves archived tasks from the database.
      *
-     * @return array The archived tasks.
+     * This function fetches tasks that are marked as archived from the database.
+     * Optionally, it can also fetch and include the users assigned to each task.
+     *
+     * @param bool $addAssignedUsers Optional. Whether to include assigned users for each task. Default false.
+     * @return array An array of archived tasks. Each task may include assigned users if $addAssignedUsers is true.
      */
-    public function getArchivedTasks() {
+    public function getArchivedTasks($addAssignedUsers = false) {
         global $wpdb;
+
+        $tasks = $wpdb->get_results($wpdb->prepare(
+           "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b
+            ON a.id = b.task_id
+            WHERE a.is_archived = 1"
+        ));
     
-        return $wpdb->get_results(
-            "SELECT * FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE is_archived = 1"
-        );
+        if ($addAssignedUsers) {
+            foreach ($tasks as $task) {
+                $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
+                $task->assigned_users = $users;
+            }
+        }
+    
+        return $tasks;
     }
 
     /**

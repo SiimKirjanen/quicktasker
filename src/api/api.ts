@@ -10,7 +10,7 @@ import {
 } from "../types/pipeline";
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
-import { ArchivedTaskFromServer, Task, TaskFromServer } from "../types/task";
+import { Task, TaskFromServer } from "../types/task";
 import { ServerExtendedUser, ServerUser, User } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
 
@@ -145,9 +145,7 @@ function restoreArchivedTaskRequest(taskId: string): Promise<WPQTResponse> {
   });
 }
 
-function getArchivedTasksRequest(): Promise<
-  WPQTResponse<ArchivedTaskFromServer[]>
-> {
+function getArchivedTasksRequest(): Promise<WPQTResponse<TaskFromServer[]>> {
   return apiFetch({
     path: `/wpqt/v1/tasks/archived`,
     method: "GET",

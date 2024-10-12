@@ -8,7 +8,7 @@ import { useContext } from "@wordpress/element";
 import { REMOVE_ARCHIVED_TASK } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
-import { ArchivedTask } from "../../../types/task";
+import { Task } from "../../../types/task";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
@@ -16,7 +16,7 @@ import {
 } from "../WPQTDropdown";
 
 type Props = {
-  task: ArchivedTask;
+  task: Task;
 };
 
 function ArchivedTaskDropdown({ task }: Props) {

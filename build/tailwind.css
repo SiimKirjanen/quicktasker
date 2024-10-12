@@ -906,14 +906,14 @@
   margin-right: 0.75rem;
 }
 
-.wpqt-my-6 {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
 .wpqt-mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+
+.wpqt-my-6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .\!wpqt-mb-0 {
@@ -1120,6 +1120,10 @@
   max-width: 56rem;
 }
 
+.wpqt-max-w-52 {
+  max-width: 13rem;
+}
+
 .wpqt-max-w-6xl {
   max-width: 72rem;
 }
@@ -1130,10 +1134,6 @@
 
 .wpqt-max-w-sm {
   max-width: 24rem;
-}
-
-.wpqt-max-w-52 {
-  max-width: 13rem;
 }
 
 .wpqt-flex-1 {

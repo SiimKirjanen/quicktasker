@@ -226,7 +226,7 @@ function wpqt_register_api_routes() {
                 try {
                     WPQTverifyApiNonce($data);
                     $tasksRepo = new TaskRepository();
-                    $archivedTasks = $tasksRepo->getArchivedTasks();
+                    $archivedTasks = $tasksRepo->getArchivedTasks(true);
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
                 } catch (Exception $e) {

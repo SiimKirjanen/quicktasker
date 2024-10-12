@@ -12,7 +12,7 @@ const useTaskActions = () => {
     try {
       await deleteTaskRequest(taskId);
       if (callback) callback();
-      toast.success(__("Task deleted successfully", "quicktasker"));
+      toast.success(__("Task deleted", "quicktasker"));
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to delete a task", "quicktasker"));
@@ -23,7 +23,7 @@ const useTaskActions = () => {
     try {
       await archiveTaskRequest(taskId);
       if (callback) callback();
-      toast.success(__("Task archived successfully", "quicktasker"));
+      toast.success(__("Task archived", "quicktasker"));
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to archive a task", "quicktasker"));
@@ -34,7 +34,7 @@ const useTaskActions = () => {
     try {
       await restoreArchivedTaskRequest(taskId);
       if (callback) callback();
-      toast.success(__("Task restored successfully", "quicktasker"));
+      toast.success(__("Task restored", "quicktasker"));
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to restore a task", "quicktasker"));
