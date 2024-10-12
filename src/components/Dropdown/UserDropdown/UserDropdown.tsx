@@ -1,5 +1,6 @@
 import {
   EllipsisHorizontalIcon,
+  KeyIcon,
   PencilSquareIcon,
   PowerIcon,
   RectangleStackIcon,
@@ -9,9 +10,10 @@ import {
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
+  CHANGE_USER_STATUS,
   DELETE_USER,
-  EDIT_USER,
   OPEN_EDIT_USER_MODAL,
+  RESET_PASSWORD,
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -29,7 +31,7 @@ type Props = {
 function UserDropdown({ user }: Props) {
   const { modalDispatch } = useContext(ModalContext);
   const { userDispatch } = useContext(UserContext);
-  const { changeUserStatus, deleteUser } = useUserActions();
+  const { changeUserStatus, deleteUser, resetUserPassword } = useUserActions();
   const userIsActive = user.is_active;
 
   const openEditUserModal = (e: React.MouseEvent) => {
@@ -43,8 +45,11 @@ function UserDropdown({ user }: Props) {
   const onChangeUserStatus = async (status: boolean) => {
     await changeUserStatus(user.id, status, () => {
       userDispatch({
-        type: EDIT_USER,
-        payload: { ...user, is_active: status ? "1" : "0" },
+        type: CHANGE_USER_STATUS,
+        payload: {
+          userId: user.id,
+          isActive: status,
+        },
       });
     });
   };
@@ -91,6 +96,22 @@ function UserDropdown({ user }: Props) {
           window.location.hash = `#/users/${user.id}/tasks`;
         }}
       />
+
+      {user.has_password && (
+        <WPQTDropdownItem
+          text={__("Reset password", "quicktasker")}
+          icon={<KeyIcon className="wpqt-icon-red wpqt-size-4" />}
+          onClick={async (e) => {
+            e.stopPropagation();
+            await resetUserPassword(user.id, () => {
+              userDispatch({
+                type: RESET_PASSWORD,
+                payload: user.id,
+              });
+            });
+          }}
+        />
+      )}
 
       {userIsActive && (
         <WPQTDropdownItem

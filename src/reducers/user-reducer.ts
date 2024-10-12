@@ -1,7 +1,9 @@
 import {
   ADD_USER,
+  CHANGE_USER_STATUS,
   DELETE_USER,
   EDIT_USER,
+  RESET_PASSWORD,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
 } from "../constants";
@@ -34,6 +36,28 @@ const reducer = (state: State, action: Action): State => {
       const editedUser: User = convertUserFromServer(editedServerUser);
       const users = state.users.map((user) =>
         user.id === editedUser.id ? editedUser : user,
+      );
+
+      return {
+        ...state,
+        users,
+      };
+    }
+    case CHANGE_USER_STATUS: {
+      const { isActive, userId } = action.payload;
+      const users = state.users.map((user) =>
+        user.id === userId ? { ...user, is_active: isActive } : user,
+      );
+
+      return {
+        ...state,
+        users,
+      };
+    }
+    case RESET_PASSWORD: {
+      const userId: string = action.payload;
+      const users = state.users.map((user) =>
+        user.id === userId ? { ...user, has_password: false } : user,
       );
 
       return {

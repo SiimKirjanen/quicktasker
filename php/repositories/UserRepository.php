@@ -24,7 +24,10 @@ class UserRepository {
         global $wpdb;
     
         return $wpdb->get_results(
-            "SELECT " . self::USER_FIELDS . ", b.page_hash, 
+            "SELECT " . self::USER_FIELDS . ", CASE 
+                        WHEN a.password IS NULL THEN 0 
+                        ELSE 1 
+                    END AS has_password, b.page_hash, 
                     (SELECT COUNT(*)
                      FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
                      JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d

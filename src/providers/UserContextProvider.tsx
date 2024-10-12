@@ -4,8 +4,10 @@ import { toast } from "react-toastify";
 import { getUsersRequest } from "../api/api";
 import {
   ADD_USER,
+  CHANGE_USER_STATUS,
   DELETE_USER,
   EDIT_USER,
+  RESET_PASSWORD,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
 } from "../constants";
@@ -26,6 +28,11 @@ type Action =
   | { type: typeof SET_USERS; payload: ServerUser[] }
   | { type: typeof ADD_USER; payload: ServerUser }
   | { type: typeof EDIT_USER; payload: ServerUser }
+  | {
+      type: typeof CHANGE_USER_STATUS;
+      payload: { isActive: boolean; userId: string };
+    }
+  | { type: typeof RESET_PASSWORD; payload: string }
   | { type: typeof DELETE_USER; payload: string }
   | { type: typeof SET_USERS_SEARCH_VALUE; payload: string };
 

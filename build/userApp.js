@@ -6539,6 +6539,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
 /* harmony export */   CHANGE_USER_SESSION_STATUS: () => (/* binding */ CHANGE_USER_SESSION_STATUS),
 /* harmony export */   CHANGE_USER_SETTINGS_MODAL_OPEN: () => (/* binding */ CHANGE_USER_SETTINGS_MODAL_OPEN),
+/* harmony export */   CHANGE_USER_STATUS: () => (/* binding */ CHANGE_USER_STATUS),
 /* harmony export */   CLOSE_ARCHIVE_TASK_MODAL: () => (/* binding */ CLOSE_ARCHIVE_TASK_MODAL),
 /* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
 /* harmony export */   CLOSE_NEW_TASK_MODAL: () => (/* binding */ CLOSE_NEW_TASK_MODAL),
@@ -6585,6 +6586,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   REMOVE_ARCHIVED_TASK: () => (/* binding */ REMOVE_ARCHIVED_TASK),
 /* harmony export */   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_EDITING_TASK),
 /* harmony export */   REMOVE_USER_TASK: () => (/* binding */ REMOVE_USER_TASK),
+/* harmony export */   RESET_PASSWORD: () => (/* binding */ RESET_PASSWORD),
 /* harmony export */   SET_ARCHIVE_FILTERED_PIPELINE: () => (/* binding */ SET_ARCHIVE_FILTERED_PIPELINE),
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
@@ -6653,6 +6655,8 @@ const ADD_USER = "ADD_USER";
 const SET_USERS_SEARCH_VALUE = "SET_USERS_SEARCH_VALUE";
 const EDIT_USER = "EDIT_USER";
 const DELETE_USER = "DELETE_USER";
+const CHANGE_USER_STATUS = "CHANGE_USER_STATUS";
+const RESET_PASSWORD = "RESET_PASSWORD";
 //App reducer
 const SET_SITE_URL = "SET_SITE_URL";
 const INIT_APP_STATE = "INIT_APP_STATE";
@@ -11166,7 +11170,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   convertUserFromServer: () => (/* binding */ convertUserFromServer)
 /* harmony export */ });
 const convertUserFromServer = user => Object.assign(Object.assign({}, user), {
-  is_active: user.is_active === "1"
+  is_active: user.is_active === "1",
+  has_password: user.has_password === "1"
 });
 const convertExtendedUserFromServer = user => Object.assign(Object.assign({}, user), {
   is_active: user.is_active === "1"

@@ -9,9 +9,11 @@ type BaseUser = {
 
 type User = BaseUser & {
   is_active: boolean;
+  has_password: boolean;
 };
 type ServerUser = BaseUser & {
   is_active: string;
+  has_password: string;
 };
 type ServerExtendedUser = BaseUser & {
   is_active: string;

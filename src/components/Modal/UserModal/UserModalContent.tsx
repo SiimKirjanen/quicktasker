@@ -1,4 +1,5 @@
 import {
+  KeyIcon,
   PowerIcon,
   RectangleStackIcon,
   TrashIcon,
@@ -12,7 +13,12 @@ import {
   useState,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { CLOSE_USER_MODAL, DELETE_USER, EDIT_USER } from "../../../constants";
+import {
+  CLOSE_USER_MODAL,
+  DELETE_USER,
+  EDIT_USER,
+  RESET_PASSWORD,
+} from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
@@ -44,7 +50,8 @@ const UserModalContent = forwardRef(function UserModalContent(
   const [userName, setUserName] = useState("");
   const [userDescription, setUserDescription] = useState("");
   const [isActiveUser, setIsActiveUser] = useState(false);
-  const { changeUserStatus, deleteUser } = useUserActions();
+  const [hasPassword, setHasPassword] = useState(false);
+  const { changeUserStatus, deleteUser, resetUserPassword } = useUserActions();
   const { userDispatch } = useContext(UserContext);
 
   useEffect(() => {
@@ -52,6 +59,7 @@ const UserModalContent = forwardRef(function UserModalContent(
       setUserName(userToEdit.name);
       setUserDescription(userToEdit.description);
       setIsActiveUser(userToEdit.is_active);
+      setHasPassword(userToEdit.has_password);
     }
   }, [userToEdit]);
 
@@ -133,6 +141,21 @@ const UserModalContent = forwardRef(function UserModalContent(
               });
             }}
           />
+          {hasPassword && (
+            <WPQTIconButton
+              icon={<KeyIcon className="wpqt-icon-red wpqt-size-5" />}
+              text={__("Reset password", "quicktasker")}
+              onClick={async () => {
+                await resetUserPassword(userToEdit.id, () => {
+                  userDispatch({
+                    type: RESET_PASSWORD,
+                    payload: userToEdit.id,
+                  });
+                  setHasPassword(false);
+                });
+              }}
+            />
+          )}
           {!isActiveUser && (
             <WPQTIconButton
               icon={<PowerIcon className="wpqt-icon-green wpqt-size-5" />}

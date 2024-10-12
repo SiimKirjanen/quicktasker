@@ -17,6 +17,7 @@ function UserListItem({ user }: Props) {
   const { modalDispatch } = useContext(ModalContext);
 
   const userIsActive = user.is_active;
+  const hasPassword = user.has_password;
 
   return (
     <WPQTCard
@@ -49,6 +50,15 @@ function UserListItem({ user }: Props) {
         }
         valueClassName={
           userIsActive
+            ? "wpqt-text-qtTextGreen wpqt-font-bold"
+            : "wpqt-text-qtTextRed wpqt-font-bold"
+        }
+      />
+      <WPQTCardDataItem
+        label={__("Password set", "quicktasker")}
+        value={hasPassword ? __("Yes", "quicktasker") : __("No", "quicktasker")}
+        valueClassName={
+          hasPassword
             ? "wpqt-text-qtTextGreen wpqt-font-bold"
             : "wpqt-text-qtTextRed wpqt-font-bold"
         }

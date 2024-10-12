@@ -8,6 +8,7 @@ import {
 const convertUserFromServer = (user: ServerUser): User => ({
   ...user,
   is_active: user.is_active === "1",
+  has_password: user.has_password === "1",
 });
 
 const convertExtendedUserFromServer = (
