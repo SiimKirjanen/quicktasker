@@ -16,6 +16,12 @@ type Props = {
 };
 function NavigationBar({ loading, onRefresh = () => {} }: Props) {
   const navigate = useNavigate();
+  const { checkNewComments } = useContext(UserPageNotificationsContext);
+
+  const refresh = () => {
+    onRefresh();
+    checkNewComments();
+  };
 
   return (
     <div className="wpqt-grid wpqt-h-[60px] wpqt-grid-cols-[1fr_auto_1fr] wpqt-items-center wpqt-border-0 wpqt-border-t wpqt-border-solid wpqt-border-y-gray-300 wpqt-px-4 wpqt-py-2 lg:wpqt-border-b lg:wpqt-border-t-0">
@@ -32,7 +38,7 @@ function NavigationBar({ loading, onRefresh = () => {} }: Props) {
         ) : (
           <ArrowPathIcon
             className="wpqt-icon-blue wpqt-size-9 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
-            onClick={onRefresh}
+            onClick={refresh}
           />
         )}
       </div>

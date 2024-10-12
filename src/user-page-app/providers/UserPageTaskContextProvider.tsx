@@ -12,6 +12,7 @@ import {
   SET_USER_PAGE_TASK_DATA,
   SET_USER_PAGE_TASK_LOADING,
   UPDATE_USER_PAGE_TASK_DATA,
+  UPDATE_USER_PAGE_TASK_STAGE,
 } from "../constants";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { reducer } from "../reducers/user-page-task-reducer";
@@ -35,6 +36,7 @@ type State = {
 type Action =
   | { type: typeof SET_USER_PAGE_TASK_DATA; payload: UserPageTaskResponse }
   | { type: typeof UPDATE_USER_PAGE_TASK_DATA; payload: TaskFromServer }
+  | { type: typeof UPDATE_USER_PAGE_TASK_STAGE; payload: string }
   | { type: typeof SET_USER_PAGE_TASK_LOADING; payload: boolean };
 
 type Dispatch = (action: Action) => void;

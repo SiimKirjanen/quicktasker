@@ -25,7 +25,7 @@ function UserTaskPageContent() {
     <PageWrap loading={loading} onRefresh={loadAssignedTasks}>
       <PageContentWrap>
         <PageTitle
-          description={__("Tasks that are yours to complete", "quicktasker")}
+          description={__("Tasks that are assigned to you", "quicktasker")}
         >
           {__("Assigned tasks", "quicktasker")}
         </PageTitle>

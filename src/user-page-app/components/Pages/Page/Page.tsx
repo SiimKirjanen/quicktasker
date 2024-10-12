@@ -40,11 +40,20 @@ function PageScreenMiddle({ children }: PageScreenMiddleProps) {
 type PageTitleProps = {
   children: React.ReactNode;
   description?: string;
+  titleClassName?: string;
+  className?: string;
 };
-function PageTitle({ children, description }: PageTitleProps) {
+function PageTitle({
+  children,
+  description,
+  titleClassName = "",
+  className = "",
+}: PageTitleProps) {
   return (
-    <div className="wpqt-mb-6">
-      <h1 className="wpqt-m-0 wpqt-text-center wpqt-text-2xl wpqt-font-semibold">
+    <div className={`wpqt-mb-6 ${className}`}>
+      <h1
+        className={`wpqt-m-0 wpqt-text-center wpqt-text-2xl wpqt-font-normal ${titleClassName}`}
+      >
         {children}
       </h1>
       {description && (

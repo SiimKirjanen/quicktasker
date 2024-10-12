@@ -40,7 +40,6 @@ function ProfileDropdown() {
 
   return (
     <WPQTDropdown
-      menuBtnClasses=""
       anchor="bottom end"
       menuBtn={({ active }) => (
         <div>
@@ -53,6 +52,7 @@ function ProfileDropdown() {
       <WPQTDropdownItem
         text={__("View profile", "quicktasker")}
         icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
+        className="wpqt-mb-4"
         onClick={() => {
           navigate("/user/profile");
         }}

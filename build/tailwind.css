@@ -1534,6 +1534,11 @@
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.wpqt-bg-blue-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(96 165 250 / var(--tw-bg-opacity));
+}
+
 .wpqt-p-1 {
   padding: 0.25rem;
 }
@@ -1678,6 +1683,10 @@
 
 .wpqt-font-semibold {
   font-weight: 600;
+}
+
+.wpqt-font-normal {
+  font-weight: 400;
 }
 
 .wpqt-italic {
@@ -1992,6 +2001,10 @@
 }
 
 @media (min-width: 768px) {
+  .md\:wpqt-w-2\/4 {
+    width: 50%;
+  }
+
   .md\:wpqt-grid-cols-\[1fr_auto\] {
     grid-template-columns: 1fr auto;
   }

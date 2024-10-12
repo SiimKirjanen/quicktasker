@@ -16,7 +16,7 @@ import { SET_USER_LOGGED_IN } from "../../../constants";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSession } from "../../../hooks/useSession";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
-import { PageScreenMiddle } from "../Page/Page";
+import { PageScreenMiddle, PageTitle } from "../Page/Page";
 
 function LoginPage() {
   const {
@@ -44,8 +44,13 @@ function LoginPage() {
   };
   return (
     <PageScreenMiddle>
-      <h2>{sprintf(__("Hello %s", "quicktasker"), userName)}</h2>
-      <p>{__("Please log in to continue", "quicktasker")}</p>
+      <PageTitle
+        titleClassName="wpqt-font-normal"
+        className="wpqt-mb-2"
+        description={__("Please log in to continue", "quicktasker")}
+      >
+        {sprintf(__("Hello %s", "quicktasker"), userName)}
+      </PageTitle>
       <form onSubmit={login}>
         <WPQTFieldSet>
           <WPQTField>

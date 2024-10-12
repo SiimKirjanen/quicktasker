@@ -1,7 +1,8 @@
+import { EyeIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
-import { WPQTButton } from "../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../components/common/Button/Button";
 import { getOverviewRequest } from "../../../api/user-page-api";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
@@ -46,20 +47,21 @@ function HomePage() {
             {__("Assigned tasks:", "quicktasker")}{" "}
             {overview?.assignedTasksCount}
           </div>
-          <WPQTButton
-            btnText={__("See assigned tasks", "quicktasker")}
+          <WPQTIconButton
+            icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
+            text={__("View assigned tasks", "quicktasker")}
+            className="wpqt-mb-5"
             onClick={() => navigate("/user-tasks")}
-            className="wpqt-mb-4"
-          ></WPQTButton>
-
+          />
           <div>
             {__("Assignable tasks:", "quicktasker")}{" "}
             {overview?.assignableTaskCount}
           </div>
-          <WPQTButton
-            btnText={__("See assignable tasks", "quicktasker")}
+          <WPQTIconButton
+            icon={<EyeIcon className="wpqt-size-5 wpqt-icon-green" />}
+            text={__("View assignable tasks", "quicktasker")}
             onClick={() => navigate("/assignable-tasks")}
-          ></WPQTButton>
+          />
         </div>
       </PageContentWrap>
     </PageWrap>

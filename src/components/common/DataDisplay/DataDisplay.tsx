@@ -12,8 +12,8 @@ type RowProps = {
 };
 function DisplayRow({ children, label, className = "" }: RowProps) {
   return (
-    <div className={`wpqt-mb-2 ${className}`}>
-      <span className="wpqt-font-semibold">{label}</span>
+    <div className={`wpqt-mb-1 ${className}`}>
+      <span className="wpqt-font-medium">{label}</span>
       <span className="wpqt-text-base">{children}</span>
     </div>
   );

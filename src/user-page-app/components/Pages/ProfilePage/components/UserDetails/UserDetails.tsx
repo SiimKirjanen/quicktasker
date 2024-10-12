@@ -13,7 +13,7 @@ function UserDetails({ user }: Props) {
     return null;
   }
   const rowClasses =
-    "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-2 wpqt-text-xl";
+    "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-1 wpqt-text-xl";
 
   return (
     <div className="wpqt-mb-4">

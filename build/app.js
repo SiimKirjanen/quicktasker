@@ -9766,7 +9766,7 @@ function WPQTDropdown({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.Menu, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.MenuButton, {
       as: "div",
-      className: `${menuBtnClasses} wpqt-cursor-pointer`,
+      className: `wpqt-cursor-pointer ${menuBtnClasses}`,
       onClick: event => event.stopPropagation(),
       children: ({
         active
@@ -12758,9 +12758,9 @@ function DisplayRow({
   className = ""
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: `wpqt-mb-2 ${className}`,
+    className: `wpqt-mb-1 ${className}`,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-      className: "wpqt-font-semibold",
+      className: "wpqt-font-medium",
       children: label
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
       className: "wpqt-text-base",

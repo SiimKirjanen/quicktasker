@@ -7,7 +7,7 @@ import { LoadingOval } from "../../../../components/Loading/Loading";
 import { WPQTModal } from "../../../../components/Modal/WPQTModal";
 import { Stage } from "../../../../types/stage";
 import { Task } from "../../../../types/task";
-import { SET_USER_PAGE_TASK_DATA } from "../../../constants";
+import { UPDATE_USER_PAGE_TASK_STAGE } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { UserPageTaskContext } from "../../../providers/UserPageTaskContextProvider";
 
@@ -27,8 +27,11 @@ function StageSelectionModal({ task, stages, pageHash, open, onClose }: Props) {
 
   const onSave = async () => {
     setLoading(true);
-    await changeTaskStage(task.task_hash, selectedStageId, pageHash, (data) => {
-      userTaskDispatch({ type: SET_USER_PAGE_TASK_DATA, payload: data });
+    await changeTaskStage(task.task_hash, selectedStageId, pageHash, () => {
+      userTaskDispatch({
+        type: UPDATE_USER_PAGE_TASK_STAGE,
+        payload: selectedStageId,
+      });
     });
     setLoading(false);
     onClose();

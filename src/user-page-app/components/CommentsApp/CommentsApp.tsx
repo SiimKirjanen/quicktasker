@@ -54,7 +54,7 @@ function CommentsApp({ comments, addComments }: Props) {
           })}
         </div>
       </div>
-      <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-max-w-52 wpqt-mx-auto">
+      <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-w-full md:wpqt-w-2/4 wpqt-mx-auto">
         <WPQTTextarea value={comment} onChange={setComment} />
         <WPQTIconButton
           text={__("Add comment", "quicktasker")}

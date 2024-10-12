@@ -5,6 +5,7 @@ import {
   SET_USER_PAGE_TASK_DATA,
   SET_USER_PAGE_TASK_LOADING,
   UPDATE_USER_PAGE_TASK_DATA,
+  UPDATE_USER_PAGE_TASK_STAGE,
 } from "../constants";
 import { Action, State } from "../providers/UserPageTaskContextProvider";
 import { UserPageTaskResponse } from "../types/user-page-task-response";
@@ -33,6 +34,19 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         loading: action.payload,
+      };
+    }
+    case UPDATE_USER_PAGE_TASK_STAGE: {
+      const stageId = action.payload;
+
+      return {
+        ...state,
+        task: state.task
+          ? {
+              ...state.task,
+              stage_id: stageId,
+            }
+          : null,
       };
     }
     default:

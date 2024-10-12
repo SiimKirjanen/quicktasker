@@ -1,6 +1,7 @@
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
-import { WPQTButton } from "../../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../../components/common/Button/Button";
 import { Task } from "../../../../../types/task";
 import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
 import { UserPageTaskContext } from "../../../../providers/UserPageTaskContextProvider";
@@ -26,18 +27,18 @@ function TaskStageSelect({ task }: Props) {
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center">
-      <div className="wpqt-mb-2 wpqt-font-semibold">
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-3">
+      <div className="wpqt-mb-3 wpqt-font-medium">
         {sprintf(
           __("Task is on stage %s", "quicktasker"),
           currentTaskStage?.name,
         )}
       </div>
-      <WPQTButton
-        btnText={__("Change stage", "quicktasker")}
+      <WPQTIconButton
+        text={__("Change stage", "quicktasker")}
+        icon={<PaperAirplaneIcon className="wpqt-size-5 wpqt-icon-blue" />}
         onClick={() => setSelectionModalOpen(true)}
       />
-
       <StageSelectionModal
         stages={taskStages}
         task={task}

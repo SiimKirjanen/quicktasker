@@ -19,7 +19,7 @@ function WPQTDropdown({
     <Menu>
       <MenuButton
         as="div"
-        className={`${menuBtnClasses} wpqt-cursor-pointer`}
+        className={`wpqt-cursor-pointer ${menuBtnClasses}`}
         onClick={(event) => event.stopPropagation()}
       >
         {({ active }) => <>{menuBtn({ active })}</>}

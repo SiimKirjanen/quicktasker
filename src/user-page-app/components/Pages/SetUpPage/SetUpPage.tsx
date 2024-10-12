@@ -1,14 +1,20 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
-import { WPQTButton } from "../../../../components/common/Button/Button";
+import {
+  ButtonType,
+  WPQTButton,
+} from "../../../../components/common/Button/Button";
 import { WPQTField } from "../../../../components/common/Form/Field";
 import { WPQTFieldSet } from "../../../../components/common/Form/FieldSet";
 import { WPQTLabel } from "../../../../components/common/Form/Label";
-import { WPQTInput } from "../../../../components/common/Input/Input";
+import {
+  InputType,
+  WPQTInput,
+} from "../../../../components/common/Input/Input";
 import { setUpUserPageRequest } from "../../../api/user-page-api";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
-import { PageScreenMiddle } from "../Page/Page";
+import { PageScreenMiddle, PageTitle } from "../Page/Page";
 
 function SetUpPage() {
   const {
@@ -27,7 +33,13 @@ function SetUpPage() {
     }
   }, [password, passwordRepeat]);
 
-  const submitSetup = async () => {
+  const submitSetup = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!password || !passwordRepeat) {
+      setValidationError(__("Please enter a password", "quicktasker"));
+      return;
+    }
     if (validationError) {
       return;
     }
@@ -43,29 +55,43 @@ function SetUpPage() {
 
   return (
     <PageScreenMiddle>
-      <p>
-        {sprintf(
-          __("Hello %s. Please complete setup", "quicktasker"),
-          userName,
-        )}
-      </p>
-      <form>
+      <PageTitle
+        titleClassName="wpqt-font-normal"
+        description={__("Please complete the setup", "quicktasker")}
+      >
+        {sprintf(__("Hello %s", "quicktasker"), userName)}
+      </PageTitle>
+      <form onSubmit={submitSetup}>
         <WPQTFieldSet>
           <WPQTField>
-            <WPQTLabel>{__("Enter your password", "quicktasker")}</WPQTLabel>
-            <WPQTInput value={password} onChange={setPassword} />
+            <WPQTLabel className="wpqt-text-center">
+              {__("Enter your new password", "quicktasker")}
+            </WPQTLabel>
+            <WPQTInput
+              value={password}
+              onChange={setPassword}
+              type={InputType.PASSWORD}
+            />
           </WPQTField>
           <WPQTField>
-            <WPQTLabel>{__("Repeat your password", "quicktasker")}</WPQTLabel>
-            <WPQTInput value={passwordRepeat} onChange={setPasswordRepeat} />
+            <WPQTLabel className="wpqt-text-center">
+              {__("Repeat your new password", "quicktasker")}
+            </WPQTLabel>
+            <WPQTInput
+              value={passwordRepeat}
+              onChange={setPasswordRepeat}
+              type={InputType.PASSWORD}
+            />
           </WPQTField>
           {validationError && (
-            <div className="wpqt-text-qtTextRed">{validationError}</div>
+            <div className="wpqt-text-qtTextRed wpqt-mb-3">
+              {validationError}
+            </div>
           )}
-          <WPQTField>
+          <WPQTField className="wpqt-text-center">
             <WPQTButton
               btnText={__("Setup", "quicktasker")}
-              onClick={submitSetup}
+              type={ButtonType.SUBMIT}
             />
           </WPQTField>
         </WPQTFieldSet>
