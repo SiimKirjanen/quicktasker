@@ -25,8 +25,12 @@ function UserTasksFilter() {
     });
   };
   return (
-    <WPQTFilter title={__("User tasks filtering", "quicktasker")}>
-      <WPQTInput value={searchValue} onChange={onValueChange} />
+    <WPQTFilter title={__("Filter", "quicktasker")}>
+      <WPQTInput
+        value={searchValue}
+        onChange={onValueChange}
+        className="wpqt-mb-0"
+      />
       <PipelineFilterSelect
         selectedOptionValue={filteredPipelineId}
         selectionChange={onPipelineChange}

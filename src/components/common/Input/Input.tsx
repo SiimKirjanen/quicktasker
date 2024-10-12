@@ -1,11 +1,17 @@
 import { Input } from "@headlessui/react";
 
+enum InputType {
+  TEXT = "text",
+  PASSWORD = "password",
+}
+
 type Props = {
   value: string;
   onChange: (newValue: string) => void;
   isAutoFocus?: boolean;
   className?: string;
   disabled?: boolean;
+  type?: InputType;
 };
 
 function WPQTInput({
@@ -14,6 +20,7 @@ function WPQTInput({
   isAutoFocus,
   className,
   disabled = false,
+  type = InputType.TEXT,
 }: Props) {
   return (
     <Input
@@ -22,8 +29,9 @@ function WPQTInput({
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
+      type={type}
     />
   );
 }
 
-export { WPQTInput };
+export { InputType, WPQTInput };

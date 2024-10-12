@@ -24,6 +24,8 @@ module.exports = {
       },
       animation: {
         bellShake: "bellShake 0.82s cubic-bezier(.36,.07,.19,.97) both",
+        fadeIn: "fadeIn 0.5s ease-in-out",
+        fadeOut: "fadeOut 0.5s ease-in-out",
       },
       keyframes: {
         bellShake: {
@@ -36,6 +38,14 @@ module.exports = {
           "85%": { transform: "rotate(-2deg)" },
           "92%": { transform: "rotate(1deg)" },
           "100%": { transform: "rotate(0deg)" },
+        },
+        fadeIn: {
+          "0%": { opacity: 0, transform: "translateY(-10px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+        fadeOut: {
+          "0%": { opacity: 1, transform: "translateY(0)" },
+          "100%": { opacity: 0, transform: "translateY(-10px)" },
         },
       },
     },

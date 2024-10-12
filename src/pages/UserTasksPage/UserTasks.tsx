@@ -1,6 +1,8 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../components/Card/Card";
 import { UserTaskDropdown } from "../../components/Dropdown/UserTaskDropdown/UserTaskDropdown";
+import { NoFilterResults } from "../../components/Filter/NoFilterResults/NoFilterResults";
 import { TaskModal } from "../../components/Modal/TaskModal/TaskModal";
 import {
   EDIT_USER_TASK,
@@ -24,6 +26,7 @@ function UserTasks({ userId }: Props) {
     userTasksDispatch,
   } = useContext(UserTasksContext);
   const { removeTaskFromUser } = useTaskActions();
+  const filteredTasks = tasks?.filter(filterTasks) ?? [];
 
   const unAssignTask = async (taskId: string) => {
     removeTaskFromUser(userId, taskId, () => {
@@ -35,10 +38,18 @@ function UserTasks({ userId }: Props) {
     userTasksDispatch({ type: EDIT_USER_TASK, payload: task });
   };
 
+  if (tasks && tasks.length === 0) {
+    return <NoFilterResults text={__("User has no tasks", "quicktasker")} />;
+  }
+
+  if (filteredTasks && filteredTasks.length === 0) {
+    return <NoFilterResults />;
+  }
+
   return (
     <>
       <div className="wpqt-grid wpqt-grid-cols-4 wpqt-gap-2">
-        {tasks.filter(filterTasks).map((task: Task) => {
+        {filteredTasks.map((task: Task) => {
           return (
             <WPQTCard
               className="wpqt-cursor-pointer"

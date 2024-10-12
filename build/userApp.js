@@ -6456,6 +6456,7 @@ function WPQTLabel({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   InputType: () => (/* binding */ InputType),
 /* harmony export */   WPQTInput: () => (/* binding */ WPQTInput)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
@@ -6463,19 +6464,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
 
 
+var InputType;
+(function (InputType) {
+  InputType["TEXT"] = "text";
+  InputType["PASSWORD"] = "password";
+})(InputType || (InputType = {}));
 function WPQTInput({
   value,
   onChange,
   isAutoFocus,
   className,
-  disabled = false
+  disabled = false,
+  type = InputType.TEXT
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Input, {
     autoFocus: isAutoFocus,
     className: `wpqt-mb-3 wpqt-block wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,
     value: value,
     disabled: disabled,
-    onChange: e => onChange(e.target.value)
+    onChange: e => onChange(e.target.value),
+    type: type
   });
 }
 
@@ -8295,7 +8303,8 @@ function LoginPage() {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Form_Field__WEBPACK_IMPORTED_MODULE_5__.WPQTField, {
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Input_Input__WEBPACK_IMPORTED_MODULE_7__.WPQTInput, {
             value: password,
-            onChange: setPassword
+            onChange: setPassword,
+            type: _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_7__.InputType.PASSWORD
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Form_Field__WEBPACK_IMPORTED_MODULE_5__.WPQTField, {
           className: "wpqt-flex wpqt-justify-center",
@@ -8305,6 +8314,20 @@ function LoginPage() {
           })
         })]
       })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ForgotPassword, {})]
+  });
+}
+function ForgotPassword() {
+  const [guideOpen, setGuideOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-flex-col wpqt-gap3 wpqt-items-center wpqt-mt-2 wpqt-text-sm wpqt-cursor-pointer wpqt-relative wpqt-min-w-[300px] wpqt-text-blue-500",
+    onClick: () => setGuideOpen(!guideOpen),
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-mb-2",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Forgot the password?", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: `wpqt-text-center wpqt-absolute wpqt-top-full wpqt-left-0 wpqt-w-full ${guideOpen ? "wpqt-animate-fadeIn" : "wpqt-animate-fadeOut"} ${!guideOpen && "wpqt-hidden"}`,
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please contact the site admin to reset your password", "quicktasker")
     })]
   });
 }

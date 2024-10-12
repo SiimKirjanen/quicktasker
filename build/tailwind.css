@@ -849,6 +849,10 @@
   bottom: 80px;
 }
 
+.wpqt-left-0 {
+  left: 0px;
+}
+
 .wpqt-right-2 {
   right: 0.5rem;
 }
@@ -871,6 +875,10 @@
 
 .wpqt-top-\[12px\] {
   top: 12px;
+}
+
+.wpqt-top-full {
+  top: 100%;
 }
 
 .wpqt-z-10 {
@@ -992,6 +1000,10 @@
   margin-top: 8vh;
 }
 
+.wpqt-mb-0 {
+  margin-bottom: 0px;
+}
+
 .\!wpqt-block {
   display: block !important;
 }
@@ -1014,6 +1026,10 @@
 
 .wpqt-inline-grid {
   display: inline-grid;
+}
+
+.wpqt-hidden {
+  display: none;
 }
 
 .wpqt-size-11 {
@@ -1116,6 +1132,10 @@
   width: 100vw;
 }
 
+.wpqt-min-w-\[300px\] {
+  min-width: 300px;
+}
+
 .wpqt-max-w-4xl {
   max-width: 56rem;
 }
@@ -1196,6 +1216,38 @@
 
 .wpqt-animate-bellShake {
   animation: wpqt-bellShake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes wpqt-fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wpqt-animate-fadeIn {
+  animation: wpqt-fadeIn 0.5s ease-in-out;
+}
+
+@keyframes wpqt-fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.wpqt-animate-fadeOut {
+  animation: wpqt-fadeOut 0.5s ease-in-out;
 }
 
 .\!wpqt-cursor-not-allowed {

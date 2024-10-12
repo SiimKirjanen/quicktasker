@@ -3,6 +3,7 @@ import {
   REMOVE_USER_TASK,
   SET_USER_TASKS,
   SET_USER_TASKS_FILTERED_PIPELINE,
+  SET_USER_TASKS_SEARCH_VALUE,
 } from "../constants";
 import { Action, State } from "../providers/UserTasksContextProvider";
 import { TaskFromServer } from "../types/task";
@@ -39,6 +40,14 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         tasks: updatedTasks,
+      };
+    }
+    case SET_USER_TASKS_SEARCH_VALUE: {
+      const searchValue = action.payload;
+
+      return {
+        ...state,
+        searchValue,
       };
     }
     case SET_USER_TASKS_FILTERED_PIPELINE: {
