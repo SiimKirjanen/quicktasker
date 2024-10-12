@@ -9,11 +9,11 @@
     height: calc(100vh - 120px);
   }
   .wpqt-user-app-content-height {
-    height: calc(100vh - 93px);
+    height: calc(100vh - 78px);
     box-sizing: border-box;
   }
   .wpqt-comments-app-height {
-    height: calc(100vh - 93px - 340px);
+    height: calc(100vh - 78px - 290px);
   }
   .wpqt-strip-btn {
     @apply wpqt-border-0 wpqt-border-none wpqt-bg-transparent wpqt-p-0;

@@ -37,4 +37,21 @@ function PageScreenMiddle({ children }: PageScreenMiddleProps) {
   );
 }
 
-export { PageContentWrap, PageScreenMiddle, PageWrap };
+type PageTitleProps = {
+  children: React.ReactNode;
+  description?: string;
+};
+function PageTitle({ children, description }: PageTitleProps) {
+  return (
+    <div className="wpqt-mb-6">
+      <h1 className="wpqt-m-0 wpqt-text-center wpqt-text-2xl wpqt-font-semibold">
+        {children}
+      </h1>
+      {description && (
+        <div className="wpqt-mt-1 wpqt-text-center">{description}</div>
+      )}
+    </div>
+  );
+}
+
+export { PageContentWrap, PageScreenMiddle, PageTitle, PageWrap };

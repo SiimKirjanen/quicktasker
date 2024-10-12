@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
+import { __, sprintf } from "@wordpress/i18n";
 import { useParams } from "react-router-dom";
 import { WPQTComment } from "../../../../types/comment";
 import { Task } from "../../../../types/task";
@@ -9,7 +10,7 @@ import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { UserPageTaskResponse } from "../../../types/user-page-task-response";
 import { CommentsApp } from "../../CommentsApp/CommentsApp";
-import { PageContentWrap, PageWrap } from "../Page/Page";
+import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 
 function TaskCommentsPage() {
   const {
@@ -49,7 +50,11 @@ function TaskCommentsPage() {
   return (
     <PageWrap loading={loading} onRefresh={loadComments}>
       <PageContentWrap>
-        {task && <h2>{task.name} comments</h2>}
+        {task && (
+          <PageTitle>
+            {sprintf(__("%s comments", "quicktasker"), task.name)}
+          </PageTitle>
+        )}
         {comments && (
           <CommentsApp comments={comments} addComments={onAddComment} />
         )}

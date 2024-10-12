@@ -46,7 +46,7 @@ function NotificationsPage() {
   return (
     <PageWrap loading={loading} onRefresh={checkNewComments}>
       <PageContentWrap>
-        <p>
+        <p className="wpqt-text-center">
           {sprintf(
             __("You have %d new %s", "quicktasker"),
             newComments.length,
@@ -55,7 +55,7 @@ function NotificationsPage() {
               : __("comments", "quicktasker"),
           )}
         </p>
-        <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-2 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4">
+        <div className="wpqt-grid wpqt-grid-cols-1  sm:wpqt-grid-cols-2 wpqt-gap-2 lg:wpqt-grid-cols-4">
           {Object.values(groupedComments).map((notification) => (
             <NotificationItem
               key={notification.typeId}

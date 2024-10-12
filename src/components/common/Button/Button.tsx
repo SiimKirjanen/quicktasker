@@ -1,17 +1,29 @@
 import { Button } from "@headlessui/react";
 import { WPQTTooltip } from "../../Tooltip/WPQTTooltip";
 
+enum ButtonType {
+  BUTTON = "button",
+  SUBMIT = "submit",
+  RESET = "reset",
+}
 type Props = {
-  onClick: () => void;
+  onClick?: () => void;
   btnText: string;
   className?: string;
+  type?: ButtonType;
 };
 
-function WPQTButton({ onClick, btnText, className }: Props) {
+function WPQTButton({
+  onClick = () => {},
+  btnText,
+  className,
+  type = ButtonType.BUTTON,
+}: Props) {
   return (
     <Button
       className={`wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`}
       onClick={onClick}
+      type={type}
     >
       {btnText}
     </Button>
@@ -57,4 +69,4 @@ function WPQTIconButton({
   );
 }
 
-export { WPQTButton, WPQTIconButton };
+export { ButtonType, WPQTButton, WPQTIconButton };

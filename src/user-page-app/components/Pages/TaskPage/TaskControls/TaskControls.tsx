@@ -45,7 +45,7 @@ function TaskControls({ task }: Props) {
   };
 
   return (
-    <div className="wpqt-mt-5 wpqt-flex wpqt-gap-2">
+    <div className="wpqt-mt-5 wpqt-flex wpqt-flex-wrap wpqt-justify-center wpqt-gap-4">
       {isAssignedToTask && (
         <WPQTIconButton
           icon={<UserMinusIcon className="wpqt-icon-red wpqt-size-5" />}

@@ -6,7 +6,7 @@ import {
   UserAssignableTasksContext,
   UserAssignableTasksContextProvider,
 } from "../../../providers/UserAssignableTasksContextProvider";
-import { PageContentWrap, PageWrap } from "../Page/Page";
+import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 
 function AssignableTasksPage() {
   return (
@@ -26,8 +26,12 @@ function AssignebaleTasksPageContent() {
   return (
     <PageWrap loading={loading} onRefresh={loadAssignableTasks}>
       <PageContentWrap>
-        <h1>{__("Assignable tasks", "quicktasker")}</h1>
-        <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-2 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4">
+        <PageTitle
+          description={__("Tasks available for self-assignment", "quicktasker")}
+        >
+          {__("Assignable tasks", "quicktasker")}
+        </PageTitle>
+        <div className="wpqt-grid wpqt-grid-cols-1 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-4 wpqt-gap-2 ">
           {assignableTasks.map((task) => (
             <WPQTCard
               key={task.task_hash}

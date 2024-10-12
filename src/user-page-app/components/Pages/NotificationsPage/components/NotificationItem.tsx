@@ -23,7 +23,7 @@ function NotificationItem({ notification }: Props) {
       onClick={onClick}
       className="wpqt-cursor-pointer"
     >
-      <p>{notification.numberOfComments} new comments</p>
+      <div>{notification.numberOfComments} new comments</div>
     </WPQTCard>
   );
 }

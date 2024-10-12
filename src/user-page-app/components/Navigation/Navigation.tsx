@@ -18,7 +18,7 @@ function NavigationBar({ loading, onRefresh = () => {} }: Props) {
   const navigate = useNavigate();
 
   return (
-    <div className="wpqt-grid wpqt-h-[60px] wpqt-grid-cols-[1fr_auto_1fr] wpqt-items-center wpqt-border-0 wpqt-border-t wpqt-border-solid wpqt-border-y-gray-300 wpqt-p-4 lg:wpqt-border-b lg:wpqt-border-t-0">
+    <div className="wpqt-grid wpqt-h-[60px] wpqt-grid-cols-[1fr_auto_1fr] wpqt-items-center wpqt-border-0 wpqt-border-t wpqt-border-solid wpqt-border-y-gray-300 wpqt-px-4 wpqt-py-2 lg:wpqt-border-b lg:wpqt-border-t-0">
       <div className="wpqt-flex wpqt-gap-2">
         <HomeIcon
           onClick={() => navigate("/")}
@@ -55,14 +55,14 @@ function NotificationIcon() {
     <>
       {newComments.length > 0 ? (
         <BellAlertIcon
-          className="wpqt-icon-red wpqt-size-6 wpqt-animate-bellShake wpqt-cursor-pointer"
+          className="wpqt-icon-red wpqt-size-7 wpqt-animate-bellShake wpqt-cursor-pointer"
           onClick={() => {
             navigate("/notifications");
           }}
         />
       ) : (
         <BellIcon
-          className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer"
+          className="wpqt-icon-gray wpqt-size-7 wpqt-cursor-pointer"
           onClick={() => {
             navigate("/notifications");
           }}

@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { useParams } from "react-router-dom";
 import { CustomFieldEntityType } from "../../../../types/custom-field";
 import {
@@ -6,7 +7,7 @@ import {
   UserPageTaskContextProvider,
 } from "../../../providers/UserPageTaskContextProvider";
 import { CustomFieldsWrap } from "../../CustomField/CustomFieldsWrap/CustomFieldsWrap";
-import { PageContentWrap, PageWrap } from "../Page/Page";
+import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 import { TaskControls } from "./TaskControls/TaskControls";
 import { TaskDetails } from "./TaskDetails/TaskDetails";
 import { TaskStageSelect } from "./TaskStageSelect/TaskStageSelect";
@@ -33,6 +34,7 @@ function TaskPageContent() {
   return (
     <PageWrap loading={loading} onRefresh={loadTask}>
       <PageContentWrap>
+        <PageTitle> {__("Task details", "quicktasker")}</PageTitle>
         <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
           <TaskDetails task={task} />
           <TaskStageSelect task={task} />

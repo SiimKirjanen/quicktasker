@@ -27,12 +27,12 @@ function TaskStageSelect({ task }: Props) {
 
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-items-center">
-      <h3>
+      <div className="wpqt-mb-2 wpqt-font-semibold">
         {sprintf(
-          __("Current task stage is %s", "quicktasker"),
+          __("Task is on stage %s", "quicktasker"),
           currentTaskStage?.name,
         )}
-      </h3>
+      </div>
       <WPQTButton
         btnText={__("Change stage", "quicktasker")}
         onClick={() => setSelectionModalOpen(true)}

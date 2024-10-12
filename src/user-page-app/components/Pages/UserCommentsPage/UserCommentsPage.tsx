@@ -1,8 +1,9 @@
 import { useEffect, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { WPQTComment } from "../../../../types/comment";
 import { useCommentActions } from "../../../hooks/actions/useCommentActions";
 import { CommentsApp } from "../../CommentsApp/CommentsApp";
-import { PageContentWrap, PageWrap } from "../Page/Page";
+import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 
 function UserCommentsPage() {
   const [userComments, setUserComments] = useState<WPQTComment[]>([]);
@@ -25,9 +26,11 @@ function UserCommentsPage() {
       setUserComments(comments);
     });
   };
+
   return (
     <PageWrap loading={loading} onRefresh={getUserComments}>
       <PageContentWrap>
+        <PageTitle>{__("User comments", "quicktasker")}</PageTitle>
         <CommentsApp comments={userComments} addComments={onAddUserComment} />
       </PageContentWrap>
     </PageWrap>

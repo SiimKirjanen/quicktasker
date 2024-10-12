@@ -43,7 +43,7 @@ function CommentsApp({ comments, addComments }: Props) {
   };
 
   return (
-    <div>
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-7">
       <div
         ref={commentsContainerRef}
         className="wpqt-comments-app-height wpqt-overflow-y-auto"
@@ -54,7 +54,7 @@ function CommentsApp({ comments, addComments }: Props) {
           })}
         </div>
       </div>
-      <div className="wpqt-fixed wpqt-bottom-[92px]">
+      <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-max-w-52 wpqt-mx-auto">
         <WPQTTextarea value={comment} onChange={setComment} />
         <WPQTIconButton
           text={__("Add comment", "quicktasker")}

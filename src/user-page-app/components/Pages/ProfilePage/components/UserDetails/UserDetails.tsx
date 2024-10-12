@@ -17,9 +17,6 @@ function UserDetails({ user }: Props) {
 
   return (
     <div className="wpqt-mb-4">
-      <h2 className="wpqt-text-xl2 wpqt-mb-8 wpqt-text-center">
-        {__("User details", "quicktasker")}
-      </h2>
       <DataDisplay>
         <DisplayRow label={__("Name", "quicktasker")} className={rowClasses}>
           {user.name}

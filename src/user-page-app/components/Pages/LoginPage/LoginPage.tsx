@@ -1,7 +1,10 @@
 import { useContext, useState } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { WPQTButton } from "../../../../components/common/Button/Button";
+import {
+  ButtonType,
+  WPQTButton,
+} from "../../../../components/common/Button/Button";
 import { WPQTField } from "../../../../components/common/Form/Field";
 import { WPQTFieldSet } from "../../../../components/common/Form/FieldSet";
 import { WPQTInput } from "../../../../components/common/Input/Input";
@@ -21,7 +24,9 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const { handleError } = useErrorHandler();
 
-  const login = async () => {
+  const login = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (!password) {
       toast.error(__("Please enter a password", "quicktasker"));
       return;
@@ -30,7 +35,7 @@ function LoginPage() {
       const response = await logInUserPageRequest(pageHash, password);
       await setSessionCookie(response.data);
       userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: true });
-    } catch (error: unknown) {
+    } catch (error) {
       handleError(error);
     }
   };
@@ -38,13 +43,16 @@ function LoginPage() {
     <PageScreenMiddle>
       <h2>{sprintf(__("Hello %s", "quicktasker"), userName)}</h2>
       <p>{__("Please log in to continue", "quicktasker")}</p>
-      <form>
+      <form onSubmit={login}>
         <WPQTFieldSet>
           <WPQTField>
             <WPQTInput value={password} onChange={setPassword} />
           </WPQTField>
           <WPQTField className="wpqt-flex wpqt-justify-center">
-            <WPQTButton btnText={__("Login", "quicktasker")} onClick={login} />
+            <WPQTButton
+              btnText={__("Login", "quicktasker")}
+              type={ButtonType.SUBMIT}
+            />
           </WPQTField>
         </WPQTFieldSet>
       </form>

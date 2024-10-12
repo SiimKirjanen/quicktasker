@@ -4,7 +4,7 @@ import {
   UserAssignedTasksContext,
   UserAssignedTasksContextProvider,
 } from "../../../providers/UserAssignedTasksContextProvider";
-import { PageContentWrap, PageWrap } from "../Page/Page";
+import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 import { UserTasks } from "./UserTasks";
 
 function UserTasksPage() {
@@ -24,7 +24,11 @@ function UserTaskPageContent() {
   return (
     <PageWrap loading={loading} onRefresh={loadAssignedTasks}>
       <PageContentWrap>
-        <h1>{__("Assigned Tasks", "quicktasker")}</h1>
+        <PageTitle
+          description={__("Tasks that are yours to complete", "quicktasker")}
+        >
+          {__("Assigned tasks", "quicktasker")}
+        </PageTitle>
         <UserTasks />
       </PageContentWrap>
     </PageWrap>
