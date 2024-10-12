@@ -228,12 +228,17 @@ class StageService {
         return $result;
     }
 
+
     /**
-     * Archives all tasks associated with a specific stage.
+     * Archives all tasks and their locations associated with a given stage.
      *
-     * @param int $stageId The ID of the stage.
-     * @return bool Returns true if the tasks are successfully archived, otherwise throws an exception.
-     * @throws Exception If there is a failure in archiving tasks or deleting task location.
+     * This method updates the `is_archived` field to 1 for all tasks and their locations
+     * that belong to the specified stage ID. If the update operation fails for either
+     * tasks or task locations, an exception is thrown.
+     *
+     * @param int $stageId The ID of the stage whose tasks and task locations are to be archived.
+     * @return bool Returns true if the tasks and task locations were successfully archived.
+     * @throws \Exception If the update operation fails for tasks or task locations.
      */
     public function archiveStageTasks($stageId) {
         global $wpdb;
@@ -252,10 +257,16 @@ class StageService {
             throw new \Exception('Failed to archive tasks');
         }
 
-        $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('stage_id' => $stageId));
+        $result2 = $wpdb->update(
+            TABLE_WP_QUICKTASKER_TASKS_LOCATION,
+            array('is_archived' => 1),
+            array('stage_id' => $stageId),
+            array('%d'),
+            array('%d')
+        );
 
         if ($result2 === false) {
-            throw new \Exception('Failed to delete task location');
+            throw new \Exception('Failed to archive task locations');
         }
 
         return true;
