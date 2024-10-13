@@ -15,9 +15,10 @@ function TaskStageSelect({ task }: Props) {
     state: { taskStages },
   } = useContext(UserPageTaskContext);
   const {
-    state: { pageHash },
+    state: { pageHash, userId },
   } = useContext(UserPageAppContext);
   const [selectionModalOpen, setSelectionModalOpen] = useState(false);
+  const changeEnabled = task?.assigned_users.some((user) => user.id === userId);
   const currentTaskStage = taskStages.find(
     (stage) => stage.id === task?.stage_id,
   );
@@ -34,11 +35,13 @@ function TaskStageSelect({ task }: Props) {
           currentTaskStage?.name,
         )}
       </div>
-      <WPQTIconButton
-        text={__("Change stage", "quicktasker")}
-        icon={<PaperAirplaneIcon className="wpqt-size-5 wpqt-icon-blue" />}
-        onClick={() => setSelectionModalOpen(true)}
-      />
+      {changeEnabled && (
+        <WPQTIconButton
+          text={__("Change stage", "quicktasker")}
+          icon={<PaperAirplaneIcon className="wpqt-size-5 wpqt-icon-blue" />}
+          onClick={() => setSelectionModalOpen(true)}
+        />
+      )}
       <StageSelectionModal
         stages={taskStages}
         task={task}

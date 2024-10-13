@@ -7,18 +7,34 @@ import { debounce } from "../../../../utils/debounce";
 type Props = {
   data: CustomField;
   saveCustomFieldValueChange: (customFieldId: string, value: string) => void;
+  valueChangeEnabled?: boolean;
 };
-function CustomField({ data, saveCustomFieldValueChange }: Props) {
+function CustomField({
+  data,
+  saveCustomFieldValueChange,
+  valueChangeEnabled = true,
+}: Props) {
   const handleChange = (value: string) => {
     saveCustomFieldValueChange(data.id, value);
   };
-
   switch (data.type) {
     case CustomFieldType.Text: {
-      return <TextCustomField data={data} onHandleChange={handleChange} />;
+      return (
+        <TextCustomField
+          data={data}
+          onHandleChange={handleChange}
+          valueChangeEnabled={valueChangeEnabled}
+        />
+      );
     }
     case CustomFieldType.Checkbox: {
-      return <CheckboxCustomField data={data} onHandleChange={handleChange} />;
+      return (
+        <CheckboxCustomField
+          data={data}
+          onHandleChange={handleChange}
+          valueChangeEnabled={valueChangeEnabled}
+        />
+      );
     }
   }
 }
@@ -26,8 +42,13 @@ function CustomField({ data, saveCustomFieldValueChange }: Props) {
 type TextCustomFieldProps = {
   data: CustomField;
   onHandleChange: (value: string) => void;
+  valueChangeEnabled: boolean;
 };
-function TextCustomField({ data, onHandleChange }: TextCustomFieldProps) {
+function TextCustomField({
+  data,
+  onHandleChange,
+  valueChangeEnabled,
+}: TextCustomFieldProps) {
   const [value, setValue] = useState(data.value || "");
 
   const debouncedHandleChange = useCallback(
@@ -45,7 +66,11 @@ function TextCustomField({ data, onHandleChange }: TextCustomFieldProps) {
   return (
     <div className="wpqt-text-center">
       <CustomFieldTitle name={data.name} description={data.description} />
-      <WPQTInput value={value} onChange={onChange} />
+      <WPQTInput
+        value={value}
+        onChange={onChange}
+        disabled={!valueChangeEnabled}
+      />
     </div>
   );
 }
@@ -53,10 +78,12 @@ function TextCustomField({ data, onHandleChange }: TextCustomFieldProps) {
 type CheckboxCustomFieldProps = {
   data: CustomField;
   onHandleChange: (value: string) => void;
+  valueChangeEnabled: boolean;
 };
 function CheckboxCustomField({
   data,
   onHandleChange,
+  valueChangeEnabled,
 }: CheckboxCustomFieldProps) {
   const [isChecked, setIsChecked] = useState(data.value === "true");
 
@@ -67,7 +94,12 @@ function CheckboxCustomField({
   return (
     <div className="wpqt-text-center">
       <CustomFieldTitle name={data.name} description={data.description} />
-      <input type="checkbox" checked={isChecked} onChange={onChange} />
+      <input
+        type="checkbox"
+        checked={isChecked}
+        onChange={onChange}
+        disabled={!valueChangeEnabled}
+      />
     </div>
   );
 }

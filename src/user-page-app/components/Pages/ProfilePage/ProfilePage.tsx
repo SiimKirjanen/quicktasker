@@ -37,6 +37,7 @@ function ProfilePageContent() {
           <CustomFieldsWrap
             entityId={user.id}
             entityType={CustomFieldEntityType.User}
+            entity={user}
             customFields={customFields}
           />
           <ProfileActions />

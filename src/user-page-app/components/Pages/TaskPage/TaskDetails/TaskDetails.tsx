@@ -14,6 +14,8 @@ function TaskDetails({ task }: Props) {
   }
   const rowClasses =
     "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-1 wpqt-text-xl";
+  const hasAssignedUsers =
+    task.assigned_users && task.assigned_users.length > 0;
 
   return (
     <div>
@@ -43,12 +45,14 @@ function TaskDetails({ task }: Props) {
             ? __("Yes", "quicktasker")
             : __("No", "quicktasker")}
         </DisplayRow>
-        <DisplayRow
-          label={__("Assigned users", "quicktasker")}
-          className={rowClasses}
-        >
-          {task.assigned_users.map((user) => user.name).join(", ")}
-        </DisplayRow>
+        {hasAssignedUsers && (
+          <DisplayRow
+            label={__("Assigned users", "quicktasker")}
+            className={rowClasses}
+          >
+            {task.assigned_users.map((user) => user.name).join(", ")}
+          </DisplayRow>
+        )}
       </DataDisplay>
     </div>
   );

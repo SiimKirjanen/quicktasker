@@ -41,6 +41,7 @@ function TaskPageContent() {
           <CustomFieldsWrap
             entityId={task.id}
             entityType={CustomFieldEntityType.Task}
+            entity={task}
             customFields={customFields}
           />
           <TaskControls task={task} />
