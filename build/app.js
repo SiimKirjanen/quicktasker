@@ -13084,7 +13084,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_USER_SESSIONS_SEARCH_VALUE: () => (/* binding */ SET_USER_SESSIONS_SEARCH_VALUE),
 /* harmony export */   SET_USER_TASKS: () => (/* binding */ SET_USER_TASKS),
 /* harmony export */   SET_USER_TASKS_FILTERED_PIPELINE: () => (/* binding */ SET_USER_TASKS_FILTERED_PIPELINE),
-/* harmony export */   SET_USER_TASKS_SEARCH_VALUE: () => (/* binding */ SET_USER_TASKS_SEARCH_VALUE)
+/* harmony export */   SET_USER_TASKS_SEARCH_VALUE: () => (/* binding */ SET_USER_TASKS_SEARCH_VALUE),
+/* harmony export */   WP_QUICKTASKER_INVALID_SESSION_TOKEN: () => (/* binding */ WP_QUICKTASKER_INVALID_SESSION_TOKEN)
 /* harmony export */ });
 //Pipeline reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
@@ -13165,6 +13166,8 @@ const SET_CUSTOM_FIELDS_LOCATION = "SET_CUSTOM_FIELDS_LOCATION";
 const SET_CUSTOM_FIELD_INITIAL_DATA = "SET_CUSTOM_FIELD_INITIAL_DATA";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
+//Misc
+const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 
 
 /***/ }),

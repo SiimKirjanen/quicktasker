@@ -6602,7 +6602,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_USER_SESSIONS_SEARCH_VALUE: () => (/* binding */ SET_USER_SESSIONS_SEARCH_VALUE),
 /* harmony export */   SET_USER_TASKS: () => (/* binding */ SET_USER_TASKS),
 /* harmony export */   SET_USER_TASKS_FILTERED_PIPELINE: () => (/* binding */ SET_USER_TASKS_FILTERED_PIPELINE),
-/* harmony export */   SET_USER_TASKS_SEARCH_VALUE: () => (/* binding */ SET_USER_TASKS_SEARCH_VALUE)
+/* harmony export */   SET_USER_TASKS_SEARCH_VALUE: () => (/* binding */ SET_USER_TASKS_SEARCH_VALUE),
+/* harmony export */   WP_QUICKTASKER_INVALID_SESSION_TOKEN: () => (/* binding */ WP_QUICKTASKER_INVALID_SESSION_TOKEN)
 /* harmony export */ });
 //Pipeline reducer constants
 const PIPELINE_SET_LOADING = "SET_LOADING";
@@ -6683,6 +6684,8 @@ const SET_CUSTOM_FIELDS_LOCATION = "SET_CUSTOM_FIELDS_LOCATION";
 const SET_CUSTOM_FIELD_INITIAL_DATA = "SET_CUSTOM_FIELD_INITIAL_DATA";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
+//Misc
+const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 
 
 /***/ }),
@@ -9846,17 +9849,69 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   useErrorHandler: () => (/* binding */ useErrorHandler)
 /* harmony export */ });
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
+/* harmony import */ var _useSession__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./useSession */ "./src/user-page-app/hooks/useSession.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
 
 function useErrorHandler() {
+  const {
+    loadUserPageStatus
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageAppContext);
+  const {
+    deleteSessionCookie
+  } = (0,_useSession__WEBPACK_IMPORTED_MODULE_5__.useSession)();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleError = error => {
+  const handleError = error => __awaiter(this, void 0, void 0, function* () {
+    console.error(error);
     if (error.messages && Array.isArray(error.messages) && error.messages.length > 0) {
       const errorMessage = error.messages.join(", ");
-      react_toastify__WEBPACK_IMPORTED_MODULE_0__.toast.error(errorMessage);
+      const hasInvalidTokenError = errorMessage.includes(_constants__WEBPACK_IMPORTED_MODULE_3__.WP_QUICKTASKER_INVALID_SESSION_TOKEN);
+      if (hasInvalidTokenError) {
+        react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.info((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Your session has expired. Please log in to continue.", "quicktasker"));
+        yield deleteSessionCookie();
+        loadUserPageStatus();
+      } else {
+        react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.error(errorMessage);
+      }
     }
-    console.error(error);
-  };
+  });
   return {
     handleError
   };
