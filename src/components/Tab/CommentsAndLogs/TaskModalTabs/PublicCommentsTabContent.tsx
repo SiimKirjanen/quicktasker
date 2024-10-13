@@ -6,7 +6,7 @@ import { WPQTTypes } from "../../../../types/enums";
 import { convertCommentFromServer } from "../../../../utils/comment";
 import {
   CommentsAndLogsTabContent,
-  TabContentItem,
+  TabContentCommentItem,
 } from "../CommentsAndLogsTabContent";
 
 type Props = {
@@ -40,7 +40,9 @@ function PublicCommentsTabContent({ taskId }: Props) {
       typeId={taskId}
       fetchData={fetchComments}
       onAdd={onAddComment}
-      renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
+      renderItem={(comment: WPQTComment) => (
+        <TabContentCommentItem item={comment} />
+      )}
       noDataMessage="No comments available"
       explanation="Comments that can be added and viewed by both WordPress admins and QuickTasker users who have assigned to the task."
       enableAdd={true}

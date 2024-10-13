@@ -1,6 +1,8 @@
 import { ArrowPathIcon, ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { WPQTComment } from "../../../types/comment";
+import { WPQTLogCreatedBy } from "../../../types/enums";
 import { Log } from "../../../types/log";
 import { LoadingOval } from "../../Loading/Loading";
 import { WPQTIconButton } from "../../common/Button/Button";
@@ -124,20 +126,40 @@ function CommentsRefresh({ isLoading, refreshComemnts }: CommentsRefreshProps) {
 }
 
 type TabContentItemProps = {
-  item: WPQTComment | Log;
+  log: Log;
 };
-function TabContentItem({ item }: TabContentItemProps) {
-  // Type guard to check if item is WPQTComment
-  const isWPQTComment = (item: WPQTComment | Log): item is WPQTComment => {
-    return (item as WPQTComment).author_name !== undefined;
-  };
+function TabContentItem({ log }: TabContentItemProps) {
   return (
     <>
-      <div>{isWPQTComment(item) ? item.author_name : "System"}</div>
+      <div>
+        <div className="wpqt-text-center wpqt-mb-1">{log.author_name}</div>
+        <div className="wpqt-text-center">
+          {log.created_by === WPQTLogCreatedBy.Admin
+            ? __("Admin", "quicktasker")
+            : __("User", "quicktasker")}
+        </div>
+      </div>
+      <div>{log.text}</div>
+      <div>{log.created_at}</div>
+    </>
+  );
+}
+
+function TabContentCommentItem({ item }: { item: WPQTComment }) {
+  return (
+    <>
+      <div>
+        <div className="wpqt-text-center wpqt-mb-1">{item.author_name}</div>
+        <div className="wpqt-text-center">
+          {item.is_admin_comment
+            ? __("Admin", "quicktasker")
+            : __("User", "quicktasker")}
+        </div>
+      </div>
       <div>{item.text}</div>
       <div>{item.created_at}</div>
     </>
   );
 }
 
-export { CommentsAndLogsTabContent, TabContentItem };
+export { CommentsAndLogsTabContent, TabContentCommentItem, TabContentItem };

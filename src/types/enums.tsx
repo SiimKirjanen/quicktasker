@@ -3,4 +3,10 @@ enum WPQTTypes {
   User = "user",
 }
 
-export { WPQTTypes };
+enum WPQTLogCreatedBy {
+  System = "system",
+  Admin = "admin",
+  WPQTUser = "quicktasker_user",
+}
+
+export { WPQTLogCreatedBy, WPQTTypes };

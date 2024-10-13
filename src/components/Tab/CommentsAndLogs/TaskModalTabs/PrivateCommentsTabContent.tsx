@@ -7,7 +7,7 @@ import { WPQTTypes } from "../../../../types/enums";
 import { convertCommentFromServer } from "../../../../utils/comment";
 import {
   CommentsAndLogsTabContent,
-  TabContentItem,
+  TabContentCommentItem,
 } from "../CommentsAndLogsTabContent";
 
 type Props = {
@@ -41,7 +41,9 @@ function CommentsTabContent({ taskId }: Props) {
       typeId={taskId}
       fetchData={fetchPrivateComments}
       onAdd={onAddComment}
-      renderItem={(comment: WPQTComment) => <TabContentItem item={comment} />}
+      renderItem={(comment: WPQTComment) => (
+        <TabContentCommentItem item={comment} />
+      )}
       noDataMessage="No comments available"
       explanation="Comments that can be added and viewed only by WordPress admins."
       enableAdd={true}

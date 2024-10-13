@@ -27,7 +27,7 @@ function LogsTabContent({ userId }: Props) {
     <CommentsAndLogsTabContent<Log>
       typeId={userId}
       fetchData={fetchLogs}
-      renderItem={(log: Log) => <TabContentItem item={log} />}
+      renderItem={(log: Log) => <TabContentItem log={log} />}
       noDataMessage={__("No logs available", "quicktasker")}
       explanation={__(
         "Logs can be seen only by WordPress admins",

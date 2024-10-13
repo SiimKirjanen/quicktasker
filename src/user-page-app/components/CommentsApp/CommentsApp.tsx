@@ -6,6 +6,7 @@ import { WPQTTextarea } from "../../../components/common/TextArea/TextArea";
 import { WPQTComment } from "../../../types/comment";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { UserPageNotificationsContext } from "../../providers/UserPageNotificationsContextProvider";
+import { CommentItem } from "./CommentItem/CommentItem";
 
 type Props = {
   comments: WPQTComment[];
@@ -48,7 +49,7 @@ function CommentsApp({ comments, addComments }: Props) {
         ref={commentsContainerRef}
         className="wpqt-comments-app-height wpqt-overflow-y-auto"
       >
-        <div className="wpqt-grid wpqt-grid-cols-[auto_1fr_auto] wpqt-justify-items-center wpqt-gap-x-8 wpqt-gap-y-8">
+        <div className="wpqt-grid wpqt-grid-cols-1 md:wpqt-grid-cols-[auto_1fr] wpqt-gap-4 md:wpqt-gap-8 wpqt-items-center wpqt-px-2">
           {comments.map((comment) => {
             return <CommentItem key={comment.id} comment={comment} />;
           })}
@@ -63,16 +64,6 @@ function CommentsApp({ comments, addComments }: Props) {
         />
       </div>
     </div>
-  );
-}
-
-function CommentItem({ comment }: { comment: WPQTComment }) {
-  return (
-    <>
-      <div>{comment.author_name}</div>
-      <div className="wpqt-break-all">{comment.text}</div>
-      <div>{comment.created_at}</div>
-    </>
   );
 }
 
