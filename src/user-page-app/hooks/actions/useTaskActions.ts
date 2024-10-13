@@ -58,16 +58,12 @@ function useTaskActions() {
     taskHash: string,
     stageId: string,
     pageHash: string,
-    callback?: (data: UserPageTaskResponse) => void,
+    callback?: () => void,
   ) => {
     try {
-      const response = await changeTaskStageRequest(
-        pageHash,
-        taskHash,
-        stageId,
-      );
+      await changeTaskStageRequest(pageHash, taskHash, stageId);
       toast.success(__("Task stage changed successfully", "quicktasker"));
-      if (callback) callback(response.data);
+      if (callback) callback();
     } catch (error) {
       handleError(error);
     }

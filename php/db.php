@@ -12,10 +12,10 @@ function wpqt_set_up_db() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	global $wpdb;
 
-	$wp_quick_taks_db_current_version = get_option( "wp_quick_taks_db_current_version" );
+	$wp_quicktasker_db_current_version = get_option( "wp_quicktasker_db_current_version" );
     $charset_collate = $wpdb->get_charset_collate() . ' ENGINE = innoDB';
 
-	if ( WP_QUICKTASKER_DB_VERSION != $wp_quick_taks_db_current_version ) {
+	if ( WP_QUICKTASKER_DB_VERSION != $wp_quicktasker_db_current_version ) {
 
         $sql = "CREATE TABLE " . TABLE_WP_QUICKTASKER_PIPELINES . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
@@ -101,8 +101,8 @@ function wpqt_set_up_db() {
 		$sql7 = "CREATE TABLE " . TABLE_WP_QUICKTASKS_LOGS . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
             text text NOT NULL,
-			type_id int(11) NOT NULL,
-			type ENUM('task', 'pipeline', 'stage', 'user') NOT NULL,
+			type_id int(11) DEFAULT NULL,
+			type ENUM('task', 'pipeline', 'stage', 'user', 'users') NOT NULL,
 			created_by ENUM('system', 'admin', 'quicktasker_user') NOT NULL,
 			user_id int(11) DEFAULT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
@@ -191,7 +191,7 @@ function wpqt_set_up_db() {
 
 		  dbDelta( $sql13 );
 
-		update_option( "wp_quick_taks_db_current_version", WP_QUICKTASKER_DB_VERSION );
+		update_option( "wp_quicktasker_db_current_version", WP_QUICKTASKER_DB_VERSION );
 	}
 }
 

@@ -552,7 +552,6 @@ function wpqt_register_user_page_api_routes() {
                     $permissionService = new PermissionService();
                     $stageRepository = new StageRepository();
                     $taskService = new TaskService();
-                    $customFieldRepository = new CustomFieldRepository();
                     $logService = new LogService();
                     $userPageRepository = new UserPageRepository();
 
@@ -568,13 +567,7 @@ function wpqt_register_user_page_api_routes() {
                     $logService->log('User ' . $userPage->name . ' changed task stage to ' . $stage->name, WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                     $logService->log('User changed task ' . $task->name . ' stage to ' . $stage->name, WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
 
-                    $data = (object)[
-                        'task' => $taskRepository->getTaskByHash($data['task_hash'], true),
-                        'stages' => $stageRepository->getStagesByPipelineId($task->pipeline_id),
-                        'customFields' => $customFieldRepository->getRelatedCustomFields($session->user_id, 'user')                    
-                    ];
-
-                    return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 } catch(WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 } catch (Exception $e) {
@@ -631,6 +624,12 @@ function wpqt_register_user_page_api_routes() {
         ),
     ));
 
+     /*
+    ==================================================================================================================================================================================================================
+    Custom Field endpoints
+    ==================================================================================================================================================================================================================
+    */
+
      register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/custom-fields/(?P<custom_field_id>\d+)', array(
         'methods' => 'PATCH',
         'callback' => function( $data ) {
@@ -648,7 +647,12 @@ function wpqt_register_user_page_api_routes() {
                         }
                     } 
                     $customFieldService = new CustomFieldService();
+                    $customFieldRepo = new CustomFieldRepository();
+                    $logService = new LogService();
+
+                    $customField = $customFieldRepo->getCustomFieldById($data['custom_field_id']);
                     $customFieldService->updateCustomFieldValue($data['customFieldId'], $data['entityId'], $data['entityType'], $data['value']);
+                    $logService->log('Custom field ' . $customField->name . ' value updated', $customField->entity_type, $customField->entity_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                   
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 } catch(WPQTException $e) {

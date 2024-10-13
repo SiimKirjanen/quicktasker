@@ -32,5 +32,8 @@ function wpqt_enqueue_user_public_page(){
 		'pluginURL' => WP_QUICKTASKER_PLUGIN_FOLDER_URL,
 	));
 
-    wp_enqueue_style( 'wpqt-user-page-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap', array(), null );
+    wp_enqueue_style( 'wpqt-user-page-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap', array(), null );
+
+	// Set script translations
+    wp_set_script_translations( 'wpqt-script', 'quicktasker', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/languages' );
 }

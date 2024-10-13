@@ -117,7 +117,7 @@ function changeTaskStageRequest(
   pageHash: string,
   taskHash: string,
   stageId: string,
-): Promise<WPQTResponse<UserPageTaskResponse>> {
+): Promise<WPQTResponse> {
   return apiFetch({
     method: "PATCH",
     path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/stage`,

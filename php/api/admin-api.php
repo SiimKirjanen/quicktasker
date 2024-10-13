@@ -1355,7 +1355,7 @@ function wpqt_register_api_routes() {
 
     /*
     ==================================================================================================================================================================================================================
-    Custom Fields endpoints
+    Custom Field endpoints
     ==================================================================================================================================================================================================================
     */
 
@@ -1408,8 +1408,10 @@ function wpqt_register_api_routes() {
                 try {
                     WPQTverifyApiNonce($data);
                     $customFieldService = new CustomFieldService();
+                    $logService = new LogService();
 
                     $customField = $customFieldService->createCustomField($data['name'], $data['description'], $data['type'], $data['entityType'], $data['entityId']);
+                    $logService->log('Custom field ' . $data['name'] . ' created', $data['entityType'], $data['entityId'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $customField))->toArray(), 200);
                 } catch (Exception $e) {
@@ -1457,9 +1459,13 @@ function wpqt_register_api_routes() {
             'callback' => function( $data ) {
                 try {
                     WPQTverifyApiNonce($data);
+                    $customFieldRepo = new CustomFieldRepository();
                     $customFieldService = new CustomFieldService();
+                    $logService = new LogService();
 
+                    $customField = $customFieldRepo->getCustomFieldById($data['custom_field_id']);
                     $customFieldService->markCustomFieldAsDeleted($data['custom_field_id']);
+                    $logService->log('Custom field ' . $customField->name . ' marked as deleted', $customField->entity_type, $customField->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 } catch (Exception $e) {
@@ -1488,8 +1494,12 @@ function wpqt_register_api_routes() {
                 try {
                     WPQTverifyApiNonce($data);
                     $customFieldService = new CustomFieldService();
+                    $logService = new LogService();
+                    $customFieldRepo = new CustomFieldRepository();
 
+                    $customField = $customFieldRepo->getCustomFieldById($data['custom_field_id']);
                     $customFieldService->updateCustomFieldValue($data['custom_field_id'], $data['entityId'], $data['entityType'], $data['value']);
+                    $logService->log('Custom field ' . $customField->name . ' value updated', $customField->entity_type, $customField->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 } catch (Exception $e) {

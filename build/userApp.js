@@ -9817,9 +9817,9 @@ function useTaskActions() {
   });
   const changeTaskStage = (taskHash, stageId, pageHash, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.changeTaskStageRequest)(pageHash, taskHash, stageId);
+      yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.changeTaskStageRequest)(pageHash, taskHash, stageId);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task stage changed successfully", "quicktasker"));
-      if (callback) callback(response.data);
+      if (callback) callback();
     } catch (error) {
       handleError(error);
     }
