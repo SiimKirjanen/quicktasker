@@ -37,7 +37,8 @@ function wpqt_enqueue_app_assets(){
 		'initialActivePipelineId' => $activePipeline ? $activePipeline->id : null,
 		'initialPipelines' => $pipelines,
 		'initialUsers' => $users,
-		'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID
+		'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
+		'timezone' => get_option('timezone_string'),
 	));
 
 	// Set script translations

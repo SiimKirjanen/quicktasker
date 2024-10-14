@@ -8,12 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPQT\WPQTException;
 use WPQT\Customfield\CustomFieldRepository;
+use WPQT\Time\TimeRepository;
 
 class CustomFieldService {
     protected $customFieldRepository;
+    protected $timeRepository;
 
     public function __construct() {
         $this->customFieldRepository = new CustomFieldRepository();
+        $this->timeRepository = new TimeRepository();
     }
 
 /**
@@ -43,7 +46,10 @@ class CustomFieldService {
                 'type' => $type,
                 'entity_type' => $entityType,
                 'entity_id' => $entityId,
-            )
+                'created_at' => $this->timeRepository->getCurrentUTCTime(),
+                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+            ),
+            array('%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s')
         ); 
 
         if ($result === false) {
@@ -74,11 +80,14 @@ class CustomFieldService {
         $result = $wpdb->update(
             TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
             array(
-                'is_deleted' => 1
+                'is_deleted' => 1,
+                'updated_at' => $this->timeRepository->getCurrentUTCTime()
             ),
             array(
                 'id' => $customFieldId
-            )
+            ),
+            array('%d', '%s'),
+            array('%d')
         );
 
         if( $result === false ) {
@@ -117,11 +126,14 @@ class CustomFieldService {
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES,
                 array(
-                    'value' => $value
+                    'value' => $value,
+                    'updated_at' => $this->timeRepository->getCurrentUTCTime()
                 ),
                 array(
                     'id' => $existingValue
-                )
+                ),
+                array('%s', '%s'),
+                array('%d')
             );
         } else {
             // Insert new custom field value
@@ -131,7 +143,9 @@ class CustomFieldService {
                     'custom_field_id' => $customFieldId,
                     'entity_id' => $entityId,
                     'entity_type' => $entityType,
-                    'value' => $value
+                    'value' => $value,
+                    'created_at' => $this->timeRepository->getCurrentUTCTime(),
+                    'updated_at' => $this->timeRepository->getCurrentUTCTime()
                 )
             );
         }

@@ -7,16 +7,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Log\LogService;
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
+use WPQT\Time\TimeRepository;
 
 class StageService {
     protected $stageRepository;
     protected $taskRepository;
     protected $logService;
+    protected $timeRepository;
 
     public function __construct() {
         $this->stageRepository = new StageRepository();
         $this->taskRepository = new TaskRepository();
         $this->logService = new LogService();
+        $this->timeRepository = new TimeRepository();
     }
 
     /**
@@ -44,7 +47,9 @@ class StageService {
         $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
             'pipeline_id' => $pipelineId,
             'name' => $args['name'],
-            'description' => $args['description']
+            'description' => $args['description'],
+            'created_at' => $this->timeRepository->getCurrentUTCTime(),
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
         ));
 
         if( $result === false ) {
@@ -73,7 +78,9 @@ class StageService {
         $wpdb->insert(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
             'pipeline_id' => $pipelineId,
             'stage_id' => $stageId,
-            'stage_order' => $stageOrder
+            'stage_order' => $stageOrder,
+            'created_at' => $this->timeRepository->getCurrentUTCTime(),
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
         ));
     }
 
@@ -93,7 +100,8 @@ class StageService {
 
         $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
             'name' => $args['name'],
-            'description' => $args['description']
+            'description' => $args['description'],
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
         ), array('id' => $stageId));
 
         if( $result === false ) {
@@ -159,10 +167,13 @@ class StageService {
     private function updateStageOrder($stageId, $pipelineId, $newOrder, $currentOrder) {
         global $wpdb;
 
+        $currentUtcTime = $this->timeRepository->getCurrentUTCTime();
+
         if ( $currentOrder < $newOrder) {
             $result = $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " SET stage_order = stage_order - 1 WHERE pipeline_id = %d AND stage_order > %d AND stage_order <= %d",
+                    "UPDATE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " SET stage_order = stage_order - 1, updated_at = %s WHERE pipeline_id = %d AND stage_order > %d AND stage_order <= %d",
+                    $currentUtcTime, 
                     $pipelineId,
                     $currentOrder,
                     $newOrder
@@ -176,7 +187,8 @@ class StageService {
         } else {
             $result = $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " SET stage_order = stage_order + 1 WHERE pipeline_id = %d AND stage_order >= %d AND stage_order < %d",
+                    "UPDATE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " SET stage_order = stage_order + 1, updated_at = %s WHERE pipeline_id = %d AND stage_order >= %d AND stage_order < %d",
+                    $currentUtcTime,
                     $pipelineId,
                     $newOrder,
                     $currentOrder
@@ -243,15 +255,17 @@ class StageService {
     public function archiveStageTasks($stageId) {
         global $wpdb;
 
+        $currentUtcTime = $this->timeRepository->getCurrentUTCTime();
+
         $sql = "
             UPDATE " . TABLE_WP_QUICKTASKER_TASKS . " AS a
             INNER JOIN " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " AS b
             ON a.id = b.task_id
-            SET a.is_archived = 1
+            SET a.is_archived = 1, a.updated_at = %s
             WHERE b.stage_id = %d
         ";
 
-        $result = $wpdb->query($wpdb->prepare($sql, $stageId));
+        $result = $wpdb->query($wpdb->prepare($sql, $currentUtcTime, $stageId));
 
         if ($result === false) {
             throw new \Exception('Failed to archive tasks');
@@ -259,10 +273,13 @@ class StageService {
 
         $result2 = $wpdb->update(
             TABLE_WP_QUICKTASKER_TASKS_LOCATION,
-            array('is_archived' => 1),
+            array(
+                'is_archived' => 1,
+                'updated_at' => $currentUtcTime
+            ),
             array('stage_id' => $stageId),
-            array('%d'),
-            array('%d')
+            array('%d', '%s'), // Format for data: integer and string
+            array('%d')        // Format for where clause: integer
         );
 
         if ($result2 === false) {

@@ -31,6 +31,7 @@ require( 'php/repositories/UserPageRepository.php' );
 require( 'php/repositories/PasswordRepository.php' );
 require( 'php/repositories/SessionRepository.php' );
 require( 'php/repositories/CustomFieldRepository.php' );
+require( 'php/repositories/TimeRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );

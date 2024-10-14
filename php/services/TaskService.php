@@ -10,18 +10,21 @@ use WPQT\Task\TaskRepository;
 use WPQT\Hash\HashService;
 use WPQT\Exceptions\WPQTException;
 use WPQT\Pipeline\PipelineRepository;
+use WPQT\Time\TimeRepository;
 
 class TaskService {
     protected $taskRepository;
     protected $stageRepository;
     protected $pipelineRepository;
     protected $hashService;
+    protected $timeRepository;
 
     public function __construct() {
         $this->taskRepository = new TaskRepository();
         $this->stageRepository = new StageRepository();
         $this->pipelineRepository = new PipelineRepository();
         $this->hashService = new HashService();
+        $this->timeRepository = new TimeRepository();
     }
 
     /**
@@ -67,7 +70,9 @@ class TaskService {
             'name' => $args['name'],
             'description' => $args['description'],
             'pipeline_id' => $args['pipelineId'],
-            'task_hash' => $this->hashService->generateTaskHash($args['name'])
+            'task_hash' => $this->hashService->generateTaskHash($args['name']),
+            'created_at' => $this->timeRepository->getCurrentUTCTime(),
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
         ));
 
         if( $result === false ) {
@@ -97,7 +102,9 @@ class TaskService {
         $result = $wpdb->insert(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array(
             'task_id' => $taskId,
             'stage_id' => $stageId,
-            'task_order' => $taskOrder
+            'task_order' => $taskOrder,
+            'created_at' => $this->timeRepository->getCurrentUTCTime(),
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
         ));
 
         if ($result !== false) {
@@ -140,13 +147,15 @@ class TaskService {
             array(
                 'stage_id' => $newStageId,
                 'task_order' => $newOrder,
+                'updated_at' => $this->timeRepository->getCurrentUTCTime()
             ),
             array(
                 'task_id' => $taskId
             ),
             array(
                 '%d',
-                '%d'
+                '%d',
+                '%s'
             )
         );
 
@@ -172,13 +181,16 @@ class TaskService {
     private function updateTaskOrderWithinStage($stageId, $currentOrder, $newOrder) {
         global $wpdb;
     
+        $utcTime = $this->timeRepository->getCurrentUTCTime();
+
         if ($currentOrder < $newOrder) {
             // Moving down within the same stage
             $result = $wpdb->query(
                 $wpdb->prepare(
                     "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
-                    SET task_order = task_order - 1
+                    SET task_order = task_order - 1, updated_at = %s
                     WHERE stage_id = %d AND task_order > %d AND task_order <= %d AND is_archived = 0",
+                    $utcTime,
                     $stageId,
                     $currentOrder,
                     $newOrder
@@ -189,8 +201,9 @@ class TaskService {
             $result = $wpdb->query(
                 $wpdb->prepare(
                     "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
-                    SET task_order = task_order + 1
+                    SET task_order = task_order + 1, updated_at = %s
                     WHERE stage_id = %d AND task_order < %d AND task_order >= %d AND is_archived = 0",
+                    $utcTime,
                     $stageId,
                     $currentOrder,
                     $newOrder
@@ -216,13 +229,16 @@ class TaskService {
      */
     private function updateTaskOrderAcrossStages($currentStageId, $currentOrder, $newStageId, $newOrder) {
         global $wpdb;
+
+        $utcTime = $this->timeRepository->getCurrentUTCTime();
     
         // Decrement the task order of tasks in the current stage
         $result1 = $wpdb->query(
             $wpdb->prepare(
                 "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
-                SET task_order = task_order - 1
+                SET task_order = task_order - 1, updated_at = %s
                 WHERE stage_id = %d AND task_order > %d AND is_archived = 0",
+                $utcTime,
                 $currentStageId,
                 $currentOrder
             )
@@ -236,8 +252,9 @@ class TaskService {
         $result2 = $wpdb->query(
             $wpdb->prepare(
                 "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
-                SET task_order = task_order + 1
+                SET task_order = task_order + 1, updated_at = %s
                 WHERE stage_id = %d AND task_order >= %d AND is_archived = 0",
+                $utcTime,
                 $newStageId,
                 $newOrder
             )
@@ -258,7 +275,9 @@ class TaskService {
     public function editTask($taskId, $args) {
         global $wpdb;
 
-        $defaults = array();
+        $defaults = array(
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
+        );
 
         $args = wp_parse_args($args, $defaults);
 
@@ -308,14 +327,15 @@ class TaskService {
     public function archiveTask($taskId) {
         global $wpdb;
 
+        $utcTime = $this->timeRepository->getCurrentUTCTime();
         $taskToArchive = $this->taskRepository->getTaskById($taskId);
-        $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_archived' => 1), array('id' => $taskId));
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_archived' => 1, 'updated_at' => $utcTime), array('id' => $taskId));
 
         if ($result === false) {
             throw new \Exception('Failed to archive task');
         }
 
-        $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 1), array('task_id' => $taskId));
+        $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 1, 'updated_at' => $utcTime), array('task_id' => $taskId));
 
         if ($result2 === false) {
             throw new \Exception('Failed to archive task location');
@@ -327,6 +347,7 @@ class TaskService {
     public function restoreArchivedTask($taskId) {
         global $wpdb;
 
+        $utcTime = $this->timeRepository->getCurrentUTCTime();
         $task = $this->taskRepository->getTaskById($taskId);
 
         if ($task === null) {
@@ -359,13 +380,13 @@ class TaskService {
             $this->moveTask($taskId, $pipelineStages[0]->id, $task->task_order);
         }
         
-        $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_archived' => 0), array('id' => $taskId));
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_archived' => 0, 'updated_at' => $utcTime), array('id' => $taskId));
 
         if ($result === false) {
             throw new WPQTException('Failed to restore task');
         }
 
-        $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 0), array('task_id' => $taskId));
+        $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 0, 'updated_at' => $utcTime), array('task_id' => $taskId));
 
         if ($result2 === false) {
             throw new WPQTException('Failed to restore task location');
@@ -383,11 +404,13 @@ class TaskService {
     private function shiftTaskOrder($deletedTaskOrder, $stageId) {
         global $wpdb;
 
+        $utcTime = $this->timeRepository->getCurrentUTCTime();
         $result = $wpdb->query(
             $wpdb->prepare(
                 "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
-                SET task_order = task_order - 1
+                SET task_order = task_order - 1, updated_at = %s
                 WHERE stage_id = %d AND task_order > %d AND is_archived = 0",
+                $utcTime,
                 $stageId,
                 $deletedTaskOrder
             )

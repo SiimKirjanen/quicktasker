@@ -22,8 +22,8 @@ function wpqt_set_up_db() {
             name varchar(255) NOT NULL,
             description text,
 			is_primary tinyint(1) DEFAULT 0,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 	  
@@ -34,8 +34,8 @@ function wpqt_set_up_db() {
             pipeline_id int(11) NOT NULL,
             name varchar(255) NOT NULL,
             description text,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 	  
@@ -48,8 +48,8 @@ function wpqt_set_up_db() {
             description text,
 			is_archived tinyint(1) DEFAULT 0,
 			free_for_all tinyint(1) DEFAULT 0,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			task_hash varchar(255) NOT NULL,
 			PRIMARY KEY  (id),
 			UNIQUE KEY task_hash (task_hash)
@@ -61,8 +61,8 @@ function wpqt_set_up_db() {
 			id int(11) NOT NULL AUTO_INCREMENT,
             name varchar(255) NOT NULL,
             description text,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			is_active tinyint(1) DEFAULT 1,
 			password varchar(255) DEFAULT NULL,
 			deleted tinyint(1) DEFAULT 0,
@@ -76,8 +76,8 @@ function wpqt_set_up_db() {
             stage_id int(11) NOT NULL,
 			task_id int(11) NOT NULL,
 			task_order int(11),
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			is_archived tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id),
 			UNIQUE KEY task_id (task_id)
@@ -90,8 +90,8 @@ function wpqt_set_up_db() {
 			pipeline_id int(11) NOT NULL,
             stage_id int(11) NOT NULL,
 			stage_order int(11),
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
 			UNIQUE KEY stage_id (stage_id)
 		  ) $charset_collate;";
@@ -105,7 +105,7 @@ function wpqt_set_up_db() {
 			type ENUM('task', 'pipeline', 'stage', 'user', 'users') NOT NULL,
 			created_by ENUM('system', 'admin', 'quicktasker_user') NOT NULL,
 			user_id int(11) DEFAULT NULL,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 
@@ -117,7 +117,7 @@ function wpqt_set_up_db() {
 			type_id int(11) NOT NULL,
 			type ENUM('task', 'user') NOT NULL,
 			is_private tinyint(1) DEFAULT 1,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
 			author_id int(11) NOT NULL,
 			is_admin_comment tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id)
@@ -128,8 +128,8 @@ function wpqt_set_up_db() {
 		  $sql9 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_USER_PAGES . " (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			user_id int(11) NOT NULL,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			page_hash varchar(255) NOT NULL,
 			PRIMARY KEY  (id),
 			UNIQUE KEY page_hash (page_hash)
@@ -155,8 +155,8 @@ function wpqt_set_up_db() {
 			id int(11) NOT NULL AUTO_INCREMENT,
 			user_id int(11) NOT NULL,
 			task_id int(11) NOT NULL,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
 			UNIQUE KEY unique_user_task (user_id, task_id)
 		  ) $charset_collate;";
@@ -170,8 +170,8 @@ function wpqt_set_up_db() {
 			type ENUM('text', 'select', 'checkbox', 'radio', 'datetime', 'file') NOT NULL,
 			entity_type ENUM('task', 'user', 'pipeline', 'users') NOT NULL,
 			entity_id int(11) DEFAULT NULL,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			is_deleted tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
@@ -184,8 +184,8 @@ function wpqt_set_up_db() {
 			entity_id int(11) NOT NULL,
     		entity_type ENUM('task', 'user') NOT NULL,
 			value TEXT,
-			created_at datetime DEFAULT CURRENT_TIMESTAMP,
-			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id)
 		  ) $charset_collate;";
 

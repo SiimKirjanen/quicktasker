@@ -6,18 +6,20 @@ type State = {
   siteURL: string;
   publicUserPageId: string;
   is_customFields: boolean;
+  timezone: string;
 };
 
 const initialState: State = {
   siteURL: "",
   publicUserPageId: "",
   is_customFields: true,
+  timezone: "",
 };
 
 type Action =
   | {
       type: typeof INIT_APP_STATE;
-      payload: { siteURL: string; publicUserPageId: string };
+      payload: { siteURL: string; publicUserPageId: string; timezone: string };
     }
   | { type: typeof SET_SITE_URL; payload: string };
 
@@ -39,12 +41,14 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const siteURL = window.wpqt.siteURL;
     const publicUserPageId = window.wpqt.publicUserPageId;
+    const timezone = window.wpqt.timezone;
 
     appDispatch({
       type: INIT_APP_STATE,
       payload: {
         siteURL,
         publicUserPageId,
+        timezone,
       },
     });
   }, []);

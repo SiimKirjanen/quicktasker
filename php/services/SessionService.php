@@ -3,15 +3,18 @@ namespace WPQT\Session;
 
 use WPQT\Session\SessionRepository;
 use WPQT\WPQTException;
+use WPQT\Time\TimeRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 class SessionService {
     protected $sessionRepository;
+    protected $timeRepository;
 
     public function __construct() {
         $this->sessionRepository = new SessionRepository();
+        $this->timeRepository = new TimeRepository();
     }
 
     /**
@@ -30,16 +33,6 @@ class SessionService {
          
          // Return the expiry date in 'Y-m-d H:i:s' format in UTC
          return gmdate('Y-m-d H:i:s', $expiry_time);
-    }
-
-    /**
-     * Retrieves the current UTC time in 'Y-m-d H:i:s' format.
-     *
-     * @return string The current UTC time.
-     */
-    public function getCurrentUTCTime() {
-        // Get the current UTC time in 'Y-m-d H:i:s' format
-        return gmdate('Y-m-d H:i:s');
     }
 
     /**
@@ -67,7 +60,7 @@ class SessionService {
             array(
                 'user_id' => $userId,
                 'page_hash' => $userPageHash,
-                'created_at_utc' => $this->getCurrentUTCTime(),
+                'created_at_utc' => $this->timeRepository->getCurrentUTCTime(),
                 'expires_at_utc' => $this->getNewTokenExpiryDate(),
                 'session_token' => $this->generateSessionToken()
             )

@@ -6,14 +6,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Pipeline\PipelineRepository;
+use WPQT\Time\TimeRepository;
 
 class PipelineService {
     protected $pipelineRepository;
+    protected $timeRepository;
 
     public function __construct() {
         $this->pipelineRepository = new PipelineRepository();
+        $this->timeRepository = new TimeRepository();
     }
-
 
     /**
      * Creates a pipeline with the given name.
@@ -28,7 +30,9 @@ class PipelineService {
 
         $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINES, array(
             'name' => $name,
-            'is_primary' => $activePipeline ? false : true
+            'is_primary' => $activePipeline ? false : true,
+            'created_at' => $this->timeRepository->getCurrentUTCTime(),
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
         ));
 
         if ($result == false) {
@@ -62,7 +66,8 @@ class PipelineService {
 
         $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINES, array(
             'name' => $args['name'],
-            'description' => $args['description']
+            'description' => $args['description'],
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
         ), array(
             'id' => $pipelineId
         ));
@@ -84,14 +89,17 @@ class PipelineService {
     public function markPipelineAsPrimary($pipelineId) {
         global $wpdb;
 
+        $current_time_utc = $this->timeRepository->getCurrentUTCTime();
         $result = $wpdb->query(
             $wpdb->prepare(
                 "UPDATE " . TABLE_WP_QUICKTASKER_PIPELINES . "
                  SET is_primary = CASE
                      WHEN id = %d THEN 1
                      ELSE 0
-                 END",
-                $pipelineId
+                 END,
+                 updated_at = %s",
+                $pipelineId,
+                $current_time_utc
             )
         );
 

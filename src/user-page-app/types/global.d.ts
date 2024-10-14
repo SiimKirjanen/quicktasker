@@ -4,6 +4,7 @@ declare global {
       userApiNonce: string;
       siteURL: string;
       pluginURL: string;
+      timezone: string;
     };
   }
 }

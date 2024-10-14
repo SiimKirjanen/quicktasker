@@ -8,15 +8,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPQT\Comment\CommentRepository;
 use WPQT\WPQTException;
+use WPQT\Time\TimeRepository;
 
 class CommentService {
     protected $commentRepository;
+    protected $timeRepository;
 
     public function __construct() {
         $this->commentRepository = new CommentRepository();
+        $this->timeRepository = new TimeRepository();
     }
 
-  
     /**
      * Creates a new comment in the database.
      *
@@ -40,7 +42,8 @@ class CommentService {
             'is_private' => $isPrivate,
             'text' => $text,
             'author_id' => $userId,
-            'is_admin_comment' => $isAdminComment
+            'is_admin_comment' => $isAdminComment,
+            'created_at' => $this->timeRepository->getCurrentUTCTime(),
         ));
 
         if( $result === false ) {

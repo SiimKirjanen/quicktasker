@@ -10,6 +10,7 @@ declare global {
       initialUsers: ServerUser[];
       siteURL: string;
       publicUserPageId: string;
+      timezone: string;
     };
   }
 }

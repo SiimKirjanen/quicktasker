@@ -16246,7 +16246,8 @@ __webpack_require__.r(__webpack_exports__);
 const initialState = {
   siteURL: "",
   publicUserPageId: "",
-  is_customFields: true
+  is_customFields: true,
+  timezone: ""
 };
 const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -16259,11 +16260,13 @@ const AppContextProvider = ({
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const siteURL = window.wpqt.siteURL;
     const publicUserPageId = window.wpqt.publicUserPageId;
+    const timezone = window.wpqt.timezone;
     appDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_2__.INIT_APP_STATE,
       payload: {
         siteURL,
-        publicUserPageId
+        publicUserPageId,
+        timezone
       }
     });
   }, []);
@@ -17248,11 +17251,13 @@ const reducer = (state, action) => {
       {
         const {
           siteURL,
-          publicUserPageId
+          publicUserPageId,
+          timezone
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           siteURL,
-          publicUserPageId
+          publicUserPageId,
+          timezone
         });
       }
     default:

@@ -10,16 +10,19 @@ use WPQT\User\UserRepository;
 use WPQT\Hash\HashService;
 use WPQT\WPQTException;
 use WPQT\Task\TaskRepository;
+use WPQT\Time\TimeRepository;
 
 class UserService {
     protected $userRepository;
     protected $taskRepository;
     protected $hashService;
+    protected $timeRepository;
 
     public function __construct() {
         $this->userRepository = new UserRepository();
         $this->hashService = new HashService();
         $this->taskRepository = new TaskRepository();
+        $this->timeRepository = new TimeRepository();
     }
 
     /**
@@ -37,7 +40,10 @@ class UserService {
             array(
                 'name' => $args['name'],
                 'description' => $args['description'],
-            )
+                'created_at' => $this->timeRepository->getCurrentUTCTime(),
+                'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+            ),
+            array('%s', '%s', '%s', '%s')
         );
 
         if (!$result) {
@@ -52,7 +58,10 @@ class UserService {
             array(
                 'user_id' => $newUserId,
                 'page_hash' => $pageHash,
-            )
+                'created_at' => $this->timeRepository->getCurrentUTCTime(),
+                'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+            ),
+            array('%d', '%s', '%s', '%s')
         );
 
         if (!$result2) {
@@ -80,8 +89,11 @@ class UserService {
             array(
                 'name' => $args['name'],
                 'description' => $args['description'],
+                'updated_at' => $this->timeRepository->getCurrentUTCTime(),
             ),
-            array('id' => $userId)
+            array('id' => $userId),
+            array('%s', '%s', '%s'),
+            array('%d')
         );
 
         if ($result === false) {
@@ -95,7 +107,7 @@ class UserService {
      * Change the status of a user.
      *
      * @param int $userId The ID of the user.
-     * @param int $status The new status of the user.
+     * @param boolean $status The new status of the user.
      * @return User The updated user object.
      * @throws Exception If failed to disable a user.
      */
@@ -106,8 +118,10 @@ class UserService {
             TABLE_WP_QUICKTASKER_USERS,
             array(
                 'is_active' => $status,
+                'updated_at' => $this->timeRepository->getCurrentUTCTime(),
             ),
-            array('id' => $userId)
+            array('id' => $userId),
+            array('%d', '%s'),
         );
 
         if (!$result) {
@@ -131,8 +145,10 @@ class UserService {
             TABLE_WP_QUICKTASKER_USERS,
             array(
                 'deleted' => 1,
+                'updated_at' => $this->timeRepository->getCurrentUTCTime(),
             ),
-            array('id' => $userId)
+            array('id' => $userId),
+            array('%d', '%s')
         );
 
         if (!$result) {
@@ -185,7 +201,10 @@ class UserService {
             array(
                 'user_id' => $userId,
                 'task_id' => $taskId,
-            )
+                'created_at' => $this->timeRepository->getCurrentUTCTime(),
+                'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+            ),
+            array('%d', '%d', '%s', '%s')
         );
 
         if (!$result) {
@@ -214,7 +233,8 @@ class UserService {
             array(
                 'user_id' => $userId,
                 'task_id' => $taskId,
-            )
+            ),
+            array('%d', '%d')
         );
 
         if (!$result) {
@@ -249,8 +269,11 @@ class UserService {
             TABLE_WP_QUICKTASKER_USERS,
             array(
                 'password' => null,
+                'updated_at' => $this->timeRepository->getCurrentUTCTime(),
             ),
-            array('id' => $userId)
+            array('id' => $userId),
+            array('%s', '%s'),
+            array('%d')
         );
 
         if (!$result) {

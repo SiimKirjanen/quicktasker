@@ -7,12 +7,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Log\LogRepository;
+use WPQT\Time\TimeRepository;
 
 class LogService {
     protected $logRepository;
+    protected $timeRepository;
 
     public function __construct() {
         $this->logRepository = new LogRepository();
+        $this->timeRepository = new TimeRepository();
     }
     
     /**
@@ -37,6 +40,7 @@ class LogService {
             'type_id' => $typeId,
             'user_id' => $userId,
             'created_by' => $createdBy,
+            'created_at' => $this->timeRepository->getCurrentUTCTime(),
         ));
 
         if( $result === false ) {
