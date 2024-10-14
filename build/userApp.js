@@ -5150,6 +5150,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getUserTasksRequest: () => (/* binding */ getUserTasksRequest),
 /* harmony export */   getUsersRequest: () => (/* binding */ getUsersRequest),
 /* harmony export */   markCustomFieldAsDeletedRequest: () => (/* binding */ markCustomFieldAsDeletedRequest),
+/* harmony export */   markTaskDoneRequest: () => (/* binding */ markTaskDoneRequest),
 /* harmony export */   moveStageRequest: () => (/* binding */ moveStageRequest),
 /* harmony export */   moveTaskRequest: () => (/* binding */ moveTaskRequest),
 /* harmony export */   removeTaskFromUserRequest: () => (/* binding */ removeTaskFromUserRequest),
@@ -5274,6 +5275,16 @@ function getArchivedTasksRequest() {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/tasks/archived`,
     method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function markTaskDoneRequest(taskId, done) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/tasks/${taskId}/done`,
+    method: "PATCH",
+    data: {
+      done
+    },
     headers: getCommonHeaders()
   });
 }
@@ -6569,6 +6580,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_ADD_STAGE: () => (/* binding */ PIPELINE_ADD_STAGE),
 /* harmony export */   PIPELINE_ADD_TASK: () => (/* binding */ PIPELINE_ADD_TASK),
 /* harmony export */   PIPELINE_ADD_USER_TO_TASK: () => (/* binding */ PIPELINE_ADD_USER_TO_TASK),
+/* harmony export */   PIPELINE_CHANGE_TASK_DONE_STATUS: () => (/* binding */ PIPELINE_CHANGE_TASK_DONE_STATUS),
 /* harmony export */   PIPELINE_DELETE_STAGE: () => (/* binding */ PIPELINE_DELETE_STAGE),
 /* harmony export */   PIPELINE_EDIT_PIPELINE: () => (/* binding */ PIPELINE_EDIT_PIPELINE),
 /* harmony export */   PIPELINE_EDIT_STAGE: () => (/* binding */ PIPELINE_EDIT_STAGE),
@@ -6625,6 +6637,7 @@ const PIPELINES_SET = "SET_PIPELINES";
 const PIPELINE_SET_PRIMARY2 = "SET_PRIMARY";
 const PIPELINE_ADD_USER_TO_TASK = "ADD_USER_TO_TASK";
 const PIPELINE_REMOVE_USER_FROM_TASK = "REMOVE_USER_FROM_TASK";
+const PIPELINE_CHANGE_TASK_DONE_STATUS = "CHANGE_TASK_DONE_STATUS";
 //Modal reducer constants
 const OPEN_NEW_TASK_MODAL = "OPEN_NEW_TASK_MODAL";
 const CLOSE_NEW_TASK_MODAL = "CLOSE_NEW_TASK_MODAL";
@@ -7107,6 +7120,7 @@ function UserPageApp() {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_18__.UserPageAppContextProvider, {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_UserPageNotificationsContextProvider__WEBPACK_IMPORTED_MODULE_19__.UserPageNotificationsContextProvider, {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserPageContent, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_3__.ToastContainer, {
+          closeOnClick: true,
           position: "bottom-center",
           toastClassName: "wpqt-bottom-[80px] lg:wpqt-bottom-[20px]"
         })]
@@ -7130,6 +7144,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   addTaskCommentRequest: () => (/* binding */ addTaskCommentRequest),
 /* harmony export */   addUserCommentRequest: () => (/* binding */ addUserCommentRequest),
 /* harmony export */   assignTaskToUser: () => (/* binding */ assignTaskToUser),
+/* harmony export */   changeTaskDoneStatusRequest: () => (/* binding */ changeTaskDoneStatusRequest),
 /* harmony export */   changeTaskStageRequest: () => (/* binding */ changeTaskStageRequest),
 /* harmony export */   getAssignableTasksRequest: () => (/* binding */ getAssignableTasksRequest),
 /* harmony export */   getAssignedTasksRequest: () => (/* binding */ getAssignedTasksRequest),
@@ -7228,6 +7243,16 @@ function changeTaskStageRequest(pageHash, taskHash, stageId) {
     path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/stage`,
     data: {
       stageId
+    },
+    headers: getCommonHeaders()
+  });
+}
+function changeTaskDoneStatusRequest(pageHash, taskHash, isDone) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    method: "PATCH",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/done`,
+    data: {
+      done: isDone
     },
     headers: getCommonHeaders()
   });
@@ -9206,6 +9231,111 @@ function TaskDetails({
 
 /***/ }),
 
+/***/ "./src/user-page-app/components/Pages/TaskPage/TaskDoneStatus/TaskDoneStatus.tsx":
+/*!***************************************************************************************!*\
+  !*** ./src/user-page-app/components/Pages/TaskPage/TaskDoneStatus/TaskDoneStatus.tsx ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TaskDoneStatus: () => (/* binding */ TaskDoneStatus)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/CheckBadgeIcon.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../components/Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../constants */ "./src/user-page-app/constants.ts");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useTaskActions */ "./src/user-page-app/hooks/actions/useTaskActions.ts");
+/* harmony import */ var _providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../providers/UserPageTaskContextProvider */ "./src/user-page-app/providers/UserPageTaskContextProvider.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+function TaskDoneStatus({
+  task
+}) {
+  const {
+    changeTaskDoneStatus
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_5__.useTaskActions)();
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const {
+    userTaskDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_6__.UserPageTaskContext);
+  const isDone = task.is_done;
+  const doneMessage = !isDone ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Mark task as not completed", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Mark task as completed", "quicktasker");
+  const handleDoneStatusChange = done => __awaiter(this, void 0, void 0, function* () {
+    setLoading(true);
+    yield changeTaskDoneStatus(task.task_hash, done, () => {
+      userTaskDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.UPDATE_USER_PAGE_TASK_DONE,
+        payload: {
+          done
+        }
+      });
+    });
+    setLoading(false);
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-font-medium",
+      children: doneMessage
+    }), loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
+      ovalSize: "36"
+    }) : isDone ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      className: "wpqt-size-9 wpqt-text-gray-300 wpqt-cursor-pointer",
+      onClick: () => {
+        handleDoneStatusChange(false);
+      }
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      className: "wpqt-size-9 wpqt-icon-green wpqt-cursor-pointer",
+      onClick: () => {
+        handleDoneStatusChange(true);
+      }
+    })]
+  });
+}
+
+
+/***/ }),
+
 /***/ "./src/user-page-app/components/Pages/TaskPage/TaskPage.tsx":
 /*!******************************************************************!*\
   !*** ./src/user-page-app/components/Pages/TaskPage/TaskPage.tsx ***!
@@ -9223,14 +9353,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../types/custom-field */ "./src/types/custom-field.ts");
 /* harmony import */ var _providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/UserPageTaskContextProvider */ "./src/user-page-app/providers/UserPageTaskContextProvider.tsx");
 /* harmony import */ var _CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../CustomField/CustomFieldsWrap/CustomFieldsWrap */ "./src/user-page-app/components/CustomField/CustomFieldsWrap/CustomFieldsWrap.tsx");
 /* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
 /* harmony import */ var _TaskControls_TaskControls__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TaskControls/TaskControls */ "./src/user-page-app/components/Pages/TaskPage/TaskControls/TaskControls.tsx");
 /* harmony import */ var _TaskDetails_TaskDetails__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./TaskDetails/TaskDetails */ "./src/user-page-app/components/Pages/TaskPage/TaskDetails/TaskDetails.tsx");
-/* harmony import */ var _TaskStageSelect_TaskStageSelect__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./TaskStageSelect/TaskStageSelect */ "./src/user-page-app/components/Pages/TaskPage/TaskStageSelect/TaskStageSelect.tsx");
+/* harmony import */ var _TaskDoneStatus_TaskDoneStatus__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./TaskDoneStatus/TaskDoneStatus */ "./src/user-page-app/components/Pages/TaskPage/TaskDoneStatus/TaskDoneStatus.tsx");
+/* harmony import */ var _TaskStageSelect_TaskStageSelect__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./TaskStageSelect/TaskStageSelect */ "./src/user-page-app/components/Pages/TaskPage/TaskStageSelect/TaskStageSelect.tsx");
+
 
 
 
@@ -9245,7 +9377,7 @@ __webpack_require__.r(__webpack_exports__);
 function TaskPage() {
   const {
     taskHash
-  } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_10__.useParams)();
+  } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_11__.useParams)();
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageTaskContextProvider, {
     taskHash: taskHash,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TaskPageContent, {})
@@ -9273,7 +9405,9 @@ function TaskPageContent() {
         className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskDetails_TaskDetails__WEBPACK_IMPORTED_MODULE_8__.TaskDetails, {
           task: task
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskStageSelect_TaskStageSelect__WEBPACK_IMPORTED_MODULE_9__.TaskStageSelect, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskStageSelect_TaskStageSelect__WEBPACK_IMPORTED_MODULE_10__.TaskStageSelect, {
+          task: task
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskDoneStatus_TaskDoneStatus__WEBPACK_IMPORTED_MODULE_9__.TaskDoneStatus, {
           task: task
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_5__.CustomFieldsWrap, {
           entityId: task.id,
@@ -9584,6 +9718,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_USER_PAGE_USER_LOADING: () => (/* binding */ SET_USER_PAGE_USER_LOADING),
 /* harmony export */   UPDATE_CUSTOM_FIELD_VALUE: () => (/* binding */ UPDATE_CUSTOM_FIELD_VALUE),
 /* harmony export */   UPDATE_USER_PAGE_TASK_DATA: () => (/* binding */ UPDATE_USER_PAGE_TASK_DATA),
+/* harmony export */   UPDATE_USER_PAGE_TASK_DONE: () => (/* binding */ UPDATE_USER_PAGE_TASK_DONE),
 /* harmony export */   UPDATE_USER_PAGE_TASK_STAGE: () => (/* binding */ UPDATE_USER_PAGE_TASK_STAGE)
 /* harmony export */ });
 // User page reducer constants
@@ -9602,6 +9737,7 @@ const SET_USER_PAGE_TASK_DATA = "SET_USER_PAGE_TASK_DATA";
 const SET_USER_PAGE_TASK_LOADING = "SET_USER_PAGE_TASK_LOADING";
 const UPDATE_USER_PAGE_TASK_DATA = "UPDATE_USER_PAGE_TASK_DATA";
 const UPDATE_USER_PAGE_TASK_STAGE = "UPDATE_USER_PAGE_TASK_STAGE";
+const UPDATE_USER_PAGE_TASK_DONE = "UPDATE_USER_PAGE_TASK_DONE";
 //User page notifications reducer constants
 const SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS = "SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS";
 const CHANGE_USER_PAGE_NOTIFICATIONS_LOADING = "CHANGE_USER_PAGE_NOTIFICATIONS_LOADING";
@@ -9806,11 +9942,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   useTaskActions: () => (/* binding */ useTaskActions)
 /* harmony export */ });
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
-/* harmony import */ var _useErrorHandler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
+/* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
+/* harmony import */ var _useErrorHandler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9842,13 +9981,20 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
 function useTaskActions() {
   const {
+    state: {
+      pageHash
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageAppContext);
+  const {
     handleError
-  } = (0,_useErrorHandler__WEBPACK_IMPORTED_MODULE_3__.useErrorHandler)();
+  } = (0,_useErrorHandler__WEBPACK_IMPORTED_MODULE_5__.useErrorHandler)();
   const getTask = (pageHash, taskHash, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.getTaskDataRequest)(pageHash, taskHash);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getTaskDataRequest)(pageHash, taskHash);
       if (callback) callback(response.data);
     } catch (error) {
       handleError(error);
@@ -9856,8 +10002,8 @@ function useTaskActions() {
   });
   const assignToTask = (pageHash, taskHash, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.assignTaskToUser)(pageHash, taskHash);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task assigned successfully", "quicktasker"));
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.assignTaskToUser)(pageHash, taskHash);
+      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task assigned successfully", "quicktasker"));
       if (callback) callback(response.data);
     } catch (error) {
       handleError(error);
@@ -9865,8 +10011,8 @@ function useTaskActions() {
   });
   const unAssignFromTask = (pageHash, taskHash, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.unAssignTaskFromUser)(pageHash, taskHash);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task unassigned successfully", "quicktasker"));
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.unAssignTaskFromUser)(pageHash, taskHash);
+      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task unassigned successfully", "quicktasker"));
       if (callback) callback(response.data);
     } catch (error) {
       handleError(error);
@@ -9874,9 +10020,19 @@ function useTaskActions() {
   });
   const changeTaskStage = (taskHash, stageId, pageHash, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.changeTaskStageRequest)(pageHash, taskHash, stageId);
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task stage changed successfully", "quicktasker"));
+      yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.changeTaskStageRequest)(pageHash, taskHash, stageId);
+      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task stage changed successfully", "quicktasker"));
       if (callback) callback();
+    } catch (error) {
+      handleError(error);
+    }
+  });
+  const changeTaskDoneStatus = (taskHash, doneStatus, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const successMessage = doneStatus ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task marked as completed", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task marked as incomplete", "quicktasker");
+      yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.changeTaskDoneStatusRequest)(pageHash, taskHash, doneStatus);
+      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.success(successMessage);
+      if (callback) callback(doneStatus);
     } catch (error) {
       handleError(error);
     }
@@ -9885,7 +10041,8 @@ function useTaskActions() {
     getTask,
     assignToTask,
     changeTaskStage,
-    unAssignFromTask
+    unAssignFromTask,
+    changeTaskDoneStatus
   };
 }
 
@@ -11163,6 +11320,17 @@ const reducer = (state, action) => {
           }) : null
         });
       }
+    case _constants__WEBPACK_IMPORTED_MODULE_2__.UPDATE_USER_PAGE_TASK_DONE:
+      {
+        const {
+          done
+        } = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          task: state.task ? Object.assign(Object.assign({}, state.task), {
+            is_done: done
+          }) : null
+        });
+      }
     default:
       return state;
   }
@@ -11342,6 +11510,7 @@ const convertTaskFromServer = task => Object.assign(Object.assign({}, task), {
   task_order: Number(task.task_order),
   free_for_all: task.free_for_all === "1",
   is_archived: task.is_archived === "1",
+  is_done: task.is_done === "1",
   assigned_users: task.assigned_users ? task.assigned_users.map(user => Object.assign({}, (0,_user__WEBPACK_IMPORTED_MODULE_0__.convertUserFromServer)(user))) : []
 });
 
@@ -28232,6 +28401,47 @@ function ChatBubbleLeftIcon({
   }));
 }
 const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(ChatBubbleLeftIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
+/***/ "./node_modules/@heroicons/react/24/outline/esm/CheckBadgeIcon.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/CheckBadgeIcon.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function CheckBadgeIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(CheckBadgeIcon);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
 
 /***/ }),

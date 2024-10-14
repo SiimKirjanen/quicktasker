@@ -71,7 +71,7 @@ function PipelineSelectionDropdown() {
 
         return (
           <MenuItem key={existingPipeline.id}>
-            <div className="wpqt-mb-3 wpqt-flex">
+            <div className="wpqt-mb-3 wpqt-flex wpqt-gap-2">
               <div
                 className={clsx("wpqt-cursor-pointer wpqt-text-center", {
                   "wpqt-font-bold": isCurrentPipeline,

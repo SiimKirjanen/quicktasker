@@ -126,6 +126,19 @@ function changeTaskStageRequest(
   });
 }
 
+function changeTaskDoneStatusRequest(
+  pageHash: string,
+  taskHash: string,
+  isDone: boolean,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    method: "PATCH",
+    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/done`,
+    data: { done: isDone },
+    headers: getCommonHeaders(),
+  });
+}
+
 function logoutUserPageRequest(pageHash: string): Promise<WPQTResponse> {
   return apiFetch({
     method: "POST",
@@ -225,6 +238,7 @@ export {
   addTaskCommentRequest,
   addUserCommentRequest,
   assignTaskToUser,
+  changeTaskDoneStatusRequest,
   changeTaskStageRequest,
   getAssignableTasksRequest,
   getAssignedTasksRequest,

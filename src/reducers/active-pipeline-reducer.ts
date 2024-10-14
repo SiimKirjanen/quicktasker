@@ -2,6 +2,7 @@ import {
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
   PIPELINE_ADD_USER_TO_TASK,
+  PIPELINE_CHANGE_TASK_DONE_STATUS,
   PIPELINE_DELETE_STAGE,
   PIPELINE_EDIT_PIPELINE,
   PIPELINE_EDIT_STAGE,
@@ -296,6 +297,38 @@ const activePipelineReducer = (state: State, action: Action) => {
           name: updatedPipeline.name,
           description: updatedPipeline.description,
           is_primary: updatedPipeline.is_primary === "1",
+        },
+      };
+    }
+    case PIPELINE_CHANGE_TASK_DONE_STATUS: {
+      const { taskId, done } = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        const updatedTasks = stage.tasks?.map((task) => {
+          if (task.id === taskId) {
+            return {
+              ...task,
+              is_done: done,
+            };
+          }
+          return task;
+        });
+
+        return {
+          ...stage,
+          tasks: updatedTasks,
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
         },
       };
     }

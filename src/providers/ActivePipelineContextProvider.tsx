@@ -11,6 +11,7 @@ import {
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
   PIPELINE_ADD_USER_TO_TASK,
+  PIPELINE_CHANGE_TASK_DONE_STATUS,
   PIPELINE_DELETE_STAGE,
   PIPELINE_EDIT_PIPELINE,
   PIPELINE_EDIT_STAGE,
@@ -55,6 +56,10 @@ type Action =
         source: { index: number; droppableId: string };
         destination: { index: number; droppableId: string };
       };
+    }
+  | {
+      type: typeof PIPELINE_CHANGE_TASK_DONE_STATUS;
+      payload: { taskId: string; done: boolean };
     }
   | { type: typeof PIPELINE_ADD_TASK; payload: TaskFromServer }
   | { type: typeof PIPELINE_EDIT_TASK; payload: TaskFromServer }

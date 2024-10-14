@@ -10,6 +10,7 @@ import { CustomFieldsWrap } from "../../CustomField/CustomFieldsWrap/CustomField
 import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 import { TaskControls } from "./TaskControls/TaskControls";
 import { TaskDetails } from "./TaskDetails/TaskDetails";
+import { TaskDoneStatus } from "./TaskDoneStatus/TaskDoneStatus";
 import { TaskStageSelect } from "./TaskStageSelect/TaskStageSelect";
 
 function TaskPage() {
@@ -38,6 +39,7 @@ function TaskPageContent() {
         <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
           <TaskDetails task={task} />
           <TaskStageSelect task={task} />
+          <TaskDoneStatus task={task} />
           <CustomFieldsWrap
             entityId={task.id}
             entityType={CustomFieldEntityType.Task}

@@ -541,6 +541,46 @@ function wpqt_register_api_routes() {
         ),
     );
 
+    register_rest_route(
+        'wpqt/v1',
+        'tasks/(?P<id>\d+)/done',
+        array(
+            'methods' => 'PATCH',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+       
+                    $taskService = new TaskService();
+                    $logService = new LogService();
+                    $logMessage = $data['done'] ? 'Task status changed to completed' : 'Task status changed to not completed';
+
+                    $task = $taskService->changeTaskDoneStatus( $data['id'], $data['done']);
+                    $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
+                } catch (Exception $e) {
+          
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'done' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                ),
+            ),
+        ),
+    );
+
      /*
     ==================================================================================================================================================================================================================
     Stage endpoints

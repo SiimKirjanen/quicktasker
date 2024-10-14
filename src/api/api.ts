@@ -153,6 +153,18 @@ function getArchivedTasksRequest(): Promise<WPQTResponse<TaskFromServer[]>> {
   });
 }
 
+function markTaskDoneRequest(
+  taskId: string,
+  done: boolean,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}/done`,
+    method: "PATCH",
+    data: { done },
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   Comment requests
@@ -509,6 +521,7 @@ export {
   getUsersRequest,
   getUserTasksRequest,
   markCustomFieldAsDeletedRequest,
+  markTaskDoneRequest,
   moveStageRequest,
   moveTaskRequest,
   removeTaskFromUserRequest,

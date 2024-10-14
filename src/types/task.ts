@@ -15,6 +15,7 @@ type Task = BaseTask & {
   free_for_all: boolean;
   assigned_users: User[];
   is_archived: boolean;
+  is_done: boolean;
 };
 
 type TaskFromServer = BaseTask & {
@@ -22,6 +23,7 @@ type TaskFromServer = BaseTask & {
   free_for_all: string;
   assigned_users: ServerUser[];
   is_archived: string;
+  is_done: string;
 };
 
 export type { Task, TaskFromServer };

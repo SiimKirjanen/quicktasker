@@ -1,16 +1,22 @@
+import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { TaskFromServer } from "../../../types/task";
 import {
   assignTaskToUser,
+  changeTaskDoneStatusRequest,
   changeTaskStageRequest,
   getTaskDataRequest,
   unAssignTaskFromUser,
 } from "../../api/user-page-api";
+import { UserPageAppContext } from "../../providers/UserPageAppContextProvider";
 import { UserPageTaskResponse } from "../../types/user-page-task-response";
 import { useErrorHandler } from "../useErrorHandler";
 
 function useTaskActions() {
+  const {
+    state: { pageHash },
+  } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
 
   const getTask = async (
@@ -69,7 +75,30 @@ function useTaskActions() {
     }
   };
 
-  return { getTask, assignToTask, changeTaskStage, unAssignFromTask };
+  const changeTaskDoneStatus = async (
+    taskHash: string,
+    doneStatus: boolean,
+    callback?: (doneStatus: boolean) => void,
+  ) => {
+    try {
+      const successMessage = doneStatus
+        ? __("Task marked as completed", "quicktasker")
+        : __("Task marked as incomplete", "quicktasker");
+      await changeTaskDoneStatusRequest(pageHash, taskHash, doneStatus);
+      toast.success(successMessage);
+      if (callback) callback(doneStatus);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  return {
+    getTask,
+    assignToTask,
+    changeTaskStage,
+    unAssignFromTask,
+    changeTaskDoneStatus,
+  };
 }
 
 export { useTaskActions };

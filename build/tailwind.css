@@ -924,6 +924,11 @@
   margin-bottom: 1.5rem;
 }
 
+.wpqt-mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .\!wpqt-mb-0 {
   margin-bottom: 0px !important;
 }
@@ -1694,6 +1699,11 @@
 .wpqt-text-blue-900 {
   --tw-text-opacity: 1;
   color: rgb(30 58 138 / var(--tw-text-opacity));
+}
+
+.wpqt-text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
 }
 
 .wpqt-text-gray-400 {

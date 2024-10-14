@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import {
   archiveTaskRequest,
   deleteTaskRequest,
+  markTaskDoneRequest,
   removeTaskFromUserRequest,
   restoreArchivedTaskRequest,
 } from "../../api/api";
@@ -56,11 +57,30 @@ const useTaskActions = () => {
     }
   };
 
+  const changeTaskDoneStatus = async (
+    taskId: string,
+    isCompleted: boolean,
+    callback?: (isCompleted: boolean) => void,
+  ) => {
+    try {
+      const successMessage = isCompleted
+        ? __("Task marked as completed", "quicktasker")
+        : __("Task marked as incomplete", "quicktasker");
+      await markTaskDoneRequest(taskId, isCompleted);
+      if (callback) callback(isCompleted);
+      toast.success(successMessage);
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to change task status", "quicktasker"));
+    }
+  };
+
   return {
     deleteTask,
     archiveTask,
     restoreArchivedTask,
     removeTaskFromUser,
+    changeTaskDoneStatus,
   };
 };
 

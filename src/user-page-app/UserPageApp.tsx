@@ -77,6 +77,7 @@ function UserPageApp() {
         <UserPageNotificationsContextProvider>
           <UserPageContent />
           <ToastContainer
+            closeOnClick={true}
             position="bottom-center"
             toastClassName="wpqt-bottom-[80px] lg:wpqt-bottom-[20px]"
           />

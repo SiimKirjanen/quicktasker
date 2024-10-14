@@ -594,6 +594,55 @@ function wpqt_register_user_page_api_routes() {
         ),
     ));
 
+    register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/done', array(
+        'methods' => 'PATCH',
+        'callback' => function( $data ) {
+                try {
+                    $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                    $permissionService = new PermissionService();
+                    $taskService = new TaskService();
+                    $logService = new LogService();
+                    $taskRepository = new TaskRepository();
+                    $userPageRepository = new UserPageRepository();
+
+                    $task = $taskRepository->getTaskByHash($data['task_hash']);
+                    
+                    if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id)) {
+                        throw new WPQTException('Not allowed to edit the task', true);
+                    }
+                    $userPage = $userPageRepository->getPageUserByHash($data['hash']); 
+
+                    $taskService->changeTaskDoneStatus($task->id, $data['done']);
+    
+                    $logService->log('User ' . $userPage->name . ' changed task to ' . $data['done'] ? ' completed': ' not completed', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                } catch(WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                }
+            },
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'task_hash' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+            ),
+            'done' => array(
+                'required' => true,
+                'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+            ),
+        ),
+    ));
+
     register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/user', array(
         'methods' => 'GET',
         'callback' => function( $data ) {

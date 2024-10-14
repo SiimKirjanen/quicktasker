@@ -422,4 +422,24 @@ class TaskService {
 
         return $result;
     }
+
+    /**
+     * Changes the completion status of a task.
+     *
+     * @param int $taskId The ID of the task to update.
+     * @param bool $isDone The new completion status of the task.
+     * @return array The updated task data.
+     * @throws \Exception If the task status update fails.
+     */
+    function changeTaskDoneStatus($taskId, $isDone) {
+        global $wpdb;
+
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_done' => $isDone), array('id' => $taskId), array('%d'), array('%d'));
+
+        if ($result === false) {
+            throw new \Exception('Failed to change task completed status');
+        }
+
+        return $this->taskRepository->getTaskById($taskId);
+    }
 }

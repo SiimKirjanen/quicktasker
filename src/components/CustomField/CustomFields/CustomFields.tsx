@@ -20,6 +20,14 @@ function CustomFields() {
     );
   }
 
+  if (customFields && customFields.length === 0) {
+    return (
+      <div className="wpqt-text-center wpqt-font-semibold">
+        {__("No related custom fields created", "quicktasker")}
+      </div>
+    );
+  }
+
   if (!isOpen) {
     return (
       <div className="wpqt-flex wpqt-justify-center">
