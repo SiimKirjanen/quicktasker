@@ -1,6 +1,7 @@
 import { ArrowPathIcon, ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { useTimezone } from "../../../hooks/useTimezone";
 import { WPQTComment } from "../../../types/comment";
 import { WPQTLogCreatedBy } from "../../../types/enums";
 import { Log } from "../../../types/log";
@@ -129,6 +130,8 @@ type TabContentItemProps = {
   log: Log;
 };
 function TabContentItem({ log }: TabContentItemProps) {
+  const { convertToWPTimezone } = useTimezone();
+
   return (
     <>
       <div>
@@ -140,12 +143,14 @@ function TabContentItem({ log }: TabContentItemProps) {
         </div>
       </div>
       <div>{log.text}</div>
-      <div>{log.created_at}</div>
+      <div>{convertToWPTimezone(log.created_at)}</div>
     </>
   );
 }
 
 function TabContentCommentItem({ item }: { item: WPQTComment }) {
+  const { convertToWPTimezone } = useTimezone();
+
   return (
     <>
       <div>
@@ -157,7 +162,7 @@ function TabContentCommentItem({ item }: { item: WPQTComment }) {
         </div>
       </div>
       <div>{item.text}</div>
-      <div>{item.created_at}</div>
+      <div>{convertToWPTimezone(item.created_at)}</div>
     </>
   );
 }

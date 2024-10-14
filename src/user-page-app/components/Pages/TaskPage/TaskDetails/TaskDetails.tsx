@@ -4,11 +4,13 @@ import {
   DisplayRow,
 } from "../../../../../components/common/DataDisplay/DataDisplay";
 import { Task } from "../../../../../types/task";
+import { useTimezone } from "../../../../hooks/useTimezone";
 
 type Props = {
   task: Task | null;
 };
 function TaskDetails({ task }: Props) {
+  const { convertToWPTimezone } = useTimezone();
   if (!task) {
     return null;
   }
@@ -35,7 +37,7 @@ function TaskDetails({ task }: Props) {
           label={__("Created at", "quicktasker")}
           className={rowClasses}
         >
-          {task.created_at}
+          {convertToWPTimezone(task.created_at)}
         </DisplayRow>
         <DisplayRow
           label={__("Free for all", "quicktasker")}

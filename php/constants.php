@@ -21,7 +21,7 @@ define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 DB constants
 ==================================================================================================================================================================================================================
 */
-define('WP_QUICKTASKER_DB_VERSION', "1.57");
+define('WP_QUICKTASKER_DB_VERSION', "1.58");
 
 define('TABLE_WP_QUICKTASKER_USERS', $wpdb->prefix . "quicktasker_users");
 define('TABLE_WP_QUICKTASKER_PIPELINES', $wpdb->prefix . "quicktasker_pipelines");

@@ -1,7 +1,11 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { getQueryParam } from "../../utils/url";
 import { getUserPageStatusRequest } from "../api/user-page-api";
-import { SET_USER_LOGGED_IN, SET_USER_PAGE_STATUS } from "../constants";
+import {
+  SET_INIT_DATA,
+  SET_USER_LOGGED_IN,
+  SET_USER_PAGE_STATUS,
+} from "../constants";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { useSession } from "../hooks/useSession";
 import { reducer } from "../reducers/user-page-app-reducer";
@@ -15,6 +19,7 @@ const initialState: State = {
   userId: "",
   userName: "",
   cf: true,
+  timezone: "",
 };
 
 type State = {
@@ -26,6 +31,7 @@ type State = {
   userId: string;
   userName: string;
   cf: boolean;
+  timezone: string;
 };
 
 type Action =
@@ -39,6 +45,7 @@ type Action =
         userName: string;
       };
     }
+  | { type: typeof SET_INIT_DATA; payload: { timezone: string } }
   | { type: typeof SET_USER_LOGGED_IN; payload: boolean };
 
 type Dispatch = (action: Action) => void;
@@ -66,6 +73,15 @@ const UserPageAppContextProvider = ({
   );
   const { isLoggedIn } = useSession();
   const { handleError } = useErrorHandler();
+
+  useEffect(() => {
+    const timezone = window.wpqt_user.timezone;
+
+    userPageAppDispatch({
+      type: SET_INIT_DATA,
+      payload: { timezone },
+    });
+  }, []);
 
   useEffect(() => {
     loadUserPageStatus();

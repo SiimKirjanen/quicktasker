@@ -40,6 +40,8 @@
     "@wordpress/element": "^6.4.0",
     "@wordpress/i18n": "^5.9.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "dayjs-plugin-utc": "^0.1.2",
     "js-cookie": "^3.0.5",
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.26.1",

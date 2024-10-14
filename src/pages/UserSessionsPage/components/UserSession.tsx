@@ -10,6 +10,7 @@ import {
   CHANGE_USER_SESSION_STATUS,
   DELETE_USER_SESSION,
 } from "../../../constants";
+import { useTimezone } from "../../../hooks/useTimezone";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { UserSession } from "../../../types/user-session";
 
@@ -19,6 +20,7 @@ type Props = {
 
 function UserSession({ session }: Props) {
   const { usersSessionDispatch } = useContext(UserSessionsContext);
+  const { convertToWPTimezone } = useTimezone();
   const isActive = session.is_active;
 
   const changeSessionStatus = async (status: boolean) => {
@@ -53,8 +55,8 @@ function UserSession({ session }: Props) {
         <div>{session.user_name}</div>
         <div className="wpqt-italic">{session.user_description}</div>
       </div>
-      <div>{session.created_at_utc}</div>
-      <div>{session.expires_at_utc}</div>
+      <div>{convertToWPTimezone(session.created_at_utc)}</div>
+      <div>{convertToWPTimezone(session.expires_at_utc)}</div>
       <div
         className={isActive ? "wpqt-text-qtTextGreen" : "wpqt-text-qtTextRed"}
       >

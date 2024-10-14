@@ -1,4 +1,8 @@
-import { SET_USER_LOGGED_IN, SET_USER_PAGE_STATUS } from "../constants";
+import {
+  SET_INIT_DATA,
+  SET_USER_LOGGED_IN,
+  SET_USER_PAGE_STATUS,
+} from "../constants";
 import { Action, State } from "../providers/UserPageAppContextProvider";
 
 const reducer = (state: State, action: Action): State => {
@@ -23,6 +27,14 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         isLoggedIn,
+      };
+    }
+    case SET_INIT_DATA: {
+      const { timezone } = action.payload;
+
+      return {
+        ...state,
+        timezone,
       };
     }
     default:
