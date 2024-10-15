@@ -24,6 +24,32 @@ function wpqt_style_overrides() {
     }
 }
 
+/**
+ * Adds custom styles to the head section of the page.
+ *
+ * This function hooks into the 'wp_head' action and adds custom CSS styles to hide the admin bar
+ * and adjust the top margin of the page when a user is logged in and viewing a public user page.
+ *
+ * @return void
+ */
+add_action('wp_head', 'wpqt_custom_styles');
+function wpqt_custom_styles() {
+    $locationService = new LocationService();
+
+    if ( is_user_logged_in() && $locationService->isWPQTPublicUserPage() ) {
+        echo '<style>
+        /* Hide the admin bar */
+        #wpadminbar {
+            display: none;
+        }
+		/* Adjust the top margin of the page to account for the hidden admin bar */
+        html {
+            margin-top: 0 !important;
+        }
+        </style>';
+    }
+}
+
 add_action('template_redirect', 'wpqt_custom_http_status_code');
 function wpqt_custom_http_status_code() {
 	$locationService = new LocationService();

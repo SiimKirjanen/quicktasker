@@ -43,26 +43,3 @@ function wpqt_public_user_page_template( $page_template ){
 
     return $page_template;
 }
-
-/**
- * Hides the admin bar in the user page template for the WP Quick Tasks plugin.
- *
- * This function is used as a filter for the 'show_admin_bar' hook. It checks if the current page is a public user page
- * and if the user is logged in. If both conditions are met, it returns false to hide the admin bar. Otherwise, it returns
- * true to show the admin bar.
- *
- * @return bool Whether to show or hide the admin bar.
- */
-add_filter( 'show_admin_bar', 'wpqt_hide_admin_bar_in_user_page_template' );
-function wpqt_hide_admin_bar_in_user_page_template(){
-	$locationService = new LocationService();
-
-	if( is_user_logged_in() ) {
-		if( $locationService->isWPQTPublicUserPage() ) {
-			return false;
-		}
-		return true;
-	}
-
-	return false;
-}
