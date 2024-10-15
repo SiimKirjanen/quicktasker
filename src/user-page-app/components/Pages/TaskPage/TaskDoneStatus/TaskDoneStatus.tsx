@@ -5,6 +5,7 @@ import { Loading } from "../../../../../components/Loading/Loading";
 import { Task } from "../../../../../types/task";
 import { UPDATE_USER_PAGE_TASK_DONE } from "../../../../constants";
 import { useTaskActions } from "../../../../hooks/actions/useTaskActions";
+import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
 import { UserPageTaskContext } from "../../../../providers/UserPageTaskContextProvider";
 
 type Props = {
@@ -14,7 +15,11 @@ function TaskDoneStatus({ task }: Props) {
   const { changeTaskDoneStatus } = useTaskActions();
   const [loading, setLoading] = useState(false);
   const { userTaskDispatch } = useContext(UserPageTaskContext);
+  const {
+    state: { userId },
+  } = useContext(UserPageAppContext);
 
+  const isAssigned = task?.assigned_users.some((user) => user.id === userId);
   const isDone = task.is_done;
   const doneMessage = !isDone
     ? __("Mark task as not completed", "quicktasker")
@@ -31,6 +36,10 @@ function TaskDoneStatus({ task }: Props) {
     setLoading(false);
   };
 
+  if (!isAssigned) {
+    return null;
+  }
+
   return (
     <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2">
       <div className="wpqt-font-medium">{doneMessage}</div>
@@ -38,14 +47,14 @@ function TaskDoneStatus({ task }: Props) {
         <Loading ovalSize="36" />
       ) : isDone ? (
         <CheckBadgeIcon
-          className="wpqt-size-9 wpqt-text-gray-300 wpqt-cursor-pointer"
+          className={"wpqt-size-9 wpqt-text-gray-300 wpqt-cursor-pointer"}
           onClick={() => {
             handleDoneStatusChange(false);
           }}
         />
       ) : (
         <CheckBadgeIcon
-          className="wpqt-size-9 wpqt-icon-green wpqt-cursor-pointer"
+          className={"wpqt-size-9 wpqt-icon-green wpqt-cursor-pointer"}
           onClick={() => {
             handleDoneStatusChange(true);
           }}
