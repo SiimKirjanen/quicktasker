@@ -29,7 +29,7 @@ function UserTasksFilter() {
       <WPQTInput
         value={searchValue}
         onChange={onValueChange}
-        className="wpqt-mb-0"
+        className="!wpqt-mb-0"
       />
       <PipelineFilterSelect
         selectedOptionValue={filteredPipelineId}

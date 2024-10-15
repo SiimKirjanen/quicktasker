@@ -10151,7 +10151,7 @@ function UserTasksFilter() {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__.WPQTInput, {
       value: searchValue,
       onChange: onValueChange,
-      className: "wpqt-mb-0"
+      className: "!wpqt-mb-0"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_6__.PipelineFilterSelect, {
       selectedOptionValue: filteredPipelineId,
       selectionChange: onPipelineChange
@@ -10186,7 +10186,7 @@ function WPQTFilter({
       className: "wpqt-mb-2 wpqt-text-base",
       children: title
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-flex wpqt-gap-2",
+      className: "wpqt-flex wpqt-gap-2 wpqt-items-center",
       children: children
     })]
   });
@@ -15049,7 +15049,7 @@ function Task({
         className: "wpqt-text-sm wpqt-italic",
         children: task.description
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-mt-2 wpqt-mb-2",
+        className: "wpqt-mt-2",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_3__.UserAssignementDropdown, {
           task: task
         })

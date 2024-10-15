@@ -7,7 +7,7 @@ function WPQTFilter({ children, title }: WPQTFilterProps) {
   return (
     <div className="wpqt-mb-6">
       <div className="wpqt-mb-2 wpqt-text-base">{title}</div>
-      <div className="wpqt-flex wpqt-gap-2">{children}</div>
+      <div className="wpqt-flex wpqt-gap-2 wpqt-items-center">{children}</div>
     </div>
   );
 }

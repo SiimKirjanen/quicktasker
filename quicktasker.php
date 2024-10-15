@@ -2,7 +2,7 @@
 
 /*
 	Plugin Name: QuickTasker
-	Description: TODO.
+	Description: Task management plugin to get tasks done with the help of assigned users.
 	Author: Siim Kirjanen
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker

@@ -50,7 +50,7 @@ function Task({ task, index }: Props) {
             <div className="wpqt-text-sm wpqt-italic">{task.description}</div>
           )}
 
-          <div className="wpqt-mt-2 wpqt-mb-2">
+          <div className="wpqt-mt-2">
             <UserAssignementDropdown task={task} />
           </div>
           <TaskActions task={task} />
