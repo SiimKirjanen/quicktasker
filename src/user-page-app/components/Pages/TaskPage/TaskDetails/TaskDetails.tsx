@@ -15,7 +15,7 @@ function TaskDetails({ task }: Props) {
     return null;
   }
   const rowClasses =
-    "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-1 wpqt-text-xl";
+    "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-1";
   const hasAssignedUsers =
     task.assigned_users && task.assigned_users.length > 0;
 

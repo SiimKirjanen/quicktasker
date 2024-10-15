@@ -8412,17 +8412,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 
-function CustomFieldsAd({
-  title,
-  description
-}) {
+
+function CustomFieldsAd() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-      children: title
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-      children: description
+    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-h-full",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+      className: "wpqt-font-semibold",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Custom fields")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-text-center wpqt-mb-4",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Premium feature to create and manage custom data fields. Allows to add extra data to tasks and users.")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-text-blue-500 wpqt-font-semibold",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Coming soon", "quicktasker")
     })]
   });
 }
@@ -8507,12 +8512,7 @@ function CustomFieldsInModalWrap({
           children: customFieldsDescription
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomFields_CustomFields__WEBPACK_IMPORTED_MODULE_7__.CustomFields, {})]
       })
-    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomFieldsAd_CustomFieldsAd__WEBPACK_IMPORTED_MODULE_8__.CustomFieldsAd, {
-        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board custom fields", "quicktasker"),
-        description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add board custom fields", "quicktasker")
-      })
-    })
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomFieldsAd_CustomFieldsAd__WEBPACK_IMPORTED_MODULE_8__.CustomFieldsAd, {})
   });
 }
 
@@ -12812,7 +12812,7 @@ function DisplayRow({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: `wpqt-mb-1 ${className}`,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-      className: "wpqt-font-medium",
+      className: "wpqt-font-semibold",
       children: label
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
       className: "wpqt-text-base",
@@ -12874,7 +12874,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 var InputType;
@@ -12882,15 +12885,16 @@ var InputType;
   InputType["TEXT"] = "text";
   InputType["PASSWORD"] = "password";
 })(InputType || (InputType = {}));
-function WPQTInput({
+const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(({
   value,
   onChange,
   isAutoFocus,
   className,
   disabled = false,
   type = InputType.TEXT
-}) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Input, {
+}, ref) => {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.Input, {
+    ref: ref,
     autoFocus: isAutoFocus,
     className: `wpqt-mb-3 wpqt-block wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,
     value: value,
@@ -12898,7 +12902,7 @@ function WPQTInput({
     onChange: e => onChange(e.target.value),
     type: type
   });
-}
+});
 
 
 /***/ }),
@@ -14493,6 +14497,7 @@ function AddTask({
   const [taskName, setTaskName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [showTaskInput, setShowTaskInput] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const componentRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+  const inputRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
   const {
     state: {
       activePipeline
@@ -14501,7 +14506,7 @@ function AddTask({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_7__.ActivePipelineContext);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const handleKeyDown = event => {
-      if (event.key === "Enter") {
+      if (event.key === "Enter" && document.activeElement === inputRef.current) {
         createTask();
       }
     };
@@ -14548,6 +14553,7 @@ function AddTask({
     children: showTaskInput ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-items-center wpqt-gap-3",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__.WPQTInput, {
+        ref: inputRef,
         value: taskName,
         onChange: value => setTaskName(value),
         className: "!wpqt-mb-0"
@@ -16411,7 +16417,7 @@ __webpack_require__.r(__webpack_exports__);
 const initialState = {
   siteURL: "",
   publicUserPageId: "",
-  is_customFields: true,
+  is_customFields: false,
   timezone: ""
 };
 const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({

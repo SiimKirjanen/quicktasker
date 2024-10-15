@@ -83,12 +83,7 @@ function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
           </CustomFieldsContextProvider>
         </div>
       ) : (
-        <div>
-          <CustomFieldsAd
-            title={__("Board custom fields", "quicktasker")}
-            description={__("Add board custom fields", "quicktasker")}
-          />
-        </div>
+        <CustomFieldsAd />
       )}
     </>
   );

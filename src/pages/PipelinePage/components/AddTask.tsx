@@ -15,6 +15,7 @@ function AddTask({ stageId }: Props) {
   const [taskName, setTaskName] = useState("");
   const [showTaskInput, setShowTaskInput] = useState(false);
   const componentRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const {
     state: { activePipeline },
     dispatch,
@@ -22,7 +23,10 @@ function AddTask({ stageId }: Props) {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
+      if (
+        event.key === "Enter" &&
+        document.activeElement === inputRef.current
+      ) {
         createTask();
       }
     };
@@ -86,6 +90,7 @@ function AddTask({ stageId }: Props) {
       {showTaskInput ? (
         <div className="wpqt-flex wpqt-items-center wpqt-gap-3">
           <WPQTInput
+            ref={inputRef}
             value={taskName}
             onChange={(value) => setTaskName(value)}
             className="!wpqt-mb-0"

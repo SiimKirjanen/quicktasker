@@ -21,9 +21,9 @@ function TaskDoneStatus({ task }: Props) {
 
   const isAssigned = task?.assigned_users.some((user) => user.id === userId);
   const isDone = task.is_done;
-  const doneMessage = !isDone
-    ? __("Mark task as not completed", "quicktasker")
-    : __("Mark task as completed", "quicktasker");
+  const doneMessage = isDone
+    ? __("Task is completed", "quicktasker")
+    : __("Task is incomplete", "quicktasker");
 
   const handleDoneStatusChange = async (done: boolean) => {
     setLoading(true);
@@ -41,20 +41,23 @@ function TaskDoneStatus({ task }: Props) {
   }
 
   return (
-    <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2">
+    <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-items-center">
       <div className="wpqt-font-medium">{doneMessage}</div>
+      <div className="wpqt-text-gray-400 wpqt-text-sm wpqt-mb-2">
+        {__("Click to change", "quicktasker")}
+      </div>
       {loading ? (
         <Loading ovalSize="36" />
       ) : isDone ? (
         <CheckBadgeIcon
-          className={"wpqt-size-9 wpqt-text-gray-300 wpqt-cursor-pointer"}
+          className={"wpqt-size-9 wpqt-icon-green wpqt-cursor-pointer"}
           onClick={() => {
             handleDoneStatusChange(false);
           }}
         />
       ) : (
         <CheckBadgeIcon
-          className={"wpqt-size-9 wpqt-icon-green wpqt-cursor-pointer"}
+          className={"wpqt-size-9 wpqt-text-gray-300 wpqt-cursor-pointer"}
           onClick={() => {
             handleDoneStatusChange(true);
           }}

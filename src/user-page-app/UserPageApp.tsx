@@ -80,6 +80,7 @@ function UserPageApp() {
             closeOnClick={true}
             position="bottom-center"
             toastClassName="wpqt-bottom-[80px] lg:wpqt-bottom-[20px]"
+            autoClose={2000}
           />
         </UserPageNotificationsContextProvider>
       </UserPageAppContextProvider>
