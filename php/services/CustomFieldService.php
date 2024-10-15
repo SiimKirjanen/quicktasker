@@ -56,7 +56,7 @@ class CustomFieldService {
             // Debugging information
             $error_message = $wpdb->last_error;
             $last_query = $wpdb->last_query;
-            throw new WPQTException('Failed to add a custom field. Error: ' . $error_message . ' Query: ' . $last_query);
+            throw new WPQTException(esc_html('Failed to add a custom field. Error: ' . $error_message . ' Query: ' . $last_query));
         }
 
         $customFieldId = $wpdb->insert_id;

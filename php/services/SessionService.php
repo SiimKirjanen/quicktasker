@@ -170,7 +170,7 @@ class SessionService {
         $session = $this->sessionRepository->getUserSession($sessionToken);
 
         if( $session === null ) {
-            throw new WPQTException(WP_QUICKTASKER_INVALID_SESSION_TOKEN, true);
+            throw new WPQTException(esc_html(WP_QUICKTASKER_INVALID_SESSION_TOKEN), true);
         }
 
         if($pageHash !== $session->page_hash) {

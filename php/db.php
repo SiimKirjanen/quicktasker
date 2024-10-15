@@ -241,6 +241,6 @@ function wpqt_insert_initial_data() {
 	}
 	} catch (\Throwable $th) {
 		$wpdb->query('ROLLBACK');
-		error_log('Error in wpqt_insert_initial_data: ' . $th->getMessage());
+		//error_log('Error in wpqt_insert_initial_data: ' . $th->getMessage());
 	}
 }
