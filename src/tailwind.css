@@ -40,6 +40,9 @@
 }
 
 /* Start of WordPress style overrides */
+#wpwrap {
+  background-color: #fff;
+}
 .wpqt-admin-page #wpfooter {
   display: none;
 }

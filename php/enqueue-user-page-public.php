@@ -37,4 +37,13 @@ function wpqt_enqueue_user_public_page(){
 
 	// Set script translations
     wp_set_script_translations( 'wpqt-script', 'quicktasker', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/languages' );
+
+	wp_add_inline_style('wpqt-tailwind', '
+	 	html {
+            margin-top: 0 !important;
+        }
+        #wpadminbar {
+            display: none;
+        }
+    ');
 }

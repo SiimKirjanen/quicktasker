@@ -10,46 +10,15 @@ function wpqt_update_db() {
     wpqt_set_up_db();
 }
 
-add_action('admin_head', 'wpqt_style_overrides');
-function wpqt_style_overrides() {
-    $locationService = new LocationService();
-
-    if( $locationService->isWPQTPage() ) {
-        echo '<style>
-        /* Change the background color of the admin area */
-        #wpwrap {
-            background-color: #fff;
-        }
-        </style>';
-    }
-}
-
 /**
- * Adds custom styles to the head section of the page.
+ * Adds a custom action to modify the HTTP status code for specific pages.
  *
- * This function hooks into the 'wp_head' action and adds custom CSS styles to hide the admin bar
- * and adjust the top margin of the page when a user is logged in and viewing a public user page.
+ * This function hooks into the 'template_redirect' action and checks if the current
+ * page is a public user page as defined by the LocationService. If it is, it prevents
+ * a 404 status and sets the HTTP status code to 200.
  *
  * @return void
  */
-add_action('wp_head', 'wpqt_custom_styles');
-function wpqt_custom_styles() {
-    $locationService = new LocationService();
-
-    if ( is_user_logged_in() && $locationService->isWPQTPublicUserPage() ) {
-        echo '<style>
-        /* Hide the admin bar */
-        #wpadminbar {
-            display: none;
-        }
-		/* Adjust the top margin of the page to account for the hidden admin bar */
-        html {
-            margin-top: 0 !important;
-        }
-        </style>';
-    }
-}
-
 add_action('template_redirect', 'wpqt_custom_http_status_code');
 function wpqt_custom_http_status_code() {
 	$locationService = new LocationService();
