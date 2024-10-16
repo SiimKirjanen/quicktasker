@@ -7,8 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class UserRepository {
-    const USER_FIELDS = "a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active";
-
     /**
      * Retrieves a list of users along with their assigned tasks count and page hash.
      *
@@ -24,7 +22,7 @@ class UserRepository {
         global $wpdb;
     
         return $wpdb->get_results(
-            "SELECT " . self::USER_FIELDS . ", CASE 
+            "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, CASE 
                         WHEN a.password IS NULL THEN 0 
                         ELSE 1 
                     END AS has_password, b.page_hash, 
@@ -40,22 +38,21 @@ class UserRepository {
     }
 
     /**
-     * Retrieves a user by their ID, including additional information such as the page hash and the count of assigned tasks.
+     * Retrieves a user by their ID.
      *
-     * This function performs a query to fetch user details from the database, including:
-     * - User fields defined in the constant `USER_FIELDS`
-     * - Page hash from the `TABLE_WP_QUICKTASKER_USER_PAGES` table
-     * - Count of assigned tasks from the `TABLE_WP_QUICKTASKER_USER_TASK` and `TABLE_WP_QUICKTASKER_TASKS` tables
+     * This function fetches user details from the database, including the user's ID, name, description,
+     * creation and update timestamps, active status, associated page hash, and the count of assigned tasks
+     * that are not archived.
      *
      * @param int $id The ID of the user to retrieve.
-     * @return object|null The user object containing the requested information, or null if the user is not found.
+     * @return object|null The user object containing user details and assigned tasks count, or null if the user is not found.
      */
     public function getUserById($id) {
         global $wpdb;
     
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT " . self::USER_FIELDS . ", b.page_hash, 
+                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, 
                         (SELECT COUNT(*)
                          FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
                          JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d
@@ -83,7 +80,7 @@ class UserRepository {
         $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
 
         $sql = $wpdb->prepare(
-            "SELECT " . self::USER_FIELDS . ", b.task_id
+            "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.task_id
              FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
              INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b 
              ON a.id = b.user_id
@@ -107,7 +104,7 @@ class UserRepository {
         global $wpdb;
 
         $query = $wpdb->prepare(
-            "SELECT DISTINCT " . self::USER_FIELDS . "
+            "SELECT DISTINCT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active
              FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
              INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b
              ON a.id = b.user_id

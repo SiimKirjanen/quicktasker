@@ -166,7 +166,7 @@ class SessionService {
      * @return Session|null The session object if the token is valid and has not expired, null otherwise.
      */
     public function verifySessionToken($pageHash) {
-        $sessionToken = $_COOKIE['wpqt-session-token-' . $pageHash];
+        $sessionToken = sanitize_text_field($_COOKIE['wpqt-session-token-' . $pageHash]);
         $session = $this->sessionRepository->getUserSession($sessionToken);
 
         if( $session === null ) {

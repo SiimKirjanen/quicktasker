@@ -16,17 +16,6 @@ class CustomFieldRepository {
         $this->taskRepository = new TaskRepository();
     }
 
-    const PUBLIC_TABLE_COLUMNS = [
-        'id',
-        'name',
-        'description',
-        'type',
-        'entity_type',
-        'entity_id',
-        'created_at',
-        'updated_at'
-    ];
-
     /**
      * Retrieves a custom field by its ID.
      *
@@ -40,10 +29,9 @@ class CustomFieldRepository {
      */
     public function getCustomFieldById($id) {
         global $wpdb;
-        $columns = implode(', ', self::PUBLIC_TABLE_COLUMNS);
 
         $query = $wpdb->prepare(
-            "SELECT {$columns} FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+            "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
             WHERE id = %d",
             $id
         );
@@ -60,18 +48,19 @@ class CustomFieldRepository {
      */
     public function getCustomFields($entityId, $entityType, $isDeleted = false) {
         global $wpdb;
-        $columns = implode(', ', self::PUBLIC_TABLE_COLUMNS);
+
         $isDeletedCondition = $isDeleted ? 1 : 0;
+        $query = '';
 
         if($entityId === "null") {
             $query = $wpdb->prepare(
-                "SELECT {$columns} FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
                 WHERE entity_id IS NULL AND entity_type = %s AND is_deleted = %d",
                 $entityType, $isDeletedCondition
             );
         } else {
             $query = $wpdb->prepare(
-                "SELECT {$columns} FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
                 WHERE entity_id = %s AND entity_type = %s AND is_deleted = %d",
                 $entityId, $entityType, $isDeletedCondition
             );

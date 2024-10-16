@@ -164,7 +164,7 @@ function wpqt_register_user_page_api_routes() {
                     $sessionService = new SessionService();
                     $logService = new LogService();
                     
-                    $sessionToken = $_COOKIE['wpqt-session-token-' . $data['hash']];
+                    $sessionToken = sanitize_text_field($_COOKIE['wpqt-session-token-' . $data['hash']]);
                     $sessionService->markSessionInactive($sessionToken);
 
                     $logService->log('User logged out', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
