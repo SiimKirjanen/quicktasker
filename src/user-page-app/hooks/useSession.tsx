@@ -37,7 +37,18 @@ function useSession() {
     return !!Cookies.get(`wpqt-session-token-${pageHash}`);
   };
 
+  /**
+   * Deletes the session cookie and removes the session expiration from local storage.
+   *
+   * This function removes the session expiration associated with the given page hash
+   * from the local storage and deletes the session token cookie.
+   *
+   * @async
+   * @function deleteSessionCookie
+   * @returns {Promise<void>} A promise that resolves when the session cookie and local storage item are removed.
+   */
   const deleteSessionCookie = async () => {
+    localStorage.removeItem(`wpqt-session-expiration-${pageHash}`);
     Cookies.remove(`wpqt-session-token-${pageHash}`);
   };
 

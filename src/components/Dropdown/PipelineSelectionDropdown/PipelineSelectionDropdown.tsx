@@ -17,6 +17,7 @@ import { ActivePipelineContext } from "../../../providers/ActivePipelineContextP
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { Pipeline } from "../../../types/pipeline";
+import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTDropdown } from "../WPQTDropdown";
 
 function PipelineSelectionDropdown() {
@@ -98,12 +99,13 @@ function PipelineSelectionDropdown() {
         );
       })}
       <MenuItem key="new-pipeline">
-        <div
-          className="wpqt-mt-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2"
-          onClick={openPipelineModal}
-        >
-          <div>{__("Add new board", "quicktasker")}</div>
-          <PlusCircleIcon className="wpqt-size-6 wpqt-text-green-600" />
+        <div className="wpqt-mt-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2">
+          <WPQTIconButton
+            text={__("Add new board", "quicktasker")}
+            onClick={openPipelineModal}
+            icon={<PlusCircleIcon className="wpqt-size-6 wpqt-icon-green" />}
+            className="wpqt-bg-white hover:!wpqt-bg-gray-100"
+          />
         </div>
       </MenuItem>
     </WPQTDropdown>

@@ -15,14 +15,17 @@ function UserAssignementDropdown({
   onUserAdd = () => {},
   onUserDelete = () => {},
 }: Props) {
+  const hasAssignedUsers =
+    task.assigned_users && task.assigned_users.length > 0;
+
   return (
     <WPQTDropdown
       menuBtnClasses="wpqt-inline-flex"
       anchor="bottom start"
-      menuBtn={({ active }) => (
+      menuBtn={() => (
         <div className="wpqt-group wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1">
           <UserCircleIcon
-            className={`wpqt-mr-1 wpqt-size-5 ${active ? "wpqt-text-blue-800" : "wpqt-text-blue-400"} group-hover:wpqt-text-blue-800`}
+            className={`wpqt-mr-1 wpqt-size-5 ${hasAssignedUsers ? "wpqt-text-blue-400" : "wpqt-text-gray-300"} group-hover:wpqt-text-blue-600`}
           />
           {task.assigned_users && (
             <div>

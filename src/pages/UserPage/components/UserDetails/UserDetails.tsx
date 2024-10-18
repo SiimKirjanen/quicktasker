@@ -2,11 +2,6 @@ import { __ } from "@wordpress/i18n";
 import { usePageLinks } from "../../../../hooks/usePageLinks";
 import { ExtendedUser } from "../../../../types/user";
 
-import {
-  DataDisplay,
-  DisplayRow,
-} from "../../../../components/common/DataDisplay/DataDisplay";
-
 type Props = {
   data: ExtendedUser;
 };
@@ -15,27 +10,53 @@ function UserDetails({ data }: Props) {
   const isActive = data.is_active;
 
   return (
-    <div>
-      <DataDisplay>
-        <DisplayRow label={__("Name", "quicktasker")}>{data.name}</DisplayRow>
-        <DisplayRow label={__("Description", "quicktasker")}>
-          {data.description}
-        </DisplayRow>
-        <DisplayRow label={__("Created at", "quicktasker")}>
-          {data.created_at}
-        </DisplayRow>
-        <DisplayRow label={__("Setup completed", "quicktasker")}>
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
+      <div>
+        <span className="wpqt-font-semibold">
+          {__("Name", "quicktasker")}:{" "}
+        </span>
+        <span>{data.name}</span>
+      </div>
+
+      <div>
+        <span className="wpqt-font-semibold">
+          {__("Created at", "quicktasker")}:{" "}
+        </span>
+        <span>{data.created_at}</span>
+      </div>
+
+      <div>
+        <span className="wpqt-font-semibold">
+          {__("Setup completed", "quicktasker")}:{" "}
+        </span>
+        <span>
           {data.setup_completed
             ? __("Yes", "quicktasker")
             : __("No", "quicktasker")}
-        </DisplayRow>
-        <DisplayRow label={__("Assigned tasks count", "quicktasker")}>
-          {data.assigned_tasks_count}
-        </DisplayRow>
-        <DisplayRow label={__("Is active", "quicktasker")}>
+        </span>
+      </div>
+
+      <div>
+        <span className="wpqt-font-semibold">
+          {__("Assigned tasks count", "quicktasker")}:{" "}
+        </span>
+        <span>{data.assigned_tasks_count}</span>
+      </div>
+
+      <div>
+        <span className="wpqt-font-semibold">
+          {__("Is active", "quicktasker")}:{" "}
+        </span>
+        <span>
           {isActive ? __("Yes", "quicktasker") : __("No", "quicktasker")}
-        </DisplayRow>
-        <DisplayRow label={__("User Page", "quicktasker")}>
+        </span>
+      </div>
+
+      <div>
+        <span className="wpqt-font-semibold">
+          {__("User Page", "quicktasker")}:{" "}
+        </span>
+        <span>
           <a
             href={userPage + "&code=" + data.page_hash}
             target="_blank"
@@ -43,8 +64,8 @@ function UserDetails({ data }: Props) {
           >
             {userPage + "&code=" + data.page_hash}
           </a>
-        </DisplayRow>
-      </DataDisplay>
+        </span>
+      </div>
     </div>
   );
 }

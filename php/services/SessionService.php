@@ -28,8 +28,8 @@ class SessionService {
          // Get the current UTC time
          $current_time = time();
         
-         // Calculate the expiry date by adding one hour
-         $expiry_time = $current_time + HOUR_IN_SECONDS;
+         // Calculate the expiry date
+         $expiry_time = $current_time + WP_QUICKTASKER_SESSION_LENGHT;
          
          // Return the expiry date in 'Y-m-d H:i:s' format in UTC
          return gmdate('Y-m-d H:i:s', $expiry_time);

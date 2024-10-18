@@ -1667,6 +1667,10 @@
   line-height: 1;
 }
 
+.wpqt-leading-normal {
+  line-height: 1.5;
+}
+
 .wpqt-text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
@@ -1680,11 +1684,6 @@
 .wpqt-text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
-}
-
-.wpqt-text-blue-800 {
-  --tw-text-opacity: 1;
-  color: rgb(30 64 175 / var(--tw-text-opacity));
 }
 
 .wpqt-text-blue-900 {
@@ -1856,6 +1855,11 @@
 
 /* End of WordPress style overrides */
 
+.hover\:\!wpqt-bg-gray-100:hover {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity)) !important;
+}
+
 .hover\:wpqt-bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -1907,9 +1911,9 @@
   background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
 
-.wpqt-group:hover .group-hover\:wpqt-text-blue-800 {
+.wpqt-group:hover .group-hover\:wpqt-text-blue-600 {
   --tw-text-opacity: 1;
-  color: rgb(30 64 175 / var(--tw-text-opacity));
+  color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
 .wpqt-group:hover .group-hover\:wpqt-icon-red {
@@ -1980,6 +1984,10 @@
 }
 
 @media (min-width: 768px) {
+  .md\:wpqt-mb-0 {
+    margin-bottom: 0px;
+  }
+
   .md\:wpqt-w-2\/4 {
     width: 50%;
   }

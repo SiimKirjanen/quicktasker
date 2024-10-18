@@ -22,7 +22,9 @@ function CommentItem({ comment }: { comment: WPQTComment }) {
             : __("User", "quicktasker")}
         </div>
       </div>
-      <div className="wpqt-break-all wpqt-text-center">{comment.text}</div>
+      <div className="wpqt-break-all wpqt-text-center wpqt-leading-normal wpqt-mb-4 md:wpqt-mb-0">
+        {comment.text}
+      </div>
     </>
   );
 }
