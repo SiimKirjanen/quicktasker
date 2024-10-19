@@ -17,7 +17,7 @@ dayjs.extend(timezone);
 export const convertToTimezone = (utcDateTime: string, wpTimezone: string) => {
   try {
     const zonedDate = dayjs.utc(utcDateTime).tz(wpTimezone);
-    const formattedDate = zonedDate.format("YYYY-MM-DD HH:mm");
+    const formattedDate = zonedDate.format("MMMM D, YYYY HH:mm");
 
     return formattedDate;
   } catch (error) {

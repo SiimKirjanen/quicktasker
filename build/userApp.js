@@ -5620,12 +5620,15 @@ function WPQTCardDataItem({
   valueClassName,
   valueLink,
   icon,
-  onClick = () => {}
+  onClick = () => {},
+  className = "",
+  labelClassName = ""
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center",
+    className: `wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center ${className}`,
     onClick: onClick,
     children: [icon && icon, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: labelClassName,
       children: value ? `${label}:` : label
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: `${valueClassName}`,
@@ -11584,7 +11587,7 @@ dayjs__WEBPACK_IMPORTED_MODULE_0___default().extend((dayjs_plugin_timezone__WEBP
 const convertToTimezone = (utcDateTime, wpTimezone) => {
   try {
     const zonedDate = dayjs__WEBPACK_IMPORTED_MODULE_0___default().utc(utcDateTime).tz(wpTimezone);
-    const formattedDate = zonedDate.format("YYYY-MM-DD HH:mm");
+    const formattedDate = zonedDate.format("MMMM D, YYYY HH:mm");
     return formattedDate;
   } catch (error) {
     console.error("Error: ", error);

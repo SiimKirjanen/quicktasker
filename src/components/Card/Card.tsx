@@ -49,6 +49,8 @@ type WPQTCardDataItemProps = {
   valueLink?: string;
   icon?: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  className?: string;
+  labelClassName?: string;
 };
 
 function WPQTCardDataItem({
@@ -58,14 +60,16 @@ function WPQTCardDataItem({
   valueLink,
   icon,
   onClick = () => {},
+  className = "",
+  labelClassName = "",
 }: WPQTCardDataItemProps) {
   return (
     <div
-      className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center"
+      className={`wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center ${className}`}
       onClick={onClick}
     >
       {icon && icon}
-      <div>{value ? `${label}:` : label}</div>
+      <div className={labelClassName}>{value ? `${label}:` : label}</div>
 
       <div className={`${valueClassName}`}>
         {valueLink ? (

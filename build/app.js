@@ -8207,12 +8207,15 @@ function WPQTCardDataItem({
   valueClassName,
   valueLink,
   icon,
-  onClick = () => {}
+  onClick = () => {},
+  className = "",
+  labelClassName = ""
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center",
+    className: `wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center ${className}`,
     onClick: onClick,
     children: [icon && icon, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: labelClassName,
       children: value ? `${label}:` : label
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: `${valueClassName}`,
@@ -15367,9 +15370,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/UserIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/CalendarIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/RectangleStackIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/LockClosedIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PowerIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EyeIcon.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _hooks_usePageLinks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../hooks/usePageLinks */ "./src/hooks/usePageLinks.tsx");
+/* harmony import */ var _hooks_useTimezone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../hooks/useTimezone */ "./src/hooks/useTimezone.ts");
+
+
 
 
 
@@ -15379,56 +15391,69 @@ function UserDetails({
   const {
     userPage
   } = (0,_hooks_usePageLinks__WEBPACK_IMPORTED_MODULE_2__.usePageLinks)();
+  const {
+    convertToWPTimezone
+  } = (0,_hooks_useTimezone__WEBPACK_IMPORTED_MODULE_3__.useTimezone)();
   const isActive = data.is_active;
+  const userPageLink = userPage + "&code=" + data.page_hash;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-        className: "wpqt-font-semibold",
-        children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Name", "quicktasker"), ":", " "]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: data.name
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-        className: "wpqt-font-semibold",
-        children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Created at", "quicktasker"), ":", " "]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: data.created_at
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-        className: "wpqt-font-semibold",
-        children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Setup completed", "quicktasker"), ":", " "]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: data.setup_completed ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Yes", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No", "quicktasker")
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-        className: "wpqt-font-semibold",
-        children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Assigned tasks count", "quicktasker"), ":", " "]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: data.assigned_tasks_count
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-        className: "wpqt-font-semibold",
-        children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Is active", "quicktasker"), ":", " "]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: isActive ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Yes", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No", "quicktasker")
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-        className: "wpqt-font-semibold",
-        children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("User Page", "quicktasker"), ":", " "]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
-          href: userPage + "&code=" + data.page_hash,
-          target: "_blank",
-          rel: "noreferrer",
-          children: userPage + "&code=" + data.page_hash
-        })
-      })]
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserDetailItem, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Name", "quicktasker"),
+      value: data.name,
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        className: "wpqt-size-5 wpqt-icon-blue"
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserDetailItem, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Created at", "quicktasker"),
+      value: convertToWPTimezone(data.created_at),
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        className: "wpqt-size-5 wpqt-icon-blue"
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserDetailItem, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Assigned tasks count", "quicktasker"),
+      value: data.assigned_tasks_count,
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        className: "wpqt-size-5 wpqt-icon-blue"
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserDetailItem, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Setup completed", "quicktasker"),
+      value: data.setup_completed ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Yes", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No", "quicktasker"),
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        className: "wpqt-size-5 wpqt-text-yellow-600"
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserDetailItem, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Is active", "quicktasker"),
+      value: isActive ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Yes", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No", "quicktasker"),
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        className: `wpqt-size-5 ${isActive ? "wpqt-icon-green" : "wpqt-icon-red"}`
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(UserDetailItem, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("User Page", "quicktasker"),
+      value: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+        href: userPageLink,
+        rel: "noreferrer",
+        target: "_blank",
+        children: userPageLink
+      }),
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        className: `wpqt-size-5 wpqt-icon-blue`
+      })
+    })]
+  });
+}
+function UserDetailItem({
+  label,
+  value,
+  icon
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-items-center wpqt-gap-2",
+    children: [icon, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+      className: "wpqt-font-semibold",
+      children: [label, ": "]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+      children: value
     })]
   });
 }
@@ -16167,6 +16192,7 @@ function UserListItem({
     },
     className: "wpqt-cursor-pointer",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_3__.WPQTCardDataItem, {
+      className: "hover:wpqt-underline",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Open user page", "quicktasker"),
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
         className: "wpqt-size-5 wpqt-icon-blue"
@@ -16176,6 +16202,7 @@ function UserListItem({
         window.open(userPageLink, "_blank");
       }
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_3__.WPQTCardDataItem, {
+      className: "hover:wpqt-underline",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View user details", "quicktasker"),
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
         className: "wpqt-size-5 wpqt-icon-blue"
@@ -18248,7 +18275,7 @@ dayjs__WEBPACK_IMPORTED_MODULE_0___default().extend((dayjs_plugin_timezone__WEBP
 const convertToTimezone = (utcDateTime, wpTimezone) => {
   try {
     const zonedDate = dayjs__WEBPACK_IMPORTED_MODULE_0___default().utc(utcDateTime).tz(wpTimezone);
-    const formattedDate = zonedDate.format("YYYY-MM-DD HH:mm");
+    const formattedDate = zonedDate.format("MMMM D, YYYY HH:mm");
     return formattedDate;
   } catch (error) {
     console.error("Error: ", error);
@@ -37089,6 +37116,47 @@ const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(A
 
 /***/ }),
 
+/***/ "./node_modules/@heroicons/react/24/outline/esm/CalendarIcon.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/CalendarIcon.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function CalendarIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(CalendarIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
 /***/ "./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js":
 /*!****************************************************************************!*\
   !*** ./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js ***!
@@ -37421,6 +37489,47 @@ function KeyIcon({
   }));
 }
 const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(KeyIcon);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
+
+/***/ }),
+
+/***/ "./node_modules/@heroicons/react/24/outline/esm/LockClosedIcon.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@heroicons/react/24/outline/esm/LockClosedIcon.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+
+function LockClosedIcon({
+  title,
+  titleId,
+  ...props
+}, svgRef) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+    strokeWidth: 1.5,
+    stroke: "currentColor",
+    "aria-hidden": "true",
+    "data-slot": "icon",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("title", {
+    id: titleId
+  }, title) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: "M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+  }));
+}
+const ForwardRef = /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(LockClosedIcon);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ForwardRef);
 
 /***/ }),

@@ -1736,6 +1736,10 @@
   color: rgb(202 138 4 / var(--tw-text-opacity));
 }
 
+.wpqt-underline {
+  text-decoration-line: underline;
+}
+
 .wpqt-line-through {
   text-decoration-line: line-through;
 }
