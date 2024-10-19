@@ -11,7 +11,8 @@ function wp_quick_taks_add_admin_menu() {
         'QuickTasker',
         'manage_options',
         'wp-quick-tasks',
-        'wp_quick_taks_generate_app_page'
+        'wp_quick_taks_generate_app_page',
+        plugins_url('img/menu-item.png', dirname(__FILE__) ),
     );
 
     add_submenu_page(

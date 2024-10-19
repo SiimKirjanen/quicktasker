@@ -1731,8 +1731,17 @@
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.wpqt-text-yellow-600 {
+  --tw-text-opacity: 1;
+  color: rgb(202 138 4 / var(--tw-text-opacity));
+}
+
 .wpqt-line-through {
   text-decoration-line: line-through;
+}
+
+.wpqt-no-underline {
+  text-decoration-line: none;
 }
 
 .wpqt-shadow {
@@ -1807,6 +1816,16 @@
 .wpqt-icon-blue {
   --tw-text-opacity: 1;
   color: rgb(29 78 216 / var(--tw-text-opacity));
+}
+
+.wpqt-icon-yellow {
+  --tw-text-opacity: 1;
+  color: rgb(250 204 21 / var(--tw-text-opacity));
+}
+
+.wpqt-icon-yellow:hover {
+  --tw-text-opacity: 1;
+  color: rgb(234 179 8 / var(--tw-text-opacity));
 }
 
 .wpqt-icon-gray {

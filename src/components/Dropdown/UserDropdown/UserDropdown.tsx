@@ -83,18 +83,18 @@ function UserDropdown({ user }: Props) {
       />
 
       <WPQTDropdownItem
-        text={__("Edit user", "quicktasker")}
-        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
-        onClick={openEditUserModal}
-      />
-
-      <WPQTDropdownItem
         text={__("User tasks", "quicktasker")}
         icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={(e) => {
           e.stopPropagation();
           window.location.hash = `#/users/${user.id}/tasks`;
         }}
+      />
+
+      <WPQTDropdownItem
+        text={__("Edit user", "quicktasker")}
+        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
+        onClick={openEditUserModal}
       />
 
       {user.has_password && (

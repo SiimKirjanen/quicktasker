@@ -1,10 +1,10 @@
+import { EyeIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
 import { UserDropdown } from "../../../../components/Dropdown/UserDropdown/UserDropdown";
 import { OPEN_EDIT_USER_MODAL } from "../../../../constants";
 import { usePageLinks } from "../../../../hooks/usePageLinks";
-import { useTimezone } from "../../../../hooks/useTimezone";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { User } from "../../../../types/user";
 
@@ -15,10 +15,9 @@ type Props = {
 function UserListItem({ user }: Props) {
   const { userPage } = usePageLinks();
   const { modalDispatch } = useContext(ModalContext);
-  const { convertToWPTimezone } = useTimezone();
 
   const userIsActive = user.is_active;
-  const hasPassword = user.has_password;
+  const userPageLink = userPage + "&code=" + user.page_hash;
 
   return (
     <WPQTCard
@@ -34,14 +33,23 @@ function UserListItem({ user }: Props) {
       className="wpqt-cursor-pointer"
     >
       <WPQTCardDataItem
-        label={__("Users page", "quicktasker")}
-        value={"Link"}
-        valueLink={userPage + "&code=" + user.page_hash}
+        label={__("Open user page", "quicktasker")}
+        icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
+        onClick={(e) => {
+          e.stopPropagation();
+          window.open(userPageLink, "_blank");
+        }}
       />
+
       <WPQTCardDataItem
-        label={__("User created at", "quicktasker")}
-        value={convertToWPTimezone(user.created_at)}
+        label={__("View user details", "quicktasker")}
+        icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
+        onClick={(e) => {
+          e.stopPropagation();
+          window.location.hash = `#/users/${user.id}`;
+        }}
       />
+
       <WPQTCardDataItem
         label={__("Status", "quicktasker")}
         value={
@@ -54,14 +62,10 @@ function UserListItem({ user }: Props) {
             ? "wpqt-text-qtTextGreen wpqt-font-bold"
             : "wpqt-text-qtTextRed wpqt-font-bold"
         }
-      />
-      <WPQTCardDataItem
-        label={__("Password set", "quicktasker")}
-        value={hasPassword ? __("Yes", "quicktasker") : __("No", "quicktasker")}
-        valueClassName={
-          hasPassword
-            ? "wpqt-text-qtTextGreen wpqt-font-bold"
-            : "wpqt-text-qtTextRed wpqt-font-bold"
+        icon={
+          <PowerIcon
+            className={`wpqt-size-5 ${userIsActive ? "wpqt-icon-green" : "wpqt-icon-red"}`}
+          />
         }
       />
     </WPQTCard>

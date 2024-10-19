@@ -28,7 +28,7 @@ function WPQTCard({
       )}
       onClick={onClick}
     >
-      <div className="wpqt-mb-2">
+      <div className="wpqt-mb-3">
         <div className="wpqt-text-lg">{title}</div>
         {description && <div className="wpqt-italic">{description}</div>}
       </div>
@@ -44,9 +44,11 @@ function WPQTCard({
 
 type WPQTCardDataItemProps = {
   label: string;
-  value: string;
+  value?: string;
   valueClassName?: string;
   valueLink?: string;
+  icon?: React.ReactNode;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 };
 
 function WPQTCardDataItem({
@@ -54,16 +56,23 @@ function WPQTCardDataItem({
   value,
   valueClassName,
   valueLink,
+  icon,
+  onClick = () => {},
 }: WPQTCardDataItemProps) {
   return (
-    <div className="wpqt-mb-1 wpqt-flex wpqt-gap-1">
-      <div>{label}:</div>
+    <div
+      className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center"
+      onClick={onClick}
+    >
+      {icon && icon}
+      <div>{value ? `${label}:` : label}</div>
+
       <div className={`${valueClassName}`}>
         {valueLink ? (
           <a
             href={valueLink}
             target="_blank"
-            className="wpqt-text-qtTextBlue"
+            className="wpqt-text-qtTextBlue wpqt-no-underline"
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
           >
