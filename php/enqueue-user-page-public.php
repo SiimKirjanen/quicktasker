@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\User\UserRepository;
+use WPQT\Time\TimeRepository;
 use WPQT\Nonce\NonceService;
 use WPQT\Location\LocationService;
 use WPQT\Pipeline\PipelineRepository;
@@ -12,6 +13,7 @@ use WPQT\Pipeline\PipelineRepository;
 add_action( 'wp_enqueue_scripts', 'wpqt_enqueue_user_public_page' );
 function wpqt_enqueue_user_public_page(){
 	$locationService = new LocationService();
+	$timeRepository = new TimeRepository();
 
 	if( !$locationService->isWPQTPublicUserPage() ) {
 		return;
@@ -30,7 +32,7 @@ function wpqt_enqueue_user_public_page(){
 		'userApiNonce' => NonceService::createNonce( WPQT_USER_API_NONCE ),
 		'siteURL' => site_url(),
 		'pluginURL' => WP_QUICKTASKER_PLUGIN_FOLDER_URL,
-		'timezone' => get_option('timezone_string'),
+		'timezone' => $timeRepository->getWPTimezone(),
 	));
 
     wp_enqueue_style( 'wpqt-user-page-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap', array(), null );
