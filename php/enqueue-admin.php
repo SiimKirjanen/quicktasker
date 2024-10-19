@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\User\UserRepository;
+use WPQT\Time\TimeRepository;
 use WPQT\Nonce\NonceService;
 use WPQT\Location\LocationService;
 use WPQT\Pipeline\PipelineRepository;
@@ -12,6 +13,7 @@ use WPQT\Pipeline\PipelineRepository;
 add_action( 'admin_enqueue_scripts', 'wpqt_enqueue_app_assets' );
 function wpqt_enqueue_app_assets(){
 	$locationService = new LocationService();
+	$timeRepository = new TimeRepository();
 	
 	if( !$locationService->isWPQTPage() ) {
 		return;
@@ -38,7 +40,7 @@ function wpqt_enqueue_app_assets(){
 		'initialPipelines' => $pipelines,
 		'initialUsers' => $users,
 		'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
-		'timezone' => get_option('timezone_string'),
+		'timezone' => $timeRepository->getWPTimezone(),
 	));
 
 	// Set script translations
