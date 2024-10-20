@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "@wordpress/element";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
+  CHANGE_TASK_DONE_STATUS,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_PIPELINE_MODAL,
@@ -76,6 +77,10 @@ type Action =
   | { type: typeof OPEN_NEW_USER_MODAL }
   | { type: typeof OPEN_EDIT_USER_MODAL; payload: User }
   | { type: typeof CHANGE_USER_SETTINGS_MODAL_OPEN; payload: boolean }
+  | {
+      type: typeof CHANGE_TASK_DONE_STATUS;
+      payload: { done: boolean };
+    }
   | { type: typeof CLOSE_USER_MODAL };
 
 type ModalDispatch = (action: Action) => void;

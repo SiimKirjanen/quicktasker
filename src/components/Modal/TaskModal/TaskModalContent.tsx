@@ -17,11 +17,13 @@ import {
 import {
   ArchiveBoxIcon,
   ArrowUturnUpIcon,
+  CheckBadgeIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CLOSE_TASK_MODAL,
+  PIPELINE_CHANGE_TASK_DONE_STATUS,
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../../../constants";
@@ -35,6 +37,7 @@ import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { Toggle } from "../../common/Toggle/Toggle";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
+import { LoadingOval } from "../../Loading/Loading";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 
 type Props = {
@@ -77,6 +80,7 @@ const TaskModalContent = forwardRef(
         });
       }
     };
+
     const clearContent = () => {
       setTaskName("");
       setTaskDescription("");
@@ -132,12 +136,24 @@ const TaskModalContent = forwardRef(
                   />
                 </WPQTModalField>
 
-                <WPQTModalField label={__("Free for all task", "quicktasker")}>
+                <WPQTModalField
+                  label={__("Free for all task", "quicktasker")}
+                  tooltipId={`free-for-all-${taskToEdit.id}-tooltip`}
+                  tooltipText={__(
+                    "When enabled, all QuickTasker users have the ability to self-assign or unassign this task.",
+                    "quicktasker",
+                  )}
+                >
                   <Toggle
                     checked={freeForAllTask}
                     handleChange={setFreeForAllTask}
                   />
                 </WPQTModalField>
+
+                <TaskDoneStatus
+                  taskId={taskToEdit.id}
+                  isCompleted={taskToEdit.is_done}
+                />
               </WPQTModalFieldSet>
               <div>
                 <CustomFieldsInModalWrap
@@ -208,5 +224,49 @@ const TaskModalContent = forwardRef(
     );
   },
 );
+
+type TaskDontStatusProps = {
+  taskId: string;
+  isCompleted: boolean;
+};
+function TaskDoneStatus({ isCompleted, taskId }: TaskDontStatusProps) {
+  const { modalDispatch } = useContext(ModalContext);
+  const { dispatch } = useContext(ActivePipelineContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const { changeTaskDoneStatus } = useTaskActions();
+
+  const toggleTaskDontStatus = async () => {
+    setIsLoading(true);
+    await changeTaskDoneStatus(taskId, !isCompleted, (isCompleted) => {
+      modalDispatch({
+        type: PIPELINE_CHANGE_TASK_DONE_STATUS,
+        payload: { done: isCompleted },
+      });
+      dispatch({
+        type: PIPELINE_CHANGE_TASK_DONE_STATUS,
+        payload: { taskId, done: isCompleted },
+      });
+    });
+    setIsLoading(false);
+  };
+  return (
+    <WPQTModalField
+      label={
+        isCompleted
+          ? __("Task completed", "quicktasker")
+          : __("Task not completed", "quicktasker")
+      }
+    >
+      {isLoading ? (
+        <LoadingOval width="24" height="24" />
+      ) : (
+        <CheckBadgeIcon
+          onClick={toggleTaskDontStatus}
+          className={`wpqt-size-6 ${isCompleted ? "wpqt-icon-green" : "wpqt-text-gray-300"} wpqt-cursor-pointer`}
+        />
+      )}
+    </WPQTModalField>
+  );
+}
 
 export { TaskModalContent };

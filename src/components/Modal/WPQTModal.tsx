@@ -9,6 +9,7 @@ import {
 } from "@headlessui/react";
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { WPQTIconButton } from "../common/Button/Button";
+import { WPQTTooltip } from "../Tooltip/WPQTTooltip";
 
 type Props = {
   children: React.ReactNode;
@@ -70,16 +71,35 @@ function WPQTModalFieldSet({ children }: { children: React.ReactNode }) {
 function WPQTModalField({
   label,
   children,
+  tooltipId,
+  tooltipText,
 }: {
   label: string;
   children: React.ReactNode;
+  tooltipId?: string;
+  tooltipText?: string;
 }) {
+  const showToolTip = tooltipId && tooltipText;
+  const tooltipAttributes: React.HTMLAttributes<HTMLLabelElement> = showToolTip
+    ? {
+        "data-tooltip-id": tooltipId,
+        "data-tooltip-content": tooltipText,
+        "data-tooltip-position-strategy": "fixed",
+        "data-tooltip-variant": "info",
+        "data-tooltip-place": "top-end",
+      }
+    : {};
+
   return (
     <Field className="wpqt-mb-3">
-      <Label className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium">
+      <Label
+        className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium"
+        {...tooltipAttributes}
+      >
         {label}
       </Label>
       {children}
+      {showToolTip && <WPQTTooltip id={tooltipId} />}
     </Field>
   );
 }

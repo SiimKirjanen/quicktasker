@@ -1,5 +1,6 @@
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
+  CHANGE_TASK_DONE_STATUS,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_PIPELINE_MODAL,
@@ -146,6 +147,17 @@ const reducer = (state: State, action: Action): State => {
         };
       }
       return closeModal();
+    }
+    case CHANGE_TASK_DONE_STATUS: {
+      const { done }: { done: boolean } = action.payload;
+
+      return {
+        ...state,
+        taskToEdit: {
+          ...state.taskToEdit!,
+          is_done: done,
+        },
+      };
     }
     default:
       return state;
