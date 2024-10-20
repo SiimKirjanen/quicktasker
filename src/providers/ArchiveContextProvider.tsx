@@ -8,7 +8,10 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { getArchivedTasksRequest } from "../api/api";
 import {
+  ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
+  CHANGE_ARCHIVED_TASK_DONE_STATUS,
   REMOVE_ARCHIVED_TASK,
+  REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
@@ -16,6 +19,7 @@ import {
 } from "../constants";
 import { reducer } from "../reducers/archive-reducer";
 import { Task, TaskFromServer } from "../types/task";
+import { User } from "../types/user";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -36,7 +40,19 @@ type Action =
   | { type: typeof SET_ARCHIVE_TASKS; payload: TaskFromServer[] }
   | { type: typeof SET_ARCHIVE_SEARCH_VALUE; payload: string }
   | { type: typeof SET_ARCHIVE_FILTERED_PIPELINE; payload: string }
-  | { type: typeof REMOVE_ARCHIVED_TASK; payload: string };
+  | {
+      type: typeof ADD_ASSIGNED_USER_TO_ARCHIVED_TASK;
+      payload: { taskId: string; user: User };
+    }
+  | {
+      type: typeof REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK;
+      payload: { taskId: string; user: User };
+    }
+  | { type: typeof REMOVE_ARCHIVED_TASK; payload: string }
+  | {
+      type: typeof CHANGE_ARCHIVED_TASK_DONE_STATUS;
+      payload: { taskId: string; done: boolean };
+    };
 
 type Dispatch = (action: Action) => void;
 

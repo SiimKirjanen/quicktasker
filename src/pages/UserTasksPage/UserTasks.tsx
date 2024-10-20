@@ -1,12 +1,17 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../components/Card/Card";
+import { TaskCardActions } from "../../components/Card/TaskCardActions";
+import { UserAssignementDropdown } from "../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { UserTaskDropdown } from "../../components/Dropdown/UserTaskDropdown/UserTaskDropdown";
 import { NoFilterResults } from "../../components/Filter/NoFilterResults/NoFilterResults";
 import { TaskModal } from "../../components/Modal/TaskModal/TaskModal";
 import {
+  ADD_ASSIGNED_USER_TO_USER_TASK,
+  CHANGE_USER_TASK_DONE_STATUS,
   EDIT_USER_TASK,
   OPEN_EDIT_TASK_MODAL,
+  REMOVE_ASSIGNED_USER_FROM_USER_TASK,
   REMOVE_USER_TASK,
 } from "../../constants";
 import { useTaskActions } from "../../hooks/actions/useTaskActions";
@@ -14,6 +19,7 @@ import { useUserTasksFilter } from "../../hooks/filters/useUserTasksFilter";
 import { ModalContext } from "../../providers/ModalContextProvider";
 import { UserTasksContext } from "../../providers/UserTasksContextProvider";
 import { Task, TaskFromServer } from "../../types/task";
+import { User } from "../../types/user";
 
 type Props = {
   userId: string;
@@ -48,7 +54,7 @@ function UserTasks({ userId }: Props) {
 
   return (
     <>
-      <div className="wpqt-grid wpqt-grid-cols-4 wpqt-gap-2">
+      <div className="wpqt-card-grid">
         {filteredTasks.map((task: Task) => {
           return (
             <WPQTCard
@@ -68,7 +74,32 @@ function UserTasks({ userId }: Props) {
                   payload: { taskToEdit: task },
                 });
               }}
-            ></WPQTCard>
+            >
+              <UserAssignementDropdown
+                task={task}
+                onUserAdd={(user: User) => {
+                  userTasksDispatch({
+                    type: ADD_ASSIGNED_USER_TO_USER_TASK,
+                    payload: { taskId: task.id, user },
+                  });
+                }}
+                onUserDelete={(user: User) => {
+                  userTasksDispatch({
+                    type: REMOVE_ASSIGNED_USER_FROM_USER_TASK,
+                    payload: { taskId: task.id, user },
+                  });
+                }}
+              />
+              <TaskCardActions
+                task={task}
+                onDoneStatusChange={(taskId: string, done: boolean) => {
+                  userTasksDispatch({
+                    type: CHANGE_USER_TASK_DONE_STATUS,
+                    payload: { taskId, done },
+                  });
+                }}
+              />
+            </WPQTCard>
           );
         })}
       </div>

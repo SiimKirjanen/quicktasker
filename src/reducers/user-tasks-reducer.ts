@@ -1,5 +1,8 @@
 import {
+  ADD_ASSIGNED_USER_TO_USER_TASK,
+  CHANGE_USER_TASK_DONE_STATUS,
   EDIT_USER_TASK,
+  REMOVE_ASSIGNED_USER_FROM_USER_TASK,
   REMOVE_USER_TASK,
   SET_USER_TASKS,
   SET_USER_TASKS_FILTERED_PIPELINE,
@@ -56,6 +59,62 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         filteredPipelineId,
+      };
+    }
+    case ADD_ASSIGNED_USER_TO_USER_TASK: {
+      const { taskId, user } = action.payload;
+
+      const updatedTasks = state.tasks.map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            assigned_users: [user, ...task.assigned_users],
+          };
+        }
+        return task;
+      });
+
+      return {
+        ...state,
+        tasks: updatedTasks,
+      };
+    }
+    case REMOVE_ASSIGNED_USER_FROM_USER_TASK: {
+      const { taskId, user } = action.payload;
+
+      const updatedTasks = state.tasks.map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            assigned_users: task.assigned_users.filter(
+              (assignedUser) => assignedUser.id !== user.id,
+            ),
+          };
+        }
+        return task;
+      });
+
+      return {
+        ...state,
+        tasks: updatedTasks,
+      };
+    }
+    case CHANGE_USER_TASK_DONE_STATUS: {
+      const { taskId, done } = action.payload;
+
+      const updatedTasks = state.tasks.map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            is_done: done,
+          };
+        }
+        return task;
+      });
+
+      return {
+        ...state,
+        tasks: updatedTasks,
       };
     }
     default:

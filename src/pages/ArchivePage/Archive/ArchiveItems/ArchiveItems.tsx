@@ -22,7 +22,7 @@ function ArchiveItems() {
 
   return (
     <div>
-      <div className="wpqt-grid wpqt-grid-cols-4 wpqt-gap-2">
+      <div className="wpqt-card-grid">
         {filteredArchiveItems.map((task) => (
           <ArchiveItem key={task.id} task={task} />
         ))}

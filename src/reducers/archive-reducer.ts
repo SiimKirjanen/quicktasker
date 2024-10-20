@@ -1,5 +1,8 @@
 import {
+  ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
+  CHANGE_ARCHIVED_TASK_DONE_STATUS,
   REMOVE_ARCHIVED_TASK,
+  REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
@@ -38,6 +41,65 @@ const reducer = (state: State, action: Action): State => {
       const archivedTasks = (state.archivedTasks ?? []).filter(
         (task) => task.id !== action.payload,
       );
+
+      return {
+        ...state,
+        archivedTasks,
+      };
+    }
+    case ADD_ASSIGNED_USER_TO_ARCHIVED_TASK: {
+      const { taskId, user } = action.payload;
+
+      const archivedTasks = (state.archivedTasks ?? []).map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            assigned_users: [user, ...task.assigned_users],
+          };
+        }
+
+        return task;
+      });
+
+      return {
+        ...state,
+        archivedTasks,
+      };
+    }
+    case REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK: {
+      const { taskId, user } = action.payload;
+
+      const archivedTasks = (state.archivedTasks ?? []).map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            assigned_users: task.assigned_users.filter(
+              (assignedUser) => assignedUser.id !== user.id,
+            ),
+          };
+        }
+
+        return task;
+      });
+
+      return {
+        ...state,
+        archivedTasks,
+      };
+    }
+    case CHANGE_ARCHIVED_TASK_DONE_STATUS: {
+      const { taskId, done } = action.payload;
+
+      const archivedTasks = (state.archivedTasks ?? []).map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            is_done: done,
+          };
+        }
+
+        return task;
+      });
 
       return {
         ...state,

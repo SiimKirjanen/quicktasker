@@ -976,6 +976,10 @@
   margin-top: 0.5rem;
 }
 
+.wpqt-mt-3 {
+  margin-top: 0.75rem;
+}
+
 .wpqt-mt-4 {
   margin-top: 1rem;
 }
@@ -1793,6 +1797,24 @@
 
 .wpqt-comments-app-height {
   height: calc(100vh - 78px - 290px);
+}
+
+.wpqt-card-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .wpqt-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .wpqt-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .wpqt-main-border {

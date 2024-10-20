@@ -8,7 +8,10 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { getUserTasksRequest } from "../api/api";
 import {
+  ADD_ASSIGNED_USER_TO_USER_TASK,
+  CHANGE_USER_TASK_DONE_STATUS,
   EDIT_USER_TASK,
+  REMOVE_ASSIGNED_USER_FROM_USER_TASK,
   REMOVE_USER_TASK,
   SET_FULL_PAGE_LOADING,
   SET_USER_TASKS,
@@ -17,6 +20,7 @@ import {
 } from "../constants";
 import { reducer } from "../reducers/user-tasks-reducer";
 import { Task, TaskFromServer } from "../types/task";
+import { User } from "../types/user";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -36,7 +40,19 @@ type Action =
   | { type: typeof REMOVE_USER_TASK; payload: string }
   | { type: typeof EDIT_USER_TASK; payload: TaskFromServer }
   | { type: typeof SET_USER_TASKS_FILTERED_PIPELINE; payload: string }
-  | { type: typeof SET_USER_TASKS_SEARCH_VALUE; payload: string };
+  | { type: typeof SET_USER_TASKS_SEARCH_VALUE; payload: string }
+  | {
+      type: typeof ADD_ASSIGNED_USER_TO_USER_TASK;
+      payload: { taskId: string; user: User };
+    }
+  | {
+      type: typeof CHANGE_USER_TASK_DONE_STATUS;
+      payload: { taskId: string; done: boolean };
+    }
+  | {
+      type: typeof REMOVE_ASSIGNED_USER_FROM_USER_TASK;
+      payload: { taskId: string; user: User };
+    };
 
 type Dispatch = (action: Action) => void;
 
