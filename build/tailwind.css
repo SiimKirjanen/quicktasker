@@ -1714,6 +1714,11 @@
   color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
+.wpqt-text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+
 .wpqt-text-green-600 {
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
@@ -1805,7 +1810,7 @@
 }
 
 .wpqt-comments-app-height {
-  height: calc(100vh - 78px - 290px);
+  height: calc(100vh - 78px - 300px);
 }
 
 .wpqt-card-grid {

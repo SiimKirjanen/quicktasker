@@ -13,7 +13,7 @@
     box-sizing: border-box;
   }
   .wpqt-comments-app-height {
-    height: calc(100vh - 78px - 290px);
+    height: calc(100vh - 78px - 300px);
   }
   .wpqt-strip-btn {
     @apply wpqt-border-0 wpqt-border-none wpqt-bg-transparent wpqt-p-0;

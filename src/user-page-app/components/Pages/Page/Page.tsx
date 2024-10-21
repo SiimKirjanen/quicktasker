@@ -57,7 +57,9 @@ function PageTitle({
         {children}
       </h1>
       {description && (
-        <div className="wpqt-mt-1 wpqt-text-center">{description}</div>
+        <div className="wpqt-mt-1 wpqt-text-center wpqt-text-gray-600">
+          {description}
+        </div>
       )}
     </div>
   );

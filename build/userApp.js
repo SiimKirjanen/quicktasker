@@ -7516,7 +7516,10 @@ function CommentsApp({
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       ref: commentsContainerRef,
       className: "wpqt-comments-app-height wpqt-overflow-y-auto",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: comments && comments.length === 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-text-center",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("No comments found", "quicktasker")
+      }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-grid wpqt-grid-cols-1 md:wpqt-grid-cols-[auto_1fr] wpqt-gap-3 md:wpqt-gap-8 wpqt-items-center wpqt-px-2",
         children: comments.map(comment => {
           return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentItem_CommentItem__WEBPACK_IMPORTED_MODULE_7__.CommentItem, {
@@ -8672,7 +8675,7 @@ function PageTitle({
       className: `wpqt-m-0 wpqt-text-center wpqt-text-2xl wpqt-font-normal ${titleClassName}`,
       children: children
     }), description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mt-1 wpqt-text-center",
+      className: "wpqt-mt-1 wpqt-text-center wpqt-text-gray-600",
       children: description
     })]
   });
@@ -9067,7 +9070,7 @@ function TaskCommentsPage() {
   } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_10__.useParams)();
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const [task, setTask] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
-  const [comments, setComments] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [comments, setComments] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const {
     loadTaskComments,
     addTaskComment
@@ -9101,6 +9104,7 @@ function TaskCommentsPage() {
     onRefresh: loadComments,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_9__.PageContentWrap, {
       children: [task && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_9__.PageTitle, {
+        description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Comments related to the task", "quicktasker"),
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("%s comments", "quicktasker"), task.name)
       }), comments && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsApp_CommentsApp__WEBPACK_IMPORTED_MODULE_8__.CommentsApp, {
         comments: comments,
@@ -9473,16 +9477,13 @@ function TaskPageContent() {
     },
     loadTask
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageTaskContext);
-  if (!task) {
-    return null;
-  }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_6__.PageWrap, {
     loading: loading,
     onRefresh: loadTask,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_6__.PageContentWrap, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_6__.PageTitle, {
         children: [" ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task details", "quicktasker")]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      }), task && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskDetails_TaskDetails__WEBPACK_IMPORTED_MODULE_8__.TaskDetails, {
           task: task
@@ -9634,7 +9635,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 function UserCommentsPage() {
-  const [userComments, setUserComments] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [userComments, setUserComments] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const {
     loadUserComments,
@@ -9660,8 +9661,9 @@ function UserCommentsPage() {
     onRefresh: getUserComments,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_5__.PageContentWrap, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_5__.PageTitle, {
+        description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Comments related to your user", "quicktasker"),
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("User comments", "quicktasker")
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsApp_CommentsApp__WEBPACK_IMPORTED_MODULE_4__.CommentsApp, {
+      }), userComments && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsApp_CommentsApp__WEBPACK_IMPORTED_MODULE_4__.CommentsApp, {
         comments: userComments,
         addComments: onAddUserComment
       })]

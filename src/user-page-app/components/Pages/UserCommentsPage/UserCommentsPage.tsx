@@ -6,7 +6,7 @@ import { CommentsApp } from "../../CommentsApp/CommentsApp";
 import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 
 function UserCommentsPage() {
-  const [userComments, setUserComments] = useState<WPQTComment[]>([]);
+  const [userComments, setUserComments] = useState<WPQTComment[] | null>(null);
   const [loading, setLoading] = useState(true);
   const { loadUserComments, addUserComment } = useCommentActions();
 
@@ -30,8 +30,14 @@ function UserCommentsPage() {
   return (
     <PageWrap loading={loading} onRefresh={getUserComments}>
       <PageContentWrap>
-        <PageTitle>{__("User comments", "quicktasker")}</PageTitle>
-        <CommentsApp comments={userComments} addComments={onAddUserComment} />
+        <PageTitle
+          description={__("Comments related to your user", "quicktasker")}
+        >
+          {__("User comments", "quicktasker")}
+        </PageTitle>
+        {userComments && (
+          <CommentsApp comments={userComments} addComments={onAddUserComment} />
+        )}
       </PageContentWrap>
     </PageWrap>
   );

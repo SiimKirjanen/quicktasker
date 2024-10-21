@@ -29,25 +29,24 @@ function TaskPageContent() {
     loadTask,
   } = useContext(UserPageTaskContext);
 
-  if (!task) {
-    return null;
-  }
   return (
     <PageWrap loading={loading} onRefresh={loadTask}>
       <PageContentWrap>
         <PageTitle> {__("Task details", "quicktasker")}</PageTitle>
-        <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
-          <TaskDetails task={task} />
-          <TaskStageSelect task={task} />
-          <TaskDoneStatus task={task} />
-          <CustomFieldsWrap
-            entityId={task.id}
-            entityType={CustomFieldEntityType.Task}
-            entity={task}
-            customFields={customFields}
-          />
-          <TaskControls task={task} />
-        </div>
+        {task && (
+          <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
+            <TaskDetails task={task} />
+            <TaskStageSelect task={task} />
+            <TaskDoneStatus task={task} />
+            <CustomFieldsWrap
+              entityId={task.id}
+              entityType={CustomFieldEntityType.Task}
+              entity={task}
+              customFields={customFields}
+            />
+            <TaskControls task={task} />
+          </div>
+        )}
       </PageContentWrap>
     </PageWrap>
   );

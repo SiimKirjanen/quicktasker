@@ -20,7 +20,7 @@ function TaskCommentsPage() {
   const { taskHash } = useParams<{ taskHash: string }>();
   const [loading, setLoading] = useState(true);
   const [task, setTask] = useState<Task | null>(null);
-  const [comments, setComments] = useState<WPQTComment[]>([]);
+  const [comments, setComments] = useState<WPQTComment[] | null>(null);
   const { loadTaskComments, addTaskComment } = useCommentActions();
   const { getTask } = useTaskActions();
 
@@ -51,7 +51,9 @@ function TaskCommentsPage() {
     <PageWrap loading={loading} onRefresh={loadComments}>
       <PageContentWrap>
         {task && (
-          <PageTitle>
+          <PageTitle
+            description={__("Comments related to the task", "quicktasker")}
+          >
             {sprintf(__("%s comments", "quicktasker"), task.name)}
           </PageTitle>
         )}

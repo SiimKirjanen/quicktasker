@@ -49,11 +49,17 @@ function CommentsApp({ comments, addComments }: Props) {
         ref={commentsContainerRef}
         className="wpqt-comments-app-height wpqt-overflow-y-auto"
       >
-        <div className="wpqt-grid wpqt-grid-cols-1 md:wpqt-grid-cols-[auto_1fr] wpqt-gap-3 md:wpqt-gap-8 wpqt-items-center wpqt-px-2">
-          {comments.map((comment) => {
-            return <CommentItem key={comment.id} comment={comment} />;
-          })}
-        </div>
+        {comments && comments.length === 0 ? (
+          <div className="wpqt-text-center">
+            {__("No comments found", "quicktasker")}
+          </div>
+        ) : (
+          <div className="wpqt-grid wpqt-grid-cols-1 md:wpqt-grid-cols-[auto_1fr] wpqt-gap-3 md:wpqt-gap-8 wpqt-items-center wpqt-px-2">
+            {comments.map((comment) => {
+              return <CommentItem key={comment.id} comment={comment} />;
+            })}
+          </div>
+        )}
       </div>
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-w-full md:wpqt-w-2/4 wpqt-mx-auto">
         <WPQTTextarea value={comment} onChange={setComment} />
