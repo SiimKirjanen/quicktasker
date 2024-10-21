@@ -62,9 +62,10 @@ class LogRepository {
             FROM $table_logs AS logs
             LEFT JOIN $table_users AS wp_users ON logs.created_by = 'admin' AND logs.user_id = wp_users.ID
             LEFT JOIN $table_quicktasker_users AS quicktasker_users ON logs.created_by = 'quicktasker_user' AND logs.user_id = quicktasker_users.id
+            WHERE logs.type_id = %d AND logs.type = %s
         ";
 
-        $results = $wpdb->get_results($sql);
+        $results = $wpdb->get_results($wpdb->prepare($sql, $typeId, $type));
 
         return $results;
     }

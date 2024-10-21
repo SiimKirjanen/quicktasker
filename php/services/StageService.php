@@ -240,22 +240,22 @@ class StageService {
         return $result;
     }
 
-
     /**
-     * Archives all tasks and their locations associated with a given stage.
+     * Archives all tasks associated with a given stage.
      *
-     * This method updates the `is_archived` field to 1 for all tasks and their locations
-     * that belong to the specified stage ID. If the update operation fails for either
-     * tasks or task locations, an exception is thrown.
+     * This function updates the tasks and their locations to mark them as archived.
+     * It sets the `is_archived` flag to 1 and updates the `updated_at` timestamp
+     * to the current UTC time.
      *
-     * @param int $stageId The ID of the stage whose tasks and task locations are to be archived.
-     * @return bool Returns true if the tasks and task locations were successfully archived.
-     * @throws \Exception If the update operation fails for tasks or task locations.
+     * @param int $stageId The ID of the stage whose tasks are to be archived.
+     * @return array The list of tasks that were archived.
+     * @throws \Exception If the task or task location archiving fails.
      */
     public function archiveStageTasks($stageId) {
         global $wpdb;
 
         $currentUtcTime = $this->timeRepository->getCurrentUTCTime();
+        $tasksToArvhive = $this->taskRepository->getTasksByStageId($stageId);
 
         $sql = "
             UPDATE " . TABLE_WP_QUICKTASKER_TASKS . " AS a
@@ -286,6 +286,6 @@ class StageService {
             throw new \Exception('Failed to archive task locations');
         }
 
-        return true;
+        return $tasksToArvhive;
     }
 }

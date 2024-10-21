@@ -780,7 +780,12 @@ function wpqt_register_api_routes() {
                     $wpdb->query('START TRANSACTION');
 
                     $stageService = new StageService();
-                    $stageService->archiveStageTasks( $data['id'] );
+                    $logService = new LogService();
+                    $archivedTasks = $stageService->archiveStageTasks( $data['id'] );
+
+                    foreach($archivedTasks as $task) {
+                        $logService->log('Task archived', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    }
 
                     $wpdb->query('COMMIT');
 
