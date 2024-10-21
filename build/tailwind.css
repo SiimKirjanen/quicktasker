@@ -1579,6 +1579,10 @@
   padding-bottom: 1.25rem;
 }
 
+.\!wpqt-pr-6 {
+  padding-right: 1.5rem !important;
+}
+
 .wpqt-pb-\[10px\] {
   padding-bottom: 10px;
 }
@@ -1593,26 +1597,6 @@
 
 .wpqt-pt-3 {
   padding-top: 0.75rem;
-}
-
-.wpqt-pr-3 {
-  padding-right: 0.75rem;
-}
-
-.\!wpqt-pr-3 {
-  padding-right: 0.75rem !important;
-}
-
-.\!wpqt-pr-4 {
-  padding-right: 1rem !important;
-}
-
-.\!wpqt-pr-5 {
-  padding-right: 1.25rem !important;
-}
-
-.\!wpqt-pr-6 {
-  padding-right: 1.5rem !important;
 }
 
 .wpqt-text-center {
