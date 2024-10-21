@@ -73,7 +73,7 @@ class SessionRepository{
         return $wpdb->get_results(
             "SELECT a.id, a.user_id, a.created_at_utc, a.expires_at_utc, a.is_active, b.name AS user_name, b.description AS user_description FROM " . TABLE_WP_QUICKTASKER_USER_SESSIONS . " AS a
             INNER JOIN " . TABLE_WP_QUICKTASKER_USERS . " AS b 
-            ON a.user_id = b.id"
+            ON a.user_id = b.id ORDER BY a.created_at_utc DESC"
         );
     }
 }

@@ -1136,6 +1136,10 @@
   min-width: 300px;
 }
 
+.wpqt-min-w-\[340px\] {
+  min-width: 340px;
+}
+
 .wpqt-max-w-4xl {
   max-width: 56rem;
 }
@@ -1705,6 +1709,11 @@
   color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
+.wpqt-text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
 .wpqt-text-green-600 {
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
@@ -1817,6 +1826,20 @@
   }
 }
 
+.wpqt-user-page-card-flex {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .wpqt-user-page-card-flex {
+    flex-direction: row;
+  }
+}
+
 .wpqt-main-border {
   border-radius: 0.375rem;
   border-width: 1px;
@@ -1842,7 +1865,7 @@
 
 .wpqt-icon-gray {
   --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
+  color: rgb(209 213 219 / var(--tw-text-opacity));
 }
 
 /* Start of WordPress style overrides */

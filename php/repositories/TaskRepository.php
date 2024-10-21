@@ -198,7 +198,8 @@ class TaskRepository {
             LEFT JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS b
             ON a.task_id = b.id
             WHERE a.user_id = %d
-            AND b.is_archived = 0",
+            AND b.is_archived = 0
+            ORDER BY b.created_at DESC",
             $userId
         ));
     
@@ -225,7 +226,7 @@ class TaskRepository {
             "SELECT a.* FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
             LEFT JOIN ". TABLE_WP_QUICKTASKER_USER_TASK ." AS b
             ON a.id = b.task_id
-            WHERE b.task_id IS NULL AND a.is_archived = 0 AND a.free_for_all = 1"
+            WHERE b.task_id IS NULL AND a.is_archived = 0 AND a.free_for_all = 1 ORDER BY a.created_at DESC",
         ) );
     }
 }

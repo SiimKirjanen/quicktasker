@@ -18,11 +18,12 @@
   .wpqt-strip-btn {
     @apply wpqt-border-0 wpqt-border-none wpqt-bg-transparent wpqt-p-0;
   }
-
   .wpqt-card-grid {
     @apply wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 sm:wpqt-grid-cols-2 lg:wpqt-grid-cols-3;
   }
-
+  .wpqt-user-page-card-flex {
+    @apply wpqt-flex wpqt-flex-col wpqt-flex-wrap wpqt-justify-center wpqt-gap-2 md:wpqt-flex-row;
+  }
   .wpqt-main-border {
     @apply wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder;
   }
@@ -39,7 +40,7 @@
     @apply wpqt-text-yellow-400 hover:wpqt-text-yellow-500;
   }
   .wpqt-icon-gray {
-    @apply wpqt-text-gray-400;
+    @apply wpqt-text-gray-300;
   }
 }
 

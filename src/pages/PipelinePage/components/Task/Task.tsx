@@ -96,7 +96,7 @@ function TaskActions({ task }: TaskActionsProps) {
         />
       ) : (
         <CheckBadgeIcon
-          className="wpqt-size-6 wpqt-text-gray-300"
+          className="wpqt-size-6 wpqt-icon-gray"
           onClick={(e) => {
             e.stopPropagation();
             changeDone(true);

@@ -62,7 +62,7 @@ function StageSelectionModal({ task, stages, pageHash, open, onClose }: Props) {
           </Field>
         ))}
       </RadioGroup>
-      <div className="wpqt-mt-5 wpqt-flex wpqt-justify-end">
+      <div className="wpqt-mt-5 wpqt-flex wpqt-justify-center">
         {loading ? (
           <LoadingOval width="32" height="32" />
         ) : (
