@@ -1,5 +1,6 @@
 import {
   ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
+  CHANGE_ARCHIVE_TASK_DONE_FILTER,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
   EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
@@ -121,6 +122,14 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         archivedTasks,
+      };
+    }
+    case CHANGE_ARCHIVE_TASK_DONE_FILTER: {
+      const archiveTaskDoneFilter = action.payload;
+
+      return {
+        ...state,
+        archiveTaskDoneFilter,
       };
     }
     default: {

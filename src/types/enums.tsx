@@ -9,4 +9,10 @@ enum WPQTLogCreatedBy {
   WPQTUser = "quicktasker_user",
 }
 
-export { WPQTLogCreatedBy, WPQTTypes };
+enum WPQTArchiveDoneFilter {
+  All = "all",
+  Completed = "completed",
+  NotCompleted = "not completed",
+}
+
+export { WPQTArchiveDoneFilter, WPQTLogCreatedBy, WPQTTypes };

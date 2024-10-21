@@ -1,10 +1,15 @@
 import { useContext } from "@wordpress/element";
 import { ArchiveContext } from "../../providers/ArchiveContextProvider";
+import { WPQTArchiveDoneFilter } from "../../types/enums";
 import { Task } from "../../types/task";
 
 const useArchiveFilter = () => {
   const {
-    state: { archiveSearchValue, archiveFilteredPipelineId },
+    state: {
+      archiveSearchValue,
+      archiveFilteredPipelineId,
+      archiveTaskDoneFilter,
+    },
   } = useContext(ArchiveContext);
 
   const filterArchive = (archivedTask: Task) => {
@@ -21,7 +26,14 @@ const useArchiveFilter = () => {
       !archiveFilteredPipelineId ||
       archivedTask.pipeline_id === archiveFilteredPipelineId;
 
-    return matchesSearchValue && matchesPipelineId;
+    const matchesTaskDoneFilter =
+      archiveTaskDoneFilter === WPQTArchiveDoneFilter.All ||
+      (archiveTaskDoneFilter === WPQTArchiveDoneFilter.Completed &&
+        archivedTask.is_done) ||
+      (archiveTaskDoneFilter === WPQTArchiveDoneFilter.NotCompleted &&
+        !archivedTask.is_done);
+
+    return matchesSearchValue && matchesPipelineId && matchesTaskDoneFilter;
   };
 
   return {

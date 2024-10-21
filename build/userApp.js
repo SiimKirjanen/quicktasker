@@ -6576,6 +6576,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ADD_CUSTOM_FIELD: () => (/* binding */ ADD_CUSTOM_FIELD),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
 /* harmony export */   CHANGE_ARCHIVED_TASK_DONE_STATUS: () => (/* binding */ CHANGE_ARCHIVED_TASK_DONE_STATUS),
+/* harmony export */   CHANGE_ARCHIVE_TASK_DONE_FILTER: () => (/* binding */ CHANGE_ARCHIVE_TASK_DONE_FILTER),
 /* harmony export */   CHANGE_TASK_DONE_STATUS: () => (/* binding */ CHANGE_TASK_DONE_STATUS),
 /* harmony export */   CHANGE_USER_SESSION_STATUS: () => (/* binding */ CHANGE_USER_SESSION_STATUS),
 /* harmony export */   CHANGE_USER_SETTINGS_MODAL_OPEN: () => (/* binding */ CHANGE_USER_SETTINGS_MODAL_OPEN),
@@ -6701,6 +6702,7 @@ const ADD_ASSIGNED_USER_TO_ARCHIVED_TASK = "ADD_ASSIGNED_USER_TO_ARCHIVED_TASK";
 const REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK = "REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK";
 const CHANGE_ARCHIVED_TASK_DONE_STATUS = "CHANGE_ARCHIVED_TASK_DONE_STATUS";
 const EDIT_ARCHIVED_TASK = "EDIT_ARCHIVED_TASK";
+const CHANGE_ARCHIVE_TASK_DONE_FILTER = "CHANGE_ARCHIVE_TASK_DONE_FILTER";
 //User reducer constants
 const SET_USERS = "SET_USERS";
 const ADD_USER = "ADD_USER";
