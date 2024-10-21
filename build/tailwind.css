@@ -1270,10 +1270,6 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
-.wpqt-grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .wpqt-grid-cols-5 {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
@@ -2051,10 +2047,6 @@
 
   .lg\:wpqt-order-2 {
     order: 2;
-  }
-
-  .lg\:wpqt-grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .lg\:wpqt-grid-cols-4 {

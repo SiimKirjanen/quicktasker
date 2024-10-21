@@ -10,6 +10,7 @@ import { getArchivedTasksRequest } from "../api/api";
 import {
   ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
+  EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
@@ -49,6 +50,7 @@ type Action =
       payload: { taskId: string; user: User };
     }
   | { type: typeof REMOVE_ARCHIVED_TASK; payload: string }
+  | { type: typeof EDIT_ARCHIVED_TASK; payload: TaskFromServer }
   | {
       type: typeof CHANGE_ARCHIVED_TASK_DONE_STATUS;
       payload: { taskId: string; done: boolean };

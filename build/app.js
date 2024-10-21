@@ -13247,6 +13247,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   DELETE_CUSTOM_FIELD: () => (/* binding */ DELETE_CUSTOM_FIELD),
 /* harmony export */   DELETE_USER: () => (/* binding */ DELETE_USER),
 /* harmony export */   DELETE_USER_SESSION: () => (/* binding */ DELETE_USER_SESSION),
+/* harmony export */   EDIT_ARCHIVED_TASK: () => (/* binding */ EDIT_ARCHIVED_TASK),
 /* harmony export */   EDIT_CUSTOM_FIELD: () => (/* binding */ EDIT_CUSTOM_FIELD),
 /* harmony export */   EDIT_USER: () => (/* binding */ EDIT_USER),
 /* harmony export */   EDIT_USER_TASK: () => (/* binding */ EDIT_USER_TASK),
@@ -13355,6 +13356,7 @@ const REMOVE_ARCHIVED_TASK = "REMOVE_ARCHIVED_TASK";
 const ADD_ASSIGNED_USER_TO_ARCHIVED_TASK = "ADD_ASSIGNED_USER_TO_ARCHIVED_TASK";
 const REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK = "REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK";
 const CHANGE_ARCHIVED_TASK_DONE_STATUS = "CHANGE_ARCHIVED_TASK_DONE_STATUS";
+const EDIT_ARCHIVED_TASK = "EDIT_ARCHIVED_TASK";
 //User reducer constants
 const SET_USERS = "SET_USERS";
 const ADD_USER = "ADD_USER";
@@ -14255,8 +14257,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Filter_ArchiveFilter_ArchiveFilter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../components/Filter/ArchiveFilter/ArchiveFilter */ "./src/components/Filter/ArchiveFilter/ArchiveFilter.tsx");
 /* harmony import */ var _components_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../components/Loading/Loading */ "./src/components/Loading/Loading.tsx");
 /* harmony import */ var _components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../components/Modal/TaskModal/TaskModal */ "./src/components/Modal/TaskModal/TaskModal.tsx");
-/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
-/* harmony import */ var _ArchiveItems_ArchiveItems__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ArchiveItems/ArchiveItems */ "./src/pages/ArchivePage/Archive/ArchiveItems/ArchiveItems.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
+/* harmony import */ var _ArchiveItems_ArchiveItems__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ArchiveItems/ArchiveItems */ "./src/pages/ArchivePage/Archive/ArchiveItems/ArchiveItems.tsx");
+
 
 
 
@@ -14268,15 +14272,23 @@ function Archive() {
   const {
     state: {
       archivedTasks
-    }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_5__.ArchiveContext);
+    },
+    archiveDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_6__.ArchiveContext);
   if (!archivedTasks) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
       className: "wpqt-h-[200px]"
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_ArchiveFilter_ArchiveFilter__WEBPACK_IMPORTED_MODULE_2__.ArchiveFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveItems_ArchiveItems__WEBPACK_IMPORTED_MODULE_6__.ArchiveItems, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_4__.TaskModal, {})]
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_ArchiveFilter_ArchiveFilter__WEBPACK_IMPORTED_MODULE_2__.ArchiveFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchiveItems_ArchiveItems__WEBPACK_IMPORTED_MODULE_7__.ArchiveItems, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_4__.TaskModal, {
+      editTaskCallback: task => {
+        archiveDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_5__.EDIT_ARCHIVED_TASK,
+          payload: task
+        });
+      }
+    })]
   });
 }
 
@@ -17779,7 +17791,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const reducer = (state, action) => {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e;
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_ARCHIVE_TASKS:
       {
@@ -17856,6 +17868,19 @@ const reducer = (state, action) => {
             return Object.assign(Object.assign({}, task), {
               is_done: done
             });
+          }
+          return task;
+        });
+        return Object.assign(Object.assign({}, state), {
+          archivedTasks
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.EDIT_ARCHIVED_TASK:
+      {
+        const editedTask = action.payload;
+        const archivedTasks = ((_e = state.archivedTasks) !== null && _e !== void 0 ? _e : []).map(task => {
+          if (task.id === editedTask.id) {
+            return (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.convertTaskFromServer)(editedTask);
           }
           return task;
         });

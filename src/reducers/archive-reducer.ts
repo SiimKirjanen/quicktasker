@@ -1,6 +1,7 @@
 import {
   ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
+  EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
@@ -96,6 +97,22 @@ const reducer = (state: State, action: Action): State => {
             ...task,
             is_done: done,
           };
+        }
+
+        return task;
+      });
+
+      return {
+        ...state,
+        archivedTasks,
+      };
+    }
+    case EDIT_ARCHIVED_TASK: {
+      const editedTask: TaskFromServer = action.payload;
+
+      const archivedTasks = (state.archivedTasks ?? []).map((task) => {
+        if (task.id === editedTask.id) {
+          return convertTaskFromServer(editedTask);
         }
 
         return task;
