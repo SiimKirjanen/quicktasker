@@ -1,5 +1,6 @@
 const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 const path = require("path");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = {
   ...defaultConfig,
@@ -23,4 +24,12 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    ...defaultConfig.plugins,
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static", // Generates a static HTML file
+      openAnalyzer: false, // Prevents the report from automatically opening
+      reportFilename: path.resolve(__dirname, "reports", "bundle-report.html"),
+    }),
+  ],
 };
