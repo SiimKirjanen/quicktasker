@@ -12,7 +12,7 @@ type State = {
 const initialState: State = {
   siteURL: "",
   publicUserPageId: "",
-  is_customFields: false,
+  is_customFields: true,
   timezone: "",
 };
 
