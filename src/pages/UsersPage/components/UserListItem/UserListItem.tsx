@@ -33,7 +33,7 @@ function UserListItem({ user }: Props) {
       className="wpqt-cursor-pointer"
     >
       <WPQTCardDataItem
-        className="hover:wpqt-underline"
+        className="hover:wpqt-underline wpqt-self-start"
         label={__("Open user page", "quicktasker")}
         icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
         onClick={(e) => {
@@ -43,7 +43,7 @@ function UserListItem({ user }: Props) {
       />
 
       <WPQTCardDataItem
-        className="hover:wpqt-underline"
+        className="hover:wpqt-underline wpqt-self-start"
         label={__("View user details", "quicktasker")}
         icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
         onClick={(e) => {

@@ -23,11 +23,11 @@ function TaskCardActions({ task, onDoneStatusChange, className = "" }: Props) {
   };
 
   if (loading) {
-    return <Loading ovalSize="24" />;
+    return <Loading ovalSize="24" className="wpqt-mt-auto" />;
   }
 
   return (
-    <div className={`wpqt-flex wpqt-justify-center wpqt-mt-3 ${className}`}>
+    <div className={`wpqt-flex wpqt-justify-center wpqt-mt-auto ${className}`}>
       {isTaskCompleted ? (
         <CheckBadgeIcon
           className="wpqt-size-6 wpqt-icon-green"

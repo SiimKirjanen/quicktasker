@@ -5607,6 +5607,7 @@ function WPQTCard({
         children: description
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-flex-col wpqt-h-full",
       children: children
     }), hasDropdown && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-absolute wpqt-right-2 wpqt-top-1 wpqt-z-10",

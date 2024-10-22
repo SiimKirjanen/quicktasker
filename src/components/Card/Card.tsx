@@ -7,6 +7,7 @@ type WPQTCardProps = {
   description?: string;
   onClick?: () => void;
   dropdown?: React.ReactNode;
+  childrenClassName?: string;
 };
 
 function WPQTCard({
@@ -34,7 +35,7 @@ function WPQTCard({
           <div className="wpqt-italic wpqt-text-gray-500">{description}</div>
         )}
       </div>
-      <div>{children}</div>
+      <div className="wpqt-flex wpqt-flex-col wpqt-h-full">{children}</div>
       {hasDropdown && (
         <div className="wpqt-absolute wpqt-right-2 wpqt-top-1 wpqt-z-10">
           {dropdown}

@@ -25,7 +25,7 @@ function UserTasksFilter() {
     });
   };
   return (
-    <WPQTFilter title={__("Filter", "quicktasker")}>
+    <WPQTFilter title={__("Filter tasks", "quicktasker")}>
       <WPQTInput
         value={searchValue}
         onChange={onValueChange}

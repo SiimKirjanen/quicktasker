@@ -8194,6 +8194,7 @@ function WPQTCard({
         children: description
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-flex-col wpqt-h-full",
       children: children
     }), hasDropdown && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-absolute wpqt-right-2 wpqt-top-1 wpqt-z-10",
@@ -8303,11 +8304,12 @@ function TaskCardActions({
   });
   if (loading) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
-      ovalSize: "24"
+      ovalSize: "24",
+      className: "wpqt-mt-auto"
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: `wpqt-flex wpqt-justify-center wpqt-mt-3 ${className}`,
+    className: `wpqt-flex wpqt-justify-center wpqt-mt-auto ${className}`,
     children: isTaskCompleted ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
       className: "wpqt-size-6 wpqt-icon-green",
       onClick: e => {
@@ -10286,7 +10288,7 @@ function UserTasksFilter() {
     });
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_7__.WPQTFilter, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Filter", "quicktasker"),
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Filter tasks", "quicktasker"),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__.WPQTInput, {
       value: searchValue,
       onChange: onValueChange,
@@ -16525,7 +16527,7 @@ function UserListItem({
     },
     className: "wpqt-cursor-pointer",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_3__.WPQTCardDataItem, {
-      className: "hover:wpqt-underline",
+      className: "hover:wpqt-underline wpqt-self-start",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Open user page", "quicktasker"),
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
         className: "wpqt-size-5 wpqt-icon-blue"
@@ -16535,7 +16537,7 @@ function UserListItem({
         window.open(userPageLink, "_blank");
       }
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_3__.WPQTCardDataItem, {
-      className: "hover:wpqt-underline",
+      className: "hover:wpqt-underline wpqt-self-start",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View user details", "quicktasker"),
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
         className: "wpqt-size-5 wpqt-icon-blue"

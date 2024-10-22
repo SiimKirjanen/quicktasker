@@ -1004,6 +1004,10 @@
   margin-top: 8vh;
 }
 
+.wpqt-mt-auto {
+  margin-top: auto;
+}
+
 .\!wpqt-block {
   display: block !important;
 }
