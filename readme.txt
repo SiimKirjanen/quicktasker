@@ -3,7 +3,7 @@ Tags: task manager, task management, project manager, project management
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,9 @@ QuickTasker is a plugin that offers the following and more to manage your tasks.
 5. User task comments
 
 == Changelog ==
+
+= 1.3.0 =
+* Minor style and functionality improvements
 
 = 1.2.0 =
 * Added task status filtering to archived tasks.
