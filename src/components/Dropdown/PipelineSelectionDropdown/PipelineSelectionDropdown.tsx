@@ -53,7 +53,7 @@ function PipelineSelectionDropdown() {
 
   return (
     <WPQTDropdown
-      menuBtnClasses="wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1 wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-2"
+      menuBtnClasses="wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1 wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-3"
       menuBtn={({ active }) => (
         <>
           <div className="wpqt-leading-none">{activePipeline?.name}</div>

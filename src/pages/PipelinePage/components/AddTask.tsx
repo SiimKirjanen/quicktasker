@@ -4,6 +4,7 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { createTaskRequest } from "../../../api/api";
 import { WPQTInput } from "../../../components/common/Input/Input";
+import { LoadingOval } from "../../../components/Loading/Loading";
 import { PIPELINE_ADD_TASK } from "../../../constants";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
@@ -14,6 +15,7 @@ type Props = {
 function AddTask({ stageId }: Props) {
   const [taskName, setTaskName] = useState("");
   const [showTaskInput, setShowTaskInput] = useState(false);
+  const [loading, setLoading] = useState(false);
   const componentRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const {
@@ -61,6 +63,7 @@ function AddTask({ stageId }: Props) {
       return;
     }
     try {
+      setLoading(true);
       const response = await createTaskRequest(
         stageId,
         activePipeline!.id,
@@ -74,6 +77,8 @@ function AddTask({ stageId }: Props) {
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to create task", "quicktasker"));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,14 +100,20 @@ function AddTask({ stageId }: Props) {
             onChange={(value) => setTaskName(value)}
             className="!wpqt-mb-0"
           />
-          <XCircleIcon
-            className="wpqt-icon-red wpqt-size-6 wpqt-cursor-pointer"
-            onClick={clearState}
-          />
-          <PlusCircleIcon
-            className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer"
-            onClick={createTask}
-          />
+          {loading ? (
+            <LoadingOval width="24" height="24" />
+          ) : (
+            <>
+              <XCircleIcon
+                className="wpqt-icon-red wpqt-size-6 wpqt-cursor-pointer"
+                onClick={clearState}
+              />
+              <PlusCircleIcon
+                className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer"
+                onClick={createTask}
+              />
+            </>
+          )}
         </div>
       ) : (
         <div
