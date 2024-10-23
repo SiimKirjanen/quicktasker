@@ -1,4 +1,4 @@
-import { useCallback, useState } from "@wordpress/element";
+import { useCallback, useEffect, useState } from "@wordpress/element";
 import { WPQTInput } from "../../../../components/common/Input/Input";
 import { CustomFieldTitle } from "../../../../components/CustomField/CustomFields/components/CustomField/CustomField";
 import { CustomField, CustomFieldType } from "../../../../types/custom-field";
@@ -49,7 +49,11 @@ function TextCustomField({
   onHandleChange,
   valueChangeEnabled,
 }: TextCustomFieldProps) {
-  const [value, setValue] = useState(data.value || "");
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    setValue(data.value || "");
+  }, [data.value]);
 
   const debouncedHandleChange = useCallback(
     debounce((newValue: string) => {
@@ -86,6 +90,10 @@ function CheckboxCustomField({
   valueChangeEnabled,
 }: CheckboxCustomFieldProps) {
   const [isChecked, setIsChecked] = useState(data.value === "true");
+
+  useEffect(() => {
+    setIsChecked(data.value === "true");
+  }, [data.value]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
