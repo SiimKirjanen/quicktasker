@@ -29,8 +29,8 @@ function wpqt_enqueue_app_assets(){
 	$build_asset = require(WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/build/app.asset.php');
 	$dependencies = array_merge(array('wp-element', 'wp-api-fetch'), $build_asset['dependencies']);
 
-	wp_enqueue_style( 'wpqt-tailwind', WP_QUICKTASKER_PLUGIN_FOLDER_URL . '/build/tailwind.css');
-    wp_enqueue_script('wpqt-script', WP_QUICKTASKER_PLUGIN_FOLDER_URL . '/build/app.js', $dependencies, $build_asset['version'], true);
+	wp_enqueue_style( 'wpqt-tailwind', WP_QUICKTASKER_PLUGIN_FOLDER_URL . 'build/tailwind.css');
+    wp_enqueue_script('wpqt-script', WP_QUICKTASKER_PLUGIN_FOLDER_URL . 'build/app.js', $dependencies, $build_asset['version'], true);
 
 	wp_localize_script('wpqt-script', 'wpqt', array(
 		'apiNonce' => NonceService::createNonce( WPQT_ADMIN_API_NONCE ),
@@ -44,5 +44,5 @@ function wpqt_enqueue_app_assets(){
 	));
 
 	// Set script translations
-    wp_set_script_translations( 'wpqt-script', 'quicktasker', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/languages' );
+    wp_set_script_translations( 'wpqt-script', 'quicktasker', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'languages/json' );
 }

@@ -12,7 +12,7 @@ Directories, URL
 ==================================================================================================================================================================================================================
 */
 define('WP_QUICKTASKER_PLUGIN_FOLDER_DIR', plugin_dir_path( dirname( __FILE__ ) ));
-define('WP_QUICKTASKER_PLUGIN_MAIN_FILE', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/quicktasker.php');
+define('WP_QUICKTASKER_PLUGIN_MAIN_FILE', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'quicktasker.php');
 define('WP_QUICKTASKER_PLUGIN_FOLDER_URL', plugin_dir_url( dirname( __FILE__ ) ));
 define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 
