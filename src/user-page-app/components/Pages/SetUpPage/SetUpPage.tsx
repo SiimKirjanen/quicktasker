@@ -11,6 +11,7 @@ import {
   InputType,
   WPQTInput,
 } from "../../../../components/common/Input/Input";
+import { Loading } from "../../../../components/Loading/Loading";
 import { setUpUserPageRequest } from "../../../api/user-page-api";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
@@ -22,6 +23,7 @@ function SetUpPage() {
   } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [validationError, setValidationError] = useState("");
 
@@ -46,10 +48,12 @@ function SetUpPage() {
     const data = { password };
 
     try {
+      setLoading(true);
       await setUpUserPageRequest(pageHash, data);
       window.location.reload();
     } catch (error) {
       handleError(error);
+      setLoading(false);
     }
   };
 
@@ -89,10 +93,14 @@ function SetUpPage() {
             </div>
           )}
           <WPQTField className="wpqt-text-center">
-            <WPQTButton
-              btnText={__("Setup", "quicktasker")}
-              type={ButtonType.SUBMIT}
-            />
+            {loading ? (
+              <Loading ovalSize="32" />
+            ) : (
+              <WPQTButton
+                btnText={__("Setup", "quicktasker")}
+                type={ButtonType.SUBMIT}
+              />
+            )}
           </WPQTField>
         </WPQTFieldSet>
       </form>

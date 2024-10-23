@@ -11,6 +11,7 @@ import {
   InputType,
   WPQTInput,
 } from "../../../../components/common/Input/Input";
+import { Loading } from "../../../../components/Loading/Loading";
 import { logInUserPageRequest } from "../../../api/user-page-api";
 import { SET_USER_LOGGED_IN } from "../../../constants";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
@@ -25,6 +26,7 @@ function LoginPage() {
   } = useContext(UserPageAppContext);
   const { setSessionCookie } = useSession();
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { handleError } = useErrorHandler();
 
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,10 +37,12 @@ function LoginPage() {
       return;
     }
     try {
+      setLoading(true);
       const response = await logInUserPageRequest(pageHash, password);
       await setSessionCookie(response.data);
       userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: true });
     } catch (error) {
+      setLoading(false);
       handleError(error);
     }
   };
@@ -61,10 +65,14 @@ function LoginPage() {
             />
           </WPQTField>
           <WPQTField className="wpqt-flex wpqt-justify-center">
-            <WPQTButton
-              btnText={__("Login", "quicktasker")}
-              type={ButtonType.SUBMIT}
-            />
+            {loading ? (
+              <Loading ovalSize="32" />
+            ) : (
+              <WPQTButton
+                btnText={__("Login", "quicktasker")}
+                type={ButtonType.SUBMIT}
+              />
+            )}
           </WPQTField>
         </WPQTFieldSet>
       </form>
