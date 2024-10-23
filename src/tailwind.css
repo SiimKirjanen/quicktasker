@@ -42,6 +42,9 @@
   .wpqt-icon-gray {
     @apply wpqt-text-gray-300;
   }
+  .wpqt-transform-y-center {
+    transform: translateY(-50%);
+  }
 }
 
 /* Start of WordPress style overrides */

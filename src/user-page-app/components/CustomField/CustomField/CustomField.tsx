@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useState } from "@wordpress/element";
 import { WPQTInput } from "../../../../components/common/Input/Input";
 import { CustomFieldTitle } from "../../../../components/CustomField/CustomFields/components/CustomField/CustomField";
+import { Loading } from "../../../../components/Loading/Loading";
 import { CustomField, CustomFieldType } from "../../../../types/custom-field";
 import { debounce } from "../../../../utils/debounce";
 
 type Props = {
   data: CustomField;
-  saveCustomFieldValueChange: (customFieldId: string, value: string) => void;
+  saveCustomFieldValueChange: (
+    customFieldId: string,
+    value: string,
+  ) => Promise<void>;
   valueChangeEnabled?: boolean;
 };
 function CustomField({
@@ -14,8 +18,8 @@ function CustomField({
   saveCustomFieldValueChange,
   valueChangeEnabled = true,
 }: Props) {
-  const handleChange = (value: string) => {
-    saveCustomFieldValueChange(data.id, value);
+  const handleChange = async (value: string) => {
+    await saveCustomFieldValueChange(data.id, value);
   };
   switch (data.type) {
     case CustomFieldType.Text: {
@@ -41,7 +45,7 @@ function CustomField({
 
 type TextCustomFieldProps = {
   data: CustomField;
-  onHandleChange: (value: string) => void;
+  onHandleChange: (value: string) => Promise<void>;
   valueChangeEnabled: boolean;
 };
 function TextCustomField({
@@ -50,14 +54,17 @@ function TextCustomField({
   valueChangeEnabled,
 }: TextCustomFieldProps) {
   const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setValue(data.value || "");
   }, [data.value]);
 
   const debouncedHandleChange = useCallback(
-    debounce((newValue: string) => {
-      onHandleChange(newValue);
+    debounce(async (newValue: string) => {
+      setLoading(true);
+      await onHandleChange(newValue);
+      setLoading(false);
     }, 600),
     [onHandleChange],
   );
@@ -74,6 +81,7 @@ function TextCustomField({
         value={value}
         onChange={onChange}
         disabled={!valueChangeEnabled}
+        loading={loading}
       />
     </div>
   );
@@ -81,7 +89,7 @@ function TextCustomField({
 
 type CheckboxCustomFieldProps = {
   data: CustomField;
-  onHandleChange: (value: string) => void;
+  onHandleChange: (value: string) => Promise<void>;
   valueChangeEnabled: boolean;
 };
 function CheckboxCustomField({
@@ -90,24 +98,31 @@ function CheckboxCustomField({
   valueChangeEnabled,
 }: CheckboxCustomFieldProps) {
   const [isChecked, setIsChecked] = useState(data.value === "true");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsChecked(data.value === "true");
   }, [data.value]);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
-    onHandleChange(e.target.checked ? "true" : "false");
+    setLoading(true);
+    await onHandleChange(e.target.checked ? "true" : "false");
+    setLoading(false);
   };
   return (
     <div className="wpqt-text-center">
       <CustomFieldTitle name={data.name} description={data.description} />
-      <input
-        type="checkbox"
-        checked={isChecked}
-        onChange={onChange}
-        disabled={!valueChangeEnabled}
-      />
+      {loading ? (
+        <Loading ovalSize="24" />
+      ) : (
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onChange={onChange}
+          disabled={!valueChangeEnabled}
+        />
+      )}
     </div>
   );
 }

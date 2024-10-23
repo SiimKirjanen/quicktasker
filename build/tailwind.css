@@ -861,12 +861,20 @@
   right: -20px;
 }
 
+.wpqt-right-\[-32px\] {
+  right: -32px;
+}
+
 .wpqt-right-\[12px\] {
   right: 12px;
 }
 
 .wpqt-top-1 {
   top: 0.25rem;
+}
+
+.wpqt-top-1\/2 {
+  top: 50%;
 }
 
 .wpqt-top-\[-20px\] {
@@ -1010,6 +1018,10 @@
 
 .wpqt-block {
   display: block;
+}
+
+.wpqt-inline-block {
+  display: inline-block;
 }
 
 .wpqt-flex {
@@ -1871,6 +1883,10 @@
 .wpqt-icon-gray {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+
+.wpqt-transform-y-center {
+  transform: translateY(-50%);
 }
 
 /* Start of WordPress style overrides */

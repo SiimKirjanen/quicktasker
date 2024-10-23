@@ -3,9 +3,14 @@ import { Oval } from "react-loader-spinner";
 type LoadingOverProps = {
   width?: string;
   height?: string;
+  className?: string;
 };
 
-function LoadingOval({ width = "80", height = "80" }: LoadingOverProps) {
+function LoadingOval({
+  width = "80",
+  height = "80",
+  className = "",
+}: LoadingOverProps) {
   return (
     <Oval
       visible={true}
@@ -15,7 +20,7 @@ function LoadingOval({ width = "80", height = "80" }: LoadingOverProps) {
       secondaryColor="#2563eb"
       ariaLabel="oval-loading"
       wrapperStyle={{}}
-      wrapperClass=""
+      wrapperClass={className}
     />
   );
 }
