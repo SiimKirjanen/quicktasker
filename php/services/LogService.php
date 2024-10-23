@@ -27,7 +27,7 @@ class LogService {
      * @return mixed The log entry retrieved by its ID.
      * @throws \Exception If the log entry could not be added to the database.
      */
-    public function log($text, $type, $typeId, $createdBy, $userId = null,) {
+    public function log($text, $type, $typeId, $createdBy, $userId = null) {
         global $wpdb;
 
         if($typeId === 'null') {
