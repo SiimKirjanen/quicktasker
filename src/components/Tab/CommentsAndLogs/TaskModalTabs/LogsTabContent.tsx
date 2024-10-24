@@ -29,7 +29,7 @@ function LogsTabContent({ taskId }: Props) {
       fetchData={fetchLogs}
       renderItem={(log: Log) => <TabContentItem log={log} />}
       noDataMessage="No logs available"
-      explanation="Logs can be seen only by WordPress admins"
+      explanation="Logs can be seen only by WordPress users (with required permissions)"
     />
   );
 }

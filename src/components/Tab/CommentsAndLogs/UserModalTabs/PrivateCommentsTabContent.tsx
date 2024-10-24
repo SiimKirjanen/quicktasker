@@ -51,7 +51,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
       )}
       noDataMessage={__("No comments available", "quicktasker")}
       explanation={__(
-        "Comments that can be added and viewed only by WordPress admins.",
+        "Comments that can be added and viewed only by WordPress users (with required permissions).",
         "quicktasker",
       )}
       enableAdd={true}

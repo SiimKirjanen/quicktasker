@@ -45,7 +45,7 @@ function CommentsTabContent({ taskId }: Props) {
         <TabContentCommentItem item={comment} />
       )}
       noDataMessage="No comments available"
-      explanation="Comments that can be added and viewed only by WordPress admins."
+      explanation="Comments that can be added and viewed only by WordPress users (with required permissions)."
       enableAdd={true}
     />
   );

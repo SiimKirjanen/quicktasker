@@ -158,7 +158,7 @@ function TabContentCommentItem({ item }: { item: WPQTComment }) {
         <div className="wpqt-text-center">
           {item.is_admin_comment
             ? __("Admin", "quicktasker")
-            : __("User", "quicktasker")}
+            : __("QuickTasker", "quicktasker")}
         </div>
       </div>
       <div>{item.text}</div>

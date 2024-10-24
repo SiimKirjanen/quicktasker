@@ -19,7 +19,7 @@ function CommentItem({ comment }: { comment: WPQTComment }) {
         <div className="wpqt-text-sm">
           {isAdminComment
             ? __("Admin", "quicktasker")
-            : __("User", "quicktasker")}
+            : __("QuickTasker", "quicktasker")}
         </div>
       </div>
       <div className="wpqt-break-all wpqt-text-center wpqt-leading-normal wpqt-mb-4 md:wpqt-mb-0">

@@ -30,7 +30,7 @@ function LogsTabContent({ userId }: Props) {
       renderItem={(log: Log) => <TabContentItem log={log} />}
       noDataMessage={__("No logs available", "quicktasker")}
       explanation={__(
-        "Logs can be seen only by WordPress admins",
+        "Logs can be seen only by WordPress users (with required permissions)",
         "quicktasker",
       )}
     />

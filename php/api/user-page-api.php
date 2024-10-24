@@ -511,12 +511,12 @@ function wpqt_register_user_page_api_routes() {
                             throw new WPQTException('Not allowed to assign', true);
                         }
                         $userService->assignTaskToUser($session->user_id, $taskId);
-                        $logService->log('User assigned itself to ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
-                        $logService->log('User ' . $userPage->name . ' assigned itself', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log('Assigned itself to ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log($userPage->name . ' assigned itself to the task', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                     } elseif ($data->get_method() === 'DELETE') {
                         $userService->removeTaskFromUser($session->user_id, $taskId);
-                        $logService->log('User unassigned itself from ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
-                        $logService->log('User ' . $userPage->name . ' unassigned itself', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log('Unassigned itself from ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log($userPage->name . ' unassigned itself from the task', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                     }
 
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);

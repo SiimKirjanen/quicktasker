@@ -12067,7 +12067,7 @@ function TabContentCommentItem({
         children: item.author_name
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-center",
-        children: item.is_admin_comment ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Admin", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("User", "quicktasker")
+        children: item.is_admin_comment ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Admin", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("QuickTasker", "quicktasker")
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: item.text
@@ -12148,7 +12148,7 @@ function LogsTabContent({
       log: log
     }),
     noDataMessage: "No logs available",
-    explanation: "Logs can be seen only by WordPress admins"
+    explanation: "Logs can be seen only by WordPress users (with required permissions)"
   });
 }
 
@@ -12237,7 +12237,7 @@ function CommentsTabContent({
       item: comment
     }),
     noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed only by WordPress admins.",
+    explanation: "Comments that can be added and viewed only by WordPress users (with required permissions).",
     enableAdd: true
   });
 }
@@ -12327,7 +12327,7 @@ function PublicCommentsTabContent({
       item: comment
     }),
     noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by both WordPress admins and QuickTasker users who have assigned to the task.",
+    explanation: "Comments that can be added and viewed by WordPress users (with required permissions) and QuickTasker users who have been assigned to the task.",
     enableAdd: true
   });
 }
@@ -12447,7 +12447,7 @@ function LogsTabContent({
       log: log
     }),
     noDataMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No logs available", "quicktasker"),
-    explanation: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Logs can be seen only by WordPress admins", "quicktasker")
+    explanation: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Logs can be seen only by WordPress users (with required permissions)", "quicktasker")
   });
 }
 
@@ -12537,7 +12537,7 @@ function PrivateCommentsTabContent({
       item: comment
     }),
     noDataMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No comments available", "quicktasker"),
-    explanation: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Comments that can be added and viewed only by WordPress admins.", "quicktasker"),
+    explanation: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Comments that can be added and viewed only by WordPress users (with required permissions).", "quicktasker"),
     enableAdd: true
   });
 }
@@ -12630,7 +12630,7 @@ function PublicCommentsTabContent({
       item: comment
     }),
     noDataMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No comments available", "quicktasker"),
-    explanation: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Comments that can be added and viewed by both WordPress admins and QuickTasker user", "quicktasker"),
+    explanation: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Comments that can be added and viewed by WordPress users (with required permissions) and current QuickTasker user (in user page).", "quicktasker"),
     enableAdd: true
   });
 }
