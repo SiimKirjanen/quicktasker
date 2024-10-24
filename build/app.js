@@ -12045,7 +12045,7 @@ function TabContentItem({
         children: log.author_name
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-center",
-        children: log.created_by === _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTLogCreatedBy.Admin ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Admin", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("User", "quicktasker")
+        children: log.created_by === _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTLogCreatedBy.Admin ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Admin", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("QuickTasker", "quicktasker")
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: log.text

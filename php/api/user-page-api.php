@@ -613,8 +613,9 @@ function wpqt_register_user_page_api_routes() {
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']); 
 
                     $taskService->changeTaskDoneStatus($task->id, $data['done']);
-    
-                    $logService->log('User ' . $userPage->name . ' changed task to ' . $data['done'] ? ' completed': ' not completed', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                    $logMessage = $userPage->name . ' changed task to ' . ($data['done'] === true ? 'completed' : 'not completed');
+
+                    $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 } catch(WPQTException $e) {

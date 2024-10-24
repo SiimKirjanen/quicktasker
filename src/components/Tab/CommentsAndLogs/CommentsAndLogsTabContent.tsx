@@ -139,7 +139,7 @@ function TabContentItem({ log }: TabContentItemProps) {
         <div className="wpqt-text-center">
           {log.created_by === WPQTLogCreatedBy.Admin
             ? __("Admin", "quicktasker")
-            : __("User", "quicktasker")}
+            : __("QuickTasker", "quicktasker")}
         </div>
       </div>
       <div>{log.text}</div>
