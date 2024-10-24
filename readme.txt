@@ -39,6 +39,7 @@ QuickTasker is a plugin that offers the following and more to manage your tasks.
 * Generated translations template .pot file.
 * Added Estonian translations.
 * Fixed plugin reactivation issue.
+* Added QuickTasker capabilitie for admin area. WP admin users will have this capability automatically. 
 * UI improvements.
 
 = 1.3.1 =
