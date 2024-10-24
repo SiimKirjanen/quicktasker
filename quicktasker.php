@@ -53,7 +53,7 @@ require( 'php/actions.php' );
 require( 'php/filters.php' );
 require( 'php/api/admin-api.php' );
 require( 'php/api/user-page-api.php' );
-//require( 'php/side-effects.php' );
+require( 'php/side-effects.php' );
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );
