@@ -199,48 +199,54 @@ function wpqt_set_up_db() {
 function wpqt_insert_initial_data() {
 	global $wpdb;
 
+	$pipeRepo = new PipelineRepository();
+	$pipeService = new PipelineService();
+	$stageService = new StageService();
+	$taskService = new TaskService();
+	$transaction_started = false;
+	
 	try {
-		$wpdb->query('START TRANSACTION');
-
-		$pipeRepo = new PipelineRepository();
-		$pipeService = new PipelineService();
-		$stageService = new StageService();
-		$taskService = new TaskService();
 		$pipelines = $pipeRepo->getPipelines();
 
-	if( !count($pipelines) ) {
-		$newPipeId = $pipeService->createPipeline("QuickTasker Food")->id;
-		$pipeService->markPipelineAsPrimary($newPipeId);
-		$firstStageId = $stageService->createStage($newPipeId, array('name' => 'Order Received'))->id;
-		$secondStageId = $stageService->createStage($newPipeId, array('name' => 'Preparing Order'))->id;
-		$thirdStageId = $stageService->createStage($newPipeId, array('name' => 'Out for Delivery'))->id;
-		$stageService->createStage($newPipeId, array('name' => 'Delivered'));
+		if( !count($pipelines) ) {
+			$wpdb->query('START TRANSACTION');
+			$transaction_started = true;
 
-		$taskService->createTask($firstStageId, array(
-            'name' => 'Order #1001',
-            'description' => 'Large pizza and a soda.',
-            'pipelineId' => $newPipeId
-        ));
-        $taskService->createTask($firstStageId, array(
-            'name' => 'Order #1002',
-            'description' => 'Burger and fries.',
-            'pipelineId' => $newPipeId
-        ));
-        $taskService->createTask($secondStageId, array(
-            'name' => 'Order #1003',
-            'description' => 'Tacos and nachos.',
-            'pipelineId' => $newPipeId
-        ));
-        $taskService->createTask($thirdStageId, array(
-            'name' => 'Order #1004',
-            'description' => 'Steak dinner with mashed potatoes.',
-            'pipelineId' => $newPipeId
-        ));
+			$newPipeId = $pipeService->createPipeline("QuickTasker Food")->id;
+			$pipeService->markPipelineAsPrimary($newPipeId);
+			$firstStageId = $stageService->createStage($newPipeId, array('name' => 'Order Received'))->id;
+			$secondStageId = $stageService->createStage($newPipeId, array('name' => 'Preparing Order'))->id;
+			$thirdStageId = $stageService->createStage($newPipeId, array('name' => 'Out for Delivery'))->id;
+			$stageService->createStage($newPipeId, array('name' => 'Delivered'));
 
-		$wpdb->query('COMMIT');
-	}
+			$taskService->createTask($firstStageId, array(
+				'name' => 'Order #1001',
+				'description' => 'Large pizza and a soda.',
+				'pipelineId' => $newPipeId
+			));
+			$taskService->createTask($firstStageId, array(
+				'name' => 'Order #1002',
+				'description' => 'Burger and fries.',
+				'pipelineId' => $newPipeId
+			));
+			$taskService->createTask($secondStageId, array(
+				'name' => 'Order #1003',
+				'description' => 'Tacos and nachos.',
+				'pipelineId' => $newPipeId
+			));
+			$taskService->createTask($thirdStageId, array(
+				'name' => 'Order #1004',
+				'description' => 'Steak dinner with mashed potatoes.',
+				'pipelineId' => $newPipeId
+			));
+
+			$wpdb->query('COMMIT');
+		}
 	} catch (\Throwable $th) {
-		$wpdb->query('ROLLBACK');
+		if ($transaction_started) {
+            $wpdb->query('ROLLBACK');
+        }
+
 		//error_log('Error in wpqt_insert_initial_data: ' . $th->getMessage());
 	}
 }
