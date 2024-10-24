@@ -46,12 +46,14 @@ require( 'php/services/SessionService.php' );
 require( 'php/services/NonceService.php' );
 require( 'php/services/CommentService.php' );
 require( 'php/services/CustomFieldService.php' );
+require( 'php/services/CapabilityService.php' );
 require( 'php/services/RequestValidation.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
 require( 'php/api/admin-api.php' );
 require( 'php/api/user-page-api.php' );
+require( 'php/side-effects.php' );
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );

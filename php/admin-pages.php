@@ -9,7 +9,7 @@ function wp_quick_taks_add_admin_menu() {
     add_menu_page(
         'QuickTasker',
         'QuickTasker',
-        'manage_options',
+        WP_QUICKTASKER_ADMIN_ROLE,
         'wp-quick-tasks',
         'wp_quick_taks_generate_app_page',
         plugins_url('img/menu-item.png', dirname(__FILE__) ),
@@ -19,7 +19,7 @@ function wp_quick_taks_add_admin_menu() {
         'wp-quick-tasks',
         esc_html__('Boards', 'quicktasker'),
         esc_html__('Boards', 'quicktasker'),
-        'manage_options',
+        WP_QUICKTASKER_ADMIN_ROLE,
         'wp-quick-tasks',
         'wp_quick_taks_generate_app_page'
     );
@@ -37,7 +37,7 @@ function wp_quick_taks_add_admin_menu() {
         'wp-quick-tasks',
         esc_html__('Users', 'quicktasker'),
         esc_html__('Users', 'quicktasker'),
-        'manage_options',
+        WP_QUICKTASKER_ADMIN_ROLE,
         'wp-quick-tasks#/users',
         'wp_quick_taks_generate_app_page'
     );
@@ -46,7 +46,7 @@ function wp_quick_taks_add_admin_menu() {
         'wp-quick-tasks',
         esc_html__('User sessions', 'quicktasker'),
         esc_html__('User sessions', 'quicktasker'),
-        'manage_options',
+        WP_QUICKTASKER_ADMIN_ROLE,
         'wp-quick-tasks#/user-sessions',
         'wp_quick_taks_generate_app_page'
     );
@@ -55,7 +55,7 @@ function wp_quick_taks_add_admin_menu() {
         'wp-quick-tasks',
         esc_html__('Archive', 'quicktasker'),
         esc_html__('Archive', 'quicktasker'),
-        'manage_options',
+        WP_QUICKTASKER_ADMIN_ROLE,
         'wp-quick-tasks#/archive',
         'wp_quick_taks_generate_app_page'
     );
