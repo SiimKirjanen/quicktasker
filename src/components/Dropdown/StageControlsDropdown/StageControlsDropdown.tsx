@@ -124,7 +124,11 @@ function StageControlsDropdown({ stage }: Props) {
         onClick={archiveAllStageTasks}
         disabled={stageTasksLenght === 0}
         id={`item-dropdown-${stage.id}-archive`}
-        tooltipText={__("No tasks to archive on the stage", "quicktasker")}
+        tooltipText={
+          stageTasksLenght === 0
+            ? __("No tasks to archive on the stage", "quicktasker")
+            : undefined
+        }
       />
 
       <WPQTDropdownItem
