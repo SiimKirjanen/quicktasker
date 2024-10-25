@@ -163,6 +163,10 @@ class TaskRepository {
     public function getTasksByStageIds($stageIds) {
         global $wpdb;
 
+        if ( empty($stageIds) ) {
+            return [];
+        }
+
         // Prepare the placeholders for the IN clause
         $placeholders = implode(',', array_fill(0, count($stageIds), '%d'));
 

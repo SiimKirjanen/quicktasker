@@ -76,6 +76,10 @@ class UserRepository {
     public function getAssignedUsersByTaskIds($taskIds) {
         global $wpdb;
 
+        if ( empty($taskIds) ) {
+            return [];
+        }
+
         // Prepare the placeholders for the IN clause
         $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
 
