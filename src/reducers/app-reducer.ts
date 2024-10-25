@@ -12,13 +12,15 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case INIT_APP_STATE: {
-      const { siteURL, publicUserPageId, timezone } = action.payload;
+      const { siteURL, publicUserPageId, timezone, isUserAllowedToDelete } =
+        action.payload;
 
       return {
         ...state,
         siteURL,
         publicUserPageId,
         timezone,
+        isUserAllowedToDelete,
       };
     }
     default:

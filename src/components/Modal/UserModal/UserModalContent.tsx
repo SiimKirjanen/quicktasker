@@ -20,6 +20,7 @@ import {
   RESET_PASSWORD,
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
@@ -47,6 +48,9 @@ const UserModalContent = forwardRef(function UserModalContent(
     state: { userToEdit },
     modalDispatch,
   } = useContext(ModalContext);
+  const {
+    state: { isUserAllowedToDelete },
+  } = useContext(AppContext);
   const [userName, setUserName] = useState("");
   const [userDescription, setUserDescription] = useState("");
   const [isActiveUser, setIsActiveUser] = useState(false);
@@ -186,21 +190,23 @@ const UserModalContent = forwardRef(function UserModalContent(
               }}
             />
           )}
-          <WPQTIconButton
-            icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-            text={__("Delete user", "quicktasker")}
-            onClick={async () => {
-              await deleteUser(userToEdit!.id, (userId) => {
-                userDispatch({
-                  type: DELETE_USER,
-                  payload: userId,
+          {isUserAllowedToDelete && (
+            <WPQTIconButton
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+              text={__("Delete user", "quicktasker")}
+              onClick={async () => {
+                await deleteUser(userToEdit!.id, (userId) => {
+                  userDispatch({
+                    type: DELETE_USER,
+                    payload: userId,
+                  });
+                  modalDispatch({
+                    type: CLOSE_USER_MODAL,
+                  });
                 });
-                modalDispatch({
-                  type: CLOSE_USER_MODAL,
-                });
-              });
-            }}
-          />
+              }}
+            />
+          )}
         </div>
       </div>
       <WPQTModalFooter

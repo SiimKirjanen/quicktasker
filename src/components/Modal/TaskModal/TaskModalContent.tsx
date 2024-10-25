@@ -29,6 +29,7 @@ import {
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
 import { WPQTIconButton } from "../../common/Button/Button";
@@ -51,15 +52,19 @@ const TaskModalContent = forwardRef(
       state: { taskToEdit },
       modalDispatch,
     } = useContext(ModalContext);
-    const [taskName, setTaskName] = useState("");
-    const [taskDescription, setTaskDescription] = useState("");
-    const [freeForAllTask, setFreeForAllTask] = useState(false);
-    const { deleteTask, archiveTask, restoreArchivedTask } = useTaskActions();
+    const {
+      state: { isUserAllowedToDelete },
+    } = useContext(AppContext);
     const {
       state: { activePipeline },
       fetchAndSetPipelineData,
     } = useContext(ActivePipelineContext);
     const { archiveDispatch } = useContext(ArchiveContext);
+    const [taskName, setTaskName] = useState("");
+    const [taskDescription, setTaskDescription] = useState("");
+    const [freeForAllTask, setFreeForAllTask] = useState(false);
+    const { deleteTask, archiveTask, restoreArchivedTask } = useTaskActions();
+
     const isTaskArchived = taskToEdit?.is_archived;
 
     useEffect(() => {
@@ -198,18 +203,20 @@ const TaskModalContent = forwardRef(
               />
             )}
 
-            <WPQTIconButton
-              icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-              text={__("Delete task", "quicktasker")}
-              onClick={() => {
-                deleteTask(taskToEdit.id, () => {
-                  modalDispatch({ type: CLOSE_TASK_MODAL });
-                  if (activePipeline) {
-                    fetchAndSetPipelineData(activePipeline.id);
-                  }
-                });
-              }}
-            />
+            {isUserAllowedToDelete && (
+              <WPQTIconButton
+                icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+                text={__("Delete task", "quicktasker")}
+                onClick={() => {
+                  deleteTask(taskToEdit.id, () => {
+                    modalDispatch({ type: CLOSE_TASK_MODAL });
+                    if (activePipeline) {
+                      fetchAndSetPipelineData(activePipeline.id);
+                    }
+                  });
+                }}
+              />
+            )}
           </div>
         </div>
         <WPQTModalFooter

@@ -7,6 +7,7 @@ import {
 import { useContext } from "@wordpress/element";
 import { REMOVE_ARCHIVED_TASK } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { Task } from "../../../types/task";
 import {
@@ -20,8 +21,11 @@ type Props = {
 };
 
 function ArchivedTaskDropdown({ task }: Props) {
-  const { deleteTask, restoreArchivedTask } = useTaskActions();
+  const {
+    state: { isUserAllowedToDelete },
+  } = useContext(AppContext);
   const { archiveDispatch } = useContext(ArchiveContext);
+  const { deleteTask, restoreArchivedTask } = useTaskActions();
 
   return (
     <WPQTDropdown
@@ -51,20 +55,22 @@ function ArchivedTaskDropdown({ task }: Props) {
         }}
       />
 
-      <WPQTDropdownItem
-        text="Delete"
-        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-        onClick={async (e: React.MouseEvent) => {
-          e.stopPropagation();
-          await deleteTask(task.id, () => {
-            archiveDispatch({
-              type: REMOVE_ARCHIVED_TASK,
-              payload: task.id,
+      {isUserAllowedToDelete && (
+        <WPQTDropdownItem
+          text="Delete"
+          icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+          onClick={async (e: React.MouseEvent) => {
+            e.stopPropagation();
+            await deleteTask(task.id, () => {
+              archiveDispatch({
+                type: REMOVE_ARCHIVED_TASK,
+                payload: task.id,
+              });
             });
-          });
-        }}
-        className="!wpqt-mb-0"
-      />
+          }}
+          className="!wpqt-mb-0"
+        />
+      )}
     </WPQTDropdown>
   );
 }
