@@ -115,7 +115,11 @@ function wpqt_set_up_db() {
 			created_by ENUM('system', 'admin', 'quicktasker_user') NOT NULL,
 			user_id int(11) DEFAULT NULL,
 			created_at datetime NOT NULL COMMENT 'UTC',
-			PRIMARY KEY  (id)
+			PRIMARY KEY  (id),
+			INDEX (type_id),
+			INDEX (type),
+			INDEX (created_by),
+			INDEX (user_id)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql7 ); 
@@ -129,7 +133,12 @@ function wpqt_set_up_db() {
 			created_at datetime NOT NULL COMMENT 'UTC',
 			author_id int(11) NOT NULL,
 			is_admin_comment tinyint(1) DEFAULT 0,
-			PRIMARY KEY  (id)
+			PRIMARY KEY  (id),
+			INDEX (type_id),
+			INDEX (type),
+			INDEX (is_private),
+			INDEX (author_id),
+			INDEX (is_admin_comment)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql8 ); 
@@ -141,7 +150,8 @@ function wpqt_set_up_db() {
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			page_hash varchar(255) NOT NULL,
 			PRIMARY KEY  (id),
-			UNIQUE KEY page_hash (page_hash)
+			UNIQUE KEY page_hash (page_hash),
+			INDEX (user_id)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql9 ); 
@@ -155,7 +165,11 @@ function wpqt_set_up_db() {
 			created_at_utc datetime NOT NULL COMMENT 'UTC',
 			expires_at_utc datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
-			UNIQUE KEY session_token (session_token)
+			UNIQUE KEY session_token (session_token),
+			INDEX (user_id),
+			INDEX (is_active),
+			INDEX (created_at_utc),
+			INDEX (expires_at_utc)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql10 ); 
@@ -183,7 +197,10 @@ function wpqt_set_up_db() {
 			created_at datetime NOT NULL COMMENT 'UTC',
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			is_deleted tinyint(1) DEFAULT 0,
-			PRIMARY KEY  (id)
+			PRIMARY KEY  (id),
+			INDEX (entity_type),
+			INDEX (entity_id),
+			INDEX (is_deleted)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql12 );
@@ -196,7 +213,10 @@ function wpqt_set_up_db() {
 			value TEXT,
 			created_at datetime NOT NULL COMMENT 'UTC',
 			updated_at datetime NOT NULL COMMENT 'UTC',
-			PRIMARY KEY  (id)
+			PRIMARY KEY  (id),
+			INDEX (custom_field_id),
+			INDEX (entity_id),
+			INDEX (entity_type)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql13 );
