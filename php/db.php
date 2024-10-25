@@ -36,7 +36,8 @@ function wpqt_set_up_db() {
             description text,
 			created_at datetime NOT NULL COMMENT 'UTC',
 			updated_at datetime NOT NULL COMMENT 'UTC',
-			PRIMARY KEY  (id)
+			PRIMARY KEY  (id),
+			INDEX (pipeline_id)
 		  ) $charset_collate;";
 	  
 		dbDelta( $sql2 );
@@ -53,7 +54,9 @@ function wpqt_set_up_db() {
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			task_hash varchar(255) NOT NULL,
 			PRIMARY KEY  (id),
-			UNIQUE KEY task_hash (task_hash)
+			UNIQUE KEY task_hash (task_hash),
+			INDEX (pipeline_id),
+			INDEX (is_archived)
 		  ) $charset_collate;";
 	  
 		dbDelta( $sql3 ); 
@@ -67,7 +70,8 @@ function wpqt_set_up_db() {
 			is_active tinyint(1) DEFAULT 1,
 			password varchar(255) DEFAULT NULL,
 			deleted tinyint(1) DEFAULT 0,
-			PRIMARY KEY  (id)
+			PRIMARY KEY  (id),
+			INDEX (deleted)
 		  ) $charset_collate;";
 	  
 		dbDelta( $sql4 ); 
@@ -81,7 +85,9 @@ function wpqt_set_up_db() {
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			is_archived tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id),
-			UNIQUE KEY task_id (task_id)
+			UNIQUE KEY task_id (task_id),
+			INDEX (stage_id),
+			INDEX (task_order)
 		  ) $charset_collate;";
 		
 		dbDelta( $sql5 ); 
@@ -94,7 +100,9 @@ function wpqt_set_up_db() {
 			created_at datetime NOT NULL COMMENT 'UTC',
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
-			UNIQUE KEY stage_id (stage_id)
+			UNIQUE KEY stage_id (stage_id),
+			INDEX (pipeline_id),
+			INDEX (stage_order)
 		  ) $charset_collate;";
 
 		dbDelta( $sql6 ); 
@@ -159,7 +167,8 @@ function wpqt_set_up_db() {
 			created_at datetime NOT NULL COMMENT 'UTC',
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
-			UNIQUE KEY unique_user_task (user_id, task_id)
+			UNIQUE KEY unique_user_task (user_id, task_id),
+			INDEX (task_id)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql11 );
