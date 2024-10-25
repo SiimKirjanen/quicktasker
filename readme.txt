@@ -36,7 +36,8 @@ QuickTasker is a plugin that offers the following and more to manage your tasks.
 == Changelog ==
 
 = 1.5.0 =
-* Added QuickTasker capabilitie for admin area delete actions. WP admin users will have this capability automatically. 
+* Added QuickTasker capabilitie for admin area delete actions. WP admin users will have this capability automatically.
+* Added indexes for DB tables. 
 
 = 1.4.0 =
 * Generated translations template .pot file.
