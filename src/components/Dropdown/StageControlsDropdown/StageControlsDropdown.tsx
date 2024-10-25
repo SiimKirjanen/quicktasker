@@ -19,6 +19,7 @@ import {
   PIPELINE_DELETE_STAGE,
 } from "../../../constants";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage, StageChangeDirection } from "../../../types/stage";
 import {
@@ -38,6 +39,9 @@ function StageControlsDropdown({ stage }: Props) {
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
   const { modalDispatch } = useContext(ModalContext);
+  const {
+    state: { isUserAllowedToDelete },
+  } = useContext(AppContext);
   const stagesLength = activePipeline?.stages?.length ?? 0;
   const stageTasksLenght = stage.tasks?.length ?? 0;
   const stageOrder = +stage.stage_order;
@@ -131,18 +135,20 @@ function StageControlsDropdown({ stage }: Props) {
         }
       />
 
-      <WPQTDropdownItem
-        text={__("Delete stage", "quicktasker")}
-        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-        onClick={deleteStage}
-        disabled={stageTasksLenght > 0}
-        className="!wpqt-mb-0"
-        id={`item-dropdown-${stage.id}`}
-        tooltipText={__(
-          "Stage can be deleted when there are no tasks on it",
-          "quicktasker",
-        )}
-      />
+      {isUserAllowedToDelete && (
+        <WPQTDropdownItem
+          text={__("Delete stage", "quicktasker")}
+          icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+          onClick={deleteStage}
+          disabled={stageTasksLenght > 0}
+          className="!wpqt-mb-0"
+          id={`item-dropdown-${stage.id}`}
+          tooltipText={__(
+            "Stage can be deleted when there are no tasks on it",
+            "quicktasker",
+          )}
+        />
+      )}
     </WPQTDropdown>
   );
 }

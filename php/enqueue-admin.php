@@ -9,12 +9,13 @@ use WPQT\Time\TimeRepository;
 use WPQT\Nonce\NonceService;
 use WPQT\Location\LocationService;
 use WPQT\Pipeline\PipelineRepository;
+use WPQT\Permission\PermissionService;
 
 add_action( 'admin_enqueue_scripts', 'wpqt_enqueue_app_assets' );
 function wpqt_enqueue_app_assets(){
 	$locationService = new LocationService();
 	$timeRepository = new TimeRepository();
-	
+
 	if( !$locationService->isWPQTPage() ) {
 		return;
 	}
@@ -41,6 +42,7 @@ function wpqt_enqueue_app_assets(){
 		'initialUsers' => $users,
 		'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
 		'timezone' => $timeRepository->getWPTimezone(),
+		'isUserAllowedToDelete' => PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints() ? "1" : "0",
 	));
 
 	// Set script translations

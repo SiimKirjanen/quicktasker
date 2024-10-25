@@ -7,6 +7,7 @@ type State = {
   publicUserPageId: string;
   is_customFields: boolean;
   timezone: string;
+  isUserAllowedToDelete: boolean;
 };
 
 const initialState: State = {
@@ -14,12 +15,18 @@ const initialState: State = {
   publicUserPageId: "",
   is_customFields: false,
   timezone: "",
+  isUserAllowedToDelete: false,
 };
 
 type Action =
   | {
       type: typeof INIT_APP_STATE;
-      payload: { siteURL: string; publicUserPageId: string; timezone: string };
+      payload: {
+        siteURL: string;
+        publicUserPageId: string;
+        timezone: string;
+        isUserAllowedToDelete: boolean;
+      };
     }
   | { type: typeof SET_SITE_URL; payload: string };
 
@@ -42,6 +49,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     const siteURL = window.wpqt.siteURL;
     const publicUserPageId = window.wpqt.publicUserPageId;
     const timezone = window.wpqt.timezone;
+    const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
 
     appDispatch({
       type: INIT_APP_STATE,
@@ -49,6 +57,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         siteURL,
         publicUserPageId,
         timezone,
+        isUserAllowedToDelete,
       },
     });
   }, []);

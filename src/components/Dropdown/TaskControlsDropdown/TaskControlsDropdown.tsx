@@ -9,6 +9,7 @@ import { __ } from "@wordpress/i18n";
 import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
 import {
@@ -23,11 +24,14 @@ type Props = {
 
 function TaskControlsDropdown({ task }: Props) {
   const { modalDispatch } = useContext(ModalContext);
-  const { deleteTask, archiveTask } = useTaskActions();
   const {
     state: { activePipeline },
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
+  const {
+    state: { isUserAllowedToDelete },
+  } = useContext(AppContext);
+  const { deleteTask, archiveTask } = useTaskActions();
 
   const openTaskEditModal = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -64,17 +68,19 @@ function TaskControlsDropdown({ task }: Props) {
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openTaskEditModal}
       />
-      <WPQTDropdownItem
-        text={__("Delete task", "quicktasker")}
-        icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-        onClick={async (e: React.MouseEvent) => {
-          e.stopPropagation();
-          await deleteTask(task.id, () => {
-            fetchAndSetPipelineData(activePipeline!.id);
-          });
-        }}
-        className="!wpqt-mb-0"
-      />
+      {isUserAllowedToDelete && (
+        <WPQTDropdownItem
+          text={__("Delete task", "quicktasker")}
+          icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+          onClick={async (e: React.MouseEvent) => {
+            e.stopPropagation();
+            await deleteTask(task.id, () => {
+              fetchAndSetPipelineData(activePipeline!.id);
+            });
+          }}
+          className="!wpqt-mb-0"
+        />
+      )}
     </WPQTDropdown>
   );
 }

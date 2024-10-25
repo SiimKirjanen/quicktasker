@@ -26,6 +26,18 @@ class PermissionService {
     }
 
     /**
+     * Checks if the current user has the required permissions to access public API delete endpoints.
+     *
+     * This function verifies if the current user has the necessary permissions defined by the 
+     * WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE capability.
+     *
+     * @return bool True if the user has the required permissions, false otherwise.
+     */
+    public static function hasRequiredPermissionsForPublicAPIDeleteEndpoints() {
+        return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE );
+    }
+
+    /**
      * Checks if a user is allowed to view a task.
      *
      * @param int $userId The ID of the user.

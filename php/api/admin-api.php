@@ -450,7 +450,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
             },
             'args' => array(
                 'id' => array(
@@ -755,7 +755,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
             },
             'args' => array(
                 'id' => array(
@@ -1023,7 +1023,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
             },
             'args' => array(
                 'id' => array(
@@ -1170,7 +1170,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
             },
             'args' => array(
                 'id' => array(
@@ -1233,7 +1233,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
             },
             'args' => array(
                 'id' => array(
@@ -1518,7 +1518,7 @@ function wpqt_register_api_routes() {
                 }
             },
             'permission_callback' => function() {
-                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
             },
             'args' => array(
                 'custom_field_id' => array(

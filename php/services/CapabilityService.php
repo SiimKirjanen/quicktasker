@@ -4,11 +4,12 @@ namespace WPQT\Capability;
 
 class CapabilityService {
 
-    /**
-     * Adds the QuickTasker admin capability to the administrator role.
+      /**
+     * Adds QuickTasker admin capabilities to the administrator role.
      *
-     * This function checks if the administrator role has the QuickTasker admin capability.
-     * If the capability is not present, it adds the capability to the administrator role.
+     * This function checks if the administrator role has the QuickTasker admin capabilities
+     * defined by WP_QUICKTASKER_ADMIN_ROLE and WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE.
+     * If the capabilities are not present, they are added to the administrator role.
      *
      * @return void
      */
@@ -18,13 +19,18 @@ class CapabilityService {
         if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE) ) {
             $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE);
         }
+
+        if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE) ) {
+            $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE);
+        }
     }
 
     /**
-     * Removes the QuickTasker admin capability from the administrator role.
+     * Removes QuickTasker admin capabilities from the administrator role.
      *
-     * This function checks if the administrator role has the QuickTasker admin capability
-     * and removes it if present.
+     * This function checks if the administrator role has the QuickTasker admin capabilities
+     * defined by WP_QUICKTASKER_ADMIN_ROLE and WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE.
+     * If the capabilities are present, they are removed from the administrator role.
      *
      * @return void
      */
@@ -33,6 +39,10 @@ class CapabilityService {
 
         if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE) ) {
             $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE);
+        }
+
+        if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE) ) {
+            $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE);
         }
     }
 }

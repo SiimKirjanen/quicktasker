@@ -12,6 +12,7 @@ type Props = {
   onChange: (newValue: string) => void;
   isAutoFocus?: boolean;
   className?: string;
+  wrapperClassName?: string;
   disabled?: boolean;
   type?: InputType;
   loading?: boolean;
@@ -23,7 +24,8 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
       value,
       onChange,
       isAutoFocus,
-      className,
+      className = "",
+      wrapperClassName = "",
       disabled = false,
       type = InputType.TEXT,
       loading = false,
@@ -31,7 +33,9 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     return (
-      <div className="wpqt-inline-block wpqt-relative wpqt-mb-3">
+      <div
+        className={`wpqt-inline-block wpqt-relative wpqt-mb-3 ${wrapperClassName}`}
+      >
         <Input
           ref={ref}
           autoFocus={isAutoFocus}

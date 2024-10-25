@@ -11,6 +11,7 @@ import {
   DELETE_USER_SESSION,
 } from "../../../constants";
 import { useTimezone } from "../../../hooks/useTimezone";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { UserSession } from "../../../types/user-session";
 
@@ -20,6 +21,9 @@ type Props = {
 
 function UserSession({ session }: Props) {
   const { usersSessionDispatch } = useContext(UserSessionsContext);
+  const {
+    state: { isUserAllowedToDelete },
+  } = useContext(AppContext);
   const { convertToWPTimezone } = useTimezone();
   const isActive = session.is_active;
 
@@ -76,11 +80,13 @@ function UserSession({ session }: Props) {
             title={__("Turn session on", "quicktasker")}
           />
         )}
-        <TrashIcon
-          className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
-          title={__("Delete session", "quicktasker")}
-          onClick={deleteSession}
-        />
+        {isUserAllowedToDelete && (
+          <TrashIcon
+            className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
+            title={__("Delete session", "quicktasker")}
+            onClick={deleteSession}
+          />
+        )}
       </div>
     </>
   );

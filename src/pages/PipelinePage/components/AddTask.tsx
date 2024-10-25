@@ -98,6 +98,7 @@ function AddTask({ stageId }: Props) {
             ref={inputRef}
             value={taskName}
             onChange={(value) => setTaskName(value)}
+            wrapperClassName="!wpqt-mb-0"
             className="!wpqt-mb-0"
           />
           {loading ? (

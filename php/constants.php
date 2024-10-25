@@ -72,11 +72,12 @@ Miscellaneous constants
 ==================================================================================================================================================================================================================
 */
 define('WP_QUICKTASKER_INVALID_SESSION_TOKEN', "Invalid session token");
-define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "2");
+define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "3");
 
 /*
 ==================================================================================================================================================================================================================
 Capabilities constants
 ==================================================================================================================================================================================================================
 */
-define('WP_QUICKTASKER_ADMIN_ROLE', "quicktasker_admin_role");
+define('WP_QUICKTASKER_ADMIN_ROLE', "quicktasker_admin_role"); //Allows access to QuickTasker admin pages and private API GET requests
+define('WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE', "quicktasker_admin_role_allow_delete"); //Allows private API DELETE requests

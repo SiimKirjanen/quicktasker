@@ -49,7 +49,7 @@ function CustomFields() {
       </div>
       <div className="wpqt-flex wpqt-justify-center">
         <WPQTIconButton
-          text={__("Close custom fields", "quicktasker")}
+          text={__("Close", "quicktasker")}
           onClick={() => setIsOpen(false)}
           icon={<EyeIcon className="wpqt-icon-red wpqt-size-5" />}
         />
