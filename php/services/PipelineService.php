@@ -109,4 +109,63 @@ class PipelineService {
 
         return $result;   
     }
+
+
+    /**
+     * Deletes a pipeline and its associated data from the database.
+     *
+     * This method performs the following actions:
+     * 1. Retrieves the pipeline by its ID.
+     * 2. Deletes the pipeline from the database.
+     * 3. Deletes all stages associated with the pipeline.
+     * 4. Deletes the location data of the pipeline stages.
+     * 5. Deletes all non-archived tasks associated with the pipeline.
+     *
+     * @param int $pipelineId The ID of the pipeline to be deleted.
+     * @return mixed The deleted pipeline object.
+     * @throws \Exception If the pipeline is not found or any of the delete operations fail.
+     */
+    public function deletePipeline($pipelineId) {
+        global $wpdb;
+
+        $pipeline = $this->pipelineRepository->getPipelineById($pipelineId);
+        if ($pipeline === null) {
+            throw new \Exception('Board not found');
+        }
+
+        // Delete the pipeline
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINES, array(
+            'id' => $pipelineId
+        ));
+        if ($result === false) {
+            throw new \Exception('Failed to delete a board');
+        }
+
+        // Delete the pipeline stages
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
+            'pipeline_id' => $pipelineId
+        ));
+        if ($result === false) {
+            throw new \Exception('Failed to delete board stages');
+        }
+
+        // Delete the pipeline stages location
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
+            'pipeline_id' => $pipelineId
+        ));
+        if ($result === false) {
+            throw new \Exception('Failed to delete board stages location');
+        }
+
+        // Delete not archived tasks
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS, array(
+            'pipeline_id' => $pipelineId,
+            'is_archived' => 0
+        ));
+        if ($result === false) {
+            throw new \Exception('Failed to delete board tasks');
+        }
+
+        return $pipeline;
+    }
 }

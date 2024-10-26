@@ -47,8 +47,6 @@ class LogService {
             throw new \Exception('Failed to add a log');
         }
 
-        $logId = $wpdb->insert_id;
-
-        return $this->logRepository->getLogById($logId);
+        return $this->logRepository->getLogById( $wpdb->insert_id );
     }
 }

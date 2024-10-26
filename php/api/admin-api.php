@@ -211,6 +211,38 @@ function wpqt_register_api_routes() {
         ),
     );
 
+    register_rest_route(
+        'wpqt/v1',
+        'pipelines/(?P<id>\d+)',
+        array(
+            'methods' => 'DELETE',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $pipelineService = new PipelineService();
+                    $logService = new LogService();
+                    
+                    $deletedPipeline = $pipelineService->deletePipeline($data['id']);
+                    $logService->log('Board ' . $deletedPipeline->name . ' deleted', WP_QT_LOG_TYPE_PIPELINE, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
+        ),
+    );
+
     /*
     ==================================================================================================================================================================================================================
     Task endpoints
