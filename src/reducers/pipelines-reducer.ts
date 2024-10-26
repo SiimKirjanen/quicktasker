@@ -1,6 +1,7 @@
 import {
   PIPELINE_ADD_PIPELINE,
   PIPELINE_EDIT_PIPELINE,
+  PIPELINE_REMOVE_PIPELINE,
   PIPELINE_SET_PRIMARY,
   PIPELINES_SET,
 } from "../constants";
@@ -71,6 +72,16 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         pipelines: state.pipelines.map((p) =>
           p.id === pipeline.id ? pipeline : p,
+        ),
+      };
+    }
+    case PIPELINE_REMOVE_PIPELINE: {
+      const pipelineId: string = action.payload;
+
+      return {
+        ...state,
+        pipelines: state.pipelines.filter(
+          (pipeline) => pipeline.id !== pipelineId,
         ),
       };
     }

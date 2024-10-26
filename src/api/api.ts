@@ -8,6 +8,7 @@ import {
   Pipeline,
   PipelineFromServer,
 } from "../types/pipeline";
+import { DeletePipelineResponse } from "../types/requestResponse/delete-pipeline-response";
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { Task, TaskFromServer } from "../types/task";
@@ -67,6 +68,16 @@ function setPipelinePrimaryRequest(pipelineId: string): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}/set-primary`,
     method: "PATCH",
+    headers: getCommonHeaders(),
+  });
+}
+
+function deletePipelineRequest(
+  pipelineId: string,
+): Promise<WPQTResponse<DeletePipelineResponse>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}`,
+    method: "DELETE",
     headers: getCommonHeaders(),
   });
 }
@@ -502,6 +513,7 @@ export {
   createPipelineRequest,
   createTaskRequest,
   createUserRequest,
+  deletePipelineRequest,
   deleteStageRequest,
   deleteTaskRequest,
   deleteUserRequest,

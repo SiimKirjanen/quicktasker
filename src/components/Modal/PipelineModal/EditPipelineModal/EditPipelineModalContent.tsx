@@ -1,3 +1,4 @@
+import { TrashIcon } from "@heroicons/react/24/outline";
 import {
   forwardRef,
   useContext,
@@ -6,9 +7,20 @@ import {
   useState,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
+import {
+  CLOSE_PIPELINE_MODAL,
+  PIPELINE_REMOVE_ACTIVE_PIPELINE,
+  PIPELINE_REMOVE_PIPELINE,
+  PIPELINE_SET_PRIMARY,
+} from "../../../../constants";
+import { usePipelineActions } from "../../../../hooks/actions/usePipelineActions";
+import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
+import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
 import { CustomFieldEntityType } from "../../../../types/custom-field";
 import { Pipeline } from "../../../../types/pipeline";
+import { WPQTIconButton } from "../../../common/Button/Button";
 import { WPQTInput } from "../../../common/Input/Input";
 import { WPQTTextarea } from "../../../common/TextArea/TextArea";
 import { CustomFieldsInModalWrap } from "../../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
@@ -28,7 +40,13 @@ const EditPipelineModalContent = forwardRef(
   ({ editPipeline, modalSaving }: Props, ref) => {
     const {
       state: { pipelineToEdit },
+      modalDispatch,
     } = useContext(ModalContext);
+    const { fetchAndSetPipelineData, dispatch } = useContext(
+      ActivePipelineContext,
+    );
+    const { pipelinesDispatch } = useContext(PipelinesContext);
+    const { deletePipeline } = usePipelineActions();
     const [pipelineName, setPipelineName] = useState("");
     const [pipelineDescription, setPipelineDescription] = useState("");
 
@@ -49,6 +67,31 @@ const EditPipelineModalContent = forwardRef(
       }
     };
 
+    const onDeletePipeline = () => {
+      if (!pipelineToEdit) return;
+
+      deletePipeline(
+        pipelineToEdit.id,
+        (removedPipelineId, pipelineIdToLoad) => {
+          modalDispatch({ type: CLOSE_PIPELINE_MODAL });
+          toast.success(__("Board deleted. Refreshing data", "quicktasker"));
+          pipelinesDispatch({
+            type: PIPELINE_REMOVE_PIPELINE,
+            payload: removedPipelineId,
+          });
+          if (pipelineIdToLoad !== null) {
+            pipelinesDispatch({
+              type: PIPELINE_SET_PRIMARY,
+              payload: pipelineIdToLoad,
+            });
+            fetchAndSetPipelineData(pipelineIdToLoad);
+          } else {
+            dispatch({ type: PIPELINE_REMOVE_ACTIVE_PIPELINE });
+          }
+        },
+      );
+    };
+
     const clearContent = () => {
       setPipelineName("");
       setPipelineDescription("");
@@ -62,32 +105,40 @@ const EditPipelineModalContent = forwardRef(
 
     return (
       <>
-        <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 md:wpqt-grid-cols-[auto_1fr]">
-          <div>
-            <WPQTModalFieldSet>
-              <WPQTModalField label={__("Name", "quicktasker")}>
-                <WPQTInput
-                  isAutoFocus={true}
-                  value={pipelineName}
-                  onChange={(newValue: string) => setPipelineName(newValue)}
-                />
-              </WPQTModalField>
-              <WPQTModalField label={__("Description", "quicktasker")}>
-                <WPQTTextarea
-                  rowsCount={3}
-                  value={pipelineDescription}
-                  onChange={(newValue: string) =>
-                    setPipelineDescription(newValue)
-                  }
-                />
-              </WPQTModalField>
-            </WPQTModalFieldSet>
+        <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
+          <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
+            <div className="wpqt-mb-5 wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[auto_1fr]">
+              <WPQTModalFieldSet>
+                <WPQTModalField label={__("Name", "quicktasker")}>
+                  <WPQTInput
+                    isAutoFocus={true}
+                    value={pipelineName}
+                    onChange={(newValue: string) => setPipelineName(newValue)}
+                  />
+                </WPQTModalField>
+                <WPQTModalField label={__("Description", "quicktasker")}>
+                  <WPQTTextarea
+                    rowsCount={3}
+                    value={pipelineDescription}
+                    onChange={(newValue: string) =>
+                      setPipelineDescription(newValue)
+                    }
+                  />
+                </WPQTModalField>
+              </WPQTModalFieldSet>
+              <CustomFieldsInModalWrap
+                entityId={pipelineToEdit.id}
+                entityType={CustomFieldEntityType.Pipeline}
+              />
+            </div>
           </div>
-
-          <CustomFieldsInModalWrap
-            entityId={pipelineToEdit.id}
-            entityType={CustomFieldEntityType.Pipeline}
-          />
+          <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
+            <WPQTIconButton
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+              text={__("Delete board", "quicktasker")}
+              onClick={onDeletePipeline}
+            />
+          </div>
         </div>
         <WPQTModalFooter
           onSave={savePipeline}

@@ -2,6 +2,7 @@ import { createContext, useEffect, useReducer } from "@wordpress/element";
 import {
   PIPELINE_ADD_PIPELINE,
   PIPELINE_EDIT_PIPELINE,
+  PIPELINE_REMOVE_PIPELINE,
   PIPELINE_SET_PRIMARY,
   PIPELINES_SET,
 } from "../constants";
@@ -20,6 +21,7 @@ type Action =
   | { type: typeof PIPELINES_SET; payload: PipelineFromServer[] }
   | { type: typeof PIPELINE_ADD_PIPELINE; payload: PipelineFromServer }
   | { type: typeof PIPELINE_EDIT_PIPELINE; payload: Pipeline }
+  | { type: typeof PIPELINE_REMOVE_PIPELINE; payload: string }
   | { type: typeof PIPELINE_SET_PRIMARY; payload: string };
 
 type Dispatch = (action: Action) => void;

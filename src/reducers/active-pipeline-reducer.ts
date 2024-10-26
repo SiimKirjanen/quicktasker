@@ -8,6 +8,7 @@ import {
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
+  PIPELINE_REMOVE_ACTIVE_PIPELINE,
   PIPELINE_REMOVE_USER_FROM_TASK,
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
@@ -330,6 +331,12 @@ const activePipelineReducer = (state: State, action: Action) => {
           ...state.activePipeline,
           stages: updatedStages,
         },
+      };
+    }
+    case PIPELINE_REMOVE_ACTIVE_PIPELINE: {
+      return {
+        ...state,
+        activePipeline: null,
       };
     }
     default:

@@ -18,10 +18,15 @@ class PipelineService {
     }
 
     /**
-     * Creates a pipeline with the given name.
+     * Creates a new pipeline with the given name.
      *
-     * @param string $name The name of the pipeline.
-     * @return void
+     * This method inserts a new pipeline record into the database. If there is no active pipeline,
+     * the new pipeline is set as the primary pipeline. The creation and update timestamps are set
+     * to the current UTC time.
+     *
+     * @param string $name The name of the new pipeline.
+     * @return mixed The newly created pipeline object.
+     * @throws \Exception If the pipeline creation fails.
      */
     public function createPipeline($name) {
         global $wpdb;
@@ -129,6 +134,8 @@ class PipelineService {
         global $wpdb;
 
         $pipeline = $this->pipelineRepository->getPipelineById($pipelineId);
+        $pipelineIdToLoadAfterDelete = null;
+
         if ($pipeline === null) {
             throw new \Exception('Board not found');
         }
@@ -166,6 +173,25 @@ class PipelineService {
             throw new \Exception('Failed to delete board tasks');
         }
 
-        return $pipeline;
+        // If the pipeline was the primary pipeline, mark another pipeline as primary
+        if($pipeline->is_primary) {
+            $newActivePipeline = $wpdb->get_row("SELECT * FROM " . TABLE_WP_QUICKTASKER_PIPELINES . " WHERE is_primary = 0 ORDER BY id ASC LIMIT 1");
+
+            if ($newActivePipeline) {
+                $this->markPipelineAsPrimary($newActivePipeline->id);
+                $pipelineIdToLoadAfterDelete = $newActivePipeline->id;
+            }
+        }else {
+            $currentActivePipeline = $this->pipelineRepository->getActivePipeline();
+            if( $currentActivePipeline === null ) {
+                throw new \Exception('Failed to get active board');
+            }
+            $pipelineIdToLoadAfterDelete = $currentActivePipeline->id;
+        }
+
+        return (object)[
+            'deletedPipeline' => $pipeline,
+            'pipelineIdToLoad' => $pipelineIdToLoadAfterDelete,
+        ];
     }
 }

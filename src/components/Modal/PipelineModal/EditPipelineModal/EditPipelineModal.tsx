@@ -39,7 +39,7 @@ function EditPipelineModal() {
   };
 
   return (
-    <WPQTModal modalOpen={pipelineModalOpen} closeModal={closeModal} size="lg">
+    <WPQTModal modalOpen={pipelineModalOpen} closeModal={closeModal} size="xl">
       <EditPipelineModalContent
         ref={modalContentRef}
         editPipeline={editPipeline}

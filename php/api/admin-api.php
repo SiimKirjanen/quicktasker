@@ -217,16 +217,26 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'DELETE',
             'callback' => function( $data ) {
+                global $wpdb;
+
                 try {
                     WPQTverifyApiNonce($data);
+                    $wpdb->query('START TRANSACTION');
+
                     $pipelineService = new PipelineService();
                     $logService = new LogService();
                     
-                    $deletedPipeline = $pipelineService->deletePipeline($data['id']);
-                    $logService->log('Board ' . $deletedPipeline->name . ' deleted', WP_QT_LOG_TYPE_PIPELINE, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $data = $pipelineService->deletePipeline($data['id']);
+                    $logService->log('Board ' . $data->deletedPipeline->name . ' deleted', WP_QT_LOG_TYPE_PIPELINE, $data->deletedPipeline->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $wpdb->query('COMMIT');
 
-                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                    return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                        'deletedPipelineId' => $data->deletedPipeline->id,
+                        'pipelineIdToLoad' => $data->pipelineIdToLoad
+                    ]))->toArray(), 200);
                 } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
+
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },
