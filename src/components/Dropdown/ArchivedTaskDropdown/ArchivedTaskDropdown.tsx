@@ -26,6 +26,7 @@ function ArchivedTaskDropdown({ task }: Props) {
   } = useContext(AppContext);
   const { archiveDispatch } = useContext(ArchiveContext);
   const { deleteTask, restoreArchivedTask } = useTaskActions();
+  const pipelineExists = task.pipeline_name !== null;
 
   return (
     <WPQTDropdown
@@ -44,6 +45,9 @@ function ArchivedTaskDropdown({ task }: Props) {
       <WPQTDropdownItem
         text="Restore task"
         icon={<ArrowUturnUpIcon className="wpqt-icon-green wpqt-size-4" />}
+        disabled={!pipelineExists}
+        id={`restore-task-${task.id}-dropdown-item`}
+        tooltipText="Task cannot be restored because the board has been deleted."
         onClick={async (e: React.MouseEvent) => {
           e.stopPropagation();
           await restoreArchivedTask(task.id, () => {

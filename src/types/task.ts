@@ -3,6 +3,7 @@ import { ServerUser, User } from "./user";
 type BaseTask = {
   id: string;
   pipeline_id: string;
+  pipeline_name: string | null;
   stage_id: string;
   name: string;
   description: string;

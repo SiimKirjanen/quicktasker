@@ -18,10 +18,15 @@ class PipelineService {
     }
 
     /**
-     * Creates a pipeline with the given name.
+     * Creates a new pipeline with the given name.
      *
-     * @param string $name The name of the pipeline.
-     * @return void
+     * This method inserts a new pipeline record into the database. If there is no active pipeline,
+     * the new pipeline is set as the primary pipeline. The creation and update timestamps are set
+     * to the current UTC time.
+     *
+     * @param string $name The name of the new pipeline.
+     * @return mixed The newly created pipeline object.
+     * @throws \Exception If the pipeline creation fails.
      */
     public function createPipeline($name) {
         global $wpdb;
@@ -108,5 +113,85 @@ class PipelineService {
         }
 
         return $result;   
+    }
+
+
+    /**
+     * Deletes a pipeline and its associated data from the database.
+     *
+     * This method performs the following actions:
+     * 1. Retrieves the pipeline by its ID.
+     * 2. Deletes the pipeline from the database.
+     * 3. Deletes all stages associated with the pipeline.
+     * 4. Deletes the location data of the pipeline stages.
+     * 5. Deletes all non-archived tasks associated with the pipeline.
+     *
+     * @param int $pipelineId The ID of the pipeline to be deleted.
+     * @return mixed The deleted pipeline object.
+     * @throws \Exception If the pipeline is not found or any of the delete operations fail.
+     */
+    public function deletePipeline($pipelineId) {
+        global $wpdb;
+
+        $pipeline = $this->pipelineRepository->getPipelineById($pipelineId);
+        $pipelineIdToLoadAfterDelete = null;
+
+        if ($pipeline === null) {
+            throw new \Exception('Board not found');
+        }
+
+        // Delete the pipeline
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINES, array(
+            'id' => $pipelineId
+        ));
+        if ($result === false) {
+            throw new \Exception('Failed to delete a board');
+        }
+
+        // Delete the pipeline stages
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
+            'pipeline_id' => $pipelineId
+        ));
+        if ($result === false) {
+            throw new \Exception('Failed to delete board stages');
+        }
+
+        // Delete the pipeline stages location
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
+            'pipeline_id' => $pipelineId
+        ));
+        if ($result === false) {
+            throw new \Exception('Failed to delete board stages location');
+        }
+
+        // Delete not archived tasks
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS, array(
+            'pipeline_id' => $pipelineId,
+            'is_archived' => 0
+        ));
+        if ($result === false) {
+            throw new \Exception('Failed to delete board tasks');
+        }
+
+        // If the pipeline was the primary pipeline, mark another pipeline as primary
+        if($pipeline->is_primary) {
+            $newActivePipeline = $wpdb->get_row("SELECT * FROM " . TABLE_WP_QUICKTASKER_PIPELINES . " WHERE is_primary = 0 ORDER BY id ASC LIMIT 1");
+
+            if ($newActivePipeline) {
+                $this->markPipelineAsPrimary($newActivePipeline->id);
+                $pipelineIdToLoadAfterDelete = $newActivePipeline->id;
+            }
+        }else {
+            $currentActivePipeline = $this->pipelineRepository->getActivePipeline();
+            if( $currentActivePipeline === null ) {
+                throw new \Exception('Failed to get active board');
+            }
+            $pipelineIdToLoadAfterDelete = $currentActivePipeline->id;
+        }
+
+        return (object)[
+            'deletedPipeline' => $pipeline,
+            'pipelineIdToLoad' => $pipelineIdToLoadAfterDelete,
+        ];
     }
 }

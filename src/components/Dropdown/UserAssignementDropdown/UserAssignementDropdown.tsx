@@ -8,19 +8,21 @@ type Props = {
   task: Task;
   onUserAdd?: (user: User) => void;
   onUserDelete?: (user: User) => void;
+  menuBtnClasses?: string;
 };
 
 function UserAssignementDropdown({
   task,
   onUserAdd = () => {},
   onUserDelete = () => {},
+  menuBtnClasses = "",
 }: Props) {
   const hasAssignedUsers =
     task.assigned_users && task.assigned_users.length > 0;
 
   return (
     <WPQTDropdown
-      menuBtnClasses="wpqt-inline-flex"
+      menuBtnClasses={`wpqt-inline-flex ${menuBtnClasses}`}
       anchor="bottom start"
       menuBtn={() => (
         <div className="wpqt-group wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1">
