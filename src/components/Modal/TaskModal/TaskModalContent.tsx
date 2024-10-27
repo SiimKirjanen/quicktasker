@@ -66,6 +66,7 @@ const TaskModalContent = forwardRef(
     const { deleteTask, archiveTask, restoreArchivedTask } = useTaskActions();
 
     const isTaskArchived = taskToEdit?.is_archived;
+    const pipelineExists = taskToEdit?.pipeline_name !== null;
 
     useEffect(() => {
       if (taskToEdit) {
@@ -174,7 +175,7 @@ const TaskModalContent = forwardRef(
           </div>
 
           <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
-            {isTaskArchived ? (
+            {isTaskArchived && pipelineExists && (
               <WPQTIconButton
                 icon={
                   <ArrowUturnUpIcon className="wpqt-icon-green wpqt-size-5" />
@@ -190,7 +191,8 @@ const TaskModalContent = forwardRef(
                   });
                 }}
               />
-            ) : (
+            )}
+            {!isTaskArchived && (
               <WPQTIconButton
                 icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-5" />}
                 text={__("Archive task", "quicktasker")}

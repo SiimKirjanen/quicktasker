@@ -1,5 +1,7 @@
+import { ViewColumnsIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
-import { WPQTCard } from "../../../../components/Card/Card";
+import { __ } from "@wordpress/i18n";
+import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
 import { TaskCardActions } from "../../../../components/Card/TaskCardActions";
 import { ArchivedTaskDropdown } from "../../../../components/Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
@@ -34,6 +36,15 @@ function ArchiveItem({ task }: Props) {
         });
       }}
     >
+      <WPQTCardDataItem
+        label={__("Board", "quicktasker")}
+        value={
+          task.pipeline_name
+            ? task.pipeline_name
+            : __("Board is deleted", "quicktasker")
+        }
+        icon={<ViewColumnsIcon className="wpqt-size-5 wpqt-icon-blue" />}
+      />
       <UserAssignementDropdown
         task={task}
         onUserAdd={(user: User) => {

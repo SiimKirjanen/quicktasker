@@ -42,9 +42,10 @@ class TaskRepository {
         global $wpdb;
 
         $tasks = $wpdb->get_results($wpdb->prepare(
-           "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
-            LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b
-            ON a.id = b.task_id
+           "SELECT a.*, b.task_order, b.stage_id, c.name as pipeline_name
+            FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b ON a.id = b.task_id
+            LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON a.pipeline_id = c.id
             WHERE a.is_archived = 1"
         ));
     
