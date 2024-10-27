@@ -41,11 +41,12 @@ function ArchiveItem({ task }: Props) {
         value={
           task.pipeline_name
             ? task.pipeline_name
-            : __("Board is deleted", "quicktasker")
+            : __("Board is deleted!", "quicktasker")
         }
         icon={<ViewColumnsIcon className="wpqt-size-5 wpqt-icon-blue" />}
       />
       <UserAssignementDropdown
+        menuBtnClasses="wpqt-self-start"
         task={task}
         onUserAdd={(user: User) => {
           archiveDispatch({

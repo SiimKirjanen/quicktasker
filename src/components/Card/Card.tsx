@@ -59,7 +59,7 @@ type WPQTCardDataItemProps = {
 function WPQTCardDataItem({
   label,
   value,
-  valueClassName,
+  valueClassName = "",
   valueLink,
   icon,
   onClick = () => {},

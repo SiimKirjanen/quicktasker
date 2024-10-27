@@ -57,6 +57,12 @@ function AddTask({ stageId }: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (showTaskInput) {
+      inputRef.current?.focus();
+    }
+  }, [showTaskInput]);
+
   const createTask = async () => {
     if (!taskName) {
       toast.error(__("Task name is required", "quicktasker"));
