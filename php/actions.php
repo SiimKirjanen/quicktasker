@@ -4,18 +4,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 use WPQT\Location\LocationService;
-
-add_action( 'plugins_loaded', 'wpqt_update_db' );
-function wpqt_update_db() {
-    wpqt_set_up_db();
-}
+use WPQT\Asset\AssetRepository;
 
 /**
- * Adds a custom action to modify the HTTP status code for specific pages.
+ * Hook into 'plugins_loaded' action to update the database.
  *
- * This function hooks into the 'template_redirect' action and checks if the current
- * page is a public user page as defined by the LocationService. If it is, it prevents
- * a 404 status and sets the HTTP status code to 200.
+ * This function is hooked to the 'plugins_loaded' action and is responsible for
+ * calling the wpqt_set_up_db() function to set up or update the database.
  *
  * @return void
  */
@@ -30,7 +25,20 @@ function wpqt_custom_http_status_code() {
     }
 }
 
-
+/**
+ * Removes unnecessary tags and scripts from the WordPress header and footer for public user pages.
+ *
+ * This function performs the following actions:
+ * - Removes WordPress emoji scripts and styles.
+ * - Removes various tags from the WordPress header, including RSD link, WordPress generator, feed links, and more.
+ * - Disables hreflang type for MultilingualPress.
+ * - Removes the skip link script from the footer.
+ * - Dequeues block library and global styles inline CSS.
+ *
+ * The function is hooked to the 'after_setup_theme' action and only executes if the current page is a public user page as determined by the LocationService.
+ *
+ * @return void
+ */
 add_action( 'after_setup_theme', 'wpqt_remove_unnecessary_tags_and_more' );
 function wpqt_remove_unnecessary_tags_and_more(){
     $locationService = new LocationService();
@@ -69,5 +77,28 @@ function wpqt_remove_unnecessary_tags_and_more(){
             wp_dequeue_style( 'wp-block-library' );
 			wp_dequeue_style( 'global-styles' );
         }, 100 );
+	}
+}
+
+/**
+ * Hooks into the 'wp_print_scripts' action to include allowed scripts.
+ *
+ * This function checks if the current page is a WPQT public user page. If it is,
+ * it retrieves the script dependencies from the AssetRepository and merges them
+ * with the 'wpqt-script'. The resulting array of allowed scripts is then set to
+ * the global $wp_scripts queue.
+ *
+ * @return void
+ */
+add_action('wp_print_scripts', 'wpqt_include_allowed_scripts', PHP_INT_MAX);
+function wpqt_include_allowed_scripts() {
+	$locationService = new LocationService();
+
+	if( $locationService->isWPQTPublicUserPage() ) {
+		global $wp_scripts;
+
+		$dependencies = AssetRepository::getWPQTScriptDependencies();
+		$allowedToLoad = array_merge($dependencies, array('wpqt-script'));
+		$wp_scripts->queue = $allowedToLoad;
 	}
 }

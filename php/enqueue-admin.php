@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPQT\User\UserRepository;
 use WPQT\Time\TimeRepository;
+use WPQT\Asset\AssetRepository;
 use WPQT\Nonce\NonceService;
 use WPQT\Location\LocationService;
 use WPQT\Pipeline\PipelineRepository;
@@ -27,8 +28,8 @@ function wpqt_enqueue_app_assets(){
 	$pipelines = $pipelineRepo->getPipelines();
 	$users = $userRepo->getUsers();
 
-	$build_asset = require(WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/build/app.asset.php');
-	$dependencies = array_merge(array('wp-element', 'wp-api-fetch'), $build_asset['dependencies']);
+	$build_asset = AssetRepository::getWPQTScriptBildAssets();
+	$dependencies = AssetRepository::getWPQTScriptDependencies();
 
 	wp_enqueue_style( 'wpqt-tailwind', WP_QUICKTASKER_PLUGIN_FOLDER_URL . 'build/tailwind.css');
     wp_enqueue_script('wpqt-script', WP_QUICKTASKER_PLUGIN_FOLDER_URL . 'build/app.js', $dependencies, $build_asset['version'], true);
