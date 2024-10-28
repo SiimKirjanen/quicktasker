@@ -14,11 +14,15 @@ Task management plugin to get tasks done with the help of assigned users.
 
 Task management plugin to get tasks done with the help of assigned users.
 
-QuickTasker is a plugin that offers the following and more to manage your tasks.
+QuickTasker is a plugin that offers the following and more to organize your project tasks.
 
 * Create boards with multiple stages and move tasks between stages to track progress.
-* Create QuickTasker users and assign tasks to them.
-* Each QuickTasker user has their own mobile-like page where they can manage assigned tasks.
+* Create and assign tasks to users.
+* Each user has a mobile-like page to manage their tasks.
+* Archive tasks to keep your boards clean and organized.
+* Private and public comments on tasks and users.
+* Logs to track changes and updates.
+* Track user sessions to monitor activity.
 
 == Installation ==
 
