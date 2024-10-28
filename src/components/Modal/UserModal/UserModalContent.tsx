@@ -20,6 +20,7 @@ import {
   RESET_PASSWORD,
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
+import { useLoadingStates } from "../../../hooks/useLoadingStates";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
@@ -57,6 +58,14 @@ const UserModalContent = forwardRef(function UserModalContent(
   const [hasPassword, setHasPassword] = useState(false);
   const { changeUserStatus, deleteUser, resetUserPassword } = useUserActions();
   const { userDispatch } = useContext(UserContext);
+  const {
+    loading1: isResetPWLoading,
+    setLoading1: setIsResetPWLoading,
+    loading2: isActivateLoading,
+    setLoading2: setIsActivateLoading,
+    loading3: isDeleteLoading,
+    setLoading3: setIsDeleteLoading,
+  } = useLoadingStates();
 
   useEffect(() => {
     if (userToEdit) {
@@ -149,7 +158,9 @@ const UserModalContent = forwardRef(function UserModalContent(
             <WPQTIconButton
               icon={<KeyIcon className="wpqt-icon-red wpqt-size-5" />}
               text={__("Reset password", "quicktasker")}
+              loading={isResetPWLoading}
               onClick={async () => {
+                setIsResetPWLoading(true);
                 await resetUserPassword(userToEdit.id, () => {
                   userDispatch({
                     type: RESET_PASSWORD,
@@ -157,6 +168,7 @@ const UserModalContent = forwardRef(function UserModalContent(
                   });
                   setHasPassword(false);
                 });
+                setIsResetPWLoading(false);
               }}
             />
           )}
@@ -164,7 +176,9 @@ const UserModalContent = forwardRef(function UserModalContent(
             <WPQTIconButton
               icon={<PowerIcon className="wpqt-icon-green wpqt-size-5" />}
               text={__("Activate user", "quicktasker")}
+              loading={isActivateLoading}
               onClick={async () => {
+                setIsActivateLoading(true);
                 await changeUserStatus(userToEdit!.id, true, (userData) => {
                   userDispatch({
                     type: EDIT_USER,
@@ -172,6 +186,7 @@ const UserModalContent = forwardRef(function UserModalContent(
                   });
                   setIsActiveUser(true);
                 });
+                setIsActivateLoading(false);
               }}
             />
           )}
@@ -179,7 +194,9 @@ const UserModalContent = forwardRef(function UserModalContent(
             <WPQTIconButton
               icon={<PowerIcon className="wpqt-icon-red wpqt-size-5" />}
               text={__("Disable user", "quicktasker")}
+              loading={isActivateLoading}
               onClick={async () => {
+                setIsActivateLoading(true);
                 await changeUserStatus(userToEdit!.id, false, (userData) => {
                   userDispatch({
                     type: EDIT_USER,
@@ -187,6 +204,7 @@ const UserModalContent = forwardRef(function UserModalContent(
                   });
                   setIsActiveUser(false);
                 });
+                setIsActivateLoading(false);
               }}
             />
           )}
@@ -194,7 +212,9 @@ const UserModalContent = forwardRef(function UserModalContent(
             <WPQTIconButton
               icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
               text={__("Delete user", "quicktasker")}
+              loading={isDeleteLoading}
               onClick={async () => {
+                setIsDeleteLoading(true);
                 await deleteUser(userToEdit!.id, (userId) => {
                   userDispatch({
                     type: DELETE_USER,
@@ -204,6 +224,7 @@ const UserModalContent = forwardRef(function UserModalContent(
                     type: CLOSE_USER_MODAL,
                   });
                 });
+                setIsDeleteLoading(false);
               }}
             />
           )}

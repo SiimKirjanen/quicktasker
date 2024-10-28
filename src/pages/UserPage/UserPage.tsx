@@ -52,6 +52,14 @@ function UserPage({ userId }: Props) {
       return prevData;
     });
   };
+  const onChangePasswordStatus = async (status: boolean) => {
+    setUserData((prevData) => {
+      if (prevData) {
+        return { ...prevData, has_password: status };
+      }
+      return prevData;
+    });
+  };
 
   return (
     <Page>
@@ -65,6 +73,7 @@ function UserPage({ userId }: Props) {
             data={userData}
             changeStatus={onChangeStatus}
             changeSetUpStatus={onChangeSetUpStatus}
+            changePasswordStatus={onChangePasswordStatus}
           />
         </>
       )}

@@ -24,6 +24,7 @@ function CustomFieldCreation({ description }: Props) {
     state: { entityId, entityType },
     customFieldsDispatch,
   } = useContext(CustomFieldsContext);
+  const [loading, setLoading] = useState(false);
 
   const customFieldTypeOptions: Option[] = [
     { value: CustomFieldType.Text, label: "Text" },
@@ -35,6 +36,7 @@ function CustomFieldCreation({ description }: Props) {
       console.error("Entity ID or Entity Type is missing");
       return;
     }
+    setLoading(true);
     await addCustomField(
       entityId,
       entityType,
@@ -49,6 +51,7 @@ function CustomFieldCreation({ description }: Props) {
         resetState();
       },
     );
+    setLoading(false);
   };
 
   const resetState = () => {
@@ -109,6 +112,7 @@ function CustomFieldCreation({ description }: Props) {
           <WPQTIconButton
             text={__("Add", "quicktasker")}
             onClick={createCustomField}
+            loading={loading}
             icon={<PlusCircleIcon className="wpqt-icon-green wpqt-size-5" />}
           />
         )}

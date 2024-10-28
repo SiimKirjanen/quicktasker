@@ -31,6 +31,7 @@ function CommentsAndLogsTabContent<T>({
   const [data, setData] = useState<T[] | null>(null);
   const [newEntry, setNewEntry] = useState("");
   const [loadingComments, setLoadingComments] = useState(true);
+  const [addingEntry, setAddingEntry] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -46,11 +47,13 @@ function CommentsAndLogsTabContent<T>({
   };
 
   const addEntry = async () => {
+    setAddingEntry(true);
     const entry = await onAdd(newEntry);
     if (entry) {
       setData((prevData) => (prevData ? [...prevData, entry] : [entry]));
       setNewEntry("");
     }
+    setAddingEntry(false);
   };
 
   if (data === null) {
@@ -94,6 +97,7 @@ function CommentsAndLogsTabContent<T>({
             />
             <WPQTIconButton
               text="Add comment"
+              loading={addingEntry}
               onClick={addEntry}
               className="wpqt-float-right"
               icon={
