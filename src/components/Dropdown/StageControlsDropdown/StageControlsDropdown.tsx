@@ -3,11 +3,11 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   Cog8ToothIcon,
-  PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
+import { TfiSave } from "react-icons/tfi";
 import { toast } from "react-toastify";
 import {
   archiveStageTasksRequest,
@@ -119,7 +119,7 @@ function StageControlsDropdown({ stage }: Props) {
       )}
       <WPQTDropdownItem
         text={__("Edit stage", "quicktasker")}
-        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
+        icon={<TfiSave className="wpqt-icon-blue wpqt-size-3" />}
         onClick={openStageEditModal}
       />
       <WPQTDropdownItem

@@ -88,7 +88,7 @@ const StageModalContent = forwardRef(
             stageModalSaving
               ? __("Saving...", "quicktasker")
               : editingStage
-                ? __("Save changes", "quicktasker")
+                ? __("Save", "quicktasker")
                 : __("Add stage", "quicktasker")
           }
         />

@@ -145,7 +145,7 @@ const EditPipelineModalContent = forwardRef(
           saveBtnText={
             modalSaving
               ? __("Saving...", "quicktasker")
-              : __("Edit board", "quicktasker")
+              : __("Save", "quicktasker")
           }
         />
       </>

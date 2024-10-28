@@ -7,7 +7,8 @@ import {
   Fieldset,
   Label,
 } from "@headlessui/react";
-import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { TfiSave } from "react-icons/tfi";
 import { WPQTIconButton } from "../common/Button/Button";
 import { WPQTTooltip } from "../Tooltip/WPQTTooltip";
 
@@ -115,7 +116,7 @@ function WPQTModalFooter({
     <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
       <WPQTIconButton
         text={saveBtnText}
-        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-5" />}
+        icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
         onClick={onSave}
       />
     </div>
