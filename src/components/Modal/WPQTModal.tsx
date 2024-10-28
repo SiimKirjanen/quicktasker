@@ -108,14 +108,17 @@ function WPQTModalField({
 function WPQTModalFooter({
   onSave,
   saveBtnText,
+  loading = false,
 }: {
   onSave: () => void;
   saveBtnText: string;
+  loading?: boolean;
 }) {
   return (
     <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
       <WPQTIconButton
         text={saveBtnText}
+        loading={loading}
         icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
         onClick={onSave}
       />

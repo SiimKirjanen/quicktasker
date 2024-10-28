@@ -41,7 +41,7 @@ class StageService {
         $args = wp_parse_args($args, $defaults);
 
         if ( empty($args['name']) ) {
-            throw new Exception('Required fields are missing');
+            throw new \Exception('Required fields are missing');
         }
 
         $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(

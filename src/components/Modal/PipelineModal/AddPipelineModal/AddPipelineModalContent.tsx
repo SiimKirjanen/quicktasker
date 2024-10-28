@@ -52,11 +52,8 @@ const PipelineModalContent = forwardRef(
         </WPQTModalFieldSet>
         <WPQTModalFooter
           onSave={savePipeline}
-          saveBtnText={
-            modalSaving
-              ? __("Saving...", "quicktasker")
-              : __("Add board", "quicktasker")
-          }
+          loading={modalSaving}
+          saveBtnText={__("Add board", "quicktasker")}
         />
       </>
     );

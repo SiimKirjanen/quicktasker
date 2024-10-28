@@ -853,6 +853,10 @@
   left: 0px;
 }
 
+.wpqt-left-1\/2 {
+  left: 50%;
+}
+
 .wpqt-right-2 {
   right: 0.5rem;
 }
@@ -1054,6 +1058,11 @@
   height: 0.5rem;
 }
 
+.wpqt-size-3 {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
 .wpqt-size-4 {
   width: 1rem;
   height: 1rem;
@@ -1082,11 +1091,6 @@
 .wpqt-size-9 {
   width: 2.25rem;
   height: 2.25rem;
-}
-
-.wpqt-size-3 {
-  width: 0.75rem;
-  height: 0.75rem;
 }
 
 .wpqt-h-\[200px\] {

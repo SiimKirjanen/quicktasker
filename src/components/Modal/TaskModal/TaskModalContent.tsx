@@ -28,6 +28,7 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
+import { useLoadingStates } from "../../../hooks/useLoadingStates";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
@@ -65,6 +66,12 @@ const TaskModalContent = forwardRef(
     const [taskDescription, setTaskDescription] = useState("");
     const [freeForAllTask, setFreeForAllTask] = useState(false);
     const { archiveTask, restoreArchivedTask } = useTaskActions();
+    const {
+      loading1: isDeletingTask,
+      setLoading1: setIsDeletingTask,
+      loading2: archiveLoading,
+      setLoading2: setArchiveLoading,
+    } = useLoadingStates();
 
     const isTaskArchived = taskToEdit?.is_archived;
     const pipelineExists = taskToEdit?.pipeline_name !== null;
@@ -197,10 +204,13 @@ const TaskModalContent = forwardRef(
               <WPQTIconButton
                 icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-5" />}
                 text={__("Archive task", "quicktasker")}
+                loading={archiveLoading}
                 onClick={() => {
+                  setArchiveLoading(true);
                   archiveTask(taskToEdit.id, () => {
                     modalDispatch({ type: CLOSE_TASK_MODAL });
                     fetchAndSetPipelineData(activePipeline!.id);
+                    setArchiveLoading(false);
                   });
                 }}
               />
@@ -210,9 +220,12 @@ const TaskModalContent = forwardRef(
               <WPQTIconButton
                 icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
                 text={__("Delete task", "quicktasker")}
+                loading={isDeletingTask}
                 onClick={async () => {
+                  setIsDeletingTask(true);
                   await deleteTask(taskToEdit);
                   modalDispatch({ type: CLOSE_TASK_MODAL });
+                  setIsDeletingTask(false);
                 }}
               />
             )}

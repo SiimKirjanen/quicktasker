@@ -84,12 +84,11 @@ const StageModalContent = forwardRef(
         </WPQTModalFieldSet>
         <WPQTModalFooter
           onSave={saveStage}
+          loading={stageModalSaving}
           saveBtnText={
-            stageModalSaving
-              ? __("Saving...", "quicktasker")
-              : editingStage
-                ? __("Save", "quicktasker")
-                : __("Add stage", "quicktasker")
+            editingStage
+              ? __("Save", "quicktasker")
+              : __("Add stage", "quicktasker")
           }
         />
       </>

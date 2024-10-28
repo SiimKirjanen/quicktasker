@@ -6254,12 +6254,14 @@ function WPQTModalField({
 }
 function WPQTModalFooter({
   onSave,
-  saveBtnText
+  saveBtnText,
+  loading = false
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTIconButton, {
       text: saveBtnText,
+      loading: loading,
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tfi__WEBPACK_IMPORTED_MODULE_8__.TfiSave, {
         className: "wpqt-icon-blue wpqt-size-4"
       }),
@@ -6317,8 +6319,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
-/* harmony import */ var _Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Tooltip/WPQTTooltip */ "./src/components/Tooltip/WPQTTooltip.tsx");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Tooltip/WPQTTooltip */ "./src/components/Tooltip/WPQTTooltip.tsx");
+
 
 
 
@@ -6334,7 +6338,7 @@ function WPQTButton({
   className,
   type = ButtonType.BUTTON
 }) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.Button, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Button, {
     className: `wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`,
     onClick: onClick,
     type: type,
@@ -6347,7 +6351,8 @@ function WPQTIconButton({
   onClick = () => {},
   className,
   tooltipId,
-  tooltipText
+  tooltipText,
+  loading = false
 }) {
   const showTooltip = tooltipText && tooltipId;
   const tooltipAttributes = showTooltip ? {
@@ -6357,12 +6362,16 @@ function WPQTIconButton({
     "data-tooltip-variant": "info"
   } : {};
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, tooltipAttributes, {
-    className: `wpqt-main-border wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${className}`,
+    className: `wpqt-main-border wpqt-relative wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${className}`,
     onClick: onClick,
     children: [icon, text && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-      className: "wpqt-whitespace-nowrap",
+      className: `wpqt-whitespace-nowrap ${loading ? "wpqt-invisible" : ""}`,
       children: text
-    }), showTooltip && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_1__.WPQTTooltip, {
+    }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_1__.LoadingOval, {
+      width: "20",
+      height: "20",
+      className: "wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-y-center wpqt-transform-x-center"
+    }), showTooltip && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__.WPQTTooltip, {
       id: tooltipId
     })]
   }));

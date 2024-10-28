@@ -1,4 +1,5 @@
 import { Button } from "@headlessui/react";
+import { LoadingOval } from "../../Loading/Loading";
 import { WPQTTooltip } from "../../Tooltip/WPQTTooltip";
 
 enum ButtonType {
@@ -37,6 +38,7 @@ type WPQTIconButtonProps = {
   className?: string;
   tooltipId?: string;
   tooltipText?: string;
+  loading?: boolean;
 };
 function WPQTIconButton({
   icon,
@@ -45,6 +47,7 @@ function WPQTIconButton({
   className,
   tooltipId,
   tooltipText,
+  loading = false,
 }: WPQTIconButtonProps) {
   const showTooltip = tooltipText && tooltipId;
   const tooltipAttributes: React.HTMLAttributes<HTMLDivElement> = showTooltip
@@ -59,11 +62,24 @@ function WPQTIconButton({
   return (
     <div
       {...tooltipAttributes}
-      className={`wpqt-main-border wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${className}`}
+      className={`wpqt-main-border wpqt-relative wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${className}`}
       onClick={onClick}
     >
       {icon}
-      {text && <span className="wpqt-whitespace-nowrap">{text}</span>}
+      {text && (
+        <span
+          className={`wpqt-whitespace-nowrap ${loading ? "wpqt-invisible" : ""}`}
+        >
+          {text}
+        </span>
+      )}
+      {loading && (
+        <LoadingOval
+          width="20"
+          height="20"
+          className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-y-center wpqt-transform-x-center"
+        />
+      )}
       {showTooltip && <WPQTTooltip id={tooltipId} />}
     </div>
   );

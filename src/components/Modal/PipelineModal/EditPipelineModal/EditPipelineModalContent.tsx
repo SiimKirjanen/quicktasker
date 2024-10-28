@@ -15,6 +15,7 @@ import {
   PIPELINE_SET_PRIMARY,
 } from "../../../../constants";
 import { usePipelineActions } from "../../../../hooks/actions/usePipelineActions";
+import { useLoadingStates } from "../../../../hooks/useLoadingStates";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
@@ -49,6 +50,8 @@ const EditPipelineModalContent = forwardRef(
     const { deletePipeline } = usePipelineActions();
     const [pipelineName, setPipelineName] = useState("");
     const [pipelineDescription, setPipelineDescription] = useState("");
+    const { loading1: isDeletingBoard, setLoading1: setIsDeletingBoard } =
+      useLoadingStates();
 
     useEffect(() => {
       if (pipelineToEdit) {
@@ -69,12 +72,13 @@ const EditPipelineModalContent = forwardRef(
 
     const onDeletePipeline = () => {
       if (!pipelineToEdit) return;
-
+      setIsDeletingBoard(true);
       deletePipeline(
         pipelineToEdit.id,
         (removedPipelineId, pipelineIdToLoad) => {
           modalDispatch({ type: CLOSE_PIPELINE_MODAL });
-          toast.success(__("Board deleted. Refreshing data", "quicktasker"));
+          setIsDeletingBoard(false);
+          toast.success(__("Board deleted", "quicktasker"));
           pipelinesDispatch({
             type: PIPELINE_REMOVE_PIPELINE,
             payload: removedPipelineId,
@@ -135,6 +139,7 @@ const EditPipelineModalContent = forwardRef(
           <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
             <WPQTIconButton
               icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+              loading={isDeletingBoard}
               text={__("Delete board", "quicktasker")}
               onClick={onDeletePipeline}
             />
@@ -142,11 +147,8 @@ const EditPipelineModalContent = forwardRef(
         </div>
         <WPQTModalFooter
           onSave={savePipeline}
-          saveBtnText={
-            modalSaving
-              ? __("Saving...", "quicktasker")
-              : __("Save", "quicktasker")
-          }
+          loading={modalSaving}
+          saveBtnText={__("Save", "quicktasker")}
         />
       </>
     );
