@@ -33,6 +33,11 @@ function TaskDetails({ task }: Props) {
             {task.description}
           </DisplayRow>
         )}
+
+        <DisplayRow label={__("Board", "quicktasker")} className={rowClasses}>
+          {task.pipeline_name}
+        </DisplayRow>
+
         <DisplayRow
           label={__("Created at", "quicktasker")}
           className={rowClasses}

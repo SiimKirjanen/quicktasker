@@ -1,4 +1,8 @@
-import { CalendarIcon, CheckBadgeIcon } from "@heroicons/react/24/outline";
+import {
+  CalendarIcon,
+  CheckBadgeIcon,
+  ViewColumnsIcon,
+} from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +34,15 @@ function UserTasks() {
               label={__("Created", "quicktasker")}
               value={convertToWPTimezone(task.created_at)}
               icon={<CalendarIcon className="wpqt-size-5 wpqt-icon-blue" />}
+            />
+            <WPQTCardDataItem
+              label={__("Board", "quicktasker")}
+              value={
+                task.pipeline_name
+                  ? task.pipeline_name
+                  : __("Board is deleted!", "quicktasker")
+              }
+              icon={<ViewColumnsIcon className="wpqt-size-5 wpqt-icon-blue" />}
             />
             <WPQTCardDataItem
               label={

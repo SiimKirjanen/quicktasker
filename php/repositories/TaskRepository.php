@@ -99,9 +99,9 @@ class TaskRepository {
         global $wpdb;
 
         $task = $wpdb->get_row( $wpdb->prepare(
-            "SELECT a.*, b.task_order, b.stage_id FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
-            LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b
-            ON a.id = b.task_id
+            "SELECT a.*, b.task_order, b.stage_id, c.name as pipeline_name FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+            LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b ON a.id = b.task_id
+            LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON a.pipeline_id = c.id
             WHERE a.task_hash = %s",
             $hash
         ) );
@@ -199,9 +199,9 @@ class TaskRepository {
         global $wpdb;
     
         $tasks = $wpdb->get_results($wpdb->prepare(
-            "SELECT b.* FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS a
-            LEFT JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS b
-            ON a.task_id = b.id
+            "SELECT b.*, c.name as pipeline_name FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS a
+            LEFT JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS b ON a.task_id = b.id
+            LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON b.pipeline_id = c.id
             WHERE a.user_id = %d
             AND b.is_archived = 0
             ORDER BY b.created_at DESC",
@@ -228,9 +228,10 @@ class TaskRepository {
         global $wpdb;
     
         return $wpdb->get_results( $wpdb->prepare(
-            "SELECT a.* FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
-            LEFT JOIN ". TABLE_WP_QUICKTASKER_USER_TASK ." AS b
-            ON a.id = b.task_id
+            "SELECT a.*, c.name as pipeline_name FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+            LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b ON a.id = b.task_id
+            LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON a.pipeline_id = c.id
+           
             WHERE b.task_id IS NULL AND a.is_archived = 0 AND a.free_for_all = 1 ORDER BY a.created_at DESC",
         ) );
     }
