@@ -44,10 +44,11 @@ import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModal
 type Props = {
   taskModalSaving: boolean;
   editTask: (task: Task) => void;
+  deleteTask: (task: Task) => Promise<void>;
 };
 
 const TaskModalContent = forwardRef(
-  ({ taskModalSaving, editTask }: Props, ref) => {
+  ({ taskModalSaving, editTask, deleteTask }: Props, ref) => {
     const {
       state: { taskToEdit },
       modalDispatch,
@@ -63,7 +64,7 @@ const TaskModalContent = forwardRef(
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [freeForAllTask, setFreeForAllTask] = useState(false);
-    const { deleteTask, archiveTask, restoreArchivedTask } = useTaskActions();
+    const { archiveTask, restoreArchivedTask } = useTaskActions();
 
     const isTaskArchived = taskToEdit?.is_archived;
     const pipelineExists = taskToEdit?.pipeline_name !== null;
@@ -209,13 +210,9 @@ const TaskModalContent = forwardRef(
               <WPQTIconButton
                 icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
                 text={__("Delete task", "quicktasker")}
-                onClick={() => {
-                  deleteTask(taskToEdit.id, () => {
-                    modalDispatch({ type: CLOSE_TASK_MODAL });
-                    if (activePipeline) {
-                      fetchAndSetPipelineData(activePipeline.id);
-                    }
-                  });
+                onClick={async () => {
+                  await deleteTask(taskToEdit);
+                  modalDispatch({ type: CLOSE_TASK_MODAL });
                 }}
               />
             )}

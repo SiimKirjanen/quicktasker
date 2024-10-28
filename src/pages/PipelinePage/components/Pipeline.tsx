@@ -81,6 +81,12 @@ const Pipeline = () => {
     [activePipeline],
   );
 
+  const deleteTaskCallback = () => {
+    if (activePipeline) {
+      fetchAndSetPipelineData(activePipeline.id);
+    }
+  };
+
   if (!activePipeline) {
     return <PipelineIntro />;
   }
@@ -96,7 +102,7 @@ const Pipeline = () => {
         pipelineId={activePipeline.id}
         stagesLength={activePipeline!.stages?.length}
       />
-      <TaskModal />
+      <TaskModal deleteTaskCallback={deleteTaskCallback} />
       <StageModal />
     </div>
   );

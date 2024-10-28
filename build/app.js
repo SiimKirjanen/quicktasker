@@ -11079,10 +11079,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/useModal */ "./src/hooks/useModal.tsx");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
-/* harmony import */ var _TaskModalContent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TaskModalContent */ "./src/components/Modal/TaskModal/TaskModalContent.tsx");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
+/* harmony import */ var _hooks_useModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/useModal */ "./src/hooks/useModal.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _TaskModalContent__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./TaskModalContent */ "./src/components/Modal/TaskModal/TaskModalContent.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -11118,14 +11119,19 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function TaskModal({
-  editTaskCallback
+  editTaskCallback,
+  deleteTaskCallback
 }) {
   const {
     state: {
       taskModalOpen
     }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__.ModalContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__.ModalContext);
+  const {
+    deleteTask
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__.useTaskActions)();
   const {
     modalSaving,
     setModalSaving,
@@ -11133,12 +11139,12 @@ function TaskModal({
     closeModal,
     handleSuccess,
     handleError
-  } = (0,_hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_TASK_MODAL);
+  } = (0,_hooks_useModal__WEBPACK_IMPORTED_MODULE_5__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_TASK_MODAL);
   const editTask = task => __awaiter(this, void 0, void 0, function* () {
     try {
       setModalSaving(true);
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.editTaskRequest)(task);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK, response.data, _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.ACTIVE_PIPELINE);
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK, response.data, _hooks_useModal__WEBPACK_IMPORTED_MODULE_5__.DispatchType.ACTIVE_PIPELINE);
       if (editTaskCallback) {
         editTaskCallback(response.data);
       }
@@ -11146,13 +11152,21 @@ function TaskModal({
       handleError(error);
     }
   });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_6__.WPQTModal, {
+  const onDeleteTask = task => __awaiter(this, void 0, void 0, function* () {
+    deleteTask(task.id, () => {
+      if (deleteTaskCallback) {
+        deleteTaskCallback(task);
+      }
+    });
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_7__.WPQTModal, {
     modalOpen: taskModalOpen,
     closeModal: closeModal,
     size: "xl",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskModalContent__WEBPACK_IMPORTED_MODULE_7__.TaskModalContent, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskModalContent__WEBPACK_IMPORTED_MODULE_8__.TaskModalContent, {
       ref: modalContentRef,
       editTask: editTask,
+      deleteTask: onDeleteTask,
       taskModalSaving: modalSaving
     })
   });
@@ -11247,7 +11261,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(({
   taskModalSaving,
-  editTask
+  editTask,
+  deleteTask
 }, ref) => {
   const {
     state: {
@@ -11273,7 +11288,6 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
   const [taskDescription, setTaskDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [freeForAllTask, setFreeForAllTask] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
-    deleteTask,
     archiveTask,
     restoreArchivedTask
   } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_6__.useTaskActions)();
@@ -11404,16 +11418,12 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             className: "wpqt-icon-red wpqt-size-5"
           }),
           text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Delete task", "quicktasker"),
-          onClick: () => {
-            deleteTask(taskToEdit.id, () => {
-              modalDispatch({
-                type: _constants__WEBPACK_IMPORTED_MODULE_5__.CLOSE_TASK_MODAL
-              });
-              if (activePipeline) {
-                fetchAndSetPipelineData(activePipeline.id);
-              }
+          onClick: () => __awaiter(void 0, void 0, void 0, function* () {
+            yield deleteTask(taskToEdit);
+            modalDispatch({
+              type: _constants__WEBPACK_IMPORTED_MODULE_5__.CLOSE_TASK_MODAL
             });
-          }
+          })
         })]
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalFooter, {
@@ -14536,6 +14546,12 @@ function Archive() {
           type: _constants__WEBPACK_IMPORTED_MODULE_5__.EDIT_ARCHIVED_TASK,
           payload: task
         });
+      },
+      deleteTaskCallback: task => {
+        archiveDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_5__.REMOVE_ARCHIVED_TASK,
+          payload: task.id
+        });
       }
     })]
   });
@@ -15198,6 +15214,11 @@ const Pipeline = () => {
       react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Failed to move a task", "quicktasker"));
     }
   }), [activePipeline]);
+  const deleteTaskCallback = () => {
+    if (activePipeline) {
+      fetchAndSetPipelineData(activePipeline.id);
+    }
+  };
   if (!activePipeline) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PipelineIntro__WEBPACK_IMPORTED_MODULE_10__.PipelineIntro, {});
   }
@@ -15213,7 +15234,9 @@ const Pipeline = () => {
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddStage__WEBPACK_IMPORTED_MODULE_9__.AddStage, {
       pipelineId: activePipeline.id,
       stagesLength: (_b = activePipeline.stages) === null || _b === void 0 ? void 0 : _b.length
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_6__.TaskModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_5__.StageModal, {})]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_6__.TaskModal, {
+      deleteTaskCallback: deleteTaskCallback
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_5__.StageModal, {})]
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Pipeline);
