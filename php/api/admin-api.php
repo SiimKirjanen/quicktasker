@@ -683,8 +683,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $stageService = new StageService();
                     $logService = new LogService();
@@ -735,8 +735,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $stageService = new StageService();
                     $logService = new LogService();
@@ -782,8 +782,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $stageService = new StageService();
                     $stageService->deleteStage( $data['id'] );
@@ -818,8 +818,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $stageService = new StageService();
                     $logService = new LogService();
@@ -927,8 +927,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $userService = new UserService();
                     $logService = new LogService();
@@ -1123,8 +1123,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
                 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $userService = new UserService();
                     $logService = new LogService();
