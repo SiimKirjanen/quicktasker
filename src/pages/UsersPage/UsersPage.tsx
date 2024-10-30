@@ -32,7 +32,10 @@ function UsersPage() {
   return (
     <Page>
       <WPQTPageHeader
-        description={__("Create and manage users", "quicktasker")}
+        description={__(
+          "Create and manage QuickTaskers who can access a mobile-like page to manage their assigned tasks.",
+          "quicktasker",
+        )}
         icon={
           <Cog8ToothIcon
             className="wpqt-icon-gray wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
@@ -45,7 +48,7 @@ function UsersPage() {
           />
         }
       >
-        {__("QuickTasker users page", "quicktasker")}
+        {__("QuickTaskers", "quicktasker")}
       </WPQTPageHeader>
       <AddUser />
       <UserFilter />
