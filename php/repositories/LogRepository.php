@@ -69,4 +69,62 @@ class LogRepository {
 
         return $results;
     }
+
+    /**
+     * Retrieves global logs from the database with optional filtering and ordering.
+     *
+     * @param string|null $logType The type of log to filter by. If null, no filtering by type is applied.
+     * @param string|null $logCreatedBy The creator of the log to filter by. If null, no filtering by creator is applied.
+     * @param int $numberOfLogs The number of logs to retrieve. Currently not used in the query.
+     * @param string $logOrder The order of the logs, either 'ASC' for ascending or 'DESC' for descending.
+     * @return array The retrieved logs from the database.
+     */
+    public function getGlobalLogs($logType, $logCreatedBy, $numberOfLogs, $logOrder) {
+        global $wpdb;
+
+        $table_logs = TABLE_WP_QUICKTASKS_LOGS;
+        $table_users = $wpdb->users;
+        $table_quicktasker_users = TABLE_WP_QUICKTASKER_USERS;
+        $order = $logOrder === 'ASC' ? 'ASC' : 'DESC';
+
+        $sql = "
+            SELECT 
+                logs.id,
+                logs.text,
+                logs.type_id,
+                logs.type,
+                logs.created_by,
+                logs.user_id,
+                logs.created_at,
+                CASE 
+                    WHEN logs.created_by = 'admin' THEN wp_users.display_name
+                    WHEN logs.created_by = 'quicktasker_user' THEN quicktasker_users.name
+                    ELSE 'system'
+                END AS author_name
+            FROM $table_logs AS logs
+            LEFT JOIN $table_users AS wp_users ON logs.created_by = 'admin' AND logs.user_id = wp_users.ID
+            LEFT JOIN $table_quicktasker_users AS quicktasker_users ON logs.created_by = 'quicktasker_user' AND logs.user_id = quicktasker_users.id";
+        $whereClauses = [];
+        $queryParams = [];
+
+        if ($logType !== null) {
+            $whereClauses[] = "logs.type = %s";
+            $queryParams[] = $logType;
+        }
+
+        if ($logCreatedBy !== null) {
+            $whereClauses[] = "logs.created_by = %s";
+            $queryParams[] = $logCreatedBy;
+        }
+    
+        if (!empty($whereClauses)) {
+            $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
+        }
+
+        $sql .= " ORDER BY logs.created_at " . $order;
+
+        $results = $wpdb->get_results($wpdb->prepare($sql, ...$queryParams));
+
+        return $results;
+    }
 }

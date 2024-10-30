@@ -1349,6 +1349,55 @@ function wpqt_register_api_routes() {
         ),
     );
 
+    register_rest_route(
+        'wpqt/v1',
+        'global-logs',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $logRepo = new LogRepository();
+
+                    $type = $data['type'] ?? null;
+                    $numberOfLogs = $data['numberOfLogs'] ?? null;
+                    $createdBy = $data['createdBy'] ?? null;
+
+                    $logs = $logRepo->getGlobalLogs($type, $createdBy, $numberOfLogs, $data['order']);
+                    
+                    return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
+                }catch(Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'type' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'numberOfLogs' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'createdBy' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'order' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
+        ),
+    );
+
     /*
     ==================================================================================================================================================================================================================
     Comments endpoints
