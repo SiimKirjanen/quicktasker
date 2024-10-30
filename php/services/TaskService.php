@@ -167,6 +167,7 @@ class TaskService {
             'oldStageId' => $currentStageId,
             'newStageId' => $newStageId,
             'stageChanged' => $stageChanged,
+            'task' => $this->taskRepository->getTaskById($taskId)
         ];
     }
     
@@ -318,11 +319,16 @@ class TaskService {
         return true;
     }
 
+  
     /**
-     * Archives a task.
-     *
+     * Archives a task by setting its 'is_archived' status to 1 and updating the 'updated_at' timestamp.
+     * This method updates both the main task table and the task location table.
+     * 
      * @param int $taskId The ID of the task to be archived.
-     * @throws Exception If failed to archive the task or delete the task location.
+     * 
+     * @throws \Exception If the task or task location update fails.
+     * 
+     * @return object The updated task object after archiving.
      */
     public function archiveTask($taskId) {
         global $wpdb;
@@ -342,6 +348,8 @@ class TaskService {
         }
 
         $this->shiftTaskOrder($taskToArchive->task_order, $taskToArchive->stage_id);
+
+        return $this->taskRepository->getTaskById($taskId);
     }
 
     public function restoreArchivedTask($taskId) {
@@ -391,6 +399,8 @@ class TaskService {
         if ($result2 === false) {
             throw new WPQTException('Failed to restore task location');
         }
+
+        return $this->taskRepository->getTaskById($taskId);
     }
 
     /**

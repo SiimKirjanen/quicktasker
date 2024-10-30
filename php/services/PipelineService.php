@@ -85,11 +85,14 @@ class PipelineService {
     }
 
     /**
-     * Marks a pipeline as primary.
+     * Marks a pipeline as the primary pipeline.
+     *
+     * This method updates the is_primary field of the pipeline table to mark the specified pipeline
+     * as the primary pipeline. The updated_at field is set to the current UTC time.
      *
      * @param int $pipelineId The ID of the pipeline to mark as primary.
-     * @return int The number of rows affected by the update query.
-     * @throws Exception If the update query fails.
+     * @return mixed The updated pipeline object.
+     * @throws \Exception If the update operation fails.
      */
     public function markPipelineAsPrimary($pipelineId) {
         global $wpdb;
@@ -112,7 +115,7 @@ class PipelineService {
             throw new \Exception('Failed to mark pipeline as primary');
         }
 
-        return $result;   
+        return $this->pipelineRepository->getPipelineById($pipelineId);   
     }
 
 
