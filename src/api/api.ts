@@ -1,4 +1,5 @@
 import apiFetch from "@wordpress/api-fetch";
+import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import { WPQTTypes } from "../types/enums";
@@ -236,6 +237,26 @@ function getLogsRequest(
   });
   return apiFetch({
     path: `/wpqt/v1/logs?${queryParams.toString()}`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+function getGlobalLogsRequest(
+  logsFilter: ServerLogsFilterType,
+): Promise<WPQTResponse<LogFromServer[]>> {
+  const queryParams = new URLSearchParams(
+    Object.entries(logsFilter).reduce(
+      (acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      },
+      {} as Record<string, string>,
+    ),
+  );
+
+  return apiFetch({
+    path: `/wpqt/v1/global-logs?${queryParams.toString()}`,
     method: "GET",
     headers: getCommonHeaders(),
   });
@@ -526,6 +547,7 @@ export {
   getComments,
   getCustomFieldsRequest,
   getExtendedUserRequest,
+  getGlobalLogsRequest,
   getLogsRequest,
   getPipelineData,
   getTaskLogs,

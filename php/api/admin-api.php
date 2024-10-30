@@ -109,7 +109,7 @@ function wpqt_register_api_routes() {
                     $pipelineService = new PipelineService();
                     $logService = new LogService();
                     $newPipeline = $pipelineService->createPipeline($data['name']);
-                    $logService->log('Board created', WP_QT_LOG_TYPE_PIPELINE, $newPipeline->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Board ' . $newPipeline->name . ' created', WP_QT_LOG_TYPE_PIPELINE, $newPipeline->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                    
                     return new WP_REST_Response((new ApiResponse(true, array(), $newPipeline))->toArray(), 200);
                 } catch (Exception $e) {
@@ -138,8 +138,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $pipelineService = new PipelineService();
                     $logService = new LogService();
@@ -147,7 +147,7 @@ function wpqt_register_api_routes() {
                         "name" => $data['name'],
                         "description" => $data['description']
                     ));
-                    $logService->log('Board edited', WP_QT_LOG_TYPE_PIPELINE, $pipeline->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Board ' . $pipeline->name . ' edited', WP_QT_LOG_TYPE_PIPELINE, $pipeline->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     $wpdb->query('COMMIT');
                     return new WP_REST_Response((new ApiResponse(true, array(), $pipeline))->toArray(), 200);
@@ -190,8 +190,8 @@ function wpqt_register_api_routes() {
                     WPQTverifyApiNonce($data);
                     $pipelineService = new PipelineService();
                     $logService = new LogService();
-                    $pipelineService->markPipelineAsPrimary($data['id']);
-                    $logService->log('Board marked as primary', WP_QT_LOG_TYPE_PIPELINE, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $pipeline = $pipelineService->markPipelineAsPrimary($data['id']);
+                    $logService->log('Board ' . $pipeline->name . ' marked as primary', WP_QT_LOG_TYPE_PIPELINE, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 } catch (Exception $e) {
@@ -220,8 +220,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $pipelineService = new PipelineService();
                     $logService = new LogService();
@@ -319,8 +319,8 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $taskService = new TaskService();
                     $logService = new LogService();
@@ -329,9 +329,9 @@ function wpqt_register_api_routes() {
                     $stage = $stageRepo->getStageById($data['stageId']);
 
                     if($moveInfo->stageChanged === true) {
-                        $logService->log('Task moved to ' . $stage->name . ' stage', WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $logService->log('Task ' . $moveInfo->task->name . ' moved to ' . $stage->name . ' stage', WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                     }else {
-                        $logService->log('Task order changed in ' . $stage->name . ' stage', WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $logService->log('Task ' . $moveInfo->task->name . ' order changed in ' . $stage->name . ' stage', WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                     }
                     
                     $wpdb->query('COMMIT');
@@ -374,9 +374,9 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
-
+                    WPQTverifyApiNonce($data);
+                    
                     $taskService = new TaskService();
                     $logService = new LogService();
                     
@@ -384,7 +384,7 @@ function wpqt_register_api_routes() {
                         "name" => $data['name'],
                         "pipelineId" => $data['pipelineId'],
                     ) );
-                    $logService->log('Task created', WP_QT_LOG_TYPE_TASK, $newTask->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Task ' . $newTask->name . ' created', WP_QT_LOG_TYPE_TASK, $newTask->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     $wpdb->query('COMMIT');
 
@@ -434,7 +434,7 @@ function wpqt_register_api_routes() {
                         "description" => $data['description'],
                         "free_for_all" => $data['freeForAll'],
                     ) );
-                    $logService->log('Task edited', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Task ' . $task->name . ' edited', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
                 } catch (Exception $e) {
@@ -478,8 +478,9 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
+                    
                     $taskService = new TaskService();
                     $taskService->deleteTask( $data['id'] );
                     $wpdb->query('COMMIT');
@@ -513,14 +514,14 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
 
+                    WPQTverifyApiNonce($data);
                     $taskService = new TaskService();
                     $logService = new LogService();
 
-                    $taskService->archiveTask( $data['id'] );
-                    $logService->log('Task archived', WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $task = $taskService->archiveTask( $data['id'] );
+                    $logService->log('Task ' . $task->name . ' archived', WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                     $wpdb->query('COMMIT');
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
@@ -552,14 +553,14 @@ function wpqt_register_api_routes() {
                 global $wpdb;
 
                 try {
-                    WPQTverifyApiNonce($data);
                     $wpdb->query('START TRANSACTION');
+                    WPQTverifyApiNonce($data);
 
                     $taskService = new TaskService();
                     $logService = new LogService();
 
-                    $taskService->restoreArchivedTask( $data['id'] );
-                    $logService->log('Task restored from archive', WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $task = $taskService->restoreArchivedTask( $data['id'] );
+                    $logService->log('Task ' . $task->name . ' restored from archive', WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     $wpdb->query('COMMIT');
 
@@ -594,9 +595,10 @@ function wpqt_register_api_routes() {
        
                     $taskService = new TaskService();
                     $logService = new LogService();
-                    $logMessage = $data['done'] ? 'Task status changed to completed' : 'Task status changed to not completed';
 
                     $task = $taskService->changeTaskDoneStatus( $data['id'], $data['done']);
+                    $logMessage = $data['done'] ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
+
                     $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
@@ -644,7 +646,7 @@ function wpqt_register_api_routes() {
                         "description" => $data['description']
                     ) );
 
-                    $logService->log('Stage created', WP_QT_LOG_TYPE_STAGE, $newStage->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Stage ' . $newStage->name .  ' created', WP_QT_LOG_TYPE_STAGE, $newStage->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $newStage))->toArray(), 200);
                 } catch (Exception $e) {
@@ -693,7 +695,7 @@ function wpqt_register_api_routes() {
                         "name" => $data['name'],
                         "description" => $data['description']
                     ) );
-                    $logService->log('Stage edited', WP_QT_LOG_TYPE_STAGE, $stage->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Stage ' . $stage->name . ' edited', WP_QT_LOG_TYPE_STAGE, $stage->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                     $wpdb->query('COMMIT');
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $stage))->toArray(), 200);
@@ -744,7 +746,7 @@ function wpqt_register_api_routes() {
                     $stage = $stageService->moveStage( $data['id'], array(
                         "direction" => $data['direction'],
                     ) );
-                    $logService->log('Stage moved', WP_QT_LOG_TYPE_STAGE, $stage->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Stage ' . $stage->name . ' moved', WP_QT_LOG_TYPE_STAGE, $stage->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     $wpdb->query('COMMIT');
 
@@ -826,7 +828,7 @@ function wpqt_register_api_routes() {
                     $archivedTasks = $stageService->archiveStageTasks( $data['id'] );
 
                     foreach($archivedTasks as $task) {
-                        $logService->log('Task archived', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $logService->log('Task ' . $task->name . ' archived', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                     }
 
                     $wpdb->query('COMMIT');
@@ -937,7 +939,7 @@ function wpqt_register_api_routes() {
                         "name" => $data['name'],
                         "description" => $data['description'],
                     ));
-                    $logService->log('User created', WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('User ' . $user->name . ' created', WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                     $wpdb->query('COMMIT');
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
@@ -1012,8 +1014,8 @@ function wpqt_register_api_routes() {
                     $task = $userService->assignTaskToUser($data['id'], $data->get_param('task_id'));
                     $user = $userRepo->getUserById($data['id']);
 
-                    $logService->log('Task assigned to ' . $user->name, WP_QT_LOG_TYPE_TASK, $data->get_param('task_id'), WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
-                    $logService->log('Task ' . $task->name . ' assigned', WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, WP_QT_LOG_TYPE_TASK, $data->get_param('task_id'), WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 }catch(Exception $e) {
@@ -1055,8 +1057,8 @@ function wpqt_register_api_routes() {
                     $task = $userService->removeTaskFromUser($data['id'], $data->get_param('task_id'));
                     $user = $userRepo->getUserById($data['id']);
 
-                    $logService->log('Task unassigned from ' . $user->name, WP_QT_LOG_TYPE_TASK, $data->get_param('task_id'), WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
-                    $logService->log('Unassigned from ' . $task->name . " task", WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('Task ' . $task->name . ' unassigned from ' . $user->name, WP_QT_LOG_TYPE_TASK, $data->get_param('task_id'), WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('User ' . $user->name . ' unassigned from ' . $task->name . " task", WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 }catch(Exception $e) {
@@ -1094,7 +1096,7 @@ function wpqt_register_api_routes() {
                     $logService = new LogService();
 
                     $user = $userService->editUser($data['id'], $data->get_param('user'));
-                    $logService->log('User edited', WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('User ' . $user->name . ' edited', WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
                 }catch(Exception $e) {
@@ -1129,9 +1131,9 @@ function wpqt_register_api_routes() {
                     $userService = new UserService();
                     $logService = new LogService();
 
-                    $userService->resetUserPassword($data['id']);
+                    $user = $userService->resetUserPassword($data['id']);
 
-                    $logService->log('User password reset', WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $logService->log('User ' . $user->name . ' password reset', WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                     
                     $wpdb->query('COMMIT');
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
@@ -1166,8 +1168,8 @@ function wpqt_register_api_routes() {
                     $logService = new LogService();
 
                     $user = $userService->changeUserStatus($data['id'], $data['status']);
-                    $statusString = $data['status'] ? 'true' : 'false';
-                    $logService->log('User status changed to ' . $statusString , WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $statusString = $data['status'] ? 'active' : 'disabled';
+                    $logService->log('User ' . $user->name . ' status changed to ' . $statusString , WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
                 }catch(Exception $e) {
@@ -1203,8 +1205,8 @@ function wpqt_register_api_routes() {
                     $userService = new UserService();
                     $logService = new LogService();
 
-                    $userService->deleteUser($data['id']);
-                    $logService->log('User marked as deleted', WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                    $user = $userService->deleteUser($data['id']);
+                    $logService->log('User ' . $user->name . ' marked as deleted', WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                     return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                 }catch(Exception $e) {
@@ -1345,6 +1347,55 @@ function wpqt_register_api_routes() {
                     'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 )
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'global-logs',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $logRepo = new LogRepository();
+
+                    $type = $data['type'] ?? null;
+                    $numberOfLogs = $data['numberOfLogs'] ?? null;
+                    $createdBy = $data['createdBy'] ?? null;
+
+                    $logs = $logRepo->getGlobalLogs($type, $createdBy, $numberOfLogs, $data['order']);
+                    
+                    return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
+                }catch(Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'type' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'numberOfLogs' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'createdBy' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'order' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
             ),
         ),
     );

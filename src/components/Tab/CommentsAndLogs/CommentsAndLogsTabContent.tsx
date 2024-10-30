@@ -3,8 +3,6 @@ import { useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useTimezone } from "../../../hooks/useTimezone";
 import { WPQTComment } from "../../../types/comment";
-import { WPQTLogCreatedBy } from "../../../types/enums";
-import { Log } from "../../../types/log";
 import { LoadingOval } from "../../Loading/Loading";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
@@ -75,7 +73,7 @@ function CommentsAndLogsTabContent<T>({
         <div className="wpqt-mb-3 wpqt-text-center">{noDataMessage}</div>
       )}
       {data.length > 0 && (
-        <div className="wpqt-mb-[28px] wpqt-mt-[56px] wpqt-grid wpqt-grid-cols-[0.3fr_1fr_0.3fr] wpqt-place-items-center wpqt-gap-8">
+        <div className="wpqt-mb-[28px] wpqt-mt-[56px] wpqt-logs-grid">
           {data.map((item) => renderItem(item))}
         </div>
       )}
@@ -130,28 +128,6 @@ function CommentsRefresh({ isLoading, refreshComemnts }: CommentsRefreshProps) {
   );
 }
 
-type TabContentItemProps = {
-  log: Log;
-};
-function TabContentItem({ log }: TabContentItemProps) {
-  const { convertToWPTimezone } = useTimezone();
-
-  return (
-    <>
-      <div>
-        <div className="wpqt-text-center wpqt-mb-1">{log.author_name}</div>
-        <div className="wpqt-text-center">
-          {log.created_by === WPQTLogCreatedBy.Admin
-            ? __("Admin", "quicktasker")
-            : __("QuickTasker", "quicktasker")}
-        </div>
-      </div>
-      <div>{log.text}</div>
-      <div>{convertToWPTimezone(log.created_at)}</div>
-    </>
-  );
-}
-
 function TabContentCommentItem({ item }: { item: WPQTComment }) {
   const { convertToWPTimezone } = useTimezone();
 
@@ -171,4 +147,4 @@ function TabContentCommentItem({ item }: { item: WPQTComment }) {
   );
 }
 
-export { CommentsAndLogsTabContent, TabContentCommentItem, TabContentItem };
+export { CommentsAndLogsTabContent, TabContentCommentItem };

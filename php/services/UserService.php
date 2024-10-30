@@ -155,7 +155,7 @@ class UserService {
             throw new \Exception('Failed to delete a user');
         }
 
-        return true;
+        return $this->userRepository->getUserById($userId);
     }
 
     /**
@@ -245,16 +245,18 @@ class UserService {
     }
 
 
+
     /**
      * Resets the password for a given user.
      *
-     * This method will set the user's password to null and delete all user sessions.
-     * It first checks if the user has a password set. If not, it throws an exception.
-     * If the password reset or session deletion fails, it throws an exception.
+     * This method will set the user's password to null and update the 
+     * 'updated_at' timestamp to the current UTC time. It will also delete 
+     * all sessions associated with the user.
      *
      * @param int $userId The ID of the user whose password is to be reset.
-     * @return bool Returns true if the password and sessions are successfully reset.
-     * @throws \Exception If the user does not have a password set, or if the password reset or session deletion fails.
+     * @throws \Exception If the user does not have a password set or if the 
+     *                    password reset or session deletion fails.
+     * @return mixed The user object after the password reset.
      */
     public function resetUserPassword($userId) {
         global $wpdb;
@@ -289,6 +291,6 @@ class UserService {
             throw new \Exception('Failed to reset a user sessions');
         }
 
-        return true;
+        return $this->userRepository->getUserById($userId);
     }
 }

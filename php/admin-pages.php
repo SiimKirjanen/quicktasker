@@ -59,6 +59,15 @@ function wp_quick_taks_add_admin_menu() {
         'wp-quick-tasks#/archive',
         'wp_quick_taks_generate_app_page'
     );
+
+    add_submenu_page(
+        'wp-quick-tasks',
+        esc_html__('Logs', 'quicktasker'),
+        esc_html__('Logs', 'quicktasker'),
+        WP_QUICKTASKER_ADMIN_ROLE,
+        'wp-quick-tasks#/logs',
+        'wp_quick_taks_generate_app_page'
+    );
 }
 
 function wp_quick_taks_generate_app_page() {

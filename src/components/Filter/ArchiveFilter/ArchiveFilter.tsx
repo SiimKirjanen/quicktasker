@@ -52,7 +52,7 @@ function ArchiveFilter() {
   };
 
   return (
-    <WPQTFilter title={__("Filter tasks", "quicktasker")}>
+    <WPQTFilter title={__("Archive filtering", "quicktasker")}>
       <Input
         type="text"
         value={archiveSearchValue}

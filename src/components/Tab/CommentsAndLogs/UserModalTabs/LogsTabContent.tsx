@@ -3,10 +3,8 @@ import { toast } from "react-toastify";
 import { getLogsRequest } from "../../../../api/api";
 import { WPQTTypes } from "../../../../types/enums";
 import { Log } from "../../../../types/log";
-import {
-  CommentsAndLogsTabContent,
-  TabContentItem,
-} from "../CommentsAndLogsTabContent";
+import { LogItem } from "../../../Log/LogItem";
+import { CommentsAndLogsTabContent } from "../CommentsAndLogsTabContent";
 
 type Props = {
   userId: string;
@@ -27,7 +25,7 @@ function LogsTabContent({ userId }: Props) {
     <CommentsAndLogsTabContent<Log>
       typeId={userId}
       fetchData={fetchLogs}
-      renderItem={(log: Log) => <TabContentItem log={log} />}
+      renderItem={(log: Log) => <LogItem log={log} />}
       noDataMessage={__("No logs available", "quicktasker")}
       explanation={__(
         "Logs can be seen only by WordPress users (with required permissions)",
