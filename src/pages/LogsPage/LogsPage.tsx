@@ -6,7 +6,12 @@ import { LogsPageContent } from "./components/LogsPageContent/LogsPageContent";
 const LogsPage = () => {
   return (
     <Page>
-      <WPQTPageHeader description={__("See logs.", "quicktasker")}>
+      <WPQTPageHeader
+        description={__(
+          "The logs page where you can see all logs and filter them.",
+          "quicktasker",
+        )}
+      >
         {__("Logs", "quicktasker")}
       </WPQTPageHeader>
       <LogsPageContent />

@@ -46,7 +46,7 @@ const LogsPageContent = () => {
     numberOfLogs: LogNumberEnum.Hundred,
     type: LogTypeEnum.All,
     createdBy: LogCreatedByEnum.All,
-    order: LogOrderEnum.Asc,
+    order: LogOrderEnum.Desc,
   });
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [shouldFetchLogs, setShouldFetchLogs] = useState(true);

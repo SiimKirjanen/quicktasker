@@ -21,7 +21,7 @@ const LogsFilter = ({ filterSettings, setFilterSettings }: Props) => {
     useState<LogsFilterType>(filterSettings);
 
   return (
-    <WPQTFilter title={__("Filter logs", "quicktasker")}>
+    <WPQTFilter title={__("Logs filtering", "quicktasker")}>
       <WPQTSelect
         allSelector={false}
         selectedOptionValue={localFilterSettings.type}
