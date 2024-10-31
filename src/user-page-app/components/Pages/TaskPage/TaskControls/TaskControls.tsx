@@ -3,7 +3,7 @@ import {
   UserMinusIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { useNavigate } from "react-router-dom";
 import { WPQTIconButton } from "../../../../../components/common/Button/Button";
 import { Task } from "../../../../../types/task";
@@ -22,6 +22,7 @@ function TaskControls({ task }: Props) {
   } = useContext(UserPageAppContext);
   const { userTaskDispatch } = useContext(UserPageTaskContext);
   const { assignToTask, unAssignFromTask } = useTaskActions();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const isAssignedToTask = task?.assigned_users.some(
@@ -33,21 +34,26 @@ function TaskControls({ task }: Props) {
   }
 
   const onAssignToTask = async () => {
+    setLoading(true);
     await assignToTask(pageHash, task.task_hash, (data) => {
       userTaskDispatch({ type: UPDATE_USER_PAGE_TASK_DATA, payload: data });
     });
+    setLoading(false);
   };
 
   const onUnassignFromTask = async () => {
+    setLoading(true);
     await unAssignFromTask(pageHash, task.task_hash, () => {
       navigate(`/`);
     });
+    setLoading(false);
   };
 
   return (
     <div className="wpqt-mt-5 wpqt-flex wpqt-flex-wrap wpqt-justify-center wpqt-gap-4">
       {isAssignedToTask && (
         <WPQTIconButton
+          loading={loading}
           icon={<UserMinusIcon className="wpqt-icon-red wpqt-size-5" />}
           text="Unassign from task"
           onClick={onUnassignFromTask}
@@ -64,6 +70,7 @@ function TaskControls({ task }: Props) {
       )}
       {!isAssignedToTask && (
         <WPQTIconButton
+          loading={loading}
           icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
           text="Assing to task"
           onClick={onAssignToTask}
