@@ -4,7 +4,7 @@ import {
   EyeIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { REMOVE_ARCHIVED_TASK } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { AppContext } from "../../../providers/AppContextProvider";
@@ -26,6 +26,9 @@ function ArchivedTaskDropdown({ task }: Props) {
   } = useContext(AppContext);
   const { archiveDispatch } = useContext(ArchiveContext);
   const { deleteTask, restoreArchivedTask } = useTaskActions();
+  const [isRestoring, setIsRestoring] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const pipelineExists = task.pipeline_name !== null;
 
   return (
@@ -44,33 +47,39 @@ function ArchivedTaskDropdown({ task }: Props) {
 
       <WPQTDropdownItem
         text="Restore task"
+        loading={isRestoring}
         icon={<ArrowUturnUpIcon className="wpqt-icon-green wpqt-size-4" />}
         disabled={!pipelineExists}
         id={`restore-task-${task.id}-dropdown-item`}
         tooltipText="Task cannot be restored because the board has been deleted."
         onClick={async (e: React.MouseEvent) => {
           e.stopPropagation();
+          setIsRestoring(true);
           await restoreArchivedTask(task.id, () => {
             archiveDispatch({
               type: REMOVE_ARCHIVED_TASK,
               payload: task.id,
             });
           });
+          setIsRestoring(false);
         }}
       />
 
       {isUserAllowedToDelete && (
         <WPQTDropdownItem
           text="Delete"
+          loading={isDeleting}
           icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
           onClick={async (e: React.MouseEvent) => {
             e.stopPropagation();
+            setIsDeleting(true);
             await deleteTask(task.id, () => {
               archiveDispatch({
                 type: REMOVE_ARCHIVED_TASK,
                 payload: task.id,
               });
             });
+            setIsDeleting(false);
           }}
           className="!wpqt-mb-0"
         />

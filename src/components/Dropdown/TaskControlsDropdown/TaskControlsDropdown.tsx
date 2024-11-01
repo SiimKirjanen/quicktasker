@@ -4,7 +4,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
@@ -32,6 +32,7 @@ function TaskControlsDropdown({ task }: Props) {
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
   const { deleteTask, archiveTask } = useTaskActions();
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const openTaskEditModal = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -72,11 +73,14 @@ function TaskControlsDropdown({ task }: Props) {
         <WPQTDropdownItem
           text={__("Delete task", "quicktasker")}
           icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+          loading={deleteLoading}
           onClick={async (e: React.MouseEvent) => {
             e.stopPropagation();
+            setDeleteLoading(true);
             await deleteTask(task.id, () => {
               fetchAndSetPipelineData(activePipeline!.id);
             });
+            setDeleteLoading(false);
           }}
           className="!wpqt-mb-0"
         />

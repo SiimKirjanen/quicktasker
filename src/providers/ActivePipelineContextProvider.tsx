@@ -83,13 +83,13 @@ type Dispatch = (action: Action) => void;
 type PipelineContextType = {
   state: State;
   dispatch: Dispatch;
-  fetchAndSetPipelineData: (pipelineId: string) => void;
+  fetchAndSetPipelineData: (pipelineId: string) => Promise<void>;
 };
 
 const ActivePipelineContext = createContext<PipelineContextType>({
   state: initialState,
   dispatch: () => {},
-  fetchAndSetPipelineData: () => {},
+  fetchAndSetPipelineData: () => Promise.resolve(),
 });
 
 const ActivePipelineContextProvider = ({

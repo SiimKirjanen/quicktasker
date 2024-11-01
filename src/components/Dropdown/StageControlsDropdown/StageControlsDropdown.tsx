@@ -6,7 +6,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
@@ -42,6 +42,10 @@ function StageControlsDropdown({ stage }: Props) {
   const {
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
+  const [moveLoading, setMoveLoading] = useState(false);
+  const [archiveLoading, setArchiveLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const stagesLength = activePipeline?.stages?.length ?? 0;
   const stageTasksLenght = stage.tasks?.length ?? 0;
   const stageOrder = +stage.stage_order;
@@ -50,12 +54,15 @@ function StageControlsDropdown({ stage }: Props) {
 
   const deleteStage = async () => {
     try {
+      setDeleteLoading(true);
       await deleteStageRequest(stage.id);
 
       dispatch({ type: PIPELINE_DELETE_STAGE, payload: stage.id });
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to delete a stage", "quicktasker"));
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -70,18 +77,22 @@ function StageControlsDropdown({ stage }: Props) {
 
   const moveStage = async (direction: StageChangeDirection) => {
     try {
+      setMoveLoading(true);
       await moveStageRequest(stage.id, direction);
-      fetchAndSetPipelineData(activePipeline!.id);
+      await fetchAndSetPipelineData(activePipeline!.id);
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to move a stage", "quicktasker"));
+    } finally {
+      setMoveLoading(false);
     }
   };
 
   const archiveAllStageTasks = async () => {
     try {
+      setArchiveLoading(true);
       await archiveStageTasksRequest(stage.id);
-      fetchAndSetPipelineData(activePipeline!.id);
+      await fetchAndSetPipelineData(activePipeline!.id);
       toast.success(
         sprintf(__("Archived all %s tasks", "quicktasker"), stage.name),
       );
@@ -93,6 +104,8 @@ function StageControlsDropdown({ stage }: Props) {
           stage.name,
         ),
       );
+    } finally {
+      setArchiveLoading(false);
     }
   };
 
@@ -105,6 +118,7 @@ function StageControlsDropdown({ stage }: Props) {
       {showMoveLeft && (
         <WPQTDropdownItem
           text={__("Move left", "quicktasker")}
+          loading={moveLoading}
           icon={<ChevronLeftIcon className="wpqt-icon-blue wpqt-size-4" />}
           onClick={() => moveStage("left")}
         />
@@ -113,6 +127,7 @@ function StageControlsDropdown({ stage }: Props) {
       {showMoveRight && (
         <WPQTDropdownItem
           text={__("Move right", "quicktasker")}
+          loading={moveLoading}
           icon={<ChevronRightIcon className="wpqt-icon-blue wpqt-size-4" />}
           onClick={() => moveStage("right")}
         />
@@ -125,6 +140,7 @@ function StageControlsDropdown({ stage }: Props) {
       <WPQTDropdownItem
         text={__("Archive all stage tasks", "quicktasker")}
         icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
+        loading={archiveLoading}
         onClick={archiveAllStageTasks}
         disabled={stageTasksLenght === 0}
         id={`item-dropdown-${stage.id}-archive`}
@@ -139,6 +155,7 @@ function StageControlsDropdown({ stage }: Props) {
         <WPQTDropdownItem
           text={__("Delete stage", "quicktasker")}
           icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+          loading={deleteLoading}
           onClick={deleteStage}
           disabled={stageTasksLenght > 0}
           className="!wpqt-mb-0"

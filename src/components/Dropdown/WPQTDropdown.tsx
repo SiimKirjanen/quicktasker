@@ -1,5 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { AnchorProps } from "@headlessui/react/dist/internal/floating";
+import { LoadingOval } from "../Loading/Loading";
 import { WPQTTooltip } from "../Tooltip/WPQTTooltip";
 
 type Props = {
@@ -56,6 +57,7 @@ type WPQTDropdownItemProps = {
   disabled?: boolean;
   id?: string;
   tooltipText?: string;
+  loading?: boolean;
 };
 function WPQTDropdownItem({
   text,
@@ -65,6 +67,7 @@ function WPQTDropdownItem({
   disabled = false,
   id = "",
   tooltipText = "",
+  loading = false,
 }: WPQTDropdownItemProps) {
   const showTooltip = tooltipText !== "" && id !== "";
   const tooltipAttributes: React.HTMLAttributes<HTMLDivElement> = showTooltip
@@ -79,11 +82,11 @@ function WPQTDropdownItem({
     <MenuItem>
       <div
         {...tooltipAttributes}
-        className={`${className} wpqt-mb-3 wpqt-flex wpqt-items-center wpqt-gap-2 ${
+        className={`wpqt-mb-3 wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-relative ${
           !disabled
             ? "wpqt-cursor-pointer hover:wpqt-underline"
             : "wpqt-cursor-not-allowed wpqt-line-through"
-        }`}
+        } ${className}`}
         onClick={(e) => {
           if (!disabled && onClick) {
             onClick(e);
@@ -91,7 +94,14 @@ function WPQTDropdownItem({
         }}
       >
         {icon}
-        {text}
+        <span className={`${loading ? "wpqt-invisible" : ""}`}>{text}</span>
+        {loading && (
+          <LoadingOval
+            width="16"
+            height="16"
+            className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-y-center wpqt-transform-x-center"
+          />
+        )}
         <WPQTTooltip id={id} />
       </div>
     </MenuItem>
