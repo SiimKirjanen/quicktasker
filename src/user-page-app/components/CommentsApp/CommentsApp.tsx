@@ -1,6 +1,7 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect, useRef, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
 import { WPQTIconButton } from "../../../components/common/Button/Button";
 import { WPQTTextarea } from "../../../components/common/TextArea/TextArea";
 import { WPQTComment } from "../../../types/comment";
@@ -10,12 +11,13 @@ import { CommentItem } from "./CommentItem/CommentItem";
 
 type Props = {
   comments: WPQTComment[];
-  addComments: (comment: string) => void;
+  addComments: (comment: string) => Promise<void>;
 };
 function CommentsApp({ comments, addComments }: Props) {
   const { checkNewComments } = useContext(UserPageNotificationsContext);
   const [comment, setComment] = useState("");
   const commentsContainerRef = useRef<HTMLDivElement>(null);
+  const [addCommentLoading, setAddCommentLoading] = useState(false);
   const { storeComments } = useLocalStorage();
 
   useEffect(() => {
@@ -33,9 +35,15 @@ function CommentsApp({ comments, addComments }: Props) {
     }
   }, [comments]);
 
-  const saveComment = () => {
-    addComments(comment);
+  const saveComment = async () => {
+    if (!comment) {
+      toast.error(__("Comment cant be empty", "quicktasker"));
+      return;
+    }
+    setAddCommentLoading(true);
+    await addComments(comment);
     setComment("");
+    setAddCommentLoading(false);
   };
 
   const storeSeenComments = async () => {
@@ -64,6 +72,7 @@ function CommentsApp({ comments, addComments }: Props) {
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-w-full md:wpqt-w-2/4 wpqt-mx-auto">
         <WPQTTextarea value={comment} onChange={setComment} />
         <WPQTIconButton
+          loading={addCommentLoading}
           text={__("Add comment", "quicktasker")}
           onClick={saveComment}
           icon={<ChatBubbleLeftIcon className="wpqt-icon-green wpqt-size-5" />}

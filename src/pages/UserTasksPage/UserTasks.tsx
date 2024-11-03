@@ -35,7 +35,7 @@ function UserTasks({ userId }: Props) {
   const filteredTasks = tasks?.filter(filterTasks) ?? [];
 
   const unAssignTask = async (taskId: string) => {
-    removeTaskFromUser(userId, taskId, () => {
+    await removeTaskFromUser(userId, taskId, () => {
       userTasksDispatch({ type: REMOVE_USER_TASK, payload: taskId });
     });
   };

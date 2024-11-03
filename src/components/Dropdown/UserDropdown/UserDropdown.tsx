@@ -1,14 +1,14 @@
 import {
   EllipsisHorizontalIcon,
   KeyIcon,
+  PencilSquareIcon,
   PowerIcon,
   RectangleStackIcon,
   TrashIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { TfiSave } from "react-icons/tfi";
 import {
   CHANGE_USER_STATUS,
   DELETE_USER,
@@ -32,6 +32,10 @@ function UserDropdown({ user }: Props) {
   const { modalDispatch } = useContext(ModalContext);
   const { userDispatch } = useContext(UserContext);
   const { changeUserStatus, deleteUser, resetUserPassword } = useUserActions();
+  const [isResettingPw, setIsResettingPw] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isChangingStatus, setIsChangingStatus] = useState(false);
+
   const userIsActive = user.is_active;
 
   const openEditUserModal = (e: React.MouseEvent) => {
@@ -43,6 +47,7 @@ function UserDropdown({ user }: Props) {
   };
 
   const onChangeUserStatus = async (status: boolean) => {
+    setIsChangingStatus(true);
     await changeUserStatus(user.id, status, () => {
       userDispatch({
         type: CHANGE_USER_STATUS,
@@ -52,16 +57,19 @@ function UserDropdown({ user }: Props) {
         },
       });
     });
+    setIsChangingStatus(false);
   };
 
   const onDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    setIsDeleting(true);
     await deleteUser(user.id, (userId) => {
       userDispatch({
         type: DELETE_USER,
         payload: userId,
       });
     });
+    setIsDeleting(false);
   };
 
   return (
@@ -93,22 +101,25 @@ function UserDropdown({ user }: Props) {
 
       <WPQTDropdownItem
         text={__("Edit user", "quicktasker")}
-        icon={<TfiSave className="wpqt-icon-blue wpqt-size-3" />}
+        icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openEditUserModal}
       />
 
       {user.has_password && (
         <WPQTDropdownItem
           text={__("Reset password", "quicktasker")}
+          loading={isResettingPw}
           icon={<KeyIcon className="wpqt-icon-red wpqt-size-4" />}
           onClick={async (e) => {
             e.stopPropagation();
+            setIsResettingPw(true);
             await resetUserPassword(user.id, () => {
               userDispatch({
                 type: RESET_PASSWORD,
                 payload: user.id,
               });
             });
+            setIsResettingPw(false);
           }}
         />
       )}
@@ -116,6 +127,7 @@ function UserDropdown({ user }: Props) {
       {userIsActive && (
         <WPQTDropdownItem
           text={__("Disable user", "quicktasker")}
+          loading={isChangingStatus}
           icon={<PowerIcon className="wpqt-icon-red wpqt-size-4" />}
           className="!wpqt-mb-0"
           onClick={(e: React.MouseEvent) => {
@@ -129,6 +141,7 @@ function UserDropdown({ user }: Props) {
         <>
           <WPQTDropdownItem
             text={__("Activate user", "quicktasker")}
+            loading={isChangingStatus}
             icon={<PowerIcon className="wpqt-icon-green wpqt-size-4" />}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
@@ -137,6 +150,7 @@ function UserDropdown({ user }: Props) {
           />
           <WPQTDropdownItem
             text={__("Delete user", "quicktasker")}
+            loading={isDeleting}
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
             onClick={onDeleteUser}
           />
