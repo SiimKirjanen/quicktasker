@@ -10218,7 +10218,11 @@ function ArchiveFilter() {
       onChange: setArchiveSearchValue
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_6__.PipelineFilterSelect, {
       selectedOptionValue: archiveFilteredPipelineId,
-      selectionChange: onSelectionChange
+      selectionChange: onSelectionChange,
+      extraOptions: [{
+        value: "DELETED",
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("DELETED", "quicktasker")
+      }]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_7__.WPQTSelect, {
       allSelector: false,
       selectedOptionValue: archiveTaskDoneFilter,
@@ -13581,7 +13585,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function PipelineFilterSelect({
   selectedOptionValue,
-  selectionChange
+  selectionChange,
+  extraOptions = []
 }) {
   const {
     state: {
@@ -13593,7 +13598,7 @@ function PipelineFilterSelect({
     label: pipeline.name
   })), [pipelines]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTSelect__WEBPACK_IMPORTED_MODULE_3__.WPQTSelect, {
-    options: pipelineOptions,
+    options: [...pipelineOptions, ...extraOptions],
     selectedOptionValue: selectedOptionValue,
     onSelectionChange: selectionChange
   });
@@ -14358,7 +14363,7 @@ const useArchiveFilter = () => {
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_1__.ArchiveContext);
   const filterArchive = archivedTask => {
     const matchesSearchValue = archivedTask.name.toLowerCase().includes(archiveSearchValue.toLowerCase()) || archivedTask.description && archivedTask.description.toLowerCase().includes(archiveSearchValue.toLowerCase());
-    const matchesPipelineId = !archiveFilteredPipelineId || archivedTask.pipeline_id === archiveFilteredPipelineId;
+    const matchesPipelineId = !archiveFilteredPipelineId || (archiveFilteredPipelineId === "DELETED" ? archivedTask.pipeline_name === null : archivedTask.pipeline_id === archiveFilteredPipelineId);
     const matchesTaskDoneFilter = archiveTaskDoneFilter === _types_enums__WEBPACK_IMPORTED_MODULE_2__.WPQTArchiveDoneFilter.All || archiveTaskDoneFilter === _types_enums__WEBPACK_IMPORTED_MODULE_2__.WPQTArchiveDoneFilter.Completed && archivedTask.is_done || archiveTaskDoneFilter === _types_enums__WEBPACK_IMPORTED_MODULE_2__.WPQTArchiveDoneFilter.NotCompleted && !archivedTask.is_done;
     return matchesSearchValue && matchesPipelineId && matchesTaskDoneFilter;
   };

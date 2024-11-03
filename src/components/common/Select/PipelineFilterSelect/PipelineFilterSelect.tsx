@@ -1,12 +1,17 @@
 import { useContext, useMemo } from "@wordpress/element";
 import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
-import { WPQTSelect } from "../WPQTSelect";
+import { Option, WPQTSelect } from "../WPQTSelect";
 
 type Props = {
   selectedOptionValue: string;
   selectionChange: (selection: string) => void;
+  extraOptions?: Option[];
 };
-function PipelineFilterSelect({ selectedOptionValue, selectionChange }: Props) {
+function PipelineFilterSelect({
+  selectedOptionValue,
+  selectionChange,
+  extraOptions = [],
+}: Props) {
   const {
     state: { pipelines },
   } = useContext(PipelinesContext);
@@ -22,7 +27,7 @@ function PipelineFilterSelect({ selectedOptionValue, selectionChange }: Props) {
 
   return (
     <WPQTSelect
-      options={pipelineOptions}
+      options={[...pipelineOptions, ...extraOptions]}
       selectedOptionValue={selectedOptionValue}
       onSelectionChange={selectionChange}
     />

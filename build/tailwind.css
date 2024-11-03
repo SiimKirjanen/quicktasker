@@ -1070,11 +1070,6 @@
   height: 0.5rem;
 }
 
-.wpqt-size-3 {
-  width: 0.75rem;
-  height: 0.75rem;
-}
-
 .wpqt-size-4 {
   width: 1rem;
   height: 1rem;
@@ -1187,10 +1182,6 @@
 
 .wpqt-max-w-sm {
   max-width: 24rem;
-}
-
-.wpqt-max-w-\[600px\] {
-  max-width: 600px;
 }
 
 .wpqt-flex-1 {

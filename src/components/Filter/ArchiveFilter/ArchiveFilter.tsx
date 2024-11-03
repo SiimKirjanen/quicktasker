@@ -61,6 +61,9 @@ function ArchiveFilter() {
       <PipelineFilterSelect
         selectedOptionValue={archiveFilteredPipelineId}
         selectionChange={onSelectionChange}
+        extraOptions={[
+          { value: "DELETED", label: __("DELETED", "quicktasker") },
+        ]}
       />
       <WPQTSelect
         allSelector={false}

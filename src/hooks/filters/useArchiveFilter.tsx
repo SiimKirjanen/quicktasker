@@ -24,7 +24,9 @@ const useArchiveFilter = () => {
 
     const matchesPipelineId =
       !archiveFilteredPipelineId ||
-      archivedTask.pipeline_id === archiveFilteredPipelineId;
+      (archiveFilteredPipelineId === "DELETED"
+        ? archivedTask.pipeline_name === null
+        : archivedTask.pipeline_id === archiveFilteredPipelineId);
 
     const matchesTaskDoneFilter =
       archiveTaskDoneFilter === WPQTArchiveDoneFilter.All ||
