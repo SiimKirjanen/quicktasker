@@ -1362,10 +1362,11 @@ function wpqt_register_api_routes() {
                     $logRepo = new LogRepository();
 
                     $type = $data['type'] ?? null;
+                    $typeId = $data['typeId'] ?? null;
                     $numberOfLogs = $data['numberOfLogs'] ?? null;
                     $createdBy = $data['createdBy'] ?? null;
 
-                    $logs = $logRepo->getGlobalLogs($type, $createdBy, $numberOfLogs, $data['order']);
+                    $logs = $logRepo->getGlobalLogs($type, $typeId, $createdBy, $numberOfLogs, $data['order']);
                     
                     return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
                 }catch(Exception $e) {
@@ -1380,6 +1381,11 @@ function wpqt_register_api_routes() {
                     'required' => false,
                     'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+                'typeId' => array(
+                    'required' => false,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
                 'numberOfLogs' => array(
                     'required' => false,

@@ -33,11 +33,12 @@ enum LogNumberEnum {
 type LogsFilterType = {
   numberOfLogs: string;
   type: LogTypeEnum;
+  typeId: string;
   createdBy: LogCreatedByEnum;
   order: LogOrderEnum;
 };
 type ServerLogsFilterType = Partial<
-  Pick<LogsFilterType, "numberOfLogs" | "type" | "createdBy">
+  Pick<LogsFilterType, "numberOfLogs" | "type" | "createdBy" | "typeId">
 >;
 
 const LogsPageContent = () => {
@@ -45,6 +46,7 @@ const LogsPageContent = () => {
   const [filterSettings, setFilterSettings] = useState<LogsFilterType>({
     numberOfLogs: LogNumberEnum.Hundred,
     type: LogTypeEnum.All,
+    typeId: "",
     createdBy: LogCreatedByEnum.All,
     order: LogOrderEnum.Desc,
   });
@@ -67,6 +69,9 @@ const LogsPageContent = () => {
       }
       if (filter.type === LogTypeEnum.All) {
         delete filter.type;
+      }
+      if (filter.typeId === "") {
+        delete filter.typeId;
       }
       if (filter.createdBy === LogCreatedByEnum.All) {
         delete filter.createdBy;

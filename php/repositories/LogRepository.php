@@ -74,12 +74,13 @@ class LogRepository {
      * Retrieves global logs from the database with optional filtering and ordering.
      *
      * @param string|null $logType The type of log to filter by. If null, no filtering by type is applied.
+     * @param int|null $typeId The ID of the log type to filter by. If null, no filtering by type ID is applied.
      * @param string|null $logCreatedBy The creator of the log to filter by. If null, no filtering by creator is applied.
      * @param int $numberOfLogs The number of logs to retrieve. Currently not used in the query.
      * @param string $logOrder The order of the logs, either 'ASC' for ascending or 'DESC' for descending.
      * @return array The retrieved logs from the database.
      */
-    public function getGlobalLogs($logType, $logCreatedBy, $numberOfLogs, $logOrder) {
+    public function getGlobalLogs($logType, $typeId, $logCreatedBy, $numberOfLogs, $logOrder) {
         global $wpdb;
 
         $table_logs = TABLE_WP_QUICKTASKS_LOGS;
@@ -110,6 +111,11 @@ class LogRepository {
         if ($logType !== null) {
             $whereClauses[] = "logs.type = %s";
             $queryParams[] = $logType;
+        }
+
+        if ($typeId !== null) {
+            $whereClauses[] = "logs.type_id = %d";
+            $queryParams[] = $typeId;
         }
 
         if ($logCreatedBy !== null) {

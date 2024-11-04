@@ -1,5 +1,5 @@
 import { FunnelIcon } from "@heroicons/react/24/outline";
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
   LogCreatedByEnum,
@@ -8,6 +8,7 @@ import {
   LogsFilterType,
   LogTypeEnum,
 } from "../../../pages/LogsPage/components/LogsPageContent/LogsPageContent";
+import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTFilter } from "../WPQTFilter";
@@ -17,6 +18,9 @@ type Props = {
   setFilterSettings: (filterSettings: LogsFilterType) => void;
 };
 const LogsFilter = ({ filterSettings, setFilterSettings }: Props) => {
+  const {
+    state: { pipelines },
+  } = useContext(PipelinesContext);
   const [localFilterSettings, setLocalFilterSettings] =
     useState<LogsFilterType>(filterSettings);
 
@@ -47,9 +51,26 @@ const LogsFilter = ({ filterSettings, setFilterSettings }: Props) => {
           setLocalFilterSettings({
             ...localFilterSettings,
             type: selection as LogTypeEnum,
+            typeId: "",
           });
         }}
       />
+      {localFilterSettings.type === LogTypeEnum.Pipeline && (
+        <WPQTSelect
+          allSelector={true}
+          selectedOptionValue={localFilterSettings.typeId}
+          options={pipelines.map((pipeline) => ({
+            label: pipeline.name,
+            value: pipeline.id,
+          }))}
+          onSelectionChange={(selection: string) => {
+            setLocalFilterSettings({
+              ...localFilterSettings,
+              typeId: selection,
+            });
+          }}
+        />
+      )}
       <WPQTSelect
         allSelector={false}
         selectedOptionValue={localFilterSettings.createdBy}
