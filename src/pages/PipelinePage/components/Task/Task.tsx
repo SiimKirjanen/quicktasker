@@ -37,7 +37,7 @@ function Task({ task, index }: Props) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="wpqt-relative wpqt-mx-3 wpqt-mb-2 wpqt-flex !wpqt-cursor-pointer wpqt-flex-col wpqt-gap-1 wpqt-rounded wpqt-border wpqt-border-gray-200 wpqt-bg-white wpqt-p-3 wpqt-shadow"
+          className="wpqt-relative wpqt-mx-4 wpqt-mb-2 wpqt-flex !wpqt-cursor-pointer wpqt-flex-col wpqt-gap-1 wpqt-rounded wpqt-border wpqt-border-gray-200 wpqt-bg-white wpqt-p-3 wpqt-shadow hover:wpqt-shadow-md"
           onClick={openEditTaskModal}
         >
           <div className="wpqt-absolute wpqt-right-[12px] wpqt-top-[12px]">
