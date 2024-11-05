@@ -11,6 +11,7 @@ use WPQT\Nonce\NonceService;
 use WPQT\Location\LocationService;
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Permission\PermissionService;
+use WPQT\Settings\SettingRepository;
 
 add_action( 'admin_enqueue_scripts', 'wpqt_enqueue_app_assets' );
 function wpqt_enqueue_app_assets(){
@@ -44,6 +45,7 @@ function wpqt_enqueue_app_assets(){
 		'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
 		'timezone' => $timeRepository->getWPTimezone(),
 		'isUserAllowedToDelete' => PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints() ? "1" : "0",
+		'userPageCustomStyles' => SettingRepository::getUserPageCustomStyles(),
 	));
 
 	// Set script translations

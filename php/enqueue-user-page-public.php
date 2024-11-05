@@ -10,6 +10,7 @@ use WPQT\Asset\AssetRepository;
 use WPQT\Nonce\NonceService;
 use WPQT\Location\LocationService;
 use WPQT\Pipeline\PipelineRepository;
+use WPQT\Settings\SettingRepository;
 
 add_action( 'wp_enqueue_scripts', 'wpqt_enqueue_user_public_page' );
 function wpqt_enqueue_user_public_page(){
@@ -22,6 +23,7 @@ function wpqt_enqueue_user_public_page(){
 
 	$pipelineRepo = new PipelineRepository();
 	$userRepo = new UserRepository();
+	$customUserPageStyles = SettingRepository::getUserPageCustomStyles();
 
 	$build_asset = AssetRepository::getWPQTScriptBildAssets();
 	$dependencies = AssetRepository::getWPQTScriptDependencies();
@@ -49,4 +51,8 @@ function wpqt_enqueue_user_public_page(){
             display: none;
         }
     ');
+
+	if( $customUserPageStyles ) {
+		wp_add_inline_style('wpqt-tailwind', $customUserPageStyles);
+	}
 }

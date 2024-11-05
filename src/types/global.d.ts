@@ -12,6 +12,7 @@ declare global {
       publicUserPageId: string;
       timezone: string;
       isUserAllowedToDelete: "1" | "0";
+      userPageCustomStyles: string;
     };
   }
 }

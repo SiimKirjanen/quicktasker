@@ -7745,6 +7745,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   removeTaskFromUserRequest: () => (/* binding */ removeTaskFromUserRequest),
 /* harmony export */   resetUserPasswordRequest: () => (/* binding */ resetUserPasswordRequest),
 /* harmony export */   restoreArchivedTaskRequest: () => (/* binding */ restoreArchivedTaskRequest),
+/* harmony export */   saveUserPageCustomStylesRequest: () => (/* binding */ saveUserPageCustomStylesRequest),
 /* harmony export */   setPipelinePrimaryRequest: () => (/* binding */ setPipelinePrimaryRequest),
 /* harmony export */   updateCustomFieldValueRequest: () => (/* binding */ updateCustomFieldValueRequest)
 /* harmony export */ });
@@ -8167,6 +8168,21 @@ function updateCustomFieldValueRequest(customFieldId, value, entityId, entityTyp
       value,
       entityId: String(entityId),
       entityType
+    },
+    headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Settings requests
+  ==================================================================================================================================================================================================================
+*/
+function saveUserPageCustomStylesRequest(userPageCustomStyles) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/settings/user-page-custom-styles`,
+    method: "PATCH",
+    data: {
+      styles: userPageCustomStyles
     },
     headers: getCommonHeaders()
   });
@@ -13820,6 +13836,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_CUSTOM_FIELDS_LOCATION: () => (/* binding */ SET_CUSTOM_FIELDS_LOCATION),
 /* harmony export */   SET_CUSTOM_FIELD_INITIAL_DATA: () => (/* binding */ SET_CUSTOM_FIELD_INITIAL_DATA),
 /* harmony export */   SET_CUSTOM_FIELD_LOADING: () => (/* binding */ SET_CUSTOM_FIELD_LOADING),
+/* harmony export */   SET_CUSTOM_USER_PAGE_STYLES: () => (/* binding */ SET_CUSTOM_USER_PAGE_STYLES),
 /* harmony export */   SET_FULL_PAGE_LOADING: () => (/* binding */ SET_FULL_PAGE_LOADING),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
 /* harmony export */   SET_USERS: () => (/* binding */ SET_USERS),
@@ -13896,6 +13913,7 @@ const RESET_PASSWORD = "RESET_PASSWORD";
 //App reducer
 const SET_SITE_URL = "SET_SITE_URL";
 const INIT_APP_STATE = "INIT_APP_STATE";
+const SET_CUSTOM_USER_PAGE_STYLES = "SET_CUSTOM_USER_PAGE_STYLES";
 //Loading reducer
 const SET_FULL_PAGE_LOADING = "SET_FULL_PAGE_LOADING";
 //User sessions reducer
@@ -14132,6 +14150,70 @@ function usePipelineActions() {
   });
   return {
     deletePipeline
+  };
+}
+
+
+/***/ }),
+
+/***/ "./src/hooks/actions/useSettingActions.ts":
+/*!************************************************!*\
+  !*** ./src/hooks/actions/useSettingActions.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useSettingActions: () => (/* binding */ useSettingActions)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+function useSettingActions() {
+  const saveCustomUserPageStyles = (styles, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.saveUserPageCustomStylesRequest)(styles);
+      if (callback) callback(response.data);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Custom user page styles saved successfully", "quicktasker"));
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to save custom user page styles", "quicktasker"));
+    }
+  });
+  return {
+    saveCustomUserPageStyles
   };
 }
 
@@ -14518,10 +14600,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_LogsPage_LogsPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/LogsPage/LogsPage */ "./src/pages/LogsPage/LogsPage.tsx");
 /* harmony import */ var _pages_OverviewPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pages/OverviewPage */ "./src/pages/OverviewPage.tsx");
 /* harmony import */ var _pages_PipelinePage_PipelinePage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pages/PipelinePage/PipelinePage */ "./src/pages/PipelinePage/PipelinePage.tsx");
-/* harmony import */ var _pages_UserPage_UserPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pages/UserPage/UserPage */ "./src/pages/UserPage/UserPage.tsx");
-/* harmony import */ var _pages_UserSessionsPage_UserSessionsPage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pages/UserSessionsPage/UserSessionsPage */ "./src/pages/UserSessionsPage/UserSessionsPage.tsx");
-/* harmony import */ var _pages_UsersPage_UsersPage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../pages/UsersPage/UsersPage */ "./src/pages/UsersPage/UsersPage.tsx");
-/* harmony import */ var _pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../pages/UserTasksPage/UserTasksPage */ "./src/pages/UserTasksPage/UserTasksPage.tsx");
+/* harmony import */ var _pages_SettingsPage_SettingsPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pages/SettingsPage/SettingsPage */ "./src/pages/SettingsPage/SettingsPage.tsx");
+/* harmony import */ var _pages_UserPage_UserPage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pages/UserPage/UserPage */ "./src/pages/UserPage/UserPage.tsx");
+/* harmony import */ var _pages_UserSessionsPage_UserSessionsPage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../pages/UserSessionsPage/UserSessionsPage */ "./src/pages/UserSessionsPage/UserSessionsPage.tsx");
+/* harmony import */ var _pages_UsersPage_UsersPage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../pages/UsersPage/UsersPage */ "./src/pages/UsersPage/UsersPage.tsx");
+/* harmony import */ var _pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../pages/UserTasksPage/UserTasksPage */ "./src/pages/UserTasksPage/UserTasksPage.tsx");
+
 
 
 
@@ -14558,28 +14642,30 @@ const getPageFromUrl = () => {
     const userTasksMatch = hash.match(/^#\/users\/(\d+)\/tasks$/);
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
-      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_9__.UserTasksPage, {
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_10__.UserTasksPage, {
         userId: userId
       });
     }
     const userMatch = hash.match(/^#\/users\/(\d+)$/);
     if (userMatch) {
       const userId = userMatch[1];
-      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserPage_UserPage__WEBPACK_IMPORTED_MODULE_6__.UserPage, {
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserPage_UserPage__WEBPACK_IMPORTED_MODULE_7__.UserPage, {
         userId: userId
       });
     }
     switch (hash) {
       case "#/users":
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UsersPage_UsersPage__WEBPACK_IMPORTED_MODULE_8__.UsersPage, {});
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UsersPage_UsersPage__WEBPACK_IMPORTED_MODULE_9__.UsersPage, {});
       case "#/overview":
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_OverviewPage__WEBPACK_IMPORTED_MODULE_4__.OverviewPage, {});
       case "#/archive":
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_ArchivePage_ArchivePage__WEBPACK_IMPORTED_MODULE_2__.ArchivePage, {});
       case "#/user-sessions":
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserSessionsPage_UserSessionsPage__WEBPACK_IMPORTED_MODULE_7__.UserSessionsPage, {});
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserSessionsPage_UserSessionsPage__WEBPACK_IMPORTED_MODULE_8__.UserSessionsPage, {});
       case "#/logs":
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_LogsPage_LogsPage__WEBPACK_IMPORTED_MODULE_3__.LogsPage, {});
+      case "#/settings":
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_SettingsPage_SettingsPage__WEBPACK_IMPORTED_MODULE_6__.SettingsPage, {});
       default:
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage_PipelinePage__WEBPACK_IMPORTED_MODULE_5__.PipelinePage, {});
     }
@@ -14601,6 +14687,7 @@ const setSubMenuItemActive = () => {
     "#/archive": "#/archive",
     "#/user-sessions": "#/user-sessions",
     "#/logs": "#/logs",
+    "#/settings": "#/settings",
     default: ""
   };
   let targetHash = hashMap.default;
@@ -16225,6 +16312,178 @@ function TaskActions({
 
 /***/ }),
 
+/***/ "./src/pages/SettingsPage/SettingsPage.tsx":
+/*!*************************************************!*\
+  !*** ./src/pages/SettingsPage/SettingsPage.tsx ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SettingsPage: () => (/* binding */ SettingsPage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_common_Header_Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/common/Header/Header */ "./src/components/common/Header/Header.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Page/Page */ "./src/pages/Page/Page.tsx");
+/* harmony import */ var _components_CustomStyleSetting_CustomStyleSetting__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/CustomStyleSetting/CustomStyleSetting */ "./src/pages/SettingsPage/components/CustomStyleSetting/CustomStyleSetting.tsx");
+
+
+
+
+
+const SettingsPage = () => {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_3__.Page, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Header_Header__WEBPACK_IMPORTED_MODULE_2__.WPQTPageHeader, {
+      description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Manage settings, preferences, and configurations.", "quicktasker"),
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Settings", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_CustomStyleSetting_CustomStyleSetting__WEBPACK_IMPORTED_MODULE_4__.CustomStyleSetting, {})]
+  });
+};
+
+
+/***/ }),
+
+/***/ "./src/pages/SettingsPage/components/CustomStyleSetting/CustomStyleSetting.tsx":
+/*!*************************************************************************************!*\
+  !*** ./src/pages/SettingsPage/components/CustomStyleSetting/CustomStyleSetting.tsx ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CustomStyleSetting: () => (/* binding */ CustomStyleSetting)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_icons_tfi__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-icons/tfi */ "./node_modules/react-icons/tfi/index.mjs");
+/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _components_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useSettingActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../hooks/actions/useSettingActions */ "./src/hooks/actions/useSettingActions.ts");
+/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
+/* harmony import */ var _Settings_Settings__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Settings/Settings */ "./src/pages/SettingsPage/components/Settings/Settings.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+
+
+const CustomStyleSetting = () => {
+  const {
+    state: {
+      userPageCustomStyles: initialUserPageCustomStyles
+    },
+    appDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_7__.AppContext);
+  const [userPageCustomStyles, setUserPageCustomStylesState] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [isSaving, setIsSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const {
+    saveCustomUserPageStyles
+  } = (0,_hooks_actions_useSettingActions__WEBPACK_IMPORTED_MODULE_6__.useSettingActions)();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    setUserPageCustomStylesState(initialUserPageCustomStyles);
+  }, [initialUserPageCustomStyles]);
+  const onSave = () => __awaiter(void 0, void 0, void 0, function* () {
+    setIsSaving(true);
+    yield saveCustomUserPageStyles(userPageCustomStyles, styles => {
+      appDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_CUSTOM_USER_PAGE_STYLES,
+        payload: styles
+      });
+    });
+    setIsSaving(false);
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Settings_Settings__WEBPACK_IMPORTED_MODULE_8__.Settings, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Custom style", "quicktasker"),
+    description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom CSS rules for QuickTasker user page.", "quicktasker"),
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__.WPQTTextarea, {
+      value: userPageCustomStyles,
+      onChange: setUserPageCustomStylesState
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Save", "quicktasker"),
+      loading: isSaving,
+      onClick: onSave,
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tfi__WEBPACK_IMPORTED_MODULE_9__.TfiSave, {
+        className: "wpqt-icon-blue wpqt-size-4"
+      })
+    })]
+  });
+};
+
+
+/***/ }),
+
+/***/ "./src/pages/SettingsPage/components/Settings/Settings.tsx":
+/*!*****************************************************************!*\
+  !*** ./src/pages/SettingsPage/components/Settings/Settings.tsx ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Settings: () => (/* binding */ Settings)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+const Settings = ({
+  children,
+  title,
+  description
+}) => {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
+      children: title
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      children: description
+    }), children]
+  });
+};
+
+
+/***/ }),
+
 /***/ "./src/pages/UserPage/UserPage.tsx":
 /*!*****************************************!*\
   !*** ./src/pages/UserPage/UserPage.tsx ***!
@@ -17658,7 +17917,8 @@ const initialState = {
   publicUserPageId: "",
   is_customFields: false,
   timezone: "",
-  isUserAllowedToDelete: false
+  isUserAllowedToDelete: false,
+  userPageCustomStyles: ""
 };
 const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -17673,13 +17933,15 @@ const AppContextProvider = ({
     const publicUserPageId = window.wpqt.publicUserPageId;
     const timezone = window.wpqt.timezone;
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
+    const userPageCustomStyles = window.wpqt.userPageCustomStyles;
     appDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_2__.INIT_APP_STATE,
       payload: {
         siteURL,
         publicUserPageId,
         timezone,
-        isUserAllowedToDelete
+        isUserAllowedToDelete,
+        userPageCustomStyles
       }
     });
   }, []);
@@ -18704,13 +18966,22 @@ const reducer = (state, action) => {
           siteURL,
           publicUserPageId,
           timezone,
-          isUserAllowedToDelete
+          isUserAllowedToDelete,
+          userPageCustomStyles
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           siteURL,
           publicUserPageId,
           timezone,
-          isUserAllowedToDelete
+          isUserAllowedToDelete,
+          userPageCustomStyles
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_USER_PAGE_STYLES:
+      {
+        const userPageCustomStyles = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          userPageCustomStyles
         });
       }
     default:

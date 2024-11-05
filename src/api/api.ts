@@ -522,6 +522,24 @@ function updateCustomFieldValueRequest(
     headers: getCommonHeaders(),
   });
 }
+
+/*
+  ==================================================================================================================================================================================================================
+  Settings requests
+  ==================================================================================================================================================================================================================
+*/
+
+function saveUserPageCustomStylesRequest(
+  userPageCustomStyles: string,
+): Promise<WPQTResponse<string>> {
+  return apiFetch({
+    path: `/wpqt/v1/settings/user-page-custom-styles`,
+    method: "PATCH",
+    data: { styles: userPageCustomStyles },
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -561,6 +579,7 @@ export {
   removeTaskFromUserRequest,
   resetUserPasswordRequest,
   restoreArchivedTaskRequest,
+  saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
   updateCustomFieldValueRequest,
 };

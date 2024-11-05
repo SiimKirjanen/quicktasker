@@ -26,6 +26,7 @@ use WPQT\User\UserRepository;
 use WPQT\Stage\StageRepository;
 use WPQT\UserPage\UserPageService;
 use WPQT\Customfield\CustomFieldService;
+use WPQT\Settings\SettingsService;
 
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
@@ -1677,5 +1678,40 @@ function wpqt_register_api_routes() {
             ),
         ),
     );
+
+    /*
+    ==================================================================================================================================================================================================================
+    Settings endpoints
+    ==================================================================================================================================================================================================================
+    */
+
+    register_rest_route(
+        'wpqt/v1',
+        'settings/user-page-custom-styles',
+        array(
+            'methods' => 'PATCH',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    $styles = SettingsService::saveUserPageCustomStyles($data['styles']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $styles))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'styles' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
+        ),
+    );
+
 }
 
