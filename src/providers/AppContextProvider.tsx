@@ -1,5 +1,9 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { INIT_APP_STATE, SET_SITE_URL } from "../constants";
+import {
+  INIT_APP_STATE,
+  SET_CUSTOM_USER_PAGE_STYLES,
+  SET_SITE_URL,
+} from "../constants";
 import { reducer } from "../reducers/app-reducer";
 
 type State = {
@@ -8,6 +12,7 @@ type State = {
   is_customFields: boolean;
   timezone: string;
   isUserAllowedToDelete: boolean;
+  userPageCustomStyles: string;
 };
 
 const initialState: State = {
@@ -16,6 +21,7 @@ const initialState: State = {
   is_customFields: false,
   timezone: "",
   isUserAllowedToDelete: false,
+  userPageCustomStyles: "",
 };
 
 type Action =
@@ -26,8 +32,10 @@ type Action =
         publicUserPageId: string;
         timezone: string;
         isUserAllowedToDelete: boolean;
+        userPageCustomStyles: string;
       };
     }
+  | { type: typeof SET_CUSTOM_USER_PAGE_STYLES; payload: string }
   | { type: typeof SET_SITE_URL; payload: string };
 
 type Dispatch = (action: Action) => void;
@@ -50,6 +58,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     const publicUserPageId = window.wpqt.publicUserPageId;
     const timezone = window.wpqt.timezone;
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
+    const userPageCustomStyles = window.wpqt.userPageCustomStyles;
 
     appDispatch({
       type: INIT_APP_STATE,
@@ -58,6 +67,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         publicUserPageId,
         timezone,
         isUserAllowedToDelete,
+        userPageCustomStyles,
       },
     });
   }, []);

@@ -81,3 +81,10 @@ Capabilities constants
 */
 define('WP_QUICKTASKER_ADMIN_ROLE', "quicktasker_admin_role"); //Allows access to QuickTasker admin pages and private API GET requests
 define('WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE', "quicktasker_admin_role_allow_delete"); //Allows private API DELETE requests
+
+/*
+==================================================================================================================================================================================================================
+Settings constants
+==================================================================================================================================================================================================================
+*/
+define('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES', "quicktasker_user_page_custom_styles");

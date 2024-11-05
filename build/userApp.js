@@ -5158,6 +5158,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   removeTaskFromUserRequest: () => (/* binding */ removeTaskFromUserRequest),
 /* harmony export */   resetUserPasswordRequest: () => (/* binding */ resetUserPasswordRequest),
 /* harmony export */   restoreArchivedTaskRequest: () => (/* binding */ restoreArchivedTaskRequest),
+/* harmony export */   saveUserPageCustomStylesRequest: () => (/* binding */ saveUserPageCustomStylesRequest),
 /* harmony export */   setPipelinePrimaryRequest: () => (/* binding */ setPipelinePrimaryRequest),
 /* harmony export */   updateCustomFieldValueRequest: () => (/* binding */ updateCustomFieldValueRequest)
 /* harmony export */ });
@@ -5580,6 +5581,21 @@ function updateCustomFieldValueRequest(customFieldId, value, entityId, entityTyp
       value,
       entityId: String(entityId),
       entityType
+    },
+    headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Settings requests
+  ==================================================================================================================================================================================================================
+*/
+function saveUserPageCustomStylesRequest(userPageCustomStyles) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/settings/user-page-custom-styles`,
+    method: "PATCH",
+    data: {
+      styles: userPageCustomStyles
     },
     headers: getCommonHeaders()
   });
@@ -6705,6 +6721,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_CUSTOM_FIELDS_LOCATION: () => (/* binding */ SET_CUSTOM_FIELDS_LOCATION),
 /* harmony export */   SET_CUSTOM_FIELD_INITIAL_DATA: () => (/* binding */ SET_CUSTOM_FIELD_INITIAL_DATA),
 /* harmony export */   SET_CUSTOM_FIELD_LOADING: () => (/* binding */ SET_CUSTOM_FIELD_LOADING),
+/* harmony export */   SET_CUSTOM_USER_PAGE_STYLES: () => (/* binding */ SET_CUSTOM_USER_PAGE_STYLES),
 /* harmony export */   SET_FULL_PAGE_LOADING: () => (/* binding */ SET_FULL_PAGE_LOADING),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
 /* harmony export */   SET_USERS: () => (/* binding */ SET_USERS),
@@ -6781,6 +6798,7 @@ const RESET_PASSWORD = "RESET_PASSWORD";
 //App reducer
 const SET_SITE_URL = "SET_SITE_URL";
 const INIT_APP_STATE = "INIT_APP_STATE";
+const SET_CUSTOM_USER_PAGE_STYLES = "SET_CUSTOM_USER_PAGE_STYLES";
 //Loading reducer
 const SET_FULL_PAGE_LOADING = "SET_FULL_PAGE_LOADING";
 //User sessions reducer
@@ -6923,7 +6941,8 @@ const initialState = {
   publicUserPageId: "",
   is_customFields: false,
   timezone: "",
-  isUserAllowedToDelete: false
+  isUserAllowedToDelete: false,
+  userPageCustomStyles: ""
 };
 const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -6938,13 +6957,15 @@ const AppContextProvider = ({
     const publicUserPageId = window.wpqt.publicUserPageId;
     const timezone = window.wpqt.timezone;
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
+    const userPageCustomStyles = window.wpqt.userPageCustomStyles;
     appDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_2__.INIT_APP_STATE,
       payload: {
         siteURL,
         publicUserPageId,
         timezone,
-        isUserAllowedToDelete
+        isUserAllowedToDelete,
+        userPageCustomStyles
       }
     });
   }, []);
@@ -7107,13 +7128,22 @@ const reducer = (state, action) => {
           siteURL,
           publicUserPageId,
           timezone,
-          isUserAllowedToDelete
+          isUserAllowedToDelete,
+          userPageCustomStyles
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           siteURL,
           publicUserPageId,
           timezone,
-          isUserAllowedToDelete
+          isUserAllowedToDelete,
+          userPageCustomStyles
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_USER_PAGE_STYLES:
+      {
+        const userPageCustomStyles = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          userPageCustomStyles
         });
       }
     default:
