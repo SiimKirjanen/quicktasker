@@ -9,6 +9,7 @@ declare global {
       apiNonce: string;
       initialUsers: ServerUser[];
       siteURL: string;
+      pluginURL: string;
       publicUserPageId: string;
       timezone: string;
       isUserAllowedToDelete: "1" | "0";

@@ -6938,6 +6938,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const initialState = {
   siteURL: "",
+  pluginURL: "",
   publicUserPageId: "",
   is_customFields: false,
   timezone: "",
@@ -6958,6 +6959,7 @@ const AppContextProvider = ({
     const timezone = window.wpqt.timezone;
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
     const userPageCustomStyles = window.wpqt.userPageCustomStyles;
+    const pluginURL = window.wpqt.pluginURL;
     appDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_2__.INIT_APP_STATE,
       payload: {
@@ -6965,7 +6967,8 @@ const AppContextProvider = ({
         publicUserPageId,
         timezone,
         isUserAllowedToDelete,
-        userPageCustomStyles
+        userPageCustomStyles,
+        pluginURL
       }
     });
   }, []);
@@ -7129,14 +7132,16 @@ const reducer = (state, action) => {
           publicUserPageId,
           timezone,
           isUserAllowedToDelete,
-          userPageCustomStyles
+          userPageCustomStyles,
+          pluginURL
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           siteURL,
           publicUserPageId,
           timezone,
           isUserAllowedToDelete,
-          userPageCustomStyles
+          userPageCustomStyles,
+          pluginURL
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_USER_PAGE_STYLES:

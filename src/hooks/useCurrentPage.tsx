@@ -1,5 +1,6 @@
 import { useEffect, useState } from "@wordpress/element";
 import { ArchivePage } from "../pages/ArchivePage/ArchivePage";
+import { GuidePage } from "../pages/GuidePage/GuidePage";
 import { LogsPage } from "../pages/LogsPage/LogsPage";
 import { OverviewPage } from "../pages/OverviewPage";
 import { PipelinePage } from "../pages/PipelinePage/PipelinePage";
@@ -61,6 +62,8 @@ const getPageFromUrl = () => {
         return <LogsPage />;
       case "#/settings":
         return <SettingsPage />;
+      case "#/guide":
+        return <GuidePage />;
       default:
         return <PipelinePage />;
     }
@@ -86,6 +89,7 @@ const setSubMenuItemActive = () => {
     "#/user-sessions": "#/user-sessions",
     "#/logs": "#/logs",
     "#/settings": "#/settings",
+    "#/guide": "#/guide",
     default: "",
   };
 

@@ -14597,14 +14597,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _pages_ArchivePage_ArchivePage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pages/ArchivePage/ArchivePage */ "./src/pages/ArchivePage/ArchivePage.tsx");
-/* harmony import */ var _pages_LogsPage_LogsPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/LogsPage/LogsPage */ "./src/pages/LogsPage/LogsPage.tsx");
-/* harmony import */ var _pages_OverviewPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pages/OverviewPage */ "./src/pages/OverviewPage.tsx");
-/* harmony import */ var _pages_PipelinePage_PipelinePage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pages/PipelinePage/PipelinePage */ "./src/pages/PipelinePage/PipelinePage.tsx");
-/* harmony import */ var _pages_SettingsPage_SettingsPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pages/SettingsPage/SettingsPage */ "./src/pages/SettingsPage/SettingsPage.tsx");
-/* harmony import */ var _pages_UserPage_UserPage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pages/UserPage/UserPage */ "./src/pages/UserPage/UserPage.tsx");
-/* harmony import */ var _pages_UserSessionsPage_UserSessionsPage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../pages/UserSessionsPage/UserSessionsPage */ "./src/pages/UserSessionsPage/UserSessionsPage.tsx");
-/* harmony import */ var _pages_UsersPage_UsersPage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../pages/UsersPage/UsersPage */ "./src/pages/UsersPage/UsersPage.tsx");
-/* harmony import */ var _pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../pages/UserTasksPage/UserTasksPage */ "./src/pages/UserTasksPage/UserTasksPage.tsx");
+/* harmony import */ var _pages_GuidePage_GuidePage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/GuidePage/GuidePage */ "./src/pages/GuidePage/GuidePage.tsx");
+/* harmony import */ var _pages_LogsPage_LogsPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pages/LogsPage/LogsPage */ "./src/pages/LogsPage/LogsPage.tsx");
+/* harmony import */ var _pages_OverviewPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pages/OverviewPage */ "./src/pages/OverviewPage.tsx");
+/* harmony import */ var _pages_PipelinePage_PipelinePage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pages/PipelinePage/PipelinePage */ "./src/pages/PipelinePage/PipelinePage.tsx");
+/* harmony import */ var _pages_SettingsPage_SettingsPage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../pages/SettingsPage/SettingsPage */ "./src/pages/SettingsPage/SettingsPage.tsx");
+/* harmony import */ var _pages_UserPage_UserPage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../pages/UserPage/UserPage */ "./src/pages/UserPage/UserPage.tsx");
+/* harmony import */ var _pages_UserSessionsPage_UserSessionsPage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../pages/UserSessionsPage/UserSessionsPage */ "./src/pages/UserSessionsPage/UserSessionsPage.tsx");
+/* harmony import */ var _pages_UsersPage_UsersPage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../pages/UsersPage/UsersPage */ "./src/pages/UsersPage/UsersPage.tsx");
+/* harmony import */ var _pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../pages/UserTasksPage/UserTasksPage */ "./src/pages/UserTasksPage/UserTasksPage.tsx");
+
 
 
 
@@ -14642,32 +14644,34 @@ const getPageFromUrl = () => {
     const userTasksMatch = hash.match(/^#\/users\/(\d+)\/tasks$/);
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
-      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_10__.UserTasksPage, {
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserTasksPage_UserTasksPage__WEBPACK_IMPORTED_MODULE_11__.UserTasksPage, {
         userId: userId
       });
     }
     const userMatch = hash.match(/^#\/users\/(\d+)$/);
     if (userMatch) {
       const userId = userMatch[1];
-      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserPage_UserPage__WEBPACK_IMPORTED_MODULE_7__.UserPage, {
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserPage_UserPage__WEBPACK_IMPORTED_MODULE_8__.UserPage, {
         userId: userId
       });
     }
     switch (hash) {
       case "#/users":
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UsersPage_UsersPage__WEBPACK_IMPORTED_MODULE_9__.UsersPage, {});
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UsersPage_UsersPage__WEBPACK_IMPORTED_MODULE_10__.UsersPage, {});
       case "#/overview":
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_OverviewPage__WEBPACK_IMPORTED_MODULE_4__.OverviewPage, {});
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_OverviewPage__WEBPACK_IMPORTED_MODULE_5__.OverviewPage, {});
       case "#/archive":
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_ArchivePage_ArchivePage__WEBPACK_IMPORTED_MODULE_2__.ArchivePage, {});
       case "#/user-sessions":
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserSessionsPage_UserSessionsPage__WEBPACK_IMPORTED_MODULE_8__.UserSessionsPage, {});
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_UserSessionsPage_UserSessionsPage__WEBPACK_IMPORTED_MODULE_9__.UserSessionsPage, {});
       case "#/logs":
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_LogsPage_LogsPage__WEBPACK_IMPORTED_MODULE_3__.LogsPage, {});
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_LogsPage_LogsPage__WEBPACK_IMPORTED_MODULE_4__.LogsPage, {});
       case "#/settings":
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_SettingsPage_SettingsPage__WEBPACK_IMPORTED_MODULE_6__.SettingsPage, {});
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_SettingsPage_SettingsPage__WEBPACK_IMPORTED_MODULE_7__.SettingsPage, {});
+      case "#/guide":
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_GuidePage_GuidePage__WEBPACK_IMPORTED_MODULE_3__.GuidePage, {});
       default:
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage_PipelinePage__WEBPACK_IMPORTED_MODULE_5__.PipelinePage, {});
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_pages_PipelinePage_PipelinePage__WEBPACK_IMPORTED_MODULE_6__.PipelinePage, {});
     }
   }
 };
@@ -14688,6 +14692,7 @@ const setSubMenuItemActive = () => {
     "#/user-sessions": "#/user-sessions",
     "#/logs": "#/logs",
     "#/settings": "#/settings",
+    "#/guide": "#/guide",
     default: ""
   };
   let targetHash = hashMap.default;
@@ -15180,6 +15185,56 @@ function ArchiveItems() {
     })
   });
 }
+
+
+/***/ }),
+
+/***/ "./src/pages/GuidePage/GuidePage.tsx":
+/*!*******************************************!*\
+  !*** ./src/pages/GuidePage/GuidePage.tsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   GuidePage: () => (/* binding */ GuidePage)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_common_Header_Header__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/common/Header/Header */ "./src/components/common/Header/Header.tsx");
+/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Page/Page */ "./src/pages/Page/Page.tsx");
+
+
+
+
+
+
+const GuidePage = () => {
+  const {
+    state: {
+      pluginURL
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_4__.AppContext);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_5__.Page, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Header_Header__WEBPACK_IMPORTED_MODULE_3__.WPQTPageHeader, {
+      description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Reading material about QuickTasker features and usage.", "quicktasker"),
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Guide", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+        target: "_blank",
+        rel: "noreferrer",
+        href: pluginURL + "help/index.html",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View Guide", "quicktasker")
+      })
+    })]
+  });
+};
 
 
 /***/ }),
@@ -17914,6 +17969,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const initialState = {
   siteURL: "",
+  pluginURL: "",
   publicUserPageId: "",
   is_customFields: false,
   timezone: "",
@@ -17934,6 +17990,7 @@ const AppContextProvider = ({
     const timezone = window.wpqt.timezone;
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
     const userPageCustomStyles = window.wpqt.userPageCustomStyles;
+    const pluginURL = window.wpqt.pluginURL;
     appDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_2__.INIT_APP_STATE,
       payload: {
@@ -17941,7 +17998,8 @@ const AppContextProvider = ({
         publicUserPageId,
         timezone,
         isUserAllowedToDelete,
-        userPageCustomStyles
+        userPageCustomStyles,
+        pluginURL
       }
     });
   }, []);
@@ -18967,14 +19025,16 @@ const reducer = (state, action) => {
           publicUserPageId,
           timezone,
           isUserAllowedToDelete,
-          userPageCustomStyles
+          userPageCustomStyles,
+          pluginURL
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           siteURL,
           publicUserPageId,
           timezone,
           isUserAllowedToDelete,
-          userPageCustomStyles
+          userPageCustomStyles,
+          pluginURL
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_USER_PAGE_STYLES:

@@ -22,6 +22,7 @@ const reducer = (state: State, action: Action): State => {
         timezone,
         isUserAllowedToDelete,
         userPageCustomStyles,
+        pluginURL,
       } = action.payload;
 
       return {
@@ -31,6 +32,7 @@ const reducer = (state: State, action: Action): State => {
         timezone,
         isUserAllowedToDelete,
         userPageCustomStyles,
+        pluginURL,
       };
     }
     case SET_CUSTOM_USER_PAGE_STYLES: {
