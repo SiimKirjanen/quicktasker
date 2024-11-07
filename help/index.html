@@ -10,40 +10,82 @@
 	<style type="text/css" media="screen">
 		p, table, hr, .box { margin-bottom:25px; }
 		.box p { margin-bottom:10px; }
+		.text-center { text-align:center; }
 	</style>
 </head>
 
 
 <body>
 	<div class="container">
-	
 		<h3 class="center alt">&ldquo;QuickTasker&rdquo; Documentation v1.0</h3>
 		
-
+		<hr>
 		
-
+		<h1 class="center">&ldquo;QuickTasker&rdquo;</h1>
+		
+		<div class="borderTop">
+			<div>
+				<p class="prepend-top append-0"> Thank you for downloading QuickTasker plugin. The following is a guide to help you get started with QuickTasker. This documentation provides information on the features and usage of the plugin, divided into sections for easy navigation and understanding.
+				</p>
+			</div>
+		</div><!-- end div .borderTop -->
 		
 		<hr>
 		
 		<h2 id="toc" class="alt">Table of Contents</h2>
 		<ol class="alpha">
+			<li><a href="#admin-area">Admin area</a></li>
 			<li><a href="#board">Board</a></li>
 			<li><a href="#task">Task</a></li>
+			<li><a href="#archive">Archive</a></li>
 			<li><a href="#user">User</a></li>
 			<li><a href="#user-page">User page</a></li>
+			<li><a href="#user-sessions">User sessions</a></li>
+			<li><a href="#logs">Logs</a></li>
+			<li><a href="#settings">Settings</a></li>
 		</ol>
 		
 		<hr>
+
+		<h3 id="admin-area"><strong>A) Admin area</strong> - <a href="#toc">top</a></h3>
+		<p>This plugin provides an admin area accessible to WordPress users who have the required permissions. In the admin area, users can manage boards, tasks, settings etc. Currently there are two permissions a user can have and WordPress admins have both of them.</p>
+
+		<strong>quicktasker_admin_role</strong>
+		<p>Provides access to admin area and allows to view, create and modify resources.</p>
+
+		<strong>quicktasker_admin_role_allow_delete</strong>
+		<p>Provides access to delete resources.</p>
+
+		<hr>
 		
-		<h3 id="board"><strong>A) Board</strong> - <a href="#toc">top</a></h3>
+		<h3 id="board"><strong>B) Board</strong> - <a href="#toc">top</a></h3>
 		<p>"Board" is a central feature designed to help you organize and manage your tasks efficiently. Each board can have multiple stages, and each stage can contain numerous tasks. This hierarchical structure allows you to break down your projects into manageable parts and track progress effectively.</p>
 		
 		<img src="assets/images/board.png" alt="Board" />
-		<p><strong>Stages:</strong> A board is divided into several stages, each representing a different phase of your project. For example, you might have stages like "To Do," "In Progress," and "Completed." You can customize these stages to fit your workflow and project requirements.</p>
-		
+		<figcaption class="text-center">Board view</figcaption> <br>
+
+		<p><strong>Board settings:</strong> Settings can be accessed by clicking the gear icon next to the board name. The modal that opens have the following settings and features.</p>
+		<ul>
+			<li>Change board name and description</li>
+			<li>Delete the board</li>
+			<li><strong>[PRO feature]</strong> Manage board wide custom fields that will be added to all board tasks</li>
+		</ul>
+
+		<p><strong>Stages:</strong> A board is divided into several stages, each representing a different phase of your project. For example, you might have stages like "To Do," "In Progress," and "Completed." You can customize these stages to fit your workflow and project requirements. Stage settings can be accesses by clicking stage gear icon and selecting edit stage. The following settings are provided.</p>
+		<ul>
+			<li>Change stage name and description</li>
+		</ul>
+		<p><strong>Stage actions</strong> Stage actions can be accessed by clicking the stage gear icon</p>
+		<ul>
+			<li><strong>Move stage left</strong>. Shifts stage to left if possible.</li>
+			<li><strong>Move stage right</strong>. Shifts stage to right if possible.</li>
+			<li><strong>Edit stage</strong>. Opens a stage settings modal.</li>
+			<li><strong>Archive all stage tasks</strong>. Adds all tasks in the stage to archive.</li>
+			<li><strong>Delete stage</strong>. Deletes the stage. This actions is disabled when there are tasks in the stage.</li>
+		</ul>
 		<hr>
 
-		<h3 id="task"><strong>B) Task</strong> - <a href="#toc">top</a></h3>
+		<h3 id="task"><strong>C) Task</strong> - <a href="#toc">top</a></h3>
 
 		<p>"Task" represents an individual unit of work that needs to be completed. Tasks are the building blocks of your projects, allowing you to break down complex projects into manageable pieces</p> 
 
@@ -52,11 +94,17 @@
 		<p><strong>Editing Tasks:</strong> You can easily edit tasks to update their details, such as the title, description. This ensures that all relevant information is up-to-date and accessible to your team.</p>
 		<p><strong>Assigning Users:</strong> Tasks can be assigned to QuickTasker users, allowing you to delegate responsibilities and track who is working on what. This helps in managing workloads and ensuring accountability.</p>
 		<p><strong>Marking Tasks as Completed:</strong> Once a task is finished, you can mark it as completed. This helps in tracking progress and ensuring that nothing is overlooked.</p>
-		<p><strong>Custom Fields:</strong> You can add custom fields to tasks to capture additional information specific to your workflow. This flexibility allows you to tailor the task details to your project's unique requirements.</p>
+		<p><strong>[Pro feature] Custom Fields:</strong> You can add custom fields to tasks to capture additional information specific to your workflow. This flexibility allows you to tailor the task details to your project's unique requirements.</p>
 		<p><strong>Comments and Logs:</strong> Each task supports both private and public comments, enabling team members to communicate and collaborate effectively. Additionally, you can view logs related to the task to track changes and updates over time.</p>
 		<hr>
+
+		<h3 id="archive"><strong>D) Archive</strong> - <a href="#toc">top</a></h3>
+
+		<p>Archive page allows you to view all archived tasks. Archived tasks can be restored or deleted.</p>
+
+		<hr>
 		
-		<h3 id="user"><strong>C) User</strong> - <a href="#toc">top</a></h3>
+		<h3 id="user"><strong>E) User</strong> - <a href="#toc">top</a></h3>
 		
 		<p>"User" refers to a QuickTasker user who can be assigned to tasks and collaborate on projects. Admins have the ability to create and manage QuickTasker users, ensuring that the right people are assigned to the right tasks.</p>
 		
@@ -64,12 +112,12 @@
 
 		<p><strong>Creating Users:</strong> Admins can create new QuickTasker users, providing them with the necessary credentials to access the system. This allows for effective delegation and collaboration within your team.</p>
 		<p><strong>Editing Users:</strong> Similar to tasks, user details can be edited to keep information up-to-date.</p>
-		<p><strong>Custom Fields:</strong> You can add custom fields to user profiles to capture additional information specific to your workflow. This flexibility allows you to tailor user profiles to meet your project's unique requirements.</p>
+		<p><strong>[Pro feature] Custom Fields:</strong> You can add custom fields to user profiles to capture additional information specific to your workflow. This flexibility allows you to tailor user profiles to meet your project's unique requirements.</p>
 		<p><strong>Comments and Logs:</strong> Each user profile supports both private and public comments, enabling team members to communicate and collaborate effectively. Additionally, you can view logs related to the user to track changes and updates over time.</p>
 		
 		<hr>
 		
-		<h3 id="user-page"><strong>D) User page</strong> - <a href="#toc">top</a></h3>
+		<h3 id="user-page"><strong>F) User page</strong> - <a href="#toc">top</a></h3>
 		
 		<p>Each QuickTasker user has their own mobile-like user page. On this page, users can manage their tasks and collaborate with their team effectively.</p>
 		
@@ -82,7 +130,25 @@
 		<p><strong>Comments:</strong> Users can add comments to tasks directly from their user page, enabling effective communication and collaboration within the team. Comments can be used to ask questions, provide updates, or share important information related to the task.</p>
 		<hr>
 
+		<h3 id="user-sessions"><strong>G) User sessions</strong> - <a href="#toc">top</a></h3>
+		<p>User sessions page allows you to track and manage user logins to user page. By default user session lasts one day.</p>
+
 		<hr>
+
+		<h3 id="logs"><strong>H) Logs</strong> - <a href="#toc">top</a></h3>
+		<p>Logs page allows to view all logs generated by this plugin</p>
+
+		<hr>
+
+		<h3 id="settings"><strong>I) Settings</strong> - <a href="#toc">top</a></h3>
+		<p>Settings page provides useful options to configure and customize the QuickTasker plugin according to your needs.</p>
+
+		<ul>
+			<li><strong>Custom styles:</strong> Allows to add custom CSS rules to user page.</li>
+		</ul>
+
+		<hr>
+	
 	
 		<p><a href="#toc">Go To Table of Contents</a></p>
 		
