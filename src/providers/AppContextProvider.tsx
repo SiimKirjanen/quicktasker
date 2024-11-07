@@ -8,6 +8,7 @@ import { reducer } from "../reducers/app-reducer";
 
 type State = {
   siteURL: string;
+  pluginURL: string;
   publicUserPageId: string;
   is_customFields: boolean;
   timezone: string;
@@ -17,6 +18,7 @@ type State = {
 
 const initialState: State = {
   siteURL: "",
+  pluginURL: "",
   publicUserPageId: "",
   is_customFields: false,
   timezone: "",
@@ -33,6 +35,7 @@ type Action =
         timezone: string;
         isUserAllowedToDelete: boolean;
         userPageCustomStyles: string;
+        pluginURL: string;
       };
     }
   | { type: typeof SET_CUSTOM_USER_PAGE_STYLES; payload: string }
@@ -59,6 +62,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     const timezone = window.wpqt.timezone;
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
     const userPageCustomStyles = window.wpqt.userPageCustomStyles;
+    const pluginURL = window.wpqt.pluginURL;
 
     appDispatch({
       type: INIT_APP_STATE,
@@ -68,6 +72,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         timezone,
         isUserAllowedToDelete,
         userPageCustomStyles,
+        pluginURL,
       },
     });
   }, []);
