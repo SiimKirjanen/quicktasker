@@ -1,4 +1,5 @@
 === QuickTasker ===
+Donate link: https://www.paypal.com/donate/?hosted_button_id=QEU9KGTX4NZHN
 Tags: task manager, task management, project manager, project management 
 Requires at least: 5.3
 Requires PHP: 7.2.28
