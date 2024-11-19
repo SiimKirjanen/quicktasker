@@ -10,7 +10,13 @@ function CustomFieldsAd() {
         )}
       </div>
       <div className="wpqt-text-blue-500 wpqt-font-semibold">
-        {__("Coming soon", "quicktasker")}
+        <a
+          href="https://kirjanen.gumroad.com/l/qwxac"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {__("Get the premium version", "quicktasker")}
+        </a>
       </div>
     </div>
   );
