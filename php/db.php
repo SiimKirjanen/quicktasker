@@ -226,8 +226,10 @@ function wpqt_set_up_db() {
 			id int(11) NOT NULL AUTO_INCREMENT,
 			pipeline_id int(11) NOT NULL,
 			allow_only_last_stage_task_done tinyint(1) DEFAULT 0,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
-			INDEX pipeline_id (pipeline_id)
+			UNIQUE KEY pipeline_id (pipeline_id)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql14 );

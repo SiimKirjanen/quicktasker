@@ -7,26 +7,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Time\TimeRepository;
+use WPQT\Settings\SettingsService;
 
 class PipelineService {
     protected $pipelineRepository;
     protected $timeRepository;
+    protected $settingsService;
 
     public function __construct() {
         $this->pipelineRepository = new PipelineRepository();
         $this->timeRepository = new TimeRepository();
+        $this->settingsService = new SettingsService();
     }
 
     /**
      * Creates a new pipeline with the given name.
      *
-     * This method inserts a new pipeline record into the database. If there is no active pipeline,
-     * the new pipeline is set as the primary pipeline. The creation and update timestamps are set
-     * to the current UTC time.
+     * This method inserts a new pipeline into the database and sets it as the primary pipeline
+     * if there is no active pipeline. It also creates the corresponding pipeline settings.
      *
-     * @param string $name The name of the new pipeline.
-     * @return mixed The newly created pipeline object.
-     * @throws \Exception If the pipeline creation fails.
+     * @param string $name The name of the pipeline to be created.
+     * @return object The newly created pipeline object.
+     * @throws \Exception If the pipeline or pipeline settings could not be created.
      */
     public function createPipeline($name) {
         global $wpdb;
@@ -43,8 +45,12 @@ class PipelineService {
         if ($result == false) {
             throw new \Exception('Failed to create a board');
         } 
+
+        $pipelineId = $wpdb->insert_id;
+
+        $this->settingsService->insertSettingsColumnForPipeline($pipelineId);
         
-        return $this->pipelineRepository->getPipelineById($wpdb->insert_id);
+        return $this->pipelineRepository->getPipelineById($pipelineId);
     }
 
     /**

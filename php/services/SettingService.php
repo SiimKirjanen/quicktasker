@@ -7,9 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Settings\SettingRepository;
+use WPQT\Time\TimeRepository;
 
 class SettingsService {
+    protected $timeRepository;
 
+    public function __construct() {
+        $this->timeRepository = new TimeRepository();
+    }
 
     /**
      * Validates the custom styles provided by the user for a page.
@@ -44,5 +49,25 @@ class SettingsService {
         update_option(WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES, $customStyles);
 
         return SettingRepository::getUserPageCustomStyles();
+    }
+
+    /**
+     * Inserts a new settings column for a given pipeline into the database.
+     *
+     * @param int $pipelineId The ID of the pipeline for which the settings column is being inserted.
+     * @throws \Exception If the insertion of the settings column fails.
+     */
+    public function insertSettingsColumnForPipeline($pipelineId) {
+        global $wpdb;
+
+        $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, array(
+            'pipeline_id' => $pipelineId,
+            'created_at' => $this->timeRepository->getCurrentUTCTime(),
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
+        ));
+
+        if ($result == false) {
+            throw new \Exception('Failed to create board settings');
+        } 
     }
 }
