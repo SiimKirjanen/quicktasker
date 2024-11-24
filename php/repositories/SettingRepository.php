@@ -18,4 +18,23 @@ class SettingRepository {
     static function getUserPageCustomStyles() {
         return get_option(WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES, "");
     }
+
+    /**
+     * Retrieves the pipeline settings for a given pipeline ID.
+     *
+     * This function queries the database to fetch the settings associated with a specific pipeline.
+     *
+     * @param int $pipelineId The ID of the pipeline for which settings are to be retrieved.
+     * @return object|null Database query results. A single row object, or null if no results.
+     */
+    public function getPipelineSettings($pipelineId) {
+        global $wpdb;
+
+        return $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT id, pipeline_id, allow_only_last_stage_task_done, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . " WHERE pipeline_id = %d",
+                $pipelineId
+            )
+        );
+    }
 }

@@ -70,4 +70,28 @@ class SettingsService {
             throw new \Exception('Failed to create board settings');
         } 
     }
+
+    /**
+     * Updates the pipeline task completion restriction setting.
+     *
+     * This method updates the setting that restricts task completion to only the last stage in a pipeline.
+     *
+     * @param int $pipelineId The ID of the pipeline to update.
+     * @param bool $allowOnlyLastStageTaskDone Whether to allow only the last stage task to be marked as done.
+     * @throws \Exception If the update operation fails.
+     */
+    public function updatePipelineTaskDoneCompletionRestriction($pipelineId, $allowOnlyLastStageTaskDone) {
+        global $wpdb;
+
+        $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, array(
+            'allow_only_last_stage_task_done' => $allowOnlyLastStageTaskDone,
+            'updated_at' => $this->timeRepository->getCurrentUTCTime()
+        ), array(
+            'pipeline_id' => $pipelineId
+        ));
+
+        if ($result === false) {
+            throw new \Exception('Failed to update board settings');
+        }
+    }
 }

@@ -6,7 +6,7 @@ type Props = {
 
 const Settings = ({ children, title, description }: Props) => {
   return (
-    <div>
+    <div className="wpqt-mb-3">
       <h3>{title}</h3>
       <p>{description}</p>
       {children}

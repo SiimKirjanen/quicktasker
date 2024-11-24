@@ -9,6 +9,7 @@ import {
   Pipeline,
   PipelineFromServer,
 } from "../types/pipeline";
+import { PipelineSettingsFromServer } from "../types/pipeline-settings";
 import { DeletePipelineResponse } from "../types/requestResponse/delete-pipeline-response";
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
@@ -540,6 +541,28 @@ function saveUserPageCustomStylesRequest(
   });
 }
 
+function getPipelineSettingsRequest(
+  pipelineId: string,
+): Promise<WPQTResponse<PipelineSettingsFromServer>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/settings`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+function saveTaskCompletionDoneSettingRequest(
+  pipelineId: string,
+  checked: boolean,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/settings/task-completion-done-restriction`,
+    method: "PATCH",
+    data: { allow_task_completion_only_on_last_stage: checked },
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -568,6 +591,7 @@ export {
   getGlobalLogsRequest,
   getLogsRequest,
   getPipelineData,
+  getPipelineSettingsRequest,
   getTaskLogs,
   getUserSessionsRequest,
   getUsersRequest,
@@ -579,6 +603,7 @@ export {
   removeTaskFromUserRequest,
   resetUserPasswordRequest,
   restoreArchivedTaskRequest,
+  saveTaskCompletionDoneSettingRequest,
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
   updateCustomFieldValueRequest,
