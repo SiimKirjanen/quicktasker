@@ -14,6 +14,11 @@ use WPQT\Asset\AssetRepository;
  *
  * @return void
  */
+add_action( 'plugins_loaded', 'wpqt_update_db' );
+function wpqt_update_db() {
+    wpqt_set_up_db();
+}
+
 add_action('template_redirect', 'wpqt_custom_http_status_code');
 function wpqt_custom_http_status_code() {
 	$locationService = new LocationService();
