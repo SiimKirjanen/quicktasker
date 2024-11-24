@@ -53,12 +53,16 @@ function wpqt_register_api_routes() {
                 try {
                     WPQTverifyApiNonce($data);
                     $pipelineRepo = new PipelineRepository();
+                    $settingRepo = new SettingRepository();
+
                     $pipeline = $pipelineRepo->getFullPipeline( $data['id'] );
                     $pipelines = $pipelineRepo->getPipelines();
-
+                    $pipelineSettings = $settingRepo->getPipelineSettings($data['id']);
+                    $pipeline->settings = $pipelineSettings;
+                    
                     return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                         'pipeline' => $pipeline,
-                        'pipelines' => $pipelines
+                        'pipelines' => $pipelines,
 
                     ]))->toArray(), 200);
                 } catch (Exception $e) {

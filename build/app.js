@@ -15990,9 +15990,11 @@ const Pipeline = () => {
     className: "wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_12__.DragDropContext, {
       onDragEnd: onDragEnd,
-      children: (_a = activePipeline.stages) === null || _a === void 0 ? void 0 : _a.map(stage => {
+      children: (_a = activePipeline.stages) === null || _a === void 0 ? void 0 : _a.map((stage, index) => {
+        const isLastStage = index === activePipeline.stages.length - 1;
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_11__.Stage, {
-          stage: stage
+          stage: stage,
+          isLastStage: isLastStage
         }, stage.id);
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddStage__WEBPACK_IMPORTED_MODULE_9__.AddStage, {
@@ -16205,7 +16207,8 @@ function TaskCount({
   });
 }
 function Stage({
-  stage
+  stage,
+  isLastStage
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     "data-stage-id": stage.id,
@@ -16232,7 +16235,8 @@ function Stage({
           className: "wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto wpqt-overflow-x-hidden",
           children: [(_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.map((task, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Task_Task__WEBPACK_IMPORTED_MODULE_3__.Task, {
             task: task,
-            index: index
+            index: index,
+            onLastStage: isLastStage
           }, task.id)), provided.placeholder, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddTask__WEBPACK_IMPORTED_MODULE_2__.AddTask, {
             stageId: stage.id
           })]
@@ -16309,11 +16313,18 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 function Task({
   task,
-  index
+  index,
+  onLastStage
 }) {
   const {
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_8__.ModalContext);
+  const {
+    state: {
+      activePipeline
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_7__.ActivePipelineContext);
+  const pipelineSettings = activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.settings;
   const openEditTaskModal = () => {
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_5__.OPEN_EDIT_TASK_MODAL,
@@ -16347,13 +16358,17 @@ function Task({
           task: task
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TaskActions, {
-        task: task
+        task: task,
+        onLastStage: onLastStage,
+        taskDoneLastStageRestriction: pipelineSettings.allow_only_last_stage_task_done
       })]
     }))
   }, task.id);
 }
 function TaskActions({
-  task
+  task,
+  onLastStage,
+  taskDoneLastStageRestriction
 }) {
   const {
     dispatch
@@ -16363,6 +16378,7 @@ function TaskActions({
   } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_6__.useTaskActions)();
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const isTaskCompleted = task.is_done;
+  const displayActions = !taskDoneLastStageRestriction || onLastStage;
   const changeDone = done => __awaiter(this, void 0, void 0, function* () {
     setLoading(true);
     yield changeTaskDoneStatus(task.id, done, isCompleted => {
@@ -16376,6 +16392,9 @@ function TaskActions({
     });
     setLoading(false);
   });
+  if (!displayActions) {
+    return null;
+  }
   if (loading) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.Loading, {
       ovalSize: "24"
@@ -19003,8 +19022,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   activePipelineReducer: () => (/* binding */ activePipelineReducer)
 /* harmony export */ });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
-/* harmony import */ var _utils_stage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/stage */ "./src/utils/stage.ts");
-/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/task */ "./src/utils/task.ts");
+/* harmony import */ var _utils_pipeline_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/pipeline-settings */ "./src/utils/pipeline-settings.ts");
+/* harmony import */ var _utils_stage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/stage */ "./src/utils/stage.ts");
+/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/task */ "./src/utils/task.ts");
+
 
 
 
@@ -19019,11 +19040,13 @@ const activePipelineReducer = (state, action) => {
       {
         const pipelineData = action.payload;
         const transformedStages = (pipelineData.stages || []).map(stage => {
-          return Object.assign({}, (0,_utils_stage__WEBPACK_IMPORTED_MODULE_1__.convertStageFromServer)(stage));
+          return Object.assign({}, (0,_utils_stage__WEBPACK_IMPORTED_MODULE_2__.convertStageFromServer)(stage));
         });
+        const transformedSettings = pipelineData.settings ? (0,_utils_pipeline_settings__WEBPACK_IMPORTED_MODULE_1__.convertPipelineSettingsFromServer)(pipelineData.settings) : undefined;
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, pipelineData), {
             stages: transformedStages,
+            settings: transformedSettings,
             is_primary: pipelineData.is_primary === "1"
           })
         });
@@ -19033,7 +19056,7 @@ const activePipelineReducer = (state, action) => {
         if (!state.activePipeline || !state.activePipeline.stages) {
           return state;
         }
-        const stages = (0,_utils_task__WEBPACK_IMPORTED_MODULE_2__.moveTask)(state.activePipeline.stages, action.payload.source, action.payload.destination);
+        const stages = (0,_utils_task__WEBPACK_IMPORTED_MODULE_3__.moveTask)(state.activePipeline.stages, action.payload.source, action.payload.destination);
         return Object.assign(Object.assign({}, state), {
           activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
             stages
@@ -19055,7 +19078,7 @@ const activePipelineReducer = (state, action) => {
         if (!targetStage || !targetStage.tasks) {
           return state;
         }
-        const reorderedTasks = (0,_utils_task__WEBPACK_IMPORTED_MODULE_2__.reorderTask)(targetStage.tasks, source.index, targetIndex);
+        const reorderedTasks = (0,_utils_task__WEBPACK_IMPORTED_MODULE_3__.reorderTask)(targetStage.tasks, source.index, targetIndex);
         const updatedStages = (_b = state.activePipeline.stages) === null || _b === void 0 ? void 0 : _b.map(stage => stage.id === targetStageId ? Object.assign(Object.assign({}, stage), {
           tasks: reorderedTasks
         }) : stage);
@@ -19067,7 +19090,7 @@ const activePipelineReducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_TASK:
       {
-        const newTask = (0,_utils_task__WEBPACK_IMPORTED_MODULE_2__.convertTaskFromServer)(action.payload);
+        const newTask = (0,_utils_task__WEBPACK_IMPORTED_MODULE_3__.convertTaskFromServer)(action.payload);
         if (!state.activePipeline) {
           return state;
         }
@@ -19081,7 +19104,7 @@ const activePipelineReducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_EDIT_TASK:
       {
-        const editedTask = (0,_utils_task__WEBPACK_IMPORTED_MODULE_2__.convertTaskFromServer)(action.payload);
+        const editedTask = (0,_utils_task__WEBPACK_IMPORTED_MODULE_3__.convertTaskFromServer)(action.payload);
         if (!state.activePipeline) {
           return state;
         }
@@ -19711,7 +19734,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   reducer: () => (/* binding */ reducer)
 /* harmony export */ });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
-/* harmony import */ var _utils_stage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/stage */ "./src/utils/stage.ts");
+/* harmony import */ var _utils_pipeline_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/pipeline-settings */ "./src/utils/pipeline-settings.ts");
+/* harmony import */ var _utils_stage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/stage */ "./src/utils/stage.ts");
+
 
 
 const reducer = (state, action) => {
@@ -19721,12 +19746,13 @@ const reducer = (state, action) => {
       {
         const pipelines = action.payload;
         const transformStage = stage => {
-          return Object.assign({}, (0,_utils_stage__WEBPACK_IMPORTED_MODULE_1__.convertStageFromServer)(stage));
+          return Object.assign({}, (0,_utils_stage__WEBPACK_IMPORTED_MODULE_2__.convertStageFromServer)(stage));
         };
         const transformPipeline = pipeline => {
           var _a;
           return Object.assign(Object.assign({}, pipeline), {
             stages: (_a = pipeline.stages) === null || _a === void 0 ? void 0 : _a.map(transformStage),
+            settings: pipeline.settings ? (0,_utils_pipeline_settings__WEBPACK_IMPORTED_MODULE_1__.convertPipelineSettingsFromServer)(pipeline.settings) : undefined,
             is_primary: pipeline.is_primary === "1"
           });
         };
@@ -19738,10 +19764,11 @@ const reducer = (state, action) => {
       {
         const pipeline = action.payload;
         const transformStage = stage => {
-          return Object.assign({}, (0,_utils_stage__WEBPACK_IMPORTED_MODULE_1__.convertStageFromServer)(stage));
+          return Object.assign({}, (0,_utils_stage__WEBPACK_IMPORTED_MODULE_2__.convertStageFromServer)(stage));
         };
         const transformedPipeline = Object.assign(Object.assign({}, pipeline), {
           stages: (_a = pipeline.stages) === null || _a === void 0 ? void 0 : _a.map(transformStage),
+          settings: pipeline.settings ? (0,_utils_pipeline_settings__WEBPACK_IMPORTED_MODULE_1__.convertPipelineSettingsFromServer)(pipeline.settings) : undefined,
           is_primary: false
         });
         return Object.assign(Object.assign({}, state), {

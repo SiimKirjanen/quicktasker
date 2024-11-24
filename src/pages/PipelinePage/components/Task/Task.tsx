@@ -16,10 +16,15 @@ import { Task } from "../../../../types/task";
 type Props = {
   task: Task;
   index: number;
+  onLastStage: boolean;
 };
 
-function Task({ task, index }: Props) {
+function Task({ task, index, onLastStage }: Props) {
   const { modalDispatch } = useContext(ModalContext);
+  const {
+    state: { activePipeline },
+  } = useContext(ActivePipelineContext);
+  const pipelineSettings = activePipeline?.settings;
 
   const openEditTaskModal = () => {
     modalDispatch({
@@ -53,7 +58,13 @@ function Task({ task, index }: Props) {
           <div className="wpqt-mt-2">
             <UserAssignementDropdown task={task} />
           </div>
-          <TaskActions task={task} />
+          <TaskActions
+            task={task}
+            onLastStage={onLastStage}
+            taskDoneLastStageRestriction={
+              pipelineSettings!.allow_only_last_stage_task_done
+            }
+          />
         </div>
       )}
     </Draggable>
@@ -62,13 +73,19 @@ function Task({ task, index }: Props) {
 
 type TaskActionsProps = {
   task: Task;
+  onLastStage: boolean;
+  taskDoneLastStageRestriction: boolean;
 };
-function TaskActions({ task }: TaskActionsProps) {
+function TaskActions({
+  task,
+  onLastStage,
+  taskDoneLastStageRestriction,
+}: TaskActionsProps) {
   const { dispatch } = useContext(ActivePipelineContext);
   const { changeTaskDoneStatus } = useTaskActions();
   const [loading, setLoading] = useState(false);
   const isTaskCompleted = task.is_done;
-
+  const displayActions = !taskDoneLastStageRestriction || onLastStage;
   const changeDone = async (done: boolean) => {
     setLoading(true);
     await changeTaskDoneStatus(task.id, done, (isCompleted) => {
@@ -79,6 +96,10 @@ function TaskActions({ task }: TaskActionsProps) {
     });
     setLoading(false);
   };
+
+  if (!displayActions) {
+    return null;
+  }
 
   if (loading) {
     return <Loading ovalSize="24" />;
