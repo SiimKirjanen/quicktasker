@@ -37,7 +37,7 @@ function wpqt_set_up_db() {
 			created_at datetime NOT NULL COMMENT 'UTC',
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
-			INDEX (pipeline_id)
+			INDEX pipeline_id (pipeline_id)
 		  ) $charset_collate;";
 	  
 		dbDelta( $sql2 );
@@ -55,8 +55,8 @@ function wpqt_set_up_db() {
 			task_hash varchar(255) NOT NULL,
 			PRIMARY KEY  (id),
 			UNIQUE KEY task_hash (task_hash),
-			INDEX (pipeline_id),
-			INDEX (is_archived)
+			INDEX pipeline_id (pipeline_id),
+			INDEX is_archived (is_archived)
 		  ) $charset_collate;";
 	  
 		dbDelta( $sql3 ); 
@@ -71,7 +71,7 @@ function wpqt_set_up_db() {
 			password varchar(255) DEFAULT NULL,
 			deleted tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id),
-			INDEX (deleted)
+			INDEX deleted (deleted)
 		  ) $charset_collate;";
 	  
 		dbDelta( $sql4 ); 
@@ -86,8 +86,8 @@ function wpqt_set_up_db() {
 			is_archived tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id),
 			UNIQUE KEY task_id (task_id),
-			INDEX (stage_id),
-			INDEX (task_order)
+			INDEX stage_id (stage_id),
+			INDEX task_order (task_order)
 		  ) $charset_collate;";
 		
 		dbDelta( $sql5 ); 
@@ -101,8 +101,8 @@ function wpqt_set_up_db() {
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
 			UNIQUE KEY stage_id (stage_id),
-			INDEX (pipeline_id),
-			INDEX (stage_order)
+			INDEX pipeline_id (pipeline_id),
+			INDEX stage_order (stage_order)
 		  ) $charset_collate;";
 
 		dbDelta( $sql6 ); 
@@ -116,10 +116,10 @@ function wpqt_set_up_db() {
 			user_id int(11) DEFAULT NULL,
 			created_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
-			INDEX (type_id),
-			INDEX (type),
-			INDEX (created_by),
-			INDEX (user_id)
+			INDEX type_id (type_id),
+			INDEX type (type),
+			INDEX created_by (created_by),
+			INDEX user_id (user_id)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql7 ); 
@@ -134,11 +134,11 @@ function wpqt_set_up_db() {
 			author_id int(11) NOT NULL,
 			is_admin_comment tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id),
-			INDEX (type_id),
-			INDEX (type),
-			INDEX (is_private),
-			INDEX (author_id),
-			INDEX (is_admin_comment)
+			INDEX type_id (type_id),
+			INDEX type (type),
+			INDEX is_private (is_private),
+			INDEX author_id (author_id),
+			INDEX is_admin_comment (is_admin_comment)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql8 ); 
@@ -151,7 +151,7 @@ function wpqt_set_up_db() {
 			page_hash varchar(255) NOT NULL,
 			PRIMARY KEY  (id),
 			UNIQUE KEY page_hash (page_hash),
-			INDEX (user_id)
+			INDEX user_id (user_id)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql9 ); 
@@ -166,10 +166,10 @@ function wpqt_set_up_db() {
 			expires_at_utc datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
 			UNIQUE KEY session_token (session_token),
-			INDEX (user_id),
-			INDEX (is_active),
-			INDEX (created_at_utc),
-			INDEX (expires_at_utc)
+			INDEX user_id (user_id),
+			INDEX is_active (is_active),
+			INDEX created_at_utc (created_at_utc),
+			INDEX expires_at_utc (expires_at_utc)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql10 ); 
@@ -182,7 +182,8 @@ function wpqt_set_up_db() {
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
 			UNIQUE KEY unique_user_task (user_id, task_id),
-			INDEX (task_id)
+			INDEX task_id (task_id),
+			INDEX user_id (user_id)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql11 );
@@ -198,9 +199,9 @@ function wpqt_set_up_db() {
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			is_deleted tinyint(1) DEFAULT 0,
 			PRIMARY KEY  (id),
-			INDEX (entity_type),
-			INDEX (entity_id),
-			INDEX (is_deleted)
+			INDEX entity_type (entity_type),
+			INDEX entity_id (entity_id),
+			INDEX is_deleted (is_deleted)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql12 );
@@ -214,12 +215,24 @@ function wpqt_set_up_db() {
 			created_at datetime NOT NULL COMMENT 'UTC',
 			updated_at datetime NOT NULL COMMENT 'UTC',
 			PRIMARY KEY  (id),
-			INDEX (custom_field_id),
-			INDEX (entity_id),
-			INDEX (entity_type)
+			INDEX custom_field_id (custom_field_id),
+			INDEX entity_id (entity_id),
+			INDEX entity_type (entity_type)
 		  ) $charset_collate;";
 
 		  dbDelta( $sql13 );
+
+		  $sql14 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . " (
+			id int(11) NOT NULL AUTO_INCREMENT,
+			pipeline_id int(11) NOT NULL,
+			allow_only_last_stage_task_done tinyint(1) DEFAULT 0,
+			created_at datetime NOT NULL COMMENT 'UTC',
+			updated_at datetime NOT NULL COMMENT 'UTC',
+			PRIMARY KEY  (id),
+			UNIQUE KEY pipeline_id (pipeline_id)
+		  ) $charset_collate;";
+
+		  dbDelta( $sql14 );
 
 		update_option( "wp_quicktasker_db_current_version", WP_QUICKTASKER_DB_VERSION );
 	}

@@ -21,7 +21,7 @@ define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 DB constants
 ==================================================================================================================================================================================================================
 */
-define('WP_QUICKTASKER_DB_VERSION', "1.1.0");
+define('WP_QUICKTASKER_DB_VERSION', "1.2.0");
 
 define('TABLE_WP_QUICKTASKER_USERS', $wpdb->prefix . "quicktasker_users");
 define('TABLE_WP_QUICKTASKER_PIPELINES', $wpdb->prefix . "quicktasker_pipelines");
@@ -36,6 +36,7 @@ define('TABLE_WP_QUICKTASKER_USER_SESSIONS', $wpdb->prefix . "quicktasker_user_s
 define('TABLE_WP_QUICKTASKER_USER_TASK', $wpdb->prefix . "quicktasker_user_task");
 define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS', $wpdb->prefix . "quicktasker_custom_fields");
 define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES', $wpdb->prefix . "quicktasker_custom_fields_values");
+define('TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS', $wpdb->prefix . "quicktasker_pipeline_settings");
 
 /*
 ==================================================================================================================================================================================================================
@@ -73,6 +74,7 @@ Miscellaneous constants
 */
 define('WP_QUICKTASKER_INVALID_SESSION_TOKEN', "Invalid session token");
 define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "3");
+define('WP_QUICKTASKER_DB_SEEDER_TRIGGER', "1");
 
 /*
 ==================================================================================================================================================================================================================

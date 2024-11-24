@@ -105,15 +105,21 @@ function wpqt_register_api_routes() {
         array(
             'methods' => 'POST',
             'callback' => function( $data ) {
+                global $wpdb;
+
                 try {
+                    $wpdb->query('START TRANSACTION');
                     WPQTverifyApiNonce($data);
                     $pipelineService = new PipelineService();
                     $logService = new LogService();
                     $newPipeline = $pipelineService->createPipeline($data['name']);
                     $logService->log('Board ' . $newPipeline->name . ' created', WP_QT_LOG_TYPE_PIPELINE, $newPipeline->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                    
+                    $wpdb->query('COMMIT');
                     return new WP_REST_Response((new ApiResponse(true, array(), $newPipeline))->toArray(), 200);
                 } catch (Exception $e) {
+                    $wpdb->query('ROLLBACK');
+
                     return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                 }
             },

@@ -51,12 +51,14 @@ require( 'php/services/CustomFieldService.php' );
 require( 'php/services/CapabilityService.php' );
 require( 'php/services/RequestValidation.php' );
 require( 'php/services/SettingService.php' );
+require( 'php/services/DBSeederService.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
 require( 'php/api/admin-api.php' );
 require( 'php/api/user-page-api.php' );
 require( 'php/side-effects.php' );
+require( 'php/db-seeder.php' );
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );
