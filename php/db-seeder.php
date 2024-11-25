@@ -6,11 +6,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPQT\DB\DBSeederService;
 
-$quicktasker_db_seeder_trigger = get_option('quicktasker_db_seeder_trigger');
+add_action('plugins_loaded', 'wpqt_run_db_seeder');
+function wpqt_run_db_seeder() {
+    global $wpdb;
 
-if ($quicktasker_db_seeder_trigger !== WP_QUICKTASKER_DB_SEEDER_TRIGGER) {
-	$dbSeederService = new DBSeederService();
-    $dbSeederService->seedEmptyPipelineSettings();
+    $quicktasker_db_seeder_trigger = get_option('quicktasker_db_seeder_trigger');
 
-	update_option( 'quicktasker_db_seeder_trigger', WP_QUICKTASKER_DB_SEEDER_TRIGGER );
+    if ($quicktasker_db_seeder_trigger !== WP_QUICKTASKER_DB_SEEDER_TRIGGER) {
+        $dbSeederService = new DBSeederService();
+        $dbSeederService->seedEmptyPipelineSettings();
+
+        update_option('quicktasker_db_seeder_trigger', WP_QUICKTASKER_DB_SEEDER_TRIGGER);
+    }
 }
