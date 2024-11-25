@@ -17269,7 +17269,7 @@ function UserSessionsPage() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserSessionsContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserSessionsContextProvider, {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_5__.Page, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Header_Header__WEBPACK_IMPORTED_MODULE_2__.WPQTPageHeader, {
-        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("User sessions", "quicktasker")
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Quicktasker sessions", "quicktasker")
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_UserSessionsFilter_UserSessionsFilter__WEBPACK_IMPORTED_MODULE_3__.UserSessionsFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_UserSessions__WEBPACK_IMPORTED_MODULE_6__.UserSessions, {})]
     })
   });

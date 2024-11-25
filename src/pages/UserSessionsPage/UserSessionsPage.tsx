@@ -9,7 +9,9 @@ function UserSessionsPage() {
   return (
     <UserSessionsContextProvider>
       <Page>
-        <WPQTPageHeader>{__("User sessions", "quicktasker")}</WPQTPageHeader>
+        <WPQTPageHeader>
+          {__("Quicktasker sessions", "quicktasker")}
+        </WPQTPageHeader>
         <UserSessionsFilter />
         <UserSessions />
       </Page>
