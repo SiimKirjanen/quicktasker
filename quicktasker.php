@@ -52,6 +52,7 @@ require( 'php/services/CapabilityService.php' );
 require( 'php/services/RequestValidation.php' );
 require( 'php/services/SettingService.php' );
 require( 'php/services/DBSeederService.php' );
+require( 'php/services/SettingsValidationService.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );

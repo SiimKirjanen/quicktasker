@@ -26,6 +26,7 @@ use WPQT\Comment\CommentService;
 use WPQT\User\UserRepository;
 use WPQT\CustomField\CustomFieldRepository;
 use WPQT\CustomField\CustomFieldService;
+use WPQT\Settings\SettingsValidationService;
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 function wpqt_register_user_page_api_routes() {
@@ -609,12 +610,18 @@ function wpqt_register_user_page_api_routes() {
                     $logService = new LogService();
                     $taskRepository = new TaskRepository();
                     $userPageRepository = new UserPageRepository();
+                    $settingsValidationService = new SettingsValidationService();
 
                     $task = $taskRepository->getTaskByHash($data['task_hash']);
                     
-                    if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id)) {
+                    if( !$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id) ) {
                         throw new WPQTException('Not allowed to edit the task', true);
                     }
+
+                    if( !$settingsValidationService->isAllowedToMarkTaskDone($task->id) ) {
+                        throw new WPQTException('Task can be marked as done on last stage', true);
+                    }
+
                     $userPage = $userPageRepository->getPageUserByHash($data['hash']); 
 
                     $taskService->changeTaskDoneStatus($task->id, $data['done']);

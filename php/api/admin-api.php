@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+use WPQT\WPQTException;
 use WPQT\Response\ApiResponse;
 use WPQT\Log\LogRepository;
 use WPQT\Comment\CommentRepository;
@@ -28,6 +29,7 @@ use WPQT\Stage\StageRepository;
 use WPQT\UserPage\UserPageService;
 use WPQT\Customfield\CustomFieldService;
 use WPQT\Settings\SettingsService;
+use WPQT\Settings\SettingsValidationService;
 
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
@@ -607,6 +609,11 @@ function wpqt_register_api_routes() {
        
                     $taskService = new TaskService();
                     $logService = new LogService();
+                    $settingsValidationService = new SettingsValidationService();
+
+                    if( !$settingsValidationService->isAllowedToMarkTaskDone($data['id']) ) {
+                        throw new WPQTException('Task can be marked as done on last stage', true);
+                    }
 
                     $task = $taskService->changeTaskDoneStatus( $data['id'], $data['done']);
                     $logMessage = $data['done'] ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
