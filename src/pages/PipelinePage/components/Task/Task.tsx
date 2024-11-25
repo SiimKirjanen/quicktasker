@@ -25,12 +25,17 @@ function Task({ task, index, onLastStage }: Props) {
     state: { activePipeline },
   } = useContext(ActivePipelineContext);
   const pipelineSettings = activePipeline?.settings;
+  const allowToMarkTaskAsDone =
+    !pipelineSettings!.allow_only_last_stage_task_done || onLastStage;
 
   const openEditTaskModal = () => {
     modalDispatch({
       type: OPEN_EDIT_TASK_MODAL,
       payload: {
         taskToEdit: task,
+        taskModalSettings: {
+          allowToMarkTaskAsDone,
+        },
       },
     });
   };
@@ -60,10 +65,7 @@ function Task({ task, index, onLastStage }: Props) {
           </div>
           <TaskActions
             task={task}
-            onLastStage={onLastStage}
-            taskDoneLastStageRestriction={
-              pipelineSettings!.allow_only_last_stage_task_done
-            }
+            allowToMarkTaskAsDone={allowToMarkTaskAsDone}
           />
         </div>
       )}
@@ -73,19 +75,13 @@ function Task({ task, index, onLastStage }: Props) {
 
 type TaskActionsProps = {
   task: Task;
-  onLastStage: boolean;
-  taskDoneLastStageRestriction: boolean;
+  allowToMarkTaskAsDone: boolean;
 };
-function TaskActions({
-  task,
-  onLastStage,
-  taskDoneLastStageRestriction,
-}: TaskActionsProps) {
+function TaskActions({ task, allowToMarkTaskAsDone }: TaskActionsProps) {
   const { dispatch } = useContext(ActivePipelineContext);
   const { changeTaskDoneStatus } = useTaskActions();
   const [loading, setLoading] = useState(false);
   const isTaskCompleted = task.is_done;
-  const displayActions = !taskDoneLastStageRestriction || onLastStage;
   const changeDone = async (done: boolean) => {
     setLoading(true);
     await changeTaskDoneStatus(task.id, done, (isCompleted) => {
@@ -97,7 +93,7 @@ function TaskActions({
     setLoading(false);
   };
 
-  if (!displayActions) {
+  if (!allowToMarkTaskAsDone) {
     return null;
   }
 

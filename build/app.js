@@ -11614,7 +11614,8 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
 }, ref) => {
   const {
     state: {
-      taskToEdit
+      taskToEdit,
+      taskModalSettings
     },
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
@@ -11720,7 +11721,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
                 checked: freeForAllTask,
                 handleChange: setFreeForAllTask
               })
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TaskDoneStatus, {
+            }), taskModalSettings.allowToMarkTaskAsDone && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TaskDoneStatus, {
               taskId: taskToEdit.id,
               isCompleted: taskToEdit.is_done
             })]
@@ -16325,11 +16326,15 @@ function Task({
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_7__.ActivePipelineContext);
   const pipelineSettings = activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.settings;
+  const allowToMarkTaskAsDone = !pipelineSettings.allow_only_last_stage_task_done || onLastStage;
   const openEditTaskModal = () => {
     modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_5__.OPEN_EDIT_TASK_MODAL,
       payload: {
-        taskToEdit: task
+        taskToEdit: task,
+        taskModalSettings: {
+          allowToMarkTaskAsDone
+        }
       }
     });
   };
@@ -16359,16 +16364,14 @@ function Task({
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TaskActions, {
         task: task,
-        onLastStage: onLastStage,
-        taskDoneLastStageRestriction: pipelineSettings.allow_only_last_stage_task_done
+        allowToMarkTaskAsDone: allowToMarkTaskAsDone
       })]
     }))
   }, task.id);
 }
 function TaskActions({
   task,
-  onLastStage,
-  taskDoneLastStageRestriction
+  allowToMarkTaskAsDone
 }) {
   const {
     dispatch
@@ -16378,7 +16381,6 @@ function TaskActions({
   } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_6__.useTaskActions)();
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const isTaskCompleted = task.is_done;
-  const displayActions = !taskDoneLastStageRestriction || onLastStage;
   const changeDone = done => __awaiter(this, void 0, void 0, function* () {
     setLoading(true);
     yield changeTaskDoneStatus(task.id, done, isCompleted => {
@@ -16392,7 +16394,7 @@ function TaskActions({
     });
     setLoading(false);
   });
-  if (!displayActions) {
+  if (!allowToMarkTaskAsDone) {
     return null;
   }
   if (loading) {
@@ -18600,6 +18602,9 @@ const initialState = {
   taskModalOpen: false,
   targetStageId: "",
   taskToEdit: null,
+  taskModalSettings: {
+    allowToMarkTaskAsDone: true
+  },
   stageModalOpen: false,
   stageToEdit: null,
   targetPipelineId: "",
@@ -19589,12 +19594,14 @@ const reducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_EDIT_TASK_MODAL:
       {
         const {
-          taskToEdit
+          taskToEdit,
+          taskModalSettings
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           taskModalOpen: true,
           taskToEdit,
-          targetStageId: taskToEdit.stage_id
+          targetStageId: taskToEdit.stage_id,
+          taskModalSettings: Object.assign(Object.assign({}, state.taskModalSettings), taskModalSettings)
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_TASK_MODAL:
