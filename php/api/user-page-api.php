@@ -11,6 +11,7 @@ use WPQT\Password\PasswordService;
 use WPQT\Session\SessionService;
 use WPQT\Nonce\NonceService;
 use WPQT\Pipeline\PipelineRepository;
+use WPQT\Settings\SettingRepository;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Task\TaskRepository;
 use WPQT\User\UserService;
@@ -278,7 +279,10 @@ function wpqt_register_user_page_api_routes() {
                     $permissionService = new PermissionService();
                     $stageRepository = new StageRepository();
                     $customFieldRepository = new CustomFieldRepository();
+                    $settingsRepository = new SettingRepository();
+
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);
+                    $pipelineSettings = $settingsRepository->getPublicPipelineSettings($task->pipeline_id);
                    
                     if(!$permissionService->checkIfUserIsAllowedToViewTask($session->user_id, $task->id)) {
                         throw new WPQTException('Not allowed', true);
@@ -287,7 +291,8 @@ function wpqt_register_user_page_api_routes() {
                     $data = (object)[
                         'task' => $task,
                         'stages' => $stageRepository->getStagesByPipelineId($task->pipeline_id),
-                        'customFields' => $customFieldRepository->getRelatedCustomFields($task->id, 'task')
+                        'customFields' => $customFieldRepository->getRelatedCustomFields($task->id, 'task'),
+                        'pipelineSettings' => $pipelineSettings
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);

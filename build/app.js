@@ -20179,9 +20179,15 @@ const filterNewComments = (comments, storedComments) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   convertPipelineSettingsFromServer: () => (/* binding */ convertPipelineSettingsFromServer)
+/* harmony export */   convertPipelineSettingsFromServer: () => (/* binding */ convertPipelineSettingsFromServer),
+/* harmony export */   convertPublicPipelineSettingsFromServer: () => (/* binding */ convertPublicPipelineSettingsFromServer)
 /* harmony export */ });
 const convertPipelineSettingsFromServer = pipelineSettings => {
+  return Object.assign(Object.assign({}, pipelineSettings), {
+    allow_only_last_stage_task_done: pipelineSettings.allow_only_last_stage_task_done === "1"
+  });
+};
+const convertPublicPipelineSettingsFromServer = pipelineSettings => {
   return Object.assign(Object.assign({}, pipelineSettings), {
     allow_only_last_stage_task_done: pipelineSettings.allow_only_last_stage_task_done === "1"
   });

@@ -5,6 +5,7 @@ import {
   useReducer,
 } from "@wordpress/element";
 import { CustomField } from "../../types/custom-field";
+import { PublicPipelineSettings } from "../../types/pipeline-settings";
 import { Stage } from "../../types/stage";
 import { Task, TaskFromServer } from "../../types/task";
 import { getTaskDataRequest } from "../api/user-page-api";
@@ -24,6 +25,9 @@ const initialState: State = {
   task: null,
   taskStages: [],
   customFields: [],
+  pipelineSettings: {
+    allow_only_last_stage_task_done: false,
+  },
   loading: true,
 };
 
@@ -31,6 +35,7 @@ type State = {
   task: Task | null;
   taskStages: Stage[];
   customFields: CustomField[];
+  pipelineSettings: PublicPipelineSettings;
   loading: boolean;
 };
 
@@ -85,11 +90,7 @@ const UserPageTaskContextProvider = ({
         const response = await getTaskDataRequest(pageHash, taskHash);
         userTaskDispatch({
           type: SET_USER_PAGE_TASK_DATA,
-          payload: {
-            task: response.data.task,
-            stages: response.data.stages,
-            customFields: response.data.customFields,
-          },
+          payload: response.data,
         });
       } catch (error) {
         handleError(error);

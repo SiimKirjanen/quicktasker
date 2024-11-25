@@ -14,7 +14,10 @@ type Props = {
 function TaskDoneStatus({ task }: Props) {
   const { changeTaskDoneStatus } = useTaskActions();
   const [loading, setLoading] = useState(false);
-  const { userTaskDispatch } = useContext(UserPageTaskContext);
+  const {
+    state: { pipelineSettings, taskStages },
+    userTaskDispatch,
+  } = useContext(UserPageTaskContext);
   const {
     state: { userId },
   } = useContext(UserPageAppContext);
@@ -24,6 +27,14 @@ function TaskDoneStatus({ task }: Props) {
   const doneMessage = isDone
     ? __("Task is completed", "quicktasker")
     : __("Task is incomplete", "quicktasker");
+  const lastStage = taskStages.reduce((prev, current) => {
+    return Number(prev.stage_order) > Number(current.stage_order)
+      ? prev
+      : current;
+  });
+  const taskIsOnLastStage = task.stage_id === lastStage.id;
+  const allowToMarkTaskAsDone =
+    !pipelineSettings.allow_only_last_stage_task_done || taskIsOnLastStage;
 
   const handleDoneStatusChange = async (done: boolean) => {
     setLoading(true);
@@ -37,6 +48,10 @@ function TaskDoneStatus({ task }: Props) {
   };
 
   if (!isAssigned) {
+    return null;
+  }
+
+  if (!allowToMarkTaskAsDone) {
     return null;
   }
 

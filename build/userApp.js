@@ -9685,6 +9685,10 @@ function TaskDoneStatus({
   } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_5__.useTaskActions)();
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
+    state: {
+      pipelineSettings,
+      taskStages
+    },
     userTaskDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_7__.UserPageTaskContext);
   const {
@@ -9695,6 +9699,11 @@ function TaskDoneStatus({
   const isAssigned = task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId);
   const isDone = task.is_done;
   const doneMessage = isDone ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task is completed", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task is incomplete", "quicktasker");
+  const lastStage = taskStages.reduce((prev, current) => {
+    return Number(prev.stage_order) > Number(current.stage_order) ? prev : current;
+  });
+  const taskIsOnLastStage = task.stage_id === lastStage.id;
+  const allowToMarkTaskAsDone = !pipelineSettings.allow_only_last_stage_task_done || taskIsOnLastStage;
   const handleDoneStatusChange = done => __awaiter(this, void 0, void 0, function* () {
     setLoading(true);
     yield changeTaskDoneStatus(task.task_hash, done, () => {
@@ -9708,6 +9717,9 @@ function TaskDoneStatus({
     setLoading(false);
   });
   if (!isAssigned) {
+    return null;
+  }
+  if (!allowToMarkTaskAsDone) {
     return null;
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -11353,6 +11365,9 @@ const initialState = {
   task: null,
   taskStages: [],
   customFields: [],
+  pipelineSettings: {
+    allow_only_last_stage_task_done: false
+  },
   loading: true
 };
 const UserPageTaskContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
@@ -11386,11 +11401,7 @@ const UserPageTaskContextProvider = ({
         const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_2__.getTaskDataRequest)(pageHash, taskHash);
         userTaskDispatch({
           type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_USER_PAGE_TASK_DATA,
-          payload: {
-            task: response.data.task,
-            stages: response.data.stages,
-            customFields: response.data.customFields
-          }
+          payload: response.data
         });
       } catch (error) {
         handleError(error);
@@ -11725,37 +11736,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   reducer: () => (/* binding */ reducer)
 /* harmony export */ });
-/* harmony import */ var _utils_stage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/stage */ "./src/utils/stage.ts");
-/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/task */ "./src/utils/task.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants */ "./src/user-page-app/constants.ts");
+/* harmony import */ var _utils_pipeline_settings__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/pipeline-settings */ "./src/utils/pipeline-settings.ts");
+/* harmony import */ var _utils_stage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/stage */ "./src/utils/stage.ts");
+/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/task */ "./src/utils/task.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants */ "./src/user-page-app/constants.ts");
+
 
 
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case _constants__WEBPACK_IMPORTED_MODULE_2__.SET_USER_PAGE_TASK_DATA:
+    case _constants__WEBPACK_IMPORTED_MODULE_3__.SET_USER_PAGE_TASK_DATA:
       {
         const data = action.payload;
         return Object.assign(Object.assign({}, state), {
-          task: (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.convertTaskFromServer)(data.task),
-          taskStages: data.stages.map(_utils_stage__WEBPACK_IMPORTED_MODULE_0__.convertStageFromServer),
-          customFields: data.customFields
+          task: (0,_utils_task__WEBPACK_IMPORTED_MODULE_2__.convertTaskFromServer)(data.task),
+          taskStages: data.stages.map(_utils_stage__WEBPACK_IMPORTED_MODULE_1__.convertStageFromServer),
+          customFields: data.customFields,
+          pipelineSettings: (0,_utils_pipeline_settings__WEBPACK_IMPORTED_MODULE_0__.convertPublicPipelineSettingsFromServer)(data.pipelineSettings)
         });
       }
-    case _constants__WEBPACK_IMPORTED_MODULE_2__.UPDATE_USER_PAGE_TASK_DATA:
+    case _constants__WEBPACK_IMPORTED_MODULE_3__.UPDATE_USER_PAGE_TASK_DATA:
       {
         const data = action.payload;
         return Object.assign(Object.assign({}, state), {
-          task: (0,_utils_task__WEBPACK_IMPORTED_MODULE_1__.convertTaskFromServer)(data)
+          task: (0,_utils_task__WEBPACK_IMPORTED_MODULE_2__.convertTaskFromServer)(data)
         });
       }
-    case _constants__WEBPACK_IMPORTED_MODULE_2__.SET_USER_PAGE_TASK_LOADING:
+    case _constants__WEBPACK_IMPORTED_MODULE_3__.SET_USER_PAGE_TASK_LOADING:
       {
         return Object.assign(Object.assign({}, state), {
           loading: action.payload
         });
       }
-    case _constants__WEBPACK_IMPORTED_MODULE_2__.UPDATE_USER_PAGE_TASK_STAGE:
+    case _constants__WEBPACK_IMPORTED_MODULE_3__.UPDATE_USER_PAGE_TASK_STAGE:
       {
         const stageId = action.payload;
         return Object.assign(Object.assign({}, state), {
@@ -11764,7 +11778,7 @@ const reducer = (state, action) => {
           }) : null
         });
       }
-    case _constants__WEBPACK_IMPORTED_MODULE_2__.UPDATE_USER_PAGE_TASK_DONE:
+    case _constants__WEBPACK_IMPORTED_MODULE_3__.UPDATE_USER_PAGE_TASK_DONE:
       {
         const {
           done
@@ -11869,6 +11883,32 @@ function debounce(func, wait) {
     timeout = setTimeout(() => func(...args), wait);
   };
 }
+
+
+/***/ }),
+
+/***/ "./src/utils/pipeline-settings.ts":
+/*!****************************************!*\
+  !*** ./src/utils/pipeline-settings.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   convertPipelineSettingsFromServer: () => (/* binding */ convertPipelineSettingsFromServer),
+/* harmony export */   convertPublicPipelineSettingsFromServer: () => (/* binding */ convertPublicPipelineSettingsFromServer)
+/* harmony export */ });
+const convertPipelineSettingsFromServer = pipelineSettings => {
+  return Object.assign(Object.assign({}, pipelineSettings), {
+    allow_only_last_stage_task_done: pipelineSettings.allow_only_last_stage_task_done === "1"
+  });
+};
+const convertPublicPipelineSettingsFromServer = pipelineSettings => {
+  return Object.assign(Object.assign({}, pipelineSettings), {
+    allow_only_last_stage_task_done: pipelineSettings.allow_only_last_stage_task_done === "1"
+  });
+};
 
 
 /***/ }),

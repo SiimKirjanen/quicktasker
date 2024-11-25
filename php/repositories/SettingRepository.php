@@ -37,4 +37,21 @@ class SettingRepository {
             )
         );
     }
+
+    /**
+     * Retrieves the public pipeline settings for a given pipeline ID.
+     *
+     * @param int $pipelineId The ID of the pipeline to retrieve settings for.
+     * @return object|null The pipeline settings object containing the 'allow_only_last_stage_task_done' field, or null if no settings are found.
+     */
+    public function getPublicPipelineSettings($pipelineId) {
+        global $wpdb;
+
+        return $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT allow_only_last_stage_task_done FROM " . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . " WHERE pipeline_id = %d",
+                $pipelineId
+            )
+        );
+    }
 }
