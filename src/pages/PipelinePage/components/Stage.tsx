@@ -7,6 +7,7 @@ import { Task as TaskComponent } from "./Task/Task";
 
 type Props = {
   stage: Stage;
+  isLastStage: boolean;
 };
 
 function TaskCount({ tasks }: { tasks: Task[] | undefined }) {
@@ -19,7 +20,7 @@ function TaskCount({ tasks }: { tasks: Task[] | undefined }) {
   );
 }
 
-function Stage({ stage }: Props) {
+function Stage({ stage, isLastStage }: Props) {
   return (
     <div
       data-stage-id={stage.id}
@@ -44,7 +45,12 @@ function Stage({ stage }: Props) {
             className="wpqt-flex wpqt-h-full wpqt-flex-col wpqt-overflow-y-auto wpqt-overflow-x-hidden"
           >
             {stage.tasks?.map((task: Task, index: number) => (
-              <TaskComponent task={task} index={index} key={task.id} />
+              <TaskComponent
+                task={task}
+                index={index}
+                key={task.id}
+                onLastStage={isLastStage}
+              />
             ))}
             {provided.placeholder}
             <AddTask stageId={stage.id} />

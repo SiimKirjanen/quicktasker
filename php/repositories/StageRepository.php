@@ -49,6 +49,18 @@ class StageRepository {
      * @return int The next stage order.
      */
     public function getNextStageOrder($pipelineId) {
+        $lastStageOrder = $this->getLastStageOrder($pipelineId);
+
+        return $lastStageOrder === 0 ? 0 : $lastStageOrder + 1;
+    }
+
+    /**
+     * Retrieves the highest stage order for a given pipeline.
+     *
+     * @param int $pipelineId The ID of the pipeline.
+     * @return int The highest stage order in the pipeline, or 0 if no stages are found.
+     */
+    public function getLastStageOrder($pipelineId) {
         global $wpdb;
 
         $result = $wpdb->get_var(
@@ -58,6 +70,6 @@ class StageRepository {
             )
         );
 
-        return $result === null ? 0 : $result + 1;
+        return $result === null ? 0 : $result;
     }
 }

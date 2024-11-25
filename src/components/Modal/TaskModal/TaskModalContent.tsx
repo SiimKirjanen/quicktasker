@@ -51,7 +51,7 @@ type Props = {
 const TaskModalContent = forwardRef(
   ({ taskModalSaving, editTask, deleteTask }: Props, ref) => {
     const {
-      state: { taskToEdit },
+      state: { taskToEdit, taskModalSettings },
       modalDispatch,
     } = useContext(ModalContext);
     const {
@@ -164,10 +164,12 @@ const TaskModalContent = forwardRef(
                   />
                 </WPQTModalField>
 
-                <TaskDoneStatus
-                  taskId={taskToEdit.id}
-                  isCompleted={taskToEdit.is_done}
-                />
+                {taskModalSettings.allowToMarkTaskAsDone && (
+                  <TaskDoneStatus
+                    taskId={taskToEdit.id}
+                    isCompleted={taskToEdit.is_done}
+                  />
+                )}
               </WPQTModalFieldSet>
               <div>
                 <CustomFieldsInModalWrap

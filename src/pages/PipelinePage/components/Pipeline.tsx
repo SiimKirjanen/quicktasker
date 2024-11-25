@@ -94,8 +94,12 @@ const Pipeline = () => {
   return (
     <div className="wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden">
       <DragDropContext onDragEnd={onDragEnd}>
-        {activePipeline!.stages?.map((stage) => {
-          return <Stage key={stage.id} stage={stage} />;
+        {activePipeline!.stages?.map((stage, index) => {
+          const isLastStage = index === activePipeline!.stages!.length - 1;
+
+          return (
+            <Stage key={stage.id} stage={stage} isLastStage={isLastStage} />
+          );
         })}
       </DragDropContext>
       <AddStage

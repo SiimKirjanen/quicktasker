@@ -19,6 +19,7 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { reducer } from "../reducers/modal-reducer";
+import { TaskModalSettings } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
@@ -28,6 +29,9 @@ const initialState: State = {
   taskModalOpen: false,
   targetStageId: "",
   taskToEdit: null,
+  taskModalSettings: {
+    allowToMarkTaskAsDone: true,
+  },
   stageModalOpen: false,
   stageToEdit: null,
   targetPipelineId: "",
@@ -45,6 +49,7 @@ type State = {
   taskModalOpen: boolean;
   targetStageId: string;
   taskToEdit: Task | null;
+  taskModalSettings: TaskModalSettings;
   stageModalOpen: boolean;
   stageToEdit: Stage | null;
   targetPipelineId: string;
@@ -59,7 +64,10 @@ type State = {
 };
 
 type Action =
-  | { type: typeof OPEN_EDIT_TASK_MODAL; payload: { taskToEdit: Task } }
+  | {
+      type: typeof OPEN_EDIT_TASK_MODAL;
+      payload: { taskToEdit: Task; taskModalSettings?: TaskModalSettings };
+    }
   | { type: typeof CLOSE_TASK_MODAL }
   | { type: typeof ADD_ASSIGNED_USER_TO_EDITING_TASK; payload: User }
   | { type: typeof REMOVE_ASSIGNED_USER_FROM_EDITING_TASK; payload: User }

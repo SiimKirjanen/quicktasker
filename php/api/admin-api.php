@@ -4,11 +4,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+use WPQT\WPQTException;
 use WPQT\Response\ApiResponse;
 use WPQT\Log\LogRepository;
 use WPQT\Comment\CommentRepository;
 use WPQT\Comment\CommentService;
 use WPQT\User\UserRepositry;
+use WPQT\Settings\SettingRepository;
 use WPQT\User\UserService;
 use WPQT\Nonce\NonceService;
 use WPQT\Pipeline\PipelineRepository;
@@ -27,6 +29,7 @@ use WPQT\Stage\StageRepository;
 use WPQT\UserPage\UserPageService;
 use WPQT\Customfield\CustomFieldService;
 use WPQT\Settings\SettingsService;
+use WPQT\Settings\SettingsValidationService;
 
 function WPQTverifyApiNonce($data) {
     $nonce = $data->get_header('X-WPQT-API-Nonce');
@@ -52,12 +55,16 @@ function wpqt_register_api_routes() {
                 try {
                     WPQTverifyApiNonce($data);
                     $pipelineRepo = new PipelineRepository();
+                    $settingRepo = new SettingRepository();
+
                     $pipeline = $pipelineRepo->getFullPipeline( $data['id'] );
                     $pipelines = $pipelineRepo->getPipelines();
-
+                    $pipelineSettings = $settingRepo->getPipelineSettings($data['id']);
+                    $pipeline->settings = $pipelineSettings;
+                    
                     return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                         'pipeline' => $pipeline,
-                        'pipelines' => $pipelines
+                        'pipelines' => $pipelines,
 
                     ]))->toArray(), 200);
                 } catch (Exception $e) {
@@ -602,6 +609,11 @@ function wpqt_register_api_routes() {
        
                     $taskService = new TaskService();
                     $logService = new LogService();
+                    $settingsValidationService = new SettingsValidationService();
+
+                    if( !$settingsValidationService->isAllowedToMarkTaskDone($data['id']) ) {
+                        throw new WPQTException('Task can be marked as done on last stage', true);
+                    }
 
                     $task = $taskService->changeTaskDoneStatus( $data['id'], $data['done']);
                     $logMessage = $data['done'] ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
@@ -1714,6 +1726,71 @@ function wpqt_register_api_routes() {
                     'required' => true,
                     'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                     'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'pipelines/(?P<id>\d+)/settings',
+        array(
+            'methods' => 'GET',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    
+                    $settingRepo = new SettingRepository();
+                    $pipelineSettings = $settingRepo->getPipelineSettings($data['id']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array(), $pipelineSettings))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+            ),
+        ),
+    );
+
+    register_rest_route(
+        'wpqt/v1',
+        'pipelines/(?P<id>\d+)/settings/task-completion-done-restriction',
+        array(
+            'methods' => 'PATCH',
+            'callback' => function( $data ) {
+                try {
+                    WPQTverifyApiNonce($data);
+                    
+                    $settingsService = new SettingsService();
+                    $settingsService->updatePipelineTaskDoneCompletionRestriction($data['id'], $data['allow_task_completion_only_on_last_stage']);
+
+                    return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                } catch (Exception $e) {
+                    return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                }
+            },
+            'permission_callback' => function() {
+                return PermissionService::hasRequiredPermissionsForPrivateAPI();
+            },
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                ),
+                'allow_task_completion_only_on_last_stage' => array(
+                    'required' => true,
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                 ),
             ),
         ),

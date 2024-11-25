@@ -16,16 +16,26 @@ import { Task } from "../../../../types/task";
 type Props = {
   task: Task;
   index: number;
+  onLastStage: boolean;
 };
 
-function Task({ task, index }: Props) {
+function Task({ task, index, onLastStage }: Props) {
   const { modalDispatch } = useContext(ModalContext);
+  const {
+    state: { activePipeline },
+  } = useContext(ActivePipelineContext);
+  const pipelineSettings = activePipeline?.settings;
+  const allowToMarkTaskAsDone =
+    !pipelineSettings!.allow_only_last_stage_task_done || onLastStage;
 
   const openEditTaskModal = () => {
     modalDispatch({
       type: OPEN_EDIT_TASK_MODAL,
       payload: {
         taskToEdit: task,
+        taskModalSettings: {
+          allowToMarkTaskAsDone,
+        },
       },
     });
   };
@@ -53,7 +63,10 @@ function Task({ task, index }: Props) {
           <div className="wpqt-mt-2">
             <UserAssignementDropdown task={task} />
           </div>
-          <TaskActions task={task} />
+          <TaskActions
+            task={task}
+            allowToMarkTaskAsDone={allowToMarkTaskAsDone}
+          />
         </div>
       )}
     </Draggable>
@@ -62,13 +75,13 @@ function Task({ task, index }: Props) {
 
 type TaskActionsProps = {
   task: Task;
+  allowToMarkTaskAsDone: boolean;
 };
-function TaskActions({ task }: TaskActionsProps) {
+function TaskActions({ task, allowToMarkTaskAsDone }: TaskActionsProps) {
   const { dispatch } = useContext(ActivePipelineContext);
   const { changeTaskDoneStatus } = useTaskActions();
   const [loading, setLoading] = useState(false);
   const isTaskCompleted = task.is_done;
-
   const changeDone = async (done: boolean) => {
     setLoading(true);
     await changeTaskDoneStatus(task.id, done, (isCompleted) => {
@@ -79,6 +92,10 @@ function TaskActions({ task }: TaskActionsProps) {
     });
     setLoading(false);
   };
+
+  if (!allowToMarkTaskAsDone) {
+    return null;
+  }
 
   if (loading) {
     return <Loading ovalSize="24" />;

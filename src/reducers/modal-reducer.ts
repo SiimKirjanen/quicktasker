@@ -18,6 +18,7 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { Action, State, initialState } from "../providers/ModalContextProvider";
+import { TaskModalSettings } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
@@ -32,13 +33,21 @@ const closeModal = () => {
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case OPEN_EDIT_TASK_MODAL: {
-      const { taskToEdit }: { taskToEdit: Task } = action.payload;
+      const {
+        taskToEdit,
+        taskModalSettings,
+      }: { taskToEdit: Task; taskModalSettings?: TaskModalSettings } =
+        action.payload;
 
       return {
         ...state,
         taskModalOpen: true,
         taskToEdit,
         targetStageId: taskToEdit.stage_id,
+        taskModalSettings: {
+          ...state.taskModalSettings,
+          ...taskModalSettings,
+        },
       };
     }
     case CLOSE_TASK_MODAL: {

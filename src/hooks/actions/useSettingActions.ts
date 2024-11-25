@@ -1,6 +1,9 @@
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { saveUserPageCustomStylesRequest } from "../../api/api";
+import {
+  saveTaskCompletionDoneSettingRequest,
+  saveUserPageCustomStylesRequest,
+} from "../../api/api";
 
 function useSettingActions() {
   const saveCustomUserPageStyles = async (
@@ -19,8 +22,24 @@ function useSettingActions() {
     }
   };
 
+  const saveTaskCompletionDoneSetting = async (
+    pipelineId: string,
+    checked: boolean,
+    callback?: (checked: boolean) => void,
+  ) => {
+    try {
+      await saveTaskCompletionDoneSettingRequest(pipelineId, checked);
+      if (callback) callback(checked);
+    } catch (error) {
+      if (callback) callback(!checked);
+      console.error(error);
+      toast.error(__("Failed to save setting", "quicktasker"));
+    }
+  };
+
   return {
     saveCustomUserPageStyles,
+    saveTaskCompletionDoneSetting,
   };
 }
 

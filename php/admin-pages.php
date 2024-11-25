@@ -35,8 +35,8 @@ function wp_quick_taks_add_admin_menu() {
 
     add_submenu_page(
         'wp-quick-tasks',
-        esc_html__('Users', 'quicktasker'),
-        esc_html__('Users', 'quicktasker'),
+        'Quicktaskers',
+        'Quicktaskers',
         WP_QUICKTASKER_ADMIN_ROLE,
         'wp-quick-tasks#/users',
         'wp_quick_taks_generate_app_page'
@@ -44,8 +44,8 @@ function wp_quick_taks_add_admin_menu() {
 
     add_submenu_page(
         'wp-quick-tasks',
-        esc_html__('User sessions', 'quicktasker'),
-        esc_html__('User sessions', 'quicktasker'),
+        esc_html__('Quicktasker sessions', 'quicktasker'),
+        esc_html__('Quicktasker sessions', 'quicktasker'),
         WP_QUICKTASKER_ADMIN_ROLE,
         'wp-quick-tasks#/user-sessions',
         'wp_quick_taks_generate_app_page'

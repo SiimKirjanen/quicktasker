@@ -24,7 +24,8 @@ function wpqt_set_up_db() {
 			is_primary tinyint(1) DEFAULT 0,
 			created_at datetime NOT NULL COMMENT 'UTC',
 			updated_at datetime NOT NULL COMMENT 'UTC',
-			PRIMARY KEY  (id)
+			PRIMARY KEY  (id),
+			UNIQUE KEY name (name)
 		  ) $charset_collate;";
 	  
 		dbDelta( $sql );  

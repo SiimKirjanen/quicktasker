@@ -1,4 +1,5 @@
 import { TaskFromServer } from "../../types/task";
+import { convertPublicPipelineSettingsFromServer } from "../../utils/pipeline-settings";
 import { convertStageFromServer } from "../../utils/stage";
 import { convertTaskFromServer } from "../../utils/task";
 import {
@@ -21,6 +22,9 @@ const reducer = (state: State, action: Action): State => {
         task: convertTaskFromServer(data.task),
         taskStages: data.stages.map(convertStageFromServer),
         customFields: data.customFields,
+        pipelineSettings: convertPublicPipelineSettingsFromServer(
+          data.pipelineSettings,
+        ),
       };
     }
     case UPDATE_USER_PAGE_TASK_DATA: {

@@ -19,6 +19,7 @@ import { PipelineFromServer } from "../types/pipeline";
 import { Stage, StageFromServer } from "../types/stage";
 import { Task, TaskFromServer } from "../types/task";
 import { User } from "../types/user";
+import { convertPipelineSettingsFromServer } from "../utils/pipeline-settings";
 import { convertStageFromServer } from "../utils/stage";
 import { convertTaskFromServer, moveTask, reorderTask } from "../utils/task";
 
@@ -40,11 +41,16 @@ const activePipelineReducer = (state: State, action: Action) => {
         },
       );
 
+      const transformedSettings = pipelineData.settings
+        ? convertPipelineSettingsFromServer(pipelineData.settings)
+        : undefined;
+
       return {
         ...state,
         activePipeline: {
           ...pipelineData,
           stages: transformedStages,
+          settings: transformedSettings,
           is_primary: pipelineData.is_primary === "1",
         },
       };

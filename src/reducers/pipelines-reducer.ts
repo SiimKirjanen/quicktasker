@@ -8,6 +8,7 @@ import {
 import { Action, State } from "../providers/PipelinesContextProvider";
 import { Pipeline, PipelineFromServer } from "../types/pipeline";
 import { Stage, StageFromServer } from "../types/stage";
+import { convertPipelineSettingsFromServer } from "../utils/pipeline-settings";
 import { convertStageFromServer } from "../utils/stage";
 
 const reducer = (state: State, action: Action): State => {
@@ -25,6 +26,9 @@ const reducer = (state: State, action: Action): State => {
         return {
           ...pipeline,
           stages: pipeline.stages?.map(transformStage),
+          settings: pipeline.settings
+            ? convertPipelineSettingsFromServer(pipeline.settings)
+            : undefined,
           is_primary: pipeline.is_primary === "1",
         };
       };
@@ -46,6 +50,9 @@ const reducer = (state: State, action: Action): State => {
       const transformedPipeline: Pipeline = {
         ...pipeline,
         stages: pipeline.stages?.map(transformStage),
+        settings: pipeline.settings
+          ? convertPipelineSettingsFromServer(pipeline.settings)
+          : undefined,
         is_primary: false,
       };
 
