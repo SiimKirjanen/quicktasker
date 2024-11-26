@@ -26,9 +26,11 @@ function wpqt_enqueue_user_public_page(){
 	$customUserPageStyles = SettingRepository::getUserPageCustomStyles();
 
 	$build_asset = AssetRepository::getWPQTScriptBildAssets();
+	$vendors_asset = AssetRepository::getWPQTVendorScriptBildAssets();
 	$dependencies = AssetRepository::getWPQTScriptDependencies();
 
 	wp_enqueue_style( 'wpqt-tailwind', WP_QUICKTASKER_PLUGIN_FOLDER_URL . 'build/tailwind.css');
+	wp_enqueue_script('wpqt-vendors', WP_QUICKTASKER_PLUGIN_FOLDER_URL . 'build/vendors.js', array(), $vendors_asset['version'], true);
     wp_enqueue_script('wpqt-script', WP_QUICKTASKER_PLUGIN_FOLDER_URL . 'build/userApp.js', $dependencies, $build_asset['version'], true);
 
 	wp_localize_script('wpqt-script', 'wpqt_user', array(
