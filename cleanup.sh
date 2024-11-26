@@ -14,7 +14,7 @@ FILES_TO_REMOVE=(
     "package.json"
     "README.md"
     "tailwind.config.js"
-    "webpack.config.js",
+    "webpack.config.js"
     "node_modules"
 )
 
