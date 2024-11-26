@@ -32,4 +32,15 @@ module.exports = {
       reportFilename: path.resolve(__dirname, "reports", "bundle-report.html"),
     }),
   ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
 };
