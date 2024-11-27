@@ -6,40 +6,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPQT\Capability\CapabilityService;
 
-register_activation_hook( WP_QUICKTASKER_PLUGIN_MAIN_FILE, 'quicktasker_activation_check' );
-function quicktasker_activation_check() {
-    // Check if the other version of the plugin is active
-    if ( is_plugin_active('quicktasker-pro/quicktasker.php') && plugin_basename(__FILE__) === 'quicktasker/quicktasker.php' ) {
-        // Deactivate the current plugin
-        deactivate_plugins(plugin_basename(__FILE__));
-        
-        // Display an admin notice
-        add_action('admin_notices', 'quicktasker_admin_notice_pro_active');
-    } elseif ( is_plugin_active('quicktasker/quicktasker.php') && plugin_basename(__FILE__) === 'quicktasker-pro/quicktasker.php' ) {
-        // Deactivate the current plugin
-        deactivate_plugins(plugin_basename(__FILE__));
-        
-        // Display an admin notice
-        add_action('admin_notices', 'quicktasker_admin_notice_free_active');
+if ( ! function_exists( 'is_plugin_active' ) ) {
+    require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+}
+
+$plugin_main_file = dirname(plugin_dir_path(__FILE__)) . '/quicktasker.php';
+
+register_activation_hook($plugin_main_file, function() use ($plugin_main_file) {
+    if ( is_plugin_active('quicktasker-pro/quicktasker.php') && strpos($plugin_main_file, 'quicktasker/quicktasker.php') !== false) {
+        wp_die(
+            __('QuickTasker cannot be activated because QuickTasker Pro is already active.', 'quicktasker'),
+            __('Plugin Activation Error', 'quicktasker'),
+            array('back_link' => true)
+        );
+    } elseif ( is_plugin_active('quicktasker/quicktasker.php') && strpos($plugin_main_file, 'quicktasker-pro/quicktasker.php') !== false) {
+        wp_die(
+            __('QuickTasker Pro cannot be activated because QuickTasker is already active.', 'quicktasker'),
+            __('Plugin Activation Error', 'quicktasker'),
+            array('back_link' => true)
+        );
     }
-}
-
-function quicktasker_admin_notice_pro_active() {
-    ?>
-    <div class="notice notice-error is-dismissible">
-        <p><?php _e('QuickTasker Free cannot be activated because QuickTasker Pro is already active.', 'quicktasker'); ?></p>
-    </div>
-    <?php
-}
-
-function quicktasker_admin_notice_free_active() {
-    ?>
-    <div class="notice notice-error is-dismissible">
-        <p><?php _e('QuickTasker Pro cannot be activated because QuickTasker Free is already active.', 'quicktasker'); ?></p>
-    </div>
-    <?php
-}
-
+});
+ 
 register_activation_hook( WP_QUICKTASKER_PLUGIN_MAIN_FILE, 'wpqt_plugin_activate' );
 if ( ! function_exists( 'wpqt_plugin_activate' ) ) {
     function wpqt_plugin_activate() {
