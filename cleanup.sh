@@ -3,8 +3,8 @@
 # List of files and directories to remove
 FILES_TO_REMOVE=(
     "tsconfig.json"
-    ".eslintrc.js"
-    ".prettierrc.js"
+    ".eslintrc.json"
+    ".prettierrc"
     ".vscode"
     ".github"
     ".git"
@@ -16,6 +16,7 @@ FILES_TO_REMOVE=(
     "tailwind.config.js"
     "webpack.config.js"
     "node_modules"
+    "reports"
 )
 
 # Prompt the user for confirmation
