@@ -16,14 +16,16 @@ use WPQT\Location\LocationService;
  * @return array The modified array of body classes.
  */
 add_filter( 'admin_body_class', 'wpqt_admin_body_class' );
-function wpqt_admin_body_class($classes) {
-    $locationService = new LocationService();
+if ( ! function_exists( 'wpqt_admin_body_class' ) ) {
+	function wpqt_admin_body_class($classes) {
+		$locationService = new LocationService();
 
-	if( $locationService->isWPQTPage() ) {
-		return "$classes wpqt-admin-page"; 
+		if( $locationService->isWPQTPage() ) {
+			return "$classes wpqt-admin-page"; 
+		}
+
+		return $classes;
 	}
-
-	return $classes;
 }
 
 /**
@@ -34,12 +36,14 @@ function wpqt_admin_body_class($classes) {
  * @return string The updated page template.
  */
 add_filter( 'template_include', 'wpqt_public_user_page_template' );
-function wpqt_public_user_page_template( $page_template ){
-	$locationService = new LocationService();
+if ( ! function_exists( 'wpqt_public_user_page_template' ) ) {
+	function wpqt_public_user_page_template( $page_template ){
+		$locationService = new LocationService();
 
-    if ( $locationService->isWPQTPublicUserPage() ) {
-        $page_template = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/src/user-page-app/index.php';
-    }
+		if ( $locationService->isWPQTPublicUserPage() ) {
+			$page_template = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/src/user-page-app/index.php';
+		}
 
-    return $page_template;
+		return $page_template;
+	}
 }

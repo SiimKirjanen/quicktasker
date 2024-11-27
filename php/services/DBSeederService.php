@@ -9,30 +9,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Settings\SettingsService;
 use WPQT\Pipeline\PipelineRepository;
 
-class DBSeederService {
-    protected $piplelineRepository;
-    protected $settingsService;
+if ( ! class_exists( 'WPQT\DB\DBSeederService' ) ) {
+    class DBSeederService {
+        protected $piplelineRepository;
+        protected $settingsService;
 
-    public function __construct() {
-        $this->piplelineRepository = new PipelineRepository();
-        $this->settingsService = new SettingsService();
-    }
+        public function __construct() {
+            $this->piplelineRepository = new PipelineRepository();
+            $this->settingsService = new SettingsService();
+        }
 
-    public function seedEmptyPipelineSettings() {
-        global $wpdb;
+        public function seedEmptyPipelineSettings() {
+            global $wpdb;
 
-        $pipelines = $this->piplelineRepository->getPipelines();
+            $pipelines = $this->piplelineRepository->getPipelines();
 
-        foreach ($pipelines as $pipeline) {
-            $settingExists = $wpdb->get_var($wpdb->prepare(
-                "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . " WHERE pipeline_id = %d",
-                $pipeline->id
-            ));
+            foreach ($pipelines as $pipeline) {
+                $settingExists = $wpdb->get_var($wpdb->prepare(
+                    "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . " WHERE pipeline_id = %d",
+                    $pipeline->id
+                ));
 
-            if ($settingExists == 0) {
-              $this->settingsService->insertSettingsColumnForPipeline($pipeline->id);
+                if ($settingExists == 0) {
+                $this->settingsService->insertSettingsColumnForPipeline($pipeline->id);
+                }
             }
         }
     }
-
 }
