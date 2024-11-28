@@ -4,6 +4,7 @@ import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import { WPQTTypes } from "../types/enums";
 import { LogFromServer } from "../types/log";
+import { PipelineOverviewFilter } from "../types/overview";
 import {
   FullPipelineDataFromServer,
   Pipeline,
@@ -11,6 +12,7 @@ import {
 } from "../types/pipeline";
 import { PipelineSettingsFromServer } from "../types/pipeline-settings";
 import { DeletePipelineResponse } from "../types/requestResponse/delete-pipeline-response";
+import { PipelineOverviewResponse } from "../types/requestResponse/pipeline-overview-response";
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { Task, TaskFromServer } from "../types/task";
@@ -563,6 +565,29 @@ function saveTaskCompletionDoneSettingRequest(
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Overview requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getPipelineOverviewData(
+  pipelineId: string,
+  overviewFilter: PipelineOverviewFilter,
+): Promise<WPQTResponse<PipelineOverviewResponse>> {
+  const queryParams = new URLSearchParams({
+    taskStartDate: overviewFilter.taskStartDate || "",
+    taskDoneDate: overviewFilter.taskDoneDate || "",
+    taskAssignees: overviewFilter.taskAssignees.join(","),
+  });
+
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/overview?${queryParams.toString()}`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -591,6 +616,7 @@ export {
   getGlobalLogsRequest,
   getLogsRequest,
   getPipelineData,
+  getPipelineOverviewData,
   getPipelineSettingsRequest,
   getTaskLogs,
   getUserSessionsRequest,

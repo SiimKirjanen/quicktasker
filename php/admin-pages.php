@@ -25,14 +25,23 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
             'wp_quick_taks_generate_app_page'
         );
 
-    /*   add_submenu_page(
+        add_submenu_page(
             'wp-quick-tasks',
             'Overview',
             'Overview',
             'manage_options',
             'wp-quick-tasks#/overview',
             'wp_quick_taks_generate_app_page'
-        ); */
+        );
+
+        add_submenu_page(
+            'wp-quick-tasks',
+            esc_html__('Settings', 'quicktasker'),
+            esc_html__('Settings', 'quicktasker'),
+            WP_QUICKTASKER_ADMIN_ROLE,
+            'wp-quick-tasks#/settings',
+            'wp_quick_taks_generate_app_page'
+        );
 
         add_submenu_page(
             'wp-quick-tasks',
@@ -70,14 +79,7 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
             'wp_quick_taks_generate_app_page'
         );
 
-        add_submenu_page(
-            'wp-quick-tasks',
-            esc_html__('Settings', 'quicktasker'),
-            esc_html__('Settings', 'quicktasker'),
-            WP_QUICKTASKER_ADMIN_ROLE,
-            'wp-quick-tasks#/settings',
-            'wp_quick_taks_generate_app_page'
-        );
+      
 
         add_submenu_page(
             'wp-quick-tasks',

@@ -34,6 +34,7 @@ require( 'php/repositories/CustomFieldRepository.php' );
 require( 'php/repositories/TimeRepository.php' );
 require( 'php/repositories/AssetRepository.php' );
 require( 'php/repositories/SettingRepository.php' );
+require( 'php/repositories/OverViewRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );

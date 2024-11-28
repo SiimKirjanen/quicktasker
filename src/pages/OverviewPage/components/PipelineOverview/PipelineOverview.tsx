@@ -1,0 +1,76 @@
+import { useEffect, useState } from "@wordpress/element";
+import { getPipelineOverviewData } from "../../../../api/api";
+import { Loading } from "../../../../components/Loading/Loading";
+import { PipelineOverviewFilter } from "../../../../types/overview";
+import { Pipeline } from "../../../../types/pipeline";
+import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipeline-overview-response";
+import { ArhivedTaskChart } from "../ArchivedTaskChart/ArchivedTaskChart";
+import { PipelineOverviewToolBar } from "../PipelineOverviewToolBar/PipelineOverviewToolBar";
+import { StageDistributionChart } from "../StageDistributionChart/StageDistributionChart";
+import { TaskStatusChart } from "../TaskStatusChart/TaskStatusChart";
+
+type Props = {
+  pipeline: Pipeline;
+};
+function PipelineOverview({ pipeline }: Props) {
+  const [overviewFilter] = useState<PipelineOverviewFilter>({
+    taskStartDate: null,
+    taskDoneDate: null,
+    taskAssignees: [],
+  });
+  const [pipelineOverviewData, setPipelineOverviewData] =
+    useState<PipelineOverviewResponse | null>(null);
+
+  useEffect(() => {
+    const fetchPipelineOverview = async () => {
+      try {
+        const response = await getPipelineOverviewData(
+          pipeline.id,
+          overviewFilter,
+        );
+        setPipelineOverviewData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPipelineOverview();
+  }, [pipeline.id]);
+
+  const defaultChartoptions = {
+    legend: {
+      position: "left",
+      alignment: "center",
+      textStyle: {
+        color: "#233238",
+        fontSize: 14,
+      },
+    },
+  };
+
+  if (!pipelineOverviewData) {
+    return <Loading ovalSize="24" />;
+  }
+
+  return (
+    <div>
+      <PipelineOverviewToolBar />
+      <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center xl:wpqt-justify-start">
+        <StageDistributionChart
+          pipelineOverviewData={pipelineOverviewData}
+          options={defaultChartoptions}
+        />
+        <TaskStatusChart
+          pipelineOverviewData={pipelineOverviewData}
+          options={defaultChartoptions}
+        />
+        <ArhivedTaskChart
+          pipelineOverviewData={pipelineOverviewData}
+          options={defaultChartoptions}
+        />
+      </div>
+    </div>
+  );
+}
+
+export { PipelineOverview };

@@ -17,6 +17,7 @@ use WPQT\Pipeline\PipelineRepository;
 use WPQT\Customfield\CustomFieldRepository;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Task\TaskRepository;
+use WPQT\Overview\OverViewRepository;
 use WPQT\Task\TaskService;
 use WPQT\Stage\StageService;
 use WPQT\Permission\PermissionService;
@@ -1798,6 +1799,43 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 ),
             ),
         );
+
+         /*
+        ==================================================================================================================================================================================================================
+        Overview endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/overview',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        WPQTverifyApiNonce($data);
+                        $overviewRepo = new OverviewRepository();
+
+                        $overview = $overviewRepo->getPipelineOverview($data['id']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), $overview))->toArray(), 200);
+                    } catch (Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
 
     }
 }

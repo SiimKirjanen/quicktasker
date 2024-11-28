@@ -2,7 +2,7 @@ import { useEffect, useState } from "@wordpress/element";
 import { ArchivePage } from "../pages/ArchivePage/ArchivePage";
 import { GuidePage } from "../pages/GuidePage/GuidePage";
 import { LogsPage } from "../pages/LogsPage/LogsPage";
-import { OverviewPage } from "../pages/OverviewPage";
+import { OverviewPage } from "../pages/OverviewPage/OverviewPage";
 import { PipelinePage } from "../pages/PipelinePage/PipelinePage";
 import { SettingsPage } from "../pages/SettingsPage/SettingsPage";
 import { UserPage } from "../pages/UserPage/UserPage";
