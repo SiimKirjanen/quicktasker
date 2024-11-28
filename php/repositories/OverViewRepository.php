@@ -15,7 +15,7 @@ class OverViewRepository {
         $this->stageRepository = new StageRepository();
     }
 
-    public function getPipelineOverview($pipelineId) {
+    public function getPipelineOverview($pipelineId, $taskStartDate) {
         global $wpdb;
 
         $results = (object)[
@@ -29,12 +29,17 @@ class OverViewRepository {
         $pipelineStages = $this->stageRepository->getStagesByPipelineId($pipelineId);
 
         foreach ($pipelineStages as $stage) {
-            $tasksCount = $wpdb->get_var( $wpdb->prepare(
-                "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " tl
-                INNER JOIN " . TABLE_WP_QUICKTASKER_TASKS . " t ON tl.task_id = t.id
-                WHERE tl.stage_id = %d AND t.is_archived = 0",
-                $stage->id
-            ) );
+            $query = "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " tl
+                      INNER JOIN " . TABLE_WP_QUICKTASKER_TASKS . " t ON tl.task_id = t.id
+                      WHERE tl.stage_id = %d AND t.is_archived = 0";
+            $params = [$stage->id];
+
+            if ($taskStartDate) {
+                $query .= " AND t.created_at >= %s";
+                $params[] = $taskStartDate;
+            }
+
+            $tasksCount = $wpdb->get_var($wpdb->prepare($query, ...$params));
 
             $results->stages[] = (object)[
                 'id' => $stage->id,
@@ -43,25 +48,18 @@ class OverViewRepository {
             ];
         }
 
-        $results->archivedTasksCount = $wpdb->get_var( $wpdb->prepare(
-            "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE pipeline_id = %d AND is_archived = 1",
-            $pipelineId
-        ) );
+        $baseQuery = "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE pipeline_id = %d";
+        $params = [$pipelineId];
 
-        $results->notArchivedTasksCount = $wpdb->get_var( $wpdb->prepare(
-            "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE pipeline_id = %d AND is_archived = 0",
-            $pipelineId
-        ) );
+        if ($taskStartDate) {
+            $baseQuery .= " AND created_at >= %s";
+            $params[] = $taskStartDate;
+        }
 
-        $results->doneTasksCount = $wpdb->get_var( $wpdb->prepare(
-            "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE pipeline_id = %d AND is_done = 1",
-            $pipelineId
-        ) );
-
-        $results->notDoneTasksCount = $wpdb->get_var( $wpdb->prepare(
-            "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE pipeline_id = %d AND is_done = 0",
-            $pipelineId
-        ) );
+        $results->archivedTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . " AND is_archived = 1", ...$params));
+        $results->notArchivedTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . " AND is_archived = 0", ...$params));
+        $results->doneTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . " AND is_done = 1", ...$params));
+        $results->notDoneTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . " AND is_done = 0", ...$params));
 
         return $results;
     }

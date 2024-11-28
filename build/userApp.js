@@ -536,7 +536,7 @@ function saveTaskCompletionDoneSettingRequest(pipelineId, checked) {
 */
 function getPipelineOverviewData(pipelineId, overviewFilter) {
   const queryParams = new URLSearchParams({
-    taskStartDate: overviewFilter.taskStartDate || "",
+    taskStartDate: overviewFilter.taskCreationDate || "",
     taskDoneDate: overviewFilter.taskDoneDate || "",
     taskAssignees: overviewFilter.taskAssignees.join(",")
   });

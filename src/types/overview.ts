@@ -1,5 +1,5 @@
 type PipelineOverviewFilter = {
-  taskStartDate: string | null;
+  taskCreationDate: string | null;
   taskDoneDate: string | null;
   taskAssignees: string[];
 };

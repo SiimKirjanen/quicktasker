@@ -13,17 +13,19 @@ type Props = {
   pipeline: Pipeline;
 };
 function PipelineOverview({ pipeline }: Props) {
-  const [overviewFilter] = useState<PipelineOverviewFilter>({
-    taskStartDate: null,
+  const [overviewFilter, setOverviewFilter] = useState<PipelineOverviewFilter>({
+    taskCreationDate: null,
     taskDoneDate: null,
     taskAssignees: [],
   });
   const [pipelineOverviewData, setPipelineOverviewData] =
     useState<PipelineOverviewResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPipelineOverview = async () => {
       try {
+        setLoading(true);
         const response = await getPipelineOverviewData(
           pipeline.id,
           overviewFilter,
@@ -31,11 +33,13 @@ function PipelineOverview({ pipeline }: Props) {
         setPipelineOverviewData(response.data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchPipelineOverview();
-  }, [pipeline.id]);
+  }, [pipeline.id, overviewFilter]);
 
   const defaultChartoptions = {
     legend: {
@@ -48,13 +52,27 @@ function PipelineOverview({ pipeline }: Props) {
     },
   };
 
-  if (!pipelineOverviewData) {
-    return <Loading ovalSize="24" />;
+  if (loading || !pipelineOverviewData) {
+    return <Loading ovalSize="48" />;
   }
 
   return (
     <div>
-      <PipelineOverviewToolBar />
+      <PipelineOverviewToolBar
+        overviewFilter={overviewFilter}
+        onCreationDateChange={(value) => {
+          setOverviewFilter({
+            ...overviewFilter,
+            taskCreationDate: value,
+          });
+        }}
+        onDoneDateChange={(value) => {
+          setOverviewFilter({
+            ...overviewFilter,
+            taskDoneDate: value,
+          });
+        }}
+      />
       <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center xl:wpqt-justify-start">
         <StageDistributionChart
           pipelineOverviewData={pipelineOverviewData}

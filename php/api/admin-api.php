@@ -1816,7 +1816,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         WPQTverifyApiNonce($data);
                         $overviewRepo = new OverviewRepository();
 
-                        $overview = $overviewRepo->getPipelineOverview($data['id']);
+                        $taskStartDate = $data['taskStartDate'] ?? null;
+                        $overview = $overviewRepo->getPipelineOverview($data['id'], $taskStartDate);
                         
                         return new WP_REST_Response((new ApiResponse(true, array(), $overview))->toArray(), 200);
                     } catch (Exception $e) {
@@ -1831,6 +1832,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'taskStartDate' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
             ),

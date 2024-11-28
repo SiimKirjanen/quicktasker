@@ -576,7 +576,7 @@ function getPipelineOverviewData(
   overviewFilter: PipelineOverviewFilter,
 ): Promise<WPQTResponse<PipelineOverviewResponse>> {
   const queryParams = new URLSearchParams({
-    taskStartDate: overviewFilter.taskStartDate || "",
+    taskStartDate: overviewFilter.taskCreationDate || "",
     taskDoneDate: overviewFilter.taskDoneDate || "",
     taskAssignees: overviewFilter.taskAssignees.join(","),
   });

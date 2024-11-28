@@ -587,7 +587,7 @@ function saveTaskCompletionDoneSettingRequest(pipelineId, checked) {
 */
 function getPipelineOverviewData(pipelineId, overviewFilter) {
   const queryParams = new URLSearchParams({
-    taskStartDate: overviewFilter.taskStartDate || "",
+    taskStartDate: overviewFilter.taskCreationDate || "",
     taskDoneDate: overviewFilter.taskDoneDate || "",
     taskAssignees: overviewFilter.taskAssignees.join(",")
   });
@@ -3020,15 +3020,17 @@ __webpack_require__.r(__webpack_exports__);
 
 function WPQTFilter({
   children,
-  title
+  title,
+  childrenClassName = "",
+  titleClassName = ""
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-mb-8",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mb-2 wpqt-text-base",
+      className: `wpqt-mb-2 wpqt-text-base ${titleClassName}`,
       children: title
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-flex wpqt-gap-2 wpqt-items-center",
+      className: `wpqt-flex wpqt-gap-2 wpqt-items-center ${childrenClassName}`,
       children: children
     })]
   });
@@ -5546,12 +5548,15 @@ __webpack_require__.r(__webpack_exports__);
 
 function WPQTTabs({
   tabs,
-  tabsContent
+  tabsContent,
+  tabClassName = "",
+  tabListClassName = ""
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabGroup, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabList, {
-      className: "wpqt-mb-6 wpqt-flex wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-b-gray-300",
+      className: `wpqt-mb-6 wpqt-flex wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-b-gray-300 ${tabListClassName}`,
       children: tabs.map(tab => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(WPQTTab, {
+        className: tabClassName,
         children: tab
       }, tab))
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.TabPanels, {
@@ -5562,11 +5567,12 @@ function WPQTTabs({
   });
 }
 function WPQTTab({
-  children
+  children,
+  className
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Tab, {
     as: "div",
-    className: "wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-pb-[10px] wpqt-text-center wpqt-text-lg data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500",
+    className: `wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-pb-[10px] wpqt-text-center wpqt-text-lg data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500 ${className}`,
     children: children
   });
 }
@@ -7847,7 +7853,9 @@ function OverviewPage() {
       children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Overview", "quicktasker")
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Tab_WPQTTabs__WEBPACK_IMPORTED_MODULE_4__.WPQTTabs, {
       tabs: pipelineNames,
-      tabsContent: tabContent
+      tabsContent: tabContent,
+      tabListClassName: "wpqt-gap-5",
+      tabClassName: "wpqt-flex-none"
     })]
   });
 }
@@ -7902,11 +7910,62 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_date_picker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-date-picker */ "./node_modules/react-date-picker/dist/esm/index.js");
+/* harmony import */ var _components_Filter_WPQTFilter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/Filter/WPQTFilter */ "./src/components/Filter/WPQTFilter.tsx");
 
-function PipelineOverviewToolBar() {
+
+
+
+
+function PipelineOverviewToolBar({
+  overviewFilter,
+  onCreationDateChange,
+  onDoneDateChange
+}) {
+  const formatDate = value => {
+    if (value instanceof Date) {
+      return dayjs__WEBPACK_IMPORTED_MODULE_2___default()(value).format("YYYY-MM-DD");
+    }
+    return "";
+  };
+  const handleCreationDateChange = value => {
+    const dateString = formatDate(value);
+    onCreationDateChange(dateString);
+  };
+  const handleDoneDateChange = value => {
+    const dateString = formatDate(value);
+    onDoneDateChange(dateString);
+  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-      children: "Toolbar"
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_Filter_WPQTFilter__WEBPACK_IMPORTED_MODULE_3__.WPQTFilter, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Statistics filtering", "quicktasker"),
+      titleClassName: "wpqt-text-center",
+      childrenClassName: "wpqt-gap-6 wpqt-justify-center",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-mb-2",
+          children: "Task creation date"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_date_picker__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          onChange: handleCreationDateChange,
+          value: overviewFilter.taskCreationDate,
+          format: "y-MM-dd",
+          id: "taskCreationDate"
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-mb-2",
+          children: "Task done date"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_date_picker__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          onChange: handleDoneDateChange,
+          value: overviewFilter.taskDoneDate,
+          format: "y-MM-dd",
+          id: "taskCreationDate"
+        })]
+      })]
     })
   });
 }
@@ -7972,23 +8031,27 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 function PipelineOverview({
   pipeline
 }) {
-  const [overviewFilter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
-    taskStartDate: null,
+  const [overviewFilter, setOverviewFilter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
+    taskCreationDate: null,
     taskDoneDate: null,
     taskAssignees: []
   });
   const [pipelineOverviewData, setPipelineOverviewData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const fetchPipelineOverview = () => __awaiter(this, void 0, void 0, function* () {
       try {
+        setLoading(true);
         const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getPipelineOverviewData)(pipeline.id, overviewFilter);
         setPipelineOverviewData(response.data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     });
     fetchPipelineOverview();
-  }, [pipeline.id]);
+  }, [pipeline.id, overviewFilter]);
   const defaultChartoptions = {
     legend: {
       position: "left",
@@ -7999,13 +8062,25 @@ function PipelineOverview({
       }
     }
   };
-  if (!pipelineOverviewData) {
+  if (loading || !pipelineOverviewData) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
-      ovalSize: "24"
+      ovalSize: "48"
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PipelineOverviewToolBar_PipelineOverviewToolBar__WEBPACK_IMPORTED_MODULE_5__.PipelineOverviewToolBar, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PipelineOverviewToolBar_PipelineOverviewToolBar__WEBPACK_IMPORTED_MODULE_5__.PipelineOverviewToolBar, {
+      overviewFilter: overviewFilter,
+      onCreationDateChange: value => {
+        setOverviewFilter(Object.assign(Object.assign({}, overviewFilter), {
+          taskCreationDate: value
+        }));
+      },
+      onDoneDateChange: value => {
+        setOverviewFilter(Object.assign(Object.assign({}, overviewFilter), {
+          taskDoneDate: value
+        }));
+      }
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-flex-wrap wpqt-justify-center xl:wpqt-justify-start",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageDistributionChart_StageDistributionChart__WEBPACK_IMPORTED_MODULE_6__.StageDistributionChart, {
         pipelineOverviewData: pipelineOverviewData,
@@ -9165,7 +9240,9 @@ function PipelinesSettingsTabs() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Tab_WPQTTabs__WEBPACK_IMPORTED_MODULE_2__.WPQTTabs, {
       tabs: pipelineNames,
-      tabsContent: tabContent
+      tabsContent: tabContent,
+      tabListClassName: "wpqt-gap-5",
+      tabClassName: "wpqt-flex-none"
     })
   });
 }

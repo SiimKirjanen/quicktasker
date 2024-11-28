@@ -22,7 +22,12 @@ function OverviewPage() {
       >
         {__("Overview", "quicktasker")}
       </WPQTPageHeader>
-      <WPQTTabs tabs={pipelineNames} tabsContent={tabContent} />
+      <WPQTTabs
+        tabs={pipelineNames}
+        tabsContent={tabContent}
+        tabListClassName="wpqt-gap-5"
+        tabClassName="wpqt-flex-none"
+      />
     </Page>
   );
 }
