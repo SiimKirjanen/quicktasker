@@ -7875,7 +7875,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_google_charts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-google-charts */ "./node_modules/react-google-charts/dist/index.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_google_charts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-google-charts */ "./node_modules/react-google-charts/dist/index.js");
+/* harmony import */ var _utils_statistics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../utils/statistics */ "./src/utils/statistics.ts");
+/* harmony import */ var _NotEnoughData_NotEnoughData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../NotEnoughData/NotEnoughData */ "./src/pages/OverviewPage/components/NotEnoughData/NotEnoughData.tsx");
+
+
+
 
 
 function ArhivedTaskChart({
@@ -7885,7 +7892,13 @@ function ArhivedTaskChart({
 }) {
   var _a, _b;
   const archivedPieChartData = [["Archived tasks", "Task Count"], ["Archived tasks", parseInt((_a = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.archivedTasksCount) !== null && _a !== void 0 ? _a : "0") || 0], ["Not archived tasks", parseInt((_b = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.notArchivedTasksCount) !== null && _b !== void 0 ? _b : "0") || 0]];
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_google_charts__WEBPACK_IMPORTED_MODULE_1__.Chart, {
+  const hasEnoughData = (0,_utils_statistics__WEBPACK_IMPORTED_MODULE_2__.hasEnoughDataCheck)(archivedPieChartData);
+  if (!hasEnoughData) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_NotEnoughData_NotEnoughData__WEBPACK_IMPORTED_MODULE_3__.NotEnoughData, {
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Not enough data to display archived tasks chart", "quicktasker")
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_google_charts__WEBPACK_IMPORTED_MODULE_4__.Chart, {
     chartType: "PieChart",
     data: archivedPieChartData,
     options: Object.assign(Object.assign({}, options), {
@@ -7893,6 +7906,31 @@ function ArhivedTaskChart({
     }),
     width: width,
     height: "400px"
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/pages/OverviewPage/components/NotEnoughData/NotEnoughData.tsx":
+/*!***************************************************************************!*\
+  !*** ./src/pages/OverviewPage/components/NotEnoughData/NotEnoughData.tsx ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NotEnoughData: () => (/* binding */ NotEnoughData)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function NotEnoughData({
+  text
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-flex wpqt-justify-center wpqt-items-center wpqt-h-[400px] wpqt-w-[500px] wpqt-font-semibold",
+    children: text
   });
 }
 
@@ -8115,7 +8153,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_google_charts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-google-charts */ "./node_modules/react-google-charts/dist/index.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_google_charts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-google-charts */ "./node_modules/react-google-charts/dist/index.js");
+/* harmony import */ var _utils_statistics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../utils/statistics */ "./src/utils/statistics.ts");
+/* harmony import */ var _NotEnoughData_NotEnoughData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../NotEnoughData/NotEnoughData */ "./src/pages/OverviewPage/components/NotEnoughData/NotEnoughData.tsx");
+
+
+
 
 
 function StageDistributionChart({
@@ -8125,7 +8170,13 @@ function StageDistributionChart({
 }) {
   var _a;
   const stagesPieChartData = [["Stage", "Task Count"], ...((_a = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.stages.map(stage => [stage.name, parseInt(stage.tasksCount) || 0])) !== null && _a !== void 0 ? _a : [])];
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_google_charts__WEBPACK_IMPORTED_MODULE_1__.Chart, {
+  const hasEnoughData = (0,_utils_statistics__WEBPACK_IMPORTED_MODULE_2__.hasEnoughDataCheck)(stagesPieChartData);
+  if (!hasEnoughData) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_NotEnoughData_NotEnoughData__WEBPACK_IMPORTED_MODULE_3__.NotEnoughData, {
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Not enough data to display task distribution by stages chart", "quicktasker")
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_google_charts__WEBPACK_IMPORTED_MODULE_4__.Chart, {
     chartType: "PieChart",
     data: stagesPieChartData,
     options: Object.assign(Object.assign({}, options), {
@@ -8151,7 +8202,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_google_charts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-google-charts */ "./node_modules/react-google-charts/dist/index.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_google_charts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-google-charts */ "./node_modules/react-google-charts/dist/index.js");
+/* harmony import */ var _utils_statistics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../utils/statistics */ "./src/utils/statistics.ts");
+/* harmony import */ var _NotEnoughData_NotEnoughData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../NotEnoughData/NotEnoughData */ "./src/pages/OverviewPage/components/NotEnoughData/NotEnoughData.tsx");
+
+
+
 
 
 function TaskStatusChart({
@@ -8161,7 +8219,13 @@ function TaskStatusChart({
 }) {
   var _a, _b;
   const taskDonePieChartData = [["Task status", "Task Count"], ["Done", parseInt((_a = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.doneTasksCount) !== null && _a !== void 0 ? _a : "0") || 0], ["Not Done", parseInt((_b = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.notDoneTasksCount) !== null && _b !== void 0 ? _b : "0") || 0]];
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_google_charts__WEBPACK_IMPORTED_MODULE_1__.Chart, {
+  const hasEnoughData = (0,_utils_statistics__WEBPACK_IMPORTED_MODULE_2__.hasEnoughDataCheck)(taskDonePieChartData);
+  if (!hasEnoughData) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_NotEnoughData_NotEnoughData__WEBPACK_IMPORTED_MODULE_3__.NotEnoughData, {
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Not enough data to display task status chart", "quicktasker")
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_google_charts__WEBPACK_IMPORTED_MODULE_4__.Chart, {
     chartType: "PieChart",
     data: taskDonePieChartData,
     options: Object.assign(Object.assign({}, options), {
@@ -12818,6 +12882,24 @@ const convertStageFromServer = stage => Object.assign(Object.assign({}, stage), 
   tasks: (stage.tasks || []).map(task => Object.assign({}, (0,_task__WEBPACK_IMPORTED_MODULE_0__.convertTaskFromServer)(task)))
 });
 
+
+/***/ }),
+
+/***/ "./src/utils/statistics.ts":
+/*!*********************************!*\
+  !*** ./src/utils/statistics.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   hasEnoughDataCheck: () => (/* binding */ hasEnoughDataCheck)
+/* harmony export */ });
+function hasEnoughDataCheck(stagesPieChartData) {
+  const stages = stagesPieChartData.slice(1);
+  const hasAtLeastOneStageWithTasks = stages.some(stage => stage[1] > 0);
+  return stagesPieChartData.length > 1 && hasAtLeastOneStageWithTasks;
+}
 
 /***/ }),
 

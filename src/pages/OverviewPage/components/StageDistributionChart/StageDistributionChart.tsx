@@ -1,11 +1,15 @@
+import { __ } from "@wordpress/i18n";
 import { Chart, ChartWrapperOptions } from "react-google-charts";
 import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipeline-overview-response";
+import { hasEnoughDataCheck } from "../../../../utils/statistics";
+import { NotEnoughData } from "../NotEnoughData/NotEnoughData";
 
 type Props = {
   pipelineOverviewData: PipelineOverviewResponse;
   options: ChartWrapperOptions["options"];
   width: string;
 };
+
 function StageDistributionChart({
   pipelineOverviewData,
   options,
@@ -18,6 +22,19 @@ function StageDistributionChart({
       parseInt(stage.tasksCount) || 0,
     ]) ?? []),
   ];
+  const hasEnoughData: boolean = hasEnoughDataCheck(stagesPieChartData);
+
+  if (!hasEnoughData) {
+    return (
+      <NotEnoughData
+        text={__(
+          "Not enough data to display task distribution by stages chart",
+          "quicktasker",
+        )}
+      />
+    );
+  }
+
   return (
     <Chart
       chartType="PieChart"
