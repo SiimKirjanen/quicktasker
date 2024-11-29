@@ -15,7 +15,7 @@ class OverViewRepository {
         $this->stageRepository = new StageRepository();
     }
 
-    public function getPipelineOverview($pipelineId, $taskStartDate) {
+    public function getPipelineOverview($pipelineId, $taskStartDate, $taskDoneDate) {
         global $wpdb;
 
         $results = (object)[
@@ -39,6 +39,12 @@ class OverViewRepository {
                 $params[] = $taskStartDate;
             }
 
+            if ($taskDoneDate) {
+                $taskDoneDateEnd = $taskDoneDate . ' 23:59:59';
+                $query .= " AND (t.task_completed_at <= %s OR t.task_completed_at IS NULL)";
+                $params[] = $taskDoneDateEnd;
+            }
+
             $tasksCount = $wpdb->get_var($wpdb->prepare($query, ...$params));
 
             $results->stages[] = (object)[
@@ -54,6 +60,12 @@ class OverViewRepository {
         if ($taskStartDate) {
             $baseQuery .= " AND created_at >= %s";
             $params[] = $taskStartDate;
+        }
+
+        if ($taskDoneDate) {
+            $taskDoneDateEnd = $taskDoneDate . ' 23:59:59';
+            $baseQuery .= " AND (task_completed_at <= %s OR task_completed_at IS NULL)";
+            $params[] = $taskDoneDateEnd;
         }
 
         $results->archivedTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . " AND is_archived = 1", ...$params));
