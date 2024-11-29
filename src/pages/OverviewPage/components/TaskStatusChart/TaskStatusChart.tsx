@@ -4,8 +4,9 @@ import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipe
 type Props = {
   pipelineOverviewData: PipelineOverviewResponse;
   options: ChartWrapperOptions["options"];
+  width: string;
 };
-function TaskStatusChart({ pipelineOverviewData, options }: Props) {
+function TaskStatusChart({ pipelineOverviewData, options, width }: Props) {
   const taskDonePieChartData = [
     ["Task status", "Task Count"],
     ["Done", parseInt(pipelineOverviewData?.doneTasksCount ?? "0") || 0],
@@ -17,7 +18,7 @@ function TaskStatusChart({ pipelineOverviewData, options }: Props) {
       chartType="PieChart"
       data={taskDonePieChartData}
       options={{ ...options, title: "Task status" }}
-      width={"600px"}
+      width={width}
       height={"400px"}
     />
   );

@@ -4,8 +4,9 @@ import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipe
 type Props = {
   pipelineOverviewData: PipelineOverviewResponse;
   options: ChartWrapperOptions["options"];
+  width: string;
 };
-function ArhivedTaskChart({ pipelineOverviewData, options }: Props) {
+function ArhivedTaskChart({ pipelineOverviewData, options, width }: Props) {
   const archivedPieChartData = [
     ["Archived tasks", "Task Count"],
     [
@@ -22,7 +23,7 @@ function ArhivedTaskChart({ pipelineOverviewData, options }: Props) {
       chartType="PieChart"
       data={archivedPieChartData}
       options={{ ...options, title: "Archived tasks" }}
-      width={"600px"}
+      width={width}
       height={"400px"}
     />
   );

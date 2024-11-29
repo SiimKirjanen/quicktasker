@@ -77,14 +77,17 @@ function PipelineOverview({ pipeline }: Props) {
         <StageDistributionChart
           pipelineOverviewData={pipelineOverviewData}
           options={defaultChartoptions}
+          width="500px"
         />
         <TaskStatusChart
           pipelineOverviewData={pipelineOverviewData}
           options={defaultChartoptions}
+          width="500px"
         />
         <ArhivedTaskChart
           pipelineOverviewData={pipelineOverviewData}
           options={defaultChartoptions}
+          width="500px"
         />
       </div>
     </div>

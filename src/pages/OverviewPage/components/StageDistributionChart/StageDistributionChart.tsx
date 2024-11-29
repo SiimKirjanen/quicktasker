@@ -4,8 +4,13 @@ import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipe
 type Props = {
   pipelineOverviewData: PipelineOverviewResponse;
   options: ChartWrapperOptions["options"];
+  width: string;
 };
-function StageDistributionChart({ pipelineOverviewData, options }: Props) {
+function StageDistributionChart({
+  pipelineOverviewData,
+  options,
+  width,
+}: Props) {
   const stagesPieChartData = [
     ["Stage", "Task Count"],
     ...(pipelineOverviewData?.stages.map((stage) => [
@@ -18,7 +23,7 @@ function StageDistributionChart({ pipelineOverviewData, options }: Props) {
       chartType="PieChart"
       data={stagesPieChartData}
       options={{ ...options, title: "Task distribution by stages" }}
-      width={"600px"}
+      width={width}
       height={"400px"}
     />
   );

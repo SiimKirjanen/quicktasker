@@ -7880,7 +7880,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function ArhivedTaskChart({
   pipelineOverviewData,
-  options
+  options,
+  width
 }) {
   var _a, _b;
   const archivedPieChartData = [["Archived tasks", "Task Count"], ["Archived tasks", parseInt((_a = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.archivedTasksCount) !== null && _a !== void 0 ? _a : "0") || 0], ["Not archived tasks", parseInt((_b = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.notArchivedTasksCount) !== null && _b !== void 0 ? _b : "0") || 0]];
@@ -7890,7 +7891,7 @@ function ArhivedTaskChart({
     options: Object.assign(Object.assign({}, options), {
       title: "Archived tasks"
     }),
-    width: "600px",
+    width: width,
     height: "400px"
   });
 }
@@ -8084,13 +8085,16 @@ function PipelineOverview({
       className: "wpqt-flex wpqt-flex-wrap wpqt-justify-center xl:wpqt-justify-start",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageDistributionChart_StageDistributionChart__WEBPACK_IMPORTED_MODULE_6__.StageDistributionChart, {
         pipelineOverviewData: pipelineOverviewData,
-        options: defaultChartoptions
+        options: defaultChartoptions,
+        width: "500px"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskStatusChart_TaskStatusChart__WEBPACK_IMPORTED_MODULE_7__.TaskStatusChart, {
         pipelineOverviewData: pipelineOverviewData,
-        options: defaultChartoptions
+        options: defaultChartoptions,
+        width: "500px"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ArchivedTaskChart_ArchivedTaskChart__WEBPACK_IMPORTED_MODULE_4__.ArhivedTaskChart, {
         pipelineOverviewData: pipelineOverviewData,
-        options: defaultChartoptions
+        options: defaultChartoptions,
+        width: "500px"
       })]
     })]
   });
@@ -8116,7 +8120,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function StageDistributionChart({
   pipelineOverviewData,
-  options
+  options,
+  width
 }) {
   var _a;
   const stagesPieChartData = [["Stage", "Task Count"], ...((_a = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.stages.map(stage => [stage.name, parseInt(stage.tasksCount) || 0])) !== null && _a !== void 0 ? _a : [])];
@@ -8126,7 +8131,7 @@ function StageDistributionChart({
     options: Object.assign(Object.assign({}, options), {
       title: "Task distribution by stages"
     }),
-    width: "600px",
+    width: width,
     height: "400px"
   });
 }
@@ -8151,7 +8156,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function TaskStatusChart({
   pipelineOverviewData,
-  options
+  options,
+  width
 }) {
   var _a, _b;
   const taskDonePieChartData = [["Task status", "Task Count"], ["Done", parseInt((_a = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.doneTasksCount) !== null && _a !== void 0 ? _a : "0") || 0], ["Not Done", parseInt((_b = pipelineOverviewData === null || pipelineOverviewData === void 0 ? void 0 : pipelineOverviewData.notDoneTasksCount) !== null && _b !== void 0 ? _b : "0") || 0]];
@@ -8161,7 +8167,7 @@ function TaskStatusChart({
     options: Object.assign(Object.assign({}, options), {
       title: "Task status"
     }),
-    width: "600px",
+    width: width,
     height: "400px"
   });
 }
