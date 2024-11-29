@@ -445,7 +445,16 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         function changeTaskDoneStatus($taskId, $isDone) {
             global $wpdb;
 
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_done' => $isDone), array('id' => $taskId), array('%d'), array('%d'));
+            $utcTime = $this->timeRepository->getCurrentUTCTime();
+            $data = array(
+                'is_done' => $isDone,
+                'task_completed_at' => $isDone ? $utcTime : null
+            );
+            $where = array('id' => $taskId);
+            $format = array('%d', $isDone ? '%s' : '%d');
+            $where_format = array('%d');
+
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, $data, $where, $format, $where_format);
 
             if ($result === false) {
                 throw new \Exception('Failed to change task completed status');
