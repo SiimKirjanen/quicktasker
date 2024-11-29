@@ -608,7 +608,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
                         WPQTverifyApiNonce($data);
         
                         $taskService = new TaskService();
@@ -623,9 +626,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logMessage = $data['done'] ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
 
                         $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
                     } catch (Exception $e) {
+                        $wpdb->query('ROLLBACK');
             
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     }
@@ -1836,19 +1841,17 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'taskStartDate' => array(
                         'required' => false,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateDateParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'taskDoneDate' => array(
                         'required' => false,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateDateParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
             ),
         );
-
-
     }
 }
 
