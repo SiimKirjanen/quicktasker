@@ -38,7 +38,17 @@ function PipelineOverviewToolBar({
         childrenClassName="wpqt-gap-6 wpqt-justify-center"
       >
         <div>
-          <div className="wpqt-mb-2">Task creation date</div>
+          <div className="wpqt-mb-2">
+            <div className="wpqt-font-semibold">
+              {__("Task creation date", "quicktasker")}
+            </div>
+            <div>
+              {__(
+                "(Filter tasks that have creation date equal or bigger than)",
+                "quicktasker",
+              )}
+            </div>
+          </div>
           <DatePicker
             onChange={handleCreationDateChange}
             value={overviewFilter.taskCreationDate}
@@ -47,7 +57,17 @@ function PipelineOverviewToolBar({
           />
         </div>
         <div>
-          <div className="wpqt-mb-2">Task done date</div>
+          <div className="wpqt-mb-2">
+            <div className="wpqt-font-semibold">
+              {__("Task done date", "quicktasker")}
+            </div>
+            <div>
+              {__(
+                "(Filter tasks that have done date equal or smaller than)",
+                "quicktasker",
+              )}
+            </div>
+          </div>
           <DatePicker
             onChange={handleDoneDateChange}
             value={overviewFilter.taskDoneDate}

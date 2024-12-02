@@ -18,7 +18,7 @@ function OverviewPage() {
   return (
     <Page>
       <WPQTPageHeader
-        description={__("This is the overview page.", "quicktasker")}
+        description={__("Get overview of the tasks.", "quicktasker")}
       >
         {__("Overview", "quicktasker")}
       </WPQTPageHeader>
