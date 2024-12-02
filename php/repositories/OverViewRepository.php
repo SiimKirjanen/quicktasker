@@ -41,7 +41,7 @@ class OverViewRepository {
 
             if ($taskDoneDate) {
                 $taskDoneDateEnd = $taskDoneDate . ' 23:59:59';
-                $query .= " AND (t.task_completed_at <= %s OR t.task_completed_at IS NULL)";
+                $query .= " AND t.task_completed_at <= %s";
                 $params[] = $taskDoneDateEnd;
             }
 
@@ -64,7 +64,7 @@ class OverViewRepository {
 
         if ($taskDoneDate) {
             $taskDoneDateEnd = $taskDoneDate . ' 23:59:59';
-            $baseQuery .= " AND (task_completed_at <= %s OR task_completed_at IS NULL)";
+            $baseQuery .= " AND task_completed_at <= %s";
             $params[] = $taskDoneDateEnd;
         }
 
