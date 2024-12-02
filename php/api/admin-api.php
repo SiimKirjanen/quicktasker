@@ -17,6 +17,7 @@ use WPQT\Pipeline\PipelineRepository;
 use WPQT\Customfield\CustomFieldRepository;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Task\TaskRepository;
+use WPQT\Overview\OverViewRepository;
 use WPQT\Task\TaskService;
 use WPQT\Stage\StageService;
 use WPQT\Permission\PermissionService;
@@ -607,7 +608,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
                         WPQTverifyApiNonce($data);
         
                         $taskService = new TaskService();
@@ -622,9 +626,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logMessage = $data['done'] ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
 
                         $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
                     } catch (Exception $e) {
+                        $wpdb->query('ROLLBACK');
             
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     }
@@ -1799,6 +1805,53 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+         /*
+        ==================================================================================================================================================================================================================
+        Overview endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/overview',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        WPQTverifyApiNonce($data);
+                        $overviewRepo = new OverviewRepository();
+
+                        $taskStartDate = $data['taskStartDate'] ?? null;
+                        $taskDoneDate = $data['taskDoneDate'] ?? null;
+                        $overview = $overviewRepo->getPipelineOverview($data['id'], $taskStartDate, $taskDoneDate);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), $overview))->toArray(), 200);
+                    } catch (Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'taskStartDate' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateDateParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'taskDoneDate' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateDateParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
     }
 }
 

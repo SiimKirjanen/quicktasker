@@ -3,13 +3,24 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 type Props = {
   tabs: string[];
   tabsContent: React.ReactNode[];
+  tabListClassName?: string;
+  tabClassName?: string;
 };
-function WPQTTabs({ tabs, tabsContent }: Props) {
+function WPQTTabs({
+  tabs,
+  tabsContent,
+  tabClassName = "",
+  tabListClassName = "",
+}: Props) {
   return (
     <TabGroup>
-      <TabList className="wpqt-mb-6 wpqt-flex wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-b-gray-300">
+      <TabList
+        className={`wpqt-mb-6 wpqt-flex wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-b-gray-300 ${tabListClassName}`}
+      >
         {tabs.map((tab) => (
-          <WPQTTab key={tab}>{tab}</WPQTTab>
+          <WPQTTab key={tab} className={tabClassName}>
+            {tab}
+          </WPQTTab>
         ))}
       </TabList>
       <TabPanels>
@@ -21,11 +32,17 @@ function WPQTTabs({ tabs, tabsContent }: Props) {
   );
 }
 
-function WPQTTab({ children }: { children: React.ReactNode }) {
+function WPQTTab({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className: string;
+}) {
   return (
     <Tab
       as="div"
-      className="wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-pb-[10px] wpqt-text-center wpqt-text-lg data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500"
+      className={`wpqt-flex-1 wpqt-cursor-pointer wpqt-p-1 wpqt-pb-[10px] wpqt-text-center wpqt-text-lg data-[selected]:wpqt-border-b-2 data-[selected]:wpqt-border-l-0 data-[selected]:wpqt-border-r-0 data-[selected]:wpqt-border-t-0 data-[selected]:wpqt-border-solid data-[selected]:wpqt-border-b-blue-500 ${className}`}
     >
       {children}
     </Tab>

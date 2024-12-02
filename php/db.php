@@ -54,6 +54,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				free_for_all tinyint(1) DEFAULT 0,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
+				task_completed_at datetime DEFAULT NULL COMMENT 'UTC',
 				task_hash varchar(255) NOT NULL,
 				PRIMARY KEY  (id),
 				UNIQUE KEY task_hash (task_hash),

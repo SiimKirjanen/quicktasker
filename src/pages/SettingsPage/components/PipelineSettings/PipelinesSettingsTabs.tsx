@@ -14,7 +14,12 @@ function PipelinesSettingsTabs() {
 
   return (
     <div>
-      <WPQTTabs tabs={pipelineNames} tabsContent={tabContent} />
+      <WPQTTabs
+        tabs={pipelineNames}
+        tabsContent={tabContent}
+        tabListClassName="wpqt-gap-5"
+        tabClassName="wpqt-flex-none"
+      />
     </div>
   );
 }

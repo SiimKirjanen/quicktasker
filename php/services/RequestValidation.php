@@ -157,5 +157,15 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         public static function validateUserPageCustomFieldEntityType($param) {
             return in_array($param, array('task', 'user'));
         }
+
+        /**
+         * Validates if the given parameter is a date in the format YYYY-MM-DD.
+         *
+         * @param string $param The date parameter to validate.
+         * @return bool Returns true if the parameter matches the date format, false otherwise.
+         */
+        public static function validateDateParam($param) {
+            return preg_match('/^\d{4}-\d{2}-\d{2}$/', $param);
+        }
     }
 }
