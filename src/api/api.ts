@@ -1,5 +1,6 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
+import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import { WPQTTypes } from "../types/enums";
@@ -16,7 +17,7 @@ import { PipelineOverviewResponse } from "../types/requestResponse/pipeline-over
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { Task, TaskFromServer } from "../types/task";
-import { ServerExtendedUser, ServerUser, User } from "../types/user";
+import { ServerExtendedUser, ServerUser, User, WPUser } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
 
 function getCommonHeaders() {
@@ -431,6 +432,29 @@ function resetUserPasswordRequest(userId: string): Promise<WPQTResponse> {
   });
 }
 
+function getWPUsersRequest(type: string): Promise<WPQTResponse<WPUser[]>> {
+  return apiFetch({
+    path: `/wpqt/v1/wp-users?type=${encodeURIComponent(type)}`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+function updateWPUserPermissionsRequest(
+  userId: string,
+  capabilities: WPUserCapabilities,
+) {
+  return apiFetch({
+    path: `/wpqt/v1/wp-users/${userId}/capabilities`,
+    method: "PATCH",
+    data: {
+      quicktasker_admin_role: capabilities.quicktasker_admin_role,
+      quicktasker_admin_role_allow_delete:
+        capabilities.quicktasker_admin_role_allow_delete,
+    },
+    headers: getCommonHeaders(),
+  });
+}
 /*
   ==================================================================================================================================================================================================================
   User session requests
@@ -622,6 +646,7 @@ export {
   getUserSessionsRequest,
   getUsersRequest,
   getUserTasksRequest,
+  getWPUsersRequest,
   markCustomFieldAsDeletedRequest,
   markTaskDoneRequest,
   moveStageRequest,
@@ -633,4 +658,5 @@ export {
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
   updateCustomFieldValueRequest,
+  updateWPUserPermissionsRequest,
 };

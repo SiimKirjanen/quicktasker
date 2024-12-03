@@ -1,10 +1,8 @@
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { UserFilter } from "../../components/Filter/UserFilter/UserFilter";
-import { UserModal } from "../../components/Modal/UserModal/UserModal";
-import { UsersSettingsModal } from "../../components/Modal/UsersSettingsModal/UsersSettingsModal";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { WPQTTabs } from "../../components/Tab/WPQTTabs";
 import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   SET_FULL_PAGE_LOADING,
@@ -13,13 +11,20 @@ import { LoadingContext } from "../../providers/LoadingContextProvider";
 import { ModalContext } from "../../providers/ModalContextProvider";
 import { UserContext } from "../../providers/UserContextProvider";
 import { Page } from "../Page/Page";
-import { AddUser } from "./components/AddUser/AddUser";
-import { UserList } from "./components/UserList/UserList";
+import { QuickTaskersSection } from "./QuickTaskersSection/QuickTaskersSection";
+import { RegularWPUsersSection } from "./RegularWPUserSection/ReqularWPUsersSection";
+import { WPAdminUsersSection } from "./WPAdminUsersSection/WPAdminUsersSection";
 
 function UsersPage() {
   const { updateUsers } = useContext(UserContext);
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
+  const tabNames = ["QuickTaskers", "WordPress users", "WordPress Admins"];
+  const tabContent = [
+    <QuickTaskersSection key={0} />,
+    <RegularWPUsersSection key={1} />,
+    <WPAdminUsersSection key={2} />,
+  ];
 
   useEffect(() => {
     const updateUsersAsync = async () => {
@@ -33,7 +38,7 @@ function UsersPage() {
     <Page>
       <WPQTPageHeader
         description={__(
-          "Create and manage QuickTaskers who can access a mobile-like page to manage their assigned tasks.",
+          "QuickTasker plugin can be used by 3 types of users - WordPress admins, WordPress regular users, and QuickTaskers. You can manage all users here.",
           "quicktasker",
         )}
         icon={
@@ -48,13 +53,10 @@ function UsersPage() {
           />
         }
       >
-        {__("QuickTaskers", "quicktasker")}
+        {__("Users", "quicktasker")}
       </WPQTPageHeader>
-      <AddUser />
-      <UserFilter />
-      <UserList />
-      <UsersSettingsModal />
-      <UserModal />
+
+      <WPQTTabs tabs={tabNames} tabsContent={tabContent} />
     </Page>
   );
 }

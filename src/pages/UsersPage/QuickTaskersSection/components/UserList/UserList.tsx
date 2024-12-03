@@ -1,8 +1,8 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
-import { useUserFilter } from "../../../../hooks/filters/useUserFilter";
-import { UserContext } from "../../../../providers/UserContextProvider";
+import { NoFilterResults } from "../../../../../components/Filter/NoFilterResults/NoFilterResults";
+import { useUserFilter } from "../../../../../hooks/filters/useUserFilter";
+import { UserContext } from "../../../../../providers/UserContextProvider";
 import { UserListItem } from "../UserListItem/UserListItem";
 
 function UserList() {

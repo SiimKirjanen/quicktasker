@@ -11,6 +11,7 @@ global $wpdb;
 Directories, URL
 ==================================================================================================================================================================================================================
 */
+
 if ( ! defined( 'WP_QUICKTASKER_PLUGIN_FOLDER_DIR' ) ) {
     define('WP_QUICKTASKER_PLUGIN_FOLDER_DIR', plugin_dir_path( dirname( __FILE__ ) ));
 }
@@ -32,6 +33,7 @@ if ( ! defined( 'WP_QUICKTASKER_PUBLIC_USER_PAGE_ID' ) ) {
 DB constants
 ==================================================================================================================================================================================================================
 */
+
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
     define('WP_QUICKTASKER_DB_VERSION', "1.4.0");
 }
@@ -136,7 +138,8 @@ if ( ! defined( 'WP_QUICKTASKER_SESSION_LENGHT' ) ) {
 ==================================================================================================================================================================================================================
 Nonce constants
 ==================================================================================================================================================================================================================
-*/	
+*/
+
 if ( ! defined( 'WPQT_ADMIN_API_NONCE' ) ) {
     define('WPQT_ADMIN_API_NONCE', "wpqt_api_nonce");
 }
@@ -150,6 +153,7 @@ if ( ! defined( 'WPQT_USER_API_NONCE' ) ) {
 Miscellaneous constants
 ==================================================================================================================================================================================================================
 */
+
 if ( ! defined( 'WP_QUICKTASKER_INVALID_SESSION_TOKEN' ) ) {
     define('WP_QUICKTASKER_INVALID_SESSION_TOKEN', "Invalid session token");
 }
@@ -168,7 +172,6 @@ Capabilities constants
 ==================================================================================================================================================================================================================
 */
 
-
 if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE' ) ) {
     define('WP_QUICKTASKER_ADMIN_ROLE', "quicktasker_admin_role"); // Allows access to QuickTasker admin pages and private API GET requests
 }
@@ -182,6 +185,7 @@ if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE' ) ) {
 Settings constants
 ==================================================================================================================================================================================================================
 */
+
 if ( ! defined( 'WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES' ) ) {
     define('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES', "quicktasker_user_page_custom_styles");
 }

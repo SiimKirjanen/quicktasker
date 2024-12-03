@@ -26,4 +26,14 @@ type ExtendedUser = BaseUser & {
   setup_completed: boolean;
 };
 
-export type { ExtendedUser, ServerExtendedUser, ServerUser, User };
+type WPUser = {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  caps: string[];
+  allcaps: string[];
+  roles: string[];
+};
+
+export type { ExtendedUser, ServerExtendedUser, ServerUser, User, WPUser };

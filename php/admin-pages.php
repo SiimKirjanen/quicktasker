@@ -45,8 +45,8 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
 
         add_submenu_page(
             'wp-quick-tasks',
-            'Quicktaskers',
-            'Quicktaskers',
+            'Users',
+            'Users',
             WP_QUICKTASKER_ADMIN_ROLE,
             'wp-quick-tasks#/users',
             'wp_quick_taks_generate_app_page'
