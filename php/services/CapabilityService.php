@@ -50,5 +50,29 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE);
             }
         }
+
+        /**
+         * Updates the capabilities of a WordPress user.
+         *
+         * @param int   $userId       The ID of the user whose capabilities are to be updated.
+         * @param array $capabilities An associative array of capabilities to be updated.
+         *                            The key is the capability name and the value is a boolean
+         *                            indicating whether to add (true) or remove (false) the capability.
+         *
+         * @return void
+         */
+        public function updateWPUserCapabilities($userId, $capabilities) {
+            $user = get_user_by('id', $userId);
+
+            if ($user) {
+                foreach ($capabilities as $capability => $value) {
+                    if ($value) {
+                        $user->add_cap($capability);
+                    } else {
+                        $user->remove_cap($capability);
+                    }
+                }
+            }
+        }
     }
 }

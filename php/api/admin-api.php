@@ -31,6 +31,7 @@ use WPQT\UserPage\UserPageService;
 use WPQT\Customfield\CustomFieldService;
 use WPQT\Settings\SettingsService;
 use WPQT\Settings\SettingsValidationService;
+use WPQT\Capability\CapabilityService;
 
 if ( ! function_exists( 'WPQTverifyApiNonce' ) ) {
     function WPQTverifyApiNonce($data) {
@@ -1336,6 +1337,87 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'permission_callback' => function() {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
                 }
+            ),
+        );
+
+    
+        /*
+        ==================================================================================================================================================================================================================
+        WP users endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'wp-users',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        WPQTverifyApiNonce($data);
+                        $userRepo = new UserRepository();
+                        $users = [];
+
+                        if(  $data['type'] === 'admin' ) {
+                            $users = $userRepo->getWPAdminUsers();
+                        } else {
+                            $users = $userRepo->getWPNonAdminUsers();
+                        }
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), $users))->toArray(), 200);
+                    }catch(Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'type' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'wp-users/(?P<id>\d+)/capabilities',
+            array(
+                'methods' => 'PATCH',
+                'callback' => function( $data ) {
+                    try {
+                        WPQTverifyApiNonce($data);
+                        $capabilityService = new CapabilityService();
+                        $capabilities = (object)[
+                            WP_QUICKTASKER_ADMIN_ROLE => $data[WP_QUICKTASKER_ADMIN_ROLE],
+                            WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE => $data[WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE]
+                        ];
+                          
+                        $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
+                   
+                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                    }catch(Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    WP_QUICKTASKER_ADMIN_ROLE => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                ),
             ),
         );
 
