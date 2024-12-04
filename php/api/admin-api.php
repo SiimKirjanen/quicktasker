@@ -1356,13 +1356,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     try {
                         WPQTverifyApiNonce($data);
                         $userRepo = new UserRepository();
-                        $users = [];
-
-                        if(  $data['type'] === 'admin' ) {
-                            $users = $userRepo->getWPAdminUsers();
-                        } else {
-                            $users = $userRepo->getWPNonAdminUsers();
-                        }
+                        $users = $userRepo->getWPNonAdminUsers();
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $users))->toArray(), 200);
                     }catch(Exception $e) {

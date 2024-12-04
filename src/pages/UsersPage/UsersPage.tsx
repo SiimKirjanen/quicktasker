@@ -36,7 +36,7 @@ function UsersPage() {
     <Page>
       <WPQTPageHeader
         description={__(
-          "QuickTasker plugin can be used by 3 types of users - WordPress admins, WordPress regular users, and QuickTaskers. You can manage all users here.",
+          "Manage QuickTaskers and WordPress users. This plugin supports three types of users: WordPress admins, other WordPress users, and QuickTaskers. WordPress admins have full access to all admin areas. Other WordPress users do not have admin access by default but can be granted access if needed. QuickTaskers are separate users who do not have admin access but can manage tasks through a mobile-friendly webpage.",
           "quicktasker",
         )}
         icon={

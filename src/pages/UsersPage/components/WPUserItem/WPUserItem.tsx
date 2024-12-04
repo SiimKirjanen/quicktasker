@@ -1,5 +1,6 @@
 import { useState } from "@wordpress/element";
-import { WPQTCard } from "../../../../components/Card/Card";
+import { __ } from "@wordpress/i18n";
+import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
 import { Toggle } from "../../../../components/common/Toggle/Toggle";
 import { Loading } from "../../../../components/Loading/Loading";
 import { useCapabilityActions } from "../../../../hooks/actions/useCapabilityActions";
@@ -44,8 +45,15 @@ function WPUserItem({ user }: Props) {
 
   return (
     <WPQTCard title={user.name} description={user.description}>
+      <WPQTCardDataItem
+        label={__("Role", "quicktasker")}
+        value={Array.isArray(user.roles) ? user.roles.join(", ") : ""}
+      />
+      <WPQTCardDataItem label={__("Email", "quicktasker")} value={user.email} />
       <div className="wpqt-mb-2">
-        <div className="wpqt-mb-1">Admin Role</div>
+        <div className="wpqt-mb-2">
+          {__("Access to admin areas", "quicktasker")}
+        </div>
         <Toggle
           checked={capabilitySettings.quicktasker_admin_role}
           handleChange={(checked: boolean) => {
@@ -55,7 +63,9 @@ function WPUserItem({ user }: Props) {
       </div>
 
       <div className="wpqt-mb-2">
-        <div className="wpqt-mb-1">Allow delete</div>
+        <div className="wpqt-mb-2">
+          {__("Allow to delete resources", "quicktasker")}
+        </div>
         <Toggle
           checked={capabilitySettings.quicktasker_admin_role_allow_delete}
           handleChange={(checked: boolean) => {

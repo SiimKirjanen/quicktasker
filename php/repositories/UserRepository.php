@@ -211,11 +211,12 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                 return (object)[
                     'id' => $user->ID,
                     'name' => $user->display_name,
+                    'email' => $user->user_email,
                     'description' => $user->description,
                     'created_at' => $user->user_registered,
                     'updated_at' => $user->user_registered,
                     'caps' => $user->caps,
-                    'roles' => $user->roles,
+                    'roles' => array_values($user->roles),
                     'allcaps' => $user->allcaps,
                 ];
             }, $results);
