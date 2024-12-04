@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+use WP_User_Query;
+
 if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
     class UserRepository {
         /**
@@ -173,6 +175,53 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             } else {
                 return false;
             }
+        }
+
+        public function getWPAdminUsers() {
+            global $wpdb;
+
+            $args = array(
+                'role' => 'Administrator',
+            );
+
+            $users = $this->getWPUsers($args);
+    
+            return $users;
+        }
+
+        public function getWPNonAdminUsers() {
+            global $wpdb;
+
+            $args = array(
+                'role__not_in' => ['Administrator'],
+            );
+
+            $users = $this->getWPUsers($args);
+    
+            return $users;
+        }
+
+        public function getWPUsers($args) {
+            global $wpdb;
+       
+            $user_query = new WP_User_Query($args);
+            $results = $user_query->get_results();
+
+            $users = array_map(function($user) {
+                return (object)[
+                    'id' => $user->ID,
+                    'name' => $user->display_name,
+                    'email' => $user->user_email,
+                    'description' => $user->description,
+                    'created_at' => $user->user_registered,
+                    'updated_at' => $user->user_registered,
+                    'caps' => $user->caps,
+                    'roles' => array_values($user->roles),
+                    'allcaps' => $user->allcaps,
+                ];
+            }, $results);
+        
+            return $users;
         }
     }
 }

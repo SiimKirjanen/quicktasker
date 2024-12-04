@@ -15,4 +15,9 @@ enum WPQTArchiveDoneFilter {
   NotCompleted = "not completed",
 }
 
-export { WPQTArchiveDoneFilter, WPQTLogCreatedBy, WPQTTypes };
+enum WPQTWpUserTypes {
+  Admin = "administrator",
+  Other = "other",
+}
+
+export { WPQTArchiveDoneFilter, WPQTLogCreatedBy, WPQTTypes, WPQTWpUserTypes };

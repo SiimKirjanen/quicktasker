@@ -1,12 +1,15 @@
 import { EyeIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
-import { UserDropdown } from "../../../../components/Dropdown/UserDropdown/UserDropdown";
-import { OPEN_EDIT_USER_MODAL } from "../../../../constants";
-import { usePageLinks } from "../../../../hooks/usePageLinks";
-import { ModalContext } from "../../../../providers/ModalContextProvider";
-import { User } from "../../../../types/user";
+import {
+  WPQTCard,
+  WPQTCardDataItem,
+} from "../../../../../components/Card/Card";
+import { UserDropdown } from "../../../../../components/Dropdown/UserDropdown/UserDropdown";
+import { OPEN_EDIT_USER_MODAL } from "../../../../../constants";
+import { usePageLinks } from "../../../../../hooks/usePageLinks";
+import { ModalContext } from "../../../../../providers/ModalContextProvider";
+import { User } from "../../../../../types/user";
 
 type Props = {
   user: User;

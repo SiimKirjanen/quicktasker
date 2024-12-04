@@ -12,9 +12,13 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
         /**
          * Adds QuickTasker admin capabilities to the administrator role.
          *
-         * This function checks if the administrator role has the QuickTasker admin capabilities
-         * defined by WP_QUICKTASKER_ADMIN_ROLE and WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE.
+         * This function checks if the administrator role has specific QuickTasker capabilities.
          * If the capabilities are not present, they are added to the administrator role.
+         *
+         * Capabilities added:
+         * - WP_QUICKTASKER_ADMIN_ROLE
+         * - WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE
+         * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS
          *
          * @return void
          */
@@ -28,14 +32,21 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
             if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE) ) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE);
             }
+
+            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS) ) {
+                $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS);
+            }
         }
 
-        /**
-         * Removes QuickTasker admin capabilities from the administrator role.
+         /**
+         * Removes specific QuickTasker capabilities from the administrator role.
          *
-         * This function checks if the administrator role has the QuickTasker admin capabilities
-         * defined by WP_QUICKTASKER_ADMIN_ROLE and WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE.
-         * If the capabilities are present, they are removed from the administrator role.
+         * This function checks if the administrator role has the following capabilities:
+         * - WP_QUICKTASKER_ADMIN_ROLE
+         * - WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE
+         * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS
+         *
+         * If any of these capabilities are found, they are removed from the administrator role.
          *
          * @return void
          */
@@ -48,6 +59,34 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
 
             if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE) ) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE);
+            }
+
+            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS) ) {
+                $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS);
+            }
+        }
+
+        /**
+         * Updates the capabilities of a WordPress user.
+         *
+         * @param int   $userId       The ID of the user whose capabilities are to be updated.
+         * @param array $capabilities An associative array of capabilities to be updated.
+         *                            The key is the capability name and the value is a boolean
+         *                            indicating whether to add (true) or remove (false) the capability.
+         *
+         * @return void
+         */
+        public function updateWPUserCapabilities($userId, $capabilities) {
+            $user = get_user_by('id', $userId);
+
+            if ($user) {
+                foreach ($capabilities as $capability => $value) {
+                    if ($value) {
+                        $user->add_cap($capability);
+                    } else {
+                        $user->remove_cap($capability);
+                    }
+                }
             }
         }
     }
