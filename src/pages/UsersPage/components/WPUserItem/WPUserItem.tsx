@@ -66,24 +66,24 @@ function WPUserItem({ user }: Props) {
 
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Allow to delete resources", "quicktasker")}
+          {__("Access to manage users", "quicktasker")}
         </div>
         <Toggle
-          checked={capabilitySettings.quicktasker_admin_role_allow_delete}
+          checked={capabilitySettings.quicktasker_admin_role_manage_users}
           handleChange={(checked: boolean) => {
-            onToggleChange(checked, "quicktasker_admin_role_allow_delete");
+            onToggleChange(checked, "quicktasker_admin_role_manage_users");
           }}
         />
       </div>
 
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Access to users page", "quicktasker")}
+          {__("Allow to delete resources", "quicktasker")}
         </div>
         <Toggle
-          checked={capabilitySettings.quicktasker_admin_role_manage_users}
+          checked={capabilitySettings.quicktasker_admin_role_allow_delete}
           handleChange={(checked: boolean) => {
-            onToggleChange(checked, "quicktasker_admin_role_manage_users");
+            onToggleChange(checked, "quicktasker_admin_role_allow_delete");
           }}
         />
       </div>
