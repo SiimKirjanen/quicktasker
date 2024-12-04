@@ -1,5 +1,6 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { NoFilterResults } from "../../../components/Filter/NoFilterResults/NoFilterResults";
 import { useUserSessionsFilter } from "../../../hooks/filters/useUserSessionsFilter";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { UserSession } from "./UserSession";
@@ -9,6 +10,12 @@ function UserSessions() {
     state: { userSessions },
   } = useContext(UserSessionsContext);
   const { filterSessions } = useUserSessionsFilter();
+  const filteredSessions = userSessions.filter(filterSessions);
+
+  if (filteredSessions.length === 0) {
+    return <NoFilterResults text={__("No sessions found", "quicktasker")} />;
+  }
+
   return (
     <div>
       <div className="wpqt-mb-4 wpqt-grid wpqt-grid-cols-5 wpqt-font-bold">
@@ -19,7 +26,7 @@ function UserSessions() {
         <div>{__("Actions", "quicktasker")}</div>
       </div>
       <div className="wpqt-grid wpqt-grid-cols-5 wpqt-items-center wpqt-gap-y-4">
-        {userSessions.filter(filterSessions).map((session) => (
+        {filteredSessions.map((session) => (
           <UserSession key={session.id} session={session} />
         ))}
       </div>

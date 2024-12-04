@@ -1,5 +1,7 @@
 import { useEffect, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { getWPUsersRequest } from "../../../api/api";
+import { NoFilterResults } from "../../../components/Filter/NoFilterResults/NoFilterResults";
 import { Loading } from "../../../components/Loading/Loading";
 import { WPQTWpUserTypes } from "../../../types/enums";
 import { WPUser } from "../../../types/user";
@@ -24,15 +26,28 @@ function RegularWPUsersSection() {
     fetchUsers();
   }, []);
 
-  if (loading || !users) {
+  if (loading || users === null) {
     return <Loading ovalSize="48" />;
   }
 
+  if (users.length === 0) {
+    return (
+      <NoFilterResults
+        text={__("No non-admin WordPress users found", "quicktasker")}
+      />
+    );
+  }
+
   return (
-    <div className="wpqt-card-grid">
-      {users.map((user) => {
-        return <WPUserItem key={user.id} user={user} />;
-      })}
+    <div>
+      <div className="wpqt-mb-2">
+        {__("Displaying non-admin WordPress users.", "quicktasker")}
+      </div>
+      <div className="wpqt-card-grid">
+        {users.map((user) => {
+          return <WPUserItem key={user.id} user={user} />;
+        })}
+      </div>
     </div>
   );
 }
