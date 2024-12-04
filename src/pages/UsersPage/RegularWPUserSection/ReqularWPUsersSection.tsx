@@ -31,9 +31,7 @@ function RegularWPUsersSection() {
   return (
     <div className="wpqt-card-grid">
       {users.map((user) => {
-        return (
-          <WPUserItem key={user.id} user={user} type={WPQTWpUserTypes.Other} />
-        );
+        return <WPUserItem key={user.id} user={user} />;
       })}
     </div>
   );

@@ -4,12 +4,10 @@ import { Toggle } from "../../../../components/common/Toggle/Toggle";
 import { Loading } from "../../../../components/Loading/Loading";
 import { useCapabilityActions } from "../../../../hooks/actions/useCapabilityActions";
 import { WPUserCapabilities } from "../../../../types/capabilities";
-import { WPQTWpUserTypes } from "../../../../types/enums";
 import { WPUser } from "../../../../types/user";
 
 type Props = {
   user: WPUser;
-  type: WPQTWpUserTypes;
 };
 function WPUserItem({ user }: Props) {
   const [capabilitySettings, setCapabilitySettings] =

@@ -13,17 +13,15 @@ import { UserContext } from "../../providers/UserContextProvider";
 import { Page } from "../Page/Page";
 import { QuickTaskersSection } from "./QuickTaskersSection/QuickTaskersSection";
 import { RegularWPUsersSection } from "./RegularWPUserSection/ReqularWPUsersSection";
-import { WPAdminUsersSection } from "./WPAdminUsersSection/WPAdminUsersSection";
 
 function UsersPage() {
   const { updateUsers } = useContext(UserContext);
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
-  const tabNames = ["QuickTaskers", "WordPress users", "WordPress Admins"];
+  const tabNames = ["QuickTaskers", "WordPress users"];
   const tabContent = [
     <QuickTaskersSection key={0} />,
     <RegularWPUsersSection key={1} />,
-    <WPAdminUsersSection key={2} />,
   ];
 
   useEffect(() => {
@@ -56,7 +54,12 @@ function UsersPage() {
         {__("Users", "quicktasker")}
       </WPQTPageHeader>
 
-      <WPQTTabs tabs={tabNames} tabsContent={tabContent} />
+      <WPQTTabs
+        tabs={tabNames}
+        tabsContent={tabContent}
+        tabListClassName="wpqt-gap-5"
+        tabClassName="wpqt-flex-none"
+      />
     </Page>
   );
 }

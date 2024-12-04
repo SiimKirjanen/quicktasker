@@ -10909,8 +10909,7 @@ function RegularWPUsersSection() {
     className: "wpqt-card-grid",
     children: users.map(user => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_WPUserItem_WPUserItem__WEBPACK_IMPORTED_MODULE_5__.WPUserItem, {
-        user: user,
-        type: _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTWpUserTypes.Other
+        user: user
       }, user.id);
     })
   });
@@ -10931,7 +10930,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/Cog8ToothIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/Cog8ToothIcon.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -10945,7 +10944,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Page/Page */ "./src/pages/Page/Page.tsx");
 /* harmony import */ var _QuickTaskersSection_QuickTaskersSection__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./QuickTaskersSection/QuickTaskersSection */ "./src/pages/UsersPage/QuickTaskersSection/QuickTaskersSection.tsx");
 /* harmony import */ var _RegularWPUserSection_ReqularWPUsersSection__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./RegularWPUserSection/ReqularWPUsersSection */ "./src/pages/UsersPage/RegularWPUserSection/ReqularWPUsersSection.tsx");
-/* harmony import */ var _WPAdminUsersSection_WPAdminUsersSection__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./WPAdminUsersSection/WPAdminUsersSection */ "./src/pages/UsersPage/WPAdminUsersSection/WPAdminUsersSection.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10986,7 +10984,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
 function UsersPage() {
   const {
     updateUsers
@@ -10997,8 +10994,8 @@ function UsersPage() {
   const {
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__.ModalContext);
-  const tabNames = ["QuickTaskers", "WordPress users", "WordPress Admins"];
-  const tabContent = [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_QuickTaskersSection_QuickTaskersSection__WEBPACK_IMPORTED_MODULE_10__.QuickTaskersSection, {}, 0), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_RegularWPUserSection_ReqularWPUsersSection__WEBPACK_IMPORTED_MODULE_11__.RegularWPUsersSection, {}, 1), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPAdminUsersSection_WPAdminUsersSection__WEBPACK_IMPORTED_MODULE_12__.WPAdminUsersSection, {}, 2)];
+  const tabNames = ["QuickTaskers", "WordPress users"];
+  const tabContent = [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_QuickTaskersSection_QuickTaskersSection__WEBPACK_IMPORTED_MODULE_10__.QuickTaskersSection, {}, 0), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_RegularWPUserSection_ReqularWPUsersSection__WEBPACK_IMPORTED_MODULE_11__.RegularWPUsersSection, {}, 1)];
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const updateUsersAsync = () => __awaiter(this, void 0, void 0, function* () {
       loadingDispatch({
@@ -11016,7 +11013,7 @@ function UsersPage() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_9__.Page, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Header_Header__WEBPACK_IMPORTED_MODULE_3__.WPQTPageHeader, {
       description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("QuickTasker plugin can be used by 3 types of users - WordPress admins, WordPress regular users, and QuickTaskers. You can manage all users here.", "quicktasker"),
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
         className: "wpqt-icon-gray wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover",
         onClick: () => {
           modalDispatch({
@@ -11028,32 +11025,10 @@ function UsersPage() {
       children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Users", "quicktasker")
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Tab_WPQTTabs__WEBPACK_IMPORTED_MODULE_4__.WPQTTabs, {
       tabs: tabNames,
-      tabsContent: tabContent
+      tabsContent: tabContent,
+      tabListClassName: "wpqt-gap-5",
+      tabClassName: "wpqt-flex-none"
     })]
-  });
-}
-
-
-/***/ }),
-
-/***/ "./src/pages/UsersPage/WPAdminUsersSection/WPAdminUsersSection.tsx":
-/*!*************************************************************************!*\
-  !*** ./src/pages/UsersPage/WPAdminUsersSection/WPAdminUsersSection.tsx ***!
-  \*************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   WPAdminUsersSection: () => (/* binding */ WPAdminUsersSection)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-
-function WPAdminUsersSection() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-      children: "WP Admin Users Section"
-    })
   });
 }
 
