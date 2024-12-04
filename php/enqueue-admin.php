@@ -47,7 +47,7 @@ if ( ! function_exists( 'wpqt_enqueue_app_assets' ) ) {
 			'initialUsers' => $users,
 			'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
 			'timezone' => $timeRepository->getWPTimezone(),
-			'isUserAllowedToDelete' => PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints() ? "1" : "0",
+			'isUserAllowedToDelete' => PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints() ? "1" : "0",
 			'userPageCustomStyles' => SettingRepository::getUserPageCustomStyles(),
 		));
 

@@ -260,7 +260,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -512,7 +512,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -828,7 +828,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1096,7 +1096,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1243,7 +1243,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1306,7 +1306,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1364,7 +1364,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
                 },
                 'args' => array(
                     'type' => array(
@@ -1398,7 +1398,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
                 },
                 'args' => array(
                     WP_QUICKTASKER_ADMIN_ROLE => array(
@@ -1721,7 +1721,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPublicAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => array(
                     'custom_field_id' => array(

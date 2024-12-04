@@ -34,9 +34,21 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
          *
          * @return bool True if the user has the required permissions, false otherwise.
          */
-        public static function hasRequiredPermissionsForPublicAPIDeleteEndpoints() {
+        public static function hasRequiredPermissionsForPrivateAPIDeleteEndpoints() {
             return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE );
         }
+
+        /**
+         * Check if the current user has the required permissions for private API user endpoints.
+         *
+         * This function verifies if the current user has the capability defined by the 
+         * WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS constant.
+         *
+         * @return bool True if the user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredParmissionsForPrivateAPIUsersEndpoints() {
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS );
+        } 
 
         /**
          * Checks if a user is allowed to view a task.
