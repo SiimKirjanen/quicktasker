@@ -35,7 +35,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.5.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.6.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -128,6 +128,10 @@ if ( ! defined( 'WP_QT_LOG_CREATED_BY_QUICKTASKER_USER' ) ) {
     define('WP_QT_LOG_CREATED_BY_QUICKTASKER_USER', "quicktasker_user");
 }
 
+if ( ! defined( 'WP_QT_LOG_CREATED_BY_AUTOMATION' ) ) {
+    define('WP_QT_LOG_CREATED_BY_AUTOMATION', "automation");
+}
+
 /*
 ==================================================================================================================================================================================================================
 Session constants
@@ -217,4 +221,8 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK' ) ) {
 // Triggers
 if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE' ) ) {
     define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE', "task-done");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE', "task-not-done");
 }
