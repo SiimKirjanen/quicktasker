@@ -56,6 +56,7 @@ require( 'php/services/SettingService.php' );
 require( 'php/services/DBSeederService.php' );
 require( 'php/services/SettingsValidationService.php' );
 require( 'php/services/AutomationService.php' );
+require( 'php/services/ServiceLocator.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
@@ -63,6 +64,10 @@ require( 'php/api/admin-api.php' );
 require( 'php/api/user-page-api.php' );
 require( 'php/side-effects.php' );
 require( 'php/db-seeder.php' );
+
+WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
+WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
+WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );

@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Automation\AutomationRepository;
 use WPQT\Task\TaskService;
 use WPQT\Log\LogService;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
     class AutomationService {
@@ -17,9 +18,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         protected $logService;
 
         public function __construct() {
-            $this->automationRepository = new AutomationRepository();
-            $this->taskService = new TaskService();
-            $this->logService = new LogService();
+            $this->automationRepository = ServiceLocator::get('AutomationRepository');
+            $this->taskService = ServiceLocator::get('TaskService');
+            $this->logService = ServiceLocator::get('LogService');
         }
 
         public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger) {
