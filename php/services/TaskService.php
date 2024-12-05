@@ -326,12 +326,13 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
          * This method updates both the main task table and the task location table.
          * 
          * @param int $taskId The ID of the task to be archived.
+         * @param bool $fromAutomation True if the task is being archived by an automation, false otherwise.
          * 
          * @throws \Exception If the task or task location update fails.
          * 
          * @return object The updated task object after archiving.
          */
-        public function archiveTask($taskId) {
+        public function archiveTask($taskId, $fromAutomation = false) {
             global $wpdb;
 
             $utcTime = $this->timeRepository->getCurrentUTCTime();

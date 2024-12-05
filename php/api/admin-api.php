@@ -32,6 +32,7 @@ use WPQT\Customfield\CustomFieldService;
 use WPQT\Settings\SettingsService;
 use WPQT\Settings\SettingsValidationService;
 use WPQT\Capability\CapabilityService;
+use WPQT\Automation\AutomationService;
 
 if ( ! function_exists( 'WPQTverifyApiNonce' ) ) {
     function WPQTverifyApiNonce($data) {
@@ -618,15 +619,24 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $taskService = new TaskService();
                         $logService = new LogService();
                         $settingsValidationService = new SettingsValidationService();
+                        $automationService = new AutomationService();
+                        $taskMarkedAsDone = $data['done'];
 
                         if( !$settingsValidationService->isAllowedToMarkTaskDone($data['id']) ) {
                             throw new WPQTException('Task can be marked as done on last stage', true);
                         }
 
-                        $task = $taskService->changeTaskDoneStatus( $data['id'], $data['done']);
-                        $logMessage = $data['done'] ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
+                        $task = $taskService->changeTaskDoneStatus( $data['id'], $taskMarkedAsDone);
+                        $logMessage = $taskMarkedAsDone ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
 
                         $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+
+                        /* Handle automations */
+                        if ( $taskMarkedAsDone ) {
+                            $automationService->handleAutomations($task->pipeline_id, $task->id, WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE);
+                        }
+                        /* End of handling automations */
+
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);

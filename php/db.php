@@ -240,7 +240,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 			$sql15 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " (
 				id int(11) NOT NULL AUTO_INCREMENT,
 				pipeline_id int(11) NOT NULL,
-				target_id int(11) NOT NULL,
+				target_id int(11) DEFAULT NULL,
 				target_type ENUM('stage', 'task', 'quicktasker', 'pipeline') NOT NULL,
 				automation_trigger varchar(255) NOT NULL,
 				automation_action varchar(255) NOT NULL,

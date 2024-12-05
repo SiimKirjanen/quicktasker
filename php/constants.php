@@ -197,3 +197,24 @@ Settings constants
 if ( ! defined( 'WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES' ) ) {
     define('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES', "quicktasker_user_page_custom_styles");
 }
+
+/*
+==================================================================================================================================================================================================================
+Automation constants
+==================================================================================================================================================================================================================
+*/
+
+// Types
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK', "task");
+}
+
+// Actions
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK', "archive-task");
+}
+
+// Triggers
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE', "task-done");
+}
