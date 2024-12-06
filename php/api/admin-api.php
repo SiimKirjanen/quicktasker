@@ -33,6 +33,7 @@ use WPQT\Settings\SettingsService;
 use WPQT\Settings\SettingsValidationService;
 use WPQT\Capability\CapabilityService;
 use WPQT\Automation\AutomationService;
+use WPQT\ServiceLocator;
 
 if ( ! function_exists( 'WPQTverifyApiNonce' ) ) {
     function WPQTverifyApiNonce($data) {
@@ -1846,7 +1847,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $settingRepo = new SettingRepository();
                         $pipelineSettings = $settingRepo->getPipelineSettings($data['id']);
 
-                        return new WP_REST_Response((new ApiResponse(true, array(), $pipelineSettings))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'settings' => $pipelineSettings,
+                        ]))->toArray(), 200);
                     } catch (Exception $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     }
@@ -1946,6 +1949,45 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 ),
             ),
         );
+
+         /*
+        ==================================================================================================================================================================================================================
+        Automation endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/automations',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        WPQTverifyApiNonce($data);
+                 
+                        $automationRepo = ServiceLocator::get('AutomationRepository');
+                        $pipelineAutomations = $automationRepo->getPipelineAutomations($data['id']);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'automations' => $pipelineAutomations,
+                        ]))->toArray(), 200);
+                    } catch (Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
     }
 }
 
