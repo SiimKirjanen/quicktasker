@@ -1,5 +1,6 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
+import { Automation } from "../types/automation";
 import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
@@ -172,7 +173,12 @@ function getArchivedTasksRequest(): Promise<WPQTResponse<TaskFromServer[]>> {
 function markTaskDoneRequest(
   taskId: string,
   done: boolean,
-): Promise<WPQTResponse> {
+): Promise<
+  WPQTResponse<{
+    task: Task;
+    executedAutomations: Automation[];
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/tasks/${taskId}/done`,
     method: "PATCH",

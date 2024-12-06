@@ -7,8 +7,11 @@ import {
   removeTaskFromUserRequest,
   restoreArchivedTaskRequest,
 } from "../../api/api";
+import { useAutomationActions } from "./useAutomationActions";
 
 const useTaskActions = () => {
+  const { handleExecutedAutomations } = useAutomationActions();
+
   const deleteTask = async (taskId: string, callback?: () => void) => {
     try {
       await deleteTaskRequest(taskId);
@@ -66,9 +69,10 @@ const useTaskActions = () => {
       const successMessage = isCompleted
         ? __("Task marked as completed", "quicktasker")
         : __("Task marked as incomplete", "quicktasker");
-      await markTaskDoneRequest(taskId, isCompleted);
+      const response = await markTaskDoneRequest(taskId, isCompleted);
       if (callback) callback(isCompleted);
       toast.success(successMessage);
+      handleExecutedAutomations(response.data.executedAutomations, taskId);
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to change task status", "quicktasker"));

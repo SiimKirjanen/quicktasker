@@ -6200,6 +6200,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_MOVE_TASK: () => (/* binding */ PIPELINE_MOVE_TASK),
 /* harmony export */   PIPELINE_REMOVE_ACTIVE_PIPELINE: () => (/* binding */ PIPELINE_REMOVE_ACTIVE_PIPELINE),
 /* harmony export */   PIPELINE_REMOVE_PIPELINE: () => (/* binding */ PIPELINE_REMOVE_PIPELINE),
+/* harmony export */   PIPELINE_REMOVE_TASK: () => (/* binding */ PIPELINE_REMOVE_TASK),
 /* harmony export */   PIPELINE_REMOVE_USER_FROM_TASK: () => (/* binding */ PIPELINE_REMOVE_USER_FROM_TASK),
 /* harmony export */   PIPELINE_REORDER_TASK: () => (/* binding */ PIPELINE_REORDER_TASK),
 /* harmony export */   PIPELINE_SET_EXISTING_PIPELINES: () => (/* binding */ PIPELINE_SET_EXISTING_PIPELINES),
@@ -6256,6 +6257,7 @@ const PIPELINE_REMOVE_USER_FROM_TASK = "REMOVE_USER_FROM_TASK";
 const PIPELINE_CHANGE_TASK_DONE_STATUS = "CHANGE_TASK_DONE_STATUS";
 const PIPELINE_REMOVE_PIPELINE = "REMOVE_PIPELINE";
 const PIPELINE_REMOVE_ACTIVE_PIPELINE = "REMOVE_ACTIVE_PIPELINE";
+const PIPELINE_REMOVE_TASK = "REMOVE_TASK";
 //Modal reducer constants
 const OPEN_NEW_TASK_MODAL = "OPEN_NEW_TASK_MODAL";
 const CLOSE_NEW_TASK_MODAL = "CLOSE_NEW_TASK_MODAL";
@@ -6327,6 +6329,70 @@ const SET_CUSTOM_FIELD_INITIAL_DATA = "SET_CUSTOM_FIELD_INITIAL_DATA";
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 //Misc
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
+
+
+/***/ }),
+
+/***/ "./src/hooks/actions/useAutomationActions.ts":
+/*!***************************************************!*\
+  !*** ./src/hooks/actions/useAutomationActions.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useAutomationActions: () => (/* binding */ useAutomationActions)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _types_automation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../types/automation */ "./src/types/automation.ts");
+
+
+
+
+
+
+const actionMessages = {
+  [_types_automation__WEBPACK_IMPORTED_MODULE_5__.AutomationAction.ARCHIVE_TASK]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task archived by automation", "quicktasker")
+};
+function useAutomationActions() {
+  const {
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__.ActivePipelineContext);
+  const displayAutomationMessages = executedAutomations => {
+    executedAutomations.forEach(automation => {
+      const message = actionMessages[automation.automation_action] || `Automation executed: ${automation.automation_action}`;
+      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.info(message);
+    });
+  };
+  const handleExecutedAnimationsResults = (executedAutomations, triggererId) => {
+    executedAutomations.forEach(automation => {
+      if (automation.automation_action === _types_automation__WEBPACK_IMPORTED_MODULE_5__.AutomationAction.ARCHIVE_TASK) {
+        dispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_REMOVE_TASK,
+          payload: triggererId
+        });
+      }
+    });
+  };
+  const handleExecutedAutomations = (executedAutomations, triggererId) => {
+    if (executedAutomations.length === 0) {
+      return;
+    }
+    handleExecutedAnimationsResults(executedAutomations, triggererId);
+    displayAutomationMessages(executedAutomations);
+  };
+  return {
+    displayAutomationMessages,
+    handleExecutedAnimationsResults,
+    handleExecutedAutomations
+  };
+}
 
 
 /***/ }),
@@ -6682,6 +6748,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _useAutomationActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./useAutomationActions */ "./src/hooks/actions/useAutomationActions.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6712,7 +6779,11 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 const useTaskActions = () => {
+  const {
+    handleExecutedAutomations
+  } = (0,_useAutomationActions__WEBPACK_IMPORTED_MODULE_3__.useAutomationActions)();
   const deleteTask = (taskId, callback) => __awaiter(void 0, void 0, void 0, function* () {
     try {
       yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.deleteTaskRequest)(taskId);
@@ -6756,9 +6827,10 @@ const useTaskActions = () => {
   const changeTaskDoneStatus = (taskId, isCompleted, callback) => __awaiter(void 0, void 0, void 0, function* () {
     try {
       const successMessage = isCompleted ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task marked as completed", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task marked as incomplete", "quicktasker");
-      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.markTaskDoneRequest)(taskId, isCompleted);
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.markTaskDoneRequest)(taskId, isCompleted);
       if (callback) callback(isCompleted);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success(successMessage);
+      handleExecutedAutomations(response.data.executedAutomations, taskId);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to change task status", "quicktasker"));
@@ -12121,7 +12193,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const activePipelineReducer = (state, action) => {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_SET_LOADING:
       return Object.assign(Object.assign({}, state), {
@@ -12363,6 +12435,24 @@ const activePipelineReducer = (state, action) => {
       {
         return Object.assign(Object.assign({}, state), {
           activePipeline: null
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_REMOVE_TASK:
+      {
+        const taskId = action.payload;
+        if (!state.activePipeline) {
+          return state;
+        }
+        const updatedStages = (_k = state.activePipeline.stages) === null || _k === void 0 ? void 0 : _k.map(stage => {
+          var _a;
+          return Object.assign(Object.assign({}, stage), {
+            tasks: (_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.filter(task => task.id !== taskId)
+          });
+        });
+        return Object.assign(Object.assign({}, state), {
+          activePipeline: Object.assign(Object.assign({}, state.activePipeline), {
+            stages: updatedStages
+          })
         });
       }
     default:
@@ -13155,6 +13245,38 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
+
+/***/ }),
+
+/***/ "./src/types/automation.ts":
+/*!*********************************!*\
+  !*** ./src/types/automation.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AutomationAction: () => (/* binding */ AutomationAction),
+/* harmony export */   AutomationTrigger: () => (/* binding */ AutomationTrigger),
+/* harmony export */   TargetType: () => (/* binding */ TargetType)
+/* harmony export */ });
+var AutomationTrigger;
+(function (AutomationTrigger) {
+  AutomationTrigger["TASK_DONE"] = "task-done";
+  AutomationTrigger["Task_NOT_DONE"] = "task-not-done";
+})(AutomationTrigger || (AutomationTrigger = {}));
+var TargetType;
+(function (TargetType) {
+  TargetType["PIPELINE"] = "pipeline";
+  TargetType["Stage"] = "stage";
+  TargetType["Task"] = "task";
+  TargetType["quicktasker"] = "quicktasker";
+})(TargetType || (TargetType = {}));
+var AutomationAction;
+(function (AutomationAction) {
+  AutomationAction["ARCHIVE_TASK"] = "archive-task";
+})(AutomationAction || (AutomationAction = {}));
 
 
 /***/ }),

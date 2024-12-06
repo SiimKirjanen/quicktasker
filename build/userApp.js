@@ -1651,6 +1651,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_MOVE_TASK: () => (/* binding */ PIPELINE_MOVE_TASK),
 /* harmony export */   PIPELINE_REMOVE_ACTIVE_PIPELINE: () => (/* binding */ PIPELINE_REMOVE_ACTIVE_PIPELINE),
 /* harmony export */   PIPELINE_REMOVE_PIPELINE: () => (/* binding */ PIPELINE_REMOVE_PIPELINE),
+/* harmony export */   PIPELINE_REMOVE_TASK: () => (/* binding */ PIPELINE_REMOVE_TASK),
 /* harmony export */   PIPELINE_REMOVE_USER_FROM_TASK: () => (/* binding */ PIPELINE_REMOVE_USER_FROM_TASK),
 /* harmony export */   PIPELINE_REORDER_TASK: () => (/* binding */ PIPELINE_REORDER_TASK),
 /* harmony export */   PIPELINE_SET_EXISTING_PIPELINES: () => (/* binding */ PIPELINE_SET_EXISTING_PIPELINES),
@@ -1707,6 +1708,7 @@ const PIPELINE_REMOVE_USER_FROM_TASK = "REMOVE_USER_FROM_TASK";
 const PIPELINE_CHANGE_TASK_DONE_STATUS = "CHANGE_TASK_DONE_STATUS";
 const PIPELINE_REMOVE_PIPELINE = "REMOVE_PIPELINE";
 const PIPELINE_REMOVE_ACTIVE_PIPELINE = "REMOVE_ACTIVE_PIPELINE";
+const PIPELINE_REMOVE_TASK = "REMOVE_TASK";
 //Modal reducer constants
 const OPEN_NEW_TASK_MODAL = "OPEN_NEW_TASK_MODAL";
 const CLOSE_NEW_TASK_MODAL = "CLOSE_NEW_TASK_MODAL";

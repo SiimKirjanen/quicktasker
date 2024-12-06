@@ -18,6 +18,7 @@ import {
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
   PIPELINE_REMOVE_ACTIVE_PIPELINE,
+  PIPELINE_REMOVE_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
@@ -76,6 +77,7 @@ type Action =
       payload: { taskId: string; userId: string };
     }
   | { type: typeof PIPELINE_REMOVE_ACTIVE_PIPELINE }
+  | { type: typeof PIPELINE_REMOVE_TASK; payload: string }
   | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer };
 
 type Dispatch = (action: Action) => void;
