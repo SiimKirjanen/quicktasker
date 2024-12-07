@@ -575,9 +575,11 @@ function saveUserPageCustomStylesRequest(
   });
 }
 
-function getPipelineSettingsRequest(
-  pipelineId: string,
-): Promise<WPQTResponse<PipelineSettingsFromServer>> {
+function getPipelineSettingsRequest(pipelineId: string): Promise<
+  WPQTResponse<{
+    settings: PipelineSettingsFromServer;
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}/settings`,
     method: "GET",
@@ -620,6 +622,24 @@ function getPipelineOverviewData(
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Automation requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getPipelineAutomationsRequest(pipelineId: string): Promise<
+  WPQTResponse<{
+    automations: Automation[];
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -647,6 +667,7 @@ export {
   getExtendedUserRequest,
   getGlobalLogsRequest,
   getLogsRequest,
+  getPipelineAutomationsRequest,
   getPipelineData,
   getPipelineOverviewData,
   getPipelineSettingsRequest,

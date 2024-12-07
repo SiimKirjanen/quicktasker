@@ -55,6 +55,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getExtendedUserRequest: () => (/* binding */ getExtendedUserRequest),
 /* harmony export */   getGlobalLogsRequest: () => (/* binding */ getGlobalLogsRequest),
 /* harmony export */   getLogsRequest: () => (/* binding */ getLogsRequest),
+/* harmony export */   getPipelineAutomationsRequest: () => (/* binding */ getPipelineAutomationsRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
 /* harmony export */   getPipelineOverviewData: () => (/* binding */ getPipelineOverviewData),
 /* harmony export */   getPipelineSettingsRequest: () => (/* binding */ getPipelineSettingsRequest),
@@ -563,6 +564,18 @@ function getPipelineOverviewData(pipelineId, overviewFilter) {
   });
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/pipelines/${pipelineId}/overview?${queryParams.toString()}`,
+    method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Automation requests
+  ==================================================================================================================================================================================================================
+*/
+function getPipelineAutomationsRequest(pipelineId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
     method: "GET",
     headers: getCommonHeaders()
   });

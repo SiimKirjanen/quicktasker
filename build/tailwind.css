@@ -1433,6 +1433,10 @@
   width: 100vw;
 }
 
+.wpqt-w-auto {
+  width: auto;
+}
+
 .wpqt-min-w-\[300px\] {
   min-width: 300px;
 }
@@ -1892,8 +1896,16 @@
   padding-right: 24px;
 }
 
+.wpqt-pt-2 {
+  padding-top: 0.5rem;
+}
+
 .wpqt-pt-3 {
   padding-top: 0.75rem;
+}
+
+.wpqt-pt-1 {
+  padding-top: 0.25rem;
 }
 
 .wpqt-text-center {

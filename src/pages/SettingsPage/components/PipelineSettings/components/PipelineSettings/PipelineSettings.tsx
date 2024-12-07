@@ -4,6 +4,7 @@ import { Loading } from "../../../../../../components/Loading/Loading";
 import { Pipeline } from "../../../../../../types/pipeline";
 import { PipelineSettings } from "../../../../../../types/pipeline-settings";
 import { convertPipelineSettingsFromServer } from "../../../../../../utils/pipeline-settings";
+import { PipelineAutomations } from "../Automations/PipelineAutomations/PipelineAutomations";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
 
 type Props = {
@@ -19,7 +20,7 @@ function PipelineSettings({ pipeline }: Props) {
       try {
         setLoading(true);
         const response = await getPipelineSettingsRequest(pipeline.id);
-        setSettings(convertPipelineSettingsFromServer(response.data));
+        setSettings(convertPipelineSettingsFromServer(response.data.settings));
       } catch (error) {
         console.error(error);
       } finally {
@@ -46,6 +47,7 @@ function PipelineSettings({ pipeline }: Props) {
           settings.allow_only_last_stage_task_done
         }
       />
+      <PipelineAutomations pipelineId={pipeline.id} />
     </div>
   );
 }
