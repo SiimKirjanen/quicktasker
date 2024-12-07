@@ -606,7 +606,8 @@ function WPQTCard({
   title,
   description,
   children,
-  dropdown
+  dropdown,
+  titleClassName = ""
 }) {
   const hasDropdown = dropdown !== undefined;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -615,7 +616,7 @@ function WPQTCard({
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-mb-3",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-text-lg",
+        className: `wpqt-text-lg ${titleClassName}`,
         children: title
       }), description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-italic wpqt-text-gray-500",

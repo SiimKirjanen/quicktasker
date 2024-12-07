@@ -16,7 +16,7 @@ function AutomationsList({ automations }: Props) {
       <div>
         <WPQTIconButton
           icon={<BsRobot className="wpqt-size-5" />}
-          text={__("Show existing automations", "quicktasker")}
+          text={__("Show board automations", "quicktasker")}
           onClick={() => setShowAutomations(true)}
         />
       </div>
@@ -24,7 +24,9 @@ function AutomationsList({ automations }: Props) {
   }
 
   if (!automations || automations.length === 0) {
-    return <div>{__("No automations created", "quicktasker")}</div>;
+    return (
+      <div>{__("No automations created for this board", "quicktasker")}</div>
+    );
   }
 
   return (
@@ -36,7 +38,7 @@ function AutomationsList({ automations }: Props) {
       </div>
       <WPQTIconButton
         icon={<BsRobot className="wpqt-size-5" />}
-        text={__("Hide automations", "quicktasker")}
+        text={__("Hide board automations", "quicktasker")}
         onClick={() => setShowAutomations(false)}
       />
     </div>

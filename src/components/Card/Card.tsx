@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 type WPQTCardProps = {
   children?: React.ReactNode;
   className?: string;
+  titleClassName?: string;
   title: string;
   description?: string;
   onClick?: () => void;
@@ -17,6 +18,7 @@ function WPQTCard({
   description,
   children,
   dropdown,
+  titleClassName = "",
 }: WPQTCardProps) {
   const hasDropdown = dropdown !== undefined;
 
@@ -30,7 +32,7 @@ function WPQTCard({
       onClick={onClick}
     >
       <div className="wpqt-mb-3">
-        <div className="wpqt-text-lg">{title}</div>
+        <div className={`wpqt-text-lg ${titleClassName}`}>{title}</div>
         {description && (
           <div className="wpqt-italic wpqt-text-gray-500">{description}</div>
         )}
