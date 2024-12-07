@@ -9555,7 +9555,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _reducers_automation_creation_reducer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../../../reducers/automation-creation-reducer */ "./src/reducers/automation-creation-reducer.ts");
 /* harmony import */ var _utils_automations__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../../../utils/automations */ "./src/utils/automations.ts");
-/* harmony import */ var _components_AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/AutomationTargetSelection/AutomationTargetSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTargetSelection/AutomationTargetSelection.tsx");
+/* harmony import */ var _components_AutomationCreationSteps_AutomationCreationSteps__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/AutomationCreationSteps/AutomationCreationSteps */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationCreationSteps/AutomationCreationSteps.tsx");
 
 
 
@@ -9613,7 +9613,7 @@ function AutomationCreator({}) {
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(AutomationCreationStep, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_AutomationCreationSteps_AutomationCreationSteps__WEBPACK_IMPORTED_MODULE_7__.AutomationCreationSteps, {
         automation: automation,
         automationDispatch: automationDispatch
       })
@@ -9626,26 +9626,109 @@ function AutomationCreator({}) {
     })]
   });
 }
-function AutomationCreationStep({
+
+
+/***/ }),
+
+/***/ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionSelection/AutomationActionSelection.tsx":
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionSelection/AutomationActionSelection.tsx ***!
+  \************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AutomationActionSelection: () => (/* binding */ AutomationActionSelection)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_automations__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../../../utils/automations */ "./src/utils/automations.ts");
+
+
+
+function AutomationActionSelection({
+  automationDispatch,
+  automation
+}) {
+  if (!automation.automationTarget || !automation.automationTrigger) {
+    return null;
+  }
+  const target = automation.automationTarget;
+  const trigger = automation.automationTrigger;
+  const actionOptions = _utils_automations__WEBPACK_IMPORTED_MODULE_2__.availableAutomations[target][trigger].map(action => {
+    return {
+      value: action,
+      label: action
+    };
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Step 3 select a action", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: actionOptions.map(({
+        value,
+        label
+      }) => {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          onClick: () => {
+            automationDispatch({
+              type: "SET_ACTION",
+              payload: value
+            });
+          },
+          children: label
+        }, value);
+      })
+    })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationCreationSteps/AutomationCreationSteps.tsx":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationCreationSteps/AutomationCreationSteps.tsx ***!
+  \********************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AutomationCreationSteps: () => (/* binding */ AutomationCreationSteps)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AutomationActionSelection/AutomationActionSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionSelection/AutomationActionSelection.tsx");
+/* harmony import */ var _AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../AutomationTargetSelection/AutomationTargetSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTargetSelection/AutomationTargetSelection.tsx");
+/* harmony import */ var _AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../AutomationTriggerSelection/AutomationTriggerSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTriggerSelection/AutomationTriggerSelection.tsx");
+
+
+
+
+function AutomationCreationSteps({
   automation,
   automationDispatch
 }) {
   if (automation.automationTarget === null) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_7__.AutomationTargetSelection, {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_2__.AutomationTargetSelection, {
+      automationDispatch: automationDispatch
+    });
+  }
+  if (automation.automationTrigger === null && automation.automationTarget) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_3__.AutomationTriggerSelection, {
       automationDispatch: automationDispatch,
       automation: automation
     });
   }
-  if (automation.automationTrigger === null) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: "Step 2 select trigger"
+  if (automation.automationAction === null && automation.automationTrigger && automation.automationTarget) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_1__.AutomationActionSelection, {
+      automationDispatch: automationDispatch,
+      automation: automation
     });
   }
-  if (automation.automationAction === null) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: "Step 3 select action"
-    });
-  }
+  return null;
 }
 
 
@@ -9690,6 +9773,63 @@ function AutomationTargetSelection({
           onClick: () => {
             automationDispatch({
               type: "SET_TARGET",
+              payload: value
+            });
+          },
+          children: label
+        }, value);
+      })
+    })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTriggerSelection/AutomationTriggerSelection.tsx":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTriggerSelection/AutomationTriggerSelection.tsx ***!
+  \**************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AutomationTriggerSelection: () => (/* binding */ AutomationTriggerSelection)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_automations__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../../../utils/automations */ "./src/utils/automations.ts");
+
+
+
+function AutomationTriggerSelection({
+  automationDispatch,
+  automation
+}) {
+  if (!automation.automationTarget) {
+    return null;
+  }
+  const target = automation.automationTarget;
+  const triggerOptions = Object.keys(_utils_automations__WEBPACK_IMPORTED_MODULE_2__.availableAutomations[target]).map(automationTrigger => {
+    return {
+      value: automationTrigger,
+      label: automationTrigger
+    };
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Step 2 select a trigger", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: triggerOptions.map(({
+        value,
+        label
+      }) => {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          onClick: () => {
+            automationDispatch({
+              type: "SET_TRIGGER",
               payload: value
             });
           },

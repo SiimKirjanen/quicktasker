@@ -4,17 +4,15 @@ import { BsRobot } from "react-icons/bs";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
 import {
-  Action,
   automationCreationInitialState,
   automationCreationReducer,
-  AutomationCreationState,
 } from "../../../../../../../reducers/automation-creation-reducer";
 import {
   automationActionStrings,
   automationTargetStrings,
   automationTriggerStrings,
 } from "../../../../../../../utils/automations";
-import { AutomationTargetSelection } from "./components/AutomationTargetSelection/AutomationTargetSelection";
+import { AutomationCreationSteps } from "./components/AutomationCreationSteps/AutomationCreationSteps";
 
 type props = {
   pipelineId: string;
@@ -81,7 +79,7 @@ function AutomationCreator({}: props) {
         </WPQTCard>
       </div>
       <div className="wpqt-flex wpqt-justify-center">
-        <AutomationCreationStep
+        <AutomationCreationSteps
           automation={automation}
           automationDispatch={automationDispatch}
         />
@@ -93,30 +91,6 @@ function AutomationCreator({}: props) {
       />
     </div>
   );
-}
-
-type AutomationCreationStepProps = {
-  automation: AutomationCreationState;
-  automationDispatch: React.Dispatch<Action>;
-};
-function AutomationCreationStep({
-  automation,
-  automationDispatch,
-}: AutomationCreationStepProps) {
-  if (automation.automationTarget === null) {
-    return (
-      <AutomationTargetSelection
-        automationDispatch={automationDispatch}
-        automation={automation}
-      />
-    );
-  }
-  if (automation.automationTrigger === null) {
-    return <div>Step 2 select trigger</div>;
-  }
-  if (automation.automationAction === null) {
-    return <div>Step 3 select action</div>;
-  }
 }
 
 export { AutomationCreator };

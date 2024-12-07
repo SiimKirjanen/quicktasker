@@ -1,14 +1,10 @@
 import { __ } from "@wordpress/i18n";
-import {
-  Action,
-  AutomationCreationState,
-} from "../../../../../../../../../reducers/automation-creation-reducer";
+import { Action } from "../../../../../../../../../reducers/automation-creation-reducer";
 import { TargetType } from "../../../../../../../../../types/automation";
 import { availableAutomations } from "../../../../../../../../../utils/automations";
 
 type Props = {
   automationDispatch: React.Dispatch<Action>;
-  automation: AutomationCreationState;
 };
 function AutomationTargetSelection({ automationDispatch }: Props) {
   const targetOptions = Object.keys(availableAutomations).map(
