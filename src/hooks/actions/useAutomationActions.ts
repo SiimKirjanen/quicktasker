@@ -1,8 +1,10 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
+import { createPipelineAutomationRequest } from "../../api/api";
 import { PIPELINE_REMOVE_TASK } from "../../constants";
 import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
+import { AutomationCreationState } from "../../reducers/automation-creation-reducer";
 import { Automation, AutomationAction } from "../../types/automation";
 
 const actionMessages: { [key in AutomationAction]: string } = {
@@ -50,10 +52,28 @@ function useAutomationActions() {
     displayAutomationMessages(executedAutomations);
   };
 
+  const createAutomation = async (
+    pipelineId: string,
+    automation: AutomationCreationState,
+    callback?: (success: boolean) => void,
+  ) => {
+    try {
+      await createPipelineAutomationRequest(pipelineId, automation);
+      toast.success(__("Automation created", "quicktasker"));
+      callback && callback(true);
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to create automation", "quicktasker"));
+
+      callback && callback(false);
+    }
+  };
+
   return {
     displayAutomationMessages,
     handleExecutedAnimationsResults,
     handleExecutedAutomations,
+    createAutomation,
   };
 }
 

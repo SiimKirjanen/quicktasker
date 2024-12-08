@@ -1,3 +1,6 @@
+import { __ } from "@wordpress/i18n";
+import { TfiSave } from "react-icons/tfi";
+import { WPQTIconButton } from "../../../../../../../../../components/common/Button/Button";
 import {
   Action,
   AutomationCreationState,
@@ -9,8 +12,15 @@ import { AutomationTriggerSelection } from "../AutomationTriggerSelection/Automa
 type Props = {
   automation: AutomationCreationState;
   automationDispatch: React.Dispatch<Action>;
+  createAnimation: () => Promise<void>;
+  creationLoading: boolean;
 };
-function AutomationCreationSteps({ automation, automationDispatch }: Props) {
+function AutomationCreationSteps({
+  automation,
+  automationDispatch,
+  createAnimation,
+  creationLoading,
+}: Props) {
   if (automation.automationTarget === null) {
     return (
       <AutomationTargetSelection automationDispatch={automationDispatch} />
@@ -36,7 +46,15 @@ function AutomationCreationSteps({ automation, automationDispatch }: Props) {
       />
     );
   }
-  return null;
+
+  return (
+    <WPQTIconButton
+      text={__("Create animation", "quicktasker")}
+      icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
+      onClick={createAnimation}
+      loading={creationLoading}
+    />
+  );
 }
 
 export { AutomationCreationSteps };

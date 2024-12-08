@@ -3,6 +3,7 @@ import { __ } from "@wordpress/i18n";
 import { BsRobot } from "react-icons/bs";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
+import { useAutomationActions } from "../../../../../../../hooks/actions/useAutomationActions";
 import {
   automationCreationInitialState,
   automationCreationReducer,
@@ -17,18 +18,29 @@ import { AutomationCreationSteps } from "./components/AutomationCreationSteps/Au
 type props = {
   pipelineId: string;
 };
-// eslint-disable-next-line no-empty-pattern
-function AutomationCreator({}: props) {
+function AutomationCreator({ pipelineId }: props) {
   const [showCreator, setShowCreator] = useState(false);
+  const [creationLoading, setCreationLoading] = useState(false);
   const [automation, automationDispatch] = useReducer(
     automationCreationReducer,
     automationCreationInitialState,
   );
+  const { createAutomation } = useAutomationActions();
 
   const cardStyleClasses =
     "wpqt-px-3 wpqt-pt-1 wpqt-min-w-[60px] wpqt-cursor-pointer";
   const cardTitleClasses =
     "wpqt-absolute wpqt-top-0 wpqt-left-[50%] wpqt-transform-center wpqt-bg-[#fff] wpqt-text-[1rem] wpqt-leading-none wpqt-font-semibold wpqt-p-1";
+
+  const onCreateAnimation = async () => {
+    setCreationLoading(true);
+    await createAutomation(pipelineId, automation, (success: boolean) => {
+      if (success) {
+        automationDispatch({ type: "RESET" });
+      }
+    });
+    setCreationLoading(false);
+  };
 
   if (!showCreator) {
     return (
@@ -82,6 +94,8 @@ function AutomationCreator({}: props) {
         <AutomationCreationSteps
           automation={automation}
           automationDispatch={automationDispatch}
+          createAnimation={onCreateAnimation}
+          creationLoading={creationLoading}
         />
       </div>
       <WPQTIconButton

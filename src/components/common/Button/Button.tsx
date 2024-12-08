@@ -77,7 +77,7 @@ function WPQTIconButton({
         <LoadingOval
           width="20"
           height="20"
-          className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-y-center wpqt-transform-x-center"
+          className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
         />
       )}
       {showTooltip && <WPQTTooltip id={tooltipId} />}

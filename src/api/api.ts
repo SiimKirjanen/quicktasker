@@ -1,5 +1,6 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
+import { AutomationCreationState } from "../reducers/automation-creation-reducer";
 import { Automation } from "../types/automation";
 import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
@@ -640,6 +641,27 @@ function getPipelineAutomationsRequest(pipelineId: string): Promise<
   });
 }
 
+function createPipelineAutomationRequest(
+  pipelineId: string,
+  automation: AutomationCreationState,
+): Promise<
+  WPQTResponse<{
+    automation: Automation;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
+    method: "POST",
+    data: {
+      automationTargetId: null,
+      automationTarget: automation.automationTarget,
+      automationTrigger: automation.automationTrigger,
+      automationAction: automation.automationAction,
+    },
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -649,6 +671,7 @@ export {
   changeUserSessionStatusRequest,
   changeUserStatusRequest,
   createNewStageRequest,
+  createPipelineAutomationRequest,
   createPipelineRequest,
   createTaskRequest,
   createUserRequest,

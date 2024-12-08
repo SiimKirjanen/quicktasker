@@ -88,6 +88,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   changeUserSessionStatusRequest: () => (/* binding */ changeUserSessionStatusRequest),
 /* harmony export */   changeUserStatusRequest: () => (/* binding */ changeUserStatusRequest),
 /* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
+/* harmony export */   createPipelineAutomationRequest: () => (/* binding */ createPipelineAutomationRequest),
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
 /* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
 /* harmony export */   createUserRequest: () => (/* binding */ createUserRequest),
@@ -628,6 +629,19 @@ function getPipelineAutomationsRequest(pipelineId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
     method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function createPipelineAutomationRequest(pipelineId, automation) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
+    method: "POST",
+    data: {
+      automationTargetId: null,
+      automationTarget: automation.automationTarget,
+      automationTrigger: automation.automationTrigger,
+      automationAction: automation.automationAction
+    },
     headers: getCommonHeaders()
   });
 }
@@ -5899,7 +5913,7 @@ function WPQTIconButton({
     }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_1__.LoadingOval, {
       width: "20",
       height: "20",
-      className: "wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-y-center wpqt-transform-x-center"
+      className: "wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
     }), showTooltip && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__.WPQTTooltip, {
       id: tooltipId
     })]
@@ -6362,9 +6376,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
-/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
-/* harmony import */ var _types_automation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../types/automation */ "./src/types/automation.ts");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _types_automation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../types/automation */ "./src/types/automation.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
 
 
 
@@ -6372,12 +6415,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const actionMessages = {
-  [_types_automation__WEBPACK_IMPORTED_MODULE_5__.AutomationAction.ARCHIVE_TASK]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task archived by automation", "quicktasker")
+  [_types_automation__WEBPACK_IMPORTED_MODULE_6__.AutomationAction.ARCHIVE_TASK]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task archived by automation", "quicktasker")
 };
 function useAutomationActions() {
   const {
     dispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_4__.ActivePipelineContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.ActivePipelineContext);
   const displayAutomationMessages = executedAutomations => {
     executedAutomations.forEach(automation => {
       const message = actionMessages[automation.automation_action] || `Automation executed: ${automation.automation_action}`;
@@ -6386,9 +6429,9 @@ function useAutomationActions() {
   };
   const handleExecutedAnimationsResults = (executedAutomations, triggererId) => {
     executedAutomations.forEach(automation => {
-      if (automation.automation_action === _types_automation__WEBPACK_IMPORTED_MODULE_5__.AutomationAction.ARCHIVE_TASK) {
+      if (automation.automation_action === _types_automation__WEBPACK_IMPORTED_MODULE_6__.AutomationAction.ARCHIVE_TASK) {
         dispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_REMOVE_TASK,
+          type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_REMOVE_TASK,
           payload: triggererId
         });
       }
@@ -6401,10 +6444,22 @@ function useAutomationActions() {
     handleExecutedAnimationsResults(executedAutomations, triggererId);
     displayAutomationMessages(executedAutomations);
   };
+  const createAutomation = (pipelineId, automation, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.createPipelineAutomationRequest)(pipelineId, automation);
+      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Automation created", "quicktasker"));
+      callback && callback(true);
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Failed to create automation", "quicktasker"));
+      callback && callback(false);
+    }
+  });
   return {
     displayAutomationMessages,
     handleExecutedAnimationsResults,
-    handleExecutedAutomations
+    handleExecutedAutomations,
+    createAutomation
   };
 }
 
@@ -9550,12 +9605,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_bs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.mjs");
+/* harmony import */ var react_icons_bs__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.mjs");
 /* harmony import */ var _components_Card_Card__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../../components/Card/Card */ "./src/components/Card/Card.tsx");
 /* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _reducers_automation_creation_reducer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../../../reducers/automation-creation-reducer */ "./src/reducers/automation-creation-reducer.ts");
-/* harmony import */ var _utils_automations__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../../../utils/automations */ "./src/utils/automations.ts");
-/* harmony import */ var _components_AutomationCreationSteps_AutomationCreationSteps__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/AutomationCreationSteps/AutomationCreationSteps */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationCreationSteps/AutomationCreationSteps.tsx");
+/* harmony import */ var _hooks_actions_useAutomationActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../../../hooks/actions/useAutomationActions */ "./src/hooks/actions/useAutomationActions.ts");
+/* harmony import */ var _reducers_automation_creation_reducer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../../../reducers/automation-creation-reducer */ "./src/reducers/automation-creation-reducer.ts");
+/* harmony import */ var _utils_automations__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../../../utils/automations */ "./src/utils/automations.ts");
+/* harmony import */ var _components_AutomationCreationSteps_AutomationCreationSteps__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/AutomationCreationSteps/AutomationCreationSteps */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationCreationSteps/AutomationCreationSteps.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
 
 
 
@@ -9565,16 +9648,33 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// eslint-disable-next-line no-empty-pattern
-function AutomationCreator({}) {
+
+function AutomationCreator({
+  pipelineId
+}) {
   const [showCreator, setShowCreator] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const [automation, automationDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_automation_creation_reducer__WEBPACK_IMPORTED_MODULE_5__.automationCreationReducer, _reducers_automation_creation_reducer__WEBPACK_IMPORTED_MODULE_5__.automationCreationInitialState);
+  const [creationLoading, setCreationLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [automation, automationDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_automation_creation_reducer__WEBPACK_IMPORTED_MODULE_6__.automationCreationReducer, _reducers_automation_creation_reducer__WEBPACK_IMPORTED_MODULE_6__.automationCreationInitialState);
+  const {
+    createAutomation
+  } = (0,_hooks_actions_useAutomationActions__WEBPACK_IMPORTED_MODULE_5__.useAutomationActions)();
   const cardStyleClasses = "wpqt-px-3 wpqt-pt-1 wpqt-min-w-[60px] wpqt-cursor-pointer";
   const cardTitleClasses = "wpqt-absolute wpqt-top-0 wpqt-left-[50%] wpqt-transform-center wpqt-bg-[#fff] wpqt-text-[1rem] wpqt-leading-none wpqt-font-semibold wpqt-p-1";
+  const onCreateAnimation = () => __awaiter(this, void 0, void 0, function* () {
+    setCreationLoading(true);
+    yield createAutomation(pipelineId, automation, success => {
+      if (success) {
+        automationDispatch({
+          type: "RESET"
+        });
+      }
+    });
+    setCreationLoading(false);
+  });
   if (!showCreator) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_8__.BsRobot, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_9__.BsRobot, {
           className: "wpqt-size-5"
         }),
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create a new automation", "quicktasker"),
@@ -9592,7 +9692,7 @@ function AutomationCreator({}) {
         titleClassName: cardTitleClasses,
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-flex wpqt-justify-center",
-          children: automation.automationTarget ? _utils_automations__WEBPACK_IMPORTED_MODULE_6__.automationTargetStrings[automation.automationTarget] : "?"
+          children: automation.automationTarget ? _utils_automations__WEBPACK_IMPORTED_MODULE_7__.automationTargetStrings[automation.automationTarget] : "?"
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_3__.WPQTCard, {
         title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Trigger", "quicktasker"),
@@ -9600,7 +9700,7 @@ function AutomationCreator({}) {
         titleClassName: cardTitleClasses,
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-flex wpqt-justify-center",
-          children: automation.automationTrigger ? _utils_automations__WEBPACK_IMPORTED_MODULE_6__.automationTriggerStrings[automation.automationTrigger] : "?"
+          children: automation.automationTrigger ? _utils_automations__WEBPACK_IMPORTED_MODULE_7__.automationTriggerStrings[automation.automationTrigger] : "?"
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Card_Card__WEBPACK_IMPORTED_MODULE_3__.WPQTCard, {
         title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Action", "quicktasker"),
@@ -9608,17 +9708,19 @@ function AutomationCreator({}) {
         titleClassName: cardTitleClasses,
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-flex wpqt-justify-center",
-          children: automation.automationAction ? _utils_automations__WEBPACK_IMPORTED_MODULE_6__.automationActionStrings[automation.automationAction] : "?"
+          children: automation.automationAction ? _utils_automations__WEBPACK_IMPORTED_MODULE_7__.automationActionStrings[automation.automationAction] : "?"
         })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_AutomationCreationSteps_AutomationCreationSteps__WEBPACK_IMPORTED_MODULE_7__.AutomationCreationSteps, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_AutomationCreationSteps_AutomationCreationSteps__WEBPACK_IMPORTED_MODULE_8__.AutomationCreationSteps, {
         automation: automation,
-        automationDispatch: automationDispatch
+        automationDispatch: automationDispatch,
+        createAnimation: onCreateAnimation,
+        creationLoading: creationLoading
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_8__.BsRobot, {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_9__.BsRobot, {
         className: "wpqt-size-5"
       }),
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Close automation creator", "quicktasker"),
@@ -9700,35 +9802,51 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AutomationActionSelection/AutomationActionSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionSelection/AutomationActionSelection.tsx");
-/* harmony import */ var _AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../AutomationTargetSelection/AutomationTargetSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTargetSelection/AutomationTargetSelection.tsx");
-/* harmony import */ var _AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../AutomationTriggerSelection/AutomationTriggerSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTriggerSelection/AutomationTriggerSelection.tsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_icons_tfi__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-icons/tfi */ "./node_modules/react-icons/tfi/index.mjs");
+/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../AutomationActionSelection/AutomationActionSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionSelection/AutomationActionSelection.tsx");
+/* harmony import */ var _AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../AutomationTargetSelection/AutomationTargetSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTargetSelection/AutomationTargetSelection.tsx");
+/* harmony import */ var _AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../AutomationTriggerSelection/AutomationTriggerSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTriggerSelection/AutomationTriggerSelection.tsx");
+
+
+
 
 
 
 
 function AutomationCreationSteps({
   automation,
-  automationDispatch
+  automationDispatch,
+  createAnimation,
+  creationLoading
 }) {
   if (automation.automationTarget === null) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_2__.AutomationTargetSelection, {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_4__.AutomationTargetSelection, {
       automationDispatch: automationDispatch
     });
   }
   if (automation.automationTrigger === null && automation.automationTarget) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_3__.AutomationTriggerSelection, {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_5__.AutomationTriggerSelection, {
       automationDispatch: automationDispatch,
       automation: automation
     });
   }
   if (automation.automationAction === null && automation.automationTrigger && automation.automationTarget) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_1__.AutomationActionSelection, {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_3__.AutomationActionSelection, {
       automationDispatch: automationDispatch,
       automation: automation
     });
   }
-  return null;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_2__.WPQTIconButton, {
+    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Create animation", "quicktasker"),
+    icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tfi__WEBPACK_IMPORTED_MODULE_6__.TfiSave, {
+      className: "wpqt-icon-blue wpqt-size-4"
+    }),
+    onClick: createAnimation,
+    loading: creationLoading
+  });
 }
 
 

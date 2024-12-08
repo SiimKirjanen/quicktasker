@@ -37,6 +37,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   changeUserSessionStatusRequest: () => (/* binding */ changeUserSessionStatusRequest),
 /* harmony export */   changeUserStatusRequest: () => (/* binding */ changeUserStatusRequest),
 /* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
+/* harmony export */   createPipelineAutomationRequest: () => (/* binding */ createPipelineAutomationRequest),
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
 /* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
 /* harmony export */   createUserRequest: () => (/* binding */ createUserRequest),
@@ -577,6 +578,19 @@ function getPipelineAutomationsRequest(pipelineId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
     method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function createPipelineAutomationRequest(pipelineId, automation) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
+    method: "POST",
+    data: {
+      automationTargetId: null,
+      automationTarget: automation.automationTarget,
+      automationTrigger: automation.automationTrigger,
+      automationAction: automation.automationAction
+    },
     headers: getCommonHeaders()
   });
 }
@@ -1380,7 +1394,7 @@ function WPQTIconButton({
     }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_1__.LoadingOval, {
       width: "20",
       height: "20",
-      className: "wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-y-center wpqt-transform-x-center"
+      className: "wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
     }), showTooltip && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__.WPQTTooltip, {
       id: tooltipId
     })]
