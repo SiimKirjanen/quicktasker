@@ -1988,6 +1988,50 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/automations',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    try {
+                        WPQTverifyApiNonce($data);
+
+                        $automation = ServiceLocator::get('AutomationService')->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction']);
+                 
+                        return new WP_REST_Response((new ApiResponse(true, array(), $automation))->toArray(), 200);
+                    } catch (Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'automationTarget' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'automationTrigger' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'automationAction' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
     }
 }
 

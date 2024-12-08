@@ -32,6 +32,23 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
         }
 
         /**
+         * Retrieves an automation record from the database based on the provided automation ID.
+         *
+         * @param int $automationID The ID of the automation to retrieve.
+         * @return object|null The automation record as an object if found, null otherwise.
+         */
+        public function getAutomation($automationID) {
+            global $wpdb;
+
+            $query = $wpdb->prepare(
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE id = %d",
+                $automationID
+            );
+
+            return $wpdb->get_row($query);
+        }
+
+        /**
          * Retrieves automations for a specific pipeline.
          *
          * This function queries the database to fetch all automation records associated with a given pipeline ID.

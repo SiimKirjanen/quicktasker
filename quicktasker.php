@@ -66,7 +66,10 @@ require( 'php/side-effects.php' );
 require( 'php/db-seeder.php' );
 
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
+WPQT\ServiceLocator::register('TimeRepository', new WPQT\Time\TimeRepository());
 WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
+WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
+
 WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
 
 if( is_admin() ) {

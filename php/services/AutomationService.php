@@ -6,23 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use WPQT\Automation\AutomationRepository;
-use WPQT\Task\TaskService;
-use WPQT\Log\LogService;
 use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
     class AutomationService {
-        protected $automationRepository;
-        protected $taskService;
-        protected $logService;
-
-        public function __construct() {
-            $this->automationRepository = ServiceLocator::get('AutomationRepository');
-            $this->taskService = ServiceLocator::get('TaskService');
-            $this->logService = ServiceLocator::get('LogService');
-        }
-
         public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger) {
             $executedAutomations = [];
 
@@ -51,8 +38,8 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 if( $this->isArchiveTaskAction($automation) ) {
                     $logMessage = $this->getAutomationLogMessage($automation);
 
-                    $this->taskService->archiveTask($targetId, true);
-                    $this->logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+                    ServiceLocator::get('TaskService')->archiveTask($targetId, true);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -81,8 +68,50 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE;
         }
 
+        /**
+         * Generates a log message for the given automation.
+         *
+         * @param object $automation The automation object containing details about the automation.
+         * @return string The formatted log message.
+         */
         private function getAutomationLogMessage($automation) {
             return "Automation executed: Board ID: {$automation->pipeline_id}, Target ID: {$automation->target_id}, Target Type: {$automation->target_type}, Trigger: {$automation->automation_trigger}, Action: {$automation->automation_action}";
+        }
+
+        /**
+         * Creates a new automation entry in the database.
+         *
+         * @param int $pipelineId The ID of the pipeline.
+         * @param int|null $targetId The ID of the target, can be null.
+         * @param string $targetType The type of the target.
+         * @param string $trigger The trigger for the automation.
+         * @param string $action The action to be performed by the automation.
+         * @return array The created automation data.
+         * @throws \Exception If the automation creation fails.
+         */
+        public function createAutomation($pipelineId, $targetId, $targetType, $trigger, $action) {
+            global $wpdb;
+        
+            $data = [
+                'pipeline_id' => $pipelineId,
+                'target_id' => $targetId,
+                'target_type' => $targetType,
+                'automation_trigger' => $trigger,
+                'automation_action' => $action,
+                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ];
+                
+            $result = $wpdb->insert(
+                TABLE_WP_QUICKTASKER_AUTOMATIONS,
+                $data
+            );
+        
+            if (!$result) {
+                throw new \Exception('Failed to create an automation.');
+            }
+        
+            return ServiceLocator::get('AutomationRepository')->getAutomation($wpdb->insert_id);
         }
     }
 }
