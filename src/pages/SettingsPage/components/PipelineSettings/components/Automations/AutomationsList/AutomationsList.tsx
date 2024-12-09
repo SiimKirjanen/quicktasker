@@ -36,11 +36,13 @@ function AutomationsList({ automations }: Props) {
           <AutomationListItem key={automation.id} automation={automation} />
         ))}
       </div>
-      <WPQTIconButton
-        icon={<BsRobot className="wpqt-size-5" />}
-        text={__("Hide board automations", "quicktasker")}
-        onClick={() => setShowAutomations(false)}
-      />
+      <div className="wpqt-flex wpqt-justify-center">
+        <WPQTIconButton
+          icon={<BsRobot className="wpqt-size-5" />}
+          text={__("Hide board automations", "quicktasker")}
+          onClick={() => setShowAutomations(false)}
+        />
+      </div>
     </div>
   );
 }

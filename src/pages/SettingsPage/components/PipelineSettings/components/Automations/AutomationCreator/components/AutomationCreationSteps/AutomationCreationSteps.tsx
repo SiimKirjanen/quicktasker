@@ -1,3 +1,4 @@
+import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { TfiSave } from "react-icons/tfi";
 import { WPQTIconButton } from "../../../../../../../../../components/common/Button/Button";
@@ -13,14 +14,20 @@ type Props = {
   automation: AutomationCreationState;
   automationDispatch: React.Dispatch<Action>;
   createAnimation: () => Promise<void>;
-  creationLoading: boolean;
 };
 function AutomationCreationSteps({
   automation,
   automationDispatch,
   createAnimation,
-  creationLoading,
 }: Props) {
+  const [creationLoading, setCreationLoading] = useState(false);
+
+  const handleCreateAnimation = async () => {
+    setCreationLoading(true);
+    await createAnimation();
+    setCreationLoading(false);
+  };
+
   if (automation.automationTarget === null) {
     return (
       <AutomationTargetSelection automationDispatch={automationDispatch} />
@@ -49,9 +56,9 @@ function AutomationCreationSteps({
 
   return (
     <WPQTIconButton
-      text={__("Create animation", "quicktasker")}
+      text={__("Create automation", "quicktasker")}
       icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
-      onClick={createAnimation}
+      onClick={handleCreateAnimation}
       loading={creationLoading}
     />
   );

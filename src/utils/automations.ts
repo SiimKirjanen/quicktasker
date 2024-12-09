@@ -17,8 +17,11 @@ const automationTargetStrings: { [key in TargetType]: string } = {
 };
 
 const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
-  [AutomationTrigger.TASK_DONE]: __("Task done", "quicktasker"),
-  [AutomationTrigger.Task_NOT_DONE]: __("Task not done", "quicktasker"),
+  [AutomationTrigger.TASK_DONE]: __("Task marked as done", "quicktasker"),
+  [AutomationTrigger.Task_NOT_DONE]: __(
+    "Task marked as not done",
+    "quicktasker",
+  ),
 };
 
 const taskAutomations = {

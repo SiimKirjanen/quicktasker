@@ -1,7 +1,12 @@
 import { __ } from "@wordpress/i18n";
+import { Pill } from "../../../../../../../../../components/common/Pill/Pill";
 import { Action } from "../../../../../../../../../reducers/automation-creation-reducer";
 import { TargetType } from "../../../../../../../../../types/automation";
-import { availableAutomations } from "../../../../../../../../../utils/automations";
+import {
+  automationTargetStrings,
+  availableAutomations,
+} from "../../../../../../../../../utils/automations";
+import { AutomationSelection } from "../AutomationSelection/AutomationSelection";
 
 type Props = {
   automationDispatch: React.Dispatch<Action>;
@@ -11,32 +16,31 @@ function AutomationTargetSelection({ automationDispatch }: Props) {
     (automationTarget) => {
       return {
         value: automationTarget,
-        label: automationTarget,
+        label:
+          automationTargetStrings[automationTarget as TargetType] ||
+          automationTarget,
       };
     },
   );
 
   return (
-    <div>
-      <div>{__("Step 1 select a target", "quicktasker")}</div>
-      <div>
-        {targetOptions.map(({ value, label }) => {
-          return (
-            <div
-              key={value}
-              onClick={() => {
-                automationDispatch({
-                  type: "SET_TARGET",
-                  payload: value as TargetType,
-                });
-              }}
-            >
-              {label}
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <AutomationSelection title={__("Step 1. Select a target", "quicktasker")}>
+      {targetOptions.map(({ value, label }) => {
+        return (
+          <Pill
+            key={value}
+            value={value}
+            label={label}
+            onClick={() => {
+              automationDispatch({
+                type: "SET_TARGET",
+                payload: value as TargetType,
+              });
+            }}
+          />
+        );
+      })}
+    </AutomationSelection>
   );
 }
 

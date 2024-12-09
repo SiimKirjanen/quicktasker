@@ -1,3 +1,4 @@
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { useReducer, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { BsRobot } from "react-icons/bs";
@@ -20,26 +21,24 @@ type props = {
 };
 function AutomationCreator({ pipelineId }: props) {
   const [showCreator, setShowCreator] = useState(false);
-  const [creationLoading, setCreationLoading] = useState(false);
   const [automation, automationDispatch] = useReducer(
     automationCreationReducer,
     automationCreationInitialState,
   );
   const { createAutomation } = useAutomationActions();
 
-  const cardStyleClasses =
-    "wpqt-px-3 wpqt-pt-1 wpqt-min-w-[60px] wpqt-cursor-pointer";
+  const cardStyleClasses = "wpqt-px-3 wpqt-min-w-[60px] wpqt-cursor-pointer";
   const cardTitleClasses =
     "wpqt-absolute wpqt-top-0 wpqt-left-[50%] wpqt-transform-center wpqt-bg-[#fff] wpqt-text-[1rem] wpqt-leading-none wpqt-font-semibold wpqt-p-1";
-
   const onCreateAnimation = async () => {
-    setCreationLoading(true);
     await createAutomation(pipelineId, automation, (success: boolean) => {
       if (success) {
-        automationDispatch({ type: "RESET" });
+        resetAutomationState();
       }
     });
-    setCreationLoading(false);
+  };
+  const resetAutomationState = () => {
+    automationDispatch({ type: "RESET" });
   };
 
   if (!showCreator) {
@@ -62,9 +61,11 @@ function AutomationCreator({ pipelineId }: props) {
           titleClassName={cardTitleClasses}
         >
           <div className="wpqt-flex wpqt-justify-center">
-            {automation.automationTarget
-              ? automationTargetStrings[automation.automationTarget]
-              : "?"}
+            {automation.automationTarget ? (
+              automationTargetStrings[automation.automationTarget]
+            ) : (
+              <QuestionMarkIcon />
+            )}
           </div>
         </WPQTCard>
         <WPQTCard
@@ -73,9 +74,11 @@ function AutomationCreator({ pipelineId }: props) {
           titleClassName={cardTitleClasses}
         >
           <div className="wpqt-flex wpqt-justify-center">
-            {automation.automationTrigger
-              ? automationTriggerStrings[automation.automationTrigger]
-              : "?"}
+            {automation.automationTrigger ? (
+              automationTriggerStrings[automation.automationTrigger]
+            ) : (
+              <QuestionMarkIcon />
+            )}
           </div>
         </WPQTCard>
         <WPQTCard
@@ -84,9 +87,11 @@ function AutomationCreator({ pipelineId }: props) {
           titleClassName={cardTitleClasses}
         >
           <div className="wpqt-flex wpqt-justify-center">
-            {automation.automationAction
-              ? automationActionStrings[automation.automationAction]
-              : "?"}
+            {automation.automationAction ? (
+              automationActionStrings[automation.automationAction]
+            ) : (
+              <QuestionMarkIcon />
+            )}
           </div>
         </WPQTCard>
       </div>
@@ -95,16 +100,24 @@ function AutomationCreator({ pipelineId }: props) {
           automation={automation}
           automationDispatch={automationDispatch}
           createAnimation={onCreateAnimation}
-          creationLoading={creationLoading}
         />
       </div>
-      <WPQTIconButton
-        icon={<BsRobot className="wpqt-size-5" />}
-        text={__("Close automation creator", "quicktasker")}
-        onClick={() => setShowCreator(false)}
-      />
+      <div className="wpqt-flex wpqt-justify-center">
+        <WPQTIconButton
+          icon={<BsRobot className="wpqt-size-5" />}
+          text={__("Close automation creator", "quicktasker")}
+          onClick={() => {
+            setShowCreator(false);
+            resetAutomationState();
+          }}
+        />
+      </div>
     </div>
   );
+}
+
+function QuestionMarkIcon() {
+  return <QuestionMarkCircleIcon className="wpqt-size-7 wpqt-text-gray-300" />;
 }
 
 export { AutomationCreator };

@@ -14,7 +14,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             $executedAutomations = [];
 
             try {
-                $relatedAutomations = $this->automationRepository->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
+                $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
 
                 if ( ! empty($relatedAutomations) ) {
                     foreach ($relatedAutomations as $automation) {

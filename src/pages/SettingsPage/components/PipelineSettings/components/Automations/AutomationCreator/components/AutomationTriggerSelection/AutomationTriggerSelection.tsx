@@ -1,10 +1,15 @@
 import { __ } from "@wordpress/i18n";
+import { Pill } from "../../../../../../../../../components/common/Pill/Pill";
 import {
   Action,
   AutomationCreationState,
 } from "../../../../../../../../../reducers/automation-creation-reducer";
 import { AutomationTrigger } from "../../../../../../../../../types/automation";
-import { availableAutomations } from "../../../../../../../../../utils/automations";
+import {
+  automationTriggerStrings,
+  availableAutomations,
+} from "../../../../../../../../../utils/automations";
+import { AutomationSelection } from "../AutomationSelection/AutomationSelection";
 
 type Props = {
   automationDispatch: React.Dispatch<Action>;
@@ -21,31 +26,30 @@ function AutomationTriggerSelection({ automationDispatch, automation }: Props) {
   ).map((automationTrigger) => {
     return {
       value: automationTrigger,
-      label: automationTrigger,
+      label:
+        automationTriggerStrings[automationTrigger as AutomationTrigger] ||
+        automationTrigger,
     };
   });
 
   return (
-    <div>
-      <div>{__("Step 2 select a trigger", "quicktasker")}</div>
-      <div>
-        {triggerOptions.map(({ value, label }) => {
-          return (
-            <div
-              key={value}
-              onClick={() => {
-                automationDispatch({
-                  type: "SET_TRIGGER",
-                  payload: value as AutomationTrigger,
-                });
-              }}
-            >
-              {label}
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <AutomationSelection title={__("Step 2. Select a trigger", "quicktasker")}>
+      {triggerOptions.map(({ value, label }) => {
+        return (
+          <Pill
+            key={value}
+            value={value}
+            label={label}
+            onClick={() => {
+              automationDispatch({
+                type: "SET_TRIGGER",
+                payload: value as AutomationTrigger,
+              });
+            }}
+          />
+        );
+      })}
+    </AutomationSelection>
   );
 }
 

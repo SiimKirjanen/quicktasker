@@ -189,7 +189,7 @@ if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS' ) ) {
-    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS", "quicktasker_admin_role_manage_users"); // Allows access to QuickTasker Users page and related private API endpoints
+    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS", "quicktasker_admin_role_manage_users"); // Allows access to Users page and related private API endpoints
 }    
 
 /*
