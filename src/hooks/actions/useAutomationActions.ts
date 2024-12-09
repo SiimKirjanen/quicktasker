@@ -1,7 +1,10 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { createPipelineAutomationRequest } from "../../api/api";
+import {
+  createPipelineAutomationRequest,
+  deletePipelineAutomationsRequest,
+} from "../../api/api";
 import { PIPELINE_REMOVE_TASK } from "../../constants";
 import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
 import { AutomationCreationState } from "../../reducers/automation-creation-reducer";
@@ -69,11 +72,28 @@ function useAutomationActions() {
     }
   };
 
+  const deleteAutomation = async (
+    pipelineId: string,
+    automationId: string,
+    callback?: (success: boolean) => void,
+  ) => {
+    try {
+      await deletePipelineAutomationsRequest(pipelineId, automationId);
+      toast.success(__("Automation deleted", "quicktasker"));
+      callback && callback(true);
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to delete automation", "quicktasker"));
+      callback && callback(false);
+    }
+  };
+
   return {
     displayAutomationMessages,
     handleExecutedAnimationsResults,
     handleExecutedAutomations,
     createAutomation,
+    deleteAutomation,
   };
 }
 

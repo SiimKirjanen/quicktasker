@@ -41,6 +41,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
 /* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
 /* harmony export */   createUserRequest: () => (/* binding */ createUserRequest),
+/* harmony export */   deletePipelineAutomationsRequest: () => (/* binding */ deletePipelineAutomationsRequest),
 /* harmony export */   deletePipelineRequest: () => (/* binding */ deletePipelineRequest),
 /* harmony export */   deleteStageRequest: () => (/* binding */ deleteStageRequest),
 /* harmony export */   deleteTaskRequest: () => (/* binding */ deleteTaskRequest),
@@ -591,6 +592,13 @@ function createPipelineAutomationRequest(pipelineId, automation) {
       automationTrigger: automation.automationTrigger,
       automationAction: automation.automationAction
     },
+    headers: getCommonHeaders()
+  });
+}
+function deletePipelineAutomationsRequest(pipelineId, automationId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations/${automationId}`,
+    method: "DELETE",
     headers: getCommonHeaders()
   });
 }

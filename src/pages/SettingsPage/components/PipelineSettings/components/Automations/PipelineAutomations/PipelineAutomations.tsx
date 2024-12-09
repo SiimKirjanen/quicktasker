@@ -13,19 +13,19 @@ function PipelineAutomations({ pipelineId }: Props) {
   const [automations, setAutomations] = useState<Automation[] | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadAutomations = async () => {
-      try {
-        setLoading(true);
-        const response = await getPipelineAutomationsRequest(pipelineId);
-        setAutomations(response.data.automations);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadAutomations = async () => {
+    try {
+      setLoading(true);
+      const response = await getPipelineAutomationsRequest(pipelineId);
+      setAutomations(response.data.automations);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadAutomations();
   }, []);
 

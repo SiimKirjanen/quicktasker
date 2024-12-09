@@ -2032,6 +2032,38 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/automations/(?P<automation_id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    try {
+                        ServiceLocator::get('AutomationService')->deleteAutomation($data['automation_id']);
+      
+                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                    } catch (Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'automation_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
     }
 }
 

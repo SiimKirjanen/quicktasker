@@ -662,6 +662,17 @@ function createPipelineAutomationRequest(
   });
 }
 
+function deletePipelineAutomationsRequest(
+  pipelineId: string,
+  automationId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations/${automationId}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -675,6 +686,7 @@ export {
   createPipelineRequest,
   createTaskRequest,
   createUserRequest,
+  deletePipelineAutomationsRequest,
   deletePipelineRequest,
   deleteStageRequest,
   deleteTaskRequest,
