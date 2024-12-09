@@ -1,0 +1,108 @@
+import { createContext, useEffect, useReducer } from "@wordpress/element";
+import { toast } from "react-toastify";
+import { getPipelineAutomationsRequest } from "../api/api";
+import {
+  ADD_PIPELINE_AUTOMATION,
+  REMOVE_PIPELINE_AUTOMATION,
+  SET_PIPELINE_AUTOMATIONS,
+  SET_PIPELINE_AUTOMATIONS_LOADING,
+} from "../constants";
+import { reducer } from "../reducers/pipeline-automations-reducer";
+import { Automation } from "../types/automation";
+
+type State = {
+  automations: Automation[] | null;
+  loading: boolean;
+};
+
+const initialState: State = {
+  automations: null,
+  loading: true,
+};
+
+type Action =
+  | {
+      type: typeof SET_PIPELINE_AUTOMATIONS;
+      payload: {
+        automations: Automation[];
+      };
+    }
+  | {
+      type: typeof SET_PIPELINE_AUTOMATIONS_LOADING;
+      payload: boolean;
+    }
+  | {
+      type: typeof REMOVE_PIPELINE_AUTOMATION;
+      payload: string;
+    }
+  | {
+      type: typeof ADD_PIPELINE_AUTOMATION;
+      payload: Automation;
+    };
+
+type Dispatch = (action: Action) => void;
+
+type PipelineAutomationsContextType = {
+  state: State;
+  pipelineAutomationsDispatch: Dispatch;
+};
+
+const PipelineAutomationsContext =
+  createContext<PipelineAutomationsContextType>({
+    state: initialState,
+    pipelineAutomationsDispatch: () => {},
+  });
+
+const PipelineAutomationsContextProvider = ({
+  children,
+  pipelineId,
+}: {
+  children: React.ReactNode;
+  pipelineId: string;
+}) => {
+  const [state, pipelineAutomationsDispatch] = useReducer(
+    reducer,
+    initialState,
+  );
+
+  const loadAutomations = async () => {
+    try {
+      pipelineAutomationsDispatch({
+        type: SET_PIPELINE_AUTOMATIONS_LOADING,
+        payload: true,
+      });
+      const response = await getPipelineAutomationsRequest(pipelineId);
+      pipelineAutomationsDispatch({
+        type: SET_PIPELINE_AUTOMATIONS,
+        payload: { automations: response.data.automations },
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load board automations");
+    } finally {
+      pipelineAutomationsDispatch({
+        type: SET_PIPELINE_AUTOMATIONS_LOADING,
+        payload: false,
+      });
+    }
+  };
+
+  useEffect(() => {
+    loadAutomations();
+  }, []);
+
+  return (
+    <PipelineAutomationsContext.Provider
+      value={{ state, pipelineAutomationsDispatch }}
+    >
+      {children}
+    </PipelineAutomationsContext.Provider>
+  );
+};
+
+export {
+  PipelineAutomationsContext,
+  PipelineAutomationsContextProvider,
+  type Action,
+  type State,
+};

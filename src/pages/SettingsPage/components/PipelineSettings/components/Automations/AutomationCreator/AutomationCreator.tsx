@@ -1,14 +1,17 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import { useReducer, useState } from "@wordpress/element";
+import { useContext, useReducer, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { BsRobot } from "react-icons/bs";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
+import { ADD_PIPELINE_AUTOMATION } from "../../../../../../../constants";
 import { useAutomationActions } from "../../../../../../../hooks/actions/useAutomationActions";
+import { PipelineAutomationsContext } from "../../../../../../../providers/PipelineAutomationsContextProvider";
 import {
   automationCreationInitialState,
   automationCreationReducer,
 } from "../../../../../../../reducers/automation-creation-reducer";
+import { Automation } from "../../../../../../../types/automation";
 import {
   automationActionStrings,
   automationTargetStrings,
@@ -20,6 +23,9 @@ type props = {
   pipelineId: string;
 };
 function AutomationCreator({ pipelineId }: props) {
+  const { pipelineAutomationsDispatch } = useContext(
+    PipelineAutomationsContext,
+  );
   const [showCreator, setShowCreator] = useState(false);
   const [automation, automationDispatch] = useReducer(
     automationCreationReducer,
@@ -30,12 +36,21 @@ function AutomationCreator({ pipelineId }: props) {
   const cardStyleClasses = "wpqt-px-3 wpqt-min-w-[60px] wpqt-cursor-pointer";
   const cardTitleClasses =
     "wpqt-absolute wpqt-top-0 wpqt-left-[50%] wpqt-transform-center wpqt-bg-[#fff] wpqt-text-[1rem] wpqt-leading-none wpqt-font-semibold wpqt-p-1";
-  const onCreateAnimation = async () => {
-    await createAutomation(pipelineId, automation, (success: boolean) => {
-      if (success) {
-        resetAutomationState();
-      }
-    });
+  const onCreateAutomation = async () => {
+    await createAutomation(
+      pipelineId,
+      automation,
+      (success: boolean, createdAutomation: Automation | null) => {
+        if (success && createdAutomation) {
+          resetAutomationState();
+
+          pipelineAutomationsDispatch({
+            type: ADD_PIPELINE_AUTOMATION,
+            payload: createdAutomation,
+          });
+        }
+      },
+    );
   };
   const resetAutomationState = () => {
     automationDispatch({ type: "RESET" });
@@ -99,7 +114,7 @@ function AutomationCreator({ pipelineId }: props) {
         <AutomationCreationSteps
           automation={automation}
           automationDispatch={automationDispatch}
-          createAnimation={onCreateAnimation}
+          createAutomation={onCreateAutomation}
         />
       </div>
       <div className="wpqt-flex wpqt-justify-center">

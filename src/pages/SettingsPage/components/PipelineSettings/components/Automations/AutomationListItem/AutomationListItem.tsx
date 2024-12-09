@@ -1,9 +1,11 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
+import { REMOVE_PIPELINE_AUTOMATION } from "../../../../../../../constants";
 import { useAutomationActions } from "../../../../../../../hooks/actions/useAutomationActions";
+import { PipelineAutomationsContext } from "../../../../../../../providers/PipelineAutomationsContextProvider";
 import { Automation } from "../../../../../../../types/automation";
 import {
   automationActionStrings,
@@ -15,6 +17,9 @@ type Props = {
   automation: Automation;
 };
 function AutomationListItem({ automation }: Props) {
+  const { pipelineAutomationsDispatch } = useContext(
+    PipelineAutomationsContext,
+  );
   const { deleteAutomation } = useAutomationActions();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const cardStyleClasses = "wpqt-px-3 wpqt-pt-1 wpqt-min-w-[60px]";
@@ -25,7 +30,10 @@ function AutomationListItem({ automation }: Props) {
     setDeleteLoading(true);
     await deleteAutomation(automation.pipeline_id, automation.id, (success) => {
       if (success) {
-        console.log("Automation deleted");
+        pipelineAutomationsDispatch({
+          type: REMOVE_PIPELINE_AUTOMATION,
+          payload: automation.id,
+        });
       }
     });
     setDeleteLoading(false);

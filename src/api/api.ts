@@ -644,11 +644,7 @@ function getPipelineAutomationsRequest(pipelineId: string): Promise<
 function createPipelineAutomationRequest(
   pipelineId: string,
   automation: AutomationCreationState,
-): Promise<
-  WPQTResponse<{
-    automation: Automation;
-  }>
-> {
+): Promise<WPQTResponse<Automation>> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
     method: "POST",

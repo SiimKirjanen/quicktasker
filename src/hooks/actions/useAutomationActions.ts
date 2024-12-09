@@ -58,17 +58,20 @@ function useAutomationActions() {
   const createAutomation = async (
     pipelineId: string,
     automation: AutomationCreationState,
-    callback?: (success: boolean) => void,
+    callback?: (success: boolean, createdAutomation: Automation | null) => void,
   ) => {
     try {
-      await createPipelineAutomationRequest(pipelineId, automation);
+      const response = await createPipelineAutomationRequest(
+        pipelineId,
+        automation,
+      );
       toast.success(__("Automation created", "quicktasker"));
-      callback && callback(true);
+      callback && callback(true, response.data);
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to create automation", "quicktasker"));
 
-      callback && callback(false);
+      callback && callback(false, null);
     }
   };
 

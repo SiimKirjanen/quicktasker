@@ -13,18 +13,18 @@ import { AutomationTriggerSelection } from "../AutomationTriggerSelection/Automa
 type Props = {
   automation: AutomationCreationState;
   automationDispatch: React.Dispatch<Action>;
-  createAnimation: () => Promise<void>;
+  createAutomation: () => Promise<void>;
 };
 function AutomationCreationSteps({
   automation,
   automationDispatch,
-  createAnimation,
+  createAutomation,
 }: Props) {
   const [creationLoading, setCreationLoading] = useState(false);
 
-  const handleCreateAnimation = async () => {
+  const handleCreateAutomation = async () => {
     setCreationLoading(true);
-    await createAnimation();
+    await createAutomation();
     setCreationLoading(false);
   };
 
@@ -58,7 +58,7 @@ function AutomationCreationSteps({
     <WPQTIconButton
       text={__("Create automation", "quicktasker")}
       icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
-      onClick={handleCreateAnimation}
+      onClick={handleCreateAutomation}
       loading={creationLoading}
     />
   );

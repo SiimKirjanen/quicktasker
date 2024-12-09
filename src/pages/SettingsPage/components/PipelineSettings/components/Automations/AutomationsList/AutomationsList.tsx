@@ -1,14 +1,15 @@
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { BsRobot } from "react-icons/bs";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
-import { Automation } from "../../../../../../../types/automation";
+import { Loading } from "../../../../../../../components/Loading/Loading";
+import { PipelineAutomationsContext } from "../../../../../../../providers/PipelineAutomationsContextProvider";
 import { AutomationListItem } from "../AutomationListItem/AutomationListItem";
 
-type Props = {
-  automations: Automation[] | null;
-};
-function AutomationsList({ automations }: Props) {
+function AutomationsList() {
+  const {
+    state: { automations, loading },
+  } = useContext(PipelineAutomationsContext);
   const [showAutomations, setShowAutomations] = useState(false);
 
   if (!showAutomations) {
@@ -23,6 +24,10 @@ function AutomationsList({ automations }: Props) {
     );
   }
 
+  if (loading) {
+    return <Loading />;
+  }
+
   if (!automations || automations.length === 0) {
     return (
       <div>{__("No automations created for this board", "quicktasker")}</div>
@@ -32,7 +37,7 @@ function AutomationsList({ automations }: Props) {
   return (
     <div>
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-3 wpqt-mb-2">
-        {automations?.map((automation) => (
+        {automations.map((automation) => (
           <AutomationListItem key={automation.id} automation={automation} />
         ))}
       </div>
