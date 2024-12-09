@@ -3,9 +3,9 @@ import { __ } from "@wordpress/i18n";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldsContextProvider } from "../../../providers/CustomFieldsContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
+import { PremiumAd } from "../../PremiudAd/PremiumAd";
 import { CustomFieldCreation } from "../CustomFieldCreation/CustomFieldCreation";
 import { CustomFields } from "../CustomFields/CustomFields";
-import { CustomFieldsAd } from "../CustomFieldsAd/CustomFieldsAd";
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.User]: __(
@@ -83,7 +83,13 @@ function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
           </CustomFieldsContextProvider>
         </div>
       ) : (
-        <CustomFieldsAd />
+        <PremiumAd
+          title={__("Custom fields", "quicktasker")}
+          description={__(
+            "Premium feature to create and manage custom data fields. Allows to add extra data to tasks and users.",
+            "quicktasker",
+          )}
+        />
       )}
     </>
   );
