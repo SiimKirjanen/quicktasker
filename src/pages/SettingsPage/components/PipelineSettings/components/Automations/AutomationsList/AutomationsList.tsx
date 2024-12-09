@@ -1,6 +1,7 @@
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { BsRobot } from "react-icons/bs";
+import { Alert } from "../../../../../../../components/common/Alert/Alert";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
 import { Loading } from "../../../../../../../components/Loading/Loading";
 import { PipelineAutomationsContext } from "../../../../../../../providers/PipelineAutomationsContextProvider";
@@ -12,6 +13,18 @@ function AutomationsList() {
   } = useContext(PipelineAutomationsContext);
   const [showAutomations, setShowAutomations] = useState(false);
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (!automations || automations.length === 0) {
+    return (
+      <Alert type="info">
+        {__("No automations created for this board", "quicktasker")}
+      </Alert>
+    );
+  }
+
   if (!showAutomations) {
     return (
       <div>
@@ -21,16 +34,6 @@ function AutomationsList() {
           onClick={() => setShowAutomations(true)}
         />
       </div>
-    );
-  }
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (!automations || automations.length === 0) {
-    return (
-      <div>{__("No automations created for this board", "quicktasker")}</div>
     );
   }
 

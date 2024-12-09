@@ -114,15 +114,26 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             return ServiceLocator::get('AutomationRepository')->getAutomation($wpdb->insert_id);
         }
 
+  
         /**
-         * Deletes an automation entry from the database.
+         * Deletes an automation by its ID.
+         *
+         * This function retrieves the automation by its ID and deletes it from the database.
+         * If the automation is not found, it throws an exception.
+         * If the deletion fails, it throws an exception.
          *
          * @param int $automationId The ID of the automation to delete.
-         * @return bool True on successful deletion.
-         * @throws \Exception If the deletion fails.
+         * @return object The deleted automation object.
+         * @throws \Exception If the automation is not found or the deletion fails.
          */
         public function deleteAutomation($automationId) {
             global $wpdb;
+
+            $automation = ServiceLocator::get('AutomationRepository')->getAutomation($automationId);
+
+            if (!$automation) {
+                throw new \Exception('Automation not found.');
+            }
 
             $result = $wpdb->delete(
                 TABLE_WP_QUICKTASKER_AUTOMATIONS,
@@ -133,7 +144,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 throw new \Exception('Failed to delete the automation.');
             }
 
-            return true;
+            return $automation;
         }
     }
 }

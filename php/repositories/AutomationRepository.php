@@ -66,5 +66,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
 
             return $wpdb->get_results($query);
         }
+
+        /**
+         * Retrieves a formatted information message for a given automation.
+         *
+         * @param object $automation The automation object containing details.
+         * @return string A formatted string containing the automation details, including
+         *                Board ID, Target ID, Target Type, Trigger, and Action.
+         */
+        public function getAutomationInfoMessage($automation) {
+            return "Board ID: {$automation->pipeline_id}, Target ID: {$automation->target_id}, Target Type: {$automation->target_type}, Trigger: {$automation->automation_trigger}, Action: {$automation->automation_action}";
+        }
     }
 }
