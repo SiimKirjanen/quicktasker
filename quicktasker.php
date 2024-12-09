@@ -7,7 +7,7 @@
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
 	Domain Path: /languages
-	Version: 1.12.0
+	Version: 1.13.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28
 	License: GPLv2 or later
@@ -69,7 +69,6 @@ WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\Automa
 WPQT\ServiceLocator::register('TimeRepository', new WPQT\Time\TimeRepository());
 WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
 WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
-
 WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
 
 if( is_admin() ) {

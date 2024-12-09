@@ -7,10 +7,12 @@ import {
   removeTaskFromUserRequest,
   restoreArchivedTaskRequest,
 } from "../../api/api";
+import { useErrorHandler } from "../useErrorHandler";
 import { useAutomationActions } from "./useAutomationActions";
 
 const useTaskActions = () => {
   const { handleExecutedAutomations } = useAutomationActions();
+  const { displayErrorMessages } = useErrorHandler();
 
   const deleteTask = async (taskId: string, callback?: () => void) => {
     try {
@@ -76,6 +78,7 @@ const useTaskActions = () => {
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to change task status", "quicktasker"));
+      displayErrorMessages(error);
     }
   };
 
