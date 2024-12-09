@@ -50,6 +50,12 @@
   .wpqt-transform-y-center {
     transform: translateY(-50%);
   }
+  .wpqt-transform-x-center {
+    transform: translateX(-50%);
+  }
+  .wpqt-transform-center {
+    transform: translate(-50%, -50%);
+  }
 }
 
 /* Start of WordPress style overrides */

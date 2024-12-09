@@ -7,7 +7,7 @@
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
 	Domain Path: /languages
-	Version: 1.12.0
+	Version: 1.13.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28
 	License: GPLv2 or later
@@ -35,6 +35,7 @@ require( 'php/repositories/TimeRepository.php' );
 require( 'php/repositories/AssetRepository.php' );
 require( 'php/repositories/SettingRepository.php' );
 require( 'php/repositories/OverViewRepository.php' );
+require( 'php/repositories/AutomationRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
@@ -54,6 +55,8 @@ require( 'php/services/RequestValidation.php' );
 require( 'php/services/SettingService.php' );
 require( 'php/services/DBSeederService.php' );
 require( 'php/services/SettingsValidationService.php' );
+require( 'php/services/AutomationService.php' );
+require( 'php/services/ServiceLocator.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
@@ -61,6 +64,12 @@ require( 'php/api/admin-api.php' );
 require( 'php/api/user-page-api.php' );
 require( 'php/side-effects.php' );
 require( 'php/db-seeder.php' );
+
+WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
+WPQT\ServiceLocator::register('TimeRepository', new WPQT\Time\TimeRepository());
+WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
+WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
+WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );

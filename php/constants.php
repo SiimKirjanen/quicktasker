@@ -35,7 +35,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.4.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.7.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -94,6 +94,10 @@ if ( ! defined( 'TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS' ) ) {
     define('TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS', $wpdb->prefix . "quicktasker_pipeline_settings");
 }
 
+if ( ! defined( 'TABLE_WP_QUICKTASKER_AUTOMATIONS' ) ) {
+    define('TABLE_WP_QUICKTASKER_AUTOMATIONS', $wpdb->prefix . "quicktasker_automations");
+}
+
 /*
 ==================================================================================================================================================================================================================
 Log constants
@@ -122,6 +126,10 @@ if ( ! defined( 'WP_QT_LOG_CREATED_BY_ADMIN' ) ) {
 
 if ( ! defined( 'WP_QT_LOG_CREATED_BY_QUICKTASKER_USER' ) ) {
     define('WP_QT_LOG_CREATED_BY_QUICKTASKER_USER', "quicktasker_user");
+}
+
+if ( ! defined( 'WP_QT_LOG_CREATED_BY_AUTOMATION' ) ) {
+    define('WP_QT_LOG_CREATED_BY_AUTOMATION', "automation");
 }
 
 /*
@@ -181,7 +189,7 @@ if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS' ) ) {
-    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS", "quicktasker_admin_role_manage_users"); // Allows access to QuickTasker Users page and related private API endpoints
+    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS", "quicktasker_admin_role_manage_users"); // Allows access to Users page and related private API endpoints
 }    
 
 /*
@@ -192,4 +200,29 @@ Settings constants
 
 if ( ! defined( 'WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES' ) ) {
     define('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES', "quicktasker_user_page_custom_styles");
+}
+
+/*
+==================================================================================================================================================================================================================
+Automation constants
+==================================================================================================================================================================================================================
+*/
+
+// Types
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK', "task");
+}
+
+// Actions
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK', "archive-task");
+}
+
+// Triggers
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE', "task-done");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE', "task-not-done");
 }

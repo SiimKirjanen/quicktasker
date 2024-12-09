@@ -32,6 +32,8 @@ use WPQT\Customfield\CustomFieldService;
 use WPQT\Settings\SettingsService;
 use WPQT\Settings\SettingsValidationService;
 use WPQT\Capability\CapabilityService;
+use WPQT\Automation\AutomationService;
+use WPQT\ServiceLocator;
 
 if ( ! function_exists( 'WPQTverifyApiNonce' ) ) {
     function WPQTverifyApiNonce($data) {
@@ -618,18 +620,29 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $taskService = new TaskService();
                         $logService = new LogService();
                         $settingsValidationService = new SettingsValidationService();
+                        $automationService = new AutomationService();
+                        $taskMarkedAsDone = $data['done'];
 
                         if( !$settingsValidationService->isAllowedToMarkTaskDone($data['id']) ) {
                             throw new WPQTException('Task can be marked as done on last stage', true);
                         }
 
-                        $task = $taskService->changeTaskDoneStatus( $data['id'], $data['done']);
-                        $logMessage = $data['done'] ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
+                        $task = $taskService->changeTaskDoneStatus( $data['id'], $taskMarkedAsDone);
+                        $logMessage = $taskMarkedAsDone ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
 
                         $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+
+                        /* Handle automations */
+                        $trigger = $taskMarkedAsDone ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE;
+                        $executedAutomations = $automationService->handleAutomations($task->pipeline_id, $task->id, WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, $trigger);
+                        /* End of handling automations */
+
                         $wpdb->query('COMMIT');
 
-                        return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'task' => $task,
+                            'executedAutomations' => $executedAutomations
+                        ]))->toArray(), 200);
                     } catch (Exception $e) {
                         $wpdb->query('ROLLBACK');
             
@@ -1834,7 +1847,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $settingRepo = new SettingRepository();
                         $pipelineSettings = $settingRepo->getPipelineSettings($data['id']);
 
-                        return new WP_REST_Response((new ApiResponse(true, array(), $pipelineSettings))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'settings' => $pipelineSettings,
+                        ]))->toArray(), 200);
                     } catch (Exception $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     }
@@ -1934,6 +1949,127 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 ),
             ),
         );
+
+         /*
+        ==================================================================================================================================================================================================================
+        Automation endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/automations',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        WPQTverifyApiNonce($data);
+                 
+                        $automationRepo = ServiceLocator::get('AutomationRepository');
+                        $pipelineAutomations = $automationRepo->getPipelineAutomations($data['id']);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'automations' => $pipelineAutomations,
+                        ]))->toArray(), 200);
+                    } catch (Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/automations',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    try {
+                        WPQTverifyApiNonce($data);
+
+                        $automation = ServiceLocator::get('AutomationService')->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction']);
+                 
+                        return new WP_REST_Response((new ApiResponse(true, array(), $automation))->toArray(), 200);
+                    } catch (Exception $e) {
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'automationTarget' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'automationTrigger' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'automationAction' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/automations/(?P<automation_id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+                        $deletedAutomation = ServiceLocator::get('AutomationService')->deleteAutomation($data['automation_id']);
+      
+                        $wpdb->query('COMMIT');
+                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                    } catch (Exception $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'automation_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
     }
 }
 

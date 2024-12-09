@@ -7,6 +7,7 @@ enum WPQTLogCreatedBy {
   System = "system",
   Admin = "admin",
   WPQTUser = "quicktasker_user",
+  Automation = "automation",
 }
 
 enum WPQTArchiveDoneFilter {

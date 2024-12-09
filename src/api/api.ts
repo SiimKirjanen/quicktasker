@@ -1,5 +1,7 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
+import { AutomationCreationState } from "../reducers/automation-creation-reducer";
+import { Automation } from "../types/automation";
 import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
@@ -172,7 +174,12 @@ function getArchivedTasksRequest(): Promise<WPQTResponse<TaskFromServer[]>> {
 function markTaskDoneRequest(
   taskId: string,
   done: boolean,
-): Promise<WPQTResponse> {
+): Promise<
+  WPQTResponse<{
+    task: Task;
+    executedAutomations: Automation[];
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/tasks/${taskId}/done`,
     method: "PATCH",
@@ -569,9 +576,11 @@ function saveUserPageCustomStylesRequest(
   });
 }
 
-function getPipelineSettingsRequest(
-  pipelineId: string,
-): Promise<WPQTResponse<PipelineSettingsFromServer>> {
+function getPipelineSettingsRequest(pipelineId: string): Promise<
+  WPQTResponse<{
+    settings: PipelineSettingsFromServer;
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}/settings`,
     method: "GET",
@@ -614,6 +623,52 @@ function getPipelineOverviewData(
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Automation requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getPipelineAutomationsRequest(pipelineId: string): Promise<
+  WPQTResponse<{
+    automations: Automation[];
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+function createPipelineAutomationRequest(
+  pipelineId: string,
+  automation: AutomationCreationState,
+): Promise<WPQTResponse<Automation>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
+    method: "POST",
+    data: {
+      automationTargetId: null,
+      automationTarget: automation.automationTarget,
+      automationTrigger: automation.automationTrigger,
+      automationAction: automation.automationAction,
+    },
+    headers: getCommonHeaders(),
+  });
+}
+
+function deletePipelineAutomationsRequest(
+  pipelineId: string,
+  automationId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations/${automationId}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -623,9 +678,11 @@ export {
   changeUserSessionStatusRequest,
   changeUserStatusRequest,
   createNewStageRequest,
+  createPipelineAutomationRequest,
   createPipelineRequest,
   createTaskRequest,
   createUserRequest,
+  deletePipelineAutomationsRequest,
   deletePipelineRequest,
   deleteStageRequest,
   deleteTaskRequest,
@@ -641,6 +698,7 @@ export {
   getExtendedUserRequest,
   getGlobalLogsRequest,
   getLogsRequest,
+  getPipelineAutomationsRequest,
   getPipelineData,
   getPipelineOverviewData,
   getPipelineSettingsRequest,

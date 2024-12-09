@@ -115,7 +115,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				text text NOT NULL,
 				type_id int(11) DEFAULT NULL,
 				type ENUM('task', 'pipeline', 'stage', 'user', 'users') NOT NULL,
-				created_by ENUM('system', 'admin', 'quicktasker_user') NOT NULL,
+				created_by ENUM('system', 'admin', 'quicktasker_user', 'automation') NOT NULL,
 				user_id int(11) DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				PRIMARY KEY  (id),
@@ -236,6 +236,23 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 			) $charset_collate;";
 
 			dbDelta( $sql14 );
+
+			$sql15 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				pipeline_id int(11) NOT NULL,
+				target_id int(11) DEFAULT NULL,
+				target_type ENUM('stage', 'task', 'quicktasker', 'pipeline') NOT NULL,
+				automation_trigger varchar(255) NOT NULL,
+				automation_action varchar(255) NOT NULL,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				updated_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id),
+				INDEX pipeline_id (pipeline_id),
+				INDEX target_id (target_id),
+				INDEX target_type (target_type)
+			) $charset_collate;";
+
+			dbDelta( $sql15 );
 
 			update_option( "wp_quicktasker_db_current_version", WP_QUICKTASKER_DB_VERSION );
 		}

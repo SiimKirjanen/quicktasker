@@ -1122,6 +1122,10 @@
   left: 50%;
 }
 
+.wpqt-left-\[50\%\] {
+  left: 50%;
+}
+
 .wpqt-right-2 {
   right: 0.5rem;
 }
@@ -1136,6 +1140,10 @@
 
 .wpqt-right-\[12px\] {
   right: 12px;
+}
+
+.wpqt-top-0 {
+  top: 0px;
 }
 
 .wpqt-top-1 {
@@ -1439,6 +1447,10 @@
 
 .wpqt-min-w-\[340px\] {
   min-width: 340px;
+}
+
+.wpqt-min-w-\[60px\] {
+  min-width: 60px;
 }
 
 .wpqt-max-w-4xl {
@@ -1752,9 +1764,24 @@
   border-color: rgb(208 215 222 / var(--tw-border-opacity)) !important;
 }
 
+.wpqt-border-blue-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(96 165 250 / var(--tw-border-opacity));
+}
+
 .wpqt-border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
+}
+
+.wpqt-border-gray-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity));
+}
+
+.wpqt-border-green-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(74 222 128 / var(--tw-border-opacity));
 }
 
 .wpqt-border-qtBorder {
@@ -1762,8 +1789,18 @@
   border-color: rgb(208 215 222 / var(--tw-border-opacity));
 }
 
+.wpqt-border-red-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(248 113 113 / var(--tw-border-opacity));
+}
+
 .wpqt-border-transparent {
   border-color: transparent;
+}
+
+.wpqt-border-yellow-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(250 204 21 / var(--tw-border-opacity));
 }
 
 .wpqt-border-y-gray-300 {
@@ -1782,8 +1819,18 @@
   border-right-color: rgb(209 213 219 / var(--tw-border-opacity));
 }
 
+.wpqt-bg-\[\#fff\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
 .wpqt-bg-black\/40 {
   background-color: rgb(0 0 0 / 0.4);
+}
+
+.wpqt-bg-blue-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
 }
 
 .wpqt-bg-blue-500 {
@@ -1796,6 +1843,16 @@
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
 }
 
+.wpqt-bg-green-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 252 231 / var(--tw-bg-opacity));
+}
+
+.wpqt-bg-red-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 226 226 / var(--tw-bg-opacity));
+}
+
 .wpqt-bg-red-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
@@ -1804,6 +1861,11 @@
 .wpqt-bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.wpqt-bg-yellow-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 249 195 / var(--tw-bg-opacity));
 }
 
 .wpqt-p-1 {
@@ -1892,6 +1954,10 @@
   padding-right: 24px;
 }
 
+.wpqt-pt-1 {
+  padding-top: 0.25rem;
+}
+
 .wpqt-pt-3 {
   padding-top: 0.75rem;
 }
@@ -1911,6 +1977,10 @@
 .wpqt-text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.wpqt-text-\[1rem\] {
+  font-size: 1rem;
 }
 
 .wpqt-text-base {
@@ -1991,6 +2061,11 @@
   color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
+.wpqt-text-blue-700 {
+  --tw-text-opacity: 1;
+  color: rgb(29 78 216 / var(--tw-text-opacity));
+}
+
 .wpqt-text-blue-900 {
   --tw-text-opacity: 1;
   color: rgb(30 58 138 / var(--tw-text-opacity));
@@ -2016,9 +2091,19 @@
   color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
+.wpqt-text-gray-700 {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
 .wpqt-text-green-600 {
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+
+.wpqt-text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity));
 }
 
 .wpqt-text-qtBlueHover {
@@ -2041,6 +2126,11 @@
   color: rgb(211 47 47 / var(--tw-text-opacity));
 }
 
+.wpqt-text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
+}
+
 .wpqt-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -2049,6 +2139,11 @@
 .wpqt-text-yellow-600 {
   --tw-text-opacity: 1;
   color: rgb(202 138 4 / var(--tw-text-opacity));
+}
+
+.wpqt-text-yellow-700 {
+  --tw-text-opacity: 1;
+  color: rgb(161 98 7 / var(--tw-text-opacity));
 }
 
 .wpqt-line-through {
@@ -2179,6 +2274,14 @@
 
 .wpqt-transform-y-center {
   transform: translateY(-50%);
+}
+
+.wpqt-transform-x-center {
+  transform: translateX(-50%);
+}
+
+.wpqt-transform-center {
+  transform: translate(-50%, -50%);
 }
 
 /* Start of WordPress style overrides */

@@ -9,6 +9,7 @@ import {
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
   PIPELINE_REMOVE_ACTIVE_PIPELINE,
+  PIPELINE_REMOVE_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
@@ -343,6 +344,28 @@ const activePipelineReducer = (state: State, action: Action) => {
       return {
         ...state,
         activePipeline: null,
+      };
+    }
+    case PIPELINE_REMOVE_TASK: {
+      const taskId = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        return {
+          ...stage,
+          tasks: stage.tasks?.filter((task) => task.id !== taskId),
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
+        },
       };
     }
     default:
