@@ -35,15 +35,6 @@ use WPQT\Capability\CapabilityService;
 use WPQT\Automation\AutomationService;
 use WPQT\ServiceLocator;
 
-if ( ! function_exists( 'WPQTverifyApiNonce' ) ) {
-    function WPQTverifyApiNonce($data) {
-        $nonce = $data->get_header('X-WPQT-API-Nonce');
-        NonceService::verifyNonce($nonce, WPQT_ADMIN_API_NONCE);
-
-        return true;
-    }   
-}
-
 add_action('rest_api_init', 'wpqt_register_api_routes');
 if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
     function wpqt_register_api_routes() {
@@ -60,7 +51,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $pipelineRepo = new PipelineRepository();
                         $settingRepo = new SettingRepository();
 
@@ -98,7 +88,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $pipelineRepo = new PipelineRepository();
                         $pipelines = $pipelineRepo->getPipelines();
 
@@ -123,7 +112,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
                         $pipelineService = new PipelineService();
                         $logService = new LogService();
                         $newPipeline = $pipelineService->createPipeline($data['name']);
@@ -160,7 +148,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $pipelineService = new PipelineService();
                         $logService = new LogService();
@@ -208,7 +195,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $pipelineService = new PipelineService();
                         $logService = new LogService();
                         $pipeline = $pipelineService->markPipelineAsPrimary($data['id']);
@@ -242,7 +228,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $pipelineService = new PipelineService();
                         $logService = new LogService();
@@ -287,7 +272,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $tasksRepo = new TaskRepository();
                         $archivedTasks = $tasksRepo->getArchivedTasks(true);
 
@@ -309,7 +293,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $logRepo = new LogRepository();
                         $logs = $logRepo->getLogs($data['id'], WP_QT_LOG_TYPE_TASK);
                 
@@ -341,7 +324,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $taskService = new TaskService();
                         $logService = new LogService();
@@ -396,7 +378,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
                         
                         $taskService = new TaskService();
                         $logService = new LogService();
@@ -446,7 +427,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $taskService = new TaskService();
                         $logService = new LogService();
 
@@ -500,7 +480,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
                         
                         $taskService = new TaskService();
                         $taskService->deleteTask( $data['id'] );
@@ -537,7 +516,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        WPQTverifyApiNonce($data);
                         $taskService = new TaskService();
                         $logService = new LogService();
 
@@ -575,7 +553,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $taskService = new TaskService();
                         $logService = new LogService();
@@ -614,9 +591,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     global $wpdb;
 
                     try {
-                        $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
-        
+                        $wpdb->query('START TRANSACTION');        
                         $taskService = new TaskService();
                         $logService = new LogService();
                         $settingsValidationService = new SettingsValidationService();
@@ -679,7 +654,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'POST',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $stageService = new StageService();
                         $logService = new LogService();
 
@@ -728,7 +702,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $stageService = new StageService();
                         $logService = new LogService();
@@ -780,7 +753,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $stageService = new StageService();
                         $logService = new LogService();
@@ -827,7 +799,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $stageService = new StageService();
                         $stageService->deleteStage( $data['id'] );
@@ -863,7 +834,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $stageService = new StageService();
                         $logService = new LogService();
@@ -907,7 +877,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $userRepo = new UserRepository();
                         $users = $userRepo->getUsers();
 
@@ -929,7 +898,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $userRepo = new UserRepository();
                         $userService = new UserService();
                         $userPageService = new UserPageService();
@@ -972,7 +940,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $userService = new UserService();
                         $logService = new LogService();
@@ -1015,9 +982,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'GET',
                 'callback' => function( $data ) {
-                    try {
-                        WPQTverifyApiNonce($data);
-                
+                    try {                
                         $taskRepo = new TaskRepository();
                         $userTasks = $taskRepo->getTasksAssignedToUser($data['id'], true);
                     
@@ -1046,9 +1011,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'POST',
                 'callback' => function( $data ) {
-                    try {
-                        WPQTverifyApiNonce($data);
-                
+                    try {                
                         $userService = new UserService();
                         $logService = new LogService();
                         $userRepo = new UserRepository();
@@ -1089,9 +1052,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'DELETE',
                 'callback' => function( $data ) {
-                    try {
-                        WPQTverifyApiNonce($data);
-                
+                    try {                
                         $userService = new UserService();
                         $logService = new LogService();
                         $userRepo = new UserRepository();
@@ -1133,7 +1094,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $userService = new UserService();
                         $logService = new LogService();
 
@@ -1168,7 +1128,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     
                     try {
                         $wpdb->query('START TRANSACTION');
-                        WPQTverifyApiNonce($data);
 
                         $userService = new UserService();
                         $logService = new LogService();
@@ -1205,7 +1164,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $userService = new UserService();
                         $logService = new LogService();
 
@@ -1243,7 +1201,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'DELETE',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $userService = new UserService();
                         $logService = new LogService();
 
@@ -1275,7 +1232,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $sessionService = new SessionService();
                         $sessionService->changeSessionStatus($data['id'], $data['status']);
                     
@@ -1309,7 +1265,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'DELETE',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $sessionService = new SessionService();
                         $sessionService->deleteSession($data['id']);
                     
@@ -1338,7 +1293,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $sessionsRepo = new SessionRepository();
                         $userSessions = $sessionsRepo->getUserSessions();
                         
@@ -1367,7 +1321,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $userRepo = new UserRepository();
                         $users = $userRepo->getWPNonAdminUsers();
 
@@ -1396,7 +1349,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $capabilityService = new CapabilityService();
                         $capabilities = (object)[
                             WP_QUICKTASKER_ADMIN_ROLE => $data[WP_QUICKTASKER_ADMIN_ROLE],
@@ -1447,7 +1399,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $logRepo = new LogRepository();
                         $logs = $logRepo->getLogs($data['typeId'], $data['type']);
                         
@@ -1481,7 +1432,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $logRepo = new LogRepository();
 
                         $type = $data['type'] ?? null;
@@ -1542,7 +1492,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $commentRepo = new CommentRepository();
                         $comments = $commentRepo->getComments( $data->get_param('typeId'), $data->get_param('type'), $data->get_param('isPrivate') );
                 
@@ -1581,7 +1530,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'POST',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $commentService = new CommentService();
                         $adminId = get_current_user_id();
                         $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment'], $adminId, true);
@@ -1633,7 +1581,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $customFieldRepo = new CustomFieldRepository();
 
                         $customFields = $customFieldRepo->getRelatedCustomFields($data['entityId'], $data['entityType']);
@@ -1673,7 +1620,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'POST',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $customFieldService = new CustomFieldService();
                         $logService = new LogService();
 
@@ -1725,7 +1671,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'DELETE',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $customFieldRepo = new CustomFieldRepository();
                         $customFieldService = new CustomFieldService();
                         $logService = new LogService();
@@ -1759,7 +1704,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $customFieldService = new CustomFieldService();
                         $logService = new LogService();
                         $customFieldRepo = new CustomFieldRepository();
@@ -1814,7 +1758,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $styles = SettingsService::saveUserPageCustomStyles($data['styles']);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $styles))->toArray(), 200);
@@ -1841,9 +1784,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'GET',
                 'callback' => function( $data ) {
-                    try {
-                        WPQTverifyApiNonce($data);
-                        
+                    try {                        
                         $settingRepo = new SettingRepository();
                         $pipelineSettings = $settingRepo->getPipelineSettings($data['id']);
 
@@ -1873,9 +1814,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
-                    try {
-                        WPQTverifyApiNonce($data);
-                        
+                    try {                        
                         $settingsService = new SettingsService();
                         $settingsService->updatePipelineTaskDoneCompletionRestriction($data['id'], $data['allow_task_completion_only_on_last_stage']);
 
@@ -1915,7 +1854,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
                         $overviewRepo = new OverviewRepository();
 
                         $taskStartDate = $data['taskStartDate'] ?? null;
@@ -1962,9 +1900,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'GET',
                 'callback' => function( $data ) {
-                    try {
-                        WPQTverifyApiNonce($data);
-                 
+                    try {                 
                         $automationRepo = ServiceLocator::get('AutomationRepository');
                         $pipelineAutomations = $automationRepo->getPipelineAutomations($data['id']);
 
@@ -1995,8 +1931,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'POST',
                 'callback' => function( $data ) {
                     try {
-                        WPQTverifyApiNonce($data);
-
                         $automation = ServiceLocator::get('AutomationService')->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction']);
                  
                         return new WP_REST_Response((new ApiResponse(true, array(), $automation))->toArray(), 200);
