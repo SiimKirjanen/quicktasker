@@ -1047,20 +1047,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const descriptions = {
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom fields to this user only.", "quicktasker"),
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.", "quicktasker"),
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom fields to all tasks in this board.", "quicktasker"),
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to board settings.", "quicktasker")
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add user-specific custom fields. If you want to add custom fields to all users, please go to users settings.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom fields to all users. If you want to add custom fields to a specific user only, please go to that user settings.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add board level custom fields.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add task-specific custom fields. If you want to add custom fields to all tasks in this board, please go to board settings.", "quicktasker")
 };
 const existingFieldsDescriptions = {
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom fields to this user only.", "quicktasker"),
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.", "quicktasker"),
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add custom fields to all tasks in this board.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Custom fields applied to this user, including both user-specific and global users fields.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Global user custom field are applied to all users.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board level fields are applied to all tasks in this board.", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Custom fields applied to this task, including both task-specific and board-level fields.", "quicktasker")
 };
 const titles = {
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("User custom fields", "quicktasker"),
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Users custom fields", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Global users custom fields", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board custom fields", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task custom fields", "quicktasker")
 };
@@ -1216,7 +1216,7 @@ function CustomFieldsRecovery() {
     return null;
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-mb-6 wpqt-flex wpqt-flex-col wpqt-items-center",
+    className: "wpqt-my-3 wpqt-flex wpqt-flex-col wpqt-items-center",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
       children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Custom Field recovery", "quicktasker")
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -1257,11 +1257,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-icons/tb */ "./node_modules/react-icons/tb/index.mjs");
+/* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-icons/tb */ "./node_modules/react-icons/tb/index.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../hooks/actions/useCustomFieldActions */ "./src/hooks/actions/useCustomFieldActions.ts");
 /* harmony import */ var _providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../providers/CustomFieldsContextProvider */ "./src/providers/CustomFieldsContextProvider.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _utils_custom_fields__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../utils/custom-fields */ "./src/utils/custom-fields.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -1289,6 +1290,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
+
 
 
 
@@ -1334,13 +1336,13 @@ function DeletedField({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
         className: "wpqt-font-semibold",
-        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Type:", "quicktasker")
-      }), " ", customField.type]
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Level:", "quicktasker")
+      }), " ", _utils_custom_fields__WEBPACK_IMPORTED_MODULE_6__.CustomFieldEntityTypeString[customField.entity_type]]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTIconButton, {
         onClick: restoreField,
         loading: restoring,
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tb__WEBPACK_IMPORTED_MODULE_7__.TbRestore, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tb__WEBPACK_IMPORTED_MODULE_8__.TbRestore, {
           className: "wpqt-icon-green wpqt-size-5"
         }),
         tooltipId: `restore-field-${customField.id}`,
@@ -1419,14 +1421,14 @@ function CustomFields() {
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-my-6 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3",
+      className: "wpqt-my-4 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3",
       children: customFields.map(customField => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_CustomField_CustomField__WEBPACK_IMPORTED_MODULE_6__.CustomField, {
         data: customField
       }, customField.id))
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
-        text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Close", "quicktasker"),
+        text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Hide custom fields", "quicktasker"),
         onClick: () => setIsOpen(false),
         icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
           className: "wpqt-icon-red wpqt-size-5"
@@ -14888,6 +14890,31 @@ const convertCommentFromServer = comment => Object.assign(Object.assign({}, comm
 });
 const filterNewComments = (comments, storedComments) => {
   return comments.filter(comment => !storedComments.find(c => c.id === comment.id));
+};
+
+
+/***/ }),
+
+/***/ "./src/utils/custom-fields.ts":
+/*!************************************!*\
+  !*** ./src/utils/custom-fields.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CustomFieldEntityTypeString: () => (/* binding */ CustomFieldEntityTypeString)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types/custom-field */ "./src/types/custom-field.ts");
+
+
+const CustomFieldEntityTypeString = {
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Board", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("User", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Global users", "quicktasker")
 };
 
 

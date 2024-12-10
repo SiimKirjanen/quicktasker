@@ -77,7 +77,7 @@ function CustomFieldsRecovery() {
   };
 
   return (
-    <div className="wpqt-mb-6 wpqt-flex wpqt-flex-col wpqt-items-center">
+    <div className="wpqt-my-3 wpqt-flex wpqt-flex-col wpqt-items-center">
       <h2>{__("Custom Field recovery", "quicktasker")}</h2>
       <div className="wpqt-mb-4 wpqt-text-center">
         {__(

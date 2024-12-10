@@ -1209,6 +1209,16 @@
   margin-bottom: 1.5rem;
 }
 
+.wpqt-my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.wpqt-my-3 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
 .\!wpqt-mb-0 {
   margin-bottom: 0px !important;
 }

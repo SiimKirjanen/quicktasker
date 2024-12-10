@@ -10,34 +10,34 @@ import { CustomFieldsRecovery } from "../CustomFieldsRecovery/CustomFieldsRecove
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.User]: __(
-    "Add custom fields to this user only.",
+    "Add user-specific custom fields. If you want to add custom fields to all users, please go to users settings.",
     "quicktasker",
   ),
   [CustomFieldEntityType.Users]: __(
-    "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.",
+    "Add custom fields to all users. If you want to add custom fields to a specific user only, please go to that user settings.",
     "quicktasker",
   ),
   [CustomFieldEntityType.Pipeline]: __(
-    "Add custom fields to all tasks in this board.",
+    "Add board level custom fields.",
     "quicktasker",
   ),
   [CustomFieldEntityType.Task]: __(
-    "Add custom fields to this task only. If you want to add custom fields to all tasks in this board, please go to board settings.",
+    "Add task-specific custom fields. If you want to add custom fields to all tasks in this board, please go to board settings.",
     "quicktasker",
   ),
 };
 
 const existingFieldsDescriptions: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.User]: __(
-    "Add custom fields to this user only.",
+    "Custom fields applied to this user, including both user-specific and global users fields.",
     "quicktasker",
   ),
   [CustomFieldEntityType.Users]: __(
-    "Add custom fields to all users. If you want to add custom fields to a specific user, please go to that user settings.",
+    "Global user custom field are applied to all users.",
     "quicktasker",
   ),
   [CustomFieldEntityType.Pipeline]: __(
-    "Add custom fields to all tasks in this board.",
+    "Board level fields are applied to all tasks in this board.",
     "quicktasker",
   ),
   [CustomFieldEntityType.Task]: __(
@@ -48,7 +48,10 @@ const existingFieldsDescriptions: { [key in CustomFieldEntityType]: string } = {
 
 const titles: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.User]: __("User custom fields", "quicktasker"),
-  [CustomFieldEntityType.Users]: __("Users custom fields", "quicktasker"),
+  [CustomFieldEntityType.Users]: __(
+    "Global users custom fields",
+    "quicktasker",
+  ),
   [CustomFieldEntityType.Pipeline]: __("Board custom fields", "quicktasker"),
   [CustomFieldEntityType.Task]: __("Task custom fields", "quicktasker"),
 };

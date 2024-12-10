@@ -5,6 +5,7 @@ import { ADD_CUSTOM_FIELD } from "../../../../../constants";
 import { useCustomFieldActions } from "../../../../../hooks/actions/useCustomFieldActions";
 import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
 import { CustomField } from "../../../../../types/custom-field";
+import { CustomFieldEntityTypeString } from "../../../../../utils/custom-fields";
 import { WPQTIconButton } from "../../../../common/Button/Button";
 
 type Props = {
@@ -40,8 +41,10 @@ function DeletedField({ customField, refreshDeletedFields }: Props) {
         {customField.description}
       </div>
       <div>
-        <span className="wpqt-font-semibold">{__("Type:", "quicktasker")}</span>{" "}
-        {customField.type}
+        <span className="wpqt-font-semibold">
+          {__("Level:", "quicktasker")}
+        </span>{" "}
+        {CustomFieldEntityTypeString[customField.entity_type]}
       </div>
       <div>
         <WPQTIconButton
