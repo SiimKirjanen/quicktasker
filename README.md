@@ -26,12 +26,15 @@ Clone respository
 
 `git clone git@github.com:SiimKirjanen/quicktasker.git quicktasker-pro`
 
-Make the required changes in code
+Run `./convert-to-pro.sh`
+
+Make sure the required changes were made in code
 
 - src/providers/AppContextProvider.tsx (is_customFields)
 - src/user-page-app/providers/UserPageAppContextProvider.tsx (cf)
-
-Change Plugin Name in readme.txt to QuickTasker-PRO
+- src/constants.tsx (HAS_AUTOMATIONS)
+- plugin name change in quicktasker.php to QuickTasker-PRO
+- admin-pages.php menu page title change to QuickTasker-PRO
 
 Run `npm ci`
 

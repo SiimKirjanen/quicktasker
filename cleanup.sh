@@ -15,8 +15,10 @@ FILES_TO_REMOVE=(
     "README.md"
     "tailwind.config.js"
     "webpack.config.js"
-    "node_modules"
     "reports"
+    "cleanup.sh" 
+    "convert-to-pro.sh"
+    "node_modules"
 )
 
 # Prompt the user for confirmation

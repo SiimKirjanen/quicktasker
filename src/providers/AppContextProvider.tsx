@@ -20,7 +20,7 @@ const initialState: State = {
   siteURL: "",
   pluginURL: "",
   publicUserPageId: "",
-  is_customFields: true,
+  is_customFields: false,
   timezone: "",
   isUserAllowedToDelete: false,
   userPageCustomStyles: "",
