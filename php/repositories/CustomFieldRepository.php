@@ -32,7 +32,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
                 WHERE id = %d",
                 $id
             );
@@ -45,6 +45,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
          *
          * @param int|'null' $entityId The ID of the entity to retrieve custom fields for.
          * @param string $entityType The type of the entity to retrieve custom fields for.
+         * @param bool $isDeleted Whether to get deleted custom fields or active fields.
          * @return array|null An array of custom fields or null if none found.
          */
         public function getCustomFields($entityId, $entityType, $isDeleted = false) {
@@ -55,13 +56,13 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
 
             if($entityId === "null") {
                 $query = $wpdb->prepare(
-                    "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                    "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
                     WHERE entity_id IS NULL AND entity_type = %s AND is_deleted = %d",
                     $entityType, $isDeletedCondition
                 );
             } else {
                 $query = $wpdb->prepare(
-                    "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                    "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
                     WHERE entity_id = %s AND entity_type = %s AND is_deleted = %d",
                     $entityId, $entityType, $isDeletedCondition
                 );
@@ -70,13 +71,13 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
             return $wpdb->get_results($query);
         }
 
-        public function getRelatedCustomFields($entityId, $entityType) {
+        public function getRelatedCustomFields($entityId, $entityType, $activeFields = true) {
             if($entityType === 'task') {
-                return $this->getTaskRelatedCustomFields($entityId);
+                return $this->getTaskRelatedCustomFields($entityId, $activeFields);
             }else if($entityType === 'user') {
-                return $this->getUserRelatedCustomFields($entityId);
+                return $this->getUserRelatedCustomFields($entityId, $activeFields);
             }
-            return $this->getCustomFields($entityId, $entityType);
+            return $this->getCustomFields($entityId, $entityType, !$activeFields);
         }
 
         /**
@@ -86,13 +87,15 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
          * It joins the custom fields table with the custom field values table to get the relevant data.
          *
          * @param int $taskId The ID of the task for which to retrieve custom fields.
+         * @param bool $activeFields Whether to get active or deleted custom fields.
          * @return array|null An array of custom fields and their values, or null if no results are found.
          */
-        public function getTaskRelatedCustomFields($taskId) {
+        public function getTaskRelatedCustomFields($taskId, $activeFields = true) {
             global $wpdb;
 
+            $isDeletedCondition = $activeFields ? 0 : 1;
             $task = $this->taskRepository->getTaskById($taskId);
-
+            
             $query = $wpdb->prepare(
                 "SELECT custom_fields.*, custom_field_values.value 
                 FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . " custom_fields
@@ -100,16 +103,26 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
                 ON custom_fields.id = custom_field_values.custom_field_id 
                 AND custom_field_values.entity_id = %d 
                 AND custom_field_values.entity_type = 'task'
-                WHERE (custom_fields.entity_id = %d AND custom_fields.entity_type = 'task' AND custom_fields.is_deleted = 0) 
-                OR (custom_fields.entity_id = %d AND custom_fields.entity_type = 'pipeline' AND custom_fields.is_deleted = 0)",
-                $taskId, $taskId, $task->pipeline_id
+                WHERE (custom_fields.entity_id = %d AND custom_fields.entity_type = 'task' AND custom_fields.is_deleted = %d) 
+                OR (custom_fields.entity_id = %d AND custom_fields.entity_type = 'pipeline' AND custom_fields.is_deleted = %d)",
+                $taskId, $taskId, $isDeletedCondition, $task->pipeline_id, $isDeletedCondition
             );
         
             return $wpdb->get_results($query);
         }
 
-        public function getUserRelatedCustomFields($userId) {
+        /**
+         * Retrieves custom fields related to a specific user.
+         *
+         * @param int  $userId       The ID of the user whose custom fields are to be retrieved.
+         * @param bool $activeFields Optional. Whether to retrieve active custom fields. Default true.
+         *                           If true, retrieves fields that are not deleted. If false, retrieves deleted fields.
+         * @return array An array of objects containing custom fields and their values.
+         */
+        public function getUserRelatedCustomFields($userId, $activeFields = true) {
             global $wpdb;
+
+            $isDeletedCondition = $activeFields ? 0 : 1;
 
             $query = $wpdb->prepare(
                 "SELECT custom_fields.*, custom_field_values.value 
@@ -118,9 +131,9 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
                 ON custom_fields.id = custom_field_values.custom_field_id 
                 AND custom_field_values.entity_id = %d 
                 AND custom_field_values.entity_type = 'user'
-                WHERE (custom_fields.entity_id = %d AND custom_fields.entity_type = 'user' AND custom_fields.is_deleted = 0) 
-                OR (custom_fields.entity_id IS NULL AND custom_fields.entity_type = 'users' AND custom_fields.is_deleted = 0)",
-                $userId, $userId
+                WHERE (custom_fields.entity_id = %d AND custom_fields.entity_type = 'user' AND custom_fields.is_deleted = %d) 
+                OR (custom_fields.entity_id IS NULL AND custom_fields.entity_type = 'users' AND custom_fields.is_deleted = %d)",
+                $userId, $userId, $isDeletedCondition, $isDeletedCondition
             );
         
             return $wpdb->get_results($query);

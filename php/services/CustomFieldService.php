@@ -157,5 +157,35 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
 
             return true;
         }
+
+        /**
+         * Restores a custom field by setting its 'is_deleted' status to 0.
+         *
+         * @param int $customFieldId The ID of the custom field to restore.
+         * @return array The restored custom field data.
+         * @throws WPQTException If the custom field could not be restored.
+         */
+        public function restoreCustomField($customFieldId) {
+            global $wpdb;
+
+            $result = $wpdb->update(
+                TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
+                array(
+                    'is_deleted' => 0,
+                    'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                ),
+                array(
+                    'id' => $customFieldId
+                ),
+                array('%d', '%s'),
+                array('%d')
+            );
+
+            if( $result === false ) {
+                throw new WPQTException('Failed to restore the custom field');
+            }
+
+            return $this->customFieldRepository->getCustomFieldById($customFieldId);
+        }
     }
 }

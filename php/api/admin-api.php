@@ -1581,9 +1581,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        $customFieldRepo = new CustomFieldRepository();
-
-                        $customFields = $customFieldRepo->getRelatedCustomFields($data['entityId'], $data['entityType']);
+                        $activeFields = $data->get_param( 'active' );
+                        $customFields = ServiceLocator::get('CustomFieldRepository')->getRelatedCustomFields($data['entityId'], $data['entityType'], $activeFields);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $customFields))->toArray(), 200);
                     } catch (Exception $e) {
@@ -1609,6 +1608,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
+                    'active' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    )
                 ),
             ),
         );
@@ -1741,6 +1745,43 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'custom-fields/(?P<custom_field_id>\d+)/restore',
+            array(
+                'methods' => 'PATCH',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+                        $customFieldService = new CustomFieldService();
+                        $logService = new LogService();
+
+                        $customField = $customFieldService->restoreCustomField($data['custom_field_id']);
+                        $logService->log('Custom field ' . $customField->name . ' restored', $customField->entity_type, $customField->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $wpdb->query('COMMIT');
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), $customField))->toArray(), 200);
+                    } catch (Exception $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'custom_field_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    )
                 ),
             ),
         );
