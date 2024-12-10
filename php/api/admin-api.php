@@ -708,7 +708,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $stage = $stageService->editStage( $data['id'], array(
                             "name" => $data['name'],
-                            "description" => $data['description']
+                            "description" => $data['description'] ?? ''
                         ) );
                         $logService->log('Stage ' . $stage->name . ' edited', WP_QT_LOG_TYPE_STAGE, $stage->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         $wpdb->query('COMMIT');
@@ -735,7 +735,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'description' => array(
-                        'required' => true,
+                        'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
