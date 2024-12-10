@@ -78,7 +78,7 @@ const CustomFieldsContextProvider = ({
   const fetchCustomFields = async () => {
     try {
       customFieldsDispatch({ type: SET_CUSTOM_FIELD_LOADING, payload: true });
-      const response = await getCustomFieldsRequest(entityId, entityType);
+      const response = await getCustomFieldsRequest(entityId, entityType, true);
       customFieldsDispatch({ type: SET_CUSTOM_FIELDS, payload: response.data });
     } catch (error) {
       console.error(error);

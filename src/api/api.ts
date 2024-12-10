@@ -507,10 +507,12 @@ function deleteUserSessionRequest(sessionId: string): Promise<WPQTResponse> {
 function getCustomFieldsRequest(
   entityId: string,
   entityType: CustomFieldEntityType,
+  activeFields: boolean,
 ): Promise<WPQTResponse<CustomField[]>> {
   const queryParams = new URLSearchParams({
     entityId,
     entityType,
+    active: String(activeFields),
   });
 
   return apiFetch({
@@ -531,6 +533,16 @@ function addCustomFieldRequest(
     path: `/wpqt/v1/custom-fields`,
     method: "POST",
     data: { entityId, entityType, type, name, description },
+    headers: getCommonHeaders(),
+  });
+}
+
+function restoreCustomFieldRequest(
+  customFieldId: string,
+): Promise<WPQTResponse<CustomField>> {
+  return apiFetch({
+    path: `/wpqt/v1/custom-fields/${customFieldId}/restore`,
+    method: "PATCH",
     headers: getCommonHeaders(),
   });
 }
@@ -714,6 +726,7 @@ export {
   removeTaskFromUserRequest,
   resetUserPasswordRequest,
   restoreArchivedTaskRequest,
+  restoreCustomFieldRequest,
   saveTaskCompletionDoneSettingRequest,
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,

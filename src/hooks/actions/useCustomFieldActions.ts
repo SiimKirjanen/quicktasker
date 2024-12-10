@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import {
   addCustomFieldRequest,
   markCustomFieldAsDeletedRequest,
+  restoreCustomFieldRequest,
   updateCustomFieldValueRequest,
 } from "../../api/api";
 import {
@@ -47,6 +48,20 @@ function useCustomFieldActions() {
     }
   };
 
+  const restoreCustomField = async (
+    customFieldId: string,
+    callback: (restoredCustomField: CustomField) => void,
+  ) => {
+    try {
+      const response = await restoreCustomFieldRequest(customFieldId);
+      toast.success(__("Custom field restored", "quicktasker"));
+      if (callback) callback(response.data);
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to restore custom field", "quicktasker"));
+    }
+  };
+
   const updateCustomFieldValue = async (
     customFieldId: string,
     value: string,
@@ -71,6 +86,7 @@ function useCustomFieldActions() {
   return {
     addCustomField,
     markCustomFieldAsDeleted,
+    restoreCustomField,
     updateCustomFieldValue,
   };
 }

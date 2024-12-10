@@ -6,6 +6,7 @@ import { CustomFieldEntityType } from "../../../types/custom-field";
 import { PremiumAd } from "../../PremiudAd/PremiumAd";
 import { CustomFieldCreation } from "../CustomFieldCreation/CustomFieldCreation";
 import { CustomFields } from "../CustomFields/CustomFields";
+import { CustomFieldsRecovery } from "../CustomFieldsRecovery/CustomFieldsRecovery";
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.User]: __(
@@ -80,6 +81,7 @@ function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
               {customFieldsDescription}
             </div>
             <CustomFields />
+            <CustomFieldsRecovery />
           </CustomFieldsContextProvider>
         </div>
       ) : (
