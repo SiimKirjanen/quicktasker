@@ -1356,7 +1356,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ButtonType: () => (/* binding */ ButtonType),
 /* harmony export */   WPQTButton: () => (/* binding */ WPQTButton),
-/* harmony export */   WPQTIconButton: () => (/* binding */ WPQTIconButton)
+/* harmony export */   WPQTIconButton: () => (/* binding */ WPQTIconButton),
+/* harmony export */   WPQTOnlyIconBtn: () => (/* binding */ WPQTOnlyIconBtn)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
@@ -1405,17 +1406,39 @@ function WPQTIconButton({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, tooltipAttributes, {
     className: `wpqt-main-border wpqt-relative wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${className}`,
     onClick: onClick,
-    children: [icon, text && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-      className: `wpqt-whitespace-nowrap ${loading ? "wpqt-invisible" : ""}`,
-      children: text
+    children: [icon, text || loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-gap-2 wpqt-items-center wpqt-relative",
+      children: [text && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        className: `wpqt-whitespace-nowrap ${loading ? "wpqt-invisible" : ""}`,
+        children: text
+      }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_1__.LoadingOval, {
+        width: "20",
+        height: "20",
+        className: "wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
+      })]
+    }) : null, showTooltip && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__.WPQTTooltip, {
+      id: tooltipId
+    })]
+  }));
+}
+function WPQTOnlyIconBtn({
+  icon,
+  onClick = () => {},
+  className,
+  loading = false
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: `wpqt-main-border wpqt-p-1 wpqt-relative wpqt-inline-flex wpqt-cursor-pointer wpqt-bg-gray-100 hover:wpqt-bg-white ${className}`,
+    onClick: onClick,
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: `wpqt-flex wpqt-items-center ${loading ? "wpqt-invisible" : ""}`,
+      children: icon
     }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_1__.LoadingOval, {
       width: "20",
       height: "20",
       className: "wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
-    }), showTooltip && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__.WPQTTooltip, {
-      id: tooltipId
     })]
-  }));
+  });
 }
 
 

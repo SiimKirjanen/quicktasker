@@ -6,7 +6,7 @@ import { useCustomFieldActions } from "../../../../../hooks/actions/useCustomFie
 import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
 import { CustomField } from "../../../../../types/custom-field";
 import { CustomFieldEntityTypeString } from "../../../../../utils/custom-fields";
-import { WPQTIconButton } from "../../../../common/Button/Button";
+import { WPQTOnlyIconBtn } from "../../../../common/Button/Button";
 
 type Props = {
   customField: CustomField;
@@ -47,12 +47,10 @@ function DeletedField({ customField, refreshDeletedFields }: Props) {
         {CustomFieldEntityTypeString[customField.entity_type]}
       </div>
       <div>
-        <WPQTIconButton
+        <WPQTOnlyIconBtn
           onClick={restoreField}
           loading={restoring}
           icon={<TbRestore className="wpqt-icon-green wpqt-size-5" />}
-          tooltipId={`restore-field-${customField.id}`}
-          tooltipText={__("Restore custom field", "quicktasker")}
         />
       </div>
     </div>

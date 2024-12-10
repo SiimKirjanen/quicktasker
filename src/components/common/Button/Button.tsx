@@ -66,13 +66,51 @@ function WPQTIconButton({
       onClick={onClick}
     >
       {icon}
-      {text && (
-        <span
-          className={`wpqt-whitespace-nowrap ${loading ? "wpqt-invisible" : ""}`}
-        >
-          {text}
-        </span>
-      )}
+      {text || loading ? (
+        <div className="wpqt-flex wpqt-gap-2 wpqt-items-center wpqt-relative">
+          {text && (
+            <span
+              className={`wpqt-whitespace-nowrap ${loading ? "wpqt-invisible" : ""}`}
+            >
+              {text}
+            </span>
+          )}
+          {loading && (
+            <LoadingOval
+              width="20"
+              height="20"
+              className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
+            />
+          )}
+        </div>
+      ) : null}
+      {showTooltip && <WPQTTooltip id={tooltipId} />}
+    </div>
+  );
+}
+
+type WPQTOnlyIconBtnProps = {
+  icon: React.ReactNode;
+  onClick: () => void;
+  className?: string;
+  loading?: boolean;
+};
+function WPQTOnlyIconBtn({
+  icon,
+  onClick = () => {},
+  className,
+  loading = false,
+}: WPQTOnlyIconBtnProps) {
+  return (
+    <div
+      className={`wpqt-main-border wpqt-p-1 wpqt-relative wpqt-inline-flex wpqt-cursor-pointer wpqt-bg-gray-100 hover:wpqt-bg-white ${className}`}
+      onClick={onClick}
+    >
+      <div
+        className={`wpqt-flex wpqt-items-center ${loading ? "wpqt-invisible" : ""}`}
+      >
+        {icon}
+      </div>
       {loading && (
         <LoadingOval
           width="20"
@@ -80,9 +118,8 @@ function WPQTIconButton({
           className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
         />
       )}
-      {showTooltip && <WPQTTooltip id={tooltipId} />}
     </div>
   );
 }
 
-export { ButtonType, WPQTButton, WPQTIconButton };
+export { ButtonType, WPQTButton, WPQTIconButton, WPQTOnlyIconBtn };
