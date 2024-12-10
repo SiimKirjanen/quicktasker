@@ -42,14 +42,14 @@ function CustomFields() {
 
   return (
     <>
-      <div className="wpqt-my-6 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3">
+      <div className="wpqt-my-4 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3">
         {customFields.map((customField) => (
           <CustomField key={customField.id} data={customField} />
         ))}
       </div>
       <div className="wpqt-flex wpqt-justify-center">
         <WPQTIconButton
-          text={__("Close", "quicktasker")}
+          text={__("Hide custom fields", "quicktasker")}
           onClick={() => setIsOpen(false)}
           icon={<EyeIcon className="wpqt-icon-red wpqt-size-5" />}
         />
