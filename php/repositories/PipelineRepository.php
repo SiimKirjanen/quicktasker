@@ -80,6 +80,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
                 return $task->id;
             }, $tasks);
             $assignedUsers = $userRepository->getAssignedUsersByTaskIds($taskIds);
+            $assignedWPUsers = $userRepository->getAssignedWPUsersByTaskIds($taskIds);
 
             // Organize tasks under their respective stages
             $tasksByStage = [];
@@ -93,11 +94,19 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
                 $usersByTask[$user->task_id][] = $user;
             }
 
+            // Organize assigned WP users under their respective tasks
+            $wpUsersByTask = [];
+            foreach ($assignedWPUsers as $user) {
+                $wpUsersByTask[$user->task_id][] = $user;
+            }
+
             // Assign tasks and users to stages
             foreach ($pipelineStages as $stage) {
                 $stage->tasks = isset($tasksByStage[$stage->id]) ? $tasksByStage[$stage->id] : [];
+                
                 foreach ($stage->tasks as $task) {
                     $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
+                    $task->assigned_wp_users = isset($wpUsersByTask[$task->id]) ? $wpUsersByTask[$task->id] : [];
                 }
             }
 

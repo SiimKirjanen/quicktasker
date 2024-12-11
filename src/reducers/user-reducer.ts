@@ -6,9 +6,10 @@ import {
   RESET_PASSWORD,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
+  SET_WP_USERS,
 } from "../constants";
 import { Action, State } from "../providers/UserContextProvider";
-import { ServerUser, User } from "../types/user";
+import { ServerUser, User, WPUser } from "../types/user";
 import { convertUserFromServer } from "../utils/user";
 
 const reducer = (state: State, action: Action): State => {
@@ -20,6 +21,14 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         users,
+      };
+    }
+    case SET_WP_USERS: {
+      const wpUsers: WPUser[] = action.payload;
+
+      return {
+        ...state,
+        wpUsers,
       };
     }
     case ADD_USER: {
