@@ -48,7 +48,19 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
          */
         public static function hasRequiredParmissionsForPrivateAPIUsersEndpoints() {
             return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS );
-        } 
+        }
+        
+        /**
+         * Checks if the current user has the required permissions to manage private API settings endpoints.
+         *
+         * This function verifies if the current user has the capability defined by the constant
+         * `WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS`.
+         *
+         * @return bool True if the current user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredPermissionsForPrivateAPISettingsEndpoints() {
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS );
+        }
 
         /**
          * Checks if a user is allowed to view a task.

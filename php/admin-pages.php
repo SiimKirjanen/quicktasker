@@ -38,7 +38,7 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
             'wp-quick-tasks',
             esc_html__('Settings', 'quicktasker'),
             esc_html__('Settings', 'quicktasker'),
-            WP_QUICKTASKER_ADMIN_ROLE,
+            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS,
             'wp-quick-tasks#/settings',
             'wp_quick_taks_generate_app_page'
         );

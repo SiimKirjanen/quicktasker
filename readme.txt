@@ -4,7 +4,7 @@ Tags: task manager, task management, project manager, project management
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,11 @@ QuickTasker is a plugin that offers the following and more to organize your proj
 * Logs to track changes and updates.
 * Track user sessions to monitor activity.
 
+QuickTasker PRO version
+
+* Custom fields
+* Automations
+
 == Installation ==
 
 1. Install QuickTasker either via the WordPress.org plugin directory, or by uploading the files to your server.
@@ -39,6 +44,10 @@ QuickTasker is a plugin that offers the following and more to organize your proj
 5. User task comments
 
 == Changelog ==
+
+= 1.14.0 =
+* Added ability to restore deleted custom fields.
+* Added capability to access settings page.
 
 = 1.13.0 =
 * Added automations to board settings.

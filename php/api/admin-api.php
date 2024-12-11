@@ -1353,7 +1353,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $capabilities = (object)[
                             WP_QUICKTASKER_ADMIN_ROLE => $data[WP_QUICKTASKER_ADMIN_ROLE],
                             WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE => $data[WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE],
-                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS]
+                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS],
+                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS]
                         ];
                           
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
@@ -1378,6 +1379,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                     ),
                     WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS => array(
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
@@ -1807,7 +1813,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'styles' => array(
@@ -1837,7 +1843,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1865,7 +1871,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1953,7 +1959,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1980,7 +1986,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -2028,7 +2034,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
