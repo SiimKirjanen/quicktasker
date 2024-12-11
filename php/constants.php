@@ -167,7 +167,7 @@ if ( ! defined( 'WP_QUICKTASKER_INVALID_SESSION_TOKEN' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_SIDE_EFFECT_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "4");
+    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "5");
 }
 
 if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
@@ -190,7 +190,11 @@ if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE' ) ) {
 
 if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS' ) ) {
     define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS", "quicktasker_admin_role_manage_users"); // Allows access to Users page and related private API endpoints
-}    
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS' ) ) {
+    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS", "quicktasker_admin_role_manage_settings"); // Allows access to Settings page and related private API endpoints
+}  
 
 /*
 ==================================================================================================================================================================================================================

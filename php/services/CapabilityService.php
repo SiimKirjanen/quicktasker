@@ -19,6 +19,7 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
          * - WP_QUICKTASKER_ADMIN_ROLE
          * - WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS
+         * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS
          *
          * @return void
          */
@@ -36,6 +37,10 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
             if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS) ) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS);
             }
+
+            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS) ) {
+                $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS);
+            }
         }
 
          /**
@@ -45,6 +50,7 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
          * - WP_QUICKTASKER_ADMIN_ROLE
          * - WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS
+         * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS
          *
          * If any of these capabilities are found, they are removed from the administrator role.
          *
@@ -63,6 +69,10 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
 
             if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS) ) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS);
+            }
+
+            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS) ) {
+                $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS);
             }
         }
 

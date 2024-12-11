@@ -178,8 +178,6 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
         }
 
         public function getWPAdminUsers() {
-            global $wpdb;
-
             $args = array(
                 'role' => 'Administrator',
             );
@@ -190,8 +188,6 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
         }
 
         public function getWPNonAdminUsers() {
-            global $wpdb;
-
             $args = array(
                 'role__not_in' => ['Administrator'],
             );
@@ -201,9 +197,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             return $users;
         }
 
-        public function getWPUsers($args) {
-            global $wpdb;
-       
+        public function getWPUsers($args) {       
             $user_query = new WP_User_Query($args);
             $results = $user_query->get_results();
 
