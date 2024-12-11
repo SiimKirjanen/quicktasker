@@ -27,7 +27,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
         }
 
         /**
-         * Creates a new user.
+         * Creates a new quicktasker user.
          *
          * @param array $args The user data.
          * @return User The newly created user.
@@ -191,10 +191,11 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          *
          * @param int $userId The ID of the user to whom the task is being assigned.
          * @param int $taskId The ID of the task being assigned to the user.
+         * @param string $userType The type of user being assigned the task. (quicktasker or wp-user)
          * @return mixed The task details retrieved from the task repository.
          * @throws \Exception If the task assignment fails.
          */
-        public function assignTaskToUser($userId, $taskId) {
+        public function assignTaskToUser($userId, $taskId, $userType = 'quicktasker') {
             global $wpdb;
 
             $result = $wpdb->insert(
@@ -202,10 +203,11 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 array(
                     'user_id' => $userId,
                     'task_id' => $taskId,
+                    'user_type' => $userType,
                     'created_at' => $this->timeRepository->getCurrentUTCTime(),
                     'updated_at' => $this->timeRepository->getCurrentUTCTime(),
                 ),
-                array('%d', '%d', '%s', '%s')
+                array('%d', '%d', '%s', '%s', '%s')
             );
 
             if (!$result) {
@@ -223,10 +225,11 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
+         * @param string $userType The type of the user being removed. (quicktasker or wp-user)
          * @return mixed The task details after removal.
          * @throws \Exception If the task could not be removed from the user.
          */
-        public function removeTaskFromUser($userId, $taskId) {
+        public function removeTaskFromUser($userId, $taskId, $userType = 'quicktasker') {
             global $wpdb;
 
             $result = $wpdb->delete(
@@ -234,8 +237,9 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 array(
                     'user_id' => $userId,
                     'task_id' => $taskId,
+                    'user_type' => $userType,
                 ),
-                array('%d', '%d')
+                array('%d', '%d', '%s')
             );
 
             if (!$result) {
