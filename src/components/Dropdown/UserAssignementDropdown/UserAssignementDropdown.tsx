@@ -1,13 +1,13 @@
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { Task } from "../../../types/task";
-import { User } from "../../../types/user";
+import { User, WPUser } from "../../../types/user";
 import { UserAssignementSelection } from "../../User/UserAssignementSelection/UserAssignementSelection";
 import { WPQTDropdown } from "../WPQTDropdown";
 
 type Props = {
   task: Task;
-  onUserAdd?: (user: User) => void;
-  onUserDelete?: (user: User) => void;
+  onUserAdd?: (user: User | WPUser) => void;
+  onUserDelete?: (user: User | WPUser) => void;
   menuBtnClasses?: string;
 };
 
@@ -17,8 +17,11 @@ function UserAssignementDropdown({
   onUserDelete = () => {},
   menuBtnClasses = "",
 }: Props) {
-  const hasAssignedUsers =
-    task.assigned_users && task.assigned_users.length > 0;
+  const combinedUsers = [
+    ...(task.assigned_users || []),
+    ...(task.assigned_wp_users || []),
+  ];
+  const hasAssignedUsers = combinedUsers.length > 0;
 
   return (
     <WPQTDropdown
@@ -29,12 +32,12 @@ function UserAssignementDropdown({
           <UserCircleIcon
             className={`wpqt-mr-1 wpqt-size-5 ${hasAssignedUsers ? "wpqt-text-blue-400" : "wpqt-text-gray-300"} group-hover:wpqt-text-blue-600`}
           />
-          {task.assigned_users && (
+          {hasAssignedUsers && (
             <div>
-              {task.assigned_users.map((user: User, index: number) => (
-                <span key={user.id}>
+              {combinedUsers.map((user, index) => (
+                <span key={index}>
                   {user.name}
-                  {index < task.assigned_users.length - 1 && ", "}
+                  {index < combinedUsers.length - 1 && ", "}
                 </span>
               ))}
             </div>

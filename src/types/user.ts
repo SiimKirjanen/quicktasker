@@ -5,6 +5,7 @@ type BaseUser = {
   created_at: string;
   page_hash: string;
   assigned_tasks_count: string;
+  user_type: UserTypes.QUICKTASKER;
 };
 
 type User = BaseUser & {
@@ -35,6 +36,13 @@ type WPUser = {
   caps: string[];
   allcaps: string[];
   roles: string[];
+  user_type: UserTypes.WORDPRESS;
 };
 
+enum UserTypes {
+  QUICKTASKER = "quicktasker",
+  WORDPRESS = "wp-user",
+}
+
+export { UserTypes };
 export type { ExtendedUser, ServerExtendedUser, ServerUser, User, WPUser };

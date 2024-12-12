@@ -8,6 +8,7 @@ import {
   SET_USER_TASKS_FILTERED_PIPELINE,
   SET_USER_TASKS_SEARCH_VALUE,
 } from "../constants";
+import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, State } from "../providers/UserTasksContextProvider";
 import { TaskFromServer } from "../types/task";
 import { convertTaskFromServer } from "../utils/task";
@@ -68,7 +69,12 @@ const reducer = (state: State, action: Action): State => {
         if (task.id === taskId) {
           return {
             ...task,
-            assigned_users: [user, ...task.assigned_users],
+            assigned_users: isUser(user)
+              ? [user, ...task.assigned_users]
+              : task.assigned_users,
+            assigned_wp_users: isWPUser(user)
+              ? [user, ...task.assigned_wp_users]
+              : task.assigned_wp_users,
           };
         }
         return task;
@@ -81,14 +87,20 @@ const reducer = (state: State, action: Action): State => {
     }
     case REMOVE_ASSIGNED_USER_FROM_USER_TASK: {
       const { taskId, user } = action.payload;
-
       const updatedTasks = state.tasks.map((task) => {
         if (task.id === taskId) {
           return {
             ...task,
-            assigned_users: task.assigned_users.filter(
-              (assignedUser) => assignedUser.id !== user.id,
-            ),
+            assigned_users: isUser(user)
+              ? task.assigned_users.filter(
+                  (assignedUser) => assignedUser.id !== user.id,
+                )
+              : task.assigned_users,
+            assigned_wp_users: isWPUser(user)
+              ? task.assigned_wp_users.filter(
+                  (assignedWPUser) => assignedWPUser.id !== user.id,
+                )
+              : task.assigned_wp_users,
           };
         }
         return task;

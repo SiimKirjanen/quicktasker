@@ -9,6 +9,7 @@ import {
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
 } from "../constants";
+import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, State } from "../providers/ArchiveContextProvider";
 import { TaskFromServer } from "../types/task";
 import { convertTaskFromServer } from "../utils/task";
@@ -56,7 +57,12 @@ const reducer = (state: State, action: Action): State => {
         if (task.id === taskId) {
           return {
             ...task,
-            assigned_users: [user, ...task.assigned_users],
+            assigned_users: isUser(user)
+              ? [user, ...task.assigned_users]
+              : task.assigned_users,
+            assigned_wp_users: isWPUser(user)
+              ? [user, ...task.assigned_wp_users]
+              : task.assigned_wp_users,
           };
         }
 

@@ -29,7 +29,7 @@ import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
 import { Pipeline, PipelineFromServer } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { TaskFromServer } from "../types/task";
-import { User } from "../types/user";
+import { User, UserTypes, WPUser } from "../types/user";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState = {
@@ -70,11 +70,11 @@ type Action =
   | { type: typeof PIPELINE_DELETE_STAGE; payload: string }
   | {
       type: typeof PIPELINE_ADD_USER_TO_TASK;
-      payload: { taskId: string; user: User };
+      payload: { taskId: string; user: User | WPUser };
     }
   | {
       type: typeof PIPELINE_REMOVE_USER_FROM_TASK;
-      payload: { taskId: string; userId: string };
+      payload: { taskId: string; userId: string; userType: UserTypes };
     }
   | { type: typeof PIPELINE_REMOVE_ACTIVE_PIPELINE }
   | { type: typeof PIPELINE_REMOVE_TASK; payload: string }

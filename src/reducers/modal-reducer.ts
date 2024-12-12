@@ -17,12 +17,13 @@ import {
   OPEN_STAGE_EDIT_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
+import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, State, initialState } from "../providers/ModalContextProvider";
 import { TaskModalSettings } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
-import { User } from "../types/user";
+import { User, WPUser } from "../types/user";
 
 const closeModal = () => {
   return {
@@ -54,26 +55,38 @@ const reducer = (state: State, action: Action): State => {
       return closeModal();
     }
     case ADD_ASSIGNED_USER_TO_EDITING_TASK: {
-      const user: User = action.payload;
+      const user: User | WPUser = action.payload;
 
       return {
         ...state,
         taskToEdit: {
           ...state.taskToEdit!,
-          assigned_users: [user, ...(state.taskToEdit?.assigned_users ?? [])],
+          assigned_users: isUser(user)
+            ? [user, ...(state.taskToEdit?.assigned_users ?? [])]
+            : (state.taskToEdit?.assigned_users ?? []),
+          assigned_wp_users: isWPUser(user)
+            ? [user, ...(state.taskToEdit?.assigned_wp_users ?? [])]
+            : (state.taskToEdit?.assigned_wp_users ?? []),
         },
       };
     }
     case REMOVE_ASSIGNED_USER_FROM_EDITING_TASK: {
-      const user: User = action.payload;
+      const user: User | WPUser = action.payload;
 
       return {
         ...state,
         taskToEdit: {
           ...state.taskToEdit!,
-          assigned_users: (state.taskToEdit?.assigned_users ?? []).filter(
-            (assignedUser: User) => assignedUser.id !== user.id,
-          ),
+          assigned_users: isUser(user)
+            ? (state.taskToEdit?.assigned_users ?? []).filter(
+                (assignedUser: User) => assignedUser.id !== user.id,
+              )
+            : (state.taskToEdit?.assigned_users ?? []),
+          assigned_wp_users: isWPUser(user)
+            ? (state.taskToEdit?.assigned_wp_users ?? []).filter(
+                (assignedWPUser: WPUser) => assignedWPUser.id !== user.id,
+              )
+            : (state.taskToEdit?.assigned_wp_users ?? []),
         },
       };
     }

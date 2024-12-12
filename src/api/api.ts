@@ -19,7 +19,13 @@ import { PipelineOverviewResponse } from "../types/requestResponse/pipeline-over
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { Task, TaskFromServer } from "../types/task";
-import { ServerExtendedUser, ServerUser, User, WPUser } from "../types/user";
+import {
+  ServerExtendedUser,
+  ServerUser,
+  User,
+  UserTypes,
+  WPUser,
+} from "../types/user";
 import { ServerUserSession } from "../types/user-session";
 
 function getCommonHeaders() {
@@ -392,11 +398,12 @@ function changeUserStatusRequest(
 function assignTaskToUserRequest(
   userId: string,
   taskId: string,
+  userType: UserTypes,
 ): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/users/${userId}/tasks`,
+    path: `/wpqt/v1/users/${userId}/tasks/${taskId}`,
     method: "POST",
-    data: { task_id: taskId },
+    data: { user_type: userType },
     headers: getCommonHeaders(),
   });
 }
@@ -404,11 +411,12 @@ function assignTaskToUserRequest(
 function removeTaskFromUserRequest(
   userId: string,
   taskId: string,
+  userType: UserTypes,
 ): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/users/${userId}/tasks`,
+    path: `/wpqt/v1/users/${userId}/tasks/${taskId}`,
     method: "DELETE",
-    data: { task_id: taskId },
+    data: { user_type: userType },
     headers: getCommonHeaders(),
   });
 }
