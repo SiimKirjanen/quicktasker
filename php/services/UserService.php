@@ -182,7 +182,6 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
             }
         }
 
-
         /**
          * Assigns a task to a user.
          *
@@ -195,7 +194,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          * @return mixed The task details retrieved from the task repository.
          * @throws \Exception If the task assignment fails.
          */
-        public function assignTaskToUser($userId, $taskId, $userType = 'quicktasker') {
+        public function assignTaskToUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
             $result = $wpdb->insert(
@@ -217,7 +216,6 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
             return $this->taskRepository->getTaskById($taskId);
         }
 
-
         /**
          * Removes a task from a user.
          *
@@ -229,7 +227,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          * @return mixed The task details after removal.
          * @throws \Exception If the task could not be removed from the user.
          */
-        public function removeTaskFromUser($userId, $taskId, $userType = 'quicktasker') {
+        public function removeTaskFromUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
             $result = $wpdb->delete(

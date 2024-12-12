@@ -11,6 +11,29 @@ use WP_User_Query;
 if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
     class UserRepository {
         /**
+         * Retrieves a user by their ID and type.
+         *
+         * Depending on the user type, this function will either retrieve a QuickTasker user
+         * or a WordPress user by their ID.
+         *
+         * @param int $userId The ID of the user to retrieve.
+         * @param string $userType The type of the user. Should be either WP_QT_QUICKTASKER_USER_TYPE or WP_QT_WORDPRESS_USER_TYPE.
+         * 
+         * @return mixed The user object if found, or null if the user type is not recognized.
+         */
+        public function getUserByIdAndType($userId, $userType) {
+            if ( $userType === WP_QT_QUICKTASKER_USER_TYPE ) {
+
+                return $this->getUserById($userId);
+            } else if ( $userType === WP_QT_WORDPRESS_USER_TYPE ) {
+
+                return $this->getWPUserById($userId);
+            }
+
+            return null;
+        }
+
+        /**
          * Retrieves a list of users along with their assigned tasks count and page hash.
          *
          * This method executes a SQL query to fetch user details from the database.
@@ -25,7 +48,8 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             global $wpdb;
         
             return $wpdb->get_results(
-                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, CASE 
+                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, 'quicktasker' AS user_type,
+                        CASE 
                             WHEN a.password IS NULL THEN 0 
                             ELSE 1 
                         END AS has_password, b.page_hash, 
@@ -87,7 +111,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
 
             $sql = $wpdb->prepare(
-                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.task_id
+                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.task_id, 'quicktasker' AS user_type
                 FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                 INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b 
                 ON a.id = b.user_id
@@ -266,6 +290,16 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             $users = $this->getWPUsers($args);
     
             return $users;
+        }
+
+        public function getWPUserById($id) {
+            $args = array(
+                'include' => [$id],
+            );
+
+            $users = $this->getWPUsers($args);
+
+            return $users[0] ?? null;
         }
 
         public function getWPUsers($args) {       
