@@ -20,7 +20,7 @@ import {
 } from "../constants";
 import { reducer } from "../reducers/user-tasks-reducer";
 import { Task, TaskFromServer } from "../types/task";
-import { User } from "../types/user";
+import { User, WPUser } from "../types/user";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -43,7 +43,7 @@ type Action =
   | { type: typeof SET_USER_TASKS_SEARCH_VALUE; payload: string }
   | {
       type: typeof ADD_ASSIGNED_USER_TO_USER_TASK;
-      payload: { taskId: string; user: User };
+      payload: { taskId: string; user: User | WPUser };
     }
   | {
       type: typeof CHANGE_USER_TASK_DONE_STATUS;
@@ -51,7 +51,7 @@ type Action =
     }
   | {
       type: typeof REMOVE_ASSIGNED_USER_FROM_USER_TASK;
-      payload: { taskId: string; user: User };
+      payload: { taskId: string; user: User | WPUser };
     };
 
 type Dispatch = (action: Action) => void;

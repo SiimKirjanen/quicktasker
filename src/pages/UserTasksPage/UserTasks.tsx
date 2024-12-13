@@ -19,7 +19,7 @@ import { useUserTasksFilter } from "../../hooks/filters/useUserTasksFilter";
 import { ModalContext } from "../../providers/ModalContextProvider";
 import { UserTasksContext } from "../../providers/UserTasksContextProvider";
 import { Task, TaskFromServer } from "../../types/task";
-import { User } from "../../types/user";
+import { User, WPUser } from "../../types/user";
 
 type Props = {
   userId: string;
@@ -77,13 +77,13 @@ function UserTasks({ userId }: Props) {
             >
               <UserAssignementDropdown
                 task={task}
-                onUserAdd={(user: User) => {
+                onUserAdd={(user: User | WPUser) => {
                   userTasksDispatch({
                     type: ADD_ASSIGNED_USER_TO_USER_TASK,
                     payload: { taskId: task.id, user },
                   });
                 }}
-                onUserDelete={(user: User) => {
+                onUserDelete={(user: User | WPUser) => {
                   userTasksDispatch({
                     type: REMOVE_ASSIGNED_USER_FROM_USER_TASK,
                     payload: { taskId: task.id, user },

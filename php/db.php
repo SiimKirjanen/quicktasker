@@ -180,13 +180,15 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 			$sql11 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_USER_TASK . " (
 				id int(11) NOT NULL AUTO_INCREMENT,
 				user_id int(11) NOT NULL,
+				user_type ENUM('quicktasker', 'wp-user') DEFAULT 'quicktasker',
 				task_id int(11) NOT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
 				PRIMARY KEY  (id),
-				UNIQUE KEY unique_user_task (user_id, task_id),
+				UNIQUE KEY unique_user_task (user_id, task_id, user_type),
 				INDEX task_id (task_id),
-				INDEX user_id (user_id)
+				INDEX user_id (user_id),
+				INDEX user_type (user_type)
 			) $charset_collate;";
 
 			dbDelta( $sql11 );

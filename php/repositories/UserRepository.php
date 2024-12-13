@@ -11,6 +11,29 @@ use WP_User_Query;
 if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
     class UserRepository {
         /**
+         * Retrieves a user by their ID and type.
+         *
+         * Depending on the user type, this function will either retrieve a QuickTasker user
+         * or a WordPress user by their ID.
+         *
+         * @param int $userId The ID of the user to retrieve.
+         * @param string $userType The type of the user. Should be either WP_QT_QUICKTASKER_USER_TYPE or WP_QT_WORDPRESS_USER_TYPE.
+         * 
+         * @return mixed The user object if found, or null if the user type is not recognized.
+         */
+        public function getUserByIdAndType($userId, $userType) {
+            if ( $userType === WP_QT_QUICKTASKER_USER_TYPE ) {
+
+                return $this->getUserById($userId);
+            } else if ( $userType === WP_QT_WORDPRESS_USER_TYPE ) {
+
+                return $this->getWPUserById($userId);
+            }
+
+            return null;
+        }
+
+        /**
          * Retrieves a list of users along with their assigned tasks count and page hash.
          *
          * This method executes a SQL query to fetch user details from the database.
@@ -25,7 +48,8 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             global $wpdb;
         
             return $wpdb->get_results(
-                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, CASE 
+                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, 'quicktasker' AS user_type,
+                        CASE 
                             WHEN a.password IS NULL THEN 0 
                             ELSE 1 
                         END AS has_password, b.page_hash, 
@@ -33,7 +57,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                         FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
                         JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d
                         ON c.task_id = d.id
-                        WHERE c.user_id = a.id AND d.is_archived = 0) AS assigned_tasks_count
+                        WHERE c.user_id = a.id AND d.is_archived = 0 AND c.user_type = 'quicktasker') AS assigned_tasks_count
                 FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                 LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b ON a.id = b.user_id
                 WHERE a.deleted = 0"
@@ -55,12 +79,12 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
         
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, 
+                    "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, 'quicktasker' AS user_type, 
                             (SELECT COUNT(*)
                             FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
                             JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d
                             ON c.task_id = d.id
-                            WHERE c.user_id = a.id AND d.is_archived = 0) AS assigned_tasks_count
+                            WHERE c.user_id = a.id AND d.is_archived = 0 AND c.user_type = 'quicktasker') AS assigned_tasks_count
                     FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                     LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b
                     ON a.id = b.user_id
@@ -71,10 +95,10 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
         }
 
         /**
-         * Retrieves users based on task IDs.
+         * Retrieves quicktasker users based on task IDs.
          *
          * @param array $taskIds An array of task IDs.
-         * @return array The users matching the task IDs.
+         * @return array The quicktasker type users matching the task IDs.
          */
         public function getAssignedUsersByTaskIds($taskIds) {
             global $wpdb;
@@ -87,11 +111,11 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
 
             $sql = $wpdb->prepare(
-                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.task_id
+                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.task_id, 'quicktasker' AS user_type
                 FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                 INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b 
                 ON a.id = b.user_id
-                WHERE b.task_id IN ($placeholders) AND a.deleted = 0",
+                WHERE b.task_id IN ($placeholders) AND a.deleted = 0 AND b.user_type = 'quicktasker'",
                 $taskIds
             );
 
@@ -101,8 +125,54 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             return $results;
         }
 
+        public function getAssignedWPUsersByTaskIds($taskIds) {
+            global $wpdb;
+
+            if ( empty($taskIds) ) {
+                return [];
+            }
+            $wpUsers = [];
+            $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
+
+            $sql = $wpdb->prepare(
+                "SELECT id, user_id, task_id, user_type FROM " . TABLE_WP_QUICKTASKER_USER_TASK . "
+                WHERE task_id IN ($placeholders) AND user_type = 'wp-user'",
+                $taskIds
+            );
+
+            $result = $wpdb->get_results($sql);
+
+            if (empty($result)) {
+                return [];
+            }
+
+            $wpUserIds = array_map(function($item) {
+                return $item->user_id;
+            }, $result);
+
+            $wpUsersData = $this->getWPUsers(['include' => $wpUserIds]);
+
+            $wpUserMap = [];
+            foreach ($wpUsersData as $user) {
+                $wpUserMap[$user->id] = $user;
+            }
+
+            $combinedResults = array_map(function($item) use ($wpUserMap) {
+                $user = $wpUserMap[$item->user_id] ?? null;
+                if ($user) {
+                    $userClone = clone $user;
+                    $userClone->task_id = $item->task_id;
+        
+                    return $userClone;
+                }
+                return null;
+            }, $result);
+
+            return array_filter($combinedResults);
+        }
+
         /**
-         * Retrieves the assigned users for a specific task.
+         * Retrieves the assigned quicktasker users for a specific task.
          *
          * @param int $taskId The ID of the task.
          * @return array|null The assigned users and their associated page hash, or null if no users are assigned.
@@ -111,11 +181,11 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT DISTINCT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active
+                "SELECT DISTINCT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, 'quicktasker' AS user_type
                 FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                 INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b
                 ON a.id = b.user_id
-                WHERE b.task_id = %d AND a.deleted = 0
+                WHERE b.task_id = %d AND a.deleted = 0 AND b.user_type = 'quicktasker' 
                 ORDER BY b.created_at DESC",
                 $taskId
             );
@@ -177,6 +247,32 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             }
         }
 
+
+        public function getWPUsersWithCapabilities($capabilities) {
+            global $wpdb;
+        
+            // Ensure $capabilities is an array
+            if (!is_array($capabilities)) {
+                $capabilities = array($capabilities);
+            }
+        
+            // Construct the meta_query
+            $meta_query = array('relation' => 'OR');
+            foreach ($capabilities as $capability) {
+                $meta_query[] = array(
+                    'key' => $wpdb->prefix . 'capabilities',
+                    'value' => '"' . $capability . '"', // Ensure the capability is quoted
+                    'compare' => 'LIKE'
+                );
+            }
+        
+            $args = array(
+                'meta_query' => $meta_query
+            );
+        
+            return $this->getWPUsers($args);
+        }
+
         public function getWPAdminUsers() {
             $args = array(
                 'role' => 'Administrator',
@@ -197,6 +293,16 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             return $users;
         }
 
+        public function getWPUserById($id) {
+            $args = array(
+                'include' => [$id],
+            );
+
+            $users = $this->getWPUsers($args);
+
+            return $users[0] ?? null;
+        }
+
         public function getWPUsers($args) {       
             $user_query = new WP_User_Query($args);
             $results = $user_query->get_results();
@@ -212,6 +318,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                     'caps' => $user->caps,
                     'roles' => array_values($user->roles),
                     'allcaps' => $user->allcaps,
+                    'user_type' => 'wp-user',
                 ];
             }, $results);
         

@@ -1,5 +1,5 @@
 import { PipelineFromServer } from "./pipeline";
-import { ServerUser } from "./user";
+import { ServerUser, WPUser } from "./user";
 
 declare global {
   interface Window {
@@ -8,6 +8,7 @@ declare global {
       initialPipelines: PipelineFromServer[];
       apiNonce: string;
       initialUsers: ServerUser[];
+      initialWPUsers: WPUser[];
       siteURL: string;
       pluginURL: string;
       publicUserPageId: string;

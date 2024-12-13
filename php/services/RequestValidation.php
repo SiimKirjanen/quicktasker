@@ -159,6 +159,16 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         }
 
         /**
+         * Validates the user type against predefined constants.
+         *
+         * @param string $param The user type to validate.
+         * @return bool True if the user type is valid, false otherwise.
+         */
+        public static function validateUserType($param) {
+            return in_array($param, array(WP_QT_WORDPRESS_USER_TYPE, WP_QT_QUICKTASKER_USER_TYPE));
+        }
+
+        /**
          * Validates if the given parameter is a date in the format YYYY-MM-DD.
          *
          * @param string $param The date parameter to validate.

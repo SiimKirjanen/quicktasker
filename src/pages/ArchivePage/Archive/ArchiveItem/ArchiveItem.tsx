@@ -14,7 +14,7 @@ import {
 import { ArchiveContext } from "../../../../providers/ArchiveContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { Task } from "../../../../types/task";
-import { User } from "../../../../types/user";
+import { User, WPUser } from "../../../../types/user";
 
 type Props = {
   task: Task;
@@ -48,13 +48,13 @@ function ArchiveItem({ task }: Props) {
       <UserAssignementDropdown
         menuBtnClasses="wpqt-self-start"
         task={task}
-        onUserAdd={(user: User) => {
+        onUserAdd={(user: User | WPUser) => {
           archiveDispatch({
             type: ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
             payload: { taskId: task.id, user },
           });
         }}
-        onUserDelete={(user: User) => {
+        onUserDelete={(user: User | WPUser) => {
           archiveDispatch({
             type: REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
             payload: { taskId: task.id, user },

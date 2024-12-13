@@ -15,11 +15,12 @@ import {
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
 } from "../constants";
+import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, State } from "../providers/ActivePipelineContextProvider";
 import { PipelineFromServer } from "../types/pipeline";
 import { Stage, StageFromServer } from "../types/stage";
 import { Task, TaskFromServer } from "../types/task";
-import { User } from "../types/user";
+import { UserTypes } from "../types/user";
 import { convertPipelineSettingsFromServer } from "../utils/pipeline-settings";
 import { convertStageFromServer } from "../utils/stage";
 import { convertTaskFromServer, moveTask, reorderTask } from "../utils/task";
@@ -225,7 +226,7 @@ const activePipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_ADD_USER_TO_TASK: {
-      const { taskId, user }: { taskId: string; user: User } = action.payload;
+      const { taskId, user } = action.payload;
 
       if (!state.activePipeline) {
         return state;
@@ -234,9 +235,18 @@ const activePipelineReducer = (state: State, action: Action) => {
       const updatedStages = state.activePipeline.stages?.map((stage) => {
         const updatedTasks = stage.tasks?.map((task: Task) => {
           if (task.id === taskId) {
+            const updatedAssignedUsers = isUser(user)
+              ? [user, ...(task.assigned_users || [])]
+              : task.assigned_users || [];
+
+            const updatedAssignedWPUsers = isWPUser(user)
+              ? [user, ...(task.assigned_wp_users || [])]
+              : task.assigned_wp_users || [];
+
             return {
               ...task,
-              assigned_users: [user, ...(task.assigned_users || [])],
+              assigned_users: updatedAssignedUsers,
+              assigned_wp_users: updatedAssignedWPUsers,
             };
           }
           return task;
@@ -257,8 +267,7 @@ const activePipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_REMOVE_USER_FROM_TASK: {
-      const { taskId, userId }: { taskId: string; userId: string } =
-        action.payload;
+      const { taskId, userId, userType } = action.payload;
 
       if (!state.activePipeline) {
         return state;
@@ -269,9 +278,14 @@ const activePipelineReducer = (state: State, action: Action) => {
           if (task.id === taskId) {
             return {
               ...task,
-              assigned_users: task.assigned_users?.filter(
-                (user) => user.id !== userId,
-              ),
+              assigned_users:
+                userType === UserTypes.QUICKTASKER
+                  ? task.assigned_users?.filter((user) => user.id !== userId)
+                  : task.assigned_users,
+              assigned_wp_users:
+                userType === UserTypes.WORDPRESS
+                  ? task.assigned_wp_users?.filter((user) => user.id !== userId)
+                  : task.assigned_wp_users,
             };
           }
           return task;

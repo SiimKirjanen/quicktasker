@@ -1,4 +1,4 @@
-import { ServerUser, User } from "./user";
+import { ServerUser, User, WPUser } from "./user";
 
 type BaseTask = {
   id: string;
@@ -15,6 +15,7 @@ type Task = BaseTask & {
   task_order: number;
   free_for_all: boolean;
   assigned_users: User[];
+  assigned_wp_users: WPUser[];
   is_archived: boolean;
   is_done: boolean;
 };
@@ -23,6 +24,7 @@ type TaskFromServer = BaseTask & {
   task_order: string;
   free_for_all: string;
   assigned_users: ServerUser[];
+  assigned_wp_users: WPUser[];
   is_archived: string;
   is_done: string;
 };

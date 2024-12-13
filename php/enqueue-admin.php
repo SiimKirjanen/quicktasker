@@ -29,6 +29,7 @@ if ( ! function_exists( 'wpqt_enqueue_app_assets' ) ) {
 		$activePipeline = $pipelineRepo->getActivePipeline();
 		$pipelines = $pipelineRepo->getPipelines();
 		$users = $userRepo->getUsers();
+		$wpUsers = $userRepo->getWPUsersWithCapabilities([WP_QUICKTASKER_ADMIN_ROLE]);
 
 		$build_asset = AssetRepository::getWPQTScriptBildAssets();
 		$vendors_asset = AssetRepository::getWPQTVendorScriptBildAssets();
@@ -45,6 +46,7 @@ if ( ! function_exists( 'wpqt_enqueue_app_assets' ) ) {
 			'initialActivePipelineId' => $activePipeline ? $activePipeline->id : null,
 			'initialPipelines' => $pipelines,
 			'initialUsers' => $users,
+			'initialWPUsers' => $wpUsers,
 			'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
 			'timezone' => $timeRepository->getWPTimezone(),
 			'isUserAllowedToDelete' => PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints() ? "1" : "0",

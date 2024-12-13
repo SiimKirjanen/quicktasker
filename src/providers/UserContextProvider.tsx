@@ -10,22 +10,26 @@ import {
   RESET_PASSWORD,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
+  SET_WP_USERS,
 } from "../constants";
 import { reducer } from "../reducers/user-reducer";
-import { ServerUser, User } from "../types/user";
+import { ServerUser, User, WPUser } from "../types/user";
 
 const initialState: State = {
   users: [],
+  wpUsers: [],
   usersSearchValue: "",
 };
 
 type State = {
   users: User[];
+  wpUsers: WPUser[];
   usersSearchValue: string;
 };
 
 type Action =
   | { type: typeof SET_USERS; payload: ServerUser[] }
+  | { type: typeof SET_WP_USERS; payload: WPUser[] }
   | { type: typeof ADD_USER; payload: ServerUser }
   | { type: typeof EDIT_USER; payload: ServerUser }
   | {
@@ -58,8 +62,10 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const initialUsers = window.wpqt.initialUsers;
+    const initialWpUsers = window.wpqt.initialWPUsers;
 
     userDispatch({ type: SET_USERS, payload: initialUsers });
+    userDispatch({ type: SET_WP_USERS, payload: initialWpUsers });
   }, []);
 
   const updateUsers = async () => {

@@ -22,7 +22,7 @@ import {
 import { reducer } from "../reducers/archive-reducer";
 import { WPQTArchiveDoneFilter } from "../types/enums";
 import { Task, TaskFromServer } from "../types/task";
-import { User } from "../types/user";
+import { User, WPUser } from "../types/user";
 import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
@@ -47,11 +47,11 @@ type Action =
   | { type: typeof SET_ARCHIVE_FILTERED_PIPELINE; payload: string }
   | {
       type: typeof ADD_ASSIGNED_USER_TO_ARCHIVED_TASK;
-      payload: { taskId: string; user: User };
+      payload: { taskId: string; user: User | WPUser };
     }
   | {
       type: typeof REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK;
-      payload: { taskId: string; user: User };
+      payload: { taskId: string; user: User | WPUser };
     }
   | { type: typeof REMOVE_ARCHIVED_TASK; payload: string }
   | { type: typeof EDIT_ARCHIVED_TASK; payload: TaskFromServer }

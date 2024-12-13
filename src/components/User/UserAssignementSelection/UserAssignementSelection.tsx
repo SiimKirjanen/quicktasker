@@ -13,33 +13,40 @@ import {
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { Task } from "../../../types/task";
-import { User } from "../../../types/user";
+import { User, WPUser } from "../../../types/user";
 import { LoadingOval } from "../../Loading/Loading";
 
 type Props = {
   task: Task;
-  onUserAdd: (user: User) => void;
-  onUserDelete: (user: User) => void;
+  onUserAdd: (user: User | WPUser) => void;
+  onUserDelete: (user: User | WPUser) => void;
 };
 
 function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
   const {
-    state: { users },
+    state: { users, wpUsers },
   } = useContext(UserContext);
   const { dispatch } = useContext(ActivePipelineContext);
   const [loading, setLoading] = useState(false);
 
-  const availableUsers = users.filter(
+  const availableToAssignUsers = users.filter(
     (user: User) =>
       !(task.assigned_users ?? []).some(
         (assignedUser: User) => assignedUser.id === user.id,
       ),
   );
+  const availableToAssignWPUsers = wpUsers.filter(
+    (user: WPUser) =>
+      !(task.assigned_wp_users ?? []).some(
+        (assignedWPUser: WPUser) => assignedWPUser.id === user.id,
+      ),
+  );
 
-  const assignUser = async (user: User) => {
+  const assignUser = async (user: User | WPUser) => {
     try {
       setLoading(true);
-      await assignTaskToUserRequest(user.id, task.id);
+      const userType = user.user_type;
+      await assignTaskToUserRequest(user.id, task.id, userType);
 
       dispatch({
         type: PIPELINE_ADD_USER_TO_TASK,
@@ -57,15 +64,17 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
     }
   };
 
-  const removeUser = async (user: User) => {
+  const removeUser = async (user: User | WPUser) => {
     try {
       setLoading(true);
-      await removeTaskFromUserRequest(user.id, task.id);
+      const userType = user.user_type;
+      await removeTaskFromUserRequest(user.id, task.id, userType);
       dispatch({
         type: PIPELINE_REMOVE_USER_FROM_TASK,
         payload: {
           taskId: task.id,
           userId: user.id,
+          userType,
         },
       });
       onUserDelete(user);
@@ -80,19 +89,37 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
   return (
     <div className="wpqt-flex wpqt-w-[320px] wpqt-flex-col">
       <UserAssignementSection
-        sectionTitle={__("Assigned users", "quicktasker")}
+        sectionTitle={__("Assigned quicktaskers", "quicktasker")}
         users={task.assigned_users}
         onItemSelect={removeUser}
         ActionIcon={MinusIcon}
         actionIconClasses="wpqt-icon-red"
-        noUsersText={__("No users assigned", "quicktasker")}
+        noUsersText={__("No quicktaskers assigned", "quicktasker")}
       />
       <UserAssignementSection
-        sectionTitle={__("Assign a user", "quicktasker")}
-        users={availableUsers}
+        sectionTitle={__("Assigned WordPress users", "quicktasker")}
+        users={task.assigned_wp_users}
+        onItemSelect={removeUser}
+        ActionIcon={MinusIcon}
+        actionIconClasses="wpqt-icon-red"
+        noUsersText={__("No WordPress users assigned", "quicktasker")}
+      />
+      <UserAssignementSection
+        sectionTitle={__("Assign a quicktasker", "quicktasker")}
+        users={availableToAssignUsers}
         onItemSelect={assignUser}
         actionIconClasses="wpqt-icon-green"
-        noUsersText={__("No users available to assign", "quicktasker")}
+        noUsersText={__("No quicktaskers available to assign", "quicktasker")}
+      />
+      <UserAssignementSection
+        sectionTitle={__("Assign a WordPress user", "quicktasker")}
+        users={availableToAssignWPUsers}
+        onItemSelect={assignUser}
+        actionIconClasses="wpqt-icon-green"
+        noUsersText={__(
+          "No WordPress users with required permissions available to assign",
+          "quicktasker",
+        )}
       />
       {loading && (
         <div className="wpqt-flex wpqt-justify-center">
@@ -105,8 +132,8 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
 
 type UserAssignementSectionProps = {
   sectionTitle: string;
-  onItemSelect?: (user: User) => void;
-  users: User[];
+  onItemSelect?: (user: User | WPUser) => void;
+  users: User[] | WPUser[];
   ActionIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   actionIconClasses?: string;
   noUsersText: string;
@@ -122,7 +149,7 @@ function UserAssignementSection({
   return (
     <div className="wpqt-mb-2">
       <div className="wpqt-mb-2 wpqt-text-lg">{sectionTitle}</div>
-      {users.map((user: User) => {
+      {users.map((user: User | WPUser) => {
         return (
           <div
             key={user.id}

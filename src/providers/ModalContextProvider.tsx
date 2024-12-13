@@ -23,7 +23,7 @@ import { TaskModalSettings } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { Task } from "../types/task";
-import { User } from "../types/user";
+import { User, WPUser } from "../types/user";
 
 const initialState: State = {
   taskModalOpen: false,
@@ -69,8 +69,11 @@ type Action =
       payload: { taskToEdit: Task; taskModalSettings?: TaskModalSettings };
     }
   | { type: typeof CLOSE_TASK_MODAL }
-  | { type: typeof ADD_ASSIGNED_USER_TO_EDITING_TASK; payload: User }
-  | { type: typeof REMOVE_ASSIGNED_USER_FROM_EDITING_TASK; payload: User }
+  | { type: typeof ADD_ASSIGNED_USER_TO_EDITING_TASK; payload: User | WPUser }
+  | {
+      type: typeof REMOVE_ASSIGNED_USER_FROM_EDITING_TASK;
+      payload: User | WPUser;
+    }
   | { type: typeof OPEN_NEW_STAGE_MODAL; payload: { targetPipelineId: string } }
   | { type: typeof OPEN_STAGE_EDIT_MODAL; payload: { stageToEdit: Stage } }
   | { type: typeof CLOSE_STAGE_MODAL }

@@ -16,8 +16,11 @@ function TaskDetails({ task }: Props) {
   }
   const rowClasses =
     "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-1";
-  const hasAssignedUsers =
-    task.assigned_users && task.assigned_users.length > 0;
+  const combinedUsers = [
+    ...(task.assigned_users || []),
+    ...(task.assigned_wp_users || []),
+  ];
+  const hasAssignedUsers = combinedUsers.length > 0;
 
   return (
     <div>
@@ -57,7 +60,7 @@ function TaskDetails({ task }: Props) {
             label={__("Assigned users", "quicktasker")}
             className={rowClasses}
           >
-            {task.assigned_users.map((user) => user.name).join(", ")}
+            {combinedUsers.map((user) => user.name).join(", ")}
           </DisplayRow>
         )}
       </DataDisplay>

@@ -983,8 +983,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {                
-                        $taskRepo = new TaskRepository();
-                        $userTasks = $taskRepo->getTasksAssignedToUser($data['id'], true);
+                        $userTasks = ServiceLocator::get('TaskRepository')->getTasksAssignedToUser($data['id'], true);
                     
                         return new WP_REST_Response((new ApiResponse(true, array(), $userTasks))->toArray(), 200);
                     }catch(Exception $e) {
@@ -1007,24 +1006,29 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
         register_rest_route(
             'wpqt/v1',
-            'users/(?P<id>\d+)/tasks',
+            'users/(?P<id>\d+)/tasks/(?P<task_id>\d+)',
             array(
                 'methods' => 'POST',
                 'callback' => function( $data ) {
-                    try {                
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');                
                         $userService = new UserService();
                         $logService = new LogService();
                         $userRepo = new UserRepository();
 
-                        $task = $userService->assignTaskToUser($data['id'], $data->get_param('task_id'));
-                        $user = $userRepo->getUserById($data['id']);
+                        $task = $userService->assignTaskToUser($data['id'], $data['task_id'], $data['user_type']);
+                        $user = $userRepo->getUserByIdAndType($data['id'], $data['user_type']);
 
                         $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, WP_QT_LOG_TYPE_TASK, $data->get_param('task_id'), WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     }catch(Exception $e) {
-        
+                        $wpdb->query('ROLLBACK');
+                        
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     }
                 },
@@ -1042,30 +1046,38 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
+                    'user_type' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateUserType'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
                 ),
             ),
         );
 
         register_rest_route(
             'wpqt/v1',
-            'users/(?P<id>\d+)/tasks',
+            'users/(?P<id>\d+)/tasks/(?P<task_id>\d+)',
             array(
                 'methods' => 'DELETE',
                 'callback' => function( $data ) {
-                    try {                
-                        $userService = new UserService();
-                        $logService = new LogService();
-                        $userRepo = new UserRepository();
+                    global $wpdb;
 
-                        $task = $userService->removeTaskFromUser($data['id'], $data->get_param('task_id'));
-                        $user = $userRepo->getUserById($data['id']);
+                    try {   
+                        $wpdb->query('START TRANSACTION');             
+                        $logService = ServiceLocator::get('LogService');
 
-                        $logService->log('Task ' . $task->name . ' unassigned from ' . $user->name, WP_QT_LOG_TYPE_TASK, $data->get_param('task_id'), WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $task = ServiceLocator::get('UserService')->removeTaskFromUser($data['id'], $data['task_id'], $data['user_type']);
+                        $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($data['id'], $data['user_type']);
+
+                        $logService->log('Task ' . $task->name . ' unassigned from ' . $user->name, WP_QT_LOG_TYPE_TASK, $data['task_id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         $logService->log('User ' . $user->name . ' unassigned from ' . $task->name . " task", WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     }catch(Exception $e) {
-                        
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     }
                 },
@@ -1082,6 +1094,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'user_type' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateUserType'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
             ),
