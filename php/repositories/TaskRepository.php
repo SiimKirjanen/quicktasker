@@ -109,8 +109,8 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
             ) );
 
             if ( $task && $addAssignedUsers) {
-                $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
-                $task->assigned_users = $users;
+                $task->assigned_users = $this->userRepository->getAssignedUsersByTaskId($task->id);
+                $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id]);
             }
 
             return $task;
@@ -205,6 +205,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                 LEFT JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS b ON a.task_id = b.id
                 LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON b.pipeline_id = c.id
                 WHERE a.user_id = %d
+                AND a.user_type = 'quicktasker'
                 AND b.is_archived = 0
                 ORDER BY b.created_at DESC",
                 $userId

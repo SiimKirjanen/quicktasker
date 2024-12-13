@@ -4580,7 +4580,8 @@ function TaskDetails({
     return null;
   }
   const rowClasses = "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mb-4 wpqt-gap-1";
-  const hasAssignedUsers = task.assigned_users && task.assigned_users.length > 0;
+  const combinedUsers = [...(task.assigned_users || []), ...(task.assigned_wp_users || [])];
+  const hasAssignedUsers = combinedUsers.length > 0;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_2__.DataDisplay, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_2__.DisplayRow, {
@@ -4606,7 +4607,7 @@ function TaskDetails({
       }), hasAssignedUsers && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_2__.DisplayRow, {
         label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Assigned users", "quicktasker"),
         className: rowClasses,
-        children: task.assigned_users.map(user => user.name).join(", ")
+        children: combinedUsers.map(user => user.name).join(", ")
       })]
     })
   });

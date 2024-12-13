@@ -57,7 +57,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                         FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
                         JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d
                         ON c.task_id = d.id
-                        WHERE c.user_id = a.id AND d.is_archived = 0) AS assigned_tasks_count
+                        WHERE c.user_id = a.id AND d.is_archived = 0 AND c.user_type = 'quicktasker') AS assigned_tasks_count
                 FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                 LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b ON a.id = b.user_id
                 WHERE a.deleted = 0"
@@ -84,7 +84,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                             FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
                             JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d
                             ON c.task_id = d.id
-                            WHERE c.user_id = a.id AND d.is_archived = 0) AS assigned_tasks_count
+                            WHERE c.user_id = a.id AND d.is_archived = 0 AND c.user_type = 'quicktasker') AS assigned_tasks_count
                     FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                     LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b
                     ON a.id = b.user_id
@@ -171,7 +171,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
         }
 
         /**
-         * Retrieves the assigned users for a specific task.
+         * Retrieves the assigned quicktasker users for a specific task.
          *
          * @param int $taskId The ID of the task.
          * @return array|null The assigned users and their associated page hash, or null if no users are assigned.
@@ -184,7 +184,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                 FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                 INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b
                 ON a.id = b.user_id
-                WHERE b.task_id = %d AND a.deleted = 0
+                WHERE b.task_id = %d AND a.deleted = 0 AND b.user_type = 'quicktasker' 
                 ORDER BY b.created_at DESC",
                 $taskId
             );
