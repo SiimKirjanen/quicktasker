@@ -317,6 +317,12 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
 
             $this->shiftTaskOrder($taskToDelete->task_order, $taskToDelete->stage_id);
 
+            $results3 = $wpdb->delete(TABLE_WP_QUICKTASKER_USER_TASK, array('task_id' => $taskId));
+
+            if ($results3 === false) {
+                throw new \Exception('Failed to unassign users from the task');
+            }
+
             return true;
         }
 
