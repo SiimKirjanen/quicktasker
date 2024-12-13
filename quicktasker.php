@@ -68,7 +68,10 @@ require( 'php/db-seeder.php' );
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 WPQT\ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
 WPQT\ServiceLocator::register('TimeRepository', new WPQT\Time\TimeRepository());
+WPQT\ServiceLocator::register('TaskRepository', new WPQT\Task\TaskRepository());
+WPQT\ServiceLocator::register('UserRepository', new WPQT\User\UserRepository());
 WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
+WPQT\ServiceLocator::register('UserService', new WPQT\User\UserService());
 WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
 WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
 

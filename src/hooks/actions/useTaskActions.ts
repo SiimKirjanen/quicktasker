@@ -7,6 +7,7 @@ import {
   removeTaskFromUserRequest,
   restoreArchivedTaskRequest,
 } from "../../api/api";
+import { UserTypes } from "../../types/user";
 import { useErrorHandler } from "../useErrorHandler";
 import { useAutomationActions } from "./useAutomationActions";
 
@@ -53,7 +54,7 @@ const useTaskActions = () => {
     callback?: () => void,
   ) => {
     try {
-      await removeTaskFromUserRequest(userId, taskId);
+      await removeTaskFromUserRequest(userId, taskId, UserTypes.QUICKTASKER);
       if (callback) callback();
       toast.success(__("Task has been unassigned", "quicktasker"));
     } catch (error) {

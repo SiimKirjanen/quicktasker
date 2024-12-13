@@ -66,7 +66,6 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
 
   const removeUser = async (user: User | WPUser) => {
     try {
-      console.log(user);
       setLoading(true);
       const userType = user.user_type;
       await removeTaskFromUserRequest(user.id, task.id, userType);
@@ -118,7 +117,7 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
         onItemSelect={assignUser}
         actionIconClasses="wpqt-icon-green"
         noUsersText={__(
-          "No WordPress users available to assign",
+          "No WordPress users with required permissions available to assign",
           "quicktasker",
         )}
       />

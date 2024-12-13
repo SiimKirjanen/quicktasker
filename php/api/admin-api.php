@@ -983,8 +983,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {                
-                        $taskRepo = new TaskRepository();
-                        $userTasks = $taskRepo->getTasksAssignedToUser($data['id'], true);
+                        $userTasks = ServiceLocator::get('TaskRepository')->getTasksAssignedToUser($data['id'], true);
                     
                         return new WP_REST_Response((new ApiResponse(true, array(), $userTasks))->toArray(), 200);
                     }catch(Exception $e) {
@@ -1066,12 +1065,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {   
                         $wpdb->query('START TRANSACTION');             
-                        $userService = new UserService();
-                        $logService = new LogService();
-                        $userRepo = new UserRepository();
+                        $logService = ServiceLocator::get('LogService');
 
-                        $task = $userService->removeTaskFromUser($data['id'], $data['task_id'], $data['user_type']);
-                        $user = $userRepo->getUserByIdAndType($data['id'], $data['user_type']);
+                        $task = ServiceLocator::get('UserService')->removeTaskFromUser($data['id'], $data['task_id'], $data['user_type']);
+                        $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($data['id'], $data['user_type']);
 
                         $logService->log('Task ' . $task->name . ' unassigned from ' . $user->name, WP_QT_LOG_TYPE_TASK, $data['task_id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         $logService->log('User ' . $user->name . ' unassigned from ' . $task->name . " task", WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
@@ -1089,6 +1086,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 },
                 'args' => array(
                     'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'task_id' => array(
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),

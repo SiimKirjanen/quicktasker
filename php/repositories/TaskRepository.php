@@ -54,6 +54,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                 foreach ($tasks as $task) {
                     $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
                     $task->assigned_users = $users;
+                    $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id]);
                 }
             }
         
@@ -213,6 +214,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                 foreach ($tasks as $task) {
                     $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
                     $task->assigned_users = $users;
+                    $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id]);
                 }
             }
         

@@ -81,9 +81,16 @@ const reducer = (state: State, action: Action): State => {
         if (task.id === taskId) {
           return {
             ...task,
-            assigned_users: task.assigned_users.filter(
-              (assignedUser) => assignedUser.id !== user.id,
-            ),
+            assigned_users: isUser(user)
+              ? task.assigned_users.filter(
+                  (assignedUser) => assignedUser.id !== user.id,
+                )
+              : task.assigned_users,
+            assigned_wp_users: isWPUser(user)
+              ? task.assigned_wp_users.filter(
+                  (assignedWPUser) => assignedWPUser.id !== user.id,
+                )
+              : task.assigned_wp_users,
           };
         }
 

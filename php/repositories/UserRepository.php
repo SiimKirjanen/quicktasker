@@ -79,7 +79,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
         
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, 
+                    "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, 'quicktasker' AS user_type, 
                             (SELECT COUNT(*)
                             FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS c
                             JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS d
@@ -180,7 +180,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT DISTINCT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active
+                "SELECT DISTINCT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, 'quicktasker' AS user_type
                 FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a
                 INNER JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS b
                 ON a.id = b.user_id
