@@ -10,6 +10,7 @@ import {
   PIPELINE_ADD_USER_TO_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
 } from "../../../constants";
+import { isWPUser } from "../../../guards/user-guard";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { Task } from "../../../types/task";
@@ -149,10 +150,10 @@ function UserAssignementSection({
   return (
     <div className="wpqt-mb-2">
       <div className="wpqt-mb-2 wpqt-text-lg">{sectionTitle}</div>
-      {users.map((user: User | WPUser) => {
+      {users.map((user: User | WPUser, index) => {
         return (
           <div
-            key={user.id}
+            key={index}
             onClick={(e) => {
               e.stopPropagation();
               onItemSelect(user);
@@ -162,6 +163,7 @@ function UserAssignementSection({
             <div className="wpqt-flex wpqt-flex-col">
               <div>{user.name}</div>
               <div className="wpqt-italic">{user.description}</div>
+              {isWPUser(user) && <div>{user.roles?.join(",")}</div>}
             </div>
             <ActionIcon
               className={`wpqt-ml-auto wpqt-size-5 ${actionIconClasses}`}

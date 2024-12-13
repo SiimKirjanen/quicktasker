@@ -95,9 +95,10 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
          *
          * @param string $hash The hash value of the task to retrieve.
          * @param bool $addAssignedUsers Optional. Whether to include assigned users in the result. Default false.
+         * @param string $userObjectFiltering Optional. The user object filtering to apply when fetching assigned users. Default WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE.
          * @return object|null The task object if found, null otherwise. If $addAssignedUsers is true, the task object will include an 'assigned_users' property containing the assigned users.
          */
-        public function getTaskByHash($hash, $addAssignedUsers = false) {
+        public function getTaskByHash($hash, $addAssignedUsers = false, $userObjectFiltering = WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE) {
             global $wpdb;
 
             $task = $wpdb->get_row( $wpdb->prepare(
@@ -110,7 +111,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
 
             if ( $task && $addAssignedUsers) {
                 $task->assigned_users = $this->userRepository->getAssignedUsersByTaskId($task->id);
-                $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id]);
+                $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id], $userObjectFiltering);
             }
 
             return $task;

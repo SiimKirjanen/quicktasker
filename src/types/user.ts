@@ -30,7 +30,6 @@ type ExtendedUser = BaseUser & {
 type WPUser = {
   id: string;
   name: string;
-  email: string;
   description: string;
   created_at: string;
   caps: string[];

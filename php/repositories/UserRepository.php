@@ -125,7 +125,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             return $results;
         }
 
-        public function getAssignedWPUsersByTaskIds($taskIds) {
+        public function getAssignedWPUsersByTaskIds($taskIds, $filter = WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE) {
             global $wpdb;
 
             if ( empty($taskIds) ) {
@@ -150,7 +150,21 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                 return $item->user_id;
             }, $result);
 
-            $wpUsersData = $this->getWPUsers(['include' => $wpUserIds]);
+            $wpUsersData = [];
+
+            switch ($filter) {
+                case WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE:
+                    $wpUsersData = $this->getWPUsersForFrontend(['include' => $wpUserIds]);
+                    break;
+                case WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL:
+                    $wpUsersData = $this->getWPUsersMinimal(['include' => $wpUserIds]);
+                    break;
+                case WP_QUICKTASKER_WP_USER_OBJECT_FILTER_FULL:
+                default:
+                    $wpUsersData = $this->getWPUsers(['include' => $wpUserIds]);
+                    break;
+            }
+
 
             $wpUserMap = [];
             foreach ($wpUsersData as $user) {
@@ -265,12 +279,19 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                     'compare' => 'LIKE'
                 );
             }
+
+            // Include users with the administrator role
+            $meta_query[] = array(
+                'key' => $wpdb->prefix . 'capabilities',
+                'value' => '"administrator"',
+                'compare' => 'LIKE'
+            );
         
             $args = array(
                 'meta_query' => $meta_query
             );
         
-            return $this->getWPUsers($args);
+            return $this->getWPUsersForFrontend($args);
         }
 
         public function getWPAdminUsers() {
@@ -323,6 +344,47 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             }, $results);
         
             return $users;
+        }
+
+        /**
+         * Retrieves WordPress users for frontend display.
+         *
+         * This method fetches WordPress users based on the provided arguments
+         * and removes some sensitive information.
+         *
+         * @param array $args Arguments to filter the WordPress users.
+         * @return array Filtered list of WordPress users without email property.
+         */
+        public function getWPUsersForFrontend($args) {
+            $users = $this->getWPUsers($args);
+
+            $allowedAllCaps = [
+                WP_QUICKTASKER_ADMIN_ROLE,
+                WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE,
+                WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS,
+                WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS
+            ];
+        
+            $filteredUsers = array_map(function($user) use ($allowedAllCaps) {
+                unset($user->email);
+                $user->allcaps = array_intersect_key($user->allcaps, array_flip($allowedAllCaps));
+                return $user;
+            }, $users);
+        
+            return $filteredUsers;
+        }
+
+        public function getWPUsersMinimal($args) {
+            $users = $this->getWPUsers($args);
+
+            $filteredUsers = array_map(function($user) {
+                return (object)[
+                    'name' => $user->name,
+                    'id' => $user->id,
+                    'user_type' => $user->user_type,
+                ];
+            }, $users);
+            return $filteredUsers;
         }
     }
 }
