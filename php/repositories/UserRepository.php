@@ -160,9 +160,10 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             $combinedResults = array_map(function($item) use ($wpUserMap) {
                 $user = $wpUserMap[$item->user_id] ?? null;
                 if ($user) {
-                    $user->task_id = $item->task_id;
-
-                    return $user;
+                    $userClone = clone $user;
+                    $userClone->task_id = $item->task_id;
+        
+                    return $userClone;
                 }
                 return null;
             }, $result);
