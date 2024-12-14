@@ -246,12 +246,18 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				target_type ENUM('stage', 'task', 'quicktasker', 'pipeline') NOT NULL,
 				automation_trigger varchar(255) NOT NULL,
 				automation_action varchar(255) NOT NULL,
+				automation_action_target_id int(11) DEFAULT NULL,
+				automation_action_target_type ENUM('stage', 'task', 'quicktasker', 'pipeline', 'wp-user') DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
 				PRIMARY KEY  (id),
 				INDEX pipeline_id (pipeline_id),
 				INDEX target_id (target_id),
-				INDEX target_type (target_type)
+				INDEX target_type (target_type),
+				INDEX automation_trigger (automation_trigger),
+				INDEX automation_action (automation_action),
+				INDEX automation_action_target_id (automation_action_target_id),
+				INDEX automation_action_target_type (automation_action_target_type)
 			) $charset_collate;";
 
 			dbDelta( $sql15 );

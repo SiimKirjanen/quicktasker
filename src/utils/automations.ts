@@ -7,6 +7,7 @@ import {
 
 const automationActionStrings: { [key in AutomationAction]: string } = {
   [AutomationAction.ARCHIVE_TASK]: __("Archive task", "quicktasker"),
+  [AutomationAction.ASSIGN_USER]: __("Assign user", "quickkasker"),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -22,11 +23,13 @@ const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
     "Task marked as not done",
     "quicktasker",
   ),
+  [AutomationTrigger.TASK_CREATED]: __("Task created", "quicktasker"),
 };
 
 const taskAutomations = {
   [AutomationTrigger.TASK_DONE]: [AutomationAction.ARCHIVE_TASK],
   [AutomationTrigger.Task_NOT_DONE]: [AutomationAction.ARCHIVE_TASK],
+  [AutomationTrigger.TASK_CREATED]: [AutomationAction.ASSIGN_USER],
 };
 
 const availableAutomations = {

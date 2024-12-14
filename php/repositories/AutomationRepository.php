@@ -22,7 +22,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE pipeline_id = %d AND target_type = %s AND automation_trigger = %s",
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE pipeline_id = %d AND target_type = %s AND automation_trigger = %s",
                 $boardId,
                 $targetType,
                 $automationTrigger
@@ -41,7 +41,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE id = %d",
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE id = %d",
                 $automationID
             );
 
@@ -60,7 +60,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE pipeline_id = %d",
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE pipeline_id = %d",
                 $pipelineId
             );
 

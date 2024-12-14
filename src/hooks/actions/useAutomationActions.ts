@@ -15,6 +15,10 @@ const actionMessages: { [key in AutomationAction]: string } = {
     "Task archived by automation",
     "quicktasker",
   ),
+  [AutomationAction.ASSIGN_USER]: __(
+    "User assigned by automation",
+    "quicktasker",
+  ),
 };
 
 function useAutomationActions() {
@@ -34,6 +38,10 @@ function useAutomationActions() {
     executedAutomations: Automation[],
     triggererId: string,
   ) => {
+    if (!executedAutomations) {
+      return;
+    }
+
     executedAutomations.forEach((automation) => {
       if (automation.automation_action === AutomationAction.ARCHIVE_TASK) {
         dispatch({

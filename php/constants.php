@@ -35,7 +35,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.8.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.9.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -237,13 +237,29 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK' ) ) {
     define('WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK', "archive-task");
 }
 
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER', "assign-user");
+}
+
 // Triggers
 if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE' ) ) {
     define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE', "task-done");
 }
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED', "task-created");
+}
 
 if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE' ) ) {
     define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE', "task-not-done");
+}
+
+// Action target types
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER', "quicktasker");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER', "wp-user");
 }
 
 /*

@@ -381,6 +381,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         
                         $taskService = new TaskService();
                         $logService = new LogService();
+                        $automationService = ServiceLocator::get('AutomationService');
                         
                         $newTask = $taskService->createTask( $data['stageId'], array(
                             "name" => $data['name'],
@@ -388,9 +389,21 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         ) );
                         $logService->log('Task ' . $newTask->name . ' created', WP_QT_LOG_TYPE_TASK, $newTask->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
+                        /* Handle automations */
+                        $executedAutomations = $automationService->handleAutomations(
+                            $newTask->pipeline_id, 
+                            $newTask->id, 
+                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
+                        );
+                        /* End of handling automations */
+
                         $wpdb->query('COMMIT');
 
-                        return new WP_REST_Response((new ApiResponse(true, array(), $newTask))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'newTask' => $newTask,
+                            'executedAutomations' => $executedAutomations
+                        ]))->toArray(), 200);
                     } catch (Exception $e) {
                         $wpdb->query('ROLLBACK');
 

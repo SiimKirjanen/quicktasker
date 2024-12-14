@@ -6,6 +6,7 @@ import { createTaskRequest } from "../../../api/api";
 import { WPQTInput } from "../../../components/common/Input/Input";
 import { LoadingOval } from "../../../components/Loading/Loading";
 import { PIPELINE_ADD_TASK } from "../../../constants";
+import { useAutomationActions } from "../../../hooks/actions/useAutomationActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 type Props = {
@@ -22,6 +23,7 @@ function AddTask({ stageId }: Props) {
     state: { activePipeline },
     dispatch,
   } = useContext(ActivePipelineContext);
+  const { handleExecutedAnimationsResults } = useAutomationActions();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -77,9 +79,13 @@ function AddTask({ stageId }: Props) {
       );
       dispatch({
         type: PIPELINE_ADD_TASK,
-        payload: response.data,
+        payload: response.data.newTask,
       });
       clearState();
+      handleExecutedAnimationsResults(
+        response.data.executedAutomations,
+        response.data.newTask.id,
+      );
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to create task", "quicktasker"));

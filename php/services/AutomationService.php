@@ -29,16 +29,31 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                 return $executedAutomations;
             } catch(\Exception $e) {
+    
                 return $executedAutomations;
             }
         }
 
         private function executeAutomation($automation, $targetId) {
+
             if( $this->isTaskDoneTrigger($automation) ) {
                 if( $this->isArchiveTaskAction($automation) ) {
                     $logMessage = $this->getAutomationLogMessage($automation);
 
                     ServiceLocator::get('TaskService')->archiveTask($targetId, true);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+            }
+
+            if( $this->isTaskCreatedTrigger($automation) ) {
+                if ( $this->isAssignUserAction($automation) ) {
+                    $logMessage = $this->getAutomationLogMessage($automation);
+                    $userId = $automation->automation_action_target_id;
+                    $userType = $automation->automation_action_target_type;
+
+                    ServiceLocator::get('UserService')->assignTaskToUser($userId, $targetId, $userType);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
@@ -59,6 +74,20 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         }
 
         /**
+         * Checks if the given automation action is to assign a user.
+         *
+         * This function verifies if the automation action is of type 'assign user' and 
+         * if the target type of the automation action is 'user'.
+         *
+         * @param object $automation The automation object containing action details.
+         * @return bool Returns true if the automation action is to assign a user, false otherwise.
+         */
+        private function isAssignUserAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER &&
+                   in_array($automation->automation_action_target_type, [WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER, WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER], true) &&
+                   $automation->automation_action_target_id !== null;
+        }
+        /**
          * Checks if the automation trigger is set to 'task done'.
          *
          * @param object $automation The automation object containing the trigger information.
@@ -66,6 +95,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskDoneTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE;
+        }
+
+        /**
+         * Checks if the automation trigger is set to "task created".
+         *
+         * @param object $automation The automation object containing the trigger information.
+         * @return bool Returns true if the automation trigger is "task created", false otherwise.
+         */
+        private function isTaskCreatedTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED;
         }
 
         /**
