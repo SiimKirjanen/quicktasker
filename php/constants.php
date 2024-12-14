@@ -245,3 +245,21 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE' ) ) {
 if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE' ) ) {
     define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE', "task-not-done");
 }
+
+/*
+==================================================================================================================================================================================================================
+Filtering constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_FULL' ) ) {
+    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_FULL', "user-full");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE' ) ) {
+    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE', "user-admin-fe");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL' ) ) {
+    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL', "user-minimal");
+}

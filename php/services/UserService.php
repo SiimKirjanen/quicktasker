@@ -11,6 +11,7 @@ use WPQT\Hash\HashService;
 use WPQT\WPQTException;
 use WPQT\Task\TaskRepository;
 use WPQT\Time\TimeRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\User\UserService' ) ) {
     class UserService {
@@ -197,6 +198,12 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
         public function assignTaskToUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
+            $user = ServiceLocator::get("UserRepository")->getUserByIdAndType($userId, $userType);
+
+            if (!$user) {
+                throw new \Exception('Assignable user not found');
+            }
+
             $result = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_USER_TASK,
                 array(
@@ -241,7 +248,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
             );
 
             if (!$result) {
-                throw new \Exception('Failed to remove a user from a task');
+                throw new \Exception('Failed to remove user from a task');
             }
 
             return $this->taskRepository->getTaskById($taskId);

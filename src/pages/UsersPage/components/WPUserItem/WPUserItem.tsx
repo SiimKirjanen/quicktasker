@@ -53,7 +53,6 @@ function WPUserItem({ user }: Props) {
         label={__("Role", "quicktasker")}
         value={Array.isArray(user.roles) ? user.roles.join(", ") : ""}
       />
-      <WPQTCardDataItem label={__("Email", "quicktasker")} value={user.email} />
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
           {__("Access to admin areas", "quicktasker")}

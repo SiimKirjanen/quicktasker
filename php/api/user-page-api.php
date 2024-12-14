@@ -283,7 +283,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $customFieldRepository = new CustomFieldRepository();
                         $settingsRepository = new SettingRepository();
 
-                        $task = $taskRepository->getTaskByHash($data['task_hash'], true);
+                        $task = $taskRepository->getTaskByHash($data['task_hash'], true, WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL);
                         $pipelineSettings = $settingsRepository->getPublicPipelineSettings($task->pipeline_id);
                     
                         if(!$permissionService->checkIfUserIsAllowedToViewTask($session->user_id, $task->id)) {
