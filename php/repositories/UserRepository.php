@@ -294,6 +294,11 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             return $this->getWPUsersForFrontend($args);
         }
 
+        /**
+         * Retrieves a list of WordPress users with the 'Administrator' role.
+         *
+         * @return array An array of WP_User objects representing the administrators.
+         */
         public function getWPAdminUsers() {
             $args = array(
                 'role' => 'Administrator',
@@ -304,6 +309,13 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             return $users;
         }
 
+        /**
+         * Retrieves a list of WordPress users who are not administrators.
+         *
+         * This function fetches all WordPress users excluding those with the 'Administrator' role.
+         *
+         * @return array List of non-administrator WordPress users.
+         */
         public function getWPNonAdminUsers() {
             $args = array(
                 'role__not_in' => ['Administrator'],
@@ -324,6 +336,22 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             return $users[0] ?? null;
         }
 
+        /**
+         * Retrieves WordPress users based on the provided arguments.
+         *
+         * @param array $args Arguments to query users. Accepts WP_User_Query arguments.
+         * @return array An array of user objects with the following properties:
+         *               - id (int): The user ID.
+         *               - name (string): The display name of the user.
+         *               - email (string): The email address of the user.
+         *               - description (string): The description of the user.
+         *               - created_at (string): The date the user was registered.
+         *               - updated_at (string): The date the user was registered (same as created_at).
+         *               - caps (array): The capabilities of the user.
+         *               - roles (array): The roles assigned to the user.
+         *               - allcaps (array): All capabilities of the user.
+         *               - user_type (string): The type of user, always 'wp-user'.
+         */
         public function getWPUsers($args) {       
             $user_query = new WP_User_Query($args);
             $results = $user_query->get_results();
