@@ -644,6 +644,7 @@ function getPipelineAutomationsRequest(pipelineId) {
   });
 }
 function createPipelineAutomationRequest(pipelineId, automation) {
+  var _a;
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
     method: "POST",
@@ -651,7 +652,7 @@ function createPipelineAutomationRequest(pipelineId, automation) {
       automationTargetId: null,
       automationTarget: automation.automationTarget,
       automationTrigger: automation.automationTrigger,
-      automationAction: automation.automationAction
+      automationAction: (_a = automation.automationAction) === null || _a === void 0 ? void 0 : _a.id
     },
     headers: getCommonHeaders()
   });
@@ -10268,7 +10269,7 @@ function AutomationCreator({
         titleClassName: cardTitleClasses,
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-flex wpqt-justify-center",
-          children: automation.automationAction ? _utils_automations__WEBPACK_IMPORTED_MODULE_9__.automationActionStrings[automation.automationAction] : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(QuestionMarkIcon, {})
+          children: automation.automationAction ? _utils_automations__WEBPACK_IMPORTED_MODULE_9__.automationActionStrings[automation.automationAction.id] : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(QuestionMarkIcon, {})
         })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -10333,28 +10334,58 @@ function AutomationActionSelection({
   }
   const target = automation.automationTarget;
   const trigger = automation.automationTrigger;
-  const actionOptions = _utils_automations__WEBPACK_IMPORTED_MODULE_3__.availableAutomations[target][trigger].map(action => {
-    return {
-      value: action,
-      label: _utils_automations__WEBPACK_IMPORTED_MODULE_3__.automationActionStrings[action]
-    };
-  });
+  const actionOptions = _utils_automations__WEBPACK_IMPORTED_MODULE_3__.availableAutomations[target][trigger];
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationSelection_AutomationSelection__WEBPACK_IMPORTED_MODULE_4__.AutomationSelection, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Step 3. Select action", "quicktasker"),
-    children: actionOptions.map(({
-      value,
-      label
-    }) => {
+    children: actionOptions.map(actionType => {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Pill_Pill__WEBPACK_IMPORTED_MODULE_2__.Pill, {
-        value: value,
-        label: label,
+        value: actionType.id,
+        label: _utils_automations__WEBPACK_IMPORTED_MODULE_3__.automationActionStrings[actionType.id],
         onClick: () => {
           automationDispatch({
             type: "SET_ACTION",
-            payload: value
+            payload: actionType
           });
         }
-      }, value);
+      }, actionType.id);
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionTargetSelection/AutomationActionTargetSelection.tsx":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionTargetSelection/AutomationActionTargetSelection.tsx ***!
+  \************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AutomationActionTargetSelection: () => (/* binding */ AutomationActionTargetSelection)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _types_automation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../../../types/automation */ "./src/types/automation.ts");
+/* harmony import */ var _AutomationSelection_AutomationSelection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../AutomationSelection/AutomationSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationSelection/AutomationSelection.tsx");
+
+
+
+
+const userAssignementActions = [_types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.ASSIGN_USER];
+function AutomationActionTargetSelection({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  automationDispatch,
+  automation
+}) {
+  const showUserAssignment = automation.automationAction !== null && userAssignementActions.includes(automation.automationAction.id);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationSelection_AutomationSelection__WEBPACK_IMPORTED_MODULE_3__.AutomationSelection, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Step 4. Select action target", "quicktasker"),
+    children: showUserAssignment && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: "tere"
     })
   });
 }
@@ -10378,11 +10409,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_tfi__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-icons/tfi */ "./node_modules/react-icons/tfi/index.mjs");
+/* harmony import */ var react_icons_tfi__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-icons/tfi */ "./node_modules/react-icons/tfi/index.mjs");
 /* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../AutomationActionSelection/AutomationActionSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionSelection/AutomationActionSelection.tsx");
-/* harmony import */ var _AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../AutomationTargetSelection/AutomationTargetSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTargetSelection/AutomationTargetSelection.tsx");
-/* harmony import */ var _AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../AutomationTriggerSelection/AutomationTriggerSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTriggerSelection/AutomationTriggerSelection.tsx");
+/* harmony import */ var _AutomationActionTargetSelection_AutomationActionTargetSelection__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../AutomationActionTargetSelection/AutomationActionTargetSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationActionTargetSelection/AutomationActionTargetSelection.tsx");
+/* harmony import */ var _AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../AutomationTargetSelection/AutomationTargetSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTargetSelection/AutomationTargetSelection.tsx");
+/* harmony import */ var _AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../AutomationTriggerSelection/AutomationTriggerSelection */ "./src/pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationCreator/components/AutomationTriggerSelection/AutomationTriggerSelection.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10418,6 +10450,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function AutomationCreationSteps({
   automation,
   automationDispatch,
@@ -10430,25 +10463,28 @@ function AutomationCreationSteps({
     setCreationLoading(false);
   });
   if (automation.automationTarget === null) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_5__.AutomationTargetSelection, {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTargetSelection_AutomationTargetSelection__WEBPACK_IMPORTED_MODULE_6__.AutomationTargetSelection, {
       automationDispatch: automationDispatch
     });
-  }
-  if (automation.automationTrigger === null && automation.automationTarget) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_6__.AutomationTriggerSelection, {
+  } else if (automation.automationTrigger === null) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationTriggerSelection_AutomationTriggerSelection__WEBPACK_IMPORTED_MODULE_7__.AutomationTriggerSelection, {
       automationDispatch: automationDispatch,
       automation: automation
     });
-  }
-  if (automation.automationAction === null && automation.automationTrigger && automation.automationTarget) {
+  } else if (automation.automationAction === null) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_4__.AutomationActionSelection, {
+      automationDispatch: automationDispatch,
+      automation: automation
+    });
+  } else if (automation.automationAction && automation.automationAction.requireAutomationTarget && automation.automationAction.requireAutomationTargetType && (automation.automationActionTargetType === null || automation.automationActionTargetId === null)) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationActionTargetSelection_AutomationActionTargetSelection__WEBPACK_IMPORTED_MODULE_5__.AutomationActionTargetSelection, {
       automationDispatch: automationDispatch,
       automation: automation
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create automation", "quicktasker"),
-    icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tfi__WEBPACK_IMPORTED_MODULE_7__.TfiSave, {
+    icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tfi__WEBPACK_IMPORTED_MODULE_8__.TfiSave, {
       className: "wpqt-icon-blue wpqt-size-4"
     }),
     onClick: handleCreateAutomation,
@@ -14181,7 +14217,9 @@ __webpack_require__.r(__webpack_exports__);
 const automationCreationInitialState = {
   automationTarget: null,
   automationTrigger: null,
-  automationAction: null
+  automationAction: null,
+  automationActionTargetId: null,
+  automationActionTargetType: null
 };
 function automationCreationReducer(state, action) {
   switch (action.type) {
@@ -15046,9 +15084,21 @@ const automationTriggerStrings = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_CREATED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task created", "quicktasker")
 };
 const taskAutomations = {
-  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_DONE]: [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.ARCHIVE_TASK],
-  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.Task_NOT_DONE]: [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.ARCHIVE_TASK],
-  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_CREATED]: [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.ASSIGN_USER]
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_DONE]: [{
+    id: _types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.ARCHIVE_TASK,
+    requireAutomationTarget: false,
+    requireAutomationTargetType: false
+  }],
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.Task_NOT_DONE]: [{
+    id: _types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.ARCHIVE_TASK,
+    requireAutomationTarget: false,
+    requireAutomationTargetType: false
+  }],
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_CREATED]: [{
+    id: _types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.ASSIGN_USER,
+    requireAutomationTarget: true,
+    requireAutomationTargetType: true
+  }]
 };
 const availableAutomations = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.TargetType.Task]: taskAutomations

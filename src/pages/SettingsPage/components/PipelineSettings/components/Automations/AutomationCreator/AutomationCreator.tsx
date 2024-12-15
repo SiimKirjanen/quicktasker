@@ -103,7 +103,7 @@ function AutomationCreator({ pipelineId }: props) {
         >
           <div className="wpqt-flex wpqt-justify-center">
             {automation.automationAction ? (
-              automationActionStrings[automation.automationAction]
+              automationActionStrings[automation.automationAction.id]
             ) : (
               <QuestionMarkIcon />
             )}

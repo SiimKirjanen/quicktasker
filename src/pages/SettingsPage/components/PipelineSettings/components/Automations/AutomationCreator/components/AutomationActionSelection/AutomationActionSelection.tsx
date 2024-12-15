@@ -21,26 +21,20 @@ function AutomationActionSelection({ automationDispatch, automation }: Props) {
   }
   const target = automation.automationTarget;
   const trigger = automation.automationTrigger;
-  const actionOptions = availableAutomations[
-    target as keyof typeof availableAutomations
-  ][trigger].map((action) => {
-    return {
-      value: action,
-      label: automationActionStrings[action],
-    };
-  });
+  const actionOptions =
+    availableAutomations[target as keyof typeof availableAutomations][trigger];
   return (
     <AutomationSelection title={__("Step 3. Select action", "quicktasker")}>
-      {actionOptions.map(({ value, label }) => {
+      {actionOptions.map((actionType) => {
         return (
           <Pill
-            key={value}
-            value={value}
-            label={label}
+            key={actionType.id}
+            value={actionType.id}
+            label={automationActionStrings[actionType.id]}
             onClick={() => {
               automationDispatch({
                 type: "SET_ACTION",
-                payload: value,
+                payload: actionType,
               });
             }}
           />

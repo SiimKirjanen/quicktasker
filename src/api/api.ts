@@ -679,7 +679,7 @@ function createPipelineAutomationRequest(
       automationTargetId: null,
       automationTarget: automation.automationTarget,
       automationTrigger: automation.automationTrigger,
-      automationAction: automation.automationAction,
+      automationAction: automation.automationAction?.id,
     },
     headers: getCommonHeaders(),
   });

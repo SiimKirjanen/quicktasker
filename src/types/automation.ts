@@ -26,6 +26,12 @@ enum AutomationAction {
   ASSIGN_USER = "assign-user",
 }
 
+type AutomationActionType = {
+  id: AutomationAction;
+  requireAutomationTarget: boolean;
+  requireAutomationTargetType: boolean;
+};
+
 type AutomationExecutionResult = boolean | WPUser | User;
 
 type Automation = {
@@ -48,5 +54,6 @@ export {
   TargetType,
   type ActionTargetType,
   type Automation,
+  type AutomationActionType,
   type AutomationExecutionResult,
 };

@@ -7,6 +7,7 @@ import {
   AutomationCreationState,
 } from "../../../../../../../../../reducers/automation-creation-reducer";
 import { AutomationActionSelection } from "../AutomationActionSelection/AutomationActionSelection";
+import { AutomationActionTargetSelection } from "../AutomationActionTargetSelection/AutomationActionTargetSelection";
 import { AutomationTargetSelection } from "../AutomationTargetSelection/AutomationTargetSelection";
 import { AutomationTriggerSelection } from "../AutomationTriggerSelection/AutomationTriggerSelection";
 
@@ -32,22 +33,29 @@ function AutomationCreationSteps({
     return (
       <AutomationTargetSelection automationDispatch={automationDispatch} />
     );
-  }
-  if (automation.automationTrigger === null && automation.automationTarget) {
+  } else if (automation.automationTrigger === null) {
     return (
       <AutomationTriggerSelection
         automationDispatch={automationDispatch}
         automation={automation}
       />
     );
-  }
-  if (
-    automation.automationAction === null &&
-    automation.automationTrigger &&
-    automation.automationTarget
-  ) {
+  } else if (automation.automationAction === null) {
     return (
       <AutomationActionSelection
+        automationDispatch={automationDispatch}
+        automation={automation}
+      />
+    );
+  } else if (
+    automation.automationAction &&
+    automation.automationAction.requireAutomationTarget &&
+    automation.automationAction.requireAutomationTargetType &&
+    (automation.automationActionTargetType === null ||
+      automation.automationActionTargetId === null)
+  ) {
+    return (
+      <AutomationActionTargetSelection
         automationDispatch={automationDispatch}
         automation={automation}
       />

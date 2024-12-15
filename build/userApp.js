@@ -593,6 +593,7 @@ function getPipelineAutomationsRequest(pipelineId) {
   });
 }
 function createPipelineAutomationRequest(pipelineId, automation) {
+  var _a;
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/pipelines/${pipelineId}/automations`,
     method: "POST",
@@ -600,7 +601,7 @@ function createPipelineAutomationRequest(pipelineId, automation) {
       automationTargetId: null,
       automationTarget: automation.automationTarget,
       automationTrigger: automation.automationTrigger,
-      automationAction: automation.automationAction
+      automationAction: (_a = automation.automationAction) === null || _a === void 0 ? void 0 : _a.id
     },
     headers: getCommonHeaders()
   });

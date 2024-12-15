@@ -1,5 +1,6 @@
 import {
-  AutomationAction,
+  ActionTargetType,
+  AutomationActionType,
   AutomationTrigger,
   TargetType,
 } from "../types/automation";
@@ -8,18 +9,26 @@ const automationCreationInitialState: AutomationCreationState = {
   automationTarget: null,
   automationTrigger: null,
   automationAction: null,
+  automationActionTargetId: null,
+  automationActionTargetType: null,
 };
 
 type AutomationCreationState = {
   automationTarget: TargetType | null;
   automationTrigger: AutomationTrigger | null;
-  automationAction: AutomationAction | null;
+  automationAction: AutomationActionType | null;
+  automationActionTargetId: string | null;
+  automationActionTargetType: ActionTargetType | null;
 };
 
 type Action =
   | { type: "SET_TARGET"; payload: TargetType }
   | { type: "SET_TRIGGER"; payload: AutomationTrigger }
-  | { type: "SET_ACTION"; payload: AutomationAction }
+  | { type: "SET_ACTION"; payload: AutomationActionType }
+  | {
+      type: "SET_ACTION_TARGET";
+      payload: { id: string; type: ActionTargetType };
+    }
   | { type: "RESET" };
 
 function automationCreationReducer(
