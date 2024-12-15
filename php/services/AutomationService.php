@@ -18,9 +18,10 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                 if ( ! empty($relatedAutomations) ) {
                     foreach ($relatedAutomations as $automation) {
-                        $executed = $this->executeAutomation($automation, $targetId);
+                        $result = $this->executeAutomation($automation, $targetId);
 
-                        if($executed) {
+                        if($result) {
+                            $automation->executionResult = $result;
                             $executedAutomations[] = $automation;
                         }
                         
@@ -52,11 +53,12 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $logMessage = $this->getAutomationLogMessage($automation);
                     $userId = $automation->automation_action_target_id;
                     $userType = $automation->automation_action_target_type;
+                    $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, $userType);
 
                     ServiceLocator::get('UserService')->assignTaskToUser($userId, $targetId, $userType);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
-                    return true;
+                    return $user;
                 }
             }
 

@@ -1,3 +1,5 @@
+import { User, WPUser } from "./user";
+
 enum AutomationTrigger {
   TASK_DONE = "task-done",
   Task_NOT_DONE = "task-not-done",
@@ -24,6 +26,8 @@ enum AutomationAction {
   ASSIGN_USER = "assign-user",
 }
 
+type AutomationExecutionResult = boolean | WPUser | User;
+
 type Automation = {
   id: string;
   pipeline_id: string;
@@ -35,6 +39,14 @@ type Automation = {
   automation_action_target_type: ActionTargetType;
   created_at: string;
   updated_at: string;
+  executionResult: AutomationExecutionResult;
 };
 
-export { AutomationAction, AutomationTrigger, TargetType, type Automation };
+export {
+  AutomationAction,
+  AutomationTrigger,
+  TargetType,
+  type ActionTargetType,
+  type Automation,
+  type AutomationExecutionResult,
+};

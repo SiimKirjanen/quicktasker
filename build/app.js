@@ -6776,6 +6776,7 @@ const HAS_AUTOMATIONS = true;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   isUser: () => (/* binding */ isUser),
+/* harmony export */   isUserOrWPUser: () => (/* binding */ isUserOrWPUser),
 /* harmony export */   isWPUser: () => (/* binding */ isWPUser)
 /* harmony export */ });
 /* harmony import */ var _types_user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/user */ "./src/types/user.ts");
@@ -6785,6 +6786,9 @@ function isUser(user) {
 }
 function isWPUser(user) {
   return user.user_type === _types_user__WEBPACK_IMPORTED_MODULE_0__.UserTypes.WORDPRESS;
+}
+function isUserOrWPUser(result) {
+  return result && typeof result === "object" && (!result.user_type || result.user_type === _types_user__WEBPACK_IMPORTED_MODULE_0__.UserTypes.QUICKTASKER || result.user_type === _types_user__WEBPACK_IMPORTED_MODULE_0__.UserTypes.WORDPRESS);
 }
 
 
@@ -6807,8 +6811,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
-/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
-/* harmony import */ var _types_automation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../types/automation */ "./src/types/automation.ts");
+/* harmony import */ var _guards_user_guard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../guards/user-guard */ "./src/guards/user-guard.ts");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _types_automation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../types/automation */ "./src/types/automation.ts");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -6843,39 +6848,55 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 const actionMessages = {
-  [_types_automation__WEBPACK_IMPORTED_MODULE_6__.AutomationAction.ARCHIVE_TASK]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task archived by automation", "quicktasker"),
-  [_types_automation__WEBPACK_IMPORTED_MODULE_6__.AutomationAction.ASSIGN_USER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("User assigned by automation", "quicktasker")
+  [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.ARCHIVE_TASK]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task archived by automation", "quicktasker"),
+  [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.ASSIGN_USER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("User assigned by automation", "quicktasker")
 };
 function useAutomationActions() {
   const {
     dispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.ActivePipelineContext);
-  const displayAutomationMessages = executedAutomations => {
-    executedAutomations.forEach(automation => {
-      const message = actionMessages[automation.automation_action] || `Automation executed: ${automation.automation_action}`;
-      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.info(message);
-    });
-  };
-  const handleExecutedAnimationsResults = (executedAutomations, triggererId) => {
-    if (!executedAutomations) {
-      return;
-    }
-    executedAutomations.forEach(automation => {
-      if (automation.automation_action === _types_automation__WEBPACK_IMPORTED_MODULE_6__.AutomationAction.ARCHIVE_TASK) {
-        dispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_REMOVE_TASK,
-          payload: triggererId
-        });
-      }
-    });
-  };
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__.ActivePipelineContext);
   const handleExecutedAutomations = (executedAutomations, triggererId) => {
     if (executedAutomations.length === 0) {
       return;
     }
     handleExecutedAnimationsResults(executedAutomations, triggererId);
     displayAutomationMessages(executedAutomations);
+  };
+  const displayAutomationMessages = executedAutomations => {
+    if (!executedAutomations) {
+      return;
+    }
+    executedAutomations.forEach(automation => {
+      const message = actionMessages[automation.automation_action] || `Automation executed: ${automation.automation_action}`;
+      react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.info(message);
+    });
+  };
+  const handleExecutedAnimationsResults = (executedAutomations, triggererId) => {
+    if (!executedAutomations || !triggererId) {
+      return;
+    }
+    executedAutomations.forEach(automation => {
+      if (automation.automation_action === _types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.ARCHIVE_TASK) {
+        dispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_REMOVE_TASK,
+          payload: triggererId
+        });
+      }
+      if (automation.automation_action === _types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.ASSIGN_USER) {
+        const executionResult = automation.executionResult;
+        if ((0,_guards_user_guard__WEBPACK_IMPORTED_MODULE_5__.isUserOrWPUser)(executionResult)) {
+          dispatch({
+            type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_ADD_USER_TO_TASK,
+            payload: {
+              taskId: triggererId,
+              user: executionResult
+            }
+          });
+        }
+      }
+    });
   };
   const createAutomation = (pipelineId, automation, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
@@ -9275,7 +9296,7 @@ function AddTask({
     dispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_9__.ActivePipelineContext);
   const {
-    handleExecutedAnimationsResults
+    handleExecutedAutomations
   } = (0,_hooks_actions_useAutomationActions__WEBPACK_IMPORTED_MODULE_8__.useAutomationActions)();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const handleKeyDown = event => {
@@ -9317,8 +9338,9 @@ function AddTask({
         type: _constants__WEBPACK_IMPORTED_MODULE_7__.PIPELINE_ADD_TASK,
         payload: response.data.newTask
       });
+      react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task created", "quicktasker"));
       clearState();
-      handleExecutedAnimationsResults(response.data.executedAutomations, response.data.newTask.id);
+      handleExecutedAutomations(response.data.executedAutomations, response.data.newTask.id);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Failed to create task", "quicktasker"));

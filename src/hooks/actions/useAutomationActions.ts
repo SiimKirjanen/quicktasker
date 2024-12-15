@@ -5,7 +5,11 @@ import {
   createPipelineAutomationRequest,
   deletePipelineAutomationsRequest,
 } from "../../api/api";
-import { PIPELINE_REMOVE_TASK } from "../../constants";
+import {
+  PIPELINE_ADD_USER_TO_TASK,
+  PIPELINE_REMOVE_TASK,
+} from "../../constants";
+import { isUserOrWPUser } from "../../guards/user-guard";
 import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
 import { AutomationCreationState } from "../../reducers/automation-creation-reducer";
 import { Automation, AutomationAction } from "../../types/automation";
@@ -24,7 +28,21 @@ const actionMessages: { [key in AutomationAction]: string } = {
 function useAutomationActions() {
   const { dispatch } = useContext(ActivePipelineContext);
 
+  const handleExecutedAutomations = (
+    executedAutomations: Automation[],
+    triggererId: string,
+  ) => {
+    if (executedAutomations.length === 0) {
+      return;
+    }
+    handleExecutedAnimationsResults(executedAutomations, triggererId);
+    displayAutomationMessages(executedAutomations);
+  };
+
   const displayAutomationMessages = (executedAutomations: Automation[]) => {
+    if (!executedAutomations) {
+      return;
+    }
     executedAutomations.forEach((automation) => {
       const message =
         actionMessages[automation.automation_action] ||
@@ -38,7 +56,7 @@ function useAutomationActions() {
     executedAutomations: Automation[],
     triggererId: string,
   ) => {
-    if (!executedAutomations) {
+    if (!executedAutomations || !triggererId) {
       return;
     }
 
@@ -49,18 +67,16 @@ function useAutomationActions() {
           payload: triggererId,
         });
       }
+      if (automation.automation_action === AutomationAction.ASSIGN_USER) {
+        const executionResult = automation.executionResult;
+        if (isUserOrWPUser(executionResult)) {
+          dispatch({
+            type: PIPELINE_ADD_USER_TO_TASK,
+            payload: { taskId: triggererId, user: executionResult },
+          });
+        }
+      }
     });
-  };
-
-  const handleExecutedAutomations = (
-    executedAutomations: Automation[],
-    triggererId: string,
-  ) => {
-    if (executedAutomations.length === 0) {
-      return;
-    }
-    handleExecutedAnimationsResults(executedAutomations, triggererId);
-    displayAutomationMessages(executedAutomations);
   };
 
   const createAutomation = async (

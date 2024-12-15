@@ -23,7 +23,7 @@ function AddTask({ stageId }: Props) {
     state: { activePipeline },
     dispatch,
   } = useContext(ActivePipelineContext);
-  const { handleExecutedAnimationsResults } = useAutomationActions();
+  const { handleExecutedAutomations } = useAutomationActions();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -81,8 +81,9 @@ function AddTask({ stageId }: Props) {
         type: PIPELINE_ADD_TASK,
         payload: response.data.newTask,
       });
+      toast.success(__("Task created", "quicktasker"));
       clearState();
-      handleExecutedAnimationsResults(
+      handleExecutedAutomations(
         response.data.executedAutomations,
         response.data.newTask.id,
       );
