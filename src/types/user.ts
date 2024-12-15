@@ -1,3 +1,5 @@
+import { ActionTargetType } from "./automation";
+
 type BaseUser = {
   id: string;
   name: string;
@@ -35,12 +37,12 @@ type WPUser = {
   caps: string[];
   allcaps: string[];
   roles: string[];
-  user_type: UserTypes.WORDPRESS;
+  user_type: UserTypes.WP_USER;
 };
 
 enum UserTypes {
-  QUICKTASKER = "quicktasker",
-  WORDPRESS = "wp-user",
+  QUICKTASKER = ActionTargetType.QUICKTASKER,
+  WP_USER = ActionTargetType.WP_USER,
 }
 
 export { UserTypes };

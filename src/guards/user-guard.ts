@@ -6,7 +6,7 @@ function isUser(user: User | WPUser): user is User {
 }
 
 function isWPUser(user: User | WPUser): user is WPUser {
-  return user.user_type === UserTypes.WORDPRESS;
+  return user.user_type === UserTypes.WP_USER;
 }
 
 function isUserOrWPUser(
@@ -17,7 +17,7 @@ function isUserOrWPUser(
     typeof result === "object" &&
     (!result.user_type ||
       result.user_type === UserTypes.QUICKTASKER ||
-      result.user_type === UserTypes.WORDPRESS)
+      result.user_type === UserTypes.WP_USER)
   );
 }
 

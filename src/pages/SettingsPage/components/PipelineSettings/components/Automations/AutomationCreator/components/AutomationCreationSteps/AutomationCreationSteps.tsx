@@ -1,6 +1,6 @@
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { TfiSave } from "react-icons/tfi";
+import { PiFlagCheckeredFill } from "react-icons/pi";
 import { WPQTIconButton } from "../../../../../../../../../components/common/Button/Button";
 import {
   Action,
@@ -65,7 +65,7 @@ function AutomationCreationSteps({
   return (
     <WPQTIconButton
       text={__("Create automation", "quicktasker")}
-      icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
+      icon={<PiFlagCheckeredFill className="wpqt-size-6" />}
       onClick={handleCreateAutomation}
       loading={creationLoading}
     />

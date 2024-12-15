@@ -27,7 +27,10 @@ type Action =
   | { type: "SET_ACTION"; payload: AutomationActionType }
   | {
       type: "SET_ACTION_TARGET";
-      payload: { id: string; type: ActionTargetType };
+      payload: {
+        automationActionTargetId: string;
+        automationActionTargetType: ActionTargetType;
+      };
     }
   | { type: "RESET" };
 
@@ -56,6 +59,12 @@ function automationCreationReducer(
       };
     case "RESET":
       return automationCreationInitialState;
+    case "SET_ACTION_TARGET":
+      return {
+        ...state,
+        automationActionTargetId: action.payload.automationActionTargetId,
+        automationActionTargetType: action.payload.automationActionTargetType,
+      };
     default:
       return state;
   }

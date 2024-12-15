@@ -601,7 +601,9 @@ function createPipelineAutomationRequest(pipelineId, automation) {
       automationTargetId: null,
       automationTarget: automation.automationTarget,
       automationTrigger: automation.automationTrigger,
-      automationAction: (_a = automation.automationAction) === null || _a === void 0 ? void 0 : _a.id
+      automationAction: (_a = automation.automationAction) === null || _a === void 0 ? void 0 : _a.id,
+      automationActionTargetId: automation.automationActionTargetId,
+      automationActionTargetType: automation.automationActionTargetType
     },
     headers: getCommonHeaders()
   });

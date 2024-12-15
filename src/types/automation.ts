@@ -15,9 +15,9 @@ enum TargetType {
 
 enum ActionTargetType {
   PIPELINE = "pipeline",
-  Stage = "stage",
-  Task = "task",
-  quicktasker = "quicktasker",
+  STAGE = "stage",
+  TASK = "task",
+  QUICKTASKER = "quicktasker",
   WP_USER = "wp-user",
 }
 
@@ -49,10 +49,10 @@ type Automation = {
 };
 
 export {
+  ActionTargetType,
   AutomationAction,
   AutomationTrigger,
   TargetType,
-  type ActionTargetType,
   type Automation,
   type AutomationActionType,
   type AutomationExecutionResult,

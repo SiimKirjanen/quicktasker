@@ -33,7 +33,7 @@ function AutomationCreator({ pipelineId }: props) {
   );
   const { createAutomation } = useAutomationActions();
 
-  const cardStyleClasses = "wpqt-px-3 wpqt-min-w-[60px] wpqt-cursor-pointer";
+  const cardStyleClasses = "wpqt-px-3 wpqt-min-w-[60px] wpqt-cursor-default";
   const cardTitleClasses =
     "wpqt-absolute wpqt-top-0 wpqt-left-[50%] wpqt-transform-center wpqt-bg-[#fff] wpqt-text-[1rem] wpqt-leading-none wpqt-font-semibold wpqt-p-1";
   const onCreateAutomation = async () => {

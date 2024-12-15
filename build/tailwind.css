@@ -1584,6 +1584,14 @@
   cursor: pointer;
 }
 
+.wpqt-cursor-none {
+  cursor: none;
+}
+
+.wpqt-cursor-default {
+  cursor: default;
+}
+
 .wpqt-resize-none {
   resize: none;
 }

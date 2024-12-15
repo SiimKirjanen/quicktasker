@@ -1,9 +1,15 @@
+import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { AutomationActionTargetDropdown } from "../../../../../../../../../components/Dropdown/AutomationActionTargetDropdown/AutomationActionTargetDropdown";
+import { UserContext } from "../../../../../../../../../providers/UserContextProvider";
 import {
   Action,
   AutomationCreationState,
 } from "../../../../../../../../../reducers/automation-creation-reducer";
-import { AutomationAction } from "../../../../../../../../../types/automation";
+import {
+  ActionTargetType,
+  AutomationAction,
+} from "../../../../../../../../../types/automation";
 import { AutomationSelection } from "../AutomationSelection/AutomationSelection";
 
 type Props = {
@@ -14,19 +20,39 @@ type Props = {
 const userAssignementActions = [AutomationAction.ASSIGN_USER];
 
 function AutomationActionTargetSelection({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   automationDispatch,
   automation,
 }: Props) {
+  const {
+    state: { users, wpUsers },
+  } = useContext(UserContext);
+  const automationActionId = automation.automationAction?.id;
   const showUserAssignment =
-    automation.automationAction !== null &&
-    userAssignementActions.includes(automation.automationAction.id);
+    automationActionId !== undefined &&
+    userAssignementActions.includes(automationActionId);
 
   return (
     <AutomationSelection
       title={__("Step 4. Select action target", "quicktasker")}
     >
-      {showUserAssignment && <div>tere</div>}
+      {showUserAssignment && (
+        <AutomationActionTargetDropdown
+          automationAction={automationActionId}
+          quickTaskerUserTargets={users}
+          wpUserTargets={wpUsers}
+          onUserAdd={(user) => {
+            console.log("Assigning automation user");
+            automationDispatch({
+              type: "SET_ACTION_TARGET",
+              payload: {
+                automationActionTargetId: user.id,
+                automationActionTargetType:
+                  user.user_type as unknown as ActionTargetType,
+              },
+            });
+          }}
+        />
+      )}
     </AutomationSelection>
   );
 }
