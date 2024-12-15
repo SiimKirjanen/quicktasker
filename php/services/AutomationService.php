@@ -127,10 +127,12 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * @param string $targetType The type of the target.
          * @param string $trigger The trigger for the automation.
          * @param string $action The action to be performed by the automation.
+         * @param int|null $automationActionTargetId The ID of the target for the action, can be null.
+         * @param string|null $automationActionTargetType The type of the target for the action, can be null.
          * @return array The created automation data.
          * @throws \Exception If the automation creation fails.
          */
-        public function createAutomation($pipelineId, $targetId, $targetType, $trigger, $action) {
+        public function createAutomation($pipelineId, $targetId, $targetType, $trigger, $action, $automationActionTargetId = null, $automationActionTargetType = null) {
             global $wpdb;
         
             $data = [
@@ -139,6 +141,8 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 'target_type' => $targetType,
                 'automation_trigger' => $trigger,
                 'automation_action' => $action,
+                'automation_action_target_id' => $automationActionTargetId,
+                'automation_action_target_type' => $automationActionTargetType,
                 'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ];
