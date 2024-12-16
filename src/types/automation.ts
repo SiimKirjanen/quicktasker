@@ -45,7 +45,7 @@ type Automation = {
   automation_action_target_type: ActionTargetType;
   created_at: string;
   updated_at: string;
-  executionResult: AutomationExecutionResult;
+  executionResult?: AutomationExecutionResult;
 };
 
 export {

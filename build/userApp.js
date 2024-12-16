@@ -2268,6 +2268,49 @@ const reducer = (state, action) => {
 
 /***/ }),
 
+/***/ "./src/types/automation.ts":
+/*!*********************************!*\
+  !*** ./src/types/automation.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ActionTargetType: () => (/* binding */ ActionTargetType),
+/* harmony export */   AutomationAction: () => (/* binding */ AutomationAction),
+/* harmony export */   AutomationTrigger: () => (/* binding */ AutomationTrigger),
+/* harmony export */   TargetType: () => (/* binding */ TargetType)
+/* harmony export */ });
+var AutomationTrigger;
+(function (AutomationTrigger) {
+  AutomationTrigger["TASK_DONE"] = "task-done";
+  AutomationTrigger["Task_NOT_DONE"] = "task-not-done";
+  AutomationTrigger["TASK_CREATED"] = "task-created";
+})(AutomationTrigger || (AutomationTrigger = {}));
+var TargetType;
+(function (TargetType) {
+  TargetType["PIPELINE"] = "pipeline";
+  TargetType["Stage"] = "stage";
+  TargetType["Task"] = "task";
+  TargetType["quicktasker"] = "quicktasker";
+})(TargetType || (TargetType = {}));
+var ActionTargetType;
+(function (ActionTargetType) {
+  ActionTargetType["PIPELINE"] = "pipeline";
+  ActionTargetType["STAGE"] = "stage";
+  ActionTargetType["TASK"] = "task";
+  ActionTargetType["QUICKTASKER"] = "quicktasker";
+  ActionTargetType["WP_USER"] = "wp-user";
+})(ActionTargetType || (ActionTargetType = {}));
+var AutomationAction;
+(function (AutomationAction) {
+  AutomationAction["ARCHIVE_TASK"] = "archive-task";
+  AutomationAction["ASSIGN_USER"] = "assign-user";
+})(AutomationAction || (AutomationAction = {}));
+
+
+/***/ }),
+
 /***/ "./src/types/custom-field.ts":
 /*!***********************************!*\
   !*** ./src/types/custom-field.ts ***!
@@ -2295,6 +2338,25 @@ var CustomFieldEntityType;
   CustomFieldEntityType["Users"] = "users";
   CustomFieldEntityType["Task"] = "task";
 })(CustomFieldEntityType || (CustomFieldEntityType = {}));
+
+
+/***/ }),
+
+/***/ "./src/types/user.ts":
+/*!***************************!*\
+  !*** ./src/types/user.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UserTypes: () => (/* binding */ UserTypes)
+/* harmony export */ });
+var UserTypes;
+(function (UserTypes) {
+  UserTypes["QUICKTASKER"] = "quicktasker";
+  UserTypes["WP_USER"] = "wp-user";
+})(UserTypes || (UserTypes = {}));
 
 
 /***/ }),
@@ -7041,8 +7103,13 @@ const getQueryParam = param => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   convertExtendedUserFromServer: () => (/* binding */ convertExtendedUserFromServer),
-/* harmony export */   convertUserFromServer: () => (/* binding */ convertUserFromServer)
+/* harmony export */   convertUserFromServer: () => (/* binding */ convertUserFromServer),
+/* harmony export */   mapActionTargetTypeToUserType: () => (/* binding */ mapActionTargetTypeToUserType)
 /* harmony export */ });
+/* harmony import */ var _types_automation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types/automation */ "./src/types/automation.ts");
+/* harmony import */ var _types_user__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types/user */ "./src/types/user.ts");
+
+
 const convertUserFromServer = user => Object.assign(Object.assign({}, user), {
   is_active: user.is_active === "1",
   has_password: user.has_password === "1"
@@ -7050,6 +7117,16 @@ const convertUserFromServer = user => Object.assign(Object.assign({}, user), {
 const convertExtendedUserFromServer = user => Object.assign(Object.assign({}, user), {
   is_active: user.is_active === "1"
 });
+const mapActionTargetTypeToUserType = type => {
+  switch (type) {
+    case _types_automation__WEBPACK_IMPORTED_MODULE_0__.ActionTargetType.QUICKTASKER:
+      return _types_user__WEBPACK_IMPORTED_MODULE_1__.UserTypes.QUICKTASKER;
+    case _types_automation__WEBPACK_IMPORTED_MODULE_0__.ActionTargetType.WP_USER:
+      return _types_user__WEBPACK_IMPORTED_MODULE_1__.UserTypes.WP_USER;
+    default:
+      return null;
+  }
+};
 
 
 /***/ }),

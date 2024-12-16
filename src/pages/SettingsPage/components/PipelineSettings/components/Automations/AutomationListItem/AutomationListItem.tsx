@@ -12,6 +12,7 @@ import {
   automationTargetStrings,
   automationTriggerStrings,
 } from "../../../../../../../utils/automations";
+import { AutomationActionTarget } from "../AutomationActionTarget/AutomationActionTarget";
 
 type Props = {
   automation: Automation;
@@ -26,6 +27,9 @@ function AutomationListItem({ automation }: Props) {
     "wpqt-px-3 wpqt-pt-1 wpqt-min-w-[60px] wpqt-cursor-default";
   const cardTitleClasses =
     "wpqt-absolute wpqt-top-0 wpqt-left-[50%] wpqt-transform-center wpqt-bg-[#fff] wpqt-text-[1rem] wpqt-leading-none wpqt-font-semibold wpqt-p-1";
+  const hasActionTarget =
+    automation.automation_action_target_id !== null &&
+    automation.automation_action_target_type !== null;
 
   const onDelete = async () => {
     setDeleteLoading(true);
@@ -68,10 +72,16 @@ function AutomationListItem({ automation }: Props) {
         <div className="wpqt-flex wpqt-justify-center">
           {automationActionStrings[automation.automation_action]}
         </div>
+        {hasActionTarget && (
+          <AutomationActionTarget
+            actionTargetId={automation.automation_action_target_id}
+            actionTargetType={automation.automation_action_target_type}
+          />
+        )}
       </WPQTCard>
       <WPQTCard
         title={__("Controls", "quicktasker")}
-        className={`${cardStyleClasses} wpqt-ml-auto`}
+        className={`${cardStyleClasses}`}
         titleClassName={cardTitleClasses}
       >
         <div className="wpqt-flex wpqt-gap-2">

@@ -69,7 +69,8 @@ function useAutomationActions() {
       }
       if (automation.automation_action === AutomationAction.ASSIGN_USER) {
         const executionResult = automation.executionResult;
-        if (isUserOrWPUser(executionResult)) {
+
+        if (executionResult && isUserOrWPUser(executionResult)) {
           dispatch({
             type: PIPELINE_ADD_USER_TO_TASK,
             payload: { taskId: triggererId, user: executionResult },
