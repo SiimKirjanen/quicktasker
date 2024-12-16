@@ -2026,17 +2026,17 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'automationTarget' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateAutomationTargetType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'automationTrigger' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateAutomationTrigger'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'automationAction' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateAutomationAction'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'automationActionTargetId' => array(
@@ -2046,7 +2046,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'automationActionTargetType' => array(
                         'required' => false,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateOptionalStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateOptionslAutomationActionTargetType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeOptionalStringParam'),
                     ),
                 ),

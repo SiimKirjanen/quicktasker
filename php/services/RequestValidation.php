@@ -224,5 +224,65 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         public static function sanitizeOptionalStringParam($param) {
             return is_null($param) ? null : self::sanitizeStringParam($param);
         }
+
+        /**
+         * Validates if the given parameter is a valid automation target type.
+         *
+         * This function checks if the provided parameter exists within the predefined
+         * list of automation target types defined by the constant WP_QUICKTASKER_AUTOMATION_TARGET_TYPES.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is a valid automation target type, false otherwise.
+         */
+        public static function validateAutomationTargetType($param) {
+            return in_array($param, WP_QUICKTASKER_AUTOMATION_TARGET_TYPES);
+        }
+
+        /**
+         * Validates if the given parameter is a valid automation trigger.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid automation trigger, false otherwise.
+         */
+        public static function validateAutomationTrigger($param) {
+            return in_array($param, WP_QUICKTASKER_AUTOMATION_TRIGGERS);
+        }
+
+        /**
+         * Validates if the given parameter is a valid automation action.
+         *
+         * This function checks if the provided parameter exists within the predefined
+         * list of automation actions defined by the constant WP_QUICKTASKER_AUTOMATION_ACTIONS.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is a valid automation action, false otherwise.
+         */
+        public static function validateAutomationAction($param) {
+            return in_array($param, WP_QUICKTASKER_AUTOMATION_ACTIONS);
+        }
+
+        /**
+         * Validate the automation action target type.
+         *
+         * This method checks if the provided parameter is a valid automation action target type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid automation action target type, false otherwise.
+         */
+        public static function valdiateAutomationActionTargetType($param) {
+            return in_array($param, WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES);
+        }
+
+        /**
+         * Validates the optional automation action target type.
+         *
+         * This method checks if the provided parameter is either null or a valid automation action target type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is null or a valid automation action target type, false otherwise.
+         */
+        public static function validateOptionslAutomationActionTargetType($param) {
+            return is_null($param) || self::valdiateAutomationActionTargetType($param);
+        }
     }
 }
