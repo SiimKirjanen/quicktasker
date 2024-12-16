@@ -14915,7 +14915,9 @@ const reducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_WP_USERS:
       {
-        const wpUsers = action.payload;
+        const wpUsers = action.payload.map(wpUser => Object.assign(Object.assign({}, wpUser), {
+          id: String(wpUser.id)
+        }));
         return Object.assign(Object.assign({}, state), {
           wpUsers
         });

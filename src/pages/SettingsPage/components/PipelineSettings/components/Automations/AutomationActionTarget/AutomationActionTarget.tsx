@@ -11,7 +11,6 @@ function AutomationActionTarget({ actionTargetId, actionTargetType }: Props) {
   if (actionTargetId === null || actionTargetType === null) {
     return null;
   }
-
   const { getUser } = useUser();
   const isUserTarget =
     actionTargetType === ActionTargetType.QUICKTASKER ||

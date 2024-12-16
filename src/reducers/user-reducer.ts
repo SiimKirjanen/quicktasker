@@ -24,7 +24,10 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case SET_WP_USERS: {
-      const wpUsers: WPUser[] = action.payload;
+      const wpUsers: WPUser[] = action.payload.map((wpUser) => ({
+        ...wpUser,
+        id: String(wpUser.id),
+      }));
 
       return {
         ...state,
