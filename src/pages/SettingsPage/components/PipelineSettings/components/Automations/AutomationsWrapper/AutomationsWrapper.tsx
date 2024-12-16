@@ -1,15 +1,17 @@
 import { __ } from "@wordpress/i18n";
+import { Settings } from "../../../../Settings/Settings";
 
 type Props = {
   children: React.ReactNode;
 };
 function AutomationsWrapper({ children }: Props) {
   return (
-    <div>
-      <h3>{__("Board automations", "quicktasker")}</h3>
-      <p>{__("Allows to automate various tasks", "quicktasker")}</p>
-      <div>{children}</div>
-    </div>
+    <Settings
+      title={__("Board automations", "quicktasker")}
+      description={__("Allows to automate various tasks", "quicktasker")}
+    >
+      {children}
+    </Settings>
   );
 }
 

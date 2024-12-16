@@ -36,11 +36,10 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         }
 
         private function executeAutomation($automation, $targetId) {
+            $logMessage = $this->getAutomationLogMessage($automation);
 
             if( $this->isTaskDoneTrigger($automation) ) {
                 if( $this->isArchiveTaskAction($automation) ) {
-                    $logMessage = $this->getAutomationLogMessage($automation);
-
                     ServiceLocator::get('TaskService')->archiveTask($targetId, true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
@@ -48,9 +47,18 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 }
             }
 
+            if( $this->isTaskNotDoneTrigger($automation) ) {
+                if( $this->isArchiveTaskAction($automation) ) {
+                    ServiceLocator::get('TaskService')->archiveTask($targetId, false);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+
+            }
+
             if( $this->isTaskCreatedTrigger($automation) ) {
                 if ( $this->isAssignUserAction($automation) ) {
-                    $logMessage = $this->getAutomationLogMessage($automation);
                     $userId = $automation->automation_action_target_id;
                     $userType = $automation->automation_action_target_type;
                     $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, $userType);
@@ -97,6 +105,19 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskDoneTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE;
+        }
+
+        /**
+         * Checks if the automation trigger is set to "task not done".
+         *
+         * This function evaluates whether the provided automation object's trigger
+         * is equal to the constant `WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE`.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool Returns true if the automation trigger is "task not done", false otherwise.
+         */
+        private function isTaskNotDoneTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE;
         }
 
         /**
