@@ -1,8 +1,10 @@
+import { ActionTargetType } from "../types/automation";
 import {
   ExtendedUser,
   ServerExtendedUser,
   ServerUser,
   User,
+  UserTypes,
 } from "../types/user";
 
 const convertUserFromServer = (user: ServerUser): User => ({
@@ -18,4 +20,21 @@ const convertExtendedUserFromServer = (
   is_active: user.is_active === "1",
 });
 
-export { convertExtendedUserFromServer, convertUserFromServer };
+const mapActionTargetTypeToUserType = (
+  type: ActionTargetType,
+): UserTypes | null => {
+  switch (type) {
+    case ActionTargetType.QUICKTASKER:
+      return UserTypes.QUICKTASKER;
+    case ActionTargetType.WP_USER:
+      return UserTypes.WP_USER;
+    default:
+      return null;
+  }
+};
+
+export {
+  convertExtendedUserFromServer,
+  convertUserFromServer,
+  mapActionTargetTypeToUserType,
+};

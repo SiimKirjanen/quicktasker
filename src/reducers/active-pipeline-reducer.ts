@@ -283,7 +283,7 @@ const activePipelineReducer = (state: State, action: Action) => {
                   ? task.assigned_users?.filter((user) => user.id !== userId)
                   : task.assigned_users,
               assigned_wp_users:
-                userType === UserTypes.WORDPRESS
+                userType === UserTypes.WP_USER
                   ? task.assigned_wp_users?.filter((user) => user.id !== userId)
                   : task.assigned_wp_users,
             };

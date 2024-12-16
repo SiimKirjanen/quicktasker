@@ -118,7 +118,12 @@ function createTaskRequest(
   stageId: string,
   pipelineId: string,
   name: string,
-): Promise<WPQTResponse<TaskFromServer>> {
+): Promise<
+  WPQTResponse<{
+    newTask: TaskFromServer;
+    executedAutomations: Automation[];
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/tasks`,
     method: "POST",
@@ -674,7 +679,9 @@ function createPipelineAutomationRequest(
       automationTargetId: null,
       automationTarget: automation.automationTarget,
       automationTrigger: automation.automationTrigger,
-      automationAction: automation.automationAction,
+      automationAction: automation.automationAction?.id,
+      automationActionTargetId: automation.automationActionTargetId,
+      automationActionTargetType: automation.automationActionTargetType,
     },
     headers: getCommonHeaders(),
   });

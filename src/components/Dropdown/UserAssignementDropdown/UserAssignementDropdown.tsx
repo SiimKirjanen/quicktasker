@@ -1,8 +1,9 @@
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { Task } from "../../../types/task";
 import { User, WPUser } from "../../../types/user";
-import { UserAssignementSelection } from "../../User/UserAssignementSelection/UserAssignementSelection";
+
 import { WPQTDropdown } from "../WPQTDropdown";
+import { UserAssignementSelection } from "./components/UserAssignementSelection/UserAssignementSelection";
 
 type Props = {
   task: Task;

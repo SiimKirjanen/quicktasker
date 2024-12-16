@@ -1,12 +1,14 @@
 import { __ } from "@wordpress/i18n";
 import {
   AutomationAction,
+  AutomationActionType,
   AutomationTrigger,
   TargetType,
 } from "../types/automation";
 
 const automationActionStrings: { [key in AutomationAction]: string } = {
   [AutomationAction.ARCHIVE_TASK]: __("Archive task", "quicktasker"),
+  [AutomationAction.ASSIGN_USER]: __("Assign user", "quickkasker"),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -22,12 +24,33 @@ const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
     "Task marked as not done",
     "quicktasker",
   ),
+  [AutomationTrigger.TASK_CREATED]: __("Task created", "quicktasker"),
 };
 
-const taskAutomations = {
-  [AutomationTrigger.TASK_DONE]: [AutomationAction.ARCHIVE_TASK],
-  [AutomationTrigger.Task_NOT_DONE]: [AutomationAction.ARCHIVE_TASK],
-};
+const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
+  {
+    [AutomationTrigger.TASK_DONE]: [
+      {
+        id: AutomationAction.ARCHIVE_TASK,
+        requireAutomationTarget: false,
+        requireAutomationTargetType: false,
+      },
+    ],
+    [AutomationTrigger.Task_NOT_DONE]: [
+      {
+        id: AutomationAction.ARCHIVE_TASK,
+        requireAutomationTarget: false,
+        requireAutomationTargetType: false,
+      },
+    ],
+    [AutomationTrigger.TASK_CREATED]: [
+      {
+        id: AutomationAction.ASSIGN_USER,
+        requireAutomationTarget: true,
+        requireAutomationTargetType: true,
+      },
+    ],
+  };
 
 const availableAutomations = {
   [TargetType.Task]: taskAutomations,

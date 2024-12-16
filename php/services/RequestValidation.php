@@ -77,12 +77,10 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * Validates if a given parameter is numeric.
          *
          * @param mixed  $param   The parameter to validate.
-         * @param object $request The request object (not used in the current implementation).
-         * @param string $key     The key associated with the parameter (not used in the current implementation).
          *
          * @return bool Returns true if the parameter is numeric, false otherwise.
          */
-        public static function validateNumericParam($param, $request, $key) {
+        public static function validateNumericParam($param) {
             return is_numeric($param);
         }
 
@@ -90,12 +88,10 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * Sanitizes a parameter to ensure it is an absolute integer.
          *
          * @param mixed  $param   The parameter to sanitize.
-         * @param object $request The request object (not used in this function).
-         * @param string $key     The key associated with the parameter (not used in this function).
          *
          * @return int The sanitized absolute integer value of the parameter.
          */
-        public static function sanitizeAbsint($param, $request, $key) {
+        public static function sanitizeAbsint($param) {
             return absint($param);
         }
 
@@ -118,7 +114,7 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          *
          * @return string The sanitized string value of the parameter.
          */
-        public static function sanitizeStringParam($param, $request, $key) {
+        public static function sanitizeStringParam($param) {
             return sanitize_text_field($param);
         }
 
@@ -176,6 +172,117 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          */
         public static function validateDateParam($param) {
             return preg_match('/^\d{4}-\d{2}-\d{2}$/', $param);
+        }
+
+        /**
+         * Validates an optional numeric parameter.
+         *
+         * This method checks if the given parameter is either null or a valid numeric value.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is null or a valid numeric value, false otherwise.
+         */
+        public static function validateOptionalNumericParam($param) {
+            return is_null($param) || self::validateNumericParam($param);
+        }
+
+        /**
+         * Sanitizes an optional parameter by converting it to an absolute integer.
+         *
+         * If the parameter is null, it returns null. Otherwise, it sanitizes the parameter
+         * using the sanitizeAbsint method.
+         *
+         * @param mixed $param The parameter to sanitize.
+         * @return int|null The sanitized absolute integer or null if the parameter is null.
+         */
+        public static function sanitizeOptionalAbsint($param) {
+            return is_null($param) ? null : self::sanitizeAbsint($param);
+        }
+
+        /**
+         * Validates if a given parameter is a string or null.
+         *
+         * @param mixed  $param   The parameter to validate.
+         * @param object $request The request object (not used in the current implementation).
+         * @param string $key     The key associated with the parameter (not used in the current implementation).
+         *
+         * @return bool Returns true if the parameter is a string or null, false otherwise.
+         */
+        public static function validateOptionalStringParam($param) {
+            return is_null($param) || self::validateStringParam($param);
+        }
+
+        /**
+         * Sanitizes an optional string parameter.
+         *
+         * If the parameter is null, it returns null. Otherwise, it sanitizes the parameter
+         * using the sanitizeStringParam method.
+         *
+         * @param mixed $param The parameter to sanitize.
+         * @return string|null The sanitized string or null if the parameter is null.
+         */
+        public static function sanitizeOptionalStringParam($param) {
+            return is_null($param) ? null : self::sanitizeStringParam($param);
+        }
+
+        /**
+         * Validates if the given parameter is a valid automation target type.
+         *
+         * This function checks if the provided parameter exists within the predefined
+         * list of automation target types defined by the constant WP_QUICKTASKER_AUTOMATION_TARGET_TYPES.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is a valid automation target type, false otherwise.
+         */
+        public static function validateAutomationTargetType($param) {
+            return in_array($param, WP_QUICKTASKER_AUTOMATION_TARGET_TYPES);
+        }
+
+        /**
+         * Validates if the given parameter is a valid automation trigger.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid automation trigger, false otherwise.
+         */
+        public static function validateAutomationTrigger($param) {
+            return in_array($param, WP_QUICKTASKER_AUTOMATION_TRIGGERS);
+        }
+
+        /**
+         * Validates if the given parameter is a valid automation action.
+         *
+         * This function checks if the provided parameter exists within the predefined
+         * list of automation actions defined by the constant WP_QUICKTASKER_AUTOMATION_ACTIONS.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is a valid automation action, false otherwise.
+         */
+        public static function validateAutomationAction($param) {
+            return in_array($param, WP_QUICKTASKER_AUTOMATION_ACTIONS);
+        }
+
+        /**
+         * Validate the automation action target type.
+         *
+         * This method checks if the provided parameter is a valid automation action target type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid automation action target type, false otherwise.
+         */
+        public static function valdiateAutomationActionTargetType($param) {
+            return in_array($param, WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES);
+        }
+
+        /**
+         * Validates the optional automation action target type.
+         *
+         * This method checks if the provided parameter is either null or a valid automation action target type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is null or a valid automation action target type, false otherwise.
+         */
+        public static function validateOptionslAutomationActionTargetType($param) {
+            return is_null($param) || self::valdiateAutomationActionTargetType($param);
         }
     }
 }
