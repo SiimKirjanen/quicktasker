@@ -23,7 +23,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@types/jest": "^29.5.14",
-    "@wordpress/scripts": "^28.3.0",
+    "@wordpress/scripts": "^30.7.0",
     "concurrently": "^8.2.2",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
