@@ -58,6 +58,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             }
 
             if( $this->isTaskCreatedTrigger($automation) ) {
+
                 if ( $this->isAssignUserAction($automation) ) {
                     $userId = $automation->automation_action_target_id;
                     $userType = $automation->automation_action_target_type;
@@ -67,6 +68,19 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return $user;
+                }
+
+                if ( $this->isNewENtityEmailAction($automation) ) {
+                    $email = $automation->metadata;
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $templateData = [
+                        'task' => $task,
+                    ];
+                    $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE, $templateData);
+                    ServiceLocator::get('EmailService')->sendEmail($email, 'New Task Created', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
                 }
             }
 
@@ -97,6 +111,11 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                    in_array($automation->automation_action_target_type, [WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER, WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER], true) &&
                    $automation->automation_action_target_id !== null;
         }
+
+        private function isNewEntityEmailAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY && $automation->metadata !== null;
+        }
+
         /**
          * Checks if the automation trigger is set to 'task done'.
          *
