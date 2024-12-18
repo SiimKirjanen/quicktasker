@@ -17,6 +17,15 @@ describe("EmailMetaInput", () => {
     ).toBeInTheDocument();
   });
 
+  test("renders alert message", () => {
+    render(<EmailMetaInput setAutomationMeta={setAutomationMeta} />);
+    expect(
+      screen.getByText(
+        "Make sure your website is configured to send out emails",
+      ),
+    ).toBeInTheDocument();
+  });
+
   test("validates email and shows error message for invalid email", () => {
     render(<EmailMetaInput setAutomationMeta={setAutomationMeta} />);
     const input = screen.getByLabelText("Email will be sent to");
