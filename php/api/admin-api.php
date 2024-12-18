@@ -2008,7 +2008,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'POST',
                 'callback' => function( $data ) {
                     try {
-                        $automation = ServiceLocator::get('AutomationService')->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType']);
+                        $automation = ServiceLocator::get('AutomationService')->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata']);
                  
                         return new WP_REST_Response((new ApiResponse(true, array(), $automation))->toArray(), 200);
                     } catch (Exception $e) {
@@ -2047,6 +2047,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     'automationActionTargetType' => array(
                         'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateOptionslAutomationActionTargetType'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeOptionalStringParam'),
+                    ),
+                    'automationMetadata' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateOptionalStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeOptionalStringParam'),
                     ),
                 ),

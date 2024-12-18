@@ -1306,6 +1306,10 @@
   margin-top: auto;
 }
 
+.wpqt-mb-0 {
+  margin-bottom: 0px;
+}
+
 .\!wpqt-block {
   display: block !important;
 }
@@ -1610,6 +1614,10 @@
 
 .wpqt-grid-cols-\[auto_auto\] {
   grid-template-columns: auto auto;
+}
+
+.wpqt-flex-row {
+  flex-direction: row;
 }
 
 .wpqt-flex-col {
@@ -2153,6 +2161,11 @@
 .wpqt-text-yellow-700 {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity));
+}
+
+.wpqt-text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
 .wpqt-line-through {

@@ -12,7 +12,11 @@ import {
 import { isUserOrWPUser } from "../../guards/user-guard";
 import { ActivePipelineContext } from "../../providers/ActivePipelineContextProvider";
 import { AutomationCreationState } from "../../reducers/automation-creation-reducer";
-import { Automation, AutomationAction } from "../../types/automation";
+import {
+  Automation,
+  AutomationAction,
+  ExecutedAutomation,
+} from "../../types/automation";
 
 const actionMessages: { [key in AutomationAction]: string } = {
   [AutomationAction.ARCHIVE_TASK]: __(
@@ -23,13 +27,17 @@ const actionMessages: { [key in AutomationAction]: string } = {
     "User assigned by automation",
     "quicktasker",
   ),
+  [AutomationAction.NEW_ENTITY_EMAIL]: __(
+    "Email notification sent by automation",
+    "quicktasker",
+  ),
 };
 
 function useAutomationActions() {
   const { dispatch } = useContext(ActivePipelineContext);
 
   const handleExecutedAutomations = (
-    executedAutomations: Automation[],
+    executedAutomations: ExecutedAutomation[],
     triggererId: string,
   ) => {
     if (executedAutomations.length === 0) {
@@ -39,7 +47,9 @@ function useAutomationActions() {
     displayAutomationMessages(executedAutomations);
   };
 
-  const displayAutomationMessages = (executedAutomations: Automation[]) => {
+  const displayAutomationMessages = (
+    executedAutomations: ExecutedAutomation[],
+  ) => {
     if (!executedAutomations) {
       return;
     }
@@ -53,7 +63,7 @@ function useAutomationActions() {
   };
 
   const handleExecutedAnimationsResults = (
-    executedAutomations: Automation[],
+    executedAutomations: ExecutedAutomation[],
     triggererId: string,
   ) => {
     if (!executedAutomations || !triggererId) {

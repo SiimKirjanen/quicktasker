@@ -30,6 +30,7 @@ function AutomationListItem({ automation }: Props) {
   const hasActionTarget =
     automation.automation_action_target_id !== null &&
     automation.automation_action_target_type !== null;
+  const hasMeta = automation.metadata !== null;
 
   const onDelete = async () => {
     setDeleteLoading(true);
@@ -69,15 +70,16 @@ function AutomationListItem({ automation }: Props) {
         className={cardStyleClasses}
         titleClassName={cardTitleClasses}
       >
-        <div className="wpqt-flex wpqt-justify-center">
+        <div className="wpqt-flex wpqt-flex-col wpqt-justify-center wpqt-items-center">
           {automationActionStrings[automation.automation_action]}
+          {hasActionTarget && (
+            <AutomationActionTarget
+              actionTargetId={automation.automation_action_target_id}
+              actionTargetType={automation.automation_action_target_type}
+            />
+          )}
+          {hasMeta && <div>{automation.metadata}</div>}
         </div>
-        {hasActionTarget && (
-          <AutomationActionTarget
-            actionTargetId={automation.automation_action_target_id}
-            actionTargetType={automation.automation_action_target_type}
-          />
-        )}
       </WPQTCard>
       <WPQTCard
         title={__("Controls", "quicktasker")}

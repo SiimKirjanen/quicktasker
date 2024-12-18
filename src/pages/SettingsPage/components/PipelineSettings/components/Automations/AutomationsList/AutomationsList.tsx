@@ -14,7 +14,7 @@ function AutomationsList() {
   const [showAutomations, setShowAutomations] = useState(false);
 
   if (loading) {
-    return <Loading />;
+    return <Loading ovalSize="24" />;
   }
 
   if (!automations || automations.length === 0) {

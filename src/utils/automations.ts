@@ -9,6 +9,10 @@ import {
 const automationActionStrings: { [key in AutomationAction]: string } = {
   [AutomationAction.ARCHIVE_TASK]: __("Archive task", "quicktasker"),
   [AutomationAction.ASSIGN_USER]: __("Assign user", "quickkasker"),
+  [AutomationAction.NEW_ENTITY_EMAIL]: __(
+    "Send email notification",
+    "quicktasker",
+  ),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -32,15 +36,11 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
     [AutomationTrigger.TASK_DONE]: [
       {
         id: AutomationAction.ARCHIVE_TASK,
-        requireAutomationTarget: false,
-        requireAutomationTargetType: false,
       },
     ],
     [AutomationTrigger.Task_NOT_DONE]: [
       {
         id: AutomationAction.ARCHIVE_TASK,
-        requireAutomationTarget: false,
-        requireAutomationTargetType: false,
       },
     ],
     [AutomationTrigger.TASK_CREATED]: [
@@ -48,6 +48,10 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
         id: AutomationAction.ASSIGN_USER,
         requireAutomationTarget: true,
         requireAutomationTargetType: true,
+      },
+      {
+        id: AutomationAction.NEW_ENTITY_EMAIL,
+        requireMetaData: true,
       },
     ],
   };

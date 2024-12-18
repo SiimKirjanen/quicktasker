@@ -8,6 +8,7 @@ import {
 } from "../../../../../../../../../reducers/automation-creation-reducer";
 import { AutomationActionSelection } from "../AutomationActionSelection/AutomationActionSelection";
 import { AutomationActionTargetSelection } from "../AutomationActionTargetSelection/AutomationActionTargetSelection";
+import { AutomationMeta } from "../AutomationMeta/AutomationMeta";
 import { AutomationTargetSelection } from "../AutomationTargetSelection/AutomationTargetSelection";
 import { AutomationTriggerSelection } from "../AutomationTriggerSelection/AutomationTriggerSelection";
 
@@ -58,6 +59,16 @@ function AutomationCreationSteps({
       <AutomationActionTargetSelection
         automationDispatch={automationDispatch}
         automation={automation}
+      />
+    );
+  } else if (
+    automation.automationAction.requireMetaData &&
+    !automation.metaData
+  ) {
+    return (
+      <AutomationMeta
+        automationCreationState={automation}
+        automationDispatch={automationDispatch}
       />
     );
   }

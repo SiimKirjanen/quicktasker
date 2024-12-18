@@ -16,6 +16,7 @@ type Props = {
   disabled?: boolean;
   type?: InputType;
   loading?: boolean;
+  inputId?: string;
 };
 
 const WPQTInput = forwardRef<HTMLInputElement, Props>(
@@ -29,6 +30,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
       disabled = false,
       type = InputType.TEXT,
       loading = false,
+      inputId,
     },
     ref,
   ) => {
@@ -44,6 +46,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
           type={type}
+          id={inputId}
         />
         {loading && (
           <LoadingOval

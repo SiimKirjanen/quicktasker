@@ -36,6 +36,7 @@ function AutomationCreator({ pipelineId }: props) {
   const hasActionTarget =
     automation.automationActionTargetId !== null &&
     automation.automationActionTargetType !== null;
+  const hasMeta = automation.metaData !== null;
 
   const cardStyleClasses = "wpqt-px-3 wpqt-min-w-[60px] wpqt-cursor-default";
   const cardTitleClasses =
@@ -105,19 +106,20 @@ function AutomationCreator({ pipelineId }: props) {
           className={cardStyleClasses}
           titleClassName={cardTitleClasses}
         >
-          <div className="wpqt-flex wpqt-justify-center">
+          <div className="wpqt-flex wpqt-flex-col wpqt-justify-center wpqt-items-center">
             {automation.automationAction ? (
               automationActionStrings[automation.automationAction.id]
             ) : (
               <QuestionMarkIcon />
             )}
+            {hasActionTarget && (
+              <AutomationActionTarget
+                actionTargetId={automation.automationActionTargetId}
+                actionTargetType={automation.automationActionTargetType}
+              />
+            )}
+            {hasMeta && <div>{automation.metaData}</div>}
           </div>
-          {hasActionTarget && (
-            <AutomationActionTarget
-              actionTargetId={automation.automationActionTargetId}
-              actionTargetType={automation.automationActionTargetType}
-            />
-          )}
         </WPQTCard>
       </div>
       <div className="wpqt-flex wpqt-justify-center">
