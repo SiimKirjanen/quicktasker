@@ -10803,16 +10803,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! zod */ "./node_modules/zod/lib/index.mjs");
-/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../../../../../../../components/common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! zod */ "./node_modules/zod/lib/index.mjs");
+/* harmony import */ var _components_common_Alert_Alert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../../../../../../components/common/Alert/Alert */ "./src/components/common/Alert/Alert.tsx");
+/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../../../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../../../../../../../components/common/Input/Input */ "./src/components/common/Input/Input.tsx");
 
 
 
 
 
 
-const emailSchema = zod__WEBPACK_IMPORTED_MODULE_5__.z.string().email({
+
+const emailSchema = zod__WEBPACK_IMPORTED_MODULE_6__.z.string().email({
   message: "Invalid email address"
 });
 function EmailMetaInput({
@@ -10837,19 +10839,25 @@ function EmailMetaInput({
     validateEmail(email);
   }, [email]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-      htmlFor: "automation-meta-email-input",
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Email will be sent to", "quicktasker")
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Input_Input__WEBPACK_IMPORTED_MODULE_4__.WPQTInput, {
-      inputId: "automation-meta-email-input",
-      value: email,
-      onChange: setEmail,
-      wrapperClassName: "wpqt-mb-0"
-    }), !isEmailValid && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-text-red-500",
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Invalid email address", "quicktasker")
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTButton, {
+    className: "wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-justify-center wpqt-items-center",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Alert_Alert__WEBPACK_IMPORTED_MODULE_3__.Alert, {
+      type: "info",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Make sure your website is configured to send out emails", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-flex-col",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+        htmlFor: "automation-meta-email-input",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Email will be sent to", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__.WPQTInput, {
+        inputId: "automation-meta-email-input",
+        value: email,
+        onChange: setEmail,
+        wrapperClassName: "!wpqt-mb-0"
+      }), !isEmailValid && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-text-red-500",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Invalid email address", "quicktasker")
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTButton, {
       btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Set email", "quicktasker"),
       onClick: handleSetEmail
     })]
