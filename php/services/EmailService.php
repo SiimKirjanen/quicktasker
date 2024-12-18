@@ -23,28 +23,34 @@ if ( ! class_exists( 'WPQT\Email\EmailService' ) ) {
             return wp_mail($to, $subject, $message, $headers);
         }
 
+       
         /**
-         * Renders a PHP template with the provided data.
+         * Renders an email template with the provided data.
          *
-         * This method takes a template file and an associative array of data,
-         * extracts the data to variables, and includes the template file.
-         * The output of the template is captured and returned as a string.
+         * This function takes a template name and an associative array of data,
+         * loads the template file, and replaces placeholders in the template
+         * with the corresponding values from the data array.
          *
-         * @param string $template The name of the template file (without the .php extension).
-         * @param array $data An associative array of data to be extracted and used in the template.
-         * @return string The rendered template content, or an empty string if the template file does not exist.
+         * @param string $template The name of the template file (without the .html extension).
+         * @param array $data An associative array where the keys are placeholder names
+         *                    and the values are the values to replace the placeholders with.
+         * @return string The rendered template content with placeholders replaced by data values.
+         * @throws \Exception If the template file does not exist.
          */
         public static function renderTemplate($template, $data) {
-            $templatePath = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'php/templates/email/' . $template . '.php';
+            $templatePath = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'php/templates/email/' . $template . '.html';
             
             if (!file_exists($templatePath)) {
-                return '';
+                throw new \Exception('Email template not found: ' . $template);
             }
-        
-            ob_start();
-            extract($data);
-            require $templatePath;
-            return ob_get_clean();
+
+            $templateContent = file_get_contents($templatePath);
+
+            foreach ($data as $key => $value) {
+                $templateContent = str_replace("{{" . $key . "}}", $value, $templateContent);
+            }
+
+            return $templateContent;
         }
     }
 }

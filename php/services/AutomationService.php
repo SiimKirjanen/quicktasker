@@ -70,11 +70,13 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     return $user;
                 }
 
-                if ( $this->isNewENtityEmailAction($automation) ) {
+                if ( $this->isNewEntityEmailAction($automation) ) {
                     $email = $automation->metadata;
                     $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
                     $templateData = [
-                        'task' => $task,
+                        'taskName' => $task->name,
+                        'boardName' => $pipeline->name,
                     ];
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'New Task Created', $emailMessage);

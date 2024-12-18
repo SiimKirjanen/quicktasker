@@ -73,6 +73,7 @@ WPQT\ServiceLocator::register('EmailRepository', new WPQT\Email\EmailRepository(
 WPQT\ServiceLocator::register('TimeRepository', new WPQT\Time\TimeRepository());
 WPQT\ServiceLocator::register('TaskRepository', new WPQT\Task\TaskRepository());
 WPQT\ServiceLocator::register('UserRepository', new WPQT\User\UserRepository());
+WPQT\ServiceLocator::register('PipelineRepository', new WPQT\Pipeline\PipelineRepository());
 WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
 WPQT\ServiceLocator::register('UserService', new WPQT\User\UserService());
 WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
