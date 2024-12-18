@@ -10,29 +10,46 @@ use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
     class AutomationService {
+
+        /**
+         * Handles the execution of automations based on the provided parameters.
+         *
+         * @param int $boardId The ID of the board where the automations are defined.
+         * @param int $targetId The ID of the target entity for the automation.
+         * @param string $targetType The type of the target entity (e.g., 'task', 'project').
+         * @param string $automationTrigger The trigger that initiates the automation (e.g., 'onCreate', 'onUpdate').
+         * 
+         * @return object An object containing two arrays:
+         *                - 'executedAutomations': An array of successfully executed automations.
+         *                - 'failedAutomations': An array of automations that failed to execute.
+         */
         public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger) {
             $executedAutomations = [];
+            $failedAutomations = [];
+            $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
 
-            try {
-                $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
-
-                if ( ! empty($relatedAutomations) ) {
-                    foreach ($relatedAutomations as $automation) {
+            if ( ! empty($relatedAutomations) ) {
+                foreach ($relatedAutomations as $automation) {
+                    try {
                         $result = $this->executeAutomation($automation, $targetId);
 
                         if($result) {
                             $automation->executionResult = $result;
                             $executedAutomations[] = $automation;
                         }
-                        
-                    }
-                }
-
-                return $executedAutomations;
-            } catch(\Exception $e) {
+                    } catch(\Exception $e) {
     
-                return $executedAutomations;
+                        $failedAutomations[] = $automation;
+                    }
+                    
+                }
             }
+
+            return (object)[
+                'executedAutomations' => $executedAutomations,
+                'failedAutomations' => $failedAutomations
+            ];
+           
         }
 
         private function executeAutomation($automation, $targetId) {

@@ -56,7 +56,6 @@
           font-family="Helvetica, Arial, sans-serif"
         >
         </mj-text>
-        <mj-button href="{{taskLink}}">View Task</mj-button>
       </mj-column>
     </mj-section>
   </mj-body>

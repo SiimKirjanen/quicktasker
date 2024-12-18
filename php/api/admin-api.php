@@ -390,7 +390,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('Task ' . $newTask->name . ' created', WP_QT_LOG_TYPE_TASK, $newTask->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         /* Handle automations */
-                        $executedAutomations = $automationService->handleAutomations(
+                        $executionResults = $automationService->handleAutomations(
                             $newTask->pipeline_id, 
                             $newTask->id, 
                             WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
@@ -402,7 +402,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'newTask' => $newTask,
-                            'executedAutomations' => $executedAutomations
+                            'executedAutomations' => $executionResults->executedAutomations,
+                            'failedAutomations' => $executionResults->failedAutomations
                         ]))->toArray(), 200);
                     } catch (Exception $e) {
                         $wpdb->query('ROLLBACK');
@@ -622,14 +623,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         /* Handle automations */
                         $trigger = $taskMarkedAsDone ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE;
-                        $executedAutomations = $automationService->handleAutomations($task->pipeline_id, $task->id, WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, $trigger);
+                        $executionResults = $automationService->handleAutomations(
+                            $task->pipeline_id, 
+                            $task->id, WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            $trigger
+                        );
                         /* End of handling automations */
 
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'task' => $task,
-                            'executedAutomations' => $executedAutomations
+                            'executedAutomations' => $executionResults->executedAutomations,
+                            'failedAutomations' => $executionResults->failedAutomations
                         ]))->toArray(), 200);
                     } catch (Exception $e) {
                         $wpdb->query('ROLLBACK');
