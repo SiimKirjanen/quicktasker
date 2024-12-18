@@ -36,6 +36,7 @@ require( 'php/repositories/AssetRepository.php' );
 require( 'php/repositories/SettingRepository.php' );
 require( 'php/repositories/OverViewRepository.php' );
 require( 'php/repositories/AutomationRepository.php' );
+require( 'php/repositories/EmailRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
@@ -56,6 +57,7 @@ require( 'php/services/SettingService.php' );
 require( 'php/services/DBSeederService.php' );
 require( 'php/services/SettingsValidationService.php' );
 require( 'php/services/AutomationService.php' );
+require( 'php/services/EmailService.php' );
 require( 'php/services/ServiceLocator.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
@@ -67,13 +69,16 @@ require( 'php/db-seeder.php' );
 
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 WPQT\ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
+WPQT\ServiceLocator::register('EmailRepository', new WPQT\Email\EmailRepository());
 WPQT\ServiceLocator::register('TimeRepository', new WPQT\Time\TimeRepository());
 WPQT\ServiceLocator::register('TaskRepository', new WPQT\Task\TaskRepository());
 WPQT\ServiceLocator::register('UserRepository', new WPQT\User\UserRepository());
+WPQT\ServiceLocator::register('PipelineRepository', new WPQT\Pipeline\PipelineRepository());
 WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
 WPQT\ServiceLocator::register('UserService', new WPQT\User\UserService());
 WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
 WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
+WPQT\ServiceLocator::register('EmailService', new WPQT\Email\EmailService());
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );

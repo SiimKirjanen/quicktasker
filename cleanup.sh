@@ -18,6 +18,8 @@ FILES_TO_REMOVE=(
     "reports"
     "cleanup.sh" 
     "convert-to-pro.sh"
+    "jest.config.js"
+    "jest.setup.js"
     "node_modules"
 )
 

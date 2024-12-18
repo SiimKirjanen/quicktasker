@@ -11,6 +11,7 @@ const automationCreationInitialState: AutomationCreationState = {
   automationAction: null,
   automationActionTargetId: null,
   automationActionTargetType: null,
+  metaData: null,
 };
 
 type AutomationCreationState = {
@@ -19,6 +20,7 @@ type AutomationCreationState = {
   automationAction: AutomationActionType | null;
   automationActionTargetId: string | null;
   automationActionTargetType: ActionTargetType | null;
+  metaData: string | null;
 };
 
 type Action =
@@ -32,6 +34,7 @@ type Action =
         automationActionTargetType: ActionTargetType;
       };
     }
+  | { type: "SET_META"; payload: string }
   | { type: "RESET" };
 
 function automationCreationReducer(
@@ -64,6 +67,11 @@ function automationCreationReducer(
         ...state,
         automationActionTargetId: action.payload.automationActionTargetId,
         automationActionTargetType: action.payload.automationActionTargetType,
+      };
+    case "SET_META":
+      return {
+        ...state,
+        metaData: action.payload,
       };
     default:
       return state;

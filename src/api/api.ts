@@ -1,7 +1,7 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
 import { AutomationCreationState } from "../reducers/automation-creation-reducer";
-import { Automation } from "../types/automation";
+import { Automation, ExecutedAutomation } from "../types/automation";
 import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
@@ -121,7 +121,7 @@ function createTaskRequest(
 ): Promise<
   WPQTResponse<{
     newTask: TaskFromServer;
-    executedAutomations: Automation[];
+    executedAutomations: ExecutedAutomation[];
   }>
 > {
   return apiFetch({
@@ -188,7 +188,7 @@ function markTaskDoneRequest(
 ): Promise<
   WPQTResponse<{
     task: Task;
-    executedAutomations: Automation[];
+    executedAutomations: ExecutedAutomation[];
   }>
 > {
   return apiFetch({
@@ -682,6 +682,7 @@ function createPipelineAutomationRequest(
       automationAction: automation.automationAction?.id,
       automationActionTargetId: automation.automationActionTargetId,
       automationActionTargetType: automation.automationActionTargetType,
+      automationMetadata: automation.metaData,
     },
     headers: getCommonHeaders(),
   });

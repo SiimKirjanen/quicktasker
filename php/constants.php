@@ -35,7 +35,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.9.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.10.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -236,19 +236,6 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TARGET_TYPES' ) ) {
     define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPES', [WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK]);
 }
 
-// Actions
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK', "archive-task");
-}
-
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER', "assign-user");
-}
-
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTIONS' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTIONS', [WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK, WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER]);
-}
-
 // Triggers
 if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE' ) ) {
     define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE', "task-done");
@@ -262,7 +249,33 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGERS' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGERS', [WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE, WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED, WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE]);
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGERS', [
+        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE, 
+        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED, 
+        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE
+    ]);
+}
+
+// Actions
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK', "archive-task");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER', "assign-user");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY', "new-entity-email");
+}
+
+
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTIONS' ) ) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTIONS', [
+        WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK, 
+        WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER, 
+        WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY
+    ]);
 }
 
 // Action target types
@@ -275,7 +288,10 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES', [WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER, WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER]);
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES', [
+        WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER, 
+        WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER
+    ]);
 }
 
 /*
@@ -295,3 +311,15 @@ if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE' ) ) {
 if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL' ) ) {
     define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL', "user-minimal");
 }
+
+
+/*
+==================================================================================================================================================================================================================
+Email templates
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE' ) ) {
+    define('WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE', "new-task-created");
+}
+

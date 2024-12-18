@@ -24,12 +24,14 @@ enum ActionTargetType {
 enum AutomationAction {
   ARCHIVE_TASK = "archive-task",
   ASSIGN_USER = "assign-user",
+  NEW_ENTITY_EMAIL = "new-entity-email",
 }
 
 type AutomationActionType = {
   id: AutomationAction;
-  requireAutomationTarget: boolean;
-  requireAutomationTargetType: boolean;
+  requireAutomationTarget?: boolean;
+  requireAutomationTargetType?: boolean;
+  requireMetaData?: boolean;
 };
 
 type AutomationExecutionResult = boolean | WPUser | User;
@@ -45,6 +47,10 @@ type Automation = {
   automation_action_target_type: ActionTargetType;
   created_at: string;
   updated_at: string;
+  metadata: string | null;
+};
+
+type ExecutedAutomation = Automation & {
   executionResult?: AutomationExecutionResult;
 };
 
@@ -56,4 +62,5 @@ export {
   type Automation,
   type AutomationActionType,
   type AutomationExecutionResult,
+  type ExecutedAutomation,
 };

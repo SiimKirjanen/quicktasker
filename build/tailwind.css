@@ -1218,6 +1218,10 @@
   margin-bottom: 0px !important;
 }
 
+.wpqt-mb-0 {
+  margin-bottom: 0px;
+}
+
 .wpqt-mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -2133,6 +2137,11 @@
 .wpqt-text-qtTextRed {
   --tw-text-opacity: 1;
   color: rgb(211 47 47 / var(--tw-text-opacity));
+}
+
+.wpqt-text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
 .wpqt-text-red-700 {

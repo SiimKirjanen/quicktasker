@@ -10,29 +10,46 @@ use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
     class AutomationService {
+
+        /**
+         * Handles the execution of automations based on the provided parameters.
+         *
+         * @param int $boardId The ID of the board where the automations are defined.
+         * @param int $targetId The ID of the target entity for the automation.
+         * @param string $targetType The type of the target entity (e.g., 'task', 'project').
+         * @param string $automationTrigger The trigger that initiates the automation (e.g., 'onCreate', 'onUpdate').
+         * 
+         * @return object An object containing two arrays:
+         *                - 'executedAutomations': An array of successfully executed automations.
+         *                - 'failedAutomations': An array of automations that failed to execute.
+         */
         public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger) {
             $executedAutomations = [];
+            $failedAutomations = [];
+            $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
 
-            try {
-                $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
-
-                if ( ! empty($relatedAutomations) ) {
-                    foreach ($relatedAutomations as $automation) {
+            if ( ! empty($relatedAutomations) ) {
+                foreach ($relatedAutomations as $automation) {
+                    try {
                         $result = $this->executeAutomation($automation, $targetId);
 
                         if($result) {
                             $automation->executionResult = $result;
                             $executedAutomations[] = $automation;
                         }
-                        
-                    }
-                }
-
-                return $executedAutomations;
-            } catch(\Exception $e) {
+                    } catch(\Exception $e) {
     
-                return $executedAutomations;
+                        $failedAutomations[] = $automation;
+                    }
+                    
+                }
             }
+
+            return (object)[
+                'executedAutomations' => $executedAutomations,
+                'failedAutomations' => $failedAutomations
+            ];
+           
         }
 
         private function executeAutomation($automation, $targetId) {
@@ -58,6 +75,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             }
 
             if( $this->isTaskCreatedTrigger($automation) ) {
+
                 if ( $this->isAssignUserAction($automation) ) {
                     $userId = $automation->automation_action_target_id;
                     $userType = $automation->automation_action_target_type;
@@ -67,6 +85,21 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return $user;
+                }
+
+                if ( $this->isNewEntityEmailAction($automation) ) {
+                    $email = $automation->metadata;
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
+                    $templateData = [
+                        'taskName' => $task->name,
+                        'boardName' => $pipeline->name,
+                    ];
+                    $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE, $templateData);
+                    ServiceLocator::get('EmailService')->sendEmail($email, 'New Task Created', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
                 }
             }
 
@@ -97,6 +130,11 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                    in_array($automation->automation_action_target_type, [WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER, WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER], true) &&
                    $automation->automation_action_target_id !== null;
         }
+
+        private function isNewEntityEmailAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY && $automation->metadata !== null;
+        }
+
         /**
          * Checks if the automation trigger is set to 'task done'.
          *
@@ -150,10 +188,11 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * @param string $action The action to be performed by the automation.
          * @param int|null $automationActionTargetId The ID of the target for the action, can be null.
          * @param string|null $automationActionTargetType The type of the target for the action, can be null.
+         * @param string|null $metadata Additional metadata for the automation, can be null.
          * @return array The created automation data.
          * @throws \Exception If the automation creation fails.
          */
-        public function createAutomation($pipelineId, $targetId, $targetType, $trigger, $action, $automationActionTargetId = null, $automationActionTargetType = null) {
+        public function createAutomation($pipelineId, $targetId, $targetType, $trigger, $action, $automationActionTargetId = null, $automationActionTargetType = null, $metadata = null) {
             global $wpdb;
         
             $data = [
@@ -164,6 +203,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 'automation_action' => $action,
                 'automation_action_target_id' => $automationActionTargetId,
                 'automation_action_target_type' => $automationActionTargetType,
+                'metadata' => $metadata,
                 'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ];
