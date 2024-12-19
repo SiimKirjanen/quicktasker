@@ -1,10 +1,8 @@
 import { EyeIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import {
-  WPQTCard,
-  WPQTCardDataItem,
-} from "../../../../../components/Card/Card";
+import { WPQTCard } from "../../../../../components/Card/Card";
+import { WPQTCardDataItem } from "../../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { UserDropdown } from "../../../../../components/Dropdown/UserDropdown/UserDropdown";
 import { OPEN_EDIT_USER_MODAL } from "../../../../../constants";
 import { usePageLinks } from "../../../../../hooks/usePageLinks";

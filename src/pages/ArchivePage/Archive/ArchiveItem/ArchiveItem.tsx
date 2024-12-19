@@ -1,8 +1,9 @@
 import { ViewColumnsIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
-import { TaskCardActions } from "../../../../components/Card/TaskCardActions";
+import { WPQTCard } from "../../../../components/Card/Card";
+import { TaskCardActions } from "../../../../components/Card/TaskCardActions/TaskCardActions";
+import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { ArchivedTaskDropdown } from "../../../../components/Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import {

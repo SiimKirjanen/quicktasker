@@ -1,6 +1,7 @@
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTCard, WPQTCardDataItem } from "../../../../components/Card/Card";
+import { WPQTCard } from "../../../../components/Card/Card";
+import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { Toggle } from "../../../../components/common/Toggle/Toggle";
 import { Loading } from "../../../../components/Loading/Loading";
 import { useCapabilityActions } from "../../../../hooks/actions/useCapabilityActions";

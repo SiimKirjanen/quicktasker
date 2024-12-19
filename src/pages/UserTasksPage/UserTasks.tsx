@@ -1,7 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../components/Card/Card";
-import { TaskCardActions } from "../../components/Card/TaskCardActions";
+import { TaskCardActions } from "../../components/Card/TaskCardActions/TaskCardActions";
 import { UserAssignementDropdown } from "../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { UserTaskDropdown } from "../../components/Dropdown/UserTaskDropdown/UserTaskDropdown";
 import { NoFilterResults } from "../../components/Filter/NoFilterResults/NoFilterResults";
