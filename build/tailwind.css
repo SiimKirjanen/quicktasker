@@ -2160,6 +2160,11 @@
   color: rgb(161 98 7 / var(--tw-text-opacity));
 }
 
+.wpqt-text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
+}
+
 .wpqt-line-through {
   text-decoration-line: line-through;
 }

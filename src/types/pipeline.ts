@@ -27,4 +27,11 @@ type FullPipelineDataFromServer = {
   pipelines: PipelineFromServer[];
 };
 
+enum PipelineView {
+  PIPELINE = "PIPELINE-VIEW",
+  TASK = "TASK-VIEW",
+}
+
+export { PipelineView };
+
 export type { FullPipelineDataFromServer, Pipeline, PipelineFromServer };

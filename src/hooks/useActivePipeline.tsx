@@ -1,6 +1,7 @@
-import { useContext } from "@wordpress/element";
+import { useContext, useMemo } from "@wordpress/element";
 import { ActivePipelineContext } from "../providers/ActivePipelineContextProvider";
 import { Stage } from "../types/stage";
+import { Task } from "../types/task";
 
 function useActivePipeline() {
   const {
@@ -62,11 +63,53 @@ function useActivePipeline() {
     return taskIndex !== -1 ? taskIndex : null;
   };
 
+  const isTaskOnLastStage = (taskId: string): boolean => {
+    const stages = getActivePipelineStages();
+
+    if (!stages) {
+      return false;
+    }
+
+    const taskStage = getTaskStage(taskId);
+
+    if (!taskStage) {
+      return false;
+    }
+
+    const lastStage = stages[stages.length - 1];
+
+    return taskStage.id === lastStage.id;
+  };
+
+  const activePipelineTasks = useMemo(() => {
+    const stages = getActivePipelineStages();
+    const tasks: Task[] = [];
+
+    if (!stages) {
+      return tasks;
+    }
+
+    stages.forEach((stage) => {
+      if (!stage.tasks) {
+        return;
+      }
+
+      tasks.push(...stage.tasks);
+    });
+
+    return tasks;
+  }, [activePipeline]);
+
+  const activePipelineSettings = activePipeline?.settings;
+
   return {
     getActivePipelineStages,
     getActivePipelinStageTasksLength,
     getTaskStage,
     getTaskOrderInStage,
+    activePipelineTasks,
+    activePipelineSettings,
+    isTaskOnLastStage,
   };
 }
 

@@ -7,7 +7,6 @@ import { useCallback, useContext, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { moveTaskRequest } from "../../../api/api";
-import { MoveTaskModal } from "../../../components/Modal/MoveTaskModal/MoveTaskModal";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
 import {
@@ -111,7 +110,6 @@ const Pipeline = () => {
         stagesLength={activePipeline!.stages?.length}
       />
       <TaskModal deleteTaskCallback={deleteTaskCallback} />
-      <MoveTaskModal />
       <StageModal />
     </div>
   );
