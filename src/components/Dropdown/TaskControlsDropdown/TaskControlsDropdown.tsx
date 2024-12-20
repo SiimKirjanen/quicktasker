@@ -6,7 +6,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { OPEN_EDIT_TASK_MODAL } from "../../../constants";
+import { BiMove } from "react-icons/bi";
+import { OPEN_EDIT_TASK_MODAL, OPEN_MOVE_TASK_MODAL } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { AppContext } from "../../../providers/AppContextProvider";
@@ -68,6 +69,18 @@ function TaskControlsDropdown({ task }: Props) {
         text={__("Edit task", "quicktasker")}
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openTaskEditModal}
+      />
+      <WPQTDropdownItem
+        text={__("Move task", "quicktasker")}
+        icon={<BiMove className="wpqt-icon-blue wpqt-size-4" />}
+        onClick={(e: React.MouseEvent) => {
+          e.stopPropagation();
+          console.log("What?");
+          modalDispatch({
+            type: OPEN_MOVE_TASK_MODAL,
+            payload: { task },
+          });
+        }}
       />
       {isUserAllowedToDelete && (
         <WPQTDropdownItem

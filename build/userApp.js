@@ -1171,14 +1171,16 @@ __webpack_require__.r(__webpack_exports__);
 function LoadingOval({
   width = "80",
   height = "80",
-  className = ""
+  className = "",
+  color = "#1d4ed8",
+  secondaryColor = "#2563eb"
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_loader_spinner__WEBPACK_IMPORTED_MODULE_1__.Oval, {
     visible: true,
     height: height,
     width: width,
-    color: "#1d4ed8",
-    secondaryColor: "#2563eb",
+    color: color,
+    secondaryColor: secondaryColor,
     ariaLabel: "oval-loading",
     wrapperStyle: {},
     wrapperClass: className
@@ -1399,13 +1401,21 @@ function WPQTButton({
   onClick = () => {},
   btnText,
   className,
-  type = ButtonType.BUTTON
+  type = ButtonType.BUTTON,
+  disabled = false,
+  loading = false
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Button, {
+    disabled: disabled || loading,
     className: `wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`,
     onClick: onClick,
     type: type,
-    children: btnText
+    children: loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_1__.LoadingOval, {
+      width: "24",
+      height: "24",
+      color: "#ffffff",
+      secondaryColor: "#ffffff"
+    }) : btnText
   });
 }
 function WPQTIconButton({
@@ -1706,6 +1716,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CHANGE_USER_TASK_DONE_STATUS: () => (/* binding */ CHANGE_USER_TASK_DONE_STATUS),
 /* harmony export */   CLOSE_ARCHIVE_TASK_MODAL: () => (/* binding */ CLOSE_ARCHIVE_TASK_MODAL),
 /* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
+/* harmony export */   CLOSE_MOVE_TASK_MODAL: () => (/* binding */ CLOSE_MOVE_TASK_MODAL),
 /* harmony export */   CLOSE_NEW_TASK_MODAL: () => (/* binding */ CLOSE_NEW_TASK_MODAL),
 /* harmony export */   CLOSE_PIPELINE_MODAL: () => (/* binding */ CLOSE_PIPELINE_MODAL),
 /* harmony export */   CLOSE_STAGE_MODAL: () => (/* binding */ CLOSE_STAGE_MODAL),
@@ -1724,6 +1735,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
 /* harmony export */   OPEN_EDIT_USER_MODAL: () => (/* binding */ OPEN_EDIT_USER_MODAL),
+/* harmony export */   OPEN_MOVE_TASK_MODAL: () => (/* binding */ OPEN_MOVE_TASK_MODAL),
 /* harmony export */   OPEN_NEW_PIPELINE_MODAL: () => (/* binding */ OPEN_NEW_PIPELINE_MODAL),
 /* harmony export */   OPEN_NEW_STAGE_MODAL: () => (/* binding */ OPEN_NEW_STAGE_MODAL),
 /* harmony export */   OPEN_NEW_TASK_MODAL: () => (/* binding */ OPEN_NEW_TASK_MODAL),
@@ -1825,6 +1837,8 @@ const ADD_ASSIGNED_USER_TO_EDITING_TASK = "ADD_ASSIGNED_USER_TO_EDITING_TASK";
 const REMOVE_ASSIGNED_USER_FROM_EDITING_TASK = "REMOVE_ASSIGNED_USER_FROM_EDITING_TASK";
 const CHANGE_USER_SETTINGS_MODAL_OPEN = "CHANGE_USER_SETTINGS_MODAL_OPEN";
 const CHANGE_TASK_DONE_STATUS = "CHANGE_TASK_DONE_STATUS";
+const OPEN_MOVE_TASK_MODAL = "OPEN_MOVE_TASK_MODAL";
+const CLOSE_MOVE_TASK_MODAL = "CLOSE_MOVE_TASK_MODAL";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";

@@ -12,6 +12,8 @@ type Props = {
   btnText: string;
   className?: string;
   type?: ButtonType;
+  disabled?: boolean;
+  loading?: boolean;
 };
 
 function WPQTButton({
@@ -19,14 +21,26 @@ function WPQTButton({
   btnText,
   className,
   type = ButtonType.BUTTON,
+  disabled = false,
+  loading = false,
 }: Props) {
   return (
     <Button
+      disabled={disabled || loading}
       className={`wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`}
       onClick={onClick}
       type={type}
     >
-      {btnText}
+      {loading ? (
+        <LoadingOval
+          width="24"
+          height="24"
+          color="#ffffff"
+          secondaryColor="#ffffff"
+        />
+      ) : (
+        btnText
+      )}
     </Button>
   );
 }

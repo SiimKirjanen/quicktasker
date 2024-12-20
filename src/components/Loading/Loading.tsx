@@ -4,20 +4,24 @@ type LoadingOverProps = {
   width?: string;
   height?: string;
   className?: string;
+  color?: string;
+  secondaryColor?: string;
 };
 
 function LoadingOval({
   width = "80",
   height = "80",
   className = "",
+  color = "#1d4ed8",
+  secondaryColor = "#2563eb",
 }: LoadingOverProps) {
   return (
     <Oval
       visible={true}
       height={height}
       width={width}
-      color="#1d4ed8"
-      secondaryColor="#2563eb"
+      color={color}
+      secondaryColor={secondaryColor}
       ariaLabel="oval-loading"
       wrapperStyle={{}}
       wrapperClass={className}

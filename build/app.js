@@ -2351,11 +2351,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/EllipsisHorizontalIcon.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArchiveBoxIcon.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_icons_bi__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-icons/bi */ "./node_modules/react-icons/bi/index.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
@@ -2389,6 +2390,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
+
 
 
 
@@ -2454,9 +2456,24 @@ function TaskControlsDropdown({
         className: "wpqt-icon-green wpqt-size-4"
       }),
       onClick: openTaskEditModal
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_8__.WPQTDropdownItem, {
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Move task", "quicktasker"),
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bi__WEBPACK_IMPORTED_MODULE_12__.BiMove, {
+        className: "wpqt-icon-blue wpqt-size-4"
+      }),
+      onClick: e => {
+        e.stopPropagation();
+        console.log("What?");
+        modalDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_3__.OPEN_MOVE_TASK_MODAL,
+          payload: {
+            task
+          }
+        });
+      }
     }), isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_8__.WPQTDropdownItem, {
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Delete task", "quicktasker"),
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_13__["default"], {
         className: "wpqt-icon-red wpqt-size-4"
       }),
       loading: deleteLoading,
@@ -3625,14 +3642,16 @@ __webpack_require__.r(__webpack_exports__);
 function LoadingOval({
   width = "80",
   height = "80",
-  className = ""
+  className = "",
+  color = "#1d4ed8",
+  secondaryColor = "#2563eb"
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_loader_spinner__WEBPACK_IMPORTED_MODULE_1__.Oval, {
     visible: true,
     height: height,
     width: width,
-    color: "#1d4ed8",
-    secondaryColor: "#2563eb",
+    color: color,
+    secondaryColor: secondaryColor,
     ariaLabel: "oval-loading",
     wrapperStyle: {},
     wrapperClass: className
@@ -3701,6 +3720,188 @@ const LogItem = ({
     })]
   });
 };
+
+
+/***/ }),
+
+/***/ "./src/components/Modal/MoveTaskModal/MoveTaskModal.tsx":
+/*!**************************************************************!*\
+  !*** ./src/components/Modal/MoveTaskModal/MoveTaskModal.tsx ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MoveTaskModal: () => (/* binding */ MoveTaskModal)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
+/* harmony import */ var _hooks_useActivePipeline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/useActivePipeline */ "./src/hooks/useActivePipeline.tsx");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+function MoveTaskModal() {
+  const {
+    state: {
+      moveTaskModalOpen,
+      taskToEdit
+    },
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__.ModalContext);
+  const {
+    dispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__.ActivePipelineContext);
+  const {
+    getActivePipelineStages,
+    getActivePipelinStageTasksLength,
+    getTaskStage,
+    getTaskOrderInStage
+  } = (0,_hooks_useActivePipeline__WEBPACK_IMPORTED_MODULE_5__.useActivePipeline)();
+  const {
+    moveTask
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__.useTaskActions)();
+  const [order, setOrder] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
+  const [stageId, setStageId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const stageTasksLenght = getActivePipelinStageTasksLength(stageId);
+  const orderOptions = Array.from({
+    length: stageTasksLenght
+  }, (_, index) => ({
+    value: index.toString(),
+    label: (index + 1).toString()
+  }));
+  const stageOptions = getActivePipelineStages().map(stage => ({
+    value: stage.id,
+    label: stage.name
+  }));
+  const closeModal = () => {
+    modalDispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_MOVE_TASK_MODAL
+    });
+  };
+  const handleApply = () => __awaiter(this, void 0, void 0, function* () {
+    if (!taskToEdit) {
+      return;
+    }
+    const taskStage = getTaskStage(taskToEdit.id);
+    const taskOrderInStage = getTaskOrderInStage(taskToEdit.id);
+    if (!taskStage || taskOrderInStage === null) {
+      return;
+    }
+    setLoading(true);
+    yield moveTask(taskToEdit.id, stageId, order, isCompleted => {
+      if (isCompleted) {
+        dispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_MOVE_TASK,
+          payload: {
+            source: {
+              droppableId: taskStage.id,
+              index: taskOrderInStage
+            },
+            destination: {
+              droppableId: stageId,
+              index: order
+            }
+          }
+        });
+        closeModal();
+      }
+    });
+    setLoading(false);
+  });
+  const changeStage = stageId => {
+    setStageId(stageId);
+    setOrder(0);
+  };
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (taskToEdit) {
+      const taskStage = getTaskStage(taskToEdit.id);
+      const taskOrderInStage = getTaskOrderInStage(taskToEdit.id);
+      if (taskStage && taskOrderInStage !== null) {
+        setStageId(taskStage.id);
+        setOrder(taskOrderInStage);
+      }
+    }
+  }, [taskToEdit]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_10__.WPQTModal, {
+    modalOpen: moveTaskModalOpen,
+    closeModal: closeModal,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Change task location on board", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+        htmlFor: "move-task-stage-selection",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select stage", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_9__.WPQTSelect, {
+        id: "move-task-stage-selection",
+        allSelector: false,
+        selectedOptionValue: stageId,
+        options: stageOptions,
+        onSelectionChange: changeStage
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+        htmlFor: "move-task-order-selection",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select order", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_9__.WPQTSelect, {
+        id: "move-task-order-selection",
+        allSelector: false,
+        selectedOptionValue: String(order),
+        options: orderOptions,
+        onSelectionChange: value => setOrder(Number(value))
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_8__.WPQTButton, {
+        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Apply", "quicktasker"),
+        loading: loading,
+        onClick: handleApply
+      })]
+    })
+  });
+}
 
 
 /***/ }),
@@ -6353,13 +6554,21 @@ function WPQTButton({
   onClick = () => {},
   btnText,
   className,
-  type = ButtonType.BUTTON
+  type = ButtonType.BUTTON,
+  disabled = false,
+  loading = false
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Button, {
+    disabled: disabled || loading,
     className: `wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`,
     onClick: onClick,
     type: type,
-    children: btnText
+    children: loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_1__.LoadingOval, {
+      width: "24",
+      height: "24",
+      color: "#ffffff",
+      secondaryColor: "#ffffff"
+    }) : btnText
   });
 }
 function WPQTIconButton({
@@ -6609,13 +6818,15 @@ function WPQTSelect({
   selectedOptionValue,
   onSelectionChange,
   allSelector = true,
-  className = ""
+  className = "",
+  id
 }) {
   const handleChange = event => {
     const selectedValue = event.target.value;
     onSelectionChange(selectedValue);
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Select, {
+    id: id,
     value: selectedOptionValue,
     onChange: handleChange,
     className: `!wpqt-rounded-lg !wpqt-border !wpqt-border-solid !wpqt-border-qtBorder !wpqt-px-2 !wpqt-pr-6 !wpqt-py-1 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,
@@ -6721,6 +6932,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CHANGE_USER_TASK_DONE_STATUS: () => (/* binding */ CHANGE_USER_TASK_DONE_STATUS),
 /* harmony export */   CLOSE_ARCHIVE_TASK_MODAL: () => (/* binding */ CLOSE_ARCHIVE_TASK_MODAL),
 /* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
+/* harmony export */   CLOSE_MOVE_TASK_MODAL: () => (/* binding */ CLOSE_MOVE_TASK_MODAL),
 /* harmony export */   CLOSE_NEW_TASK_MODAL: () => (/* binding */ CLOSE_NEW_TASK_MODAL),
 /* harmony export */   CLOSE_PIPELINE_MODAL: () => (/* binding */ CLOSE_PIPELINE_MODAL),
 /* harmony export */   CLOSE_STAGE_MODAL: () => (/* binding */ CLOSE_STAGE_MODAL),
@@ -6739,6 +6951,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
 /* harmony export */   OPEN_EDIT_USER_MODAL: () => (/* binding */ OPEN_EDIT_USER_MODAL),
+/* harmony export */   OPEN_MOVE_TASK_MODAL: () => (/* binding */ OPEN_MOVE_TASK_MODAL),
 /* harmony export */   OPEN_NEW_PIPELINE_MODAL: () => (/* binding */ OPEN_NEW_PIPELINE_MODAL),
 /* harmony export */   OPEN_NEW_STAGE_MODAL: () => (/* binding */ OPEN_NEW_STAGE_MODAL),
 /* harmony export */   OPEN_NEW_TASK_MODAL: () => (/* binding */ OPEN_NEW_TASK_MODAL),
@@ -6840,6 +7053,8 @@ const ADD_ASSIGNED_USER_TO_EDITING_TASK = "ADD_ASSIGNED_USER_TO_EDITING_TASK";
 const REMOVE_ASSIGNED_USER_FROM_EDITING_TASK = "REMOVE_ASSIGNED_USER_FROM_EDITING_TASK";
 const CHANGE_USER_SETTINGS_MODAL_OPEN = "CHANGE_USER_SETTINGS_MODAL_OPEN";
 const CHANGE_TASK_DONE_STATUS = "CHANGE_TASK_DONE_STATUS";
+const OPEN_MOVE_TASK_MODAL = "OPEN_MOVE_TASK_MODAL";
+const CLOSE_MOVE_TASK_MODAL = "CLOSE_MOVE_TASK_MODAL";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";
@@ -7527,12 +7742,24 @@ const useTaskActions = () => {
       displayErrorMessages(error);
     }
   });
+  const moveTask = (taskId, stageId, order, callback) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.moveTaskRequest)(taskId, stageId, order);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task moved", "quicktasaker"));
+      if (callback) callback(true);
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to move a task", "quicktasker"));
+      if (callback) callback(false);
+    }
+  });
   return {
     deleteTask,
     archiveTask,
     restoreArchivedTask,
     removeTaskFromUser,
-    changeTaskDoneStatus
+    changeTaskDoneStatus,
+    moveTask
   };
 };
 
@@ -7782,6 +8009,77 @@ const useUserTasksFilter = () => {
     filterTasks
   };
 };
+
+
+/***/ }),
+
+/***/ "./src/hooks/useActivePipeline.tsx":
+/*!*****************************************!*\
+  !*** ./src/hooks/useActivePipeline.tsx ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useActivePipeline: () => (/* binding */ useActivePipeline)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+
+
+function useActivePipeline() {
+  const {
+    state: {
+      activePipeline
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_1__.ActivePipelineContext);
+  const getActivePipelineStages = () => {
+    return (activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.stages) || [];
+  };
+  const getActivePipelinStageTasksLength = stageId => {
+    const stages = getActivePipelineStages();
+    if (!stages) {
+      return 0;
+    }
+    const stage = stages.find(stage => stage.id === stageId);
+    if (!stage || !stage.tasks) {
+      return 0;
+    }
+    return stage.tasks.length;
+  };
+  const getTaskStage = taskId => {
+    const stages = getActivePipelineStages();
+    let taskStage = null;
+    if (!stages) {
+      return null;
+    }
+    stages.forEach(stage => {
+      if (!stage.tasks || taskStage) {
+        return;
+      }
+      const task = stage.tasks.find(task => task.id === taskId);
+      if (task) {
+        taskStage = stage;
+      }
+    });
+    return taskStage;
+  };
+  const getTaskOrderInStage = taskId => {
+    const taskStage = getTaskStage(taskId);
+    if (!taskStage || !taskStage.tasks) {
+      return null;
+    }
+    const taskIndex = taskStage.tasks.findIndex(task => task.id === taskId);
+    return taskIndex !== -1 ? taskIndex : null;
+  };
+  return {
+    getActivePipelineStages,
+    getActivePipelinStageTasksLength,
+    getTaskStage,
+    getTaskOrderInStage
+  };
+}
 
 
 /***/ }),
@@ -9579,20 +9877,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _components_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../components/Modal/StageModal/StageModal */ "./src/components/Modal/StageModal/StageModal.tsx");
-/* harmony import */ var _components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../components/Modal/TaskModal/TaskModal */ "./src/components/Modal/TaskModal/TaskModal.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
-/* harmony import */ var _AddStage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./AddStage */ "./src/pages/PipelinePage/components/AddStage.tsx");
-/* harmony import */ var _PipelineIntro__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./PipelineIntro */ "./src/pages/PipelinePage/components/PipelineIntro.tsx");
-/* harmony import */ var _Stage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Stage */ "./src/pages/PipelinePage/components/Stage.tsx");
+/* harmony import */ var _components_Modal_MoveTaskModal_MoveTaskModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../components/Modal/MoveTaskModal/MoveTaskModal */ "./src/components/Modal/MoveTaskModal/MoveTaskModal.tsx");
+/* harmony import */ var _components_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../components/Modal/StageModal/StageModal */ "./src/components/Modal/StageModal/StageModal.tsx");
+/* harmony import */ var _components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../components/Modal/TaskModal/TaskModal */ "./src/components/Modal/TaskModal/TaskModal.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _AddStage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./AddStage */ "./src/pages/PipelinePage/components/AddStage.tsx");
+/* harmony import */ var _PipelineIntro__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./PipelineIntro */ "./src/pages/PipelinePage/components/PipelineIntro.tsx");
+/* harmony import */ var _Stage__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Stage */ "./src/pages/PipelinePage/components/Stage.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9633,6 +9932,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 const Pipeline = () => {
   var _a, _b;
   const {
@@ -9641,13 +9941,13 @@ const Pipeline = () => {
     },
     dispatch,
     fetchAndSetPipelineData
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_8__.ActivePipelineContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_9__.ActivePipelineContext);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const refetchDataInterval = setInterval(() => {
       if (activePipeline) {
         fetchAndSetPipelineData(activePipeline.id);
       }
-    }, _constants__WEBPACK_IMPORTED_MODULE_7__.REFETCH_ACTIVE_PIPELINE_INTERVAL);
+    }, _constants__WEBPACK_IMPORTED_MODULE_8__.REFETCH_ACTIVE_PIPELINE_INTERVAL);
     return () => clearInterval(refetchDataInterval);
   }, [activePipeline]);
   const dispatchMove = (source, destination) => {
@@ -9661,7 +9961,7 @@ const Pipeline = () => {
       });
     } else {
       dispatch({
-        type: "MOVE_TASK",
+        type: _constants__WEBPACK_IMPORTED_MODULE_8__.PIPELINE_MOVE_TASK,
         payload: {
           source,
           destination
@@ -9693,25 +9993,25 @@ const Pipeline = () => {
     }
   };
   if (!activePipeline) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PipelineIntro__WEBPACK_IMPORTED_MODULE_10__.PipelineIntro, {});
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_PipelineIntro__WEBPACK_IMPORTED_MODULE_11__.PipelineIntro, {});
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-pipeline-height wpqt-flex wpqt-gap-[24px] wpqt-overflow-x-auto wpqt-overflow-y-hidden",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_12__.DragDropContext, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_13__.DragDropContext, {
       onDragEnd: onDragEnd,
       children: (_a = activePipeline.stages) === null || _a === void 0 ? void 0 : _a.map((stage, index) => {
         const isLastStage = index === activePipeline.stages.length - 1;
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_11__.Stage, {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Stage__WEBPACK_IMPORTED_MODULE_12__.Stage, {
           stage: stage,
           isLastStage: isLastStage
         }, stage.id);
       })
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddStage__WEBPACK_IMPORTED_MODULE_9__.AddStage, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddStage__WEBPACK_IMPORTED_MODULE_10__.AddStage, {
       pipelineId: activePipeline.id,
       stagesLength: (_b = activePipeline.stages) === null || _b === void 0 ? void 0 : _b.length
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_6__.TaskModal, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_TaskModal_TaskModal__WEBPACK_IMPORTED_MODULE_7__.TaskModal, {
       deleteTaskCallback: deleteTaskCallback
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_5__.StageModal, {})]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_MoveTaskModal_MoveTaskModal__WEBPACK_IMPORTED_MODULE_5__.MoveTaskModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_6__.StageModal, {})]
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Pipeline);
@@ -13606,6 +13906,7 @@ const initialState = {
   taskModalSettings: {
     allowToMarkTaskAsDone: true
   },
+  moveTaskModalOpen: false,
   stageModalOpen: false,
   stageToEdit: null,
   targetPipelineId: "",
@@ -14910,6 +15211,20 @@ const reducer = (state, action) => {
             is_done: done
           })
         });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.OPEN_MOVE_TASK_MODAL:
+      {
+        const {
+          task
+        } = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          moveTaskModalOpen: true,
+          taskToEdit: task
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.CLOSE_MOVE_TASK_MODAL:
+      {
+        return closeModal();
       }
     default:
       return state;

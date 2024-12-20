@@ -7,9 +7,13 @@ import { useCallback, useContext, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { moveTaskRequest } from "../../../api/api";
+import { MoveTaskModal } from "../../../components/Modal/MoveTaskModal/MoveTaskModal";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
-import { REFETCH_ACTIVE_PIPELINE_INTERVAL } from "../../../constants";
+import {
+  PIPELINE_MOVE_TASK,
+  REFETCH_ACTIVE_PIPELINE_INTERVAL,
+} from "../../../constants";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { AddStage } from "./AddStage";
@@ -47,7 +51,7 @@ const Pipeline = () => {
       });
     } else {
       dispatch({
-        type: "MOVE_TASK",
+        type: PIPELINE_MOVE_TASK,
         payload: {
           source,
           destination,
@@ -107,6 +111,7 @@ const Pipeline = () => {
         stagesLength={activePipeline!.stages?.length}
       />
       <TaskModal deleteTaskCallback={deleteTaskCallback} />
+      <MoveTaskModal />
       <StageModal />
     </div>
   );
