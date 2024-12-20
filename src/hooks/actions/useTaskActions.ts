@@ -4,6 +4,7 @@ import {
   archiveTaskRequest,
   deleteTaskRequest,
   markTaskDoneRequest,
+  moveTaskRequest,
   removeTaskFromUserRequest,
   restoreArchivedTaskRequest,
 } from "../../api/api";
@@ -83,12 +84,30 @@ const useTaskActions = () => {
     }
   };
 
+  const moveTask = async (
+    taskId: string,
+    stageId: string,
+    order: number,
+    callback?: (isCompleted: boolean) => void,
+  ) => {
+    try {
+      await moveTaskRequest(taskId, stageId, order);
+      toast.success(__("Task moved", "quicktasaker"));
+      if (callback) callback(true);
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to move a task", "quicktasker"));
+      if (callback) callback(false);
+    }
+  };
+
   return {
     deleteTask,
     archiveTask,
     restoreArchivedTask,
     removeTaskFromUser,
     changeTaskDoneStatus,
+    moveTask,
   };
 };
 

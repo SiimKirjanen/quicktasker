@@ -4,6 +4,7 @@ import {
   CHANGE_TASK_DONE_STATUS,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
+  CLOSE_MOVE_TASK_MODAL,
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
   CLOSE_TASK_MODAL,
@@ -12,6 +13,7 @@ import {
   OPEN_EDIT_PIPELINE_MODAL,
   OPEN_EDIT_TASK_MODAL,
   OPEN_EDIT_USER_MODAL,
+  OPEN_MOVE_TASK_MODAL,
   OPEN_NEW_PIPELINE_MODAL,
   OPEN_NEW_STAGE_MODAL,
   OPEN_NEW_USER_MODAL,
@@ -32,6 +34,7 @@ const initialState: State = {
   taskModalSettings: {
     allowToMarkTaskAsDone: true,
   },
+  moveTaskModalOpen: false,
   stageModalOpen: false,
   stageToEdit: null,
   targetPipelineId: "",
@@ -50,6 +53,7 @@ type State = {
   targetStageId: string;
   taskToEdit: Task | null;
   taskModalSettings: TaskModalSettings;
+  moveTaskModalOpen: boolean;
   stageModalOpen: boolean;
   stageToEdit: Stage | null;
   targetPipelineId: string;
@@ -92,6 +96,8 @@ type Action =
       type: typeof CHANGE_TASK_DONE_STATUS;
       payload: { done: boolean };
     }
+  | { type: typeof OPEN_MOVE_TASK_MODAL; payload: { task: Task } }
+  | { type: typeof CLOSE_MOVE_TASK_MODAL }
   | { type: typeof CLOSE_USER_MODAL };
 
 type ModalDispatch = (action: Action) => void;
