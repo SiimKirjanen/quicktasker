@@ -26,10 +26,13 @@ function MoveTaskModal() {
   const [stageId, setStageId] = useState("");
   const [loading, setLoading] = useState(false);
   const stageTasksLenght = getActivePipelinStageTasksLength(stageId);
-  const orderOptions = Array.from({ length: stageTasksLenght }, (_, index) => ({
-    value: index.toString(),
-    label: (index + 1).toString(),
-  }));
+  const orderOptions = Array.from(
+    { length: stageTasksLenght + 1 },
+    (_, index) => ({
+      value: index.toString(),
+      label: (index + 1).toString(),
+    }),
+  );
   const stageOptions = getActivePipelineStages().map((stage) => ({
     value: stage.id,
     label: stage.name,

@@ -75,7 +75,6 @@ function TaskControlsDropdown({ task }: Props) {
         icon={<BiMove className="wpqt-icon-blue wpqt-size-4" />}
         onClick={(e: React.MouseEvent) => {
           e.stopPropagation();
-          console.log("What?");
           modalDispatch({
             type: OPEN_MOVE_TASK_MODAL,
             payload: { task },
