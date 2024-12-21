@@ -1612,10 +1612,6 @@
   grid-template-columns: auto auto;
 }
 
-.wpqt-flex-row {
-  flex-direction: row;
-}
-
 .wpqt-flex-col {
   flex-direction: column;
 }
