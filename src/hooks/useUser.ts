@@ -1,4 +1,4 @@
-import { useContext } from "@wordpress/element";
+import { useContext, useMemo } from "@wordpress/element";
 import { UserContext } from "../providers/UserContextProvider";
 import { UserTypes } from "../types/user";
 
@@ -16,7 +16,9 @@ const useUser = () => {
     }
   };
 
-  return { getUser };
+  const combinedUsers = useMemo(() => [...users, ...wpUsers], [users, wpUsers]);
+
+  return { getUser, combinedUsers };
 };
 
 export { useUser };

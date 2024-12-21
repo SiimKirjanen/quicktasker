@@ -13,11 +13,13 @@ function WPQTFilter({
 }: WPQTFilterProps) {
   return (
     <div className="wpqt-mb-8">
-      <div className={`wpqt-mb-2 wpqt-text-base ${titleClassName}`}>
+      <div
+        className={`wpqt-mb-3 wpqt-text-lg wpqt-text-center ${titleClassName}`}
+      >
         {title}
       </div>
       <div
-        className={`wpqt-flex wpqt-gap-2 wpqt-items-center ${childrenClassName}`}
+        className={`wpqt-flex wpqt-gap-4 wpqt-items-center wpqt-justify-center ${childrenClassName}`}
       >
         {children}
       </div>

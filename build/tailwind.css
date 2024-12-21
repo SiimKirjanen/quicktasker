@@ -2237,6 +2237,12 @@
   }
 }
 
+@media (min-width: 1280px) {
+  .wpqt-card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .wpqt-user-page-card-flex {
   display: flex;
   flex-direction: column;

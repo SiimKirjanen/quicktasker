@@ -23,10 +23,11 @@ import {
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
+  PIPELINE_TOGGLE_VIEW,
   SET_FULL_PAGE_LOADING,
 } from "../constants";
 import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
-import { Pipeline, PipelineFromServer } from "../types/pipeline";
+import { Pipeline, PipelineFromServer, PipelineView } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { TaskFromServer } from "../types/task";
 import { User, UserTypes, WPUser } from "../types/user";
@@ -34,11 +35,13 @@ import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState = {
   loading: false,
+  view: PipelineView.PIPELINE,
   activePipeline: null,
 };
 
 type State = {
   loading: boolean;
+  view: PipelineView;
   activePipeline: Pipeline | null;
 };
 
@@ -78,6 +81,7 @@ type Action =
     }
   | { type: typeof PIPELINE_REMOVE_ACTIVE_PIPELINE }
   | { type: typeof PIPELINE_REMOVE_TASK; payload: string }
+  | { type: typeof PIPELINE_TOGGLE_VIEW; payload: PipelineView }
   | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer };
 
 type Dispatch = (action: Action) => void;

@@ -14,6 +14,7 @@ import {
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
+  PIPELINE_TOGGLE_VIEW,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, State } from "../providers/ActivePipelineContextProvider";
@@ -380,6 +381,12 @@ const activePipelineReducer = (state: State, action: Action) => {
           ...state.activePipeline,
           stages: updatedStages,
         },
+      };
+    }
+    case PIPELINE_TOGGLE_VIEW: {
+      return {
+        ...state,
+        view: action.payload,
       };
     }
     default:
