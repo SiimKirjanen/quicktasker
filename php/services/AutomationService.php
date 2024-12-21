@@ -94,6 +94,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $templateData = [
                         'taskName' => $task->name,
                         'boardName' => $pipeline->name,
+                        'creationDate' => ServiceLocator::get('TimeRepository')->convertUTCToLocal($task->created_at)
                     ];
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'New Task Created', $emailMessage);

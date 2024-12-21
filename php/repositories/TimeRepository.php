@@ -38,5 +38,25 @@ if ( ! class_exists( 'WPQT\Time\TimeRepository' ) ) {
                 return 'UTC';
             }
         }
+
+         /**
+         * Converts a UTC date string to a formatted date string in the WordPress timezone.
+         *
+         * @param string $utcDateString The UTC date string in 'Y-m-d H:i:s' format.
+         * @return string The formatted date string in the WordPress timezone.
+         */
+        public function convertUTCToLocal($utcDateString) {
+            // Create a DateTime object from the UTC date string
+            $date = new \DateTime($utcDateString, new \DateTimeZone('UTC'));
+
+            // Get the WordPress timezone
+            $wpTimezone = $this->getWPTimezone();
+
+            // Set the timezone to the WordPress timezone
+            $date->setTimezone(new \DateTimeZone($wpTimezone));
+
+            // Format the date as "F j, Y H:i"
+            return $date->format('F j, Y H:i');
+        }
     }
 }
