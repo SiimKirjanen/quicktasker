@@ -81,6 +81,19 @@ function useActivePipeline() {
     return taskStage.id === lastStage.id;
   };
 
+  const stageOptions = useMemo(() => {
+    const stages = getActivePipelineStages();
+
+    if (!stages) {
+      return [];
+    }
+
+    return stages.map((stage) => ({
+      label: stage.name,
+      value: stage.id,
+    }));
+  }, [activePipeline]);
+
   const activePipelineTasks = useMemo(() => {
     const stages = getActivePipelineStages();
     const tasks: Task[] = [];
@@ -110,6 +123,7 @@ function useActivePipeline() {
     activePipelineTasks,
     activePipelineSettings,
     isTaskOnLastStage,
+    stageOptions,
   };
 }
 

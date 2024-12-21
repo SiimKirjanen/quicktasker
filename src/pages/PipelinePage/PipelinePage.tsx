@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { TasksViewFilter } from "../../components/Filter/TasksViewFilter/TasksViewFilter";
 import { MoveTaskModal } from "../../components/Modal/MoveTaskModal/MoveTaskModal";
 import { AddPipelineModal } from "../../components/Modal/PipelineModal/AddPipelineModal/AddPipelineModal";
 import { EditPipelineModal } from "../../components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal";
@@ -6,6 +7,7 @@ import {
   ActivePipelineContext,
   ActivePipelineContextProvider,
 } from "../../providers/ActivePipelineContextProvider";
+import { ActivePipelineTaskViewContextProvider } from "../../providers/ActivePipelineTaskViewContextProvider";
 import { PipelineView } from "../../types/pipeline";
 import { Page } from "../Page/Page";
 import Pipeline from "./components/Pipeline";
@@ -28,7 +30,14 @@ const PipelinePageContent = () => {
   return (
     <Page>
       <PipelineHeader />
-      {renderPipelineView ? <Pipeline /> : <TaskView />}
+      {renderPipelineView ? (
+        <Pipeline />
+      ) : (
+        <ActivePipelineTaskViewContextProvider>
+          <TasksViewFilter />
+          <TaskView />
+        </ActivePipelineTaskViewContextProvider>
+      )}
       <AddPipelineModal />
       <EditPipelineModal />
       <MoveTaskModal />

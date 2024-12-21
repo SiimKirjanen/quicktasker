@@ -12,6 +12,7 @@ describe("AutomationActionTarget Component", () => {
   beforeEach(() => {
     mockUseUser.mockReturnValue({
       getUser: jest.fn(),
+      combinedUsers: [],
     });
   });
 
@@ -34,7 +35,7 @@ describe("AutomationActionTarget Component", () => {
 
   test("renders user name when user is found", () => {
     const mockGetUser = jest.fn().mockReturnValue({ name: "John Doe" });
-    mockUseUser.mockReturnValue({ getUser: mockGetUser });
+    mockUseUser.mockReturnValue({ getUser: mockGetUser, combinedUsers: [] });
 
     render(
       <AutomationActionTarget
@@ -47,7 +48,7 @@ describe("AutomationActionTarget Component", () => {
 
   test("renders 'User not found' when user is not found", () => {
     const mockGetUser = jest.fn().mockReturnValue(null);
-    mockUseUser.mockReturnValue({ getUser: mockGetUser });
+    mockUseUser.mockReturnValue({ getUser: mockGetUser, combinedUsers: [] });
 
     render(
       <AutomationActionTarget

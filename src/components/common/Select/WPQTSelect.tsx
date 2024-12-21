@@ -9,6 +9,7 @@ type Props = {
   selectedOptionValue: string;
   onSelectionChange: (selectedValue: string) => void;
   allSelector?: boolean;
+  allSelectorLabel?: string;
   className?: string;
   id?: string;
 };
@@ -19,6 +20,7 @@ function WPQTSelect({
   onSelectionChange,
   allSelector = true,
   className = "",
+  allSelectorLabel = "All boards",
   id,
 }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -33,7 +35,7 @@ function WPQTSelect({
       onChange={handleChange}
       className={`!wpqt-rounded-lg !wpqt-border !wpqt-border-solid !wpqt-border-qtBorder !wpqt-px-2 !wpqt-pr-6 !wpqt-py-1 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`}
     >
-      {allSelector && <option value="">All boards</option>}
+      {allSelector && <option value="">{allSelectorLabel}</option>}
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}

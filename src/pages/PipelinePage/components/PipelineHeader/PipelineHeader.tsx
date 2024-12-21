@@ -1,4 +1,9 @@
-import { ArrowPathIcon, Cog8ToothIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathIcon,
+  Cog8ToothIcon,
+  RectangleStackIcon,
+  ViewColumnsIcon,
+} from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { PipelineSelectionDropdown } from "../../../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
@@ -84,12 +89,20 @@ function PipelineModeSelector() {
 
   return (
     <div
-      className="wpqt-cursor-pointer wpqt-text-blue-400 wpqt-text-base :hover:wpqt-text-blue-600"
+      className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-400 wpqt-text-base :hover:wpqt-text-blue-600"
       onClick={toggleView}
     >
-      {view === PipelineView.PIPELINE
-        ? __("Switch to Task view", "quicktasker")
-        : __("Switch to Board view", "quicktasker")}
+      {view === PipelineView.PIPELINE ? (
+        <>
+          <RectangleStackIcon className="wpqt-size-5 wpqt-text-blue-400" />
+          {__("Switch to Task view", "quicktasker")}
+        </>
+      ) : (
+        <>
+          <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400" />
+          {__("Switch to Board view", "quicktasker")}
+        </>
+      )}
     </div>
   );
 }

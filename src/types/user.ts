@@ -29,6 +29,11 @@ type ExtendedUser = BaseUser & {
   setup_completed: boolean;
 };
 
+type UserFilter = {
+  id: string | null;
+  type: UserTypes | null;
+};
+
 type WPUser = {
   id: string;
   name: string;
@@ -46,4 +51,11 @@ enum UserTypes {
 }
 
 export { UserTypes };
-export type { ExtendedUser, ServerExtendedUser, ServerUser, User, WPUser };
+export type {
+  ExtendedUser,
+  ServerExtendedUser,
+  ServerUser,
+  User,
+  UserFilter,
+  WPUser,
+};

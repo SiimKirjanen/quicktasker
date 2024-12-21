@@ -33,8 +33,14 @@ const mapActionTargetTypeToUserType = (
   }
 };
 
+const userTypeStrings = {
+  [UserTypes.QUICKTASKER]: "Quicktasker",
+  [UserTypes.WP_USER]: "WordPress User",
+};
+
 export {
   convertExtendedUserFromServer,
   convertUserFromServer,
   mapActionTargetTypeToUserType,
+  userTypeStrings,
 };
