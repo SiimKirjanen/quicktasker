@@ -150,7 +150,11 @@ function editTaskRequest(task: Task): Promise<WPQTResponse<TaskFromServer>> {
   });
 }
 
-function deleteTaskRequest(taskId: string): Promise<WPQTResponse> {
+function deleteTaskRequest(taskId: string): Promise<
+  WPQTResponse<{
+    executedAutomations: ExecutedAutomation[];
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/tasks/${taskId}`,
     method: "DELETE",

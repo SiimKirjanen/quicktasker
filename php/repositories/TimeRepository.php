@@ -58,5 +58,18 @@ if ( ! class_exists( 'WPQT\Time\TimeRepository' ) ) {
             // Format the date as "F j, Y H:i"
             return $date->format('F j, Y H:i');
         }
+
+        /**
+         * Retrieves the local time.
+         *
+         * This function gets the current UTC time and converts it to the local time.
+         *
+         * @return string The local time in the specified format.
+         */
+        public function getLocalTime() {
+            $date = $this->getCurrentUTCTime();
+
+            return $this->convertUTCToLocal($date);
+        }
     }
 }

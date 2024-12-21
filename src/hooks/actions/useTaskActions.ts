@@ -18,9 +18,10 @@ const useTaskActions = () => {
 
   const deleteTask = async (taskId: string, callback?: () => void) => {
     try {
-      await deleteTaskRequest(taskId);
+      const response = await deleteTaskRequest(taskId);
       if (callback) callback();
       toast.success(__("Task deleted", "quicktasker"));
+      handleExecutedAutomations(response.data.executedAutomations, taskId);
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to delete a task", "quicktasker"));

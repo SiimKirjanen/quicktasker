@@ -13,6 +13,10 @@ const automationActionStrings: { [key in AutomationAction]: string } = {
     "Send email notification",
     "quicktasker",
   ),
+  [AutomationAction.DELETED_ENTITY_EMAIL]: __(
+    "Send email notification",
+    "quicktasker",
+  ),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -29,6 +33,7 @@ const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
     "quicktasker",
   ),
   [AutomationTrigger.TASK_CREATED]: __("Task created", "quicktasker"),
+  [AutomationTrigger.TASK_DELETED]: __("Task deleted", "quicktasker"),
 };
 
 const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
@@ -51,6 +56,12 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
       },
       {
         id: AutomationAction.NEW_ENTITY_EMAIL,
+        requireMetaData: true,
+      },
+    ],
+    [AutomationTrigger.TASK_DELETED]: [
+      {
+        id: AutomationAction.DELETED_ENTITY_EMAIL,
         requireMetaData: true,
       },
     ],

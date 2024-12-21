@@ -296,7 +296,7 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
          * Deletes a task.
          *
          * @param int $taskId The ID of the task to delete.
-         * @return bool True if the task is successfully deleted, false otherwise.
+         * @return object The deleted task.
          * @throws Exception If there is an error deleting the task or its location.
          */
         public function deleteTask($taskId) {
@@ -323,7 +323,7 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 throw new \Exception('Failed to unassign users from the task');
             }
 
-            return true;
+            return $taskToDelete;
         }
 
     

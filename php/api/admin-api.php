@@ -495,11 +495,24 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     try {
                         $wpdb->query('START TRANSACTION');
                         
-                        $taskService = new TaskService();
-                        $taskService->deleteTask( $data['id'] );
+                        $deletedTask = ServiceLocator::get('TaskService')->deleteTask( $data['id'] );
+
+                         /* Handle automations */
+                         $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                            $deletedTask->pipeline_id, 
+                            $deletedTask->id, 
+                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED,
+                            $deletedTask
+                         );
+                         /* End of handling automations */
+
                         $wpdb->query('COMMIT');
 
-                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'executedAutomations' => $executionResults->executedAutomations,
+                            'failedAutomations' => $executionResults->failedAutomations
+                        ]))->toArray(), 200);
                     } catch (Exception $e) {
                         $wpdb->query('ROLLBACK');
 

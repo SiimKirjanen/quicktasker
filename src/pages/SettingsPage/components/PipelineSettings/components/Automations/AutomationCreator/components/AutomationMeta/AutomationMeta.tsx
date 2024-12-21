@@ -16,7 +16,9 @@ function AutomationMeta({
   automationDispatch,
 }: Props) {
   const action = automationCreationState?.automationAction?.id;
-  const isEmailInput = action === AutomationAction.NEW_ENTITY_EMAIL;
+  const requiresEmailInput =
+    action === AutomationAction.NEW_ENTITY_EMAIL ||
+    action === AutomationAction.DELETED_ENTITY_EMAIL;
 
   const setAutomationMeta = (meta: string) => {
     automationDispatch({
@@ -25,7 +27,7 @@ function AutomationMeta({
     });
   };
 
-  if (isEmailInput) {
+  if (requiresEmailInput) {
     return <EmailMetaInput setAutomationMeta={setAutomationMeta} />;
   }
 
