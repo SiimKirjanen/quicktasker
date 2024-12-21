@@ -11935,7 +11935,12 @@ function AutomationsList() {
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-flex wpqt-flex-col",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Alert_Alert__WEBPACK_IMPORTED_MODULE_3__.Alert, {
+      type: "info",
+      className: "wpqt-mx-auto wpqt-mb-2",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Note that one automation won't trigger another automation", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-3",
       children: automations.map(automation => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationListItem_AutomationListItem__WEBPACK_IMPORTED_MODULE_7__.AutomationListItem, {
         automation: automation

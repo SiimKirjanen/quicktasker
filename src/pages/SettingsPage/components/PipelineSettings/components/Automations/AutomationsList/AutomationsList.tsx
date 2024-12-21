@@ -38,7 +38,13 @@ function AutomationsList() {
   }
 
   return (
-    <div>
+    <div className="wpqt-flex wpqt-flex-col">
+      <Alert type="info" className="wpqt-mx-auto wpqt-mb-2">
+        {__(
+          "Note that one automation won't trigger another automation",
+          "quicktasker",
+        )}
+      </Alert>
       <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-3">
         {automations.map((automation) => (
           <AutomationListItem key={automation.id} automation={automation} />
