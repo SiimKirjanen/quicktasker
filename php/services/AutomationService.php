@@ -18,12 +18,13 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * @param int $targetId The ID of the target entity for the automation.
          * @param string $targetType The type of the target entity (e.g., 'task', 'project').
          * @param string $automationTrigger The trigger that initiates the automation (e.g., 'onCreate', 'onUpdate').
+         * @param object|null $data Additional data to be used in the automation execution.
          * 
          * @return object An object containing two arrays:
          *                - 'executedAutomations': An array of successfully executed automations.
          *                - 'failedAutomations': An array of automations that failed to execute.
          */
-        public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger) {
+        public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger, $data = null) {
             $executedAutomations = [];
             $failedAutomations = [];
             $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
@@ -31,7 +32,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             if ( ! empty($relatedAutomations) ) {
                 foreach ($relatedAutomations as $automation) {
                     try {
-                        $result = $this->executeAutomation($automation, $targetId);
+                        $result = $this->executeAutomation($automation, $targetId, $data);
 
                         if($result) {
                             $automation->executionResult = $result;
@@ -52,7 +53,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
            
         }
 
-        private function executeAutomation($automation, $targetId) {
+        private function executeAutomation($automation, $targetId, $data) {
             $logMessage = $this->getAutomationLogMessage($automation);
 
             if( $this->isTaskDoneTrigger($automation) ) {
@@ -71,11 +72,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     return true;
                 }
-
             }
 
             if( $this->isTaskCreatedTrigger($automation) ) {
-
                 if ( $this->isAssignUserAction($automation) ) {
                     $userId = $automation->automation_action_target_id;
                     $userType = $automation->automation_action_target_type;
@@ -98,6 +97,25 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     ];
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'New Task Created', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+            }
+
+            if ( $this->isTaskDeletedTrigger($automation) ) {
+                if ($this->isDeletedEntityEmailAction($automation)) {
+                    $email = $automation->metadata;
+                    $deletedTask = $data;
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($deletedTask->pipeline_id);
+
+                    $templateData = [
+                        'taskName' => $deletedTask->name,
+                        'boardName' => $pipeline->name,
+                        'deleteDate' => ServiceLocator::get('TimeRepository')->getLocalTime()
+                    ];
+                    $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_DELETED_TASK_EMAIL_TEMPLATE, $templateData);
+                    ServiceLocator::get('EmailService')->sendEmail($email, 'Task Deleted', $emailMessage);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
@@ -137,6 +155,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         }
 
         /**
+         * Checks if the automation action is a deleted entity email action.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool True if the automation action is a deleted entity email action and metadata is not null, false otherwise.
+         */
+        private function isDeletedEntityEmailAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_DELETED_ENTITY_EMAIL && $automation->metadata !== null;
+        }
+
+        /**
          * Checks if the automation trigger is set to 'task done'.
          *
          * @param object $automation The automation object containing the trigger information.
@@ -167,6 +195,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskCreatedTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED;
+        }
+
+        /**
+         * Checks if the automation trigger is set to task deleted.
+         *
+         * @param object $automation The automation object containing the trigger information.
+         * @return bool Returns true if the automation trigger is set to task deleted, false otherwise.
+         */
+        private function isTaskDeletedTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED;
         }
 
         /**
