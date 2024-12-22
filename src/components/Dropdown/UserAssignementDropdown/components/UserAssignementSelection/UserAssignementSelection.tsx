@@ -76,7 +76,11 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
     try {
       setLoading(true);
       const userType = user.user_type;
-      await removeTaskFromUserRequest(user.id, task.id, userType);
+      const response = await removeTaskFromUserRequest(
+        user.id,
+        task.id,
+        userType,
+      );
       dispatch({
         type: PIPELINE_REMOVE_USER_FROM_TASK,
         payload: {
@@ -86,6 +90,7 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
         },
       });
       onUserDelete(user);
+      handleExecutedAutomations(response.data.executedAutomations, task.id);
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to remove user", "quicktasker"));

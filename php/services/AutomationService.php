@@ -144,6 +144,28 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
               }
             }
 
+            if( $this->isTaskUnassignedTrigger($automation) ) {
+                if ( $this->isTaskUnassignedEmailAction($automation) ) {
+                    $email = $automation->metadata;
+                    $unassignedUser = $data;
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
+
+                    $templateData = [
+                        'taskName' => $task->name,
+                        'boardName' => $pipeline->name,
+                        'unassignedDate' => ServiceLocator::get('TimeRepository')->getLocalTime(),
+                        'userName' => $unassignedUser->name,
+                    ];
+
+                    $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_UNASSIGNED_TASK_EMAIL_TEMPLATE, $templateData);
+                    ServiceLocator::get('EmailService')->sendEmail($email, 'Task Unassigned', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -197,6 +219,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         }
 
         /**
+         * Checks if the automation action is a task unassigned email action.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool True if the automation action is a task unassigned email action and metadata is not null, false otherwise.
+         */
+        private function isTaskUnassignedEmailAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_TASK_UNASSIGNED_EMAIL && $automation->metadata !== null;
+        }
+
+        /**
          * Checks if the automation trigger is set to 'task done'.
          *
          * @param object $automation The automation object containing the trigger information.
@@ -247,6 +279,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskAssignedTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED;
+        }
+
+        /**
+         * Checks if the automation trigger is set to task unassigned.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool Returns true if the automation trigger is task unassigned, false otherwise.
+         */
+        private function isTaskUnassignedTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED;
         }
 
         /**
