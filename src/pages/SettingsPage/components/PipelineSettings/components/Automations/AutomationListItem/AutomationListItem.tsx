@@ -46,7 +46,7 @@ function AutomationListItem({ automation }: Props) {
   };
 
   return (
-    <div className="wpqt-flex wpqt-gap-3 wpqt-main-border wpqt-p-4">
+    <div className="wpqt-flex wpqt-gap-3 wpqt-p-4">
       <WPQTCard
         title={__("Target", "quicktasker")}
         className={cardStyleClasses}

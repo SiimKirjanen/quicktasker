@@ -1,4 +1,5 @@
 import apiFetch from "@wordpress/api-fetch";
+import { ExecutedAutomation } from "../../types/automation";
 import { WPQTCommentFromServer } from "../../types/comment";
 import { CustomFieldEntityType } from "../../types/custom-field";
 import { WPQTResponse } from "../../types/response";
@@ -94,7 +95,12 @@ function getTaskDataRequest(
 function assignTaskToUser(
   pageHash: string,
   taskHash: string,
-): Promise<WPQTResponse<TaskFromServer>> {
+): Promise<
+  WPQTResponse<{
+    task: TaskFromServer;
+    executedAutomations: ExecutedAutomation[];
+  }>
+> {
   return apiFetch({
     method: "POST",
     path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/users`,

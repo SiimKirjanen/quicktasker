@@ -40,7 +40,7 @@ function useTaskActions() {
     try {
       const response = await assignTaskToUser(pageHash, taskHash);
       toast.success(__("Task assigned successfully", "quicktasker"));
-      if (callback) callback(response.data);
+      if (callback) callback(response.data.task);
     } catch (error) {
       handleError(error);
     }
