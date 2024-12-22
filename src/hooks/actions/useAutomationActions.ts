@@ -39,6 +39,10 @@ const actionMessages: { [key in AutomationAction]: string } = {
     "Email notification sent by automation",
     "quicktasker",
   ),
+  [AutomationAction.TASK_UNASSIGNED_EMAIL]: __(
+    "Email notification sent by automation",
+    "quicktasker",
+  ),
 };
 
 function useAutomationActions() {

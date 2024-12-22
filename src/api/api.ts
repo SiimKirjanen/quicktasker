@@ -425,7 +425,11 @@ function removeTaskFromUserRequest(
   userId: string,
   taskId: string,
   userType: UserTypes,
-): Promise<WPQTResponse> {
+): Promise<
+  WPQTResponse<{
+    executedAutomations: ExecutedAutomation[];
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/users/${userId}/tasks/${taskId}`,
     method: "DELETE",

@@ -537,7 +537,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                          /* Handle automations */
                          $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
                             $task->pipeline_id, 
-                            $task->id, 
+                            $taskId, 
                             WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
                             $automationTrigger,
                             $userPage

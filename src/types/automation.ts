@@ -6,6 +6,7 @@ enum AutomationTrigger {
   TASK_CREATED = "task-created",
   TASK_DELETED = "task-deleted",
   TASK_ASSIGNED = "task-assigned",
+  TASK_UNASSIGNED = "task-unassigned",
 }
 
 enum TargetType {
@@ -29,6 +30,7 @@ enum AutomationAction {
   NEW_ENTITY_EMAIL = "new-entity-email",
   DELETED_ENTITY_EMAIL = "deleted-entity-email",
   TASK_ASSIGNED_EMAIL = "task-assigned-email",
+  TASK_UNASSIGNED_EMAIL = "task-unassigned-email",
 }
 
 type AutomationActionType = {

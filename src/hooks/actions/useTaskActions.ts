@@ -56,9 +56,14 @@ const useTaskActions = () => {
     callback?: () => void,
   ) => {
     try {
-      await removeTaskFromUserRequest(userId, taskId, UserTypes.QUICKTASKER);
-      if (callback) callback();
+      const response = await removeTaskFromUserRequest(
+        userId,
+        taskId,
+        UserTypes.QUICKTASKER,
+      );
       toast.success(__("Task has been unassigned", "quicktasker"));
+      handleExecutedAutomations(response.data.executedAutomations, taskId);
+      if (callback) callback();
     } catch (error) {
       console.error(error);
       toast.error(__("Task unassignment failed. Try again", "quicktasker"));
