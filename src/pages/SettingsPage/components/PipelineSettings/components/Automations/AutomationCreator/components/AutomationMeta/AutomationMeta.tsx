@@ -18,7 +18,8 @@ function AutomationMeta({
   const action = automationCreationState?.automationAction?.id;
   const requiresEmailInput =
     action === AutomationAction.NEW_ENTITY_EMAIL ||
-    action === AutomationAction.DELETED_ENTITY_EMAIL;
+    action === AutomationAction.DELETED_ENTITY_EMAIL ||
+    action === AutomationAction.TASK_ASSIGNED_EMAIL;
 
   const setAutomationMeta = (meta: string) => {
     automationDispatch({

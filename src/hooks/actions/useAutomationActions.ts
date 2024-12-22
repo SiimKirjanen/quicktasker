@@ -35,6 +35,10 @@ const actionMessages: { [key in AutomationAction]: string } = {
     "Email notification sent by automation",
     "quicktasker",
   ),
+  [AutomationAction.TASK_ASSIGNED_EMAIL]: __(
+    "Email notification sent by automation",
+    "quicktasker",
+  ),
 };
 
 function useAutomationActions() {
@@ -58,6 +62,10 @@ function useAutomationActions() {
       return;
     }
     executedAutomations.forEach((automation) => {
+      if (automation.automation_action.includes("email")) {
+        // Dont display email sent messages
+        return;
+      }
       const message =
         actionMessages[automation.automation_action] ||
         `Automation executed: ${automation.automation_action}`;

@@ -27,6 +27,7 @@ use WPQT\User\UserRepository;
 use WPQT\CustomField\CustomFieldRepository;
 use WPQT\CustomField\CustomFieldService;
 use WPQT\Settings\SettingsValidationService;
+use WPQT\ServiceLocator;
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
@@ -501,13 +502,17 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
         register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/users', array(
             'methods' => 'POST, DELETE',
             'callback' => function( $data ) {
+                    global $wpdb;
                     try {
+                        $wpdb->query('START TRANSACTION');
+
                         $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                         $userService = new UserService();
                         $taskRepository = new TaskRepository();
                         $permissionService = new PermissionService();
                         $userPageRepository = new UserPageRepository();
                         $logService = new LogService();
+                        $automationTrigger = WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED;
 
                         $task = $taskRepository->getTaskByHash($data['task_hash']);
                         $taskId = $task->id;
@@ -521,6 +526,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             $logService->log('Assigned itself to ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                             $logService->log($userPage->name . ' assigned itself to the task', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                         } elseif ($data->get_method() === 'DELETE') {
+                            $automationTrigger = WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED;
                             $userService->removeTaskFromUser($session->user_id, $taskId);
                             $logService->log('Unassigned itself from ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                             $logService->log($userPage->name . ' unassigned itself from the task', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
@@ -528,10 +534,28 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
 
                         $task = $taskRepository->getTaskByHash($data['task_hash'], true);
 
-                        return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
+                         /* Handle automations */
+                         $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                            $task->pipeline_id, 
+                            $task->id, 
+                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            $automationTrigger,
+                            $userPage
+                         );
+                         /* End of handling automations */
+                         $wpdb->query('COMMIT');
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'task' => $task,
+                            'executedAutomations' => $executionResults->executedAutomations
+                        ]))->toArray(), 200);
                     } catch(WPQTException $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     } catch (Exception $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                     }
                 },

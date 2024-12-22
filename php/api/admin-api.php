@@ -1055,9 +1055,23 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, WP_QT_LOG_TYPE_TASK, $data->get_param('task_id'), WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+
+                        /* Handle automations */
+                        $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                            $task->pipeline_id, 
+                            $task->id, 
+                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED,
+                            $user
+                         );
+                         /* End of handling automations */
+
                         $wpdb->query('COMMIT');
 
-                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'executedAutomations' => $executionResults->executedAutomations,
+                            'failedAutomations' => $executionResults->failedAutomations
+                        ]))->toArray(), 200);
                     }catch(Exception $e) {
                         $wpdb->query('ROLLBACK');
                         
