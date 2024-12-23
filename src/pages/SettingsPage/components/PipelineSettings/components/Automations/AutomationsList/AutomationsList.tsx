@@ -41,7 +41,7 @@ function AutomationsList() {
     <div className="wpqt-flex wpqt-flex-col">
       <Alert type="info" className="wpqt-mx-auto wpqt-mb-2">
         {__(
-          "Note that one automation won't trigger another automation",
+          "Note that automation won't trigger other automations",
           "quicktasker",
         )}
       </Alert>
