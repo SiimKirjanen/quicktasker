@@ -25,6 +25,10 @@ const automationActionStrings: { [key in AutomationAction]: string } = {
     "Send email notification",
     "quicktasker",
   ),
+  [AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL]: __(
+    "Send email notification",
+    "quicktasker",
+  ),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -44,6 +48,10 @@ const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
   [AutomationTrigger.TASK_DELETED]: __("Task deleted", "quicktasker"),
   [AutomationTrigger.TASK_ASSIGNED]: __("Task assigned", "quicktasker"),
   [AutomationTrigger.TASK_UNASSIGNED]: __("Task unassigned", "quicktasker"),
+  [AutomationTrigger.TASK_PUBLIC_COMMENT_ADDED]: __(
+    "Public comment added",
+    "quicktasker",
+  ),
 };
 
 const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
@@ -84,6 +92,12 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
     [AutomationTrigger.TASK_UNASSIGNED]: [
       {
         id: AutomationAction.TASK_UNASSIGNED_EMAIL,
+        requireMetaData: true,
+      },
+    ],
+    [AutomationTrigger.TASK_PUBLIC_COMMENT_ADDED]: [
+      {
+        id: AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL,
         requireMetaData: true,
       },
     ],

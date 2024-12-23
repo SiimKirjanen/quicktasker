@@ -166,6 +166,31 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 }
             }
 
+            if ( $this->isTaskPublicCommentAddedTrigger($automation) ) {
+                if ( $this->isTaskPublicCommentAddedEmailAction($automation) ) {
+                    $email = $automation->metadata;
+                    $comment = $data;
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
+                    $authorUserType = $comment->is_admin_comment ? WP_QT_WORDPRESS_USER_TYPE : WP_QT_QUICKTASKER_USER_TYPE;
+                    $commentAuthor = ServiceLocator::get('UserRepository')->getUserByIdAndType($comment->author_id, $authorUserType);
+
+                    $templateData = [
+                        'taskName' => $task->name,
+                        'boardName' => $pipeline->name,
+                        'creationDate' => ServiceLocator::get('TimeRepository')->convertUTCToLocal($comment->created_at),
+                        'message' => $comment->text,
+                        'authorName' => $commentAuthor->name
+                    ];
+
+                    $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_NEW_PUBLIC_COMMENT_EMAIL_TEMPLATE, $templateData);
+                    ServiceLocator::get('EmailService')->sendEmail($email, 'Public Comment Added', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -229,6 +254,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         }
 
         /**
+         * Checks if the automation action is a task public comment added email action.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool True if the automation action is a task public comment added email action and metadata is not null, false otherwise.
+         */
+        private function isTaskPublicCommentAddedEmailAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PUBLIC_COMMENT_ADDED_EMAIL && $automation->metadata !== null;
+        }
+
+        /**
          * Checks if the automation trigger is set to 'task done'.
          *
          * @param object $automation The automation object containing the trigger information.
@@ -289,6 +324,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskUnassignedTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED;
+        }
+
+        /**
+         * Checks if the automation trigger is set to task public comment added.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool Returns true if the automation trigger is task public comment added, false otherwise.
+         */
+        private function isTaskPublicCommentAddedTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED;
         }
 
         /**

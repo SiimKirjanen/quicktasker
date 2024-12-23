@@ -1616,8 +1616,27 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $commentService = new CommentService();
                         $adminId = get_current_user_id();
                         $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment'], $adminId, true);
+                        $automationExecutionResults = [];
+                        
+
+                          /* Handle automations */
+                          if ( $data['type'] == WP_QT_LOG_TYPE_TASK ) {
+                            $automationTrigger = $data['isPrivate'] ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED;
+                            $task = ServiceLocator::get('TaskRepository')->getTaskById($data['typeId']);
+                            $automationExecutionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                                $task->pipeline_id, 
+                                $task->id, 
+                                WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                                $automationTrigger,
+                                $newComemnt
+                             );
+                          }  
+                         /* End of handling automations */
                 
-                        return new WP_REST_Response((new ApiResponse(true, array(), $newComemnt))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'newComment' => $newComemnt,
+                            'executedAutomations' => $automationExecutionResults,
+                        ]))->toArray(), 200);
                     } catch (Exception $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     }

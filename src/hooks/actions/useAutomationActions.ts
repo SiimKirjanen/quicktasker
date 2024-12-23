@@ -43,6 +43,10 @@ const actionMessages: { [key in AutomationAction]: string } = {
     "Email notification sent by automation",
     "quicktasker",
   ),
+  [AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL]: __(
+    "Email notification sent by automation",
+    "quicktasker",
+  ),
 };
 
 function useAutomationActions() {
