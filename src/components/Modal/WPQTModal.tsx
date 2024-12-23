@@ -8,8 +8,7 @@ import {
   Label,
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { TfiSave } from "react-icons/tfi";
-import { WPQTIconButton } from "../common/Button/Button";
+import { WPQTButton } from "../common/Button/Button";
 import { WPQTTooltip } from "../Tooltip/WPQTTooltip";
 
 type Props = {
@@ -116,12 +115,7 @@ function WPQTModalFooter({
 }) {
   return (
     <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
-      <WPQTIconButton
-        text={saveBtnText}
-        loading={loading}
-        icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
-        onClick={onSave}
-      />
+      <WPQTButton btnText={saveBtnText} loading={loading} onClick={onSave} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { __ } from "@wordpress/i18n";
 import { useTimezone } from "../../../hooks/useTimezone";
 import { WPQTComment } from "../../../types/comment";
 import { LoadingOval } from "../../Loading/Loading";
+import { Alert } from "../../common/Alert/Alert";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 
@@ -45,10 +46,14 @@ function CommentsAndLogsTabContent<T>({
   };
 
   const addEntry = async () => {
+    if (!newEntry) {
+      return;
+    }
+
     setAddingEntry(true);
     const entry = await onAdd(newEntry);
     if (entry) {
-      setData((prevData) => (prevData ? [...prevData, entry] : [entry]));
+      setData((prevData) => (prevData ? [entry, ...prevData] : [entry]));
       setNewEntry("");
     }
     setAddingEntry(false);
@@ -65,19 +70,17 @@ function CommentsAndLogsTabContent<T>({
   return (
     <div>
       {explanation && (
-        <div className="wpqt-mb-3 wpqt-text-center wpqt-font-semibold">
-          {explanation}
+        <div className="wpqt-flex wpqt-justify-center">
+          <Alert type="info" className="wpqt-mb-3 wpqt-text-center">
+            {explanation}
+          </Alert>
         </div>
       )}
       {data.length === 0 && (
         <div className="wpqt-mb-3 wpqt-text-center">{noDataMessage}</div>
       )}
-      {data.length > 0 && (
-        <div className="wpqt-mb-[28px] wpqt-mt-[56px] wpqt-logs-grid">
-          {data.map((item) => renderItem(item))}
-        </div>
-      )}
-      <div className="wpqt-mb-3 wpqt-flex wpqt-justify-center">
+
+      <div className="wpqt-mb-3 wpqt-mt-3 wpqt-flex wpqt-justify-center">
         <CommentsRefresh
           isLoading={loadingComments}
           refreshComemnts={loadData}
@@ -86,7 +89,7 @@ function CommentsAndLogsTabContent<T>({
 
       {enableAdd && (
         <div className="wpqt-flex wpqt-justify-center">
-          <div className="wpqt-w-2/3">
+          <div className="wpqt-w-2/3 wpqt-flex wpqt-flex-col wpqt-items-center">
             <WPQTTextarea
               rowsCount={3}
               value={newEntry}
@@ -97,12 +100,17 @@ function CommentsAndLogsTabContent<T>({
               text="Add comment"
               loading={addingEntry}
               onClick={addEntry}
-              className="wpqt-float-right"
               icon={
                 <ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />
               }
             />
           </div>
+        </div>
+      )}
+
+      {data.length > 0 && (
+        <div className="wpqt-mb-[28px] wpqt-mt-[56px] wpqt-logs-grid">
+          {data.map((item) => renderItem(item))}
         </div>
       )}
     </div>

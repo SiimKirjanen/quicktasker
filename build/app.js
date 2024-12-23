@@ -5520,10 +5520,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/field/field.js");
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/XMarkIcon.js");
-/* harmony import */ var react_icons_tfi__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-icons/tfi */ "./node_modules/react-icons/tfi/index.mjs");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Tooltip/WPQTTooltip */ "./src/components/Tooltip/WPQTTooltip.tsx");
-
 
 
 
@@ -5615,12 +5613,9 @@ function WPQTModalFooter({
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTIconButton, {
-      text: saveBtnText,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTButton, {
+      btnText: saveBtnText,
       loading: loading,
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tfi__WEBPACK_IMPORTED_MODULE_8__.TfiSave, {
-        className: "wpqt-icon-blue wpqt-size-4"
-      }),
       onClick: onSave
     })
   });
@@ -5686,16 +5681,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowPathIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowPathIcon.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _hooks_useTimezone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../hooks/useTimezone */ "./src/hooks/useTimezone.ts");
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _common_Alert_Alert__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Alert/Alert */ "./src/components/common/Alert/Alert.tsx");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -5731,6 +5727,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function CommentsAndLogsTabContent({
   typeId,
   fetchData,
@@ -5758,10 +5755,13 @@ function CommentsAndLogsTabContent({
     setLoadingComments(false);
   });
   const addEntry = () => __awaiter(this, void 0, void 0, function* () {
+    if (!newEntry) {
+      return;
+    }
     setAddingEntry(true);
     const entry = yield onAdd(newEntry);
     if (entry) {
-      setData(prevData => prevData ? [...prevData, entry] : [entry]);
+      setData(prevData => prevData ? [entry, ...prevData] : [entry]);
       setNewEntry("");
     }
     setAddingEntry(false);
@@ -5777,16 +5777,17 @@ function CommentsAndLogsTabContent({
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     children: [explanation && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mb-3 wpqt-text-center wpqt-font-semibold",
-      children: explanation
+      className: "wpqt-flex wpqt-justify-center",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Alert_Alert__WEBPACK_IMPORTED_MODULE_5__.Alert, {
+        type: "info",
+        className: "wpqt-mb-3 wpqt-text-center",
+        children: explanation
+      })
     }), data.length === 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-mb-3 wpqt-text-center",
       children: noDataMessage
-    }), data.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mb-[28px] wpqt-mt-[56px] wpqt-logs-grid",
-      children: data.map(item => renderItem(item))
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mb-3 wpqt-flex wpqt-justify-center",
+      className: "wpqt-mb-3 wpqt-mt-3 wpqt-flex wpqt-justify-center",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(CommentsRefresh, {
         isLoading: loadingComments,
         refreshComemnts: loadData
@@ -5794,22 +5795,24 @@ function CommentsAndLogsTabContent({
     }), enableAdd && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "wpqt-w-2/3",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__.WPQTTextarea, {
+        className: "wpqt-w-2/3 wpqt-flex wpqt-flex-col wpqt-items-center",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_7__.WPQTTextarea, {
           rowsCount: 3,
           value: newEntry,
           onChange: text => setNewEntry(text),
           className: "wpqt-mb-4 wpqt-w-full"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
           text: "Add comment",
           loading: addingEntry,
           onClick: addEntry,
-          className: "wpqt-float-right",
-          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
             className: "wpqt-icon-blue wpqt-size-5"
           })
         })]
       })
+    }), data.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-mb-[28px] wpqt-mt-[56px] wpqt-logs-grid",
+      children: data.map(item => renderItem(item))
     })]
   });
 }
@@ -5821,7 +5824,7 @@ function CommentsRefresh({
     children: isLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.LoadingOval, {
       width: "32",
       height: "32"
-    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
       className: "wpqt-icon-blue wpqt-size-8 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover",
       onClick: refreshComemnts
     })
@@ -6099,7 +6102,7 @@ function PublicCommentsTabContent({
       item: comment
     }),
     noDataMessage: "No comments available",
-    explanation: "Comments that can be added and viewed by WordPress users (with required permissions) and QuickTasker users who have been assigned to the task.",
+    explanation: "Comments that can be added and viewed by WordPress users (with required permissions) and quicktaskers (in quicktasker user page) who have been assigned to the task.",
     enableAdd: true
   });
 }

@@ -44,7 +44,7 @@ function PublicCommentsTabContent({ taskId }: Props) {
         <TabContentCommentItem item={comment} />
       )}
       noDataMessage="No comments available"
-      explanation="Comments that can be added and viewed by WordPress users (with required permissions) and QuickTasker users who have been assigned to the task."
+      explanation="Comments that can be added and viewed by WordPress users (with required permissions) and quicktaskers (in quicktasker user page) who have been assigned to the task."
       enableAdd={true}
     />
   );

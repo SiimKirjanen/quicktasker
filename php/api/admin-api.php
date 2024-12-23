@@ -293,8 +293,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        $logRepo = new LogRepository();
-                        $logs = $logRepo->getLogs($data['id'], WP_QT_LOG_TYPE_TASK);
+                        $logs = ServiceLocator::get('LogRepository')->getLogs($data['id'], WP_QT_LOG_TYPE_TASK);
                 
                         return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
                     } catch (Exception $e) {
@@ -1575,8 +1574,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        $commentRepo = new CommentRepository();
-                        $comments = $commentRepo->getComments( $data->get_param('typeId'), $data->get_param('type'), $data->get_param('isPrivate') );
+                        $comments = ServiceLocator::get('CommentRepository')->getComments( $data->get_param('typeId'), $data->get_param('type'), $data->get_param('isPrivate') );
                 
                         return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
                     } catch (Exception $e) {

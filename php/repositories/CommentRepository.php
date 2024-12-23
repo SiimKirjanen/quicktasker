@@ -28,13 +28,25 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
         public function getCommentById($commentId) {
             global $wpdb;
 
-            return $wpdb->get_row(
-                $wpdb->prepare(
-                    "SELECT * FROM " . TABLE_WP_QUICKTASKER_COMMENTS . " WHERE id = %d",
-                    $commentId
-                )
-            );
-
+            $comments_table = TABLE_WP_QUICKTASKER_COMMENTS;
+            $users_table = TABLE_WP_QUICKTASKER_USERS;
+            $wp_users_table = $wpdb->users;
+        
+            $query = "
+                SELECT comments.*, 
+                    CASE 
+                        WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
+                        ELSE users.name 
+                    END AS author_name
+                FROM $comments_table comments
+                LEFT JOIN $users_table users ON comments.author_id = users.id AND comments.is_admin_comment = 0
+                LEFT JOIN $wp_users_table wp_users ON comments.author_id = wp_users.ID AND comments.is_admin_comment = 1
+                WHERE comments.id = %d
+            ";
+        
+            $prepared_query = $wpdb->prepare($query, $commentId);
+        
+            return $wpdb->get_row($prepared_query);
         }
 
         /**
@@ -62,7 +74,7 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
                 LEFT JOIN $users_table users ON comments.author_id = users.id AND comments.is_admin_comment = 0
                 LEFT JOIN $wp_users_table wp_users ON comments.author_id = wp_users.ID AND comments.is_admin_comment = 1
                 WHERE comments.type_id = %d AND comments.type = %s AND comments.is_private = %d
-                ORDER BY comments.created_at
+                ORDER BY comments.created_at DESC
             ";
         
             $prepared_query = $wpdb->prepare($query, $typeId, $type, $isPrivate);

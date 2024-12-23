@@ -1230,10 +1230,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/field/field.js");
 /* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/label/label.js");
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/XMarkIcon.js");
-/* harmony import */ var react_icons_tfi__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-icons/tfi */ "./node_modules/react-icons/tfi/index.mjs");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Tooltip/WPQTTooltip */ "./src/components/Tooltip/WPQTTooltip.tsx");
-
 
 
 
@@ -1325,12 +1323,9 @@ function WPQTModalFooter({
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTIconButton, {
-      text: saveBtnText,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTButton, {
+      btnText: saveBtnText,
       loading: loading,
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tfi__WEBPACK_IMPORTED_MODULE_8__.TfiSave, {
-        className: "wpqt-icon-blue wpqt-size-4"
-      }),
       onClick: onSave
     })
   });
