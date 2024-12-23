@@ -6882,7 +6882,7 @@ function Pill({
   className = ""
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: `wpqt-inline-flex wpqt-rounded-xl wpqt-px-4 wpqt-py-1 wpqt-border wpqt-border-solid wpqt-cursor-pointer wpqt-border-qtBorder ${className}`,
+    className: `wpqt-inline-flex wpqt-font-semibold wpqt-rounded-xl wpqt-px-4 wpqt-py-2 wpqt-border wpqt-border-solid wpqt-cursor-pointer wpqt-border-qtBorder ${className}`,
     onClick: () => {
       onClick(value);
     },
