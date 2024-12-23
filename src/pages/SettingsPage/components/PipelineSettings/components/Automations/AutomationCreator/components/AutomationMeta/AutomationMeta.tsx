@@ -1,3 +1,4 @@
+import { SET_AUTOMATION_META } from "../../../../../../../../../constants";
 import { Action } from "../../../../../../../../../reducers/automation-creation-reducer";
 import { AutomationAction } from "../../../../../../../../../types/automation";
 import { EmailMetaInput } from "./components/EmailMetaInput/EmailMetaInput";
@@ -24,7 +25,7 @@ function AutomationMeta({
 
   const setAutomationMeta = (meta: string) => {
     automationDispatch({
-      type: "SET_META",
+      type: SET_AUTOMATION_META,
       payload: meta,
     });
   };
