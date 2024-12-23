@@ -1,7 +1,7 @@
 <!-- filepath: /s:/XAMP_8_2/htdocs/wp-quick-tasks/wp-content/plugins/quicktasker/php/templates/email/mjml/new-task-created.mjml -->
 <mjml>
   <mj-head>
-    <mj-title>Task New Public Comment Created</mj-title>
+    <mj-title>New public comment has been added to the task</mj-title>
     <mj-attributes>
       <mj-all font-family="Helvetica, Arial, sans-serif"></mj-all>
       <mj-text font-size="16px" color="#000000"></mj-text>
@@ -20,7 +20,7 @@
           color="#1E3A8A"
           font-family="Helvetica, Arial, sans-serif"
         >
-          Task Public Comment Created
+          New public comment has been added to the task
         </mj-text>
         <mj-text
           font-size="16px"
@@ -34,7 +34,7 @@
           color="#000000"
           font-family="Helvetica, Arial, sans-serif"
         >
-          A new public comment has been created in task.
+          A new public comment has been added to the task.
         </mj-text>
         <mj-text
           font-size="16px"

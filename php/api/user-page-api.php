@@ -365,7 +365,10 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
         register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/comments', array(
             'methods' => 'POST',
             'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
                         $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                         $taskRepository = new TaskRepository();
                         $permissionService = new PermissionService();
@@ -381,14 +384,28 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $task->id)) {
                             throw new WPQTException('Not allowed', true);
                         }
-                        $commentService->createComment($task->id, 'task', false, $data['comment'], $session->user_id, false);
+                        $newComment = $commentService->createComment($task->id, 'task', false, $data['comment'], $session->user_id, false);
                         $logService->log('User posted a comment on '. $task->name . ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
                         $comments = $commentRepository->getComments($task->id, 'task', false);
 
+                        $automationExecutionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                            $task->pipeline_id, 
+                            $task->id, 
+                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED,
+                            $newComment
+                         );
+
+                        $wpdb->query('COMMIT');
+
                         return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
                     } catch(WPQTException $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     } catch (Exception $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
                     }
                 },
