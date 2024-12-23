@@ -1,6 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { AutomationActionTargetDropdown } from "../../../../../../../../../components/Dropdown/AutomationActionTargetDropdown/AutomationActionTargetDropdown";
+import { SET_AUTOMATION_ACTION_TARGET } from "../../../../../../../../../constants";
 import { UserContext } from "../../../../../../../../../providers/UserContextProvider";
 import {
   Action,
@@ -43,7 +44,7 @@ function AutomationActionTargetSelection({
           onUserAdd={(user) => {
             console.log("Assigning automation user");
             automationDispatch({
-              type: "SET_ACTION_TARGET",
+              type: SET_AUTOMATION_ACTION_TARGET,
               payload: {
                 automationActionTargetId: user.id,
                 automationActionTargetType:

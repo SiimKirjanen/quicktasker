@@ -4,7 +4,12 @@ import { __ } from "@wordpress/i18n";
 import { BsRobot } from "react-icons/bs";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
-import { ADD_PIPELINE_AUTOMATION } from "../../../../../../../constants";
+import {
+  ADD_PIPELINE_AUTOMATION,
+  RESET_AUTOMATION_TO_ACTION,
+  RESET_AUTOMATION_TO_TARGET,
+  RESET_AUTOMATION_TO_TRIGGER,
+} from "../../../../../../../constants";
 import { useAutomationActions } from "../../../../../../../hooks/actions/useAutomationActions";
 import { PipelineAutomationsContext } from "../../../../../../../providers/PipelineAutomationsContextProvider";
 import {
@@ -38,7 +43,7 @@ function AutomationCreator({ pipelineId }: props) {
     automation.automationActionTargetType !== null;
   const hasMeta = automation.metaData !== null;
 
-  const cardStyleClasses = "wpqt-px-3 wpqt-min-w-[60px] wpqt-cursor-default";
+  const cardStyleClasses = "wpqt-px-3 wpqt-min-w-[60px] wpqt-cursor-pointer";
   const cardTitleClasses =
     "wpqt-absolute wpqt-top-0 wpqt-left-[50%] wpqt-transform-center wpqt-bg-[#fff] wpqt-text-[1rem] wpqt-leading-none wpqt-font-semibold wpqt-p-1";
   const onCreateAutomation = async () => {
@@ -79,6 +84,9 @@ function AutomationCreator({ pipelineId }: props) {
           title={__("Target", "quicktasker")}
           className={cardStyleClasses}
           titleClassName={cardTitleClasses}
+          onClick={() => {
+            automationDispatch({ type: RESET_AUTOMATION_TO_TARGET });
+          }}
         >
           <div className="wpqt-flex wpqt-justify-center">
             {automation.automationTarget ? (
@@ -92,6 +100,9 @@ function AutomationCreator({ pipelineId }: props) {
           title={__("Trigger", "quicktasker")}
           className={cardStyleClasses}
           titleClassName={cardTitleClasses}
+          onClick={() => {
+            automationDispatch({ type: RESET_AUTOMATION_TO_TRIGGER });
+          }}
         >
           <div className="wpqt-flex wpqt-justify-center">
             {automation.automationTrigger ? (
@@ -105,6 +116,9 @@ function AutomationCreator({ pipelineId }: props) {
           title={__("Action", "quicktasker")}
           className={cardStyleClasses}
           titleClassName={cardTitleClasses}
+          onClick={() => {
+            automationDispatch({ type: RESET_AUTOMATION_TO_ACTION });
+          }}
         >
           <div className="wpqt-flex wpqt-flex-col wpqt-justify-center wpqt-items-center">
             {automation.automationAction ? (
