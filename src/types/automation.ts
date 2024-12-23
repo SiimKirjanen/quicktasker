@@ -8,6 +8,7 @@ enum AutomationTrigger {
   TASK_ASSIGNED = "task-assigned",
   TASK_UNASSIGNED = "task-unassigned",
   TASK_PUBLIC_COMMENT_ADDED = "task-public-comment-added",
+  TASK_PRIVATE_COMMENT_ADDED = "task-private-comment-added",
 }
 
 enum TargetType {
@@ -33,6 +34,7 @@ enum AutomationAction {
   TASK_ASSIGNED_EMAIL = "task-assigned-email",
   TASK_UNASSIGNED_EMAIL = "task-unassigned-email",
   TASK_PUBLIC_COMMENT_ADDED_EMAIL = "task-public-comment-added-email",
+  TASK_PRIVATE_COMMENT_ADDED_EMAIL = "task-private-comment-added-email",
 }
 
 type AutomationActionType = {

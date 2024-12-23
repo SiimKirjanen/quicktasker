@@ -1618,7 +1618,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment'], $adminId, true);
                         $automationExecutionResults = [];
                         
-
                           /* Handle automations */
                           if ( $data['type'] == WP_QT_LOG_TYPE_TASK ) {
                             $automationTrigger = $data['isPrivate'] ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED;

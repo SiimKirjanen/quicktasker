@@ -6285,7 +6285,7 @@ function PrivateCommentsTabContent({
   const addComment = newEntry => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.addCommentRequest)(userId, _types_enums__WEBPACK_IMPORTED_MODULE_4__.WPQTTypes.User, true, newEntry);
-      return (0,_utils_comment__WEBPACK_IMPORTED_MODULE_5__.convertCommentFromServer)(response.data);
+      return (0,_utils_comment__WEBPACK_IMPORTED_MODULE_5__.convertCommentFromServer)(response.data.newComment);
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_2__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Failed to add private comment", "quicktasker"));
@@ -6378,9 +6378,9 @@ function PublicCommentsTabContent({
     addComment
   } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_4__.useCommentActions)();
   const onAddComment = newEntry => __awaiter(this, void 0, void 0, function* () {
-    const connemntFromServer = yield addComment(userId, _types_enums__WEBPACK_IMPORTED_MODULE_5__.WPQTTypes.User, false, newEntry);
-    if (connemntFromServer) {
-      return (0,_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer)(connemntFromServer);
+    const commentFromServer = yield addComment(userId, _types_enums__WEBPACK_IMPORTED_MODULE_5__.WPQTTypes.User, false, newEntry);
+    if (commentFromServer) {
+      return (0,_utils_comment__WEBPACK_IMPORTED_MODULE_6__.convertCommentFromServer)(commentFromServer);
     }
   });
   const fetchComments = () => __awaiter(this, void 0, void 0, function* () {
@@ -7365,7 +7365,8 @@ const actionMessages = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.DELETED_ENTITY_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_ASSIGNED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_UNASSIGNED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker"),
-  [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker")
+  [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker"),
+  [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker")
 };
 function useAutomationActions() {
   const {
@@ -7555,7 +7556,7 @@ function useCommentActions() {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.addCommentRequest)(typeId, type, isPrivate, commentText);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Comment added", "quicktasker"));
-      return response.data;
+      return response.data.newComment;
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to add comment", "quicktasker"));
@@ -11534,7 +11535,7 @@ function AutomationMeta({
 }) {
   var _a;
   const action = (_a = automationCreationState === null || automationCreationState === void 0 ? void 0 : automationCreationState.automationAction) === null || _a === void 0 ? void 0 : _a.id;
-  const requiresEmailInput = action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.NEW_ENTITY_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.DELETED_ENTITY_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_ASSIGNED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_UNASSIGNED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL;
+  const requiresEmailInput = action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.NEW_ENTITY_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.DELETED_ENTITY_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_ASSIGNED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_UNASSIGNED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL;
   const setAutomationMeta = meta => {
     automationDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_1__.SET_AUTOMATION_META,
@@ -11984,7 +11985,7 @@ function AutomationsList() {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Alert_Alert__WEBPACK_IMPORTED_MODULE_3__.Alert, {
       type: "info",
       className: "wpqt-mx-auto wpqt-mb-2",
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Note that one automation won't trigger another automation", "quicktasker")
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Note that automation won't trigger other automations", "quicktasker")
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-3",
       children: automations.map(automation => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationListItem_AutomationListItem__WEBPACK_IMPORTED_MODULE_7__.AutomationListItem, {
@@ -16250,6 +16251,7 @@ var AutomationTrigger;
   AutomationTrigger["TASK_ASSIGNED"] = "task-assigned";
   AutomationTrigger["TASK_UNASSIGNED"] = "task-unassigned";
   AutomationTrigger["TASK_PUBLIC_COMMENT_ADDED"] = "task-public-comment-added";
+  AutomationTrigger["TASK_PRIVATE_COMMENT_ADDED"] = "task-private-comment-added";
 })(AutomationTrigger || (AutomationTrigger = {}));
 var TargetType;
 (function (TargetType) {
@@ -16275,6 +16277,7 @@ var AutomationAction;
   AutomationAction["TASK_ASSIGNED_EMAIL"] = "task-assigned-email";
   AutomationAction["TASK_UNASSIGNED_EMAIL"] = "task-unassigned-email";
   AutomationAction["TASK_PUBLIC_COMMENT_ADDED_EMAIL"] = "task-public-comment-added-email";
+  AutomationAction["TASK_PRIVATE_COMMENT_ADDED_EMAIL"] = "task-private-comment-added-email";
 })(AutomationAction || (AutomationAction = {}));
 
 
@@ -16414,7 +16417,8 @@ const automationActionStrings = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.DELETED_ENTITY_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_ASSIGNED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_UNASSIGNED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker"),
-  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker")
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker"),
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker")
 };
 const automationTargetStrings = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.TargetType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task", "quicktasker"),
@@ -16429,7 +16433,8 @@ const automationTriggerStrings = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_DELETED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task deleted", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_ASSIGNED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task assigned", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_UNASSIGNED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task unassigned", "quicktasker"),
-  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_PUBLIC_COMMENT_ADDED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Public comment added", "quicktasker")
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_PUBLIC_COMMENT_ADDED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Public comment added", "quicktasker"),
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_PRIVATE_COMMENT_ADDED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Private comment added", "quicktasker")
 };
 const taskAutomations = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_DONE]: [{
@@ -16460,6 +16465,10 @@ const taskAutomations = {
   }],
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_PUBLIC_COMMENT_ADDED]: [{
     id: _types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL,
+    requireMetaData: true
+  }],
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_PRIVATE_COMMENT_ADDED]: [{
+    id: _types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL,
     requireMetaData: true
   }]
 };

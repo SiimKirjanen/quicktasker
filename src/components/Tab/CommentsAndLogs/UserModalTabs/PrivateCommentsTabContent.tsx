@@ -23,7 +23,7 @@ function PrivateCommentsTabContent({ userId }: Props) {
         newEntry,
       );
 
-      return convertCommentFromServer(response.data);
+      return convertCommentFromServer(response.data.newComment);
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to add private comment", "quicktasker"));

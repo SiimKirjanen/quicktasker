@@ -19,7 +19,7 @@ function useCommentActions() {
       );
       toast.success(__("Comment added", "quicktasker"));
 
-      return response.data;
+      return response.data.newComment;
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to add comment", "quicktasker"));

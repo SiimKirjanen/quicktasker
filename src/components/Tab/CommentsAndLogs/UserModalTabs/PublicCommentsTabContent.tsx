@@ -18,15 +18,15 @@ function PublicCommentsTabContent({ userId }: Props) {
   const { addComment } = useCommentActions();
 
   const onAddComment = async (newEntry: string) => {
-    const connemntFromServer = await addComment(
+    const commentFromServer = await addComment(
       userId,
       WPQTTypes.User,
       false,
       newEntry,
     );
 
-    if (connemntFromServer) {
-      return convertCommentFromServer(connemntFromServer);
+    if (commentFromServer) {
+      return convertCommentFromServer(commentFromServer);
     }
   };
 

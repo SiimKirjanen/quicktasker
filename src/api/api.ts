@@ -231,7 +231,11 @@ function addCommentRequest(
   type: string,
   isPrivate: boolean,
   comment: string,
-): Promise<WPQTResponse<WPQTCommentFromServer>> {
+): Promise<
+  WPQTResponse<{
+    newComment: WPQTCommentFromServer;
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/comments`,
     data: { comment, typeId, type, isPrivate },
