@@ -1186,10 +1186,6 @@
   order: 2;
 }
 
-.wpqt-float-right {
-  float: right;
-}
-
 .wpqt-m-0 {
   margin: 0px;
 }
@@ -1278,6 +1274,10 @@
   margin-top: 0.5rem;
 }
 
+.wpqt-mt-3 {
+  margin-top: 0.75rem;
+}
+
 .wpqt-mt-4 {
   margin-top: 1rem;
 }
@@ -1304,10 +1304,6 @@
 
 .wpqt-mt-auto {
   margin-top: auto;
-}
-
-.wpqt-mt-3 {
-  margin-top: 0.75rem;
 }
 
 .\!wpqt-block {
