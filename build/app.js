@@ -3341,6 +3341,9 @@ const LogsFilter = ({
       }, {
         label: "QuickTasker",
         value: _pages_LogsPage_components_LogsPageContent_LogsPageContent__WEBPACK_IMPORTED_MODULE_3__.LogCreatedByEnum.Quicktasker
+      }, {
+        label: "Automation",
+        value: _pages_LogsPage_components_LogsPageContent_LogsPageContent__WEBPACK_IMPORTED_MODULE_3__.LogCreatedByEnum.Automation
       }],
       onSelectionChange: selection => {
         setLocalFilterSettings(Object.assign(Object.assign({}, localFilterSettings), {
@@ -9124,10 +9127,10 @@ const LogsPage = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LogCreatedByEnum: () => (/* binding */ LogCreatedByEnum),
+/* harmony export */   LogCreatedByEnum: () => (/* reexport safe */ _types_log__WEBPACK_IMPORTED_MODULE_5__.LogCreatedByEnum),
 /* harmony export */   LogNumberEnum: () => (/* binding */ LogNumberEnum),
 /* harmony export */   LogOrderEnum: () => (/* binding */ LogOrderEnum),
-/* harmony export */   LogTypeEnum: () => (/* binding */ LogTypeEnum),
+/* harmony export */   LogTypeEnum: () => (/* reexport safe */ _types_log__WEBPACK_IMPORTED_MODULE_5__.LogTypeEnum),
 /* harmony export */   LogsPageContent: () => (/* binding */ LogsPageContent)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
@@ -9137,7 +9140,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _components_Filter_LogsFilter_LogsFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/Filter/LogsFilter/LogsFilter */ "./src/components/Filter/LogsFilter/LogsFilter.tsx");
-/* harmony import */ var _Logs_Logs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Logs/Logs */ "./src/pages/LogsPage/components/Logs/Logs.tsx");
+/* harmony import */ var _types_log__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../types/log */ "./src/types/log.ts");
+/* harmony import */ var _Logs_Logs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Logs/Logs */ "./src/pages/LogsPage/components/Logs/Logs.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9171,19 +9175,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-var LogTypeEnum;
-(function (LogTypeEnum) {
-  LogTypeEnum["Pipeline"] = "pipeline";
-  LogTypeEnum["Stage"] = "stage";
-  LogTypeEnum["Task"] = "task";
-  LogTypeEnum["All"] = "all";
-})(LogTypeEnum || (LogTypeEnum = {}));
-var LogCreatedByEnum;
-(function (LogCreatedByEnum) {
-  LogCreatedByEnum["Admin"] = "admin";
-  LogCreatedByEnum["Quicktasker"] = "quicktasker_user";
-  LogCreatedByEnum["All"] = "all";
-})(LogCreatedByEnum || (LogCreatedByEnum = {}));
+
 var LogOrderEnum;
 (function (LogOrderEnum) {
   LogOrderEnum["Asc"] = "asc";
@@ -9200,9 +9192,9 @@ const LogsPageContent = () => {
   const [logs, setLogs] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const [filterSettings, setFilterSettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
     numberOfLogs: LogNumberEnum.Hundred,
-    type: LogTypeEnum.All,
+    type: _types_log__WEBPACK_IMPORTED_MODULE_5__.LogTypeEnum.All,
     typeId: "",
-    createdBy: LogCreatedByEnum.All,
+    createdBy: _types_log__WEBPACK_IMPORTED_MODULE_5__.LogCreatedByEnum.All,
     order: LogOrderEnum.Desc
   });
   const [loadingLogs, setLoadingLogs] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
@@ -9220,13 +9212,13 @@ const LogsPageContent = () => {
       if (filter.numberOfLogs === LogNumberEnum.All) {
         delete filter.numberOfLogs;
       }
-      if (filter.type === LogTypeEnum.All) {
+      if (filter.type === _types_log__WEBPACK_IMPORTED_MODULE_5__.LogTypeEnum.All) {
         delete filter.type;
       }
       if (filter.typeId === "") {
         delete filter.typeId;
       }
-      if (filter.createdBy === LogCreatedByEnum.All) {
+      if (filter.createdBy === _types_log__WEBPACK_IMPORTED_MODULE_5__.LogCreatedByEnum.All) {
         delete filter.createdBy;
       }
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getGlobalLogsRequest)(filter);
@@ -9246,7 +9238,7 @@ const LogsPageContent = () => {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_LogsFilter_LogsFilter__WEBPACK_IMPORTED_MODULE_4__.LogsFilter, {
       filterSettings: filterSettings,
       setFilterSettings: applyFilter
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Logs_Logs__WEBPACK_IMPORTED_MODULE_5__.Logs, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Logs_Logs__WEBPACK_IMPORTED_MODULE_6__.Logs, {
       logs: logs,
       loading: loadingLogs
     })]
@@ -16353,6 +16345,35 @@ var WPQTWpUserTypes;
   WPQTWpUserTypes["Admin"] = "administrator";
   WPQTWpUserTypes["Other"] = "other";
 })(WPQTWpUserTypes || (WPQTWpUserTypes = {}));
+
+
+/***/ }),
+
+/***/ "./src/types/log.ts":
+/*!**************************!*\
+  !*** ./src/types/log.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LogCreatedByEnum: () => (/* binding */ LogCreatedByEnum),
+/* harmony export */   LogTypeEnum: () => (/* binding */ LogTypeEnum)
+/* harmony export */ });
+var LogTypeEnum;
+(function (LogTypeEnum) {
+  LogTypeEnum["Pipeline"] = "pipeline";
+  LogTypeEnum["Stage"] = "stage";
+  LogTypeEnum["Task"] = "task";
+  LogTypeEnum["All"] = "all";
+})(LogTypeEnum || (LogTypeEnum = {}));
+var LogCreatedByEnum;
+(function (LogCreatedByEnum) {
+  LogCreatedByEnum["Admin"] = "admin";
+  LogCreatedByEnum["Quicktasker"] = "quicktasker_user";
+  LogCreatedByEnum["Automation"] = "automation";
+  LogCreatedByEnum["All"] = "all";
+})(LogCreatedByEnum || (LogCreatedByEnum = {}));
 
 
 /***/ }),

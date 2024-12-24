@@ -2,21 +2,8 @@ import { useEffect, useState } from "@wordpress/element";
 import { toast } from "react-toastify";
 import { getGlobalLogsRequest } from "../../../../api/api";
 import { LogsFilter } from "../../../../components/Filter/LogsFilter/LogsFilter";
-import { Log } from "../../../../types/log";
+import { Log, LogCreatedByEnum, LogTypeEnum } from "../../../../types/log";
 import { Logs } from "../Logs/Logs";
-
-enum LogTypeEnum {
-  Pipeline = "pipeline",
-  Stage = "stage",
-  Task = "task",
-  All = "all",
-}
-
-enum LogCreatedByEnum {
-  Admin = "admin",
-  Quicktasker = "quicktasker_user",
-  All = "all",
-}
 
 enum LogOrderEnum {
   Asc = "asc",

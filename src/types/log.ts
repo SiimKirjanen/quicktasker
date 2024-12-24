@@ -11,7 +11,23 @@ type BaseLog = {
   created_by: WPQTLogCreatedBy;
 };
 
+enum LogTypeEnum {
+  Pipeline = "pipeline",
+  Stage = "stage",
+  Task = "task",
+  All = "all",
+}
+
+enum LogCreatedByEnum {
+  Admin = "admin",
+  Quicktasker = "quicktasker_user",
+  Automation = "automation",
+  All = "all",
+}
+
 type Log = BaseLog;
 type LogFromServer = BaseLog;
+
+export { LogCreatedByEnum, LogTypeEnum };
 
 export type { Log, LogFromServer };
