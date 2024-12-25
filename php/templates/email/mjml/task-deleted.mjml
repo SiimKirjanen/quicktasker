@@ -57,6 +57,13 @@
         >
           <strong>Delete date:</strong> {{deleteDate}}
         </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          <strong>Delete by:</strong> {{deletedByUserName}}
+        </mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

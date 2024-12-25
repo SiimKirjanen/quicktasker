@@ -106,13 +106,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             if ( $this->isTaskDeletedTrigger($automation) ) {
                 if ($this->isDeletedEntityEmailAction($automation)) {
                     $email = $automation->metadata;
-                    $deletedTask = $data;
+                    $deletedTask = $data->deletedTask;
+                    $deletedByUserId = $data->deletedByUserId;
                     $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($deletedTask->pipeline_id);
+                    $deletedByUser = ServiceLocator::get('UserRepository')->getUserByIdAndType($deletedByUserId, WP_QT_WORDPRESS_USER_TYPE);
 
                     $templateData = [
                         'taskName' => $deletedTask->name,
                         'boardName' => $pipeline->name,
-                        'deleteDate' => ServiceLocator::get('TimeRepository')->getLocalTime()
+                        'deleteDate' => ServiceLocator::get('TimeRepository')->getLocalTime(),
+                        'deletedByUserName' => $deletedByUser->name
                     ];
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_DELETED_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task Deleted', $emailMessage);

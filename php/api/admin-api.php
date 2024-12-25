@@ -502,7 +502,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             $deletedTask->id, 
                             WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
                             WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED,
-                            $deletedTask
+                            (object)[
+                                'deletedTask' => $deletedTask,
+                                'deletedByUserId' => get_current_user_id()
+                            ]
                          );
                          /* End of handling automations */
 
