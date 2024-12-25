@@ -1534,7 +1534,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'args' => array(
                     'type' => array(
                         'required' => false,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateLogType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'typeId' => array(
@@ -1549,12 +1549,12 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'createdBy' => array(
                         'required' => false,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateLogCreatedBy'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'order' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'valdiateQueryOrder'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
@@ -1592,7 +1592,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'type' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateCommentType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'isPrivate' => array(
@@ -1654,7 +1654,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'type' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateCommentType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'isPrivate' => array(
@@ -1665,7 +1665,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 ),
             ),
         );
-
 
         /*
         ==================================================================================================================================================================================================================
@@ -1694,13 +1693,13 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'args' => array(
                     'entityType' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateCustomFieldEntityType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'entityId' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
-                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
                     'pipelineId' => array(
                         'required' => false,
@@ -1740,13 +1739,13 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'args' => array(
                     'entityType' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateCustomFieldEntityType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'entityId' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
-                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
                     'name' => array(
                         'required' => true,
@@ -1760,7 +1759,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'type' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateCustomFieldType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
@@ -1831,12 +1830,12 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'entityId' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
-                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
                     'entityType' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateCustomFieldEntityType'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'value' => array(

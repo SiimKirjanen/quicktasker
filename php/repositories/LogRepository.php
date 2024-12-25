@@ -88,7 +88,7 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
             $table_logs = TABLE_WP_QUICKTASKS_LOGS;
             $table_users = $wpdb->users;
             $table_quicktasker_users = TABLE_WP_QUICKTASKER_USERS;
-            $order = $logOrder === 'asc' ? 'ASC' : 'DESC';
+            $order = $logOrder === 'ASC' ? 'ASC' : 'DESC';
 
             $sql = "
                 SELECT 

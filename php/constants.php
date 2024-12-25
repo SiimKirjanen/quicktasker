@@ -120,6 +120,10 @@ if ( ! defined( 'WP_QT_LOG_TYPE_USER' ) ) {
     define('WP_QT_LOG_TYPE_USER', "user");
 }
 
+if ( ! defined( 'WP_QT_LOG_TYPES' ) ) {
+    define('WP_QT_LOG_TYPES', [WP_QT_LOG_TYPE_TASK, WP_QT_LOG_TYPE_PIPELINE, WP_QT_LOG_TYPE_STAGE, WP_QT_LOG_TYPE_USER]);
+}
+
 if ( ! defined( 'WP_QT_LOG_CREATED_BY_ADMIN' ) ) {
     define('WP_QT_LOG_CREATED_BY_ADMIN', "admin");
 }
@@ -132,6 +136,78 @@ if ( ! defined( 'WP_QT_LOG_CREATED_BY_AUTOMATION' ) ) {
     define('WP_QT_LOG_CREATED_BY_AUTOMATION', "automation");
 }
 
+if ( ! defined( 'WP_QT_LOG_CREATED_BY' ) ) {
+    define('WP_QT_LOG_CREATED_BY', [WP_QT_LOG_CREATED_BY_ADMIN, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, WP_QT_LOG_CREATED_BY_AUTOMATION]);
+}
+
+/*
+==================================================================================================================================================================================================================
+Comment constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_TASK' ) ) {
+    define('WP_QUICKTASKER_COMMENT_TYPE_TASK', "task");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_USER' ) ) {
+    define('WP_QUICKTASKER_COMMENT_TYPE_USER', "user");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPES' ) ) {
+    define('WP_QUICKTASKER_COMMENT_TYPES', [WP_QUICKTASKER_COMMENT_TYPE_TASK, WP_QUICKTASKER_COMMENT_TYPE_USER]);
+}
+
+/*
+==================================================================================================================================================================================================================
+Custom field constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK', "task");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USER' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USER', "user");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS', "users");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE', "pipeline");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES', [
+        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK, 
+        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USER,
+        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS,
+        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE
+    ]);
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT', "text");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_TYPE_SELECT' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_SELECT', "select");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_TYPE_CHECKBOX' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_CHECKBOX', "checkbox");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_TYPES' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPES', [
+        WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT, 
+        WP_QUICKTASKER_CUSTOM_FIELD_TYPE_SELECT,
+        WP_QUICKTASKER_CUSTOM_FIELD_TYPE_CHECKBOX
+    ]);
+}
 /*
 ==================================================================================================================================================================================================================
 User constants
@@ -146,6 +222,9 @@ if ( ! defined( 'WP_QT_QUICKTASKER_USER_TYPE' ) ) {
     define('WP_QT_QUICKTASKER_USER_TYPE', "quicktasker");
 }
 
+if ( ! defined( 'WP_QT_USER_TYPES' ) ) {
+    define('WP_QT_USER_TYPES', [WP_QT_WORDPRESS_USER_TYPE, WP_QT_QUICKTASKER_USER_TYPE]);
+}
 
 /*
 ==================================================================================================================================================================================================================

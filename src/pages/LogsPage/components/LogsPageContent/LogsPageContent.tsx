@@ -6,8 +6,8 @@ import { Log, LogCreatedByEnum, LogTypeEnum } from "../../../../types/log";
 import { Logs } from "../Logs/Logs";
 
 enum LogOrderEnum {
-  Asc = "asc",
-  Desc = "desc",
+  Asc = "ASC",
+  Desc = "DESC",
 }
 
 enum LogNumberEnum {

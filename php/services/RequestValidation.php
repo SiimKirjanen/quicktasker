@@ -161,7 +161,7 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @return bool True if the user type is valid, false otherwise.
          */
         public static function validateUserType($param) {
-            return in_array($param, array(WP_QT_WORDPRESS_USER_TYPE, WP_QT_QUICKTASKER_USER_TYPE));
+            return in_array($param, WP_QT_USER_TYPES, true);
         }
 
         /**
@@ -283,6 +283,78 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          */
         public static function validateOptionslAutomationActionTargetType($param) {
             return is_null($param) || self::valdiateAutomationActionTargetType($param);
+        }
+
+        /**
+         * Validates the automation action target value.
+         *
+         * This method checks if the provided parameter is a valid automation action target value.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid automation action target value, false otherwise.
+         */
+        public static function validateLogType($param) {
+            return in_array($param, WP_QT_LOG_TYPES, true);
+        }
+
+        /**
+         * Validates the log created by parameter.
+         *
+         * This method checks if the provided parameter is a valid log created by value.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid log created by value, false otherwise.
+         */
+        public static function validateLogCreatedBy($param) {
+            return in_array($param, WP_QT_LOG_CREATED_BY, true);
+        }
+
+        /**
+         * Validates the log created for parameter.
+         *
+         * This method checks if the provided parameter is a valid log created for value.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid log created for value, false otherwise.
+         */
+        public static function valdiateQueryOrder($param) {
+            return in_array($param, array('ASC', 'DESC'));
+        }
+
+        /**
+         * Validates the comment type parameter.
+         *
+         * This method checks if the provided parameter is a valid comment type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid comment type, false otherwise.
+         */
+        public static function validateCommentType($param) {
+            return in_array($param, WP_QUICKTASKER_COMMENT_TYPES, true);
+        }
+
+        /**
+         * Validates the custom field entity type parameter.
+         *
+         * This method checks if the provided parameter is a valid custom field entity type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid custom field entity type, false otherwise.
+         */
+        public static function validateCustomFieldEntityType($param) {
+            return in_array($param, WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES, true);
+        }
+
+        /**
+         * Validates the custom field type parameter.
+         *
+         * This method checks if the provided parameter is a valid custom field type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid custom field type, false otherwise.
+         */
+        public static function validateCustomFieldType($param) {
+            return in_array($param, WP_QUICKTASKER_CUSTOM_FIELD_TYPES, true);
         }
     }
 }

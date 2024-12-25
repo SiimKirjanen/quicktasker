@@ -134,11 +134,11 @@ const LogsFilter = ({ filterSettings, setFilterSettings }: Props) => {
         selectedOptionValue={localFilterSettings.order}
         options={[
           {
-            label: __("ASC", "quicktasker"),
+            label: __("Ascending", "quicktasker"),
             value: LogOrderEnum.Asc,
           },
           {
-            label: __("DESC", "quicktasker"),
+            label: __("Descending", "quicktasker"),
             value: LogOrderEnum.Desc,
           },
         ]}
