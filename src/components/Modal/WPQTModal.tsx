@@ -114,7 +114,7 @@ function WPQTModalFooter({
   loading?: boolean;
 }) {
   return (
-    <div className="wpqt-mt-4 wpqt-flex wpqt-justify-end">
+    <div className="wpqt-flex wpqt-justify-end wpqt-px-2">
       <WPQTButton btnText={saveBtnText} loading={loading} onClick={onSave} />
     </div>
   );

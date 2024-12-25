@@ -75,7 +75,6 @@ export const useModal = (closeActionType: ModalCloseActionType) => {
       type,
       payload,
     });
-    closeModal();
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

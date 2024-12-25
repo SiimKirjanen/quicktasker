@@ -178,6 +178,14 @@ const TaskModalContent = forwardRef(
                 />
               </div>
             </div>
+            <WPQTModalFooter
+              onSave={saveTask}
+              saveBtnText={
+                taskModalSaving
+                  ? __("Saving...", "quicktasker")
+                  : __("Save", "quicktasker")
+              }
+            />
 
             <div className="wpqt-mt-7 md:wpqt-pr-3">
               <TaskModalTabs task={taskToEdit} />
@@ -233,14 +241,6 @@ const TaskModalContent = forwardRef(
             )}
           </div>
         </div>
-        <WPQTModalFooter
-          onSave={saveTask}
-          saveBtnText={
-            taskModalSaving
-              ? __("Saving...", "quicktasker")
-              : __("Save", "quicktasker")
-          }
-        />
       </>
     );
   },

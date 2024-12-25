@@ -129,6 +129,15 @@ const UserModalContent = forwardRef(function UserModalContent(
             />
           </div>
 
+          <WPQTModalFooter
+            onSave={saveUser}
+            saveBtnText={
+              modalSaving
+                ? __("Saving...", "quicktasker")
+                : __("Save", "quicktasker")
+            }
+          />
+
           <div className="wpqt-mt-7">
             <UserModalTabs user={userToEdit} />
           </div>
@@ -230,14 +239,6 @@ const UserModalContent = forwardRef(function UserModalContent(
           )}
         </div>
       </div>
-      <WPQTModalFooter
-        onSave={saveUser}
-        saveBtnText={
-          modalSaving
-            ? __("Saving...", "quicktasker")
-            : __("Save", "quicktasker")
-        }
-      />
     </>
   );
 });

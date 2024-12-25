@@ -1322,7 +1322,7 @@ function WPQTModalFooter({
   loading = false
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-mt-4 wpqt-flex wpqt-justify-end",
+    className: "wpqt-flex wpqt-justify-end wpqt-px-2",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_1__.WPQTButton, {
       btnText: saveBtnText,
       loading: loading,
