@@ -51,21 +51,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        $pipelineRepo = new PipelineRepository();
-                        $settingRepo = new SettingRepository();
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
 
                         $pipeline = $pipelineRepo->getFullPipeline( $data['id'] );
                         $pipelines = $pipelineRepo->getPipelines();
-                        $pipelineSettings = $settingRepo->getPipelineSettings($data['id']);
+                        $pipelineSettings = ServiceLocator::get('SettingRepository')->getPipelineSettings($data['id']);
                         $pipeline->settings = $pipelineSettings;
                         
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'pipeline' => $pipeline,
                             'pipelines' => $pipelines,
-
                         ]))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, "Failed to get pipeline");
                     }
                 },
                 'permission_callback' => function() {
@@ -92,8 +90,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $pipelines = $pipelineRepo->getPipelines();
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $pipelines))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -119,10 +117,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array(), $newPipeline))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -159,10 +157,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array(), $pipeline))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -201,8 +199,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('Board ' . $pipeline->name . ' marked as primary', WP_QT_LOG_TYPE_PIPELINE, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -240,10 +239,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'deletedPipelineId' => $data->deletedPipeline->id,
                             'pipelineIdToLoad' => $data->pipelineIdToLoad
                         ]))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -276,8 +275,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $archivedTasks = $tasksRepo->getArchivedTasks(true);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -296,8 +296,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logs = ServiceLocator::get('LogRepository')->getLogs($data['id'], WP_QT_LOG_TYPE_TASK);
                 
                         return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -338,10 +339,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -404,10 +405,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'executedAutomations' => $executionResults->executedAutomations,
                             'failedAutomations' => $executionResults->failedAutomations
                         ]))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -451,8 +452,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('Task ' . $task->name . ' edited', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -515,10 +517,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'executedAutomations' => $executionResults->executedAutomations,
                             'failedAutomations' => $executionResults->failedAutomations
                         ]))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -553,10 +555,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -592,10 +594,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -652,10 +654,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'executedAutomations' => $executionResults->executedAutomations,
                             'failedAutomations' => $executionResults->failedAutomations
                         ]))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-            
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -699,9 +701,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('Stage ' . $newStage->name .  ' created', WP_QT_LOG_TYPE_STAGE, $newStage->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $newStage))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } 
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
                 },
                 'permission_callback' => function() {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
@@ -748,11 +751,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $stage))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } 
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
                 },
                 'permission_callback' => function() {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
@@ -799,11 +802,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $stage))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } 
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
                 },
                 'permission_callback' => function() {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
@@ -839,10 +842,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
                         
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -880,10 +883,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
                         
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -915,8 +918,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $users = $userRepo->getUsers();
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $users))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -944,12 +948,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $user->setup_completed = $userPageService->checkIfUserPageSetupCompleted($data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
-                    }catch(WPQTException $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
-
                 },
                 'permission_callback' => function() {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
@@ -986,10 +988,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
-                    }catch(Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1020,9 +1022,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $userTasks = ServiceLocator::get('TaskRepository')->getTasksAssignedToUser($data['id'], true);
                     
                         return new WP_REST_Response((new ApiResponse(true, array(), $userTasks))->toArray(), 200);
-                    }catch(Exception $e) {
-        
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1074,10 +1076,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'executedAutomations' => $executionResults->executedAutomations,
                             'failedAutomations' => $executionResults->failedAutomations
                         ]))->toArray(), 200);
-                    }catch(Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
                         
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1137,10 +1139,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'executedAutomations' => $executionResults->executedAutomations,
                             'failedAutomations' => $executionResults->failedAutomations
                         ]))->toArray(), 200);
-                    }catch(Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1180,8 +1182,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('User ' . $user->name . ' edited', WP_QT_LOG_TYPE_USER, $user->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1217,10 +1221,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    }catch(Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1251,8 +1255,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('User ' . $user->name . ' status changed to ' . $statusString , WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $user))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1287,8 +1292,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('User ' . $user->name . ' marked as deleted', WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1315,8 +1321,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $sessionService->changeSessionStatus($data['id'], $data['status']);
                     
                         return new WP_REST_Response((new ApiResponse(true, array() ))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1348,8 +1355,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $sessionService->deleteSession($data['id']);
                     
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1376,8 +1384,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $userSessions = $sessionsRepo->getUserSessions();
                         
                         return new WP_REST_Response((new ApiResponse(true, array(), $userSessions))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1404,8 +1413,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $users = $userRepo->getWPNonAdminUsers();
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $users))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1439,8 +1449,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
                    
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1488,8 +1499,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logs = $logRepo->getLogs($data['typeId'], $data['type']);
                         
                         return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1527,8 +1539,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logs = $logRepo->getGlobalLogs($type, $typeId, $createdBy, $numberOfLogs, $data['order']);
                         
                         return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
-                    }catch(Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    }catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1580,8 +1593,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $comments = ServiceLocator::get('CommentRepository')->getComments( $data->get_param('typeId'), $data->get_param('type'), $data->get_param('isPrivate') );
                 
                         return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1637,8 +1651,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'newComment' => $newComemnt,
                             'executedAutomations' => $automationExecutionResults,
                         ]))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1686,8 +1701,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $customFields = ServiceLocator::get('CustomFieldRepository')->getRelatedCustomFields($data['entityId'], $data['entityType'], $activeFields);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $customFields))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1732,8 +1748,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('Custom field ' . $data['name'] . ' created', $data['entityType'], $data['entityId'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $customField))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1785,8 +1802,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('Custom field ' . $customField->name . ' marked as deleted', $customField->entity_type, $customField->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1818,8 +1836,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('Custom field ' . $customField->name . ' value updated', $customField->entity_type, $customField->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1868,10 +1887,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $customField))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1903,8 +1922,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $styles = SettingsService::saveUserPageCustomStyles($data['styles']);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $styles))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1933,8 +1953,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'settings' => $pipelineSettings,
                         ]))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -1961,8 +1982,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $settingsService->updatePipelineTaskDoneCompletionRestriction($data['id'], $data['allow_task_completion_only_on_last_stage']);
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -2003,8 +2025,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $overview = $overviewRepo->getPipelineOverview($data['id'], $taskStartDate, $taskDoneDate);
                         
                         return new WP_REST_Response((new ApiResponse(true, array(), $overview))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -2049,8 +2072,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'automations' => $pipelineAutomations,
                         ]))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -2076,8 +2100,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $automation = ServiceLocator::get('AutomationService')->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata']);
                  
                         return new WP_REST_Response((new ApiResponse(true, array(), $automation))->toArray(), 200);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
@@ -2137,10 +2162,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
       
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
                 'permission_callback' => function() {
