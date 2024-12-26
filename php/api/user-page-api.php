@@ -55,9 +55,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $userPageStatus))->toArray(), 200);
                     } catch(WPQTException $e) {
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -91,9 +93,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch(WPQTException $e) {
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -141,8 +145,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         ]))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -176,8 +181,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);  
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -207,8 +213,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $overviewData))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -233,8 +240,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $assignedTasks))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -258,8 +266,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $assignableTasks))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -301,8 +310,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -343,8 +353,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -403,10 +414,10 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $wpdb->query('ROLLBACK');
 
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -441,8 +452,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $userComments))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -467,8 +479,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -497,8 +510,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $userComments))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -570,10 +584,10 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $wpdb->query('ROLLBACK');
 
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
-
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -618,8 +632,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -674,8 +689,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -714,8 +730,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
@@ -761,8 +778,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
-                    } catch (Exception $e) {
-                        return new WP_REST_Response((new ApiResponse(false, array()))->toArray(), 400);
+                    } catch (Throwable $e) {
+                     
+                        return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
                 },
             'permission_callback' => '__return_true',
