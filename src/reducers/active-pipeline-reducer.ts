@@ -167,7 +167,7 @@ const activePipelineReducer = (state: State, action: Action) => {
       };
     }
     case PIPELINE_ADD_STAGE: {
-      const stage: Stage = action.payload;
+      const { stage } = action.payload;
 
       if (!state.activePipeline) {
         return state;

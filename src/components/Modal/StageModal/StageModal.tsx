@@ -1,10 +1,10 @@
 import { useContext } from "@wordpress/element";
-import { createNewStageRequest, editStageRequest } from "../../../api/api";
 import {
   CLOSE_STAGE_MODAL,
   PIPELINE_ADD_STAGE,
   PIPELINE_EDIT_STAGE,
 } from "../../../constants";
+import { useStageActions } from "../../../hooks/actions/useStageActions";
 import { DispatchType, useModal } from "../../../hooks/useModal";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage } from "../../../types/stage";
@@ -23,50 +23,44 @@ function StageModal() {
     handleSuccess,
     handleError,
   } = useModal(CLOSE_STAGE_MODAL);
+  const { editStage, addStage } = useStageActions();
 
-  const addStage = async (stageName: string, stageDescription: string) => {
+  const onAddStage = async (stageName: string, stageDescription: string) => {
     try {
       setModalSaving(true);
-      const response = await createNewStageRequest(
-        targetPipelineId,
-        stageName,
-        stageDescription,
-      );
-
-      handleSuccess(
-        PIPELINE_ADD_STAGE,
-        {
-          ...response.data,
-          tasks: [],
-        },
-        DispatchType.ACTIVE_PIPELINE,
-      );
+      await addStage(targetPipelineId, stageName, stageDescription, (stage) => {
+        handleSuccess(
+          PIPELINE_ADD_STAGE,
+          {
+            stage: { ...stage, tasks: [] },
+          },
+          DispatchType.ACTIVE_PIPELINE,
+        );
+      });
     } catch (error) {
       handleError(error);
     }
   };
 
-  const editStage = async (stage: Stage) => {
-    try {
-      setModalSaving(true);
-      const response = await editStageRequest(stage);
-
-      handleSuccess(
-        PIPELINE_EDIT_STAGE,
-        response.data,
-        DispatchType.ACTIVE_PIPELINE,
-      );
-    } catch (error) {
-      handleError(error);
-    }
+  const onEditStage = async (stage: Stage) => {
+    setModalSaving(true);
+    await editStage(
+      stage,
+      (stage) => {
+        handleSuccess(PIPELINE_EDIT_STAGE, stage, DispatchType.ACTIVE_PIPELINE);
+      },
+      (error) => {
+        handleError(error);
+      },
+    );
   };
 
   return (
     <WPQTModal modalOpen={stageModalOpen} closeModal={closeModal}>
       <StageModalContent
         ref={modalContentRef}
-        editStage={editStage}
-        addStage={addStage}
+        editStage={onEditStage}
+        addStage={onAddStage}
         stageModalSaving={modalSaving}
         stageTaskModalSaving={setModalSaving}
       />

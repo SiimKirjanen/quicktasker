@@ -59,7 +59,8 @@ function App() {
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_7__.PipelinesContextProvider, {
             children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_LoadingContextProvider__WEBPACK_IMPORTED_MODULE_5__.LoadingContextProvider, {
               children: [currentPage, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_toastify__WEBPACK_IMPORTED_MODULE_1__.ToastContainer, {
-                position: "bottom-right"
+                position: "bottom-right",
+                className: "wpqt-z-[999999]"
               })]
             })
           })
@@ -4467,8 +4468,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useStageActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../hooks/actions/useStageActions */ "./src/hooks/actions/useStageActions.ts");
 /* harmony import */ var _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/useModal */ "./src/hooks/useModal.tsx");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
@@ -4522,34 +4523,40 @@ function StageModal() {
     closeModal,
     handleSuccess,
     handleError
-  } = (0,_hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_STAGE_MODAL);
-  const addStage = (stageName, stageDescription) => __awaiter(this, void 0, void 0, function* () {
+  } = (0,_hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.useModal)(_constants__WEBPACK_IMPORTED_MODULE_2__.CLOSE_STAGE_MODAL);
+  const {
+    editStage,
+    addStage
+  } = (0,_hooks_actions_useStageActions__WEBPACK_IMPORTED_MODULE_3__.useStageActions)();
+  const onAddStage = (stageName, stageDescription) => __awaiter(this, void 0, void 0, function* () {
     try {
       setModalSaving(true);
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.createNewStageRequest)(targetPipelineId, stageName, stageDescription);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_STAGE, Object.assign(Object.assign({}, response.data), {
-        tasks: []
-      }), _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.ACTIVE_PIPELINE);
+      yield addStage(targetPipelineId, stageName, stageDescription, stage => {
+        handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_2__.PIPELINE_ADD_STAGE, {
+          stage: Object.assign(Object.assign({}, stage), {
+            tasks: []
+          })
+        }, _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.ACTIVE_PIPELINE);
+      });
     } catch (error) {
       handleError(error);
     }
   });
-  const editStage = stage => __awaiter(this, void 0, void 0, function* () {
-    try {
-      setModalSaving(true);
-      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.editStageRequest)(stage);
-      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_STAGE, response.data, _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.ACTIVE_PIPELINE);
-    } catch (error) {
+  const onEditStage = stage => __awaiter(this, void 0, void 0, function* () {
+    setModalSaving(true);
+    yield editStage(stage, stage => {
+      handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_2__.PIPELINE_EDIT_STAGE, stage, _hooks_useModal__WEBPACK_IMPORTED_MODULE_4__.DispatchType.ACTIVE_PIPELINE);
+    }, error => {
       handleError(error);
-    }
+    });
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_6__.WPQTModal, {
     modalOpen: stageModalOpen,
     closeModal: closeModal,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_StageModalContent__WEBPACK_IMPORTED_MODULE_7__.StageModalContent, {
       ref: modalContentRef,
-      editStage: editStage,
-      addStage: addStage,
+      editStage: onEditStage,
+      addStage: onAddStage,
       stageModalSaving: modalSaving,
       stageTaskModalSaving: setModalSaving
     })
@@ -7799,6 +7806,88 @@ function useSettingActions() {
   return {
     saveCustomUserPageStyles,
     saveTaskCompletionDoneSetting
+  };
+}
+
+
+/***/ }),
+
+/***/ "./src/hooks/actions/useStageActions.ts":
+/*!**********************************************!*\
+  !*** ./src/hooks/actions/useStageActions.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useStageActions: () => (/* binding */ useStageActions)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+function useStageActions() {
+  const addStage = (targetPipelineId, stageName, stageDescription, successCallback, errorCallback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.createNewStageRequest)(targetPipelineId, stageName, stageDescription);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Stage created successfully", "quicktasker"));
+      if (successCallback) {
+        successCallback(response.data);
+      }
+    } catch (error) {
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to create stage", "quicktasker"));
+      if (errorCallback) {
+        errorCallback(error);
+      }
+    }
+  });
+  const editStage = (stage, successCallback, errorCallback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.editStageRequest)(stage);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Stage updated successfully", "quicktasker"));
+      if (successCallback) {
+        successCallback(response.data);
+      }
+    } catch (error) {
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to update stage", "quicktasker"));
+      if (errorCallback) {
+        errorCallback(error);
+      }
+    }
+  });
+  return {
+    editStage,
+    addStage
   };
 }
 
@@ -15042,7 +15131,9 @@ const activePipelineReducer = (state, action) => {
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.PIPELINE_ADD_STAGE:
       {
-        const stage = action.payload;
+        const {
+          stage
+        } = action.payload;
         if (!state.activePipeline) {
           return state;
         }

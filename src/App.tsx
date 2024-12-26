@@ -18,7 +18,10 @@ function App() {
             <PipelinesContextProvider>
               <LoadingContextProvider>
                 {currentPage}
-                <ToastContainer position="bottom-right" />
+                <ToastContainer
+                  position="bottom-right"
+                  className="wpqt-z-[999999]"
+                />
               </LoadingContextProvider>
             </PipelinesContextProvider>
           </ModalContextProvider>

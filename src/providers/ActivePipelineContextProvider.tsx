@@ -68,7 +68,12 @@ type Action =
     }
   | { type: typeof PIPELINE_ADD_TASK; payload: TaskFromServer }
   | { type: typeof PIPELINE_EDIT_TASK; payload: TaskFromServer }
-  | { type: typeof PIPELINE_ADD_STAGE; payload: Stage }
+  | {
+      type: typeof PIPELINE_ADD_STAGE;
+      payload: {
+        stage: Stage;
+      };
+    }
   | { type: typeof PIPELINE_EDIT_STAGE; payload: Stage }
   | { type: typeof PIPELINE_DELETE_STAGE; payload: string }
   | {

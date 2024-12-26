@@ -1178,6 +1178,10 @@
   z-index: 9999;
 }
 
+.wpqt-z-\[999999\] {
+  z-index: 999999;
+}
+
 .wpqt-order-1 {
   order: 1;
 }
