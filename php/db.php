@@ -118,6 +118,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				created_by ENUM('system', 'admin', 'quicktasker_user', 'automation') NOT NULL,
 				user_id int(11) DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
+				log_status ENUM('success', 'error') DEFAULT 'success',
 				PRIMARY KEY  (id),
 				INDEX type_id (type_id),
 				INDEX type (type),

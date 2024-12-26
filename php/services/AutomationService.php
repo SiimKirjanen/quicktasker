@@ -16,7 +16,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          *
          * @param int $boardId The ID of the board where the automations are defined.
          * @param int $targetId The ID of the target entity for the automation.
-         * @param string $targetType The type of the target entity (e.g., 'task', 'project').
+         * @param string $targetType The type of the target entity (e.g., 'task', 'stage').
          * @param string $automationTrigger The trigger that initiates the automation (e.g., 'onCreate', 'onUpdate').
          * @param object|null $data Additional data to be used in the automation execution.
          * 
@@ -38,11 +38,11 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                             $automation->executionResult = $result;
                             $executedAutomations[] = $automation;
                         }
-                    } catch(\Exception $e) {
-    
+                    } catch(\Throwable $e) {
+                        $failureLogMessage = $this->getAutomationFailedLogMessage($automation);
+                        ServiceLocator::get('LogService')->log($failureLogMessage, $targetType, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION, null, WP_QT_LOG_STATUS_ERROR);
                         $failedAutomations[] = $automation;
                     }
-                    
                 }
             }
 
@@ -391,6 +391,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function getAutomationLogMessage($automation) {
             return "Automation executed: Board ID: {$automation->pipeline_id}, Target ID: {$automation->target_id}, Target Type: {$automation->target_type}, Trigger: {$automation->automation_trigger}, Action: {$automation->automation_action}";
+        }
+
+        /**
+         * Generates a log message for a failed automation.
+         *
+         * @param object $automation The automation object containing details about the failed automation.
+         * @return string The formatted log message.
+         */
+        private function getAutomationFailedLogMessage($automation) {
+            return "Automation failed: Board ID: {$automation->pipeline_id}, Target ID: {$automation->target_id}, Target Type: {$automation->target_type}, Trigger: {$automation->automation_trigger}, Action: {$automation->automation_action}, Action target type: {$automation->automation_action_target_type}, Action target id: {$automation->automation_action_target_id}, Metadata: {$automation->metadata}";
         }
 
         /**

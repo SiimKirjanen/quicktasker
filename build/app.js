@@ -16503,6 +16503,11 @@ var LogTypeEnum;
   LogTypeEnum["Task"] = "task";
   LogTypeEnum["All"] = "all";
 })(LogTypeEnum || (LogTypeEnum = {}));
+var LogStatusEnum;
+(function (LogStatusEnum) {
+  LogStatusEnum["Success"] = "success";
+  LogStatusEnum["Error"] = "error";
+})(LogStatusEnum || (LogStatusEnum = {}));
 var LogCreatedByEnum;
 (function (LogCreatedByEnum) {
   LogCreatedByEnum["Admin"] = "admin";

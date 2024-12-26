@@ -9,6 +9,7 @@ type BaseLog = {
   author_name: string;
   user_id: string;
   created_by: WPQTLogCreatedBy;
+  log_status: LogStatusEnum;
 };
 
 enum LogTypeEnum {
@@ -16,6 +17,11 @@ enum LogTypeEnum {
   Stage = "stage",
   Task = "task",
   All = "all",
+}
+
+enum LogStatusEnum {
+  Success = "success",
+  Error = "error",
 }
 
 enum LogCreatedByEnum {

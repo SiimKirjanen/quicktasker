@@ -55,6 +55,7 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
                     logs.created_by,
                     logs.user_id,
                     logs.created_at,
+                    logs.log_status,
                     CASE 
                         WHEN logs.created_by = 'admin' THEN wp_users.display_name
                         WHEN logs.created_by = 'quicktasker_user' THEN quicktasker_users.name
@@ -99,6 +100,7 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
                     logs.created_by,
                     logs.user_id,
                     logs.created_at,
+                    logs.log_status,
                     CASE 
                         WHEN logs.created_by = 'admin' THEN wp_users.display_name
                         WHEN logs.created_by = 'quicktasker_user' THEN quicktasker_users.name
