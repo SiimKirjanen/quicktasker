@@ -1306,6 +1306,14 @@
   margin-top: auto;
 }
 
+.wpqt-ml-4 {
+  margin-left: 1rem;
+}
+
+.wpqt-ml-6 {
+  margin-left: 1.5rem;
+}
+
 .\!wpqt-block {
   display: block !important;
 }

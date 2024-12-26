@@ -42,7 +42,6 @@ function AutomationActionTargetSelection({
           quickTaskerUserTargets={users}
           wpUserTargets={wpUsers}
           onUserAdd={(user) => {
-            console.log("Assigning automation user");
             automationDispatch({
               type: SET_AUTOMATION_ACTION_TARGET,
               payload: {

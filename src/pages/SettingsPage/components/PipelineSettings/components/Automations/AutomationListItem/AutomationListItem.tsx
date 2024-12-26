@@ -1,4 +1,4 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { ArrowRightCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
@@ -46,7 +46,7 @@ function AutomationListItem({ automation }: Props) {
   };
 
   return (
-    <div className="wpqt-flex wpqt-gap-3 wpqt-p-4">
+    <div className="wpqt-flex wpqt-gap-3 wpqt-p-4 wpqt-items-center">
       <WPQTCard
         title={__("Target", "quicktasker")}
         className={cardStyleClasses}
@@ -56,6 +56,7 @@ function AutomationListItem({ automation }: Props) {
           {automationTargetStrings[automation.target_type]}
         </div>
       </WPQTCard>
+      <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
       <WPQTCard
         title={__("Trigger", "quicktasker")}
         className={cardStyleClasses}
@@ -65,6 +66,7 @@ function AutomationListItem({ automation }: Props) {
           {automationTriggerStrings[automation.automation_trigger]}
         </div>
       </WPQTCard>
+      <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
       <WPQTCard
         title={__("Action", "quicktasker")}
         className={cardStyleClasses}
@@ -83,7 +85,7 @@ function AutomationListItem({ automation }: Props) {
       </WPQTCard>
       <WPQTCard
         title={__("Controls", "quicktasker")}
-        className={`${cardStyleClasses}`}
+        className={`${cardStyleClasses} wpqt-ml-6`}
         titleClassName={cardTitleClasses}
       >
         <div className="wpqt-flex wpqt-gap-2">

@@ -1,4 +1,7 @@
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightCircleIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useContext, useReducer, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { BsRobot } from "react-icons/bs";
@@ -79,7 +82,7 @@ function AutomationCreator({ pipelineId }: props) {
   }
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-3">
-      <div className="wpqt-flex wpqt-gap-3 wpqt-p-4 wpqt-justify-center">
+      <div className="wpqt-flex wpqt-gap-3 wpqt-p-4 wpqt-justify-center wpqt-items-center">
         <WPQTCard
           title={__("Target", "quicktasker")}
           className={cardStyleClasses}
@@ -96,6 +99,7 @@ function AutomationCreator({ pipelineId }: props) {
             )}
           </div>
         </WPQTCard>
+        <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
         <WPQTCard
           title={__("Trigger", "quicktasker")}
           className={cardStyleClasses}
@@ -112,6 +116,7 @@ function AutomationCreator({ pipelineId }: props) {
             )}
           </div>
         </WPQTCard>
+        <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
         <WPQTCard
           title={__("Action", "quicktasker")}
           className={cardStyleClasses}
