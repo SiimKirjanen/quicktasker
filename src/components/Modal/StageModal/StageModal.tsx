@@ -36,6 +36,7 @@ function StageModal() {
           },
           DispatchType.ACTIVE_PIPELINE,
         );
+        closeModal();
       });
     } catch (error) {
       handleError(error);
@@ -48,6 +49,7 @@ function StageModal() {
       stage,
       (stage) => {
         handleSuccess(PIPELINE_EDIT_STAGE, stage, DispatchType.ACTIVE_PIPELINE);
+        closeModal();
       },
       (error) => {
         handleError(error);
