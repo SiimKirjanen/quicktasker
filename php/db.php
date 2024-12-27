@@ -264,6 +264,30 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 
 			dbDelta( $sql15 );
 
+			$sql16 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_LABELS . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				board_id int(11) NOT NULL,
+				text varchar(255) NOT NULL,
+				color varchar(255) NOT NULL,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id),
+				INDEX board_id (board_id)
+			) $charset_collate;";
+
+			dbDelta( $sql16 );
+
+			$sql17 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_LABEL_RELATIONS . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				label_id int(11) NOT NULL,
+				entity_id int(11) NOT NULL,
+				entity_type ENUM('task') NOT NULL,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id),
+				INDEX label_id (label_id)
+			) $charset_collate;";
+
+			dbDelta( $sql17 );
+
 			update_option( "wp_quicktasker_db_current_version", WP_QUICKTASKER_DB_VERSION );
 		}
 	}
