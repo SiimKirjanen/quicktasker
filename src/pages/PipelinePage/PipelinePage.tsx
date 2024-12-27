@@ -8,6 +8,7 @@ import {
   ActivePipelineContextProvider,
 } from "../../providers/ActivePipelineContextProvider";
 import { ActivePipelineTaskViewContextProvider } from "../../providers/ActivePipelineTaskViewContextProvider";
+import { LabelsContextProvider } from "../../providers/LabelsContextProvider";
 import { PipelineView } from "../../types/pipeline";
 import { Page } from "../Page/Page";
 import Pipeline from "./components/Pipeline";
@@ -17,7 +18,9 @@ import { TaskView } from "./components/TaskView/TaskView";
 const PipelinePage = () => {
   return (
     <ActivePipelineContextProvider>
-      <PipelinePageContent />
+      <LabelsContextProvider>
+        <PipelinePageContent />
+      </LabelsContextProvider>
     </ActivePipelineContextProvider>
   );
 };

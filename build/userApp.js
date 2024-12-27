@@ -1700,6 +1700,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ADD_ASSIGNED_USER_TO_EDITING_TASK: () => (/* binding */ ADD_ASSIGNED_USER_TO_EDITING_TASK),
 /* harmony export */   ADD_ASSIGNED_USER_TO_USER_TASK: () => (/* binding */ ADD_ASSIGNED_USER_TO_USER_TASK),
 /* harmony export */   ADD_CUSTOM_FIELD: () => (/* binding */ ADD_CUSTOM_FIELD),
+/* harmony export */   ADD_LABEL: () => (/* binding */ ADD_LABEL),
 /* harmony export */   ADD_PIPELINE_AUTOMATION: () => (/* binding */ ADD_PIPELINE_AUTOMATION),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
 /* harmony export */   CHANGE_ARCHIVED_TASK_DONE_STATUS: () => (/* binding */ CHANGE_ARCHIVED_TASK_DONE_STATUS),
@@ -1722,6 +1723,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   DELETE_USER_SESSION: () => (/* binding */ DELETE_USER_SESSION),
 /* harmony export */   EDIT_ARCHIVED_TASK: () => (/* binding */ EDIT_ARCHIVED_TASK),
 /* harmony export */   EDIT_CUSTOM_FIELD: () => (/* binding */ EDIT_CUSTOM_FIELD),
+/* harmony export */   EDIT_LABEL: () => (/* binding */ EDIT_LABEL),
 /* harmony export */   EDIT_USER: () => (/* binding */ EDIT_USER),
 /* harmony export */   EDIT_USER_TASK: () => (/* binding */ EDIT_USER_TASK),
 /* harmony export */   HAS_AUTOMATIONS: () => (/* binding */ HAS_AUTOMATIONS),
@@ -1765,6 +1767,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_EDITING_TASK),
 /* harmony export */   REMOVE_ASSIGNED_USER_FROM_USER_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_USER_TASK),
 /* harmony export */   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK: () => (/* binding */ REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK),
+/* harmony export */   REMOVE_LABEL: () => (/* binding */ REMOVE_LABEL),
 /* harmony export */   REMOVE_PIPELINE_AUTOMATION: () => (/* binding */ REMOVE_PIPELINE_AUTOMATION),
 /* harmony export */   REMOVE_USER_TASK: () => (/* binding */ REMOVE_USER_TASK),
 /* harmony export */   RESET_AUTOMATION_TO_ACTION: () => (/* binding */ RESET_AUTOMATION_TO_ACTION),
@@ -1782,6 +1785,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_CUSTOM_FIELD_LOADING: () => (/* binding */ SET_CUSTOM_FIELD_LOADING),
 /* harmony export */   SET_CUSTOM_USER_PAGE_STYLES: () => (/* binding */ SET_CUSTOM_USER_PAGE_STYLES),
 /* harmony export */   SET_FULL_PAGE_LOADING: () => (/* binding */ SET_FULL_PAGE_LOADING),
+/* harmony export */   SET_LABELS: () => (/* binding */ SET_LABELS),
 /* harmony export */   SET_PIPELINE_AUTOMATIONS: () => (/* binding */ SET_PIPELINE_AUTOMATIONS),
 /* harmony export */   SET_PIPELINE_AUTOMATIONS_LOADING: () => (/* binding */ SET_PIPELINE_AUTOMATIONS_LOADING),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
@@ -1895,6 +1899,11 @@ const DELETE_CUSTOM_FIELD = "DELETE_CUSTOM_FIELD";
 const SET_CUSTOM_FIELD_LOADING = "SET_CUSTOM_FIELD_LOADING";
 const SET_CUSTOM_FIELDS_LOCATION = "SET_CUSTOM_FIELDS_LOCATION";
 const SET_CUSTOM_FIELD_INITIAL_DATA = "SET_CUSTOM_FIELD_INITIAL_DATA";
+//Labels reducer
+const SET_LABELS = "SET_LABELS";
+const ADD_LABEL = "ADD_LABEL";
+const REMOVE_LABEL = "REMOVE_LABEL";
+const EDIT_LABEL = "EDIT_LABEL";
 //Pipeline automations reducer
 const SET_PIPELINE_AUTOMATIONS = "SET_PIPELINE_AUTOMATIONS";
 const SET_PIPELINE_AUTOMATIONS_LOADING = "SET_PIPELINE_AUTOMATIONS_LOADING";

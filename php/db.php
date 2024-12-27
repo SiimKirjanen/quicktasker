@@ -267,7 +267,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 			$sql16 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_LABELS . " (
 				id int(11) NOT NULL AUTO_INCREMENT,
 				board_id int(11) NOT NULL,
-				text varchar(255) NOT NULL,
+				name varchar(255) NOT NULL,
 				color varchar(255) NOT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				PRIMARY KEY  (id),

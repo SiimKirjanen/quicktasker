@@ -7081,6 +7081,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ADD_ASSIGNED_USER_TO_EDITING_TASK: () => (/* binding */ ADD_ASSIGNED_USER_TO_EDITING_TASK),
 /* harmony export */   ADD_ASSIGNED_USER_TO_USER_TASK: () => (/* binding */ ADD_ASSIGNED_USER_TO_USER_TASK),
 /* harmony export */   ADD_CUSTOM_FIELD: () => (/* binding */ ADD_CUSTOM_FIELD),
+/* harmony export */   ADD_LABEL: () => (/* binding */ ADD_LABEL),
 /* harmony export */   ADD_PIPELINE_AUTOMATION: () => (/* binding */ ADD_PIPELINE_AUTOMATION),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
 /* harmony export */   CHANGE_ARCHIVED_TASK_DONE_STATUS: () => (/* binding */ CHANGE_ARCHIVED_TASK_DONE_STATUS),
@@ -7103,6 +7104,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   DELETE_USER_SESSION: () => (/* binding */ DELETE_USER_SESSION),
 /* harmony export */   EDIT_ARCHIVED_TASK: () => (/* binding */ EDIT_ARCHIVED_TASK),
 /* harmony export */   EDIT_CUSTOM_FIELD: () => (/* binding */ EDIT_CUSTOM_FIELD),
+/* harmony export */   EDIT_LABEL: () => (/* binding */ EDIT_LABEL),
 /* harmony export */   EDIT_USER: () => (/* binding */ EDIT_USER),
 /* harmony export */   EDIT_USER_TASK: () => (/* binding */ EDIT_USER_TASK),
 /* harmony export */   HAS_AUTOMATIONS: () => (/* binding */ HAS_AUTOMATIONS),
@@ -7146,6 +7148,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_EDITING_TASK),
 /* harmony export */   REMOVE_ASSIGNED_USER_FROM_USER_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_USER_TASK),
 /* harmony export */   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK: () => (/* binding */ REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK),
+/* harmony export */   REMOVE_LABEL: () => (/* binding */ REMOVE_LABEL),
 /* harmony export */   REMOVE_PIPELINE_AUTOMATION: () => (/* binding */ REMOVE_PIPELINE_AUTOMATION),
 /* harmony export */   REMOVE_USER_TASK: () => (/* binding */ REMOVE_USER_TASK),
 /* harmony export */   RESET_AUTOMATION_TO_ACTION: () => (/* binding */ RESET_AUTOMATION_TO_ACTION),
@@ -7163,6 +7166,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_CUSTOM_FIELD_LOADING: () => (/* binding */ SET_CUSTOM_FIELD_LOADING),
 /* harmony export */   SET_CUSTOM_USER_PAGE_STYLES: () => (/* binding */ SET_CUSTOM_USER_PAGE_STYLES),
 /* harmony export */   SET_FULL_PAGE_LOADING: () => (/* binding */ SET_FULL_PAGE_LOADING),
+/* harmony export */   SET_LABELS: () => (/* binding */ SET_LABELS),
 /* harmony export */   SET_PIPELINE_AUTOMATIONS: () => (/* binding */ SET_PIPELINE_AUTOMATIONS),
 /* harmony export */   SET_PIPELINE_AUTOMATIONS_LOADING: () => (/* binding */ SET_PIPELINE_AUTOMATIONS_LOADING),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
@@ -7276,6 +7280,11 @@ const DELETE_CUSTOM_FIELD = "DELETE_CUSTOM_FIELD";
 const SET_CUSTOM_FIELD_LOADING = "SET_CUSTOM_FIELD_LOADING";
 const SET_CUSTOM_FIELDS_LOCATION = "SET_CUSTOM_FIELDS_LOCATION";
 const SET_CUSTOM_FIELD_INITIAL_DATA = "SET_CUSTOM_FIELD_INITIAL_DATA";
+//Labels reducer
+const SET_LABELS = "SET_LABELS";
+const ADD_LABEL = "ADD_LABEL";
+const REMOVE_LABEL = "REMOVE_LABEL";
+const EDIT_LABEL = "EDIT_LABEL";
 //Pipeline automations reducer
 const SET_PIPELINE_AUTOMATIONS = "SET_PIPELINE_AUTOMATIONS";
 const SET_PIPELINE_AUTOMATIONS_LOADING = "SET_PIPELINE_AUTOMATIONS_LOADING";
@@ -9952,11 +9961,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Modal_PipelineModal_EditPipelineModal_EditPipelineModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal */ "./src/components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal.tsx");
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
 /* harmony import */ var _providers_ActivePipelineTaskViewContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../providers/ActivePipelineTaskViewContextProvider */ "./src/providers/ActivePipelineTaskViewContextProvider.tsx");
-/* harmony import */ var _types_pipeline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../types/pipeline */ "./src/types/pipeline.ts");
-/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Page/Page */ "./src/pages/Page/Page.tsx");
-/* harmony import */ var _components_Pipeline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/Pipeline */ "./src/pages/PipelinePage/components/Pipeline.tsx");
-/* harmony import */ var _components_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/PipelineHeader/PipelineHeader */ "./src/pages/PipelinePage/components/PipelineHeader/PipelineHeader.tsx");
-/* harmony import */ var _components_TaskView_TaskView__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/TaskView/TaskView */ "./src/pages/PipelinePage/components/TaskView/TaskView.tsx");
+/* harmony import */ var _providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../providers/LabelsContextProvider */ "./src/providers/LabelsContextProvider.tsx");
+/* harmony import */ var _types_pipeline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../types/pipeline */ "./src/types/pipeline.ts");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../Page/Page */ "./src/pages/Page/Page.tsx");
+/* harmony import */ var _components_Pipeline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/Pipeline */ "./src/pages/PipelinePage/components/Pipeline.tsx");
+/* harmony import */ var _components_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/PipelineHeader/PipelineHeader */ "./src/pages/PipelinePage/components/PipelineHeader/PipelineHeader.tsx");
+/* harmony import */ var _components_TaskView_TaskView__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/TaskView/TaskView */ "./src/pages/PipelinePage/components/TaskView/TaskView.tsx");
+
 
 
 
@@ -9972,7 +9983,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const PipelinePage = () => {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__.ActivePipelineContextProvider, {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(PipelinePageContent, {})
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_8__.LabelsContextProvider, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(PipelinePageContent, {})
+    })
   });
 };
 const PipelinePageContent = () => {
@@ -9981,10 +9994,10 @@ const PipelinePageContent = () => {
       view
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__.ActivePipelineContext);
-  const renderPipelineView = view === _types_pipeline__WEBPACK_IMPORTED_MODULE_8__.PipelineView.PIPELINE;
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_9__.Page, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_11__.PipelineHeader, {}), renderPipelineView ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline__WEBPACK_IMPORTED_MODULE_10__["default"], {}) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_ActivePipelineTaskViewContextProvider__WEBPACK_IMPORTED_MODULE_7__.ActivePipelineTaskViewContextProvider, {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_TasksViewFilter_TasksViewFilter__WEBPACK_IMPORTED_MODULE_2__.TasksViewFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_TaskView_TaskView__WEBPACK_IMPORTED_MODULE_12__.TaskView, {})]
+  const renderPipelineView = view === _types_pipeline__WEBPACK_IMPORTED_MODULE_9__.PipelineView.PIPELINE;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_10__.Page, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_12__.PipelineHeader, {}), renderPipelineView ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline__WEBPACK_IMPORTED_MODULE_11__["default"], {}) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_ActivePipelineTaskViewContextProvider__WEBPACK_IMPORTED_MODULE_7__.ActivePipelineTaskViewContextProvider, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_TasksViewFilter_TasksViewFilter__WEBPACK_IMPORTED_MODULE_2__.TasksViewFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_TaskView_TaskView__WEBPACK_IMPORTED_MODULE_13__.TaskView, {})]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_PipelineModal_AddPipelineModal_AddPipelineModal__WEBPACK_IMPORTED_MODULE_4__.AddPipelineModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_PipelineModal_EditPipelineModal_EditPipelineModal__WEBPACK_IMPORTED_MODULE_5__.EditPipelineModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_MoveTaskModal_MoveTaskModal__WEBPACK_IMPORTED_MODULE_3__.MoveTaskModal, {})]
   });
 };
@@ -14468,6 +14481,48 @@ const CustomFieldsContextProvider = ({
 
 /***/ }),
 
+/***/ "./src/providers/LabelsContextProvider.tsx":
+/*!*************************************************!*\
+  !*** ./src/providers/LabelsContextProvider.tsx ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LabelContext: () => (/* binding */ LabelContext),
+/* harmony export */   LabelsContextProvider: () => (/* binding */ LabelsContextProvider)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _reducers_labels_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/labels-reducer */ "./src/reducers/labels-reducer.ts");
+
+
+
+const initialState = {
+  labels: []
+};
+const LabelContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
+  state: initialState,
+  labelDispatch: () => {}
+});
+const LabelsContextProvider = ({
+  children
+}) => {
+  const [state, labelDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_labels_reducer__WEBPACK_IMPORTED_MODULE_2__.reducer, initialState);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LabelContext.Provider, {
+    value: {
+      state,
+      labelDispatch
+    },
+    children: children
+  });
+};
+
+
+/***/ }),
+
 /***/ "./src/providers/LoadingContextProvider.tsx":
 /*!**************************************************!*\
   !*** ./src/providers/LoadingContextProvider.tsx ***!
@@ -15726,6 +15781,54 @@ const reducer = (state, action) => {
         const customFields = state.customFields.filter(customField => customField.id !== customFieldId);
         return Object.assign(Object.assign({}, state), {
           customFields
+        });
+      }
+    default:
+      {
+        return state;
+      }
+  }
+};
+
+
+/***/ }),
+
+/***/ "./src/reducers/labels-reducer.ts":
+/*!****************************************!*\
+  !*** ./src/reducers/labels-reducer.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reducer: () => (/* binding */ reducer)
+/* harmony export */ });
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_LABELS:
+      {
+        return Object.assign(Object.assign({}, state), {
+          labels: action.payload
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_LABEL:
+      {
+        return Object.assign(Object.assign({}, state), {
+          labels: [...state.labels, action.payload]
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.EDIT_LABEL:
+      {
+        return Object.assign(Object.assign({}, state), {
+          labels: state.labels.map(label => label.id === action.payload.id ? action.payload : label)
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.REMOVE_LABEL:
+      {
+        return Object.assign(Object.assign({}, state), {
+          labels: state.labels.filter(label => label.id !== action.payload.id)
         });
       }
     default:
