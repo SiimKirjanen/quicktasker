@@ -751,11 +751,25 @@ function createPipelineLabelRequest(
   });
 }
 
+function assignLabelToTaskRequest(
+  pipelineId: string,
+  taskId: string,
+  labelId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data: { labelId },
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
   archiveStageTasksRequest,
   archiveTaskRequest,
+  assignLabelToTaskRequest,
   assignTaskToUserRequest,
   changeUserSessionStatusRequest,
   changeUserStatusRequest,

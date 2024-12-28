@@ -29,7 +29,7 @@ type Action =
   | { type: typeof REMOVE_LABEL; payload: Label }
   | { type: typeof SET_LABEL_ACTION_STATE_SELECTION }
   | { type: typeof SET_LABEL_ACTION_STATE_EDITING; payload: Label }
-  | { type: typeof SET_LABEL_ACTION_STATE_CREATION; payload: Label }
+  | { type: typeof SET_LABEL_ACTION_STATE_CREATION }
   | { type: typeof ADD_LABEL; payload: Label };
 
 type Dispatch = (action: Action) => void;

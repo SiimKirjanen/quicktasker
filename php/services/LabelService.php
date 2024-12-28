@@ -35,5 +35,21 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
 
             return ServiceLocator::get('LabelRepository')->getLabelById($wpdb->insert_id);
         }
+
+        public function assignLabel($entityId, $entityType, $labelId) {
+            global $wpdb;
+
+            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, array(
+                'entity_id' => $entityId,
+                'label_id' => $labelId,
+                'entity_type' => $entityType
+            ), array('%d', '%d', '%s'));
+
+            if( $result === false ) {
+                throw new \Exception('Failed to assign label to task');
+            }
+
+            return true;
+        }
     }
 }

@@ -1454,6 +1454,10 @@
   width: 100vw;
 }
 
+.wpqt-min-w-56 {
+  min-width: 14rem;
+}
+
 .wpqt-min-w-\[300px\] {
   min-width: 300px;
 }

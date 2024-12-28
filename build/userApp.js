@@ -33,6 +33,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   addCustomFieldRequest: () => (/* binding */ addCustomFieldRequest),
 /* harmony export */   archiveStageTasksRequest: () => (/* binding */ archiveStageTasksRequest),
 /* harmony export */   archiveTaskRequest: () => (/* binding */ archiveTaskRequest),
+/* harmony export */   assignLabelToTaskRequest: () => (/* binding */ assignLabelToTaskRequest),
 /* harmony export */   assignTaskToUserRequest: () => (/* binding */ assignTaskToUserRequest),
 /* harmony export */   changeUserSessionStatusRequest: () => (/* binding */ changeUserSessionStatusRequest),
 /* harmony export */   changeUserStatusRequest: () => (/* binding */ changeUserStatusRequest),
@@ -638,6 +639,16 @@ function createPipelineLabelRequest(pipelineId, name, color) {
     data: {
       name,
       color
+    }
+  });
+}
+function assignLabelToTaskRequest(pipelineId, taskId, labelId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data: {
+      labelId
     }
   });
 }

@@ -85,6 +85,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   addCustomFieldRequest: () => (/* binding */ addCustomFieldRequest),
 /* harmony export */   archiveStageTasksRequest: () => (/* binding */ archiveStageTasksRequest),
 /* harmony export */   archiveTaskRequest: () => (/* binding */ archiveTaskRequest),
+/* harmony export */   assignLabelToTaskRequest: () => (/* binding */ assignLabelToTaskRequest),
 /* harmony export */   assignTaskToUserRequest: () => (/* binding */ assignTaskToUserRequest),
 /* harmony export */   changeUserSessionStatusRequest: () => (/* binding */ changeUserSessionStatusRequest),
 /* harmony export */   changeUserStatusRequest: () => (/* binding */ changeUserStatusRequest),
@@ -690,6 +691,16 @@ function createPipelineLabelRequest(pipelineId, name, color) {
     data: {
       name,
       color
+    }
+  });
+}
+function assignLabelToTaskRequest(pipelineId, taskId, labelId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data: {
+      labelId
     }
   });
 }
@@ -2576,17 +2587,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _uiw_react_color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @uiw/react-color */ "./node_modules/@uiw/react-color-colorful/esm/index.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 
-function LabelCreation() {
+
+
+
+
+function LabelCreation({
+  labelCreated,
+  loading = false
+}) {
+  const [labelName, setLabelName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [labelColor, setLabelColor] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const onLabelCreated = () => {
+    if (!labelName || !labelColor) {
+      return;
+    }
+    labelCreated(labelName, labelColor);
+  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "label-creation",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-      type: "text",
-      placeholder: "Create a new label",
-      className: "label-creation__input"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-      className: "label-creation__button",
-      children: "Create"
+    className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_3__.WPQTInput, {
+      value: labelName,
+      onChange: setLabelName
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_uiw_react_color__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      color: labelColor,
+      disableAlpha: true,
+      onChange: color => {
+        setLabelColor(color.hex);
+      }
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_2__.WPQTButton, {
+      btnText: "Create",
+      onClick: onLabelCreated,
+      loading: loading
     })]
   });
 }
@@ -2665,8 +2702,10 @@ const LabelDropdownContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
     labelDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_5__.LabelContext);
   const [loadingLabels, setLoadingLabels] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
+  const [creatingLabel, setCreatingLabel] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
-    getPipelineLabels
+    getPipelineLabels,
+    createPipelineLabel
   } = (0,_hooks_actions_useLabelActions__WEBPACK_IMPORTED_MODULE_4__.useLabelActions)();
   const loadLabels = () => __awaiter(void 0, void 0, void 0, function* () {
     setLoadingLabels(true);
@@ -2689,24 +2728,46 @@ const LabelDropdownContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
       selected: taskAssignedLabels.some(assignedLabel => assignedLabel.id === label.id)
     }));
   };
-  const onLabelSelection = labelId => {};
-  const onLabelDeSelection = labelId => {};
-  if (labelActionState == _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.SELECTION) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelSelection_LabelSelection__WEBPACK_IMPORTED_MODULE_9__.LabelSelection, {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task label selection", "quicktasker"),
-      labels: getSelectionLabels(),
-      loading: loadingLabels,
-      labelSelected: onLabelSelection,
-      labelDeSelection: onLabelDeSelection
+  const onLabelSelected = labelId => {};
+  const onLabelDeSelected = labelId => {};
+  const onLabelCreated = (name, color) => __awaiter(void 0, void 0, void 0, function* () {
+    setCreatingLabel(true);
+    yield createPipelineLabel(task.pipeline_id, name, color, (success, label) => {
+      if (success && label) {
+        labelDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_3__.ADD_LABEL,
+          payload: label
+        });
+      }
     });
-  }
-  if (labelActionState == _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.CREATION) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelCreation_LabelCreation__WEBPACK_IMPORTED_MODULE_7__.LabelCreation, {});
-  }
-  if (labelActionState == _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.EDIT) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelEdit_LabelEdit__WEBPACK_IMPORTED_MODULE_8__.LabelEdit, {});
-  }
-  return null;
+    setCreatingLabel(false);
+  });
+  const renderContent = () => {
+    switch (labelActionState) {
+      case _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.SELECTION:
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelSelection_LabelSelection__WEBPACK_IMPORTED_MODULE_9__.LabelSelection, {
+          title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task label selection", "quicktasker"),
+          labels: getSelectionLabels(),
+          loading: loadingLabels,
+          labelSelected: onLabelSelected,
+          labelDeSelection: onLabelDeSelected
+        });
+      case _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.CREATION:
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelCreation_LabelCreation__WEBPACK_IMPORTED_MODULE_7__.LabelCreation, {
+          labelCreated: onLabelCreated,
+          loading: creatingLabel
+        });
+      case _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.EDIT:
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelEdit_LabelEdit__WEBPACK_IMPORTED_MODULE_8__.LabelEdit, {});
+      default:
+        return null;
+    }
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-min-w-56",
+    onClick: e => e.stopPropagation(),
+    children: renderContent()
+  });
 });
 
 
@@ -2748,11 +2809,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../providers/LabelsContextProvider */ "./src/providers/LabelsContextProvider.tsx");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+
+
+
 
 
 
@@ -2765,21 +2833,29 @@ function LabelSelection({
   labelDeSelection,
   loading = false
 }) {
+  const {
+    labelDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_4__.LabelContext);
   if (!labels) {
     return null;
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
+    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: title
-    }), loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
+    }), loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_6__.Loading, {
       ovalSize: "24"
     }) : labels.map(label => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(SelectionLabel, {
       label: label,
       labelSelected: labelSelected,
       labelDeSelection: labelDeSelection
-    }, label.id)), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_2__.WPQTButton, {
-      btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add new label", "quicktasker")
+    }, label.id)), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
+      btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add new label", "quicktasker"),
+      onClick: () => {
+        labelDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_LABEL_ACTION_STATE_CREATION
+        });
+      }
     })]
   });
 }
@@ -2789,13 +2865,15 @@ function SelectionLabel({
   labelDeSelection
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-gap-1",
+    className: "wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-w-full",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-      type: "checkbox"
+      type: "checkbox",
+      checked: label.selected
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex-1 wpqt-text-center",
       children: label.name
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      className: "wpqt-text-5 wpqt-icon-green"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      className: "wpqt-size-4 wpqt-icon-green"
     })]
   });
 }
@@ -8081,9 +8159,25 @@ function useLabelActions() {
       }
     }
   });
+  const assignLabelToTask = (pipelineId, taskId, labelId, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.assignLabelToTaskRequest)(pipelineId, taskId, labelId);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Label assigned to task", "quicktasker"));
+      if (callback) {
+        callback(true);
+      }
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to assign label to task", "quicktasker"));
+      if (callback) {
+        callback(false);
+      }
+    }
+  });
   return {
     getPipelineLabels,
-    createPipelineLabel
+    createPipelineLabel,
+    assignLabelToTask
   };
 }
 
@@ -16224,7 +16318,8 @@ const reducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_LABEL:
       {
         return Object.assign(Object.assign({}, state), {
-          labels: state.labels ? [...state.labels, action.payload] : [action.payload]
+          labels: state.labels ? [...state.labels, action.payload] : [action.payload],
+          labelActionState: _types_label__WEBPACK_IMPORTED_MODULE_1__.LabelActionState.SELECTION
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.EDIT_LABEL:

@@ -24,6 +24,7 @@ const reducer = (state: State, action: Action): State => {
         labels: state.labels
           ? [...state.labels, action.payload]
           : [action.payload],
+        labelActionState: LabelActionState.SELECTION,
       };
     }
     case EDIT_LABEL: {

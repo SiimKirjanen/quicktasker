@@ -1,6 +1,7 @@
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
+  assignLabelToTaskRequest,
   createPipelineLabelRequest,
   getPipelineLabelsRequest,
 } from "../../api/api";
@@ -49,7 +50,28 @@ function useLabelActions() {
     }
   };
 
-  return { getPipelineLabels, createPipelineLabel };
+  const assignLabelToTask = async (
+    pipelineId: string,
+    taskId: string,
+    labelId: string,
+    callback: (success: boolean) => void,
+  ) => {
+    try {
+      await assignLabelToTaskRequest(pipelineId, taskId, labelId);
+      toast.success(__("Label assigned to task", "quicktasker"));
+      if (callback) {
+        callback(true);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to assign label to task", "quicktasker"));
+      if (callback) {
+        callback(false);
+      }
+    }
+  };
+
+  return { getPipelineLabels, createPipelineLabel, assignLabelToTask };
 }
 
 export { useLabelActions };

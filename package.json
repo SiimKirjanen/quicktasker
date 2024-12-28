@@ -47,6 +47,7 @@
     "@hello-pangea/dnd": "^16.6.0",
     "@heroicons/react": "^2.1.5",
     "@types/js-cookie": "^3.0.6",
+    "@uiw/react-color": "^2.3.4",
     "@wordpress/api-fetch": "^7.4.0",
     "@wordpress/element": "^6.4.0",
     "@wordpress/i18n": "^5.9.0",
