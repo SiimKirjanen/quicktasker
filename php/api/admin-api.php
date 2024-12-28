@@ -2193,6 +2193,35 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
         ==================================================================================================================================================================================================================
         */
 
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/labels',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        $labels = ServiceLocator::get('LabelRepository')->getPipelineTaskLabels($data['id']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'labels' => $labels,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
     }
 }
 
