@@ -38,6 +38,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   changeUserStatusRequest: () => (/* binding */ changeUserStatusRequest),
 /* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
 /* harmony export */   createPipelineAutomationRequest: () => (/* binding */ createPipelineAutomationRequest),
+/* harmony export */   createPipelineLabelRequest: () => (/* binding */ createPipelineLabelRequest),
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
 /* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
 /* harmony export */   createUserRequest: () => (/* binding */ createUserRequest),
@@ -59,6 +60,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getLogsRequest: () => (/* binding */ getLogsRequest),
 /* harmony export */   getPipelineAutomationsRequest: () => (/* binding */ getPipelineAutomationsRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
+/* harmony export */   getPipelineLabelsRequest: () => (/* binding */ getPipelineLabelsRequest),
 /* harmony export */   getPipelineOverviewData: () => (/* binding */ getPipelineOverviewData),
 /* harmony export */   getPipelineSettingsRequest: () => (/* binding */ getPipelineSettingsRequest),
 /* harmony export */   getTaskLogs: () => (/* binding */ getTaskLogs),
@@ -614,6 +616,29 @@ function deletePipelineAutomationsRequest(pipelineId, automationId) {
     path: `/wpqt/v1/pipelines/${pipelineId}/automations/${automationId}`,
     method: "DELETE",
     headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Label requests
+  ==================================================================================================================================================================================================================
+*/
+function getPipelineLabelsRequest(pipelineId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels`,
+    method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function createPipelineLabelRequest(pipelineId, name, color) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data: {
+      name,
+      color
+    }
   });
 }
 
@@ -1786,6 +1811,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_CUSTOM_USER_PAGE_STYLES: () => (/* binding */ SET_CUSTOM_USER_PAGE_STYLES),
 /* harmony export */   SET_FULL_PAGE_LOADING: () => (/* binding */ SET_FULL_PAGE_LOADING),
 /* harmony export */   SET_LABELS: () => (/* binding */ SET_LABELS),
+/* harmony export */   SET_LABEL_ACTION_STATE_CREATION: () => (/* binding */ SET_LABEL_ACTION_STATE_CREATION),
+/* harmony export */   SET_LABEL_ACTION_STATE_EDITING: () => (/* binding */ SET_LABEL_ACTION_STATE_EDITING),
+/* harmony export */   SET_LABEL_ACTION_STATE_SELECTION: () => (/* binding */ SET_LABEL_ACTION_STATE_SELECTION),
 /* harmony export */   SET_PIPELINE_AUTOMATIONS: () => (/* binding */ SET_PIPELINE_AUTOMATIONS),
 /* harmony export */   SET_PIPELINE_AUTOMATIONS_LOADING: () => (/* binding */ SET_PIPELINE_AUTOMATIONS_LOADING),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
@@ -1904,6 +1932,9 @@ const SET_LABELS = "SET_LABELS";
 const ADD_LABEL = "ADD_LABEL";
 const REMOVE_LABEL = "REMOVE_LABEL";
 const EDIT_LABEL = "EDIT_LABEL";
+const SET_LABEL_ACTION_STATE_SELECTION = "SET_LABEL_ACTION_STATE_SELECTION";
+const SET_LABEL_ACTION_STATE_EDITING = "SET_LABEL_ACTION_STATE_EDITING";
+const SET_LABEL_ACTION_STATE_CREATION = "SET_LABEL_ACTION_STATE_CREATION";
 //Pipeline automations reducer
 const SET_PIPELINE_AUTOMATIONS = "SET_PIPELINE_AUTOMATIONS";
 const SET_PIPELINE_AUTOMATIONS_LOADING = "SET_PIPELINE_AUTOMATIONS_LOADING";

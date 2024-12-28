@@ -1,3 +1,4 @@
+import { Label } from "./label";
 import { ServerUser, User, WPUser } from "./user";
 
 type BaseTask = {
@@ -9,6 +10,7 @@ type BaseTask = {
   description: string;
   task_hash: string;
   created_at: string;
+  assigned_labels: Label[];
 };
 
 type Task = BaseTask & {

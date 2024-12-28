@@ -1,6 +1,7 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { useContext } from "@wordpress/element";
 import { TaskControlsDropdown } from "../../../../components/Dropdown/TaskControlsDropdown/TaskControlsDropdown";
+import { TaskLabelDropdown } from "../../../../components/Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { OPEN_EDIT_TASK_MODAL } from "../../../../constants";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
@@ -55,8 +56,9 @@ function Task({ task, index, onLastStage }: Props) {
             <div className="wpqt-text-sm wpqt-italic">{task.description}</div>
           )}
 
-          <div className="wpqt-mt-2">
+          <div className="wpqt-mt-2 wpqt-flex wpqt-flex-col wpqt-gap-2">
             <UserAssignementDropdown task={task} />
+            <TaskLabelDropdown task={task} />
           </div>
           <TaskActions
             task={task}

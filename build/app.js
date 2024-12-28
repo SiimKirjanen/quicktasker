@@ -90,6 +90,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   changeUserStatusRequest: () => (/* binding */ changeUserStatusRequest),
 /* harmony export */   createNewStageRequest: () => (/* binding */ createNewStageRequest),
 /* harmony export */   createPipelineAutomationRequest: () => (/* binding */ createPipelineAutomationRequest),
+/* harmony export */   createPipelineLabelRequest: () => (/* binding */ createPipelineLabelRequest),
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
 /* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
 /* harmony export */   createUserRequest: () => (/* binding */ createUserRequest),
@@ -111,6 +112,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getLogsRequest: () => (/* binding */ getLogsRequest),
 /* harmony export */   getPipelineAutomationsRequest: () => (/* binding */ getPipelineAutomationsRequest),
 /* harmony export */   getPipelineData: () => (/* binding */ getPipelineData),
+/* harmony export */   getPipelineLabelsRequest: () => (/* binding */ getPipelineLabelsRequest),
 /* harmony export */   getPipelineOverviewData: () => (/* binding */ getPipelineOverviewData),
 /* harmony export */   getPipelineSettingsRequest: () => (/* binding */ getPipelineSettingsRequest),
 /* harmony export */   getTaskLogs: () => (/* binding */ getTaskLogs),
@@ -666,6 +668,29 @@ function deletePipelineAutomationsRequest(pipelineId, automationId) {
     path: `/wpqt/v1/pipelines/${pipelineId}/automations/${automationId}`,
     method: "DELETE",
     headers: getCommonHeaders()
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Label requests
+  ==================================================================================================================================================================================================================
+*/
+function getPipelineLabelsRequest(pipelineId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels`,
+    method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function createPipelineLabelRequest(pipelineId, name, color) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data: {
+      name,
+      color
+    }
   });
 }
 
@@ -2486,6 +2511,291 @@ function TaskControlsDropdown({
         setDeleteLoading(false);
       }),
       className: "!wpqt-mb-0"
+    })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Dropdown/TaskLabelDropdown/TaskLabelDropdown.tsx":
+/*!*************************************************************************!*\
+  !*** ./src/components/Dropdown/TaskLabelDropdown/TaskLabelDropdown.tsx ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TaskLabelDropdown: () => (/* binding */ TaskLabelDropdown)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TagIcon.js");
+/* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
+/* harmony import */ var _components_LabelDropdownContent_LabelDropdownContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/LabelDropdownContent/LabelDropdownContent */ "./src/components/Dropdown/TaskLabelDropdown/components/LabelDropdownContent/LabelDropdownContent.tsx");
+
+
+
+
+function TaskLabelDropdown({
+  task
+}) {
+  const assignedLabels = task.assigned_labels || [];
+  const hasAssignedLabels = Array.isArray(assignedLabels) && assignedLabels.length > 0;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTDropdown__WEBPACK_IMPORTED_MODULE_1__.WPQTDropdown, {
+    menuBtnClasses: `wpqt-inline-flex`,
+    anchor: "bottom start",
+    menuBtn: () => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-group wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        className: `wpqt-mr-1 wpqt-size-5 ${hasAssignedLabels ? "wpqt-text-blue-400" : "wpqt-text-gray-300"} group-hover:wpqt-text-blue-600`
+      }), hasAssignedLabels && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        children: assignedLabels.map((label, index) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+          children: [label.name, index < assignedLabels.length - 1 && ", "]
+        }, index))
+      })]
+    }),
+    children: task && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_LabelDropdownContent_LabelDropdownContent__WEBPACK_IMPORTED_MODULE_2__.LabelDropdownContent, {
+      task: task
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Dropdown/TaskLabelDropdown/components/LabelCreation/LabelCreation.tsx":
+/*!**********************************************************************************************!*\
+  !*** ./src/components/Dropdown/TaskLabelDropdown/components/LabelCreation/LabelCreation.tsx ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LabelCreation: () => (/* binding */ LabelCreation)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function LabelCreation() {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "label-creation",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+      type: "text",
+      placeholder: "Create a new label",
+      className: "label-creation__input"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+      className: "label-creation__button",
+      children: "Create"
+    })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Dropdown/TaskLabelDropdown/components/LabelDropdownContent/LabelDropdownContent.tsx":
+/*!************************************************************************************************************!*\
+  !*** ./src/components/Dropdown/TaskLabelDropdown/components/LabelDropdownContent/LabelDropdownContent.tsx ***!
+  \************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LabelDropdownContent: () => (/* binding */ LabelDropdownContent)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useLabelActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../hooks/actions/useLabelActions */ "./src/hooks/actions/useLabelActions.ts");
+/* harmony import */ var _providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../providers/LabelsContextProvider */ "./src/providers/LabelsContextProvider.tsx");
+/* harmony import */ var _types_label__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../types/label */ "./src/types/label.ts");
+/* harmony import */ var _LabelCreation_LabelCreation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../LabelCreation/LabelCreation */ "./src/components/Dropdown/TaskLabelDropdown/components/LabelCreation/LabelCreation.tsx");
+/* harmony import */ var _LabelEdit_LabelEdit__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../LabelEdit/LabelEdit */ "./src/components/Dropdown/TaskLabelDropdown/components/LabelEdit/LabelEdit.tsx");
+/* harmony import */ var _LabelSelection_LabelSelection__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../LabelSelection/LabelSelection */ "./src/components/Dropdown/TaskLabelDropdown/components/LabelSelection/LabelSelection.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+
+
+const LabelDropdownContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.memo)(({
+  task
+}) => {
+  const {
+    state: {
+      labels,
+      labelActionState
+    },
+    labelDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_5__.LabelContext);
+  const [loadingLabels, setLoadingLabels] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
+  const {
+    getPipelineLabels
+  } = (0,_hooks_actions_useLabelActions__WEBPACK_IMPORTED_MODULE_4__.useLabelActions)();
+  const loadLabels = () => __awaiter(void 0, void 0, void 0, function* () {
+    setLoadingLabels(true);
+    yield getPipelineLabels(task.pipeline_id, (success, labels) => {
+      if (success && labels) {
+        labelDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_LABELS,
+          payload: labels
+        });
+      }
+    });
+    setLoadingLabels(false);
+  });
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    loadLabels();
+  }, []);
+  const getSelectionLabels = () => {
+    const taskAssignedLabels = task.assigned_labels || [];
+    return (labels || []).map(label => Object.assign(Object.assign({}, label), {
+      selected: taskAssignedLabels.some(assignedLabel => assignedLabel.id === label.id)
+    }));
+  };
+  const onLabelSelection = labelId => {};
+  const onLabelDeSelection = labelId => {};
+  if (labelActionState == _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.SELECTION) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelSelection_LabelSelection__WEBPACK_IMPORTED_MODULE_9__.LabelSelection, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task label selection", "quicktasker"),
+      labels: getSelectionLabels(),
+      loading: loadingLabels,
+      labelSelected: onLabelSelection,
+      labelDeSelection: onLabelDeSelection
+    });
+  }
+  if (labelActionState == _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.CREATION) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelCreation_LabelCreation__WEBPACK_IMPORTED_MODULE_7__.LabelCreation, {});
+  }
+  if (labelActionState == _types_label__WEBPACK_IMPORTED_MODULE_6__.LabelActionState.EDIT) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelEdit_LabelEdit__WEBPACK_IMPORTED_MODULE_8__.LabelEdit, {});
+  }
+  return null;
+});
+
+
+/***/ }),
+
+/***/ "./src/components/Dropdown/TaskLabelDropdown/components/LabelEdit/LabelEdit.tsx":
+/*!**************************************************************************************!*\
+  !*** ./src/components/Dropdown/TaskLabelDropdown/components/LabelEdit/LabelEdit.tsx ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LabelEdit: () => (/* binding */ LabelEdit)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function LabelEdit() {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+      type: "text"
+    })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Dropdown/TaskLabelDropdown/components/LabelSelection/LabelSelection.tsx":
+/*!************************************************************************************************!*\
+  !*** ./src/components/Dropdown/TaskLabelDropdown/components/LabelSelection/LabelSelection.tsx ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LabelSelection: () => (/* binding */ LabelSelection)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+
+
+
+
+
+function LabelSelection({
+  labels,
+  title,
+  labelSelected,
+  labelDeSelection,
+  loading = false
+}) {
+  if (!labels) {
+    return null;
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: title
+    }), loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
+      ovalSize: "24"
+    }) : labels.map(label => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(SelectionLabel, {
+      label: label,
+      labelSelected: labelSelected,
+      labelDeSelection: labelDeSelection
+    }, label.id)), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_2__.WPQTButton, {
+      btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add new label", "quicktasker")
+    })]
+  });
+}
+function SelectionLabel({
+  label,
+  labelSelected,
+  labelDeSelection
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-gap-1",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+      type: "checkbox"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: label.name
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      className: "wpqt-text-5 wpqt-icon-green"
     })]
   });
 }
@@ -7167,6 +7477,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_CUSTOM_USER_PAGE_STYLES: () => (/* binding */ SET_CUSTOM_USER_PAGE_STYLES),
 /* harmony export */   SET_FULL_PAGE_LOADING: () => (/* binding */ SET_FULL_PAGE_LOADING),
 /* harmony export */   SET_LABELS: () => (/* binding */ SET_LABELS),
+/* harmony export */   SET_LABEL_ACTION_STATE_CREATION: () => (/* binding */ SET_LABEL_ACTION_STATE_CREATION),
+/* harmony export */   SET_LABEL_ACTION_STATE_EDITING: () => (/* binding */ SET_LABEL_ACTION_STATE_EDITING),
+/* harmony export */   SET_LABEL_ACTION_STATE_SELECTION: () => (/* binding */ SET_LABEL_ACTION_STATE_SELECTION),
 /* harmony export */   SET_PIPELINE_AUTOMATIONS: () => (/* binding */ SET_PIPELINE_AUTOMATIONS),
 /* harmony export */   SET_PIPELINE_AUTOMATIONS_LOADING: () => (/* binding */ SET_PIPELINE_AUTOMATIONS_LOADING),
 /* harmony export */   SET_SITE_URL: () => (/* binding */ SET_SITE_URL),
@@ -7285,6 +7598,9 @@ const SET_LABELS = "SET_LABELS";
 const ADD_LABEL = "ADD_LABEL";
 const REMOVE_LABEL = "REMOVE_LABEL";
 const EDIT_LABEL = "EDIT_LABEL";
+const SET_LABEL_ACTION_STATE_SELECTION = "SET_LABEL_ACTION_STATE_SELECTION";
+const SET_LABEL_ACTION_STATE_EDITING = "SET_LABEL_ACTION_STATE_EDITING";
+const SET_LABEL_ACTION_STATE_CREATION = "SET_LABEL_ACTION_STATE_CREATION";
 //Pipeline automations reducer
 const SET_PIPELINE_AUTOMATIONS = "SET_PIPELINE_AUTOMATIONS";
 const SET_PIPELINE_AUTOMATIONS_LOADING = "SET_PIPELINE_AUTOMATIONS_LOADING";
@@ -7686,6 +8002,88 @@ function useCustomFieldActions() {
     markCustomFieldAsDeleted,
     restoreCustomField,
     updateCustomFieldValue
+  };
+}
+
+
+/***/ }),
+
+/***/ "./src/hooks/actions/useLabelActions.ts":
+/*!**********************************************!*\
+  !*** ./src/hooks/actions/useLabelActions.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useLabelActions: () => (/* binding */ useLabelActions)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+function useLabelActions() {
+  const getPipelineLabels = (boardId, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getPipelineLabelsRequest)(boardId);
+      if (callback) {
+        callback(true, response.data.labels);
+      }
+    } catch (error) {
+      console.error(error);
+      if (callback) {
+        callback(false);
+      }
+    }
+  });
+  const createPipelineLabel = (pipelineId, name, color, callback) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.createPipelineLabelRequest)(pipelineId, name, color);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Label created successfully", "quicktasker"));
+      if (callback) {
+        callback(true, response.data.label);
+      }
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to create label", "quicktasker"));
+      if (callback) {
+        callback(false);
+      }
+    }
+  });
+  return {
+    getPipelineLabels,
+    createPipelineLabel
   };
 }
 
@@ -10803,15 +11201,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_Dropdown_TaskControlsDropdown_TaskControlsDropdown__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/Dropdown/TaskControlsDropdown/TaskControlsDropdown */ "./src/components/Dropdown/TaskControlsDropdown/TaskControlsDropdown.tsx");
-/* harmony import */ var _components_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
-/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _TaskActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TaskActions */ "./src/pages/PipelinePage/components/Task/TaskActions.tsx");
+/* harmony import */ var _components_Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/Dropdown/TaskLabelDropdown/TaskLabelDropdown */ "./src/components/Dropdown/TaskLabelDropdown/TaskLabelDropdown.tsx");
+/* harmony import */ var _components_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _TaskActions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./TaskActions */ "./src/pages/PipelinePage/components/Task/TaskActions.tsx");
+
 
 
 
@@ -10828,17 +11228,17 @@ function Task({
 }) {
   const {
     modalDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__.ModalContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__.ModalContext);
   const {
     state: {
       activePipeline
     }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_5__.ActivePipelineContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__.ActivePipelineContext);
   const pipelineSettings = activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.settings;
   const allowToMarkTaskAsDone = !pipelineSettings.allow_only_last_stage_task_done || onLastStage;
   const openEditTaskModal = () => {
     modalDispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_4__.OPEN_EDIT_TASK_MODAL,
+      type: _constants__WEBPACK_IMPORTED_MODULE_5__.OPEN_EDIT_TASK_MODAL,
       payload: {
         taskToEdit: task,
         taskModalSettings: {
@@ -10847,7 +11247,7 @@ function Task({
       }
     });
   };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_8__.Draggable, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_9__.Draggable, {
     draggableId: task.id,
     index: index,
     children: provided => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({
@@ -10866,12 +11266,14 @@ function Task({
       }), task.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-sm wpqt-italic",
         children: task.description
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-mt-2",
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_3__.UserAssignementDropdown, {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-mt-2 wpqt-flex wpqt-flex-col wpqt-gap-2",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_4__.UserAssignementDropdown, {
           task: task
-        })
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskActions__WEBPACK_IMPORTED_MODULE_7__.TaskActions, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_3__.TaskLabelDropdown, {
+          task: task
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TaskActions__WEBPACK_IMPORTED_MODULE_8__.TaskActions, {
         task: task,
         allowToMarkTaskAsDone: allowToMarkTaskAsDone
       })]
@@ -14497,11 +14899,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _reducers_labels_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/labels-reducer */ "./src/reducers/labels-reducer.ts");
+/* harmony import */ var _types_label__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../types/label */ "./src/types/label.ts");
+
 
 
 
 const initialState = {
-  labels: []
+  labels: null,
+  labelActionState: _types_label__WEBPACK_IMPORTED_MODULE_3__.LabelActionState.SELECTION,
+  labelToEdit: null
 };
 const LabelContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -15804,6 +16210,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   reducer: () => (/* binding */ reducer)
 /* harmony export */ });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./src/constants.ts");
+/* harmony import */ var _types_label__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types/label */ "./src/types/label.ts");
+
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -15816,19 +16224,40 @@ const reducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_LABEL:
       {
         return Object.assign(Object.assign({}, state), {
-          labels: [...state.labels, action.payload]
+          labels: state.labels ? [...state.labels, action.payload] : [action.payload]
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.EDIT_LABEL:
       {
         return Object.assign(Object.assign({}, state), {
-          labels: state.labels.map(label => label.id === action.payload.id ? action.payload : label)
+          labels: state.labels ? state.labels.map(label => label.id === action.payload.id ? action.payload : label) : [action.payload]
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.REMOVE_LABEL:
       {
         return Object.assign(Object.assign({}, state), {
-          labels: state.labels.filter(label => label.id !== action.payload.id)
+          labels: state.labels ? state.labels.filter(label => label.id !== action.payload.id) : []
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_LABEL_ACTION_STATE_SELECTION:
+      {
+        return Object.assign(Object.assign({}, state), {
+          labelActionState: _types_label__WEBPACK_IMPORTED_MODULE_1__.LabelActionState.SELECTION,
+          labelToEdit: null
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_LABEL_ACTION_STATE_EDITING:
+      {
+        return Object.assign(Object.assign({}, state), {
+          labelActionState: _types_label__WEBPACK_IMPORTED_MODULE_1__.LabelActionState.EDIT,
+          labelToEdit: action.payload
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_LABEL_ACTION_STATE_CREATION:
+      {
+        return Object.assign(Object.assign({}, state), {
+          labelActionState: _types_label__WEBPACK_IMPORTED_MODULE_1__.LabelActionState.CREATION,
+          labelToEdit: null
         });
       }
     default:
@@ -16584,6 +17013,26 @@ var WPQTWpUserTypes;
   WPQTWpUserTypes["Admin"] = "administrator";
   WPQTWpUserTypes["Other"] = "other";
 })(WPQTWpUserTypes || (WPQTWpUserTypes = {}));
+
+
+/***/ }),
+
+/***/ "./src/types/label.ts":
+/*!****************************!*\
+  !*** ./src/types/label.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LabelActionState: () => (/* binding */ LabelActionState)
+/* harmony export */ });
+var LabelActionState;
+(function (LabelActionState) {
+  LabelActionState["SELECTION"] = "select";
+  LabelActionState["CREATION"] = "create";
+  LabelActionState["EDIT"] = "edit";
+})(LabelActionState || (LabelActionState = {}));
 
 
 /***/ }),
