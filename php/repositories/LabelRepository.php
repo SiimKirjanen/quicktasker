@@ -10,6 +10,24 @@ if ( ! class_exists( 'WPQT\Label\LabelRepository' ) ) {
     class LabelRepository {
 
         /**
+         * Retrieves a label by its ID.
+         *
+         * This function queries the database to fetch a label record based on the provided ID.
+         *
+         * @param int $id The ID of the label to retrieve.
+         * @return object|null The label object containing id, pipeline_id, created_at, color, and name fields, or null if not found.
+         */
+        public function getLabelById($id) {
+            global $wpdb;
+
+            return $wpdb->get_row( $wpdb->prepare(
+                "SELECT id, pipeline_id, created_at, color, name FROM " . TABLE_WP_QUICKTASKER_LABELS . "
+                WHERE id = %d",
+                $id
+            ) );
+        }
+
+        /**
          * Retrieves the labels assigned to the specified task IDs.
          *
          * This function queries the database to fetch labels that are associated with the given task IDs.

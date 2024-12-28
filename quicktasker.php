@@ -60,6 +60,7 @@ require( 'php/services/SettingsValidationService.php' );
 require( 'php/services/AutomationService.php' );
 require( 'php/services/EmailService.php' );
 require( 'php/services/ErrorHandlerService.php' );
+require( 'php/services/LabelService.php' );
 require( 'php/services/ServiceLocator.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
@@ -86,6 +87,7 @@ WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\Automatio
 WPQT\ServiceLocator::register('ErrorHandlerService', new WPQT\Error\ErrorHandlerService());
 WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
 WPQT\ServiceLocator::register('EmailService', new WPQT\Email\EmailService());
+WPQT\ServiceLocator::register('LabelService', new WPQT\Label\LabelService());
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );
