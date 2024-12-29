@@ -1648,6 +1648,10 @@
   justify-content: center;
 }
 
+.wpqt-justify-between {
+  justify-content: space-between;
+}
+
 .wpqt-gap-1 {
   gap: 0.25rem;
 }
@@ -1678,6 +1682,10 @@
 
 .wpqt-gap-\[24px\] {
   gap: 24px;
+}
+
+.wpqt-gap-1\.5 {
+  gap: 0.375rem;
 }
 
 .wpqt-gap-y-1 {
@@ -1957,6 +1965,11 @@
 .wpqt-py-5 {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
+}
+
+.wpqt-py-0\.5 {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
 }
 
 .\!wpqt-pr-6 {
@@ -2316,6 +2329,10 @@
   transform: translate(-50%, -50%);
 }
 
+.wpqt-clip-path-tag {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 50%);
+}
+
 /* Start of WordPress style overrides */
 
 #wpwrap {
@@ -2423,6 +2440,11 @@
 .enabled\:hover\:wpqt-bg-blue-600:hover:enabled {
   --tw-bg-opacity: 1;
   background-color: rgb(37 99 235 / var(--tw-bg-opacity));
+}
+
+.enabled\:hover\:wpqt-bg-gray-200:hover:enabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
 .wpqt-group:hover .group-hover\:wpqt-text-blue-600 {

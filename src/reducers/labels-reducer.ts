@@ -2,12 +2,17 @@ import {
   ADD_LABEL,
   EDIT_LABEL,
   REMOVE_LABEL,
+  RESET_LABEL_CONTEXT,
   SET_LABEL_ACTION_STATE_CREATION,
   SET_LABEL_ACTION_STATE_EDITING,
   SET_LABEL_ACTION_STATE_SELECTION,
   SET_LABELS,
 } from "../constants";
-import { Action, State } from "../providers/LabelsContextProvider";
+import {
+  Action,
+  initialLabelContextState,
+  State,
+} from "../providers/LabelsContextProvider";
 import { LabelActionState } from "../types/label";
 
 const reducer = (state: State, action: Action): State => {
@@ -65,6 +70,9 @@ const reducer = (state: State, action: Action): State => {
         labelActionState: LabelActionState.CREATION,
         labelToEdit: null,
       };
+    }
+    case RESET_LABEL_CONTEXT: {
+      return initialLabelContextState;
     }
     default: {
       return state;

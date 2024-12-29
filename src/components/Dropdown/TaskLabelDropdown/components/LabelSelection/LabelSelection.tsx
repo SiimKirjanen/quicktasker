@@ -1,10 +1,14 @@
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { SET_LABEL_ACTION_STATE_CREATION } from "../../../../../constants";
+import {
+  SET_LABEL_ACTION_STATE_CREATION,
+  SET_LABEL_ACTION_STATE_EDITING,
+} from "../../../../../constants";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
 import { SelectionLabel } from "../../../../../types/label";
-import { WPQTButton } from "../../../../common/Button/Button";
+import { ButtonStyleType, WPQTButton } from "../../../../common/Button/Button";
+import { WPQTTag } from "../../../../common/Tag/Tag";
 import { Loading } from "../../../../Loading/Loading";
 
 type Props = {
@@ -27,8 +31,8 @@ function LabelSelection({
     return null;
   }
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2">
-      <div>{title}</div>
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
+      <div className="wpqt-text-lg">{title}</div>
       {loading ? (
         <Loading ovalSize="24" />
       ) : (
@@ -42,7 +46,9 @@ function LabelSelection({
         ))
       )}
       <WPQTButton
-        btnText={__("Add new label", "quicktasker")}
+        btnText={__("Create new label", "quicktasker")}
+        className="wpqt-mt-3"
+        buttonStyleType={ButtonStyleType.SECONDARY}
         onClick={() => {
           labelDispatch({ type: SET_LABEL_ACTION_STATE_CREATION });
         }}
@@ -61,11 +67,41 @@ function SelectionLabel({
   labelSelected,
   labelDeSelection,
 }: SelectionLabelProps) {
+  const { labelDispatch } = useContext(LabelContext);
+  const [isSelected, setIsSelected] = useState(label.selected);
+
+  const onSelectionToggle = async (
+    element: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const isSelected = element.target.checked;
+
+    setIsSelected(isSelected);
+    if (isSelected) {
+      labelSelected(label.id);
+    } else {
+      labelDeSelection(label.id);
+    }
+  };
+
   return (
-    <div className="wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-w-full">
-      <input type="checkbox" checked={label.selected} />
-      <div className="wpqt-flex-1 wpqt-text-center">{label.name}</div>
-      <PencilSquareIcon className="wpqt-size-4 wpqt-icon-green" />
+    <div className="wpqt-flex wpqt-items-center wpqt-justify-between wpqt-gap-2 wpqt-w-full">
+      <input
+        type="checkbox"
+        checked={isSelected}
+        onChange={onSelectionToggle}
+      />
+      <WPQTTag inlineStyle={{ backgroundColor: label.color }}>
+        {label.name}
+      </WPQTTag>
+      <PencilSquareIcon
+        className="wpqt-size-5 wpqt-icon-green wpqt-cursor-pointer"
+        onClick={() => {
+          labelDispatch({
+            type: SET_LABEL_ACTION_STATE_EDITING,
+            payload: label,
+          });
+        }}
+      />
     </div>
   );
 }

@@ -80,6 +80,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   saveTaskCompletionDoneSettingRequest: () => (/* binding */ saveTaskCompletionDoneSettingRequest),
 /* harmony export */   saveUserPageCustomStylesRequest: () => (/* binding */ saveUserPageCustomStylesRequest),
 /* harmony export */   setPipelinePrimaryRequest: () => (/* binding */ setPipelinePrimaryRequest),
+/* harmony export */   unassignLabelFromTaskRequest: () => (/* binding */ unassignLabelFromTaskRequest),
 /* harmony export */   updateCustomFieldValueRequest: () => (/* binding */ updateCustomFieldValueRequest),
 /* harmony export */   updateWPUserPermissionsRequest: () => (/* binding */ updateWPUserPermissionsRequest)
 /* harmony export */ });
@@ -650,6 +651,13 @@ function assignLabelToTaskRequest(pipelineId, taskId, labelId) {
     data: {
       labelId
     }
+  });
+}
+function unassignLabelFromTaskRequest(pipelineId, taskId, labelId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels/${labelId}`,
+    method: "DELETE",
+    headers: getCommonHeaders()
   });
 }
 
@@ -1408,6 +1416,7 @@ function WPQTTooltip({
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ButtonStyleType: () => (/* binding */ ButtonStyleType),
 /* harmony export */   ButtonType: () => (/* binding */ ButtonType),
 /* harmony export */   WPQTButton: () => (/* binding */ WPQTButton),
 /* harmony export */   WPQTIconButton: () => (/* binding */ WPQTIconButton),
@@ -1428,17 +1437,26 @@ var ButtonType;
   ButtonType["SUBMIT"] = "submit";
   ButtonType["RESET"] = "reset";
 })(ButtonType || (ButtonType = {}));
+var ButtonStyleType;
+(function (ButtonStyleType) {
+  ButtonStyleType["PRIMARY"] = "primary";
+  ButtonStyleType["SECONDARY"] = "secondary";
+})(ButtonStyleType || (ButtonStyleType = {}));
 function WPQTButton({
   onClick = () => {},
   btnText,
   className,
   type = ButtonType.BUTTON,
   disabled = false,
-  loading = false
+  loading = false,
+  buttonStyleType = ButtonStyleType.PRIMARY
 }) {
+  const primaryClasses = "wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600";
+  const secondaryClasses = "wpqt-inline-flex wpqt-cursor-pointer wpqt-bg-gray-100 wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 enabled:hover:wpqt-bg-gray-200";
+  const buttonClasses = buttonStyleType === ButtonStyleType.PRIMARY ? `${primaryClasses}` : `${secondaryClasses}`;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Button, {
     disabled: disabled || loading,
-    className: `wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`,
+    className: `${buttonClasses} ${className}`,
     onClick: onClick,
     type: type,
     children: loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_1__.LoadingOval, {
@@ -1776,6 +1794,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   OPEN_STAGE_EDIT_MODAL: () => (/* binding */ OPEN_STAGE_EDIT_MODAL),
 /* harmony export */   PIPELINES_SET: () => (/* binding */ PIPELINES_SET),
 /* harmony export */   PIPELINE_ADD_EXISTING_PIPELINE: () => (/* binding */ PIPELINE_ADD_EXISTING_PIPELINE),
+/* harmony export */   PIPELINE_ADD_LABEL_TO_TASK: () => (/* binding */ PIPELINE_ADD_LABEL_TO_TASK),
 /* harmony export */   PIPELINE_ADD_PIPELINE: () => (/* binding */ PIPELINE_ADD_PIPELINE),
 /* harmony export */   PIPELINE_ADD_STAGE: () => (/* binding */ PIPELINE_ADD_STAGE),
 /* harmony export */   PIPELINE_ADD_TASK: () => (/* binding */ PIPELINE_ADD_TASK),
@@ -1788,6 +1807,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_MOVE_STAGE: () => (/* binding */ PIPELINE_MOVE_STAGE),
 /* harmony export */   PIPELINE_MOVE_TASK: () => (/* binding */ PIPELINE_MOVE_TASK),
 /* harmony export */   PIPELINE_REMOVE_ACTIVE_PIPELINE: () => (/* binding */ PIPELINE_REMOVE_ACTIVE_PIPELINE),
+/* harmony export */   PIPELINE_REMOVE_LABEL_FROM_TASK: () => (/* binding */ PIPELINE_REMOVE_LABEL_FROM_TASK),
 /* harmony export */   PIPELINE_REMOVE_PIPELINE: () => (/* binding */ PIPELINE_REMOVE_PIPELINE),
 /* harmony export */   PIPELINE_REMOVE_TASK: () => (/* binding */ PIPELINE_REMOVE_TASK),
 /* harmony export */   PIPELINE_REMOVE_USER_FROM_TASK: () => (/* binding */ PIPELINE_REMOVE_USER_FROM_TASK),
@@ -1809,6 +1829,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RESET_AUTOMATION_TO_ACTION: () => (/* binding */ RESET_AUTOMATION_TO_ACTION),
 /* harmony export */   RESET_AUTOMATION_TO_TARGET: () => (/* binding */ RESET_AUTOMATION_TO_TARGET),
 /* harmony export */   RESET_AUTOMATION_TO_TRIGGER: () => (/* binding */ RESET_AUTOMATION_TO_TRIGGER),
+/* harmony export */   RESET_LABEL_CONTEXT: () => (/* binding */ RESET_LABEL_CONTEXT),
 /* harmony export */   RESET_PASSWORD: () => (/* binding */ RESET_PASSWORD),
 /* harmony export */   SET_ARCHIVE_FILTERED_PIPELINE: () => (/* binding */ SET_ARCHIVE_FILTERED_PIPELINE),
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
@@ -1865,6 +1886,8 @@ const PIPELINE_REMOVE_PIPELINE = "REMOVE_PIPELINE";
 const PIPELINE_REMOVE_ACTIVE_PIPELINE = "REMOVE_ACTIVE_PIPELINE";
 const PIPELINE_REMOVE_TASK = "REMOVE_TASK";
 const PIPELINE_TOGGLE_VIEW = "TOGGLE_VIEW";
+const PIPELINE_ADD_LABEL_TO_TASK = "ADD_LABEL_TO_TASK";
+const PIPELINE_REMOVE_LABEL_FROM_TASK = "REMOVE_LABEL_FROM_TASK";
 //Active pipeline task view reducer constants
 const SET_STAGE_FILTER = "SET_STAGE_FILTER";
 const SET_USER_FILTER = "SET_USER_FILTER";
@@ -1946,6 +1969,7 @@ const EDIT_LABEL = "EDIT_LABEL";
 const SET_LABEL_ACTION_STATE_SELECTION = "SET_LABEL_ACTION_STATE_SELECTION";
 const SET_LABEL_ACTION_STATE_EDITING = "SET_LABEL_ACTION_STATE_EDITING";
 const SET_LABEL_ACTION_STATE_CREATION = "SET_LABEL_ACTION_STATE_CREATION";
+const RESET_LABEL_CONTEXT = "RESET_LABEL_CONTEXT";
 //Pipeline automations reducer
 const SET_PIPELINE_AUTOMATIONS = "SET_PIPELINE_AUTOMATIONS";
 const SET_PIPELINE_AUTOMATIONS_LOADING = "SET_PIPELINE_AUTOMATIONS_LOADING";

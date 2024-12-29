@@ -8,6 +8,7 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { getPipelineData } from "../api/api";
 import {
+  PIPELINE_ADD_LABEL_TO_TASK,
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
   PIPELINE_ADD_USER_TO_TASK,
@@ -18,6 +19,7 @@ import {
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
   PIPELINE_REMOVE_ACTIVE_PIPELINE,
+  PIPELINE_REMOVE_LABEL_FROM_TASK,
   PIPELINE_REMOVE_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
   PIPELINE_REORDER_TASK,
@@ -27,6 +29,7 @@ import {
   SET_FULL_PAGE_LOADING,
 } from "../constants";
 import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
+import { Label } from "../types/label";
 import { Pipeline, PipelineFromServer, PipelineView } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { TaskFromServer } from "../types/task";
@@ -87,6 +90,14 @@ type Action =
   | { type: typeof PIPELINE_REMOVE_ACTIVE_PIPELINE }
   | { type: typeof PIPELINE_REMOVE_TASK; payload: string }
   | { type: typeof PIPELINE_TOGGLE_VIEW; payload: PipelineView }
+  | {
+      type: typeof PIPELINE_ADD_LABEL_TO_TASK;
+      payload: { taskId: string; label: Label };
+    }
+  | {
+      type: typeof PIPELINE_REMOVE_LABEL_FROM_TASK;
+      payload: { taskId: string; labelId: string };
+    }
   | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer };
 
 type Dispatch = (action: Action) => void;

@@ -7,6 +7,10 @@ enum ButtonType {
   SUBMIT = "submit",
   RESET = "reset",
 }
+enum ButtonStyleType {
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
+}
 type Props = {
   onClick?: () => void;
   btnText: string;
@@ -14,8 +18,8 @@ type Props = {
   type?: ButtonType;
   disabled?: boolean;
   loading?: boolean;
+  buttonStyleType?: ButtonStyleType;
 };
-
 function WPQTButton({
   onClick = () => {},
   btnText,
@@ -23,11 +27,21 @@ function WPQTButton({
   type = ButtonType.BUTTON,
   disabled = false,
   loading = false,
+  buttonStyleType = ButtonStyleType.PRIMARY,
 }: Props) {
+  const primaryClasses =
+    "wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600";
+  const secondaryClasses =
+    "wpqt-inline-flex wpqt-cursor-pointer wpqt-bg-gray-100 wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 enabled:hover:wpqt-bg-gray-200";
+  const buttonClasses =
+    buttonStyleType === ButtonStyleType.PRIMARY
+      ? `${primaryClasses}`
+      : `${secondaryClasses}`;
+
   return (
     <Button
       disabled={disabled || loading}
-      className={`wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600 ${className}`}
+      className={`${buttonClasses} ${className}`}
       onClick={onClick}
       type={type}
     >
@@ -136,4 +150,10 @@ function WPQTOnlyIconBtn({
   );
 }
 
-export { ButtonType, WPQTButton, WPQTIconButton, WPQTOnlyIconBtn };
+export {
+  ButtonStyleType,
+  ButtonType,
+  WPQTButton,
+  WPQTIconButton,
+  WPQTOnlyIconBtn,
+};

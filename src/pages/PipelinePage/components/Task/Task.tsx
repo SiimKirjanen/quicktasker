@@ -56,7 +56,7 @@ function Task({ task, index, onLastStage }: Props) {
             <div className="wpqt-text-sm wpqt-italic">{task.description}</div>
           )}
 
-          <div className="wpqt-mt-2 wpqt-flex wpqt-flex-col wpqt-gap-2">
+          <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-gap-2">
             <UserAssignementDropdown task={task} />
             <TaskLabelDropdown task={task} />
           </div>

@@ -755,12 +755,28 @@ function assignLabelToTaskRequest(
   pipelineId: string,
   taskId: string,
   labelId: string,
-): Promise<WPQTResponse> {
+): Promise<
+  WPQTResponse<{
+    label: Label;
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels`,
     method: "POST",
     headers: getCommonHeaders(),
     data: { labelId },
+  });
+}
+
+function unassignLabelFromTaskRequest(
+  pipelineId: string,
+  taskId: string,
+  labelId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels/${labelId}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
   });
 }
 
@@ -816,6 +832,7 @@ export {
   saveTaskCompletionDoneSettingRequest,
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
+  unassignLabelFromTaskRequest,
   updateCustomFieldValueRequest,
   updateWPUserPermissionsRequest,
 };

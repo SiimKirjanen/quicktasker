@@ -1,7 +1,14 @@
 import { memo, useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { ADD_LABEL, SET_LABELS } from "../../../../../constants";
+import {
+  ADD_LABEL,
+  PIPELINE_ADD_LABEL_TO_TASK,
+  PIPELINE_REMOVE_LABEL_FROM_TASK,
+  RESET_LABEL_CONTEXT,
+  SET_LABELS,
+} from "../../../../../constants";
 import { useLabelActions } from "../../../../../hooks/actions/useLabelActions";
+import { ActivePipelineContext } from "../../../../../providers/ActivePipelineContextProvider";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
 import { LabelActionState, SelectionLabel } from "../../../../../types/label";
 import { Task } from "../../../../../types/task";
@@ -17,9 +24,15 @@ const LabelDropdownContent = memo(({ task }: Props) => {
     state: { labels, labelActionState },
     labelDispatch,
   } = useContext(LabelContext);
+  const { dispatch } = useContext(ActivePipelineContext);
   const [loadingLabels, setLoadingLabels] = useState(true);
   const [creatingLabel, setCreatingLabel] = useState(false);
-  const { getPipelineLabels, createPipelineLabel } = useLabelActions();
+  const {
+    getPipelineLabels,
+    createPipelineLabel,
+    assignLabelToTask,
+    usassignLabelFromTask,
+  } = useLabelActions();
 
   const loadLabels = async () => {
     setLoadingLabels(true);
@@ -33,6 +46,10 @@ const LabelDropdownContent = memo(({ task }: Props) => {
 
   useEffect(() => {
     loadLabels();
+
+    return () => {
+      labelDispatch({ type: RESET_LABEL_CONTEXT });
+    };
   }, []);
 
   const getSelectionLabels = (): SelectionLabel[] => {
@@ -45,8 +62,36 @@ const LabelDropdownContent = memo(({ task }: Props) => {
     }));
   };
 
-  const onLabelSelected = (labelId: string) => {};
-  const onLabelDeSelected = (labelId: string) => {};
+  const onLabelSelected = async (labelId: string) => {
+    await assignLabelToTask(
+      task.pipeline_id,
+      task.id,
+      labelId,
+      (success, label) => {
+        if (success && label) {
+          dispatch({
+            type: PIPELINE_ADD_LABEL_TO_TASK,
+            payload: { taskId: task.id, label },
+          });
+        }
+      },
+    );
+  };
+  const onLabelDeSelected = async (labelId: string) => {
+    await usassignLabelFromTask(
+      task.pipeline_id,
+      task.id,
+      labelId,
+      (success) => {
+        if (success) {
+          dispatch({
+            type: PIPELINE_REMOVE_LABEL_FROM_TASK,
+            payload: { taskId: task.id, labelId },
+          });
+        }
+      },
+    );
+  };
   const onLabelCreated = async (name: string, color: string) => {
     setCreatingLabel(true);
     await createPipelineLabel(
@@ -89,7 +134,10 @@ const LabelDropdownContent = memo(({ task }: Props) => {
   };
 
   return (
-    <div className="wpqt-min-w-56" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="wpqt-min-w-56 wpqt-flex wpqt-flex-col wpqt-gap-4"
+      onClick={(e) => e.stopPropagation()}
+    >
       {renderContent()}
     </div>
   );

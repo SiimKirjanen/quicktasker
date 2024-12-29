@@ -4,6 +4,7 @@ import {
   assignLabelToTaskRequest,
   createPipelineLabelRequest,
   getPipelineLabelsRequest,
+  unassignLabelFromTaskRequest,
 } from "../../api/api";
 import { Label } from "../../types/label";
 
@@ -54,13 +55,18 @@ function useLabelActions() {
     pipelineId: string,
     taskId: string,
     labelId: string,
-    callback: (success: boolean) => void,
+    callback?: (success: boolean, label?: Label) => void,
   ) => {
     try {
-      await assignLabelToTaskRequest(pipelineId, taskId, labelId);
+      const response = await assignLabelToTaskRequest(
+        pipelineId,
+        taskId,
+        labelId,
+      );
+
       toast.success(__("Label assigned to task", "quicktasker"));
       if (callback) {
-        callback(true);
+        callback(true, response.data.label);
       }
     } catch (error) {
       console.error(error);
@@ -71,7 +77,33 @@ function useLabelActions() {
     }
   };
 
-  return { getPipelineLabels, createPipelineLabel, assignLabelToTask };
+  const usassignLabelFromTask = async (
+    pipelineId: string,
+    taskId: string,
+    labelId: string,
+    callback?: (success: boolean) => void,
+  ) => {
+    try {
+      await unassignLabelFromTaskRequest(pipelineId, taskId, labelId);
+      toast.success(__("Label unassigned from task", "quicktasker"));
+      if (callback) {
+        callback(true);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to unassign label from task", "quicktasker"));
+      if (callback) {
+        callback(false);
+      }
+    }
+  };
+
+  return {
+    getPipelineLabels,
+    createPipelineLabel,
+    assignLabelToTask,
+    usassignLabelFromTask,
+  };
 }
 
 export { useLabelActions };

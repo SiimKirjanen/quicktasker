@@ -1,4 +1,5 @@
 import {
+  PIPELINE_ADD_LABEL_TO_TASK,
   PIPELINE_ADD_STAGE,
   PIPELINE_ADD_TASK,
   PIPELINE_ADD_USER_TO_TASK,
@@ -9,6 +10,7 @@ import {
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
   PIPELINE_REMOVE_ACTIVE_PIPELINE,
+  PIPELINE_REMOVE_LABEL_FROM_TASK,
   PIPELINE_REMOVE_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
   PIPELINE_REORDER_TASK,
@@ -387,6 +389,73 @@ const activePipelineReducer = (state: State, action: Action) => {
       return {
         ...state,
         view: action.payload,
+      };
+    }
+    case PIPELINE_ADD_LABEL_TO_TASK: {
+      const { taskId, label } = action.payload;
+      console.log(taskId, label);
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        const updatedTasks = stage.tasks?.map((task) => {
+          if (task.id === taskId) {
+            console.log("Found the task!!!");
+            return {
+              ...task,
+              assigned_labels: [...(task.assigned_labels || []), label],
+            };
+          }
+          return task;
+        });
+
+        return {
+          ...stage,
+          tasks: updatedTasks,
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
+        },
+      };
+    }
+    case PIPELINE_REMOVE_LABEL_FROM_TASK: {
+      const { taskId, labelId } = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        const updatedTasks = stage.tasks?.map((task) => {
+          if (task.id === taskId) {
+            return {
+              ...task,
+              assigned_labels: (task.assigned_labels || []).filter(
+                (label) => label.id !== labelId,
+              ),
+            };
+          }
+          return task;
+        });
+
+        return {
+          ...stage,
+          tasks: updatedTasks,
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
+        },
       };
     }
     default:

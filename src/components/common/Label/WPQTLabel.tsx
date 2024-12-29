@@ -3,7 +3,7 @@ type Props = {
   labelFor?: string;
   className?: string;
 };
-function WPQTLabel({ children, labelFor, className }: Props) {
+function WPQTLabel({ children, labelFor, className = "" }: Props) {
   return (
     <label className={`wpqt-mb-1 ${className}`} htmlFor={labelFor}>
       {children}
