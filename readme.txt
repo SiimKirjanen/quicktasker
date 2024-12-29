@@ -4,7 +4,7 @@ Tags: task manager, task management, project manager, project management
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
-Stable tag: 1.19.0
+Stable tag: 1.20.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,10 @@ QuickTasker PRO version
 5. User task comments
 
 == Changelog ==
+
+= 1.20.0 =
+* Added ability to add labels to tasks.
+* Automation upgrades.
 
 = 1.19.0 =
 * Added public and private comment email automations.
