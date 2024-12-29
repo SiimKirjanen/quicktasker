@@ -51,8 +51,9 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
             $result = $wpdb->insert(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, array(
                 'entity_id' => $entityId,
                 'label_id' => $labelId,
-                'entity_type' => $entityType
-            ), array('%d', '%d', '%s'));
+                'entity_type' => $entityType,
+                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ), array('%d', '%d', '%s', '%s'));
 
             if( $result === false ) {
                 throw new \Exception('Failed to assign label to task');

@@ -50,7 +50,8 @@ if ( ! class_exists( 'WPQT\Label\LabelRepository' ) ) {
                 FROM " . TABLE_WP_QUICKTASKER_LABELS . " AS a
                 INNER JOIN " . TABLE_WP_QUICKTASKER_LABEL_RELATIONS . " AS b 
                 ON a.id = b.label_id
-                WHERE b.entity_id IN ($placeholders) AND b.entity_type = 'task'",
+                WHERE b.entity_id IN ($placeholders) AND b.entity_type = 'task'
+                ORDER BY b.created_at",
                 $taskIds
             );
 
