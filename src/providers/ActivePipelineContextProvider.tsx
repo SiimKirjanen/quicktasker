@@ -14,6 +14,7 @@ import {
   PIPELINE_ADD_USER_TO_TASK,
   PIPELINE_CHANGE_TASK_DONE_STATUS,
   PIPELINE_DELETE_STAGE,
+  PIPELINE_EDIT_LABEL,
   PIPELINE_EDIT_PIPELINE,
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
@@ -97,6 +98,10 @@ type Action =
   | {
       type: typeof PIPELINE_REMOVE_LABEL_FROM_TASK;
       payload: { taskId: string; labelId: string };
+    }
+  | {
+      type: typeof PIPELINE_EDIT_LABEL;
+      payload: { label: Label };
     }
   | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer };
 

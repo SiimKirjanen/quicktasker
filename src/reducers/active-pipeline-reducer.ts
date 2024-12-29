@@ -5,6 +5,7 @@ import {
   PIPELINE_ADD_USER_TO_TASK,
   PIPELINE_CHANGE_TASK_DONE_STATUS,
   PIPELINE_DELETE_STAGE,
+  PIPELINE_EDIT_LABEL,
   PIPELINE_EDIT_PIPELINE,
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
@@ -442,6 +443,38 @@ const activePipelineReducer = (state: State, action: Action) => {
             };
           }
           return task;
+        });
+
+        return {
+          ...stage,
+          tasks: updatedTasks,
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
+        },
+      };
+    }
+    case PIPELINE_EDIT_LABEL: {
+      const { label } = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        const updatedTasks = stage.tasks?.map((task) => {
+          return {
+            ...task,
+            assigned_labels: (task.assigned_labels || []).map(
+              (assignedLabel) =>
+                assignedLabel.id === label.id ? label : assignedLabel,
+            ),
+          };
         });
 
         return {

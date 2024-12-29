@@ -2,15 +2,22 @@ import { memo, useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
   ADD_LABEL,
+  EDIT_LABEL,
   PIPELINE_ADD_LABEL_TO_TASK,
+  PIPELINE_EDIT_LABEL,
   PIPELINE_REMOVE_LABEL_FROM_TASK,
   RESET_LABEL_CONTEXT,
+  SET_LABEL_ACTION_STATE_SELECTION,
   SET_LABELS,
 } from "../../../../../constants";
 import { useLabelActions } from "../../../../../hooks/actions/useLabelActions";
 import { ActivePipelineContext } from "../../../../../providers/ActivePipelineContextProvider";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
-import { LabelActionState, SelectionLabel } from "../../../../../types/label";
+import {
+  Label,
+  LabelActionState,
+  SelectionLabel,
+} from "../../../../../types/label";
 import { Task } from "../../../../../types/task";
 import { LabelCreation } from "../LabelCreation/LabelCreation";
 import { LabelEdit } from "../LabelEdit/LabelEdit";
@@ -21,7 +28,7 @@ type Props = {
 };
 const LabelDropdownContent = memo(({ task }: Props) => {
   const {
-    state: { labels, labelActionState },
+    state: { labels, labelActionState, labelToEdit },
     labelDispatch,
   } = useContext(LabelContext);
   const { dispatch } = useContext(ActivePipelineContext);
@@ -32,6 +39,7 @@ const LabelDropdownContent = memo(({ task }: Props) => {
     createPipelineLabel,
     assignLabelToTask,
     usassignLabelFromTask,
+    editLabel,
   } = useLabelActions();
 
   const loadLabels = async () => {
@@ -107,6 +115,20 @@ const LabelDropdownContent = memo(({ task }: Props) => {
     setCreatingLabel(false);
   };
 
+  const onEditLabel = async (label: Label) => {
+    await editLabel(task.pipeline_id, label, (success, label) => {
+      if (success && label) {
+        labelDispatch({ type: EDIT_LABEL, payload: label });
+        dispatch({
+          type: PIPELINE_EDIT_LABEL,
+          payload: {
+            label,
+          },
+        });
+      }
+    });
+  };
+
   const renderContent = () => {
     switch (labelActionState) {
       case LabelActionState.SELECTION:
@@ -127,7 +149,15 @@ const LabelDropdownContent = memo(({ task }: Props) => {
           />
         );
       case LabelActionState.EDIT:
-        return <LabelEdit />;
+        return (
+          <LabelEdit
+            labelToEdit={labelToEdit}
+            editLabel={onEditLabel}
+            closeEdit={() => {
+              labelDispatch({ type: SET_LABEL_ACTION_STATE_SELECTION });
+            }}
+          />
+        );
       default:
         return null;
     }

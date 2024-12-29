@@ -87,5 +87,29 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
 
             return true;
         }
+
+        /**
+         * Updates a label with the given ID, name, and color.
+         *
+         * @param int $labelId The ID of the label to update.
+         * @param string $name The new name for the label.
+         * @param string $color The new color for the label.
+         * @return mixed The updated label object.
+         * @throws \Exception If the label update fails.
+         */
+        public function updateLabel($labelId, $name, $color) {
+            global $wpdb;
+
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_LABELS, array(
+                'name' => $name,
+                'color' => $color
+            ), array('id' => $labelId), array('%s', '%s'), array('%d'));
+
+            if( $result === false ) {
+                throw new \Exception('Failed to update label');
+            }
+
+            return ServiceLocator::get('LabelRepository')->getLabelById($labelId);
+        }
     }
 }

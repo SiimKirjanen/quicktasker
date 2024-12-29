@@ -27,7 +27,7 @@ function TaskLabelDropdown({ task }: Props) {
                 <WPQTTag
                   key={label.id}
                   inlineStyle={{ backgroundColor: label.color }}
-                  className="wpqt-py-0.5"
+                  className="!wpqt-py-0.5"
                 >
                   {label.name}
                 </WPQTTag>

@@ -5,6 +5,7 @@ import {
   createPipelineLabelRequest,
   getPipelineLabelsRequest,
   unassignLabelFromTaskRequest,
+  updateLabelRequest,
 } from "../../api/api";
 import { Label } from "../../types/label";
 
@@ -45,6 +46,26 @@ function useLabelActions() {
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to create label", "quicktasker"));
+      if (callback) {
+        callback(false);
+      }
+    }
+  };
+
+  const editLabel = async (
+    pipelineId: string,
+    label: Label,
+    callback?: (success: boolean, label?: Label) => void,
+  ) => {
+    try {
+      const response = await updateLabelRequest(pipelineId, label);
+      toast.success(__("Label updated successfully", "quicktasker"));
+      if (callback) {
+        callback(true, response.data.label);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to update label", "quicktasker"));
       if (callback) {
         callback(false);
       }
@@ -101,6 +122,7 @@ function useLabelActions() {
   return {
     getPipelineLabels,
     createPipelineLabel,
+    editLabel,
     assignLabelToTask,
     usassignLabelFromTask,
   };

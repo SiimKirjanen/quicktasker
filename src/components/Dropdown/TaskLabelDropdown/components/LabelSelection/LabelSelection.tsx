@@ -35,6 +35,10 @@ function LabelSelection({
       <div className="wpqt-text-lg">{title}</div>
       {loading ? (
         <Loading ovalSize="24" />
+      ) : labels.length === 0 ? (
+        <div className="wpqt-text-gray-500">
+          {__("There are no labels created for this board", "quicktasker")}
+        </div>
       ) : (
         labels.map((label) => (
           <SelectionLabel

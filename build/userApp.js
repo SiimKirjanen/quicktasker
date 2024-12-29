@@ -82,6 +82,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   setPipelinePrimaryRequest: () => (/* binding */ setPipelinePrimaryRequest),
 /* harmony export */   unassignLabelFromTaskRequest: () => (/* binding */ unassignLabelFromTaskRequest),
 /* harmony export */   updateCustomFieldValueRequest: () => (/* binding */ updateCustomFieldValueRequest),
+/* harmony export */   updateLabelRequest: () => (/* binding */ updateLabelRequest),
 /* harmony export */   updateWPUserPermissionsRequest: () => (/* binding */ updateWPUserPermissionsRequest)
 /* harmony export */ });
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
@@ -658,6 +659,17 @@ function unassignLabelFromTaskRequest(pipelineId, taskId, labelId) {
     path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels/${labelId}`,
     method: "DELETE",
     headers: getCommonHeaders()
+  });
+}
+function updateLabelRequest(pipelineId, label) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels/${label.id}`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+    data: {
+      name: label.name,
+      color: label.color
+    }
   });
 }
 
@@ -1801,6 +1813,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_ADD_USER_TO_TASK: () => (/* binding */ PIPELINE_ADD_USER_TO_TASK),
 /* harmony export */   PIPELINE_CHANGE_TASK_DONE_STATUS: () => (/* binding */ PIPELINE_CHANGE_TASK_DONE_STATUS),
 /* harmony export */   PIPELINE_DELETE_STAGE: () => (/* binding */ PIPELINE_DELETE_STAGE),
+/* harmony export */   PIPELINE_EDIT_LABEL: () => (/* binding */ PIPELINE_EDIT_LABEL),
 /* harmony export */   PIPELINE_EDIT_PIPELINE: () => (/* binding */ PIPELINE_EDIT_PIPELINE),
 /* harmony export */   PIPELINE_EDIT_STAGE: () => (/* binding */ PIPELINE_EDIT_STAGE),
 /* harmony export */   PIPELINE_EDIT_TASK: () => (/* binding */ PIPELINE_EDIT_TASK),
@@ -1888,6 +1901,7 @@ const PIPELINE_REMOVE_TASK = "REMOVE_TASK";
 const PIPELINE_TOGGLE_VIEW = "TOGGLE_VIEW";
 const PIPELINE_ADD_LABEL_TO_TASK = "ADD_LABEL_TO_TASK";
 const PIPELINE_REMOVE_LABEL_FROM_TASK = "REMOVE_LABEL_FROM_TASK";
+const PIPELINE_EDIT_LABEL = "EDIT_PIPELINE_LABEL";
 //Active pipeline task view reducer constants
 const SET_STAGE_FILTER = "SET_STAGE_FILTER";
 const SET_USER_FILTER = "SET_USER_FILTER";

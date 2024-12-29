@@ -780,6 +780,22 @@ function unassignLabelFromTaskRequest(
   });
 }
 
+function updateLabelRequest(
+  pipelineId: string,
+  label: Label,
+): Promise<
+  WPQTResponse<{
+    label: Label;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels/${label.id}`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+    data: { name: label.name, color: label.color },
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -834,5 +850,6 @@ export {
   setPipelinePrimaryRequest,
   unassignLabelFromTaskRequest,
   updateCustomFieldValueRequest,
+  updateLabelRequest,
   updateWPUserPermissionsRequest,
 };
