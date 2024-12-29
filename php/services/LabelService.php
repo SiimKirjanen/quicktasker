@@ -36,6 +36,15 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
             return ServiceLocator::get('LabelRepository')->getLabelById($wpdb->insert_id);
         }
 
+        /**
+         * Assigns a label to an entity.
+         *
+         * @param int $entityId The ID of the entity to which the label will be assigned.
+         * @param string $entityType The type of the entity (e.g., 'task', 'project').
+         * @param int $labelId The ID of the label to be assigned.
+         * @throws \Exception If the label assignment fails.
+         * @return mixed The label data retrieved by the LabelRepository.
+         */
         public function assignLabel($entityId, $entityType, $labelId) {
             global $wpdb;
 
@@ -47,6 +56,33 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
 
             if( $result === false ) {
                 throw new \Exception('Failed to assign label to task');
+            }
+
+            return ServiceLocator::get('LabelRepository')->getLabelById($labelId);
+        }
+
+        /**
+         * Unassigns a label from an entity.
+         *
+         * This function removes the association between a label and an entity (such as a task) in the database.
+         *
+         * @param int $entityId The ID of the entity from which the label is being unassigned.
+         * @param string $entityType The type of the entity (e.g., 'task').
+         * @param int $labelId The ID of the label to be unassigned.
+         * @return bool Returns true if the label was successfully unassigned.
+         * @throws \Exception If the label could not be unassigned from the entity.
+         */
+        public function unassignLabel($entityId, $entityType, $labelId) {
+            global $wpdb;
+
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, array(
+                'entity_id' => $entityId,
+                'label_id' => $labelId,
+                'entity_type' => $entityType
+            ), array('%d', '%d', '%s'));
+
+            if( $result === false ) {
+                throw new \Exception('Failed to unassign label from task');
             }
 
             return true;

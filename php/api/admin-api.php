@@ -2268,7 +2268,46 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'POST',
                 'callback' => function( $data ) {
                     try {
-                        ServiceLocator::get('LabelService')->assignLabel($data['task_id'], WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK, $data['labelId']);
+                        $label = ServiceLocator::get('LabelService')->assignLabel($data['task_id'], WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK, $data['labelId']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'label' => $label,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'task_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'labelId' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/tasks/(?P<task_id>\d+)/labels/(?P<label_id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    try {
+                        ServiceLocator::get('LabelService')->unassignLabel($data['task_id'], WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK, $data['label_id']);
                         
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -2289,7 +2328,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
-                    'labelId' => array(
+                    'label_id' => array(
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
