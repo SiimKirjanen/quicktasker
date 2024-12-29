@@ -272,7 +272,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'callback' => function( $data ) {
                     try {
                         $tasksRepo = new TaskRepository();
-                        $archivedTasks = $tasksRepo->getArchivedTasks(true);
+                        $archivedTasks = $tasksRepo->getArchivedTasks(true, true);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -2182,6 +2182,201 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
+                ),
+            ),
+        );
+
+
+         /*
+        ==================================================================================================================================================================================================================
+        Labels endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/labels',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        $labels = ServiceLocator::get('LabelRepository')->getPipelineLabels($data['id']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'labels' => $labels,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/labels',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    try {
+                        $label = ServiceLocator::get('LabelService')->createLabel($data['id'], $data['name'], $data['color']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'label' => $label,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'name' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'color' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateHexColor'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/tasks/(?P<task_id>\d+)/labels',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    try {
+                        $label = ServiceLocator::get('LabelService')->assignLabel($data['task_id'], WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK, $data['labelId']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'label' => $label,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'task_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'labelId' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/tasks/(?P<task_id>\d+)/labels/(?P<label_id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    try {
+                        ServiceLocator::get('LabelService')->unassignLabel($data['task_id'], WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK, $data['label_id']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'task_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'label_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/labels/(?P<label_id>\d+)',
+            array(
+                'methods' => 'PATCH',
+                'callback' => function( $data ) {
+                    try {
+                        $label = ServiceLocator::get('LabelService')->updateLabel($data['label_id'], $data['name'], $data['color']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'label' => $label,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'label_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'name' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'color' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateHexColor'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),  
                 ),
             ),
         );

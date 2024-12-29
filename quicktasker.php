@@ -37,6 +37,7 @@ require( 'php/repositories/SettingRepository.php' );
 require( 'php/repositories/OverViewRepository.php' );
 require( 'php/repositories/AutomationRepository.php' );
 require( 'php/repositories/EmailRepository.php' );
+require( 'php/repositories/LabelRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
@@ -59,6 +60,7 @@ require( 'php/services/SettingsValidationService.php' );
 require( 'php/services/AutomationService.php' );
 require( 'php/services/EmailService.php' );
 require( 'php/services/ErrorHandlerService.php' );
+require( 'php/services/LabelService.php' );
 require( 'php/services/ServiceLocator.php' );
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
@@ -78,12 +80,14 @@ WPQT\ServiceLocator::register('PipelineRepository', new WPQT\Pipeline\PipelineRe
 WPQT\ServiceLocator::register('CommentRepository', new WPQT\Comment\CommentRepository());
 WPQT\ServiceLocator::register('LogRepository', new WPQT\Log\LogRepository());
 WPQT\ServiceLocator::register('SettingRepository', new WPQT\Settings\SettingRepository());
+WPQT\ServiceLocator::register('LabelRepository', new WPQT\Label\LabelRepository());
 WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
 WPQT\ServiceLocator::register('UserService', new WPQT\User\UserService());
 WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
 WPQT\ServiceLocator::register('ErrorHandlerService', new WPQT\Error\ErrorHandlerService());
 WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
 WPQT\ServiceLocator::register('EmailService', new WPQT\Email\EmailService());
+WPQT\ServiceLocator::register('LabelService', new WPQT\Label\LabelService());
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );

@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
 use WPQT\User\UserRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
     class PipelineRepository {
@@ -81,6 +82,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
             }, $tasks);
             $assignedUsers = $userRepository->getAssignedUsersByTaskIds($taskIds);
             $assignedWPUsers = $userRepository->getAssignedWPUsersByTaskIds($taskIds);
+            $assignedLabels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds($taskIds);
 
             // Organize tasks under their respective stages
             $tasksByStage = [];
@@ -100,13 +102,20 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
                 $wpUsersByTask[$user->task_id][] = $user;
             }
 
-            // Assign tasks and users to stages
+            // Organize assigned labels under their respective tasks
+            $labelsByTask = [];
+            foreach ($assignedLabels as $label) {
+                $labelsByTask[$label->entity_id][] = $label;
+            }
+
+            // Assign tasks and users to stages. Assign labels to tasks.
             foreach ($pipelineStages as $stage) {
                 $stage->tasks = isset($tasksByStage[$stage->id]) ? $tasksByStage[$stage->id] : [];
                 
                 foreach ($stage->tasks as $task) {
                     $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
                     $task->assigned_wp_users = isset($wpUsersByTask[$task->id]) ? $wpUsersByTask[$task->id] : [];
+                    $task->assigned_labels = isset($labelsByTask[$task->id]) ? $labelsByTask[$task->id] : [];
                 }
             }
 

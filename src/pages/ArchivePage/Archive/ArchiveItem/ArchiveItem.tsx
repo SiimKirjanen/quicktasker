@@ -5,6 +5,7 @@ import { WPQTCard } from "../../../../components/Card/Card";
 import { TaskCardActions } from "../../../../components/Card/TaskCardActions/TaskCardActions";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { ArchivedTaskDropdown } from "../../../../components/Dropdown/ArchivedTaskDropdown/ArchivedTaskDropdown";
+import { TaskLabelDropdown } from "../../../../components/Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import {
   ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
@@ -46,22 +47,26 @@ function ArchiveItem({ task }: Props) {
         }
         icon={<ViewColumnsIcon className="wpqt-size-5 wpqt-icon-blue" />}
       />
-      <UserAssignementDropdown
-        menuBtnClasses="wpqt-self-start"
-        task={task}
-        onUserAdd={(user: User | WPUser) => {
-          archiveDispatch({
-            type: ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
-            payload: { taskId: task.id, user },
-          });
-        }}
-        onUserDelete={(user: User | WPUser) => {
-          archiveDispatch({
-            type: REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
-            payload: { taskId: task.id, user },
-          });
-        }}
-      />
+
+      <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start">
+        <UserAssignementDropdown
+          menuBtnClasses="wpqt-self-start"
+          task={task}
+          onUserAdd={(user: User | WPUser) => {
+            archiveDispatch({
+              type: ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
+              payload: { taskId: task.id, user },
+            });
+          }}
+          onUserDelete={(user: User | WPUser) => {
+            archiveDispatch({
+              type: REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
+              payload: { taskId: task.id, user },
+            });
+          }}
+        />
+        <TaskLabelDropdown task={task} />
+      </div>
 
       <TaskCardActions
         task={task}

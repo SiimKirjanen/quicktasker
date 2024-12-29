@@ -6,6 +6,7 @@ import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import { WPQTTypes } from "../types/enums";
+import { Label } from "../types/label";
 import { LogFromServer } from "../types/log";
 import { PipelineOverviewFilter } from "../types/overview";
 import {
@@ -715,16 +716,98 @@ function deletePipelineAutomationsRequest(
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Label requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getPipelineLabelsRequest(pipelineId: string): Promise<
+  WPQTResponse<{
+    labels: Label[];
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+function createPipelineLabelRequest(
+  pipelineId: string,
+  name: string,
+  color: string,
+): Promise<
+  WPQTResponse<{
+    label: Label;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data: { name, color },
+  });
+}
+
+function assignLabelToTaskRequest(
+  pipelineId: string,
+  taskId: string,
+  labelId: string,
+): Promise<
+  WPQTResponse<{
+    label: Label;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data: { labelId },
+  });
+}
+
+function unassignLabelFromTaskRequest(
+  pipelineId: string,
+  taskId: string,
+  labelId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/labels/${labelId}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
+function updateLabelRequest(
+  pipelineId: string,
+  label: Label,
+): Promise<
+  WPQTResponse<{
+    label: Label;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels/${label.id}`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+    data: { name: label.name, color: label.color },
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
   archiveStageTasksRequest,
   archiveTaskRequest,
+  assignLabelToTaskRequest,
   assignTaskToUserRequest,
   changeUserSessionStatusRequest,
   changeUserStatusRequest,
   createNewStageRequest,
   createPipelineAutomationRequest,
+  createPipelineLabelRequest,
   createPipelineRequest,
   createTaskRequest,
   createUserRequest,
@@ -746,6 +829,7 @@ export {
   getLogsRequest,
   getPipelineAutomationsRequest,
   getPipelineData,
+  getPipelineLabelsRequest,
   getPipelineOverviewData,
   getPipelineSettingsRequest,
   getTaskLogs,
@@ -764,6 +848,8 @@ export {
   saveTaskCompletionDoneSettingRequest,
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
+  unassignLabelFromTaskRequest,
   updateCustomFieldValueRequest,
+  updateLabelRequest,
   updateWPUserPermissionsRequest,
 };

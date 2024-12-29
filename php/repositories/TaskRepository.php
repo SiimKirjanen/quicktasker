@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\User\UserRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
     class TaskRepository {
@@ -39,7 +40,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
          * @param bool $addAssignedUsers Optional. Whether to include assigned users for each task. Default false.
          * @return array An array of archived tasks. Each task may include assigned users if $addAssignedUsers is true.
          */
-        public function getArchivedTasks($addAssignedUsers = false) {
+        public function getArchivedTasks($addAssignedUsers = false, $addAssignedLabels = false) {
             global $wpdb;
 
             $tasks = $wpdb->get_results($wpdb->prepare(
@@ -55,6 +56,13 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                     $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
                     $task->assigned_users = $users;
                     $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id]);
+                }
+            }
+
+            if ($addAssignedLabels) {
+                foreach ($tasks as $task) {
+                    $labels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds([$task->id]);
+                    $task->assigned_labels = $labels;
                 }
             }
         

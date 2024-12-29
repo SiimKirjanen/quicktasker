@@ -75,21 +75,24 @@ function UserTasks({ userId }: Props) {
                 });
               }}
             >
-              <UserAssignementDropdown
-                task={task}
-                onUserAdd={(user: User | WPUser) => {
-                  userTasksDispatch({
-                    type: ADD_ASSIGNED_USER_TO_USER_TASK,
-                    payload: { taskId: task.id, user },
-                  });
-                }}
-                onUserDelete={(user: User | WPUser) => {
-                  userTasksDispatch({
-                    type: REMOVE_ASSIGNED_USER_FROM_USER_TASK,
-                    payload: { taskId: task.id, user },
-                  });
-                }}
-              />
+              <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start">
+                <UserAssignementDropdown
+                  task={task}
+                  onUserAdd={(user: User | WPUser) => {
+                    userTasksDispatch({
+                      type: ADD_ASSIGNED_USER_TO_USER_TASK,
+                      payload: { taskId: task.id, user },
+                    });
+                  }}
+                  onUserDelete={(user: User | WPUser) => {
+                    userTasksDispatch({
+                      type: REMOVE_ASSIGNED_USER_FROM_USER_TASK,
+                      payload: { taskId: task.id, user },
+                    });
+                  }}
+                />
+              </div>
+
               <TaskCardActions
                 task={task}
                 onDoneStatusChange={(taskId: string, done: boolean) => {
