@@ -356,5 +356,20 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         public static function validateCustomFieldType($param) {
             return in_array($param, WP_QUICKTASKER_CUSTOM_FIELD_TYPES, true);
         }
+
+
+        /**
+         * Validates if the given parameter is a valid hexadecimal color code.
+         *
+         * This function checks if the provided string matches the pattern of a 
+         * hexadecimal color code, which starts with a '#' followed by exactly 
+         * six hexadecimal digits (0-9, a-f, A-F).
+         *
+         * @param string $param The string to be validated as a hexadecimal color code.
+         * @return bool Returns true if the string is a valid hexadecimal color code, false otherwise.
+         */
+        public static function validateHexColor($param) {
+            return preg_match('/^#[a-f0-9]{6}$/i', $param);
+        }
     }
 }

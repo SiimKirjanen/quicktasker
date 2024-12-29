@@ -2,6 +2,7 @@ import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../components/Card/Card";
 import { TaskControlsDropdown } from "../../../../components/Dropdown/TaskControlsDropdown/TaskControlsDropdown";
+import { TaskLabelDropdown } from "../../../../components/Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
 import { TaskModal } from "../../../../components/Modal/TaskModal/TaskModal";
@@ -48,9 +49,11 @@ function TaskView() {
               });
             }}
           >
-            <div className="wpqt-mt-2">
+            <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start">
               <UserAssignementDropdown task={task} />
+              <TaskLabelDropdown task={task} />
             </div>
+
             <TaskActions
               task={task}
               allowToMarkTaskAsDone={allowToMarkTaskAsDone}

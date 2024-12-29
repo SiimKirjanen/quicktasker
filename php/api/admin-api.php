@@ -272,7 +272,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'callback' => function( $data ) {
                     try {
                         $tasksRepo = new TaskRepository();
-                        $archivedTasks = $tasksRepo->getArchivedTasks(true);
+                        $archivedTasks = $tasksRepo->getArchivedTasks(true, true);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -2254,7 +2254,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'color' => array(
                         'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateHexColor'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
@@ -2374,7 +2374,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                     'color' => array(
                         'required' => false,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateHexColor'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),  
                 ),

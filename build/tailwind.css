@@ -1926,6 +1926,11 @@
   padding-right: 0.5rem !important;
 }
 
+.\!wpqt-py-0\.5 {
+  padding-top: 0.125rem !important;
+  padding-bottom: 0.125rem !important;
+}
+
 .\!wpqt-py-1 {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
@@ -1951,11 +1956,6 @@
   padding-right: 1rem;
 }
 
-.wpqt-py-0\.5 {
-  padding-top: 0.125rem;
-  padding-bottom: 0.125rem;
-}
-
 .wpqt-py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -1974,11 +1974,6 @@
 .wpqt-py-5 {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
-}
-
-.\!wpqt-py-0\.5 {
-  padding-top: 0.125rem !important;
-  padding-bottom: 0.125rem !important;
 }
 
 .\!wpqt-pr-6 {
