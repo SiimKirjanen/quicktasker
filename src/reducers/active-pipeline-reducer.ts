@@ -11,6 +11,7 @@ import {
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
   PIPELINE_REMOVE_ACTIVE_PIPELINE,
+  PIPELINE_REMOVE_LABEL,
   PIPELINE_REMOVE_LABEL_FROM_TASK,
   PIPELINE_REMOVE_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
@@ -473,6 +474,37 @@ const activePipelineReducer = (state: State, action: Action) => {
             assigned_labels: (task.assigned_labels || []).map(
               (assignedLabel) =>
                 assignedLabel.id === label.id ? label : assignedLabel,
+            ),
+          };
+        });
+
+        return {
+          ...stage,
+          tasks: updatedTasks,
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
+        },
+      };
+    }
+    case PIPELINE_REMOVE_LABEL: {
+      const labelId = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        const updatedTasks = stage.tasks?.map((task) => {
+          return {
+            ...task,
+            assigned_labels: (task.assigned_labels || []).filter(
+              (assignedLabel) => assignedLabel.id !== labelId,
             ),
           };
         });

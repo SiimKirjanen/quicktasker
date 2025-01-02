@@ -70,7 +70,7 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
          * @param int $entityId The ID of the entity from which the label is being unassigned.
          * @param string $entityType The type of the entity (e.g., 'task').
          * @param int $labelId The ID of the label to be unassigned.
-         * @return bool Returns true if the label was successfully unassigned.
+         * @return mixed The label data retrieved by the LabelRepository.
          * @throws \Exception If the label could not be unassigned from the entity.
          */
         public function unassignLabel($entityId, $entityType, $labelId) {
@@ -86,7 +86,7 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
                 throw new \Exception('Failed to unassign label from task');
             }
 
-            return true;
+            return ServiceLocator::get('LabelRepository')->getLabelById($labelId);
         }
 
         /**
@@ -111,6 +111,32 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
             }
 
             return ServiceLocator::get('LabelRepository')->getLabelById($labelId);
+        }
+
+        /**
+         * Deletes a label and its relations from the database.
+         *
+         * @param int $labelId The ID of the label to delete.
+         * @return mixed The deleted label object.
+         * @throws \Exception If the label or its relations could not be deleted.
+         */
+        public function deleteLabel($labelId) {
+            global $wpdb;
+
+            $deletedLabel = ServiceLocator::get('LabelRepository')->getLabelById($labelId);
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_LABELS, array('id' => $labelId), array('%d'));
+
+            if( $result === false ) {
+                throw new \Exception('Failed to delete label');
+            }
+
+            $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, array('label_id' => $labelId), array('%d'));
+
+            if( $result2 === false ) {
+                throw new \Exception('Failed to delete label relations');
+            }
+
+            return $deletedLabel;
         }
     }
 }

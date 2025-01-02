@@ -94,7 +94,10 @@ function SelectionLabel({
         checked={isSelected}
         onChange={onSelectionToggle}
       />
-      <WPQTTag inlineStyle={{ backgroundColor: label.color }}>
+      <WPQTTag
+        inlineStyle={{ backgroundColor: label.color }}
+        className="wpqt-py-2"
+      >
         {label.name}
       </WPQTTag>
       <PencilSquareIcon

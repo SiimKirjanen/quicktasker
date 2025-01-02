@@ -8,27 +8,29 @@ Stable tag: 1.20.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Task management plugin to get tasks done with the help of assigned users.
+Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently.
 
 
 == Description ==
 
-Task management plugin to get tasks done with the help of assigned users.
+Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently.
 
 QuickTasker is a plugin that offers the following and more to organize your project tasks.
 
 * Create boards with multiple stages and move tasks between stages to track progress.
-* Create and assign tasks to users.
-* Each user has a mobile-like page to manage their tasks.
+* Add labels to tasks to categorize and prioritize them effectively.
+* Grant permissions to WordPress users to allow them to use the plugin.
+* In addition to WordPress users, you can create dedicated QuickTasker users who can manage their tasks through a special webpage provided by the plugin.
+* Track quicktasker type user sessions to monitor activity.
 * Archive tasks to keep your boards clean and organized.
 * Private and public comments on tasks and users.
 * Logs to track changes and updates.
-* Track user sessions to monitor activity.
 
 QuickTasker PRO version
 
-* Custom fields
-* Automations
+This plugin also has a pro version that enhances the free version with additional features such as:
+* **Custom fields**. You can add custom fields to tasks to capture additional information specific to your workflow. This flexibility allows you to tailor the task details to your project's unique requirements.
+* **Automations**. Feature to automate various tasks. 
 
 == Installation ==
 

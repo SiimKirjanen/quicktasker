@@ -38,6 +38,7 @@ import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { Toggle } from "../../common/Toggle/Toggle";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
+import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { LoadingOval } from "../../Loading/Loading";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
@@ -112,13 +113,15 @@ const TaskModalContent = forwardRef(
       <>
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
           <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
-            <div className="wpqt-mb-5 wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[auto_1fr]">
+            <div className="wpqt-mb-5 wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[1fr_2fr]">
               <WPQTModalFieldSet>
                 <WPQTModalField label={__("Name", "quicktasker")}>
                   <WPQTInput
                     isAutoFocus={true}
                     value={taskName}
                     onChange={(newValue: string) => setTaskName(newValue)}
+                    wrapperClassName="wpqt-w-full"
+                    className="wpqt-w-full"
                   />
                 </WPQTModalField>
 
@@ -126,6 +129,7 @@ const TaskModalContent = forwardRef(
                   <WPQTTextarea
                     rowsCount={3}
                     value={taskDescription}
+                    className="wpqt-w-full"
                     onChange={(newValue: string) =>
                       setTaskDescription(newValue)
                     }
@@ -148,6 +152,10 @@ const TaskModalContent = forwardRef(
                       });
                     }}
                   />
+                </WPQTModalField>
+
+                <WPQTModalField label={__("Labels", "quicktasker")}>
+                  <TaskLabelDropdown task={taskToEdit} />
                 </WPQTModalField>
 
                 <WPQTModalField

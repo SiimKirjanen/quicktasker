@@ -5,7 +5,9 @@ import {
   EDIT_LABEL,
   PIPELINE_ADD_LABEL_TO_TASK,
   PIPELINE_EDIT_LABEL,
+  PIPELINE_REMOVE_LABEL,
   PIPELINE_REMOVE_LABEL_FROM_TASK,
+  REMOVE_LABEL,
   RESET_LABEL_CONTEXT,
   SET_LABEL_ACTION_STATE_SELECTION,
   SET_LABELS,
@@ -40,6 +42,7 @@ const LabelDropdownContent = memo(({ task }: Props) => {
     assignLabelToTask,
     usassignLabelFromTask,
     editLabel,
+    deleteLabel,
   } = useLabelActions();
 
   const loadLabels = async () => {
@@ -129,6 +132,17 @@ const LabelDropdownContent = memo(({ task }: Props) => {
     });
   };
 
+  const onDeleteLabel = async (labelId: string) => {
+    await deleteLabel(task.pipeline_id, labelId, (success, label) => {
+      if (success && label) {
+        console.log("Hey!");
+        labelDispatch({ type: SET_LABEL_ACTION_STATE_SELECTION });
+        labelDispatch({ type: REMOVE_LABEL, payload: label });
+        dispatch({ type: PIPELINE_REMOVE_LABEL, payload: labelId });
+      }
+    });
+  };
+
   const renderContent = () => {
     switch (labelActionState) {
       case LabelActionState.SELECTION:
@@ -153,6 +167,7 @@ const LabelDropdownContent = memo(({ task }: Props) => {
           <LabelEdit
             labelToEdit={labelToEdit}
             editLabel={onEditLabel}
+            deleteLabe={onDeleteLabel}
             closeEdit={() => {
               labelDispatch({ type: SET_LABEL_ACTION_STATE_SELECTION });
             }}

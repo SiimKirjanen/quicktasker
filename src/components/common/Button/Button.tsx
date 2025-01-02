@@ -10,6 +10,7 @@ enum ButtonType {
 enum ButtonStyleType {
   PRIMARY = "primary",
   SECONDARY = "secondary",
+  DANGER = "danger",
 }
 type Props = {
   onClick?: () => void;
@@ -33,10 +34,15 @@ function WPQTButton({
     "wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-blue-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-blue-800 enabled:hover:wpqt-bg-blue-600";
   const secondaryClasses =
     "wpqt-inline-flex wpqt-cursor-pointer wpqt-bg-gray-100 wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 enabled:hover:wpqt-bg-gray-200";
+  const dangerClasses =
+    "wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-red-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-red-800 enabled:hover:wpqt-bg-red-600";
+
   const buttonClasses =
     buttonStyleType === ButtonStyleType.PRIMARY
-      ? `${primaryClasses}`
-      : `${secondaryClasses}`;
+      ? primaryClasses
+      : buttonStyleType === ButtonStyleType.SECONDARY
+        ? secondaryClasses
+        : dangerClasses;
 
   return (
     <Button

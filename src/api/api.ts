@@ -796,6 +796,21 @@ function updateLabelRequest(
   });
 }
 
+function deleteLabelRequest(
+  pipelineId: string,
+  labelId: string,
+): Promise<
+  WPQTResponse<{
+    deletedLabel: Label;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/labels/${labelId}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -811,6 +826,7 @@ export {
   createPipelineRequest,
   createTaskRequest,
   createUserRequest,
+  deleteLabelRequest,
   deletePipelineAutomationsRequest,
   deletePipelineRequest,
   deleteStageRequest,

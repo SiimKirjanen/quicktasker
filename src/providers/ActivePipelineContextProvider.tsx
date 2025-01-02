@@ -20,6 +20,7 @@ import {
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
   PIPELINE_REMOVE_ACTIVE_PIPELINE,
+  PIPELINE_REMOVE_LABEL,
   PIPELINE_REMOVE_LABEL_FROM_TASK,
   PIPELINE_REMOVE_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
@@ -103,6 +104,7 @@ type Action =
       type: typeof PIPELINE_EDIT_LABEL;
       payload: { label: Label };
     }
+  | { type: typeof PIPELINE_REMOVE_LABEL; payload: string }
   | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer };
 
 type Dispatch = (action: Action) => void;

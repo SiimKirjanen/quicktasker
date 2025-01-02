@@ -2228,13 +2228,21 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'POST',
                 'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
                         $label = ServiceLocator::get('LabelService')->createLabel($data['id'], $data['name'], $data['color']);
+                        ServiceLocator::get('LogService')->log('Label ' . $label->name . ' created', WP_QT_LOG_TYPE_PIPELINE, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         
+                        $wpdb->query('COMMIT');
+
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'label' => $label,
                         ]))->toArray(), 200);
                     } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
@@ -2267,13 +2275,21 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'POST',
                 'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
                         $label = ServiceLocator::get('LabelService')->assignLabel($data['task_id'], WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK, $data['labelId']);
-                        
+                        $task = ServiceLocator::get('TaskRepository')->getTaskById($data['task_id']);
+                        ServiceLocator::get('LogService')->log('Label ' . $label->name . ' added to task ' . $task->name, WP_QT_LOG_TYPE_TASK, $data['task_id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+
+                        $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'label' => $label,
                         ]))->toArray(), 200);
                     } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
@@ -2306,11 +2322,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'DELETE',
                 'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
-                        ServiceLocator::get('LabelService')->unassignLabel($data['task_id'], WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK, $data['label_id']);
-                        
+                        $wpdb->query('START TRANSACTION');
+                        $label = ServiceLocator::get('LabelService')->unassignLabel($data['task_id'], WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK, $data['label_id']);
+                        $task = ServiceLocator::get('TaskRepository')->getTaskById($data['task_id']);
+                        ServiceLocator::get('LogService')->log('Label ' . $label->name . ' removed from task ' . $task->name, WP_QT_LOG_TYPE_TASK, $data['task_id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $wpdb->query('COMMIT');
+
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
@@ -2343,13 +2367,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
                         $label = ServiceLocator::get('LabelService')->updateLabel($data['label_id'], $data['name'], $data['color']);
+                        ServiceLocator::get('LogService')->log('Label ' . $label->name . ' edited', WP_QT_LOG_TYPE_PIPELINE, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         
+                        $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'label' => $label,
                         ]))->toArray(), 200);
                     } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
@@ -2377,6 +2407,46 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateHexColor'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),  
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/labels/(?P<label_id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+                        $deletedLabel = ServiceLocator::get('LabelService')->deleteLabel($data['label_id']);
+                        ServiceLocator::get('LogService')->log('Label ' . $deletedLabel->name . ' deleted', WP_QT_LOG_TYPE_PIPELINE, $deletedLabel->pipeline_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        
+                        $wpdb->query('COMMIT');
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'deletedLabel' => $deletedLabel,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'label_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    )
                 ),
             ),
         );

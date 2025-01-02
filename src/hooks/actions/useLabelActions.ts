@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import {
   assignLabelToTaskRequest,
   createPipelineLabelRequest,
+  deleteLabelRequest,
   getPipelineLabelsRequest,
   unassignLabelFromTaskRequest,
   updateLabelRequest,
@@ -119,7 +120,28 @@ function useLabelActions() {
     }
   };
 
+  const deleteLabel = async (
+    pipelineId: string,
+    labelId: string,
+    callback?: (success: boolean, label?: Label) => void,
+  ) => {
+    try {
+      const result = await deleteLabelRequest(pipelineId, labelId);
+      toast.success(__("Label deleted from the board", "quicktasker"));
+      if (callback) {
+        callback(true, result.data.deletedLabel);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to delete label", "quicktasker"));
+      if (callback) {
+        callback(false);
+      }
+    }
+  };
+
   return {
+    deleteLabel,
     getPipelineLabels,
     createPipelineLabel,
     editLabel,
