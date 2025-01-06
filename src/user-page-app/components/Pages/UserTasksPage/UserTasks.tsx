@@ -1,6 +1,7 @@
 import {
   CalendarIcon,
   CheckBadgeIcon,
+  ClockIcon,
   ViewColumnsIcon,
 } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
@@ -22,6 +23,9 @@ function UserTasks() {
     <div className="wpqt-user-page-card-flex">
       {assignedTasks.map((task) => {
         const isCompleted = task.is_done;
+        const dueDate = task.due_date
+          ? convertToWPTimezone(task.due_date)
+          : null;
 
         return (
           <WPQTCard
@@ -45,6 +49,14 @@ function UserTasks() {
               }
               icon={<ViewColumnsIcon className="wpqt-size-5 wpqt-icon-blue" />}
             />
+
+            {dueDate && (
+              <WPQTCardDataItem
+                label={__("Due date", "quicktasker")}
+                value={dueDate}
+                icon={<ClockIcon className="wpqt-size-5 wpqt-icon-blue" />}
+              />
+            )}
             <WPQTCardDataItem
               label={
                 isCompleted
