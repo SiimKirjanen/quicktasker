@@ -1,4 +1,5 @@
 import { Draggable } from "@hello-pangea/dnd";
+import { ClockIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { TaskControlsDropdown } from "../../../../components/Dropdown/TaskControlsDropdown/TaskControlsDropdown";
@@ -64,9 +65,10 @@ function Task({ task, index, onLastStage }: Props) {
             <TaskLabelDropdown task={task} />
           </div>
           {task.due_date && (
-            <div className="wpqt-mb-2">
+            <div className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center">
+              <ClockIcon className="wpqt-size-5 wpqt-icon-blue" />
               <span className="wpqt-font-semibold">
-                {__("Due date", "quicktasker")}:{" "}
+                {__("Due date", "quicktasker")}:
               </span>
               {convertToWPTimezone(task.due_date)}
             </div>

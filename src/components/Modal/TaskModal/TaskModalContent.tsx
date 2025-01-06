@@ -37,6 +37,7 @@ import { ActivePipelineContext } from "../../../providers/ActivePipelineContextP
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
+import { Label } from "../../../types/label";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
@@ -71,6 +72,7 @@ const TaskModalContent = forwardRef(
     const [taskDescription, setTaskDescription] = useState("");
     const [freeForAllTask, setFreeForAllTask] = useState(false);
     const [dueDateTime, setDueDateTime] = useState<Date | null>(null);
+    const [assignedTaskLabels, setAssignedTaskLabels] = useState<Label[]>([]);
     const { archiveTask, restoreArchivedTask } = useTaskActions();
     const {
       loading1: isDeletingTask,
@@ -93,6 +95,7 @@ const TaskModalContent = forwardRef(
         setTaskDescription(taskToEdit.description);
         setFreeForAllTask(taskToEdit.free_for_all);
         setDueDateTime(taskDueDate);
+        setAssignedTaskLabels(taskToEdit.assigned_labels);
       }
     }, [taskToEdit]);
 
@@ -108,6 +111,22 @@ const TaskModalContent = forwardRef(
             : null,
         });
       }
+    };
+
+    const onLabelSelected = (label: Label) => {
+      setAssignedTaskLabels((prev) => [...prev, label]);
+    };
+
+    const onLabelDeSelected = (labelId: string) => {
+      setAssignedTaskLabels((prev) =>
+        prev.filter((label) => label.id !== labelId),
+      );
+    };
+
+    const onLabelDeleted = (labelId: string) => {
+      setAssignedTaskLabels((prev) =>
+        prev.filter((label) => label.id !== labelId),
+      );
     };
 
     const clearContent = () => {
@@ -169,7 +188,15 @@ const TaskModalContent = forwardRef(
                 </WPQTModalField>
 
                 <WPQTModalField label={__("Labels", "quicktasker")}>
-                  <TaskLabelDropdown task={taskToEdit} />
+                  <TaskLabelDropdown
+                    task={{
+                      ...taskToEdit,
+                      assigned_labels: assignedTaskLabels,
+                    }}
+                    labelSelected={onLabelSelected}
+                    labelDeselected={onLabelDeSelected}
+                    labelDeleted={onLabelDeleted}
+                  />
                 </WPQTModalField>
 
                 <WPQTModalField

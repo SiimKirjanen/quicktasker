@@ -271,8 +271,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        $tasksRepo = new TaskRepository();
-                        $archivedTasks = $tasksRepo->getArchivedTasks(true, true);
+                        $archivedTasks = ServiceLocator::get('TaskRepository')->getArchivedTasks(true, true);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -442,7 +441,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'callback' => function( $data ) {
                     try {
                         $taskData = $data->get_json_params();
-                        
+
                         $task = ServiceLocator::get('TaskService')->editTask( $data['id'], $taskData);
                         ServiceLocator::get('LogService')->log('Task ' . $task->name . ' edited', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
