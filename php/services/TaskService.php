@@ -277,19 +277,58 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         public function editTask($taskId, $args) {
             global $wpdb;
 
+            // Handle null values for dueDate
+            if (isset($args['dueDate']) && ($args['dueDate'] === null || $args['dueDate'] === '')) {
+                $args['dueDate'] = null;
+            }
+
+             // Map request data to database columns
+            $mappedArgs = $this->mapRequestToDbColumns($args);
+
             $defaults = array(
                 'updated_at' => $this->timeRepository->getCurrentUTCTime()
             );
 
-            $args = wp_parse_args($args, $defaults);
+            $mappedArgs = wp_parse_args($mappedArgs, $defaults);
 
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, $args, array('id' => $taskId));
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, $mappedArgs, array('id' => $taskId));
 
             if ($result === false) {
                 throw new \Exception('Failed to edit task');
             }
             
             return $this->taskRepository->getTaskById($taskId, true);
+        }
+
+        /**
+         * Maps request parameters to database column names.
+         *
+         * This function takes an associative array of request parameters and maps
+         * them to the corresponding database column names based on a predefined
+         * mapping. If a parameter does not have a corresponding mapping, it is
+         * included in the result as-is.
+         *
+         * @param array $args Associative array of request parameters.
+         * @return array Associative array with database column names as keys.
+         */
+        private function mapRequestToDbColumns($args) {
+            $mapping = array(
+                'name' => 'name',
+                'description' => 'description',
+                'dueDate' => 'due_date',
+                'freeForAll' => 'free_for_all',
+            );
+    
+            $mappedArgs = array();
+            foreach ($args as $key => $value) {
+                if (isset($mapping[$key])) {
+                    $mappedArgs[$mapping[$key]] = $value;
+                } else {
+                    $mappedArgs[$key] = $value;
+                }
+            }
+    
+            return $mappedArgs;
         }
 
         /**
