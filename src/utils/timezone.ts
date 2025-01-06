@@ -26,3 +26,26 @@ export const convertToTimezone = (utcDateTime: string, wpTimezone: string) => {
     return utcDateTime + " (UTC)";
   }
 };
+
+/**
+ * Converts a UTC datetime string to a WordPress timezone Date object.
+ *
+ * @param utcDateTime - The UTC datetime string to be converted.
+ * @param wpTimezone - The WordPress timezone identifier.
+ * @returns The converted Date object in the specified WordPress timezone.
+ * @throws Will log an error to the console if the conversion fails. In this case, the original UTC date-time string will be returned as a Date object.
+ */
+export const convertUTCDatetimeToWPTimezone = (
+  utcDateTime: string,
+  wpTimezone: string,
+): Date => {
+  try {
+    const zonedDate = dayjs.utc(utcDateTime).tz(wpTimezone).toDate();
+
+    return zonedDate;
+  } catch (error) {
+    console.error("Error: ", error);
+
+    return new Date(utcDateTime);
+  }
+};

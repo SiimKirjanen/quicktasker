@@ -179,7 +179,8 @@ function editTaskRequest(task) {
       id: task.id,
       name: task.name,
       description: task.description,
-      freeForAll: task.free_for_all
+      freeForAll: task.free_for_all,
+      dueDate: task.due_date
     },
     headers: getCommonHeaders()
   });
@@ -1794,6 +1795,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CLOSE_STAGE_MODAL: () => (/* binding */ CLOSE_STAGE_MODAL),
 /* harmony export */   CLOSE_TASK_MODAL: () => (/* binding */ CLOSE_TASK_MODAL),
 /* harmony export */   CLOSE_USER_MODAL: () => (/* binding */ CLOSE_USER_MODAL),
+/* harmony export */   DATETIME_FORMAT: () => (/* binding */ DATETIME_FORMAT),
 /* harmony export */   DELETE_CUSTOM_FIELD: () => (/* binding */ DELETE_CUSTOM_FIELD),
 /* harmony export */   DELETE_USER: () => (/* binding */ DELETE_USER),
 /* harmony export */   DELETE_USER_SESSION: () => (/* binding */ DELETE_USER_SESSION),
@@ -2012,6 +2014,7 @@ const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 //Misc
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 const HAS_AUTOMATIONS = false;
+const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
 
 
 /***/ }),
@@ -7203,7 +7206,8 @@ const convertTaskFromServer = task => Object.assign(Object.assign({}, task), {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   convertToTimezone: () => (/* binding */ convertToTimezone)
+/* harmony export */   convertToTimezone: () => (/* binding */ convertToTimezone),
+/* harmony export */   convertUTCDatetimeToWPTimezone: () => (/* binding */ convertUTCDatetimeToWPTimezone)
 /* harmony export */ });
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
@@ -7233,6 +7237,23 @@ const convertToTimezone = (utcDateTime, wpTimezone) => {
   } catch (error) {
     console.error("Error: ", error);
     return utcDateTime + " (UTC)";
+  }
+};
+/**
+ * Converts a UTC datetime string to a WordPress timezone Date object.
+ *
+ * @param utcDateTime - The UTC datetime string to be converted.
+ * @param wpTimezone - The WordPress timezone identifier.
+ * @returns The converted Date object in the specified WordPress timezone.
+ * @throws Will log an error to the console if the conversion fails. In this case, the original UTC date-time string will be returned as a Date object.
+ */
+const convertUTCDatetimeToWPTimezone = (utcDateTime, wpTimezone) => {
+  try {
+    const zonedDate = dayjs__WEBPACK_IMPORTED_MODULE_0___default().utc(utcDateTime).tz(wpTimezone).toDate();
+    return zonedDate;
+  } catch (error) {
+    console.error("Error: ", error);
+    return new Date(utcDateTime);
   }
 };
 

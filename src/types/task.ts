@@ -11,6 +11,7 @@ type BaseTask = {
   task_hash: string;
   created_at: string;
   assigned_labels: Label[];
+  due_date: string | null;
 };
 
 type Task = BaseTask & {

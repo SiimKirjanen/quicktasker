@@ -146,6 +146,7 @@ function editTaskRequest(task: Task): Promise<WPQTResponse<TaskFromServer>> {
       name: task.name,
       description: task.description,
       freeForAll: task.free_for_all,
+      dueDate: task.due_date,
     },
     headers: getCommonHeaders(),
   });
