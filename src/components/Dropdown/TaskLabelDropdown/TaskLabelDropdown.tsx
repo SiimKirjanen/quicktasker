@@ -1,4 +1,5 @@
 import { TagIcon } from "@heroicons/react/24/outline";
+import { Label } from "../../../types/label";
 import { Task } from "../../../types/task";
 import { WPQTTag } from "../../common/Tag/Tag";
 import { WPQTDropdown } from "../WPQTDropdown";
@@ -6,8 +7,16 @@ import { LabelDropdownContent } from "./components/LabelDropdownContent/LabelDro
 
 type Props = {
   task: Task;
+  labelSelected?: (label: Label) => void;
+  labelDeselected?: (labelId: string) => void;
+  labelDeleted?: (labelId: string) => void;
 };
-function TaskLabelDropdown({ task }: Props) {
+function TaskLabelDropdown({
+  task,
+  labelSelected = () => {},
+  labelDeselected = () => {},
+  labelDeleted = () => {},
+}: Props) {
   const assignedLabels = task.assigned_labels || [];
   const hasAssignedLabels =
     Array.isArray(assignedLabels) && assignedLabels.length > 0;
@@ -36,7 +45,14 @@ function TaskLabelDropdown({ task }: Props) {
         </div>
       )}
     >
-      {task && <LabelDropdownContent task={task} />}
+      {task && (
+        <LabelDropdownContent
+          task={task}
+          labelSelected={labelSelected}
+          labelDeselected={labelDeselected}
+          labelDeleted={labelDeleted}
+        />
+      )}
     </WPQTDropdown>
   );
 }

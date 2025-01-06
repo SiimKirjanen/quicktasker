@@ -271,8 +271,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        $tasksRepo = new TaskRepository();
-                        $archivedTasks = $tasksRepo->getArchivedTasks(true, true);
+                        $archivedTasks = ServiceLocator::get('TaskRepository')->getArchivedTasks(true, true);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -441,15 +440,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'PATCH',
                 'callback' => function( $data ) {
                     try {
-                        $taskService = new TaskService();
-                        $logService = new LogService();
+                        $taskData = $data->get_json_params();
 
-                        $task = $taskService->editTask( $data['id'], array(
-                            "name" => $data['name'],
-                            "description" => $data['description'],
-                            "free_for_all" => $data['freeForAll'],
-                        ) );
-                        $logService->log('Task ' . $task->name . ' edited', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $task = ServiceLocator::get('TaskService')->editTask( $data['id'], $taskData);
+                        ServiceLocator::get('LogService')->log('Task ' . $task->name . ' edited', WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -467,7 +461,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
                     'name' => array(
-                        'required' => true,
+                        'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
@@ -477,9 +471,14 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'freeForAll' => array(
-                        'required' => true,
+                        'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'dueDate' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
             ),

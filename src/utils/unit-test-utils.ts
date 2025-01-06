@@ -17,6 +17,7 @@ const dummyTask: Task = {
   assigned_wp_users: [],
   is_archived: false,
   assigned_labels: [],
+  due_date: null,
 };
 
 const dummyFullPipeline: Pipeline = {

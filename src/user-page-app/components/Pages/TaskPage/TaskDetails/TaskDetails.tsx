@@ -21,6 +21,7 @@ function TaskDetails({ task }: Props) {
     ...(task.assigned_wp_users || []),
   ];
   const hasAssignedUsers = combinedUsers.length > 0;
+  const dueDate = task.due_date ? convertToWPTimezone(task.due_date) : null;
 
   return (
     <div>
@@ -47,6 +48,16 @@ function TaskDetails({ task }: Props) {
         >
           {convertToWPTimezone(task.created_at)}
         </DisplayRow>
+
+        {dueDate && (
+          <DisplayRow
+            label={__("Due date", "quicktasker")}
+            className={rowClasses}
+          >
+            {dueDate}
+          </DisplayRow>
+        )}
+
         <DisplayRow
           label={__("Free for all", "quicktasker")}
           className={rowClasses}

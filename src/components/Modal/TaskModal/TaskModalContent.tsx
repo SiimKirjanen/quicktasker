@@ -20,19 +20,24 @@ import {
   CheckBadgeIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import dayjs from "dayjs";
+import DateTimePicker from "react-datetime-picker";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CLOSE_TASK_MODAL,
+  DATETIME_FORMAT,
   PIPELINE_CHANGE_TASK_DONE_STATUS,
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { useLoadingStates } from "../../../hooks/useLoadingStates";
+import { useTimezone } from "../../../hooks/useTimezone";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
+import { Label } from "../../../types/label";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
@@ -66,6 +71,8 @@ const TaskModalContent = forwardRef(
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [freeForAllTask, setFreeForAllTask] = useState(false);
+    const [dueDateTime, setDueDateTime] = useState<Date | null>(null);
+    const [assignedTaskLabels, setAssignedTaskLabels] = useState<Label[]>([]);
     const { archiveTask, restoreArchivedTask } = useTaskActions();
     const {
       loading1: isDeletingTask,
@@ -73,15 +80,22 @@ const TaskModalContent = forwardRef(
       loading2: archiveLoading,
       setLoading2: setArchiveLoading,
     } = useLoadingStates();
+    const { convertUTCDateTimeToWPTimezone } = useTimezone();
 
     const isTaskArchived = taskToEdit?.is_archived;
     const pipelineExists = taskToEdit?.pipeline_name !== null;
 
     useEffect(() => {
       if (taskToEdit) {
+        const taskDueDate = taskToEdit.due_date
+          ? convertUTCDateTimeToWPTimezone(taskToEdit.due_date)
+          : null;
+
         setTaskName(taskToEdit.name);
         setTaskDescription(taskToEdit.description);
         setFreeForAllTask(taskToEdit.free_for_all);
+        setDueDateTime(taskDueDate);
+        setAssignedTaskLabels(taskToEdit.assigned_labels);
       }
     }, [taskToEdit]);
 
@@ -92,8 +106,27 @@ const TaskModalContent = forwardRef(
           name: taskName,
           description: taskDescription,
           free_for_all: freeForAllTask,
+          due_date: dueDateTime
+            ? dayjs(dueDateTime).utc().format(DATETIME_FORMAT)
+            : null,
         });
       }
+    };
+
+    const onLabelSelected = (label: Label) => {
+      setAssignedTaskLabels((prev) => [...prev, label]);
+    };
+
+    const onLabelDeSelected = (labelId: string) => {
+      setAssignedTaskLabels((prev) =>
+        prev.filter((label) => label.id !== labelId),
+      );
+    };
+
+    const onLabelDeleted = (labelId: string) => {
+      setAssignedTaskLabels((prev) =>
+        prev.filter((label) => label.id !== labelId),
+      );
     };
 
     const clearContent = () => {
@@ -155,7 +188,15 @@ const TaskModalContent = forwardRef(
                 </WPQTModalField>
 
                 <WPQTModalField label={__("Labels", "quicktasker")}>
-                  <TaskLabelDropdown task={taskToEdit} />
+                  <TaskLabelDropdown
+                    task={{
+                      ...taskToEdit,
+                      assigned_labels: assignedTaskLabels,
+                    }}
+                    labelSelected={onLabelSelected}
+                    labelDeselected={onLabelDeSelected}
+                    labelDeleted={onLabelDeleted}
+                  />
                 </WPQTModalField>
 
                 <WPQTModalField
@@ -169,6 +210,16 @@ const TaskModalContent = forwardRef(
                   <Toggle
                     checked={freeForAllTask}
                     handleChange={setFreeForAllTask}
+                  />
+                </WPQTModalField>
+
+                <WPQTModalField label={__("Due date", "quicktasker")}>
+                  <DateTimePicker
+                    onChange={(value) => {
+                      setDueDateTime(value);
+                    }}
+                    value={dueDateTime}
+                    format="y-MM-dd HH:mm"
                   />
                 </WPQTModalField>
 

@@ -1,4 +1,4 @@
-import { ViewColumnsIcon } from "@heroicons/react/24/outline";
+import { ClockIcon, ViewColumnsIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../components/Card/Card";
@@ -13,6 +13,7 @@ import {
   OPEN_EDIT_TASK_MODAL,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
 } from "../../../../constants";
+import { useTimezone } from "../../../../hooks/useTimezone";
 import { ArchiveContext } from "../../../../providers/ArchiveContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { Task } from "../../../../types/task";
@@ -24,6 +25,8 @@ type Props = {
 function ArchiveItem({ task }: Props) {
   const { modalDispatch } = useContext(ModalContext);
   const { archiveDispatch } = useContext(ArchiveContext);
+  const { convertToWPTimezone } = useTimezone();
+  const dueDate = task.due_date ? convertToWPTimezone(task.due_date) : null;
 
   return (
     <WPQTCard
@@ -67,6 +70,14 @@ function ArchiveItem({ task }: Props) {
         />
         <TaskLabelDropdown task={task} />
       </div>
+
+      {dueDate && (
+        <WPQTCardDataItem
+          label={__("Due date", "quicktasker")}
+          value={dueDate}
+          icon={<ClockIcon className="wpqt-size-5 wpqt-icon-blue" />}
+        />
+      )}
 
       <TaskCardActions
         task={task}

@@ -1,7 +1,7 @@
 import { __ } from "@wordpress/i18n";
 import dayjs from "dayjs";
-import DatePicker from "react-date-picker";
-import { Value } from "react-date-picker/dist/cjs/shared/types";
+import DatePicker from "react-datetime-picker";
+import { Value } from "react-datetime-picker/dist/cjs/shared/types";
 import { WPQTFilter } from "../../../../components/Filter/WPQTFilter";
 import { PipelineOverviewFilter } from "../../../../types/overview";
 

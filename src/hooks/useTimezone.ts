@@ -1,6 +1,9 @@
 import { useContext } from "@wordpress/element";
 import { AppContext } from "../providers/AppContextProvider";
-import { convertToTimezone } from "../utils/timezone";
+import {
+  convertToTimezone,
+  convertUTCDatetimeToWPTimezone,
+} from "../utils/timezone";
 
 const useTimezone = () => {
   const {
@@ -11,7 +14,11 @@ const useTimezone = () => {
     return convertToTimezone(utcDateTime, timezone);
   };
 
-  return { convertToWPTimezone };
+  const convertUTCDateTimeToWPTimezone = (utcDateTime: string) => {
+    return convertUTCDatetimeToWPTimezone(utcDateTime, timezone);
+  };
+
+  return { convertToWPTimezone, convertUTCDateTimeToWPTimezone };
 };
 
 export { useTimezone };

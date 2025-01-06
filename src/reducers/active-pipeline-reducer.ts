@@ -395,7 +395,6 @@ const activePipelineReducer = (state: State, action: Action) => {
     }
     case PIPELINE_ADD_LABEL_TO_TASK: {
       const { taskId, label } = action.payload;
-      console.log(taskId, label);
       if (!state.activePipeline) {
         return state;
       }
@@ -403,7 +402,6 @@ const activePipelineReducer = (state: State, action: Action) => {
       const updatedStages = state.activePipeline.stages?.map((stage) => {
         const updatedTasks = stage.tasks?.map((task) => {
           if (task.id === taskId) {
-            console.log("Found the task!!!");
             return {
               ...task,
               assigned_labels: [...(task.assigned_labels || []), label],
