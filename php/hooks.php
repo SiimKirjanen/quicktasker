@@ -15,13 +15,13 @@ $plugin_main_file = dirname(plugin_dir_path(__FILE__)) . '/quicktasker.php';
 register_activation_hook($plugin_main_file, function() use ($plugin_main_file) {
     if ( is_plugin_active('quicktasker-pro/quicktasker.php') && strpos($plugin_main_file, 'quicktasker/quicktasker.php') !== false) {
         wp_die(
-            __('QuickTasker cannot be activated because QuickTasker Pro is already active.', 'quicktasker'),
+            __('QuickTasker cannot be activated because QuickTasker Pro is already active. Please deactivate Pro version first.', 'quicktasker'),
             __('Plugin Activation Error', 'quicktasker'),
             array('back_link' => true)
         );
     } elseif ( is_plugin_active('quicktasker/quicktasker.php') && strpos($plugin_main_file, 'quicktasker-pro/quicktasker.php') !== false) {
         wp_die(
-            __('QuickTasker Pro cannot be activated because QuickTasker is already active.', 'quicktasker'),
+            __('QuickTasker Pro cannot be activated because QuickTasker is already active. Please deactivate free version first.', 'quicktasker'),
             __('Plugin Activation Error', 'quicktasker'),
             array('back_link' => true)
         );

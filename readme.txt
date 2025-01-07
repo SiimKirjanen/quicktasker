@@ -1,10 +1,10 @@
 === QuickTasker ===
 Donate link: https://www.paypal.com/donate/?hosted_button_id=QEU9KGTX4NZHN
-Tags: task manager, task management, project manager, project management 
+Tags: task manager, task management, project manager, project management, task board 
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
-Stable tag: 1.20.0
+Stable tag: 1.21.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,10 @@ This plugin also has a pro version that enhances the free version with additiona
 5. User task comments
 
 == Changelog ==
+
+= 1.21.0 =
+* Added ability to add due date to task.
+* Label improvements.
 
 = 1.20.0 =
 * Added ability to add labels to tasks.

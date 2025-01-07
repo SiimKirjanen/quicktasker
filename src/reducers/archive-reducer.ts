@@ -1,10 +1,12 @@
 import {
   ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
+  ADD_LABEL_ARCHIVED_TASK,
   CHANGE_ARCHIVE_TASK_DONE_FILTER,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
   EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
+  REMOVE_LABEL_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
@@ -143,6 +145,46 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         archiveTaskDoneFilter,
+      };
+    }
+    case ADD_LABEL_ARCHIVED_TASK: {
+      const { taskId, label } = action.payload;
+
+      const archivedTasks = (state.archivedTasks ?? []).map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            assigned_labels: [...task.assigned_labels, label],
+          };
+        }
+
+        return task;
+      });
+
+      return {
+        ...state,
+        archivedTasks,
+      };
+    }
+    case REMOVE_LABEL_ARCHIVED_TASK: {
+      const { taskId, labelId } = action.payload;
+
+      const archivedTasks = (state.archivedTasks ?? []).map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            assigned_labels: task.assigned_labels.filter(
+              (label) => label.id !== labelId,
+            ),
+          };
+        }
+
+        return task;
+      });
+
+      return {
+        ...state,
+        archivedTasks,
       };
     }
     default: {

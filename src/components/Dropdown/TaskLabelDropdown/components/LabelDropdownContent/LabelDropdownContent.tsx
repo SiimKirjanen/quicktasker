@@ -2,18 +2,21 @@ import { memo, useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
   ADD_LABEL,
+  ADD_LABEL_ARCHIVED_TASK,
   EDIT_LABEL,
   PIPELINE_ADD_LABEL_TO_TASK,
   PIPELINE_EDIT_LABEL,
   PIPELINE_REMOVE_LABEL,
   PIPELINE_REMOVE_LABEL_FROM_TASK,
   REMOVE_LABEL,
+  REMOVE_LABEL_ARCHIVED_TASK,
   RESET_LABEL_CONTEXT,
   SET_LABEL_ACTION_STATE_SELECTION,
   SET_LABELS,
 } from "../../../../../constants";
 import { useLabelActions } from "../../../../../hooks/actions/useLabelActions";
 import { ActivePipelineContext } from "../../../../../providers/ActivePipelineContextProvider";
+import { ArchiveContext } from "../../../../../providers/ArchiveContextProvider";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
 import {
   Label,
@@ -37,6 +40,7 @@ const LabelDropdownContent = memo(
       state: { labels, labelActionState, labelToEdit },
       labelDispatch,
     } = useContext(LabelContext);
+    const { archiveDispatch } = useContext(ArchiveContext);
     const { dispatch } = useContext(ActivePipelineContext);
     const [loadingLabels, setLoadingLabels] = useState(true);
     const [creatingLabel, setCreatingLabel] = useState(false);
@@ -88,6 +92,10 @@ const LabelDropdownContent = memo(
               type: PIPELINE_ADD_LABEL_TO_TASK,
               payload: { taskId: task.id, label },
             });
+            archiveDispatch({
+              type: ADD_LABEL_ARCHIVED_TASK,
+              payload: { taskId: task.id, label },
+            });
             labelSelected(label);
           }
         },
@@ -102,6 +110,10 @@ const LabelDropdownContent = memo(
           if (success) {
             dispatch({
               type: PIPELINE_REMOVE_LABEL_FROM_TASK,
+              payload: { taskId: task.id, labelId },
+            });
+            archiveDispatch({
+              type: REMOVE_LABEL_ARCHIVED_TASK,
               payload: { taskId: task.id, labelId },
             });
             labelDeselected(labelId);

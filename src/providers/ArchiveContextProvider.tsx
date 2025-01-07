@@ -9,11 +9,13 @@ import { toast } from "react-toastify";
 import { getArchivedTasksRequest } from "../api/api";
 import {
   ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
+  ADD_LABEL_ARCHIVED_TASK,
   CHANGE_ARCHIVE_TASK_DONE_FILTER,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
   EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
+  REMOVE_LABEL_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
@@ -21,6 +23,7 @@ import {
 } from "../constants";
 import { reducer } from "../reducers/archive-reducer";
 import { WPQTArchiveDoneFilter } from "../types/enums";
+import { Label } from "../types/label";
 import { Task, TaskFromServer } from "../types/task";
 import { User, WPUser } from "../types/user";
 import { LoadingContext } from "./LoadingContextProvider";
@@ -58,6 +61,14 @@ type Action =
   | {
       type: typeof CHANGE_ARCHIVE_TASK_DONE_FILTER;
       payload: WPQTArchiveDoneFilter;
+    }
+  | {
+      type: typeof ADD_LABEL_ARCHIVED_TASK;
+      payload: { taskId: string; label: Label };
+    }
+  | {
+      type: typeof REMOVE_LABEL_ARCHIVED_TASK;
+      payload: { taskId: string; labelId: string };
     }
   | {
       type: typeof CHANGE_ARCHIVED_TASK_DONE_STATUS;
