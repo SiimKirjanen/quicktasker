@@ -38,6 +38,7 @@ require( 'php/repositories/OverViewRepository.php' );
 require( 'php/repositories/AutomationRepository.php' );
 require( 'php/repositories/EmailRepository.php' );
 require( 'php/repositories/LabelRepository.php' );
+require( 'php/repositories/UploadRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
@@ -61,14 +62,11 @@ require( 'php/services/AutomationService.php' );
 require( 'php/services/EmailService.php' );
 require( 'php/services/ErrorHandlerService.php' );
 require( 'php/services/LabelService.php' );
+require( 'php/services/UploadService.php' );
+require( 'php/services/UUIDService.php' );
+require( 'php/services/FileService.php' );
 require( 'php/services/ServiceLocator.php' );
-require( 'php/hooks.php' );
-require( 'php/actions.php' );
-require( 'php/filters.php' );
-require( 'php/api/admin-api.php' );
-require( 'php/api/user-page-api.php' );
-require( 'php/side-effects.php' );
-require( 'php/db-seeder.php' );
+
 
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 WPQT\ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
@@ -81,6 +79,7 @@ WPQT\ServiceLocator::register('CommentRepository', new WPQT\Comment\CommentRepos
 WPQT\ServiceLocator::register('LogRepository', new WPQT\Log\LogRepository());
 WPQT\ServiceLocator::register('SettingRepository', new WPQT\Settings\SettingRepository());
 WPQT\ServiceLocator::register('LabelRepository', new WPQT\Label\LabelRepository());
+WPQT\ServiceLocator::register('UploadRepository', new WPQT\Upload\UploadRepository());
 WPQT\ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
 WPQT\ServiceLocator::register('UserService', new WPQT\User\UserService());
 WPQT\ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
@@ -88,6 +87,17 @@ WPQT\ServiceLocator::register('ErrorHandlerService', new WPQT\Error\ErrorHandler
 WPQT\ServiceLocator::register('LogService', new WPQT\Log\LogService());
 WPQT\ServiceLocator::register('EmailService', new WPQT\Email\EmailService());
 WPQT\ServiceLocator::register('LabelService', new WPQT\Label\LabelService());
+WPQT\ServiceLocator::register('UploadService', new WPQT\Upload\UploadService());
+WPQT\ServiceLocator::register('FileService', new WPQT\File\FileService());
+WPQT\ServiceLocator::register('UUIDService', new WPQT\UUID\UUIDService());
+
+require( 'php/hooks.php' );
+require( 'php/actions.php' );
+require( 'php/filters.php' );
+require( 'php/api/admin-api.php' );
+require( 'php/api/user-page-api.php' );
+require( 'php/side-effects.php' );
+require( 'php/db-seeder.php' );
 
 if( is_admin() ) {
 	require( 'php/admin-pages.php' );

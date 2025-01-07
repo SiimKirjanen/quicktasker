@@ -11,6 +11,7 @@ global $wpdb;
 Directories, URL
 ==================================================================================================================================================================================================================
 */
+$up_dir = wp_upload_dir();
 
 if ( ! defined( 'WP_QUICKTASKER_PLUGIN_FOLDER_DIR' ) ) {
     define('WP_QUICKTASKER_PLUGIN_FOLDER_DIR', plugin_dir_path( dirname( __FILE__ ) ));
@@ -24,6 +25,19 @@ if ( ! defined( 'WP_QUICKTASKER_PLUGIN_FOLDER_URL' ) ) {
     define('WP_QUICKTASKER_PLUGIN_FOLDER_URL', plugin_dir_url( dirname( __FILE__ ) ));
 }
 
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FOLDER_DIR' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_FOLDER_DIR', $up_dir['basedir'] . '/quicktasker');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR' ) ) {
+    define('WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR', WP_QUICKTASKER_UPLOAD_FOLDER_DIR . '/tasks');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FOLDER_URL' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_FOLDER_URL', $up_dir['baseurl'] . '/quicktasker');
+}
+
+
 if ( ! defined( 'WP_QUICKTASKER_PUBLIC_USER_PAGE_ID' ) ) {
     define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 }
@@ -35,7 +49,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.20.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.22.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -104,6 +118,10 @@ if ( ! defined( 'TABLE_WP_QUICKTASKER_LABELS' ) ) {
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_LABEL_RELATIONS' ) ) {
     define('TABLE_WP_QUICKTASKER_LABEL_RELATIONS', $wpdb->prefix . "quicktasker_label_relations");
+}
+
+if ( ! defined( 'TABLE_WP_QUICKTASKER_UPLOADS' ) ) {
+    define('TABLE_WP_QUICKTASKER_UPLOADS', $wpdb->prefix . "quicktasker_uploads");
 }
 
 /*
@@ -281,7 +299,7 @@ if ( ! defined( 'WP_QUICKTASKER_INVALID_SESSION_TOKEN' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_SIDE_EFFECT_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "5");
+    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "6");
 }
 
 if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {

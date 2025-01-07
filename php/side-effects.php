@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Capability\CapabilityService;
+use WPQT\ServiceLocator;
 
 /*
 	======================
@@ -16,6 +17,7 @@ if ($quicktasker_trigger_side_effect !== WP_QUICKTASKER_SIDE_EFFECT_TRIGGER) {
 	$capabilityService = new CapabilityService();
 
     $capabilityService->addQuickTaskerAdminCapabilityToAdminRole();
+	ServiceLocator::get('UploadService')->setUpUploadsFolders();
 
 	update_option( 'quicktasker_trigger_side_effect', WP_QUICKTASKER_SIDE_EFFECT_TRIGGER );
 }
