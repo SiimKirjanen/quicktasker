@@ -13,6 +13,7 @@ import {
   PIPELINE_MOVE_TASK,
   REFETCH_ACTIVE_PIPELINE_INTERVAL,
 } from "../../../constants";
+import useTabVisibility from "../../../hooks/useTabVisibility";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { AddStage } from "./AddStage";
@@ -25,16 +26,17 @@ const Pipeline = () => {
     dispatch,
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
+  const { isTabVisible } = useTabVisibility();
 
   useEffect(() => {
     const refetchDataInterval = setInterval(() => {
-      if (activePipeline) {
+      if (activePipeline && isTabVisible) {
         fetchAndSetPipelineData(activePipeline.id);
       }
     }, REFETCH_ACTIVE_PIPELINE_INTERVAL);
 
     return () => clearInterval(refetchDataInterval);
-  }, [activePipeline]);
+  }, [activePipeline, isTabVisible]);
 
   const dispatchMove = (
     source: DraggableLocation,
