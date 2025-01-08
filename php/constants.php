@@ -49,7 +49,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.22.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.24.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -262,6 +262,20 @@ if ( ! defined( 'WP_QT_QUICKTASKER_USER_TYPE' ) ) {
 
 if ( ! defined( 'WP_QT_USER_TYPES' ) ) {
     define('WP_QT_USER_TYPES', [WP_QT_WORDPRESS_USER_TYPE, WP_QT_QUICKTASKER_USER_TYPE]);
+}
+
+/*
+==================================================================================================================================================================================================================
+Upload constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK', "task");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_ENTITY_TYPES' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_ENTITY_TYPES', [WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK]);
 }
 
 /*
