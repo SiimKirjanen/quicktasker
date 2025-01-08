@@ -4,6 +4,7 @@ import { CLOSE_TASK_MODAL, PIPELINE_EDIT_TASK } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { DispatchType, useModal } from "../../../hooks/useModal";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { UploadContextProvider } from "../../../providers/UploadContextProvider";
 import { Task, TaskFromServer } from "../../../types/task";
 import { WPQTModal } from "../WPQTModal";
 import { TaskModalContent } from "./TaskModalContent";
@@ -55,12 +56,14 @@ function TaskModal({ editTaskCallback, deleteTaskCallback }: Props) {
 
   return (
     <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal} size="xl">
-      <TaskModalContent
-        ref={modalContentRef}
-        editTask={editTask}
-        deleteTask={onDeleteTask}
-        taskModalSaving={modalSaving}
-      />
+      <UploadContextProvider>
+        <TaskModalContent
+          ref={modalContentRef}
+          editTask={editTask}
+          deleteTask={onDeleteTask}
+          taskModalSaving={modalSaving}
+        />
+      </UploadContextProvider>
     </WPQTModal>
   );
 }
