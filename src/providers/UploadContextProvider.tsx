@@ -1,5 +1,5 @@
 import { createContext, useReducer } from "@wordpress/element";
-import { ADD_UPLOAD, SET_UPLOADS } from "../constants";
+import { ADD_UPLOAD, REMOVE_UPLOAD, SET_UPLOADS } from "../constants";
 import { reducer } from "../reducers/upload-reducer";
 import { Upload } from "../types/upload";
 
@@ -13,6 +13,7 @@ type State = {
 
 type Action =
   | { type: typeof SET_UPLOADS; payload: Upload[] }
+  | { type: typeof REMOVE_UPLOAD; payload: string }
   | { type: typeof ADD_UPLOAD; payload: Upload };
 
 type Dispatch = (action: Action) => void;

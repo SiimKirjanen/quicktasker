@@ -1,6 +1,10 @@
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { getUploadsRequest, uploadFileRequest } from "../../api/api";
+import {
+  deleteUploadRequest,
+  getUploadsRequest,
+  uploadFileRequest,
+} from "../../api/api";
 import { UploadEntityType } from "../../types/upload";
 
 function useUploadActions() {
@@ -29,6 +33,20 @@ function useUploadActions() {
     }
   };
 
+  const deleteUpload = async (uploadId: string) => {
+    try {
+      const response = await deleteUploadRequest(uploadId);
+      toast.success(__("File deleted successfully", "quicktasker"));
+
+      return { data: response.data, error: null };
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to delete a file", "quicktasker"));
+
+      return { data: null, error };
+    }
+  };
+
   const checkFileExists = async (url: string): Promise<boolean> => {
     try {
       const response = await fetch(url, { method: "HEAD" });
@@ -38,7 +56,7 @@ function useUploadActions() {
     }
   };
 
-  return { getUplaods, uploadFile, checkFileExists };
+  return { getUplaods, uploadFile, deleteUpload, checkFileExists };
 }
 
 export { useUploadActions };

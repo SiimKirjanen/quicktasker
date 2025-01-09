@@ -850,6 +850,17 @@ function uploadFileRequest(formData: FormData): Promise<
   });
 }
 
+function deleteUploadRequest(uploadId: string): Promise<
+  WPQTResponse<{
+    deletedUpload: Upload;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/uploads/${uploadId}`,
+    method: "DELETE",
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -870,6 +881,7 @@ export {
   deletePipelineRequest,
   deleteStageRequest,
   deleteTaskRequest,
+  deleteUploadRequest,
   deleteUserRequest,
   deleteUserSessionRequest,
   editPipelineRequest,

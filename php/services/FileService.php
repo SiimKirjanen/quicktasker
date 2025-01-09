@@ -43,5 +43,30 @@ if ( ! class_exists( 'WPQT\File\FileService' ) ) {
             }
             return true;
         }
+
+        public function deleteFile($filePath) {
+            if (file_exists($filePath)) {
+                return unlink($filePath);
+            }
+            return true;
+        }
+
+        public function deleteDirectory($dirPath) {
+            if (!is_dir($dirPath)) {
+                return false;
+            }
+        
+            $files = array_diff(scandir($dirPath), array('.', '..'));
+            foreach ($files as $file) {
+                $filePath = $dirPath . DIRECTORY_SEPARATOR . $file;
+                if (is_dir($filePath)) {
+                    $this->deleteDirectory($filePath);
+                } else {
+                    $this->deleteFile($filePath);
+                }
+            }
+        
+            return rmdir($dirPath);
+        }
     }
 }

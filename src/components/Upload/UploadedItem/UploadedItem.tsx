@@ -2,8 +2,10 @@ import { ArrowDownTrayIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
+import { REMOVE_UPLOAD } from "../../../constants";
 import { useUploadActions } from "../../../hooks/actions/useUploadActions";
 import { AppContext } from "../../../providers/AppContextProvider";
+import { UploadContext } from "../../../providers/UploadContextProvider";
 import { Upload } from "../../../types/upload";
 
 type Props = {
@@ -13,13 +15,25 @@ function UploadedItem({ upload }: Props) {
   const {
     state: { isUserAllowedToDelete, taskUploadsURL },
   } = useContext(AppContext);
-  const { checkFileExists } = useUploadActions();
+  const { uploadDispatch } = useContext(UploadContext);
+  const { checkFileExists, deleteUpload } = useUploadActions();
   const downloadUrl = `${taskUploadsURL}/${upload.upload_uuid}/${upload.file_name}`;
 
   const handleDownloadClick = async () => {
     const fileExists = await checkFileExists(downloadUrl);
     if (!fileExists) {
       toast.error(__("File was not found", "quicktasker"));
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    const { data } = await deleteUpload(upload.id);
+
+    if (data) {
+      uploadDispatch({
+        type: REMOVE_UPLOAD,
+        payload: upload.id,
+      });
     }
   };
 
@@ -36,7 +50,10 @@ function UploadedItem({ upload }: Props) {
           <ArrowDownTrayIcon className="wpqt-icon-blue wpqt-size-4 :hover:wpqt-text-blue-800 wpqt-cursor-pointer" />
         </a>
         {isUserAllowedToDelete && (
-          <TrashIcon className="wpqt-icon-red wpqt-size-4 :hover:wpqt-text-red-800 wpqt-cursor-pointer" />
+          <TrashIcon
+            className="wpqt-icon-red wpqt-size-4 :hover:wpqt-text-red-800 wpqt-cursor-pointer"
+            onClick={handleDeleteClick}
+          />
         )}
       </div>
     </div>

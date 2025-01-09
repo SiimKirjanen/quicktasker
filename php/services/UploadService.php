@@ -83,5 +83,33 @@ if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
             return ServiceLocator::get('UploadRepository')->getUpload( $wpdb->insert_id );
         }
 
+        private function deleteUploadRecord($uploadId) {
+            global $wpdb;
+
+            $rowsDeleted = $wpdb->delete(
+                TABLE_WP_QUICKTASKER_UPLOADS,
+                array('id' => $uploadId)
+            );
+
+            if( $rowsDeleted === false ){
+                throw new \Exception('Failed to delete upload record.');
+            }
+        }
+
+        public function deleteUpload($uploadId) {
+            $upload = ServiceLocator::get('UploadRepository')->getUpload($uploadId);
+            $uploadDir = WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR . DIRECTORY_SEPARATOR . $upload->upload_uuid;
+            $filePath = $uploadDir . DIRECTORY_SEPARATOR . $upload->file_name;
+
+            $this->deleteUploadRecord($uploadId);
+
+            // Delete the uploaded file
+            ServiceLocator::get('FileService')->deleteFile($filePath);
+
+            // Delete the directory
+            ServiceLocator::get('FileService')->deleteDirectory($uploadDir);
+
+            return $upload;
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { useContext, useState } from "@wordpress/element";
+import { useContext, useRef, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { ADD_UPLOAD } from "../../../constants";
 import { useUploadActions } from "../../../hooks/actions/useUploadActions";
@@ -15,6 +15,7 @@ function Uploader({ entityId, entityType }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const { uploadFile } = useUploadActions();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -55,12 +56,15 @@ function Uploader({ entityId, entityType }: Props) {
 
   const resetState = () => {
     setFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start">
       <div>{__("Select file to upload", "quicktasker")}</div>
-      <input type="file" onChange={handleFileChange} />
+      <input type="file" onChange={handleFileChange} ref={fileInputRef} />
       {file && (
         <WPQTButton
           btnText={__("Upload", "quicktasker")}

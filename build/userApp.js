@@ -48,6 +48,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   deletePipelineRequest: () => (/* binding */ deletePipelineRequest),
 /* harmony export */   deleteStageRequest: () => (/* binding */ deleteStageRequest),
 /* harmony export */   deleteTaskRequest: () => (/* binding */ deleteTaskRequest),
+/* harmony export */   deleteUploadRequest: () => (/* binding */ deleteUploadRequest),
 /* harmony export */   deleteUserRequest: () => (/* binding */ deleteUserRequest),
 /* harmony export */   deleteUserSessionRequest: () => (/* binding */ deleteUserSessionRequest),
 /* harmony export */   editPipelineRequest: () => (/* binding */ editPipelineRequest),
@@ -703,6 +704,12 @@ function uploadFileRequest(formData) {
     path: `/wpqt/v1/uploads`,
     method: "POST",
     body: formData
+  });
+}
+function deleteUploadRequest(uploadId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/uploads/${uploadId}`,
+    method: "DELETE"
   });
 }
 
@@ -1878,6 +1885,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   REMOVE_LABEL: () => (/* binding */ REMOVE_LABEL),
 /* harmony export */   REMOVE_LABEL_ARCHIVED_TASK: () => (/* binding */ REMOVE_LABEL_ARCHIVED_TASK),
 /* harmony export */   REMOVE_PIPELINE_AUTOMATION: () => (/* binding */ REMOVE_PIPELINE_AUTOMATION),
+/* harmony export */   REMOVE_UPLOAD: () => (/* binding */ REMOVE_UPLOAD),
 /* harmony export */   REMOVE_USER_TASK: () => (/* binding */ REMOVE_USER_TASK),
 /* harmony export */   RESET_AUTOMATION_TO_ACTION: () => (/* binding */ RESET_AUTOMATION_TO_ACTION),
 /* harmony export */   RESET_AUTOMATION_TO_TARGET: () => (/* binding */ RESET_AUTOMATION_TO_TARGET),
@@ -2042,6 +2050,7 @@ const RESET_AUTOMATION_TO_ACTION = "RESET_AUTOMATION_TO_ACTION";
 //Upload reducer constants
 const SET_UPLOADS = "SET_UPLOADS";
 const ADD_UPLOAD = "ADD_UPLOAD";
+const REMOVE_UPLOAD = "REMOVE_UPLOAD";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 //Misc

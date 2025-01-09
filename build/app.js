@@ -100,6 +100,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   deletePipelineRequest: () => (/* binding */ deletePipelineRequest),
 /* harmony export */   deleteStageRequest: () => (/* binding */ deleteStageRequest),
 /* harmony export */   deleteTaskRequest: () => (/* binding */ deleteTaskRequest),
+/* harmony export */   deleteUploadRequest: () => (/* binding */ deleteUploadRequest),
 /* harmony export */   deleteUserRequest: () => (/* binding */ deleteUserRequest),
 /* harmony export */   deleteUserSessionRequest: () => (/* binding */ deleteUserSessionRequest),
 /* harmony export */   editPipelineRequest: () => (/* binding */ editPipelineRequest),
@@ -755,6 +756,12 @@ function uploadFileRequest(formData) {
     path: `/wpqt/v1/uploads`,
     method: "POST",
     body: formData
+  });
+}
+function deleteUploadRequest(uploadId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/uploads/${uploadId}`,
+    method: "DELETE"
   });
 }
 
@@ -7499,15 +7506,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowDownTrayIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowDownTrayIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
-/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
+/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
+/* harmony import */ var _providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/UploadContextProvider */ "./src/providers/UploadContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -7542,6 +7551,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
 function UploadedItem({
   upload
 }) {
@@ -7550,15 +7561,30 @@ function UploadedItem({
       isUserAllowedToDelete,
       taskUploadsURL
     }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_5__.AppContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_6__.AppContext);
   const {
-    checkFileExists
-  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__.useUploadActions)();
+    uploadDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_7__.UploadContext);
+  const {
+    checkFileExists,
+    deleteUpload
+  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_5__.useUploadActions)();
   const downloadUrl = `${taskUploadsURL}/${upload.upload_uuid}/${upload.file_name}`;
   const handleDownloadClick = () => __awaiter(this, void 0, void 0, function* () {
     const fileExists = yield checkFileExists(downloadUrl);
     if (!fileExists) {
       react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("File was not found", "quicktasker"));
+    }
+  });
+  const handleDeleteClick = () => __awaiter(this, void 0, void 0, function* () {
+    const {
+      data
+    } = yield deleteUpload(upload.id);
+    if (data) {
+      uploadDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.REMOVE_UPLOAD,
+        payload: upload.id
+      });
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -7573,11 +7599,12 @@ function UploadedItem({
         download: true,
         onClick: handleDownloadClick,
         className: "focus:wpqt-shadow-none",
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
           className: "wpqt-icon-blue wpqt-size-4 :hover:wpqt-text-blue-800 wpqt-cursor-pointer"
         })
-      }), isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
-        className: "wpqt-icon-red wpqt-size-4 :hover:wpqt-text-red-800 wpqt-cursor-pointer"
+      }), isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        className: "wpqt-icon-red wpqt-size-4 :hover:wpqt-text-red-800 wpqt-cursor-pointer",
+        onClick: handleDeleteClick
       })]
     })]
   });
@@ -7652,6 +7679,7 @@ function Uploader({
   const {
     uploadFile
   } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__.useUploadActions)();
+  const fileInputRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
   const handleFileChange = e => {
     if (e.target.files) {
       setFile(e.target.files[0]);
@@ -7686,6 +7714,9 @@ function Uploader({
   });
   const resetState = () => {
     setFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start",
@@ -7693,7 +7724,8 @@ function Uploader({
       children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select file to upload", "quicktasker")
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
       type: "file",
-      onChange: handleFileChange
+      onChange: handleFileChange,
+      ref: fileInputRef
     }), file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTButton, {
       btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Upload", "quicktasker"),
       loading: uploading,
@@ -8346,6 +8378,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   REMOVE_LABEL: () => (/* binding */ REMOVE_LABEL),
 /* harmony export */   REMOVE_LABEL_ARCHIVED_TASK: () => (/* binding */ REMOVE_LABEL_ARCHIVED_TASK),
 /* harmony export */   REMOVE_PIPELINE_AUTOMATION: () => (/* binding */ REMOVE_PIPELINE_AUTOMATION),
+/* harmony export */   REMOVE_UPLOAD: () => (/* binding */ REMOVE_UPLOAD),
 /* harmony export */   REMOVE_USER_TASK: () => (/* binding */ REMOVE_USER_TASK),
 /* harmony export */   RESET_AUTOMATION_TO_ACTION: () => (/* binding */ RESET_AUTOMATION_TO_ACTION),
 /* harmony export */   RESET_AUTOMATION_TO_TARGET: () => (/* binding */ RESET_AUTOMATION_TO_TARGET),
@@ -8510,6 +8543,7 @@ const RESET_AUTOMATION_TO_ACTION = "RESET_AUTOMATION_TO_ACTION";
 //Upload reducer constants
 const SET_UPLOADS = "SET_UPLOADS";
 const ADD_UPLOAD = "ADD_UPLOAD";
+const REMOVE_UPLOAD = "REMOVE_UPLOAD";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 //Misc
@@ -9514,6 +9548,23 @@ function useUploadActions() {
       };
     }
   });
+  const deleteUpload = uploadId => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.deleteUploadRequest)(uploadId);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("File deleted successfully", "quicktasker"));
+      return {
+        data: response.data,
+        error: null
+      };
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to delete a file", "quicktasker"));
+      return {
+        data: null,
+        error
+      };
+    }
+  });
   const checkFileExists = url => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield fetch(url, {
@@ -9527,6 +9578,7 @@ function useUploadActions() {
   return {
     getUplaods,
     uploadFile,
+    deleteUpload,
     checkFileExists
   };
 }
@@ -17984,6 +18036,12 @@ const reducer = (state, action) => {
       {
         return Object.assign(Object.assign({}, state), {
           uploads: [...state.uploads, action.payload]
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.REMOVE_UPLOAD:
+      {
+        return Object.assign(Object.assign({}, state), {
+          uploads: state.uploads.filter(upload => upload.id !== action.payload)
         });
       }
     default:
