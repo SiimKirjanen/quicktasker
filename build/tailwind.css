@@ -1717,6 +1717,14 @@
   align-items: flex-start;
 }
 
+.wpqt-items-end {
+  align-items: flex-end;
+}
+
+.\!wpqt-items-end {
+  align-items: flex-end !important;
+}
+
 .wpqt-items-center {
   align-items: center;
 }
