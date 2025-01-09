@@ -1,6 +1,12 @@
 import { useContext, useRef, useState } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
-import { ADD_UPLOAD } from "../../../constants";
+import { __, sprintf } from "@wordpress/i18n";
+import { toast } from "react-toastify";
+import {
+  ADD_UPLOAD,
+  ALLOWED_UPLOAD_FILE_TYPES,
+  FILE_NAME_REGEX,
+  MAX_UPLOAD_FILE_SIZE,
+} from "../../../constants";
 import { useUploadActions } from "../../../hooks/actions/useUploadActions";
 import { UploadContext } from "../../../providers/UploadContextProvider";
 import { UploadEntityType } from "../../../types/upload";
@@ -19,7 +25,29 @@ function Uploader({ entityId, entityType }: Props) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+
+      if (selectedFile.size > MAX_UPLOAD_FILE_SIZE) {
+        toast.error(
+          sprintf(
+            __("File size exceeds the maximum limit of %d MB", "quicktasker"),
+            MAX_UPLOAD_FILE_SIZE,
+          ),
+        );
+        return;
+      }
+
+      if (!FILE_NAME_REGEX.test(selectedFile.name)) {
+        toast.error(__("Invalid file name", "quicktasker"));
+        return;
+      }
+
+      if (selectedFile.size === 0) {
+        toast.error(__("The selected file is empty", "quicktasker"));
+        return;
+      }
+
+      setFile(selectedFile);
     }
   };
 
@@ -63,8 +91,23 @@ function Uploader({ entityId, entityType }: Props) {
 
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start">
-      <div>{__("Select file to upload", "quicktasker")}</div>
-      <input type="file" onChange={handleFileChange} ref={fileInputRef} />
+      <div className="wpqt-max-w-[300px]">
+        {sprintf(
+          __("Select file to upload (Max size: %d MB)", "quicktasker"),
+          MAX_UPLOAD_FILE_SIZE / 1024 / 1024,
+        )}
+        <br />
+        {__(
+          "Allowed characters in file name: Latin letters, numbers, underscores, hyphens, and dots.",
+          "quicktasker",
+        )}
+      </div>
+      <input
+        type="file"
+        onChange={handleFileChange}
+        ref={fileInputRef}
+        accept={ALLOWED_UPLOAD_FILE_TYPES.join(",")}
+      />
       {file && (
         <WPQTButton
           btnText={__("Upload", "quicktasker")}

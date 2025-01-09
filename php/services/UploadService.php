@@ -23,10 +23,36 @@ if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
         }
 
         public function uploadFile($entityId, $entityType, $file) {
+            $this->validateUploadFile($file);
             $uploadRecord = $this->insertUploadRecord($entityId, $entityType, $file);
             $uploadPath = $this->saveFileToDisc($file, $uploadRecord);
 
             return $uploadRecord;
+        }
+
+        public function validateUploadFile($file) {
+            $fileType = mime_content_type($file['tmp_name']);
+            $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
+
+            if ($file['error'] !== UPLOAD_ERR_OK) {
+                throw new \Exception('File upload error. Error code: ' . $file['error']);
+            }
+
+            if (!in_array($fileType, WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES)) {
+                throw new \Exception('Not supported file type ' . $fileType);
+            }
+
+            if (!in_array(strtolower($fileExtension), WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS)) {
+                throw new \Exception('Not supported file extension ' . $fileExtension);
+            }
+
+            if ($file['size'] > WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE) {
+                throw new \Exception(sprintf('File size exceeds the maximum limit of %d MB', WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE / (1024 * 1024)));
+            }
+
+            if (!preg_match(WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX, $file['name'])) {
+                throw new \Exception('Invalid file name');
+            }
         }
 
         public function saveFileToDisc($file, $uploadRecord) {

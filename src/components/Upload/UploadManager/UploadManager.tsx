@@ -44,7 +44,7 @@ function UploadManager({ entityId, entityType }: Props) {
   return (
     <div className="wpqt-flex wpqt-gap-2">
       <Uploader entityId={entityId} entityType={entityType} />
-      <div className="wpqt-flex wpqt-gap-2 wpqt-flex-wrap">
+      <div className="wpqt-flex wpqt-gap-2 wpqt-flex-wrap wpqt-items-start">
         {fetchingUploads ? (
           <Loading ovalSize="24" />
         ) : (

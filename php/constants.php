@@ -537,3 +537,71 @@ if ( ! defined( 'WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE' ) ) {
     define('WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE', "task-new-private-comment");
 }
 
+
+/*
+==================================================================================================================================================================================================================
+Validation constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES' ) ) {
+    define('WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES', [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        "text/csv",
+        'text/plain',
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/bmp',
+        'image/svg+xml',
+        'audio/mpeg',
+        'audio/wav',
+        'audio/ogg',
+        'video/mp4',
+        'video/webm',
+        'video/ogg',
+        'application/zip',
+        'application/x-rar-compressed',
+        'application/x-tar',
+        'application/gzip'
+    ]);
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS' ) ) {
+    define('WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS', [
+        "pdf",
+        "doc",
+        "docx",
+        "xls",
+        "xlsx",
+        "txt",
+        "csv",
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "svg",
+        "mp3",
+        "wav",
+        "ogg",
+        "mp4",
+        "webm",
+        "zip",
+        "rar",
+        "tar",
+        "gz"
+    ]);
+}
+
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX', '/^[a-zA-Z0-9_\-\.]+$/');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE' ) ) {
+    define('WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE', 25 * 1024 * 1024);
+}

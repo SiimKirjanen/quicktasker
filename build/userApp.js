@@ -1813,6 +1813,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ADD_PIPELINE_AUTOMATION: () => (/* binding */ ADD_PIPELINE_AUTOMATION),
 /* harmony export */   ADD_UPLOAD: () => (/* binding */ ADD_UPLOAD),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
+/* harmony export */   ALLOWED_UPLOAD_FILE_TYPES: () => (/* binding */ ALLOWED_UPLOAD_FILE_TYPES),
 /* harmony export */   CHANGE_ARCHIVED_TASK_DONE_STATUS: () => (/* binding */ CHANGE_ARCHIVED_TASK_DONE_STATUS),
 /* harmony export */   CHANGE_ARCHIVE_TASK_DONE_FILTER: () => (/* binding */ CHANGE_ARCHIVE_TASK_DONE_FILTER),
 /* harmony export */   CHANGE_TASK_DONE_STATUS: () => (/* binding */ CHANGE_TASK_DONE_STATUS),
@@ -1837,8 +1838,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EDIT_LABEL: () => (/* binding */ EDIT_LABEL),
 /* harmony export */   EDIT_USER: () => (/* binding */ EDIT_USER),
 /* harmony export */   EDIT_USER_TASK: () => (/* binding */ EDIT_USER_TASK),
+/* harmony export */   FILE_NAME_REGEX: () => (/* binding */ FILE_NAME_REGEX),
 /* harmony export */   HAS_AUTOMATIONS: () => (/* binding */ HAS_AUTOMATIONS),
 /* harmony export */   INIT_APP_STATE: () => (/* binding */ INIT_APP_STATE),
+/* harmony export */   MAX_UPLOAD_FILE_SIZE: () => (/* binding */ MAX_UPLOAD_FILE_SIZE),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
@@ -2057,6 +2060,10 @@ const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 const HAS_AUTOMATIONS = false;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
+//Validation
+const ALLOWED_UPLOAD_FILE_TYPES = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "text/plain", "image/jpeg", "image/png", "image/gif", "image/bmp", "image/svg+xml", "audio/mpeg", "audio/wav", "audio/ogg", "video/mp4", "video/webm", "video/ogg", "application/zip", "application/x-rar-compressed", "application/x-tar", "application/gzip"];
+const MAX_UPLOAD_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
+const FILE_NAME_REGEX = /^[a-zA-Z0-9_\-.]+$/;
 
 
 /***/ }),

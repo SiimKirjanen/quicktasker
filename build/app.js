@@ -5805,7 +5805,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             saveBtnText: taskModalSaving ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Saving...", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Save", "quicktasker")
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
-          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("file attachment", "quicktasker"),
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("File attachment", "quicktasker"),
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_24__.UploadManager, {
             entityId: taskToEdit.id,
             entityType: _types_upload__WEBPACK_IMPORTED_MODULE_14__.UploadEntityType.TASK
@@ -7481,7 +7481,7 @@ function UploadManager({
       entityId: entityId,
       entityType: entityType
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-flex wpqt-gap-2 wpqt-flex-wrap",
+      className: "wpqt-flex wpqt-gap-2 wpqt-flex-wrap wpqt-items-start",
       children: fetchingUploads ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_7__.Loading, {
         ovalSize: "24"
       }) : uploads.map(upload => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UploadedItem_UploadedItem__WEBPACK_IMPORTED_MODULE_8__.UploadedItem, {
@@ -7638,10 +7638,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
-/* harmony import */ var _providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/UploadContextProvider */ "./src/providers/UploadContextProvider.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
+/* harmony import */ var _providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/UploadContextProvider */ "./src/providers/UploadContextProvider.tsx");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -7676,22 +7677,36 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function Uploader({
   entityId,
   entityType
 }) {
   const {
     uploadDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_5__.UploadContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_6__.UploadContext);
   const [file, setFile] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [uploading, setUploading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
     uploadFile
-  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__.useUploadActions)();
+  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_5__.useUploadActions)();
   const fileInputRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
   const handleFileChange = e => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      if (selectedFile.size > _constants__WEBPACK_IMPORTED_MODULE_4__.MAX_UPLOAD_FILE_SIZE) {
+        react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("File size exceeds the maximum limit of %d MB", "quicktasker"), _constants__WEBPACK_IMPORTED_MODULE_4__.MAX_UPLOAD_FILE_SIZE));
+        return;
+      }
+      if (!_constants__WEBPACK_IMPORTED_MODULE_4__.FILE_NAME_REGEX.test(selectedFile.name)) {
+        react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Invalid file name", "quicktasker"));
+        return;
+      }
+      if (selectedFile.size === 0) {
+        react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("The selected file is empty", "quicktasker"));
+        return;
+      }
+      setFile(selectedFile);
     }
   };
   const generateFormData = () => {
@@ -7713,7 +7728,7 @@ function Uploader({
       } = yield uploadFile(formData);
       if (data) {
         uploadDispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_3__.ADD_UPLOAD,
+          type: _constants__WEBPACK_IMPORTED_MODULE_4__.ADD_UPLOAD,
           payload: data.upload
         });
         resetState();
@@ -7729,13 +7744,15 @@ function Uploader({
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select file to upload", "quicktasker")
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-max-w-[300px]",
+      children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select file to upload (Max size: %d MB)", "quicktasker"), _constants__WEBPACK_IMPORTED_MODULE_4__.MAX_UPLOAD_FILE_SIZE / 1024 / 1024), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("br", {}), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Allowed characters in file name: Latin letters, numbers, underscores, hyphens, and dots.", "quicktasker")]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
       type: "file",
       onChange: handleFileChange,
-      ref: fileInputRef
-    }), file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTButton, {
+      ref: fileInputRef,
+      accept: _constants__WEBPACK_IMPORTED_MODULE_4__.ALLOWED_UPLOAD_FILE_TYPES.join(",")
+    }), file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTButton, {
       btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Upload", "quicktasker"),
       loading: uploading,
       onClick: handleUpload
@@ -8315,6 +8332,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ADD_PIPELINE_AUTOMATION: () => (/* binding */ ADD_PIPELINE_AUTOMATION),
 /* harmony export */   ADD_UPLOAD: () => (/* binding */ ADD_UPLOAD),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
+/* harmony export */   ALLOWED_UPLOAD_FILE_TYPES: () => (/* binding */ ALLOWED_UPLOAD_FILE_TYPES),
 /* harmony export */   CHANGE_ARCHIVED_TASK_DONE_STATUS: () => (/* binding */ CHANGE_ARCHIVED_TASK_DONE_STATUS),
 /* harmony export */   CHANGE_ARCHIVE_TASK_DONE_FILTER: () => (/* binding */ CHANGE_ARCHIVE_TASK_DONE_FILTER),
 /* harmony export */   CHANGE_TASK_DONE_STATUS: () => (/* binding */ CHANGE_TASK_DONE_STATUS),
@@ -8339,8 +8357,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EDIT_LABEL: () => (/* binding */ EDIT_LABEL),
 /* harmony export */   EDIT_USER: () => (/* binding */ EDIT_USER),
 /* harmony export */   EDIT_USER_TASK: () => (/* binding */ EDIT_USER_TASK),
+/* harmony export */   FILE_NAME_REGEX: () => (/* binding */ FILE_NAME_REGEX),
 /* harmony export */   HAS_AUTOMATIONS: () => (/* binding */ HAS_AUTOMATIONS),
 /* harmony export */   INIT_APP_STATE: () => (/* binding */ INIT_APP_STATE),
+/* harmony export */   MAX_UPLOAD_FILE_SIZE: () => (/* binding */ MAX_UPLOAD_FILE_SIZE),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
@@ -8559,6 +8579,10 @@ const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 const HAS_AUTOMATIONS = false;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
+//Validation
+const ALLOWED_UPLOAD_FILE_TYPES = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "text/plain", "image/jpeg", "image/png", "image/gif", "image/bmp", "image/svg+xml", "audio/mpeg", "audio/wav", "audio/ogg", "video/mp4", "video/webm", "video/ogg", "application/zip", "application/x-rar-compressed", "application/x-tar", "application/gzip"];
+const MAX_UPLOAD_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
+const FILE_NAME_REGEX = /^[a-zA-Z0-9_\-.]+$/;
 
 
 /***/ }),

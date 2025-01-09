@@ -151,6 +151,34 @@ const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 const HAS_AUTOMATIONS = false;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
 
+//Validation
+const ALLOWED_UPLOAD_FILE_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/csv",
+  "text/plain",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/bmp",
+  "image/svg+xml",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/ogg",
+  "video/mp4",
+  "video/webm",
+  "video/ogg",
+  "application/zip",
+  "application/x-rar-compressed",
+  "application/x-tar",
+  "application/gzip",
+];
+const MAX_UPLOAD_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
+const FILE_NAME_REGEX = /^[a-zA-Z0-9_\-.]+$/;
+
 export {
   ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
@@ -161,6 +189,7 @@ export {
   ADD_PIPELINE_AUTOMATION,
   ADD_UPLOAD,
   ADD_USER,
+  ALLOWED_UPLOAD_FILE_TYPES,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
   CHANGE_ARCHIVE_TASK_DONE_FILTER,
   CHANGE_TASK_DONE_STATUS,
@@ -185,8 +214,10 @@ export {
   EDIT_LABEL,
   EDIT_USER,
   EDIT_USER_TASK,
+  FILE_NAME_REGEX,
   HAS_AUTOMATIONS,
   INIT_APP_STATE,
+  MAX_UPLOAD_FILE_SIZE,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
   OPEN_EDIT_TASK_MODAL,

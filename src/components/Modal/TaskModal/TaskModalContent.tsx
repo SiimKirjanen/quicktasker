@@ -249,7 +249,7 @@ const TaskModalContent = forwardRef(
                 }
               />
             </div>
-            <WPQTModalField label={__("file attachment", "quicktasker")}>
+            <WPQTModalField label={__("File attachment", "quicktasker")}>
               <UploadManager
                 entityId={taskToEdit.id}
                 entityType={UploadEntityType.TASK}
