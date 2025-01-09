@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
 import { SET_UPLOADS } from "../../../constants";
 import { useUploadActions } from "../../../hooks/actions/useUploadActions";
 import { UploadContext } from "../../../providers/UploadContextProvider";
@@ -30,6 +32,9 @@ function UploadManager({ entityId, entityType }: Props) {
         payload: data.uploads,
       });
     }
+    if (error) {
+      toast.error(__("Failed to fetch uploads", "quicktasker"));
+    }
   };
 
   useEffect(() => {
@@ -37,13 +42,15 @@ function UploadManager({ entityId, entityType }: Props) {
   }, []);
 
   return (
-    <div className="wpqt-flex wpqt-gap-2 wpqt-items-center">
+    <div className="wpqt-flex wpqt-gap-2">
       <Uploader entityId={entityId} entityType={entityType} />
       <div className="wpqt-flex wpqt-gap-2 wpqt-flex-wrap">
         {fetchingUploads ? (
           <Loading ovalSize="24" />
         ) : (
-          uploads.map((upload) => <UploadedItem key={upload.id} />)
+          uploads.map((upload) => (
+            <UploadedItem key={upload.id} upload={upload} />
+          ))
         )}
       </div>
     </div>

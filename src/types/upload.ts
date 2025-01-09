@@ -5,7 +5,7 @@ enum UploadEntityType {
 type Upload = {
   id: string;
   file_name: string;
-  file_extension: string;
+  file_type: string;
   upload_uuid: string;
   entity_id: string;
   entity_type: UploadEntityType;

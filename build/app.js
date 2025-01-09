@@ -5792,13 +5792,17 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             })
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-mb-4",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalFooter, {
+            onSave: saveTask,
+            saveBtnText: taskModalSaving ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Saving...", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Save", "quicktasker")
+          })
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("file attachment", "quicktasker"),
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_24__.UploadManager, {
             entityId: taskToEdit.id,
             entityType: _types_upload__WEBPACK_IMPORTED_MODULE_14__.UploadEntityType.TASK
           })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalFooter, {
-          onSave: saveTask,
-          saveBtnText: taskModalSaving ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Saving...", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Save", "quicktasker")
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-mt-7 md:wpqt-pr-3",
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_23__.TaskModalTabs, {
@@ -7384,12 +7388,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
-/* harmony import */ var _providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/UploadContextProvider */ "./src/providers/UploadContextProvider.tsx");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _UploadedItem_UploadedItem__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../UploadedItem/UploadedItem */ "./src/components/Upload/UploadedItem/UploadedItem.tsx");
-/* harmony import */ var _Uploader_Uploader__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Uploader/Uploader */ "./src/components/Upload/Uploader/Uploader.tsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
+/* harmony import */ var _providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/UploadContextProvider */ "./src/providers/UploadContextProvider.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _UploadedItem_UploadedItem__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../UploadedItem/UploadedItem */ "./src/components/Upload/UploadedItem/UploadedItem.tsx");
+/* harmony import */ var _Uploader_Uploader__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Uploader/Uploader */ "./src/components/Upload/Uploader/Uploader.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -7425,6 +7432,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
 function UploadManager({
   entityId,
   entityType
@@ -7434,11 +7443,11 @@ function UploadManager({
       uploads
     },
     uploadDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_4__.UploadContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_6__.UploadContext);
   const [fetchingUploads, setFetchingUploads] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const {
     getUplaods
-  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_3__.useUploadActions)();
+  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_5__.useUploadActions)();
   const fetchUploads = () => __awaiter(this, void 0, void 0, function* () {
     setFetchingUploads(true);
     const {
@@ -7448,24 +7457,29 @@ function UploadManager({
     setFetchingUploads(false);
     if (data && data.uploads) {
       uploadDispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_2__.SET_UPLOADS,
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.SET_UPLOADS,
         payload: data.uploads
       });
+    }
+    if (error) {
+      react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Failed to fetch uploads", "quicktasker"));
     }
   });
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     fetchUploads();
   }, []);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-gap-2 wpqt-items-center",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Uploader_Uploader__WEBPACK_IMPORTED_MODULE_7__.Uploader, {
+    className: "wpqt-flex wpqt-gap-2",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Uploader_Uploader__WEBPACK_IMPORTED_MODULE_9__.Uploader, {
       entityId: entityId,
       entityType: entityType
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-gap-2 wpqt-flex-wrap",
-      children: fetchingUploads ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_5__.Loading, {
+      children: fetchingUploads ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_7__.Loading, {
         ovalSize: "24"
-      }) : uploads.map(upload => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UploadedItem_UploadedItem__WEBPACK_IMPORTED_MODULE_6__.UploadedItem, {}, upload.id))
+      }) : uploads.map(upload => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UploadedItem_UploadedItem__WEBPACK_IMPORTED_MODULE_8__.UploadedItem, {
+        upload: upload
+      }, upload.id))
     })]
   });
 }
@@ -7485,10 +7499,87 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowDownTrayIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
+/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
 
-function UploadedItem() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    children: "tere"
+
+
+
+
+
+
+function UploadedItem({
+  upload
+}) {
+  const {
+    state: {
+      isUserAllowedToDelete,
+      taskUploadsURL
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_5__.AppContext);
+  const {
+    checkFileExists
+  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__.useUploadActions)();
+  const downloadUrl = `${taskUploadsURL}/${upload.upload_uuid}/${upload.file_name}`;
+  const handleDownloadClick = () => __awaiter(this, void 0, void 0, function* () {
+    const fileExists = yield checkFileExists(downloadUrl);
+    if (!fileExists) {
+      react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("File was not found", "quicktasker"));
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-flex-col wpqt-gap-3 wpqt-main-border wpqt-p-2",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-font-semibold",
+      children: upload.file_name
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-gap-4 wpqt-justify-end",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+        href: downloadUrl,
+        download: true,
+        onClick: handleDownloadClick,
+        className: "focus:wpqt-shadow-none",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          className: "wpqt-icon-blue wpqt-size-4 :hover:wpqt-text-blue-800 wpqt-cursor-pointer"
+        })
+      }), isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        className: "wpqt-icon-red wpqt-size-4 :hover:wpqt-text-red-800 wpqt-cursor-pointer"
+      })]
+    })]
   });
 }
 
@@ -7511,8 +7602,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useUploadActions */ "./src/hooks/actions/useUploadActions.ts");
+/* harmony import */ var _providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/UploadContextProvider */ "./src/providers/UploadContextProvider.tsx");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -7545,15 +7638,20 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
 function Uploader({
   entityId,
   entityType
 }) {
+  const {
+    uploadDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UploadContextProvider__WEBPACK_IMPORTED_MODULE_5__.UploadContext);
   const [file, setFile] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [uploading, setUploading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
     uploadFile
-  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_3__.useUploadActions)();
+  } = (0,_hooks_actions_useUploadActions__WEBPACK_IMPORTED_MODULE_4__.useUploadActions)();
   const handleFileChange = e => {
     if (e.target.files) {
       setFile(e.target.files[0]);
@@ -7574,20 +7672,29 @@ function Uploader({
     if (formData) {
       setUploading(true);
       const {
-        data,
-        error
+        data
       } = yield uploadFile(formData);
+      if (data) {
+        uploadDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_3__.ADD_UPLOAD,
+          payload: data.upload
+        });
+        resetState();
+      }
       setUploading(false);
     }
   });
+  const resetState = () => {
+    setFile(null);
+  };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
+    className: "wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select file to upload", "quicktasker")
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
       type: "file",
       onChange: handleFileChange
-    }), file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTButton, {
+    }), file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTButton, {
       btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Upload", "quicktasker"),
       loading: uploading,
       onClick: handleUpload
@@ -8165,6 +8272,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ADD_LABEL: () => (/* binding */ ADD_LABEL),
 /* harmony export */   ADD_LABEL_ARCHIVED_TASK: () => (/* binding */ ADD_LABEL_ARCHIVED_TASK),
 /* harmony export */   ADD_PIPELINE_AUTOMATION: () => (/* binding */ ADD_PIPELINE_AUTOMATION),
+/* harmony export */   ADD_UPLOAD: () => (/* binding */ ADD_UPLOAD),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
 /* harmony export */   CHANGE_ARCHIVED_TASK_DONE_STATUS: () => (/* binding */ CHANGE_ARCHIVED_TASK_DONE_STATUS),
 /* harmony export */   CHANGE_ARCHIVE_TASK_DONE_FILTER: () => (/* binding */ CHANGE_ARCHIVE_TASK_DONE_FILTER),
@@ -8401,6 +8509,7 @@ const RESET_AUTOMATION_TO_TRIGGER = "RESET_AUTOMATION_TO_TRIGGER";
 const RESET_AUTOMATION_TO_ACTION = "RESET_AUTOMATION_TO_ACTION";
 //Upload reducer constants
 const SET_UPLOADS = "SET_UPLOADS";
+const ADD_UPLOAD = "ADD_UPLOAD";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 //Misc
@@ -9391,6 +9500,7 @@ function useUploadActions() {
   const uploadFile = formData => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.uploadFileRequest)(formData);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("File uploaded successfully", "quicktasker"));
       return {
         data: response.data,
         error: null
@@ -9404,9 +9514,20 @@ function useUploadActions() {
       };
     }
   });
+  const checkFileExists = url => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield fetch(url, {
+        method: "HEAD"
+      });
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  });
   return {
     getUplaods,
-    uploadFile
+    uploadFile,
+    checkFileExists
   };
 }
 
@@ -15638,7 +15759,8 @@ const initialState = {
   is_customFields: false,
   timezone: "",
   isUserAllowedToDelete: false,
-  userPageCustomStyles: ""
+  userPageCustomStyles: "",
+  taskUploadsURL: ""
 };
 const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -15655,6 +15777,7 @@ const AppContextProvider = ({
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
     const userPageCustomStyles = window.wpqt.userPageCustomStyles;
     const pluginURL = window.wpqt.pluginURL;
+    const taskUploadsURL = window.wpqt.taskUploadsURL;
     appDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_2__.INIT_APP_STATE,
       payload: {
@@ -15663,7 +15786,8 @@ const AppContextProvider = ({
         timezone,
         isUserAllowedToDelete,
         userPageCustomStyles,
-        pluginURL
+        pluginURL,
+        taskUploadsURL
       }
     });
   }, []);
@@ -17068,7 +17192,8 @@ const reducer = (state, action) => {
           timezone,
           isUserAllowedToDelete,
           userPageCustomStyles,
-          pluginURL
+          pluginURL,
+          taskUploadsURL
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           siteURL,
@@ -17076,7 +17201,8 @@ const reducer = (state, action) => {
           timezone,
           isUserAllowedToDelete,
           userPageCustomStyles,
-          pluginURL
+          pluginURL,
+          taskUploadsURL
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_USER_PAGE_STYLES:
@@ -17852,6 +17978,12 @@ const reducer = (state, action) => {
       {
         return Object.assign(Object.assign({}, state), {
           uploads: action.payload
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_UPLOAD:
+      {
+        return Object.assign(Object.assign({}, state), {
+          uploads: [...state.uploads, action.payload]
         });
       }
     default:

@@ -23,6 +23,7 @@ const reducer = (state: State, action: Action): State => {
         isUserAllowedToDelete,
         userPageCustomStyles,
         pluginURL,
+        taskUploadsURL,
       } = action.payload;
 
       return {
@@ -33,6 +34,7 @@ const reducer = (state: State, action: Action): State => {
         isUserAllowedToDelete,
         userPageCustomStyles,
         pluginURL,
+        taskUploadsURL,
       };
     }
     case SET_CUSTOM_USER_PAGE_STYLES: {

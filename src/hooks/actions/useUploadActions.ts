@@ -19,6 +19,7 @@ function useUploadActions() {
   const uploadFile = async (formData: FormData) => {
     try {
       const response = await uploadFileRequest(formData);
+      toast.success(__("File uploaded successfully", "quicktasker"));
 
       return { data: response.data, error: null };
     } catch (error) {
@@ -28,7 +29,16 @@ function useUploadActions() {
     }
   };
 
-  return { getUplaods, uploadFile };
+  const checkFileExists = async (url: string): Promise<boolean> => {
+    try {
+      const response = await fetch(url, { method: "HEAD" });
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  return { getUplaods, uploadFile, checkFileExists };
 }
 
 export { useUploadActions };

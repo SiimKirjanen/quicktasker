@@ -51,6 +51,7 @@ if ( ! function_exists( 'wpqt_enqueue_app_assets' ) ) {
 			'timezone' => $timeRepository->getWPTimezone(),
 			'isUserAllowedToDelete' => PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints() ? "1" : "0",
 			'userPageCustomStyles' => SettingRepository::getUserPageCustomStyles(),
+			'taskUploadsURL' => WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL,
 		));
 
 		// Set script translations

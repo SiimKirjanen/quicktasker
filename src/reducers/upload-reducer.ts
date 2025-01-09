@@ -1,4 +1,4 @@
-import { SET_UPLOADS } from "../constants";
+import { ADD_UPLOAD, SET_UPLOADS } from "../constants";
 import { Action, State } from "../providers/UploadContextProvider";
 
 const reducer = (state: State, action: Action): State => {
@@ -7,6 +7,12 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         uploads: action.payload,
+      };
+    }
+    case ADD_UPLOAD: {
+      return {
+        ...state,
+        uploads: [...state.uploads, action.payload],
       };
     }
     default: {

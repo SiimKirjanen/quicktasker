@@ -23,8 +23,6 @@ if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
         }
 
         public function uploadFile($entityId, $entityType, $file) {
-            $this->setUpUploadsFolders();
-
             $uploadRecord = $this->insertUploadRecord($entityId, $entityType, $file);
             $uploadPath = $this->saveFileToDisc($file, $uploadRecord);
 

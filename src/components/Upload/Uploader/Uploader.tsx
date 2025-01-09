@@ -1,6 +1,8 @@
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { ADD_UPLOAD } from "../../../constants";
 import { useUploadActions } from "../../../hooks/actions/useUploadActions";
+import { UploadContext } from "../../../providers/UploadContextProvider";
 import { UploadEntityType } from "../../../types/upload";
 import { WPQTButton } from "../../common/Button/Button";
 
@@ -9,6 +11,7 @@ type Props = {
   entityType: UploadEntityType;
 };
 function Uploader({ entityId, entityType }: Props) {
+  const { uploadDispatch } = useContext(UploadContext);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const { uploadFile } = useUploadActions();
@@ -38,13 +41,24 @@ function Uploader({ entityId, entityType }: Props) {
 
     if (formData) {
       setUploading(true);
-      const { data, error } = await uploadFile(formData);
+      const { data } = await uploadFile(formData);
+      if (data) {
+        uploadDispatch({
+          type: ADD_UPLOAD,
+          payload: data.upload,
+        });
+        resetState();
+      }
       setUploading(false);
     }
   };
 
+  const resetState = () => {
+    setFile(null);
+  };
+
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start">
       <div>{__("Select file to upload", "quicktasker")}</div>
       <input type="file" onChange={handleFileChange} />
       {file && (

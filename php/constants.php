@@ -37,6 +37,10 @@ if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FOLDER_URL' ) ) {
     define('WP_QUICKTASKER_UPLOAD_FOLDER_URL', $up_dir['baseurl'] . '/quicktasker');
 }
 
+if ( ! defined( 'WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL' ) ) {
+    define('WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL', WP_QUICKTASKER_UPLOAD_FOLDER_URL . '/tasks');
+}
+
 
 if ( ! defined( 'WP_QUICKTASKER_PUBLIC_USER_PAGE_ID' ) ) {
     define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');

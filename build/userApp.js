@@ -1804,6 +1804,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ADD_LABEL: () => (/* binding */ ADD_LABEL),
 /* harmony export */   ADD_LABEL_ARCHIVED_TASK: () => (/* binding */ ADD_LABEL_ARCHIVED_TASK),
 /* harmony export */   ADD_PIPELINE_AUTOMATION: () => (/* binding */ ADD_PIPELINE_AUTOMATION),
+/* harmony export */   ADD_UPLOAD: () => (/* binding */ ADD_UPLOAD),
 /* harmony export */   ADD_USER: () => (/* binding */ ADD_USER),
 /* harmony export */   CHANGE_ARCHIVED_TASK_DONE_STATUS: () => (/* binding */ CHANGE_ARCHIVED_TASK_DONE_STATUS),
 /* harmony export */   CHANGE_ARCHIVE_TASK_DONE_FILTER: () => (/* binding */ CHANGE_ARCHIVE_TASK_DONE_FILTER),
@@ -2040,6 +2041,7 @@ const RESET_AUTOMATION_TO_TRIGGER = "RESET_AUTOMATION_TO_TRIGGER";
 const RESET_AUTOMATION_TO_ACTION = "RESET_AUTOMATION_TO_ACTION";
 //Upload reducer constants
 const SET_UPLOADS = "SET_UPLOADS";
+const ADD_UPLOAD = "ADD_UPLOAD";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 //Misc
@@ -2171,7 +2173,8 @@ const initialState = {
   is_customFields: false,
   timezone: "",
   isUserAllowedToDelete: false,
-  userPageCustomStyles: ""
+  userPageCustomStyles: "",
+  taskUploadsURL: ""
 };
 const AppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -2188,6 +2191,7 @@ const AppContextProvider = ({
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
     const userPageCustomStyles = window.wpqt.userPageCustomStyles;
     const pluginURL = window.wpqt.pluginURL;
+    const taskUploadsURL = window.wpqt.taskUploadsURL;
     appDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_2__.INIT_APP_STATE,
       payload: {
@@ -2196,7 +2200,8 @@ const AppContextProvider = ({
         timezone,
         isUserAllowedToDelete,
         userPageCustomStyles,
-        pluginURL
+        pluginURL,
+        taskUploadsURL
       }
     });
   }, []);
@@ -2359,7 +2364,8 @@ const reducer = (state, action) => {
           timezone,
           isUserAllowedToDelete,
           userPageCustomStyles,
-          pluginURL
+          pluginURL,
+          taskUploadsURL
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           siteURL,
@@ -2367,7 +2373,8 @@ const reducer = (state, action) => {
           timezone,
           isUserAllowedToDelete,
           userPageCustomStyles,
-          pluginURL
+          pluginURL,
+          taskUploadsURL
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_CUSTOM_USER_PAGE_STYLES:

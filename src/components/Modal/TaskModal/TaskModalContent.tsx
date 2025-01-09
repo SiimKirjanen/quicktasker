@@ -239,20 +239,23 @@ const TaskModalContent = forwardRef(
                 />
               </div>
             </div>
-            <div>
+            <div className="wpqt-mb-4">
+              <WPQTModalFooter
+                onSave={saveTask}
+                saveBtnText={
+                  taskModalSaving
+                    ? __("Saving...", "quicktasker")
+                    : __("Save", "quicktasker")
+                }
+              />
+            </div>
+            <WPQTModalField label={__("file attachment", "quicktasker")}>
               <UploadManager
                 entityId={taskToEdit.id}
                 entityType={UploadEntityType.TASK}
               />
-            </div>
-            <WPQTModalFooter
-              onSave={saveTask}
-              saveBtnText={
-                taskModalSaving
-                  ? __("Saving...", "quicktasker")
-                  : __("Save", "quicktasker")
-              }
-            />
+            </WPQTModalField>
+
             <div className="wpqt-mt-7 md:wpqt-pr-3">
               <TaskModalTabs task={taskToEdit} />
             </div>
