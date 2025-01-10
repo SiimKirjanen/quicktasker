@@ -14,6 +14,7 @@ type State = {
   timezone: string;
   isUserAllowedToDelete: boolean;
   userPageCustomStyles: string;
+  taskUploadsURL: string;
 };
 
 const initialState: State = {
@@ -24,6 +25,7 @@ const initialState: State = {
   timezone: "",
   isUserAllowedToDelete: false,
   userPageCustomStyles: "",
+  taskUploadsURL: "",
 };
 
 type Action =
@@ -36,6 +38,7 @@ type Action =
         isUserAllowedToDelete: boolean;
         userPageCustomStyles: string;
         pluginURL: string;
+        taskUploadsURL: string;
       };
     }
   | { type: typeof SET_CUSTOM_USER_PAGE_STYLES; payload: string }
@@ -63,6 +66,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
     const userPageCustomStyles = window.wpqt.userPageCustomStyles;
     const pluginURL = window.wpqt.pluginURL;
+    const taskUploadsURL = window.wpqt.taskUploadsURL;
 
     appDispatch({
       type: INIT_APP_STATE,
@@ -73,6 +77,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         isUserAllowedToDelete,
         userPageCustomStyles,
         pluginURL,
+        taskUploadsURL,
       },
     });
   }, []);

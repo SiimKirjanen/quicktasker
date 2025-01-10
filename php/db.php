@@ -289,6 +289,22 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 
 			dbDelta( $sql17 );
 
+			$sql18 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_UPLOADS . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				file_name varchar(255) NOT NULL,
+				file_type varchar(255) NOT NULL,
+				upload_uuid varchar(255) NOT NULL,
+				entity_id int(11) NOT NULL,
+				entity_type ENUM('task') NOT NULL,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id),
+				INDEX entity_id (entity_id),
+				INDEX entity_type (entity_type),
+				UNIQUE KEY upload_uuid (upload_uuid)
+			) $charset_collate;";
+
+			dbDelta( $sql18 );
+
 			update_option( "wp_quicktasker_db_current_version", WP_QUICKTASKER_DB_VERSION );
 		}
 	}

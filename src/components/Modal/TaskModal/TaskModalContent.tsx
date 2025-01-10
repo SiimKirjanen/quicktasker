@@ -38,6 +38,7 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
 import { Label } from "../../../types/label";
+import { UploadEntityType } from "../../../types/upload";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
@@ -47,6 +48,7 @@ import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDro
 import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { LoadingOval } from "../../Loading/Loading";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
+import { UploadManager } from "../../Upload/UploadManager/UploadManager";
 
 type Props = {
   taskModalSaving: boolean;
@@ -146,7 +148,7 @@ const TaskModalContent = forwardRef(
       <>
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
           <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
-            <div className="wpqt-mb-5 wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[1fr_2fr]">
+            <div className="wpqt-mb-2 wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[1fr_2fr]">
               <WPQTModalFieldSet>
                 <WPQTModalField label={__("Name", "quicktasker")}>
                   <WPQTInput
@@ -237,14 +239,22 @@ const TaskModalContent = forwardRef(
                 />
               </div>
             </div>
-            <WPQTModalFooter
-              onSave={saveTask}
-              saveBtnText={
-                taskModalSaving
-                  ? __("Saving...", "quicktasker")
-                  : __("Save", "quicktasker")
-              }
-            />
+            <div className="wpqt-mb-4">
+              <WPQTModalFooter
+                onSave={saveTask}
+                saveBtnText={
+                  taskModalSaving
+                    ? __("Saving...", "quicktasker")
+                    : __("Save", "quicktasker")
+                }
+              />
+            </div>
+            <WPQTModalField label={__("File attachment", "quicktasker")}>
+              <UploadManager
+                entityId={taskToEdit.id}
+                entityType={UploadEntityType.TASK}
+              />
+            </WPQTModalField>
 
             <div className="wpqt-mt-7 md:wpqt-pr-3">
               <TaskModalTabs task={taskToEdit} />

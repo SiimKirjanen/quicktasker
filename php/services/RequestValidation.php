@@ -371,5 +371,15 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         public static function validateHexColor($param) {
             return preg_match('/^#[a-f0-9]{6}$/i', $param);
         }
+
+        /**
+         * Validates if the given parameter is a valid upload entity type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid upload entity type, false otherwise.
+         */
+        public static function validateUploadEntityType($param) {
+            return in_array($param, WP_QUICKTASKER_UPLOAD_ENTITY_TYPES);
+        }
     }
 }

@@ -138,6 +138,11 @@ const RESET_AUTOMATION_TO_TARGET = "RESET_AUTOMATION_TO_TARGET";
 const RESET_AUTOMATION_TO_TRIGGER = "RESET_AUTOMATION_TO_TRIGGER";
 const RESET_AUTOMATION_TO_ACTION = "RESET_AUTOMATION_TO_ACTION";
 
+//Upload reducer constants
+const SET_UPLOADS = "SET_UPLOADS";
+const ADD_UPLOAD = "ADD_UPLOAD";
+const REMOVE_UPLOAD = "REMOVE_UPLOAD";
+
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 
@@ -145,6 +150,34 @@ const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 const HAS_AUTOMATIONS = false;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
+
+//Validation
+const ALLOWED_UPLOAD_FILE_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/csv",
+  "text/plain",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/bmp",
+  "image/svg+xml",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/ogg",
+  "video/mp4",
+  "video/webm",
+  "video/ogg",
+  "application/zip",
+  "application/x-rar-compressed",
+  "application/x-tar",
+  "application/gzip",
+];
+const MAX_UPLOAD_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
+const FILE_NAME_REGEX = /^[a-zA-Z0-9_\-.]+$/;
 
 export {
   ADD_ASSIGNED_USER_TO_ARCHIVED_TASK,
@@ -154,7 +187,9 @@ export {
   ADD_LABEL,
   ADD_LABEL_ARCHIVED_TASK,
   ADD_PIPELINE_AUTOMATION,
+  ADD_UPLOAD,
   ADD_USER,
+  ALLOWED_UPLOAD_FILE_TYPES,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
   CHANGE_ARCHIVE_TASK_DONE_FILTER,
   CHANGE_TASK_DONE_STATUS,
@@ -179,8 +214,10 @@ export {
   EDIT_LABEL,
   EDIT_USER,
   EDIT_USER_TASK,
+  FILE_NAME_REGEX,
   HAS_AUTOMATIONS,
   INIT_APP_STATE,
+  MAX_UPLOAD_FILE_SIZE,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
   OPEN_EDIT_TASK_MODAL,
@@ -227,6 +264,7 @@ export {
   REMOVE_LABEL,
   REMOVE_LABEL_ARCHIVED_TASK,
   REMOVE_PIPELINE_AUTOMATION,
+  REMOVE_UPLOAD,
   REMOVE_USER_TASK,
   RESET_AUTOMATION_TO_ACTION,
   RESET_AUTOMATION_TO_TARGET,
@@ -252,6 +290,7 @@ export {
   SET_PIPELINE_AUTOMATIONS_LOADING,
   SET_SITE_URL,
   SET_STAGE_FILTER,
+  SET_UPLOADS,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
   SET_USER_FILTER,

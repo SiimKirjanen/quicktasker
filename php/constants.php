@@ -11,6 +11,7 @@ global $wpdb;
 Directories, URL
 ==================================================================================================================================================================================================================
 */
+$up_dir = wp_upload_dir();
 
 if ( ! defined( 'WP_QUICKTASKER_PLUGIN_FOLDER_DIR' ) ) {
     define('WP_QUICKTASKER_PLUGIN_FOLDER_DIR', plugin_dir_path( dirname( __FILE__ ) ));
@@ -24,6 +25,23 @@ if ( ! defined( 'WP_QUICKTASKER_PLUGIN_FOLDER_URL' ) ) {
     define('WP_QUICKTASKER_PLUGIN_FOLDER_URL', plugin_dir_url( dirname( __FILE__ ) ));
 }
 
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FOLDER_DIR' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_FOLDER_DIR', $up_dir['basedir'] . '/quicktasker');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR' ) ) {
+    define('WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR', WP_QUICKTASKER_UPLOAD_FOLDER_DIR . '/tasks');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FOLDER_URL' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_FOLDER_URL', $up_dir['baseurl'] . '/quicktasker');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL' ) ) {
+    define('WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL', WP_QUICKTASKER_UPLOAD_FOLDER_URL . '/tasks');
+}
+
+
 if ( ! defined( 'WP_QUICKTASKER_PUBLIC_USER_PAGE_ID' ) ) {
     define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 }
@@ -35,7 +53,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.20.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.21.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -104,6 +122,10 @@ if ( ! defined( 'TABLE_WP_QUICKTASKER_LABELS' ) ) {
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_LABEL_RELATIONS' ) ) {
     define('TABLE_WP_QUICKTASKER_LABEL_RELATIONS', $wpdb->prefix . "quicktasker_label_relations");
+}
+
+if ( ! defined( 'TABLE_WP_QUICKTASKER_UPLOADS' ) ) {
+    define('TABLE_WP_QUICKTASKER_UPLOADS', $wpdb->prefix . "quicktasker_uploads");
 }
 
 /*
@@ -248,6 +270,20 @@ if ( ! defined( 'WP_QT_USER_TYPES' ) ) {
 
 /*
 ==================================================================================================================================================================================================================
+Upload constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK', "task");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_ENTITY_TYPES' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_ENTITY_TYPES', [WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK]);
+}
+
+/*
+==================================================================================================================================================================================================================
 Session constants
 ==================================================================================================================================================================================================================
 */
@@ -281,7 +317,7 @@ if ( ! defined( 'WP_QUICKTASKER_INVALID_SESSION_TOKEN' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_SIDE_EFFECT_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "5");
+    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "6");
 }
 
 if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
@@ -501,3 +537,71 @@ if ( ! defined( 'WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE' ) ) {
     define('WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE', "task-new-private-comment");
 }
 
+
+/*
+==================================================================================================================================================================================================================
+Validation constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES' ) ) {
+    define('WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES', [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        "text/csv",
+        'text/plain',
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/bmp',
+        'image/svg+xml',
+        'audio/mpeg',
+        'audio/wav',
+        'audio/ogg',
+        'video/mp4',
+        'video/webm',
+        'video/ogg',
+        'application/zip',
+        'application/x-rar-compressed',
+        'application/x-tar',
+        'application/gzip'
+    ]);
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS' ) ) {
+    define('WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS', [
+        "pdf",
+        "doc",
+        "docx",
+        "xls",
+        "xlsx",
+        "txt",
+        "csv",
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "svg",
+        "mp3",
+        "wav",
+        "ogg",
+        "mp4",
+        "webm",
+        "zip",
+        "rar",
+        "tar",
+        "gz"
+    ]);
+}
+
+if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX' ) ) {
+    define('WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX', '/^[a-zA-Z0-9_\-\.]+$/');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE' ) ) {
+    define('WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE', 25 * 1024 * 1024);
+}

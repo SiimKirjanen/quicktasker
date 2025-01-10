@@ -20,6 +20,7 @@ import { PipelineOverviewResponse } from "../types/requestResponse/pipeline-over
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
 import { Task, TaskFromServer } from "../types/task";
+import { Upload, UploadEntityType } from "../types/upload";
 import {
   ServerExtendedUser,
   ServerUser,
@@ -812,6 +813,54 @@ function deleteLabelRequest(
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Upload requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getUploadsRequest(
+  entityId: string,
+  entityType: UploadEntityType,
+): Promise<
+  WPQTResponse<{
+    uploads: Upload[];
+  }>
+> {
+  const queryParams = new URLSearchParams({
+    entity_id: entityId,
+    entity_type: entityType,
+  });
+
+  return apiFetch({
+    path: `/wpqt/v1/uploads?${queryParams.toString()}`,
+    method: "GET",
+  });
+}
+
+function uploadFileRequest(formData: FormData): Promise<
+  WPQTResponse<{
+    upload: Upload;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/uploads`,
+    method: "POST",
+    body: formData,
+  });
+}
+
+function deleteUploadRequest(uploadId: string): Promise<
+  WPQTResponse<{
+    deletedUpload: Upload;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/uploads/${uploadId}`,
+    method: "DELETE",
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -832,6 +881,7 @@ export {
   deletePipelineRequest,
   deleteStageRequest,
   deleteTaskRequest,
+  deleteUploadRequest,
   deleteUserRequest,
   deleteUserSessionRequest,
   editPipelineRequest,
@@ -850,6 +900,7 @@ export {
   getPipelineOverviewData,
   getPipelineSettingsRequest,
   getTaskLogs,
+  getUploadsRequest,
   getUserSessionsRequest,
   getUsersRequest,
   getUserTasksRequest,
@@ -869,4 +920,5 @@ export {
   updateCustomFieldValueRequest,
   updateLabelRequest,
   updateWPUserPermissionsRequest,
+  uploadFileRequest,
 };

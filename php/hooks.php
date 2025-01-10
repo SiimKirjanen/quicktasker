@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Capability\CapabilityService;
+use WPQT\ServiceLocator;
 
 if ( ! function_exists( 'is_plugin_active' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -36,6 +37,7 @@ if ( ! function_exists( 'wpqt_plugin_activate' ) ) {
         
         wpqt_set_up_db();
         wpqt_insert_initial_data();
+        ServiceLocator::get('UploadService')->setUpUploadsFolders();
     }
 }
 

@@ -2450,6 +2450,121 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        /*
+        ==================================================================================================================================================================================================================
+        Upload endpoints
+        ==================================================================================================================================================================================================================
+        */
+        register_rest_route(
+            'wpqt/v1',
+            'uploads',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        $uploads = ServiceLocator::get('UploadRepository')->getUploads($data['entity_id'], $data['entity_type']);
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'uploads' => $uploads,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'entity_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'entity_type' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateUploadEntityType'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'uploads',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+                        $upload = ServiceLocator::get('UploadService')->uploadFile($data['entity_id'], $data['entity_type'], $_FILES['file_to_upload']);
+                        ServiceLocator::get('LogService')->log('File ' . $upload->file_name . ' uploaded', WP_QT_LOG_TYPE_TASK, $upload->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        
+                        $wpdb->query('COMMIT');
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'upload' => $upload,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'entity_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'entity_type' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateUploadEntityType'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'uploads/(?P<upload_id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+                        $deletedUpload = ServiceLocator::get('UploadService')->deleteUpload( $data['upload_id'] );
+                        ServiceLocator::get('LogService')->log('File ' . $deletedUpload->file_name . ' deleted', WP_QT_LOG_TYPE_TASK, $deletedUpload->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        
+                        $wpdb->query('COMMIT');
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'deletedUpload' => $deletedUpload,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                },
+                'args' => array(
+                    'upload_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
     }
 }
 
