@@ -86,13 +86,13 @@ function useLabelActions() {
         labelId,
       );
 
-      toast.success(__("Label assigned to task", "quicktasker"));
+      toast.success(__("Label added to task", "quicktasker"));
       if (callback) {
         callback(true, response.data.label);
       }
     } catch (error) {
       console.error(error);
-      toast.error(__("Failed to assign label to task", "quicktasker"));
+      toast.error(__("Failed to add label to task", "quicktasker"));
       if (callback) {
         callback(false);
       }
@@ -107,13 +107,13 @@ function useLabelActions() {
   ) => {
     try {
       await unassignLabelFromTaskRequest(pipelineId, taskId, labelId);
-      toast.success(__("Label unassigned from task", "quicktasker"));
+      toast.success(__("Label removed from task", "quicktasker"));
       if (callback) {
         callback(true);
       }
     } catch (error) {
       console.error(error);
-      toast.error(__("Failed to unassign label from task", "quicktasker"));
+      toast.error(__("Failed to remove label from task", "quicktasker"));
       if (callback) {
         callback(false);
       }

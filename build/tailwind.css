@@ -1559,8 +1559,8 @@
   max-width: 72rem;
 }
 
-.wpqt-max-w-8 {
-  max-width: 2rem;
+.wpqt-max-w-\[300px\] {
+  max-width: 300px;
 }
 
 .wpqt-max-w-lg {
@@ -1569,10 +1569,6 @@
 
 .wpqt-max-w-sm {
   max-width: 24rem;
-}
-
-.wpqt-max-w-\[300px\] {
-  max-width: 300px;
 }
 
 .wpqt-flex-1 {
