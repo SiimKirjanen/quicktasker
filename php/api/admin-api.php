@@ -2500,6 +2500,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     try {
                         $wpdb->query('START TRANSACTION');
                         $upload = ServiceLocator::get('UploadService')->uploadFile($data['entity_id'], $data['entity_type'], $_FILES['file_to_upload']);
+                        ServiceLocator::get('LogService')->log('File ' . $upload->file_name . ' uploaded', WP_QT_LOG_TYPE_TASK, $upload->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
@@ -2540,6 +2541,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     try {
                         $wpdb->query('START TRANSACTION');
                         $deletedUpload = ServiceLocator::get('UploadService')->deleteUpload( $data['upload_id'] );
+                        ServiceLocator::get('LogService')->log('File ' . $deletedUpload->file_name . ' deleted', WP_QT_LOG_TYPE_TASK, $deletedUpload->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
