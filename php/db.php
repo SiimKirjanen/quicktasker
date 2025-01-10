@@ -300,7 +300,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				PRIMARY KEY  (id),
 				INDEX entity_id (entity_id),
 				INDEX entity_type (entity_type),
-				UNIQUE KEY file_uuid (file_uuid)
+				UNIQUE KEY upload_uuid (upload_uuid)
 			) $charset_collate;";
 
 			dbDelta( $sql18 );
