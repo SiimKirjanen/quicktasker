@@ -4,7 +4,7 @@ Tags: task manager, task management, project manager, project management, task b
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
-Stable tag: 1.22.0
+Stable tag: 1.22.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,9 @@ This plugin also has a pro version that enhances the free version with additiona
 5. User task comments
 
 == Changelog ==
+
+= 1.22.1 =
+* Minor improvements.
 
 = 1.22.0 =
 * Added the ability to attach files to tasks.
