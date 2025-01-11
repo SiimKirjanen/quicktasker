@@ -23,6 +23,7 @@ type CustomField = {
   entity_id: string;
   created_at: string;
   updated_at: string;
+  deleted_at: string;
   value?: string;
 };
 

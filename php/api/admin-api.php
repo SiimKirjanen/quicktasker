@@ -1715,9 +1715,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                     'entityId' => array(
-                        'required' => true,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
-                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateOptionalNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeOptionalAbsint'),
                     ),
                     'pipelineId' => array(
                         'required' => false,

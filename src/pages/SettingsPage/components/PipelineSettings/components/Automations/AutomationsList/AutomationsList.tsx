@@ -11,7 +11,7 @@ function AutomationsList() {
   const {
     state: { automations, loading },
   } = useContext(PipelineAutomationsContext);
-  const [showAutomations, setShowAutomations] = useState(false);
+  const [showAutomations, setShowAutomations] = useState(true);
 
   if (loading) {
     return <Loading ovalSize="24" />;

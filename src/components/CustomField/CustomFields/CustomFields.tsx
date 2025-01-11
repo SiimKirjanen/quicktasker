@@ -1,8 +1,6 @@
-import { EyeIcon } from "@heroicons/react/24/outline";
-import { useContext, useState } from "@wordpress/element";
+import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
-import { WPQTIconButton } from "../../common/Button/Button";
 import { LoadingOval } from "../../Loading/Loading";
 import { CustomField } from "./components/CustomField/CustomField";
 
@@ -10,7 +8,6 @@ function CustomFields() {
   const {
     state: { loading, customFields },
   } = useContext(CustomFieldsContext);
-  const [isOpen, setIsOpen] = useState(false);
 
   if (loading) {
     return (
@@ -28,33 +25,12 @@ function CustomFields() {
     );
   }
 
-  if (!isOpen) {
-    return (
-      <div className="wpqt-flex wpqt-justify-center">
-        <WPQTIconButton
-          text={__("Show custom fields", "quicktasker")}
-          onClick={() => setIsOpen(true)}
-          icon={<EyeIcon className="wpqt-icon-blue wpqt-size-5" />}
-        />
-      </div>
-    );
-  }
-
   return (
-    <>
-      <div className="wpqt-my-4 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3">
-        {customFields.map((customField) => (
-          <CustomField key={customField.id} data={customField} />
-        ))}
-      </div>
-      <div className="wpqt-flex wpqt-justify-center">
-        <WPQTIconButton
-          text={__("Hide custom fields", "quicktasker")}
-          onClick={() => setIsOpen(false)}
-          icon={<EyeIcon className="wpqt-icon-red wpqt-size-5" />}
-        />
-      </div>
-    </>
+    <div className="wpqt-my-4 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3">
+      {customFields.map((customField) => (
+        <CustomField key={customField.id} data={customField} />
+      ))}
+    </div>
   );
 }
 

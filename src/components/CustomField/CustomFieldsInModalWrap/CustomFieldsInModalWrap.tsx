@@ -78,12 +78,12 @@ function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
             entityId={entityId}
             entityType={entityType}
           >
-            <CustomFieldCreation description={creationDescription} />
             <h2 className="wpqt-text-center">{customFieldsTitle}</h2>
             <div className="wpqt-mb-4 wpqt-text-center">
               {customFieldsDescription}
             </div>
             <CustomFields />
+            <CustomFieldCreation description={creationDescription} />
             <CustomFieldsRecovery />
           </CustomFieldsContextProvider>
         </div>

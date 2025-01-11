@@ -183,7 +183,10 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @return bool Returns true if the parameter is null or a valid numeric value, false otherwise.
          */
         public static function validateOptionalNumericParam($param) {
-            return is_null($param) || self::validateNumericParam($param);
+            if (is_null($param) || $param === 'null') {
+                return true;
+            }
+            return self::validateNumericParam($param);
         }
 
         /**
@@ -196,7 +199,10 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @return int|null The sanitized absolute integer or null if the parameter is null.
          */
         public static function sanitizeOptionalAbsint($param) {
-            return is_null($param) ? null : self::sanitizeAbsint($param);
+            if (is_null($param) || $param === 'null') {
+                return null;
+            }
+            return self::sanitizeAbsint($param);
         }
 
         /**

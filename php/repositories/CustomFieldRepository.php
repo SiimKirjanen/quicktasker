@@ -32,7 +32,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, deleted_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
                 WHERE id = %d",
                 $id
             );
@@ -43,7 +43,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
         /**
          * Retrieves custom fields for a given entity.
          *
-         * @param int|'null' $entityId The ID of the entity to retrieve custom fields for.
+         * @param int|null $entityId The ID of the entity to retrieve custom fields for.
          * @param string $entityType The type of the entity to retrieve custom fields for.
          * @param bool $isDeleted Whether to get deleted custom fields or active fields.
          * @return array|null An array of custom fields or null if none found.
@@ -54,15 +54,15 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
             $isDeletedCondition = $isDeleted ? 1 : 0;
             $query = '';
 
-            if($entityId === "null") {
+            if($entityId === null) {
                 $query = $wpdb->prepare(
-                    "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                    "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, deleted_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
                     WHERE entity_id IS NULL AND entity_type = %s AND is_deleted = %d",
                     $entityType, $isDeletedCondition
                 );
             } else {
                 $query = $wpdb->prepare(
-                    "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
+                    "SELECT id, name, description, type, entity_type, entity_id, created_at, updated_at, deleted_at, is_deleted FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . "
                     WHERE entity_id = %s AND entity_type = %s AND is_deleted = %d",
                     $entityId, $entityType, $isDeletedCondition
                 );

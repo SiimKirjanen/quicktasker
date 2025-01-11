@@ -78,16 +78,19 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
         public function markCustomFieldAsDeleted($customFieldId) {
             global $wpdb;
 
+            $currentTime = $this->timeRepository->getCurrentUTCTime();
+
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
                 array(
                     'is_deleted' => 1,
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                    'updated_at' => $currentTime,
+                    'deleted_at' => $currentTime,
                 ),
                 array(
                     'id' => $customFieldId
                 ),
-                array('%d', '%s'),
+                array('%d', '%s', '%s'),
                 array('%d')
             );
 

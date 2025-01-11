@@ -3,6 +3,7 @@ import { __ } from "@wordpress/i18n";
 import { TbRestore } from "react-icons/tb";
 import { ADD_CUSTOM_FIELD } from "../../../../../constants";
 import { useCustomFieldActions } from "../../../../../hooks/actions/useCustomFieldActions";
+import { useTimezone } from "../../../../../hooks/useTimezone";
 import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
 import { CustomField } from "../../../../../types/custom-field";
 import { CustomFieldEntityTypeString } from "../../../../../utils/custom-fields";
@@ -16,6 +17,7 @@ function DeletedField({ customField, refreshDeletedFields }: Props) {
   const { customFieldsDispatch } = useContext(CustomFieldsContext);
   const [restoring, setRestoring] = useState(false);
   const { restoreCustomField } = useCustomFieldActions();
+  const { convertToWPTimezone } = useTimezone();
 
   const restoreField = async () => {
     setRestoring(true);
@@ -46,6 +48,14 @@ function DeletedField({ customField, refreshDeletedFields }: Props) {
         </span>{" "}
         {CustomFieldEntityTypeString[customField.entity_type]}
       </div>
+      {customField.deleted_at && (
+        <div>
+          <span className="wpqt-font-semibold">
+            {__("Deleted:", "quicktasker")}
+          </span>{" "}
+          {convertToWPTimezone(customField.deleted_at)}
+        </div>
+      )}
       <div>
         <WPQTOnlyIconBtn
           onClick={restoreField}
