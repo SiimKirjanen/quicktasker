@@ -218,6 +218,27 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 }
             }
 
+            if( $this->isTaskAttachementAddedTrigger($automation) ) {
+                if ( $this->isTaskAttachmentAddedEmailAction($automation) ) {
+                    $email = $automation->metadata;
+                    $upload = $data;
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
+
+                    $templateData = [
+                        'taskName' => $task->name,
+                        'boardName' => $pipeline->name,
+                        'creationDate' => ServiceLocator::get('TimeRepository')->convertUTCToLocal($upload->created_at),
+                        'fileName' => $upload->file_name,
+                    ];
+                    $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_NEW_ATTACHMENT_EMAIL_TEMPLATE, $templateData);
+                    ServiceLocator::get('EmailService')->sendEmail($email, 'Task attachment added', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -298,6 +319,10 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskPrivateCommentAddedEmailAction($automation) {
             return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PRIVATE_COMMENT_ADDED_EMAIL && $automation->metadata !== null;
+        }
+
+        private function isTaskAttachmentAddedEmailAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_ADDED_EMAIL && $automation->metadata !== null;
         }
 
         /**
@@ -381,6 +406,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskPrivateCommentAddedTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED;
+        }
+
+        /**
+         * Checks if the automation trigger is set to "task attachment added".
+         *
+         * @param object $automation The automation object to check.
+         * @return bool Returns true if the automation trigger is "task attachment added", false otherwise.
+         */
+        private function isTaskAttachementAddedTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED;
         }
 
         /**

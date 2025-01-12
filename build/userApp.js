@@ -2495,6 +2495,7 @@ var AutomationTrigger;
   AutomationTrigger["TASK_UNASSIGNED"] = "task-unassigned";
   AutomationTrigger["TASK_PUBLIC_COMMENT_ADDED"] = "task-public-comment-added";
   AutomationTrigger["TASK_PRIVATE_COMMENT_ADDED"] = "task-private-comment-added";
+  AutomationTrigger["TASK_FILE_UPLOADED"] = "task-attachment-added";
 })(AutomationTrigger || (AutomationTrigger = {}));
 var TargetType;
 (function (TargetType) {
@@ -2521,6 +2522,7 @@ var AutomationAction;
   AutomationAction["TASK_UNASSIGNED_EMAIL"] = "task-unassigned-email";
   AutomationAction["TASK_PUBLIC_COMMENT_ADDED_EMAIL"] = "task-public-comment-added-email";
   AutomationAction["TASK_PRIVATE_COMMENT_ADDED_EMAIL"] = "task-private-comment-added-email";
+  AutomationAction["TASK_FILE_UPLOADED_EMAIL"] = "task-attachment-added-email";
 })(AutomationAction || (AutomationAction = {}));
 
 

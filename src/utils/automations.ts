@@ -33,6 +33,10 @@ const automationActionStrings: { [key in AutomationAction]: string } = {
     "Send email notification",
     "quicktasker",
   ),
+  [AutomationAction.TASK_FILE_UPLOADED_EMAIL]: __(
+    "Send email notification",
+    "quicktasker",
+  ),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -60,6 +64,7 @@ const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
     "Private comment added",
     "quicktasker",
   ),
+  [AutomationTrigger.TASK_FILE_UPLOADED]: __("File attached", "quicktasker"),
 };
 
 const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
@@ -112,6 +117,12 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
     [AutomationTrigger.TASK_PRIVATE_COMMENT_ADDED]: [
       {
         id: AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL,
+        requireMetaData: true,
+      },
+    ],
+    [AutomationTrigger.TASK_FILE_UPLOADED]: [
+      {
+        id: AutomationAction.TASK_FILE_UPLOADED_EMAIL,
         requireMetaData: true,
       },
     ],

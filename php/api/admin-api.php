@@ -2502,6 +2502,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $upload = ServiceLocator::get('UploadService')->uploadFile($data['entity_id'], $data['entity_type'], $_FILES['file_to_upload']);
                         $task = ServiceLocator::get('TaskRepository')->getTaskById($upload->entity_id);
                         ServiceLocator::get('LogService')->log('File ' . $upload->file_name . ' uploaded to task ' . $task->name, WP_QT_LOG_TYPE_TASK, $upload->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+
+                        /* Handle automations */
+                        $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                            $task->pipeline_id, 
+                            $task->id, 
+                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED,
+                            $upload
+                        );
+                        /* End of handling automations */
                         
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
