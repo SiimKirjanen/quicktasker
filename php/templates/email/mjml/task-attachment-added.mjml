@@ -64,6 +64,13 @@
         >
           <strong>File Name:</strong> {{fileName}}
         </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          <strong>Added by:</strong> {{uploaderName}}
+        </mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

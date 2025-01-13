@@ -221,15 +221,18 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             if( $this->isTaskAttachementAddedTrigger($automation) ) {
                 if ( $this->isTaskAttachmentAddedEmailAction($automation) ) {
                     $email = $automation->metadata;
-                    $upload = $data;
+                    $upload = $data->upload;
+                    $userId = $data->userId;
                     $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
+                    $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, WP_QT_WORDPRESS_USER_TYPE);
 
                     $templateData = [
                         'taskName' => $task->name,
                         'boardName' => $pipeline->name,
                         'creationDate' => ServiceLocator::get('TimeRepository')->convertUTCToLocal($upload->created_at),
                         'fileName' => $upload->file_name,
+                        'uploaderName' => $user->name
                     ];
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_NEW_ATTACHMENT_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task attachment added', $emailMessage);
@@ -242,15 +245,18 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             if ( $this->isTaskAttachmentDeletedTrigger($automation) ) {
                 if( $this->isTaskAttachmentDeletedEmailAction($automation) ) {
                     $email = $automation->metadata;
-                    $upload = $data;
+                    $upload = $data->deletedUpload;
+                    $userId = $data->userId;
                     $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
+                    $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, WP_QT_WORDPRESS_USER_TYPE);
 
                     $templateData = [
                         'taskName' => $task->name,
                         'boardName' => $pipeline->name,
                         'deleteDate' => ServiceLocator::get('TimeRepository')->convertUTCToLocal($upload->deleted_at),
                         'fileName' => $upload->file_name,
+                        'deleterName' => $user->name
                     ];
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE, $templateData);

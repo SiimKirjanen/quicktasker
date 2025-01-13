@@ -2509,7 +2509,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             $task->id, 
                             WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
                             WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED,
-                            $upload
+                            (object)[
+                                'upload' => $upload,
+                                'userId' => get_current_user_id(),
+                            ]
                         );
                         /* End of handling automations */
                         
@@ -2561,7 +2564,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             $task->id, 
                             WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
                             WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED,
-                            $deletedUpload
+                            (object)[
+                                'deletedUpload' => $deletedUpload,
+                                'userId' => get_current_user_id(),
+                            ]
                         );
                         /* End of handling automations */
                         

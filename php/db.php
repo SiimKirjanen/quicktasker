@@ -298,6 +298,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				entity_id int(11) NOT NULL,
 				entity_type ENUM('task') NOT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
+				uploader_id int(11) NOT NULL,
 				PRIMARY KEY  (id),
 				INDEX entity_id (entity_id),
 				INDEX entity_type (entity_type),

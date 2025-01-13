@@ -98,7 +98,8 @@ if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
                     'file_name' => $file['name'],
                     'file_type' => $file['type'],
                     'upload_uuid' => ServiceLocator::get('UUIDService')->generateUUIDV4(),
-                    'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+                    'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                    'uploader_id' => get_current_user_id()
                 )
             );
 
