@@ -8660,7 +8660,8 @@ const actionMessages = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_UNASSIGNED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker"),
-  [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_FILE_UPLOADED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker")
+  [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_FILE_UPLOADED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker"),
+  [_types_automation__WEBPACK_IMPORTED_MODULE_7__.AutomationAction.TASK_FILE_DELETED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email notification sent by automation", "quicktasker")
 };
 function useAutomationActions() {
   const {
@@ -13304,7 +13305,7 @@ function AutomationMeta({
 }) {
   var _a;
   const action = (_a = automationCreationState === null || automationCreationState === void 0 ? void 0 : automationCreationState.automationAction) === null || _a === void 0 ? void 0 : _a.id;
-  const requiresEmailInput = action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.NEW_ENTITY_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.DELETED_ENTITY_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_ASSIGNED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_UNASSIGNED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_FILE_UPLOADED_EMAIL;
+  const requiresEmailInput = action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.NEW_ENTITY_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.DELETED_ENTITY_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_ASSIGNED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_UNASSIGNED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_FILE_UPLOADED_EMAIL || action === _types_automation__WEBPACK_IMPORTED_MODULE_2__.AutomationAction.TASK_FILE_DELETED_EMAIL;
   const setAutomationMeta = meta => {
     automationDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_1__.SET_AUTOMATION_META,
@@ -13756,11 +13757,7 @@ function AutomationsList() {
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-flex-col",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Alert_Alert__WEBPACK_IMPORTED_MODULE_3__.Alert, {
-      type: "info",
-      className: "wpqt-mx-auto wpqt-mb-2",
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Note that automation won't trigger other automations", "quicktasker")
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-3",
       children: automations.map(automation => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationListItem_AutomationListItem__WEBPACK_IMPORTED_MODULE_7__.AutomationListItem, {
         automation: automation
@@ -18388,6 +18385,7 @@ var AutomationTrigger;
   AutomationTrigger["TASK_PUBLIC_COMMENT_ADDED"] = "task-public-comment-added";
   AutomationTrigger["TASK_PRIVATE_COMMENT_ADDED"] = "task-private-comment-added";
   AutomationTrigger["TASK_FILE_UPLOADED"] = "task-attachment-added";
+  AutomationTrigger["TASK_FILE_DELETED"] = "task-attachment-deleted";
 })(AutomationTrigger || (AutomationTrigger = {}));
 var TargetType;
 (function (TargetType) {
@@ -18415,6 +18413,7 @@ var AutomationAction;
   AutomationAction["TASK_PUBLIC_COMMENT_ADDED_EMAIL"] = "task-public-comment-added-email";
   AutomationAction["TASK_PRIVATE_COMMENT_ADDED_EMAIL"] = "task-private-comment-added-email";
   AutomationAction["TASK_FILE_UPLOADED_EMAIL"] = "task-attachment-added-email";
+  AutomationAction["TASK_FILE_DELETED_EMAIL"] = "task-attachment-deleted-email";
 })(AutomationAction || (AutomationAction = {}));
 
 
@@ -18628,7 +18627,8 @@ const automationActionStrings = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_UNASSIGNED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker"),
-  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_FILE_UPLOADED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker")
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_FILE_UPLOADED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker"),
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_FILE_DELETED_EMAIL]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Send email notification", "quicktasker")
 };
 const automationTargetStrings = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.TargetType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task", "quicktasker"),
@@ -18645,7 +18645,8 @@ const automationTriggerStrings = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_UNASSIGNED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task unassigned", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_PUBLIC_COMMENT_ADDED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Public comment added", "quicktasker"),
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_PRIVATE_COMMENT_ADDED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Private comment added", "quicktasker"),
-  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_FILE_UPLOADED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("File attached", "quicktasker")
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_FILE_UPLOADED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("File attached", "quicktasker"),
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_FILE_DELETED]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Attached file deleted", "quicktasker")
 };
 const taskAutomations = {
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_DONE]: [{
@@ -18684,6 +18685,10 @@ const taskAutomations = {
   }],
   [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_FILE_UPLOADED]: [{
     id: _types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_FILE_UPLOADED_EMAIL,
+    requireMetaData: true
+  }],
+  [_types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationTrigger.TASK_FILE_DELETED]: [{
+    id: _types_automation__WEBPACK_IMPORTED_MODULE_1__.AutomationAction.TASK_FILE_DELETED_EMAIL,
     requireMetaData: true
   }]
 };

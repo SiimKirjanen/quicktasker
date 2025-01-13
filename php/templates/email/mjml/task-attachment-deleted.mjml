@@ -1,0 +1,70 @@
+<!-- filepath: /s:/XAMP_8_2/htdocs/wp-quick-tasks/wp-content/plugins/quicktasker/php/templates/email/mjml/new-task-created.mjml -->
+<mjml>
+  <mj-head>
+    <mj-title>Attachment has been removed from the task</mj-title>
+    <mj-attributes>
+      <mj-all font-family="Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-size="16px" color="#000000"></mj-text>
+      <mj-button
+        background-color="#1E3A8A"
+        color="#ffffff"
+        border-radius="5px"
+      ></mj-button>
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <mj-section background-color="#f0f0f0" padding="20px">
+      <mj-column>
+        <mj-text
+          font-size="20px"
+          color="#1E3A8A"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          Attachment has been removed from the task
+        </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          Hello,
+        </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          Attachment has been removed from the task.
+        </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          <strong>Task Name:</strong> {{taskName}}
+        </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          <strong>Board Name:</strong> {{boardName}}
+        </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          <strong>Delete date:</strong> {{deleteDate}}
+        </mj-text>
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="Helvetica, Arial, sans-serif"
+        >
+          <strong>File Name:</strong> {{fileName}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

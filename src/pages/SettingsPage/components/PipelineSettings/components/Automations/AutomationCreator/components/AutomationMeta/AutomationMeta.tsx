@@ -24,7 +24,8 @@ function AutomationMeta({
     action === AutomationAction.TASK_UNASSIGNED_EMAIL ||
     action === AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL ||
     action === AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL ||
-    action === AutomationAction.TASK_FILE_UPLOADED_EMAIL;
+    action === AutomationAction.TASK_FILE_UPLOADED_EMAIL ||
+    action === AutomationAction.TASK_FILE_DELETED_EMAIL;
 
   const setAutomationMeta = (meta: string) => {
     automationDispatch({

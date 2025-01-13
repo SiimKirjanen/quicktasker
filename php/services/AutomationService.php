@@ -239,6 +239,29 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 }
             }
 
+            if ( $this->isTaskAttachmentDeletedTrigger($automation) ) {
+                if( $this->isTaskAttachmentDeletedEmailAction($automation) ) {
+                    $email = $automation->metadata;
+                    $upload = $data;
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
+
+                    $templateData = [
+                        'taskName' => $task->name,
+                        'boardName' => $pipeline->name,
+                        'deleteDate' => ServiceLocator::get('TimeRepository')->convertUTCToLocal($upload->deleted_at),
+                        'fileName' => $upload->file_name,
+                    ];
+
+                    $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE, $templateData);
+                    ServiceLocator::get('EmailService')->sendEmail($email, 'Task attachment deleted', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+
+                }
+            }
+
             return false;
         }
 
@@ -323,6 +346,10 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
         private function isTaskAttachmentAddedEmailAction($automation) {
             return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_ADDED_EMAIL && $automation->metadata !== null;
+        }
+
+        private function isTaskAttachmentDeletedEmailAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_DELETED_EMAIL && $automation->metadata !== null;
         }
 
         /**
@@ -416,6 +443,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskAttachementAddedTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED;
+        }
+
+        /**
+         * Checks if the automation trigger is set to task attachment deleted.
+         *
+         * @param object $automation The automation object containing the trigger information.
+         * @return bool Returns true if the automation trigger is task attachment deleted, false otherwise.
+         */
+        private function isTaskAttachmentDeletedTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED;
         }
 
         /**

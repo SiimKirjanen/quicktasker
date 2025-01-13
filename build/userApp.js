@@ -2496,6 +2496,7 @@ var AutomationTrigger;
   AutomationTrigger["TASK_PUBLIC_COMMENT_ADDED"] = "task-public-comment-added";
   AutomationTrigger["TASK_PRIVATE_COMMENT_ADDED"] = "task-private-comment-added";
   AutomationTrigger["TASK_FILE_UPLOADED"] = "task-attachment-added";
+  AutomationTrigger["TASK_FILE_DELETED"] = "task-attachment-deleted";
 })(AutomationTrigger || (AutomationTrigger = {}));
 var TargetType;
 (function (TargetType) {
@@ -2523,6 +2524,7 @@ var AutomationAction;
   AutomationAction["TASK_PUBLIC_COMMENT_ADDED_EMAIL"] = "task-public-comment-added-email";
   AutomationAction["TASK_PRIVATE_COMMENT_ADDED_EMAIL"] = "task-private-comment-added-email";
   AutomationAction["TASK_FILE_UPLOADED_EMAIL"] = "task-attachment-added-email";
+  AutomationAction["TASK_FILE_DELETED_EMAIL"] = "task-attachment-deleted-email";
 })(AutomationAction || (AutomationAction = {}));
 
 

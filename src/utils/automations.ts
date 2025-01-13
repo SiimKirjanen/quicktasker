@@ -37,6 +37,10 @@ const automationActionStrings: { [key in AutomationAction]: string } = {
     "Send email notification",
     "quicktasker",
   ),
+  [AutomationAction.TASK_FILE_DELETED_EMAIL]: __(
+    "Send email notification",
+    "quicktasker",
+  ),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -65,6 +69,10 @@ const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
     "quicktasker",
   ),
   [AutomationTrigger.TASK_FILE_UPLOADED]: __("File attached", "quicktasker"),
+  [AutomationTrigger.TASK_FILE_DELETED]: __(
+    "Attached file deleted",
+    "quicktasker",
+  ),
 };
 
 const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
@@ -123,6 +131,12 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
     [AutomationTrigger.TASK_FILE_UPLOADED]: [
       {
         id: AutomationAction.TASK_FILE_UPLOADED_EMAIL,
+        requireMetaData: true,
+      },
+    ],
+    [AutomationTrigger.TASK_FILE_DELETED]: [
+      {
+        id: AutomationAction.TASK_FILE_DELETED_EMAIL,
         requireMetaData: true,
       },
     ],

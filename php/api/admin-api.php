@@ -2554,6 +2554,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $deletedUpload = ServiceLocator::get('UploadService')->deleteUpload( $data['upload_id'] );
                         $task = ServiceLocator::get('TaskRepository')->getTaskById($deletedUpload->entity_id);
                         ServiceLocator::get('LogService')->log('File ' . $deletedUpload->file_name . ' deleted from task ' . $task->name, WP_QT_LOG_TYPE_TASK, $deletedUpload->entity_id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+
+                           /* Handle automations */
+                           $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                            $task->pipeline_id, 
+                            $task->id, 
+                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED,
+                            $deletedUpload
+                        );
+                        /* End of handling automations */
                         
                         $wpdb->query('COMMIT');
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
