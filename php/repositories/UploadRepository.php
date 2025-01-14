@@ -12,9 +12,10 @@ if ( ! class_exists( 'WPQT\Upload\UploadRepository' ) ) {
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT id, file_name, file_type, upload_uuid, entity_id, entity_type, created_at
-                    FROM " . TABLE_WP_QUICKTASKER_UPLOADS . " 
-                    WHERE id = %d",
+                    "SELECT uploads.id, uploads.file_name, uploads.file_type, uploads.upload_uuid, uploads.entity_id, uploads.entity_type, uploads.created_at, uploads.uploader_id, wp_users.display_name AS uploader_name
+                    FROM " . TABLE_WP_QUICKTASKER_UPLOADS . " AS uploads
+                    LEFT JOIN " . $wpdb->users . " AS wp_users ON uploads.uploader_id = wp_users.ID 
+                    WHERE uploads.id = %d",
                     $uploadId
                 )
             );
@@ -24,9 +25,10 @@ if ( ! class_exists( 'WPQT\Upload\UploadRepository' ) ) {
 
             return $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT id, file_name, file_type, upload_uuid, entity_type, entity_type, created_at
-                    FROM " . TABLE_WP_QUICKTASKER_UPLOADS . " 
-                    WHERE entity_id = %d AND entity_type = %s",
+                    "SELECT uploads.id, uploads.file_name, uploads.file_type, uploads.upload_uuid, uploads.entity_id, uploads.entity_type, uploads.created_at, uploads.uploader_id, wp_users.display_name AS uploader_name
+                    FROM " . TABLE_WP_QUICKTASKER_UPLOADS . " AS uploads
+                    LEFT JOIN " . $wpdb->users . " AS wp_users ON uploads.uploader_id = wp_users.ID 
+                    WHERE uploads.entity_id = %d AND uploads.entity_type = %s",
                     $entityId, $entityType
                 )
             );
