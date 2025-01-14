@@ -7,6 +7,7 @@ import { useUploadActions } from "../../../hooks/actions/useUploadActions";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { UploadContext } from "../../../providers/UploadContextProvider";
 import { Upload } from "../../../types/upload";
+import { UploadInfoDropdown } from "../../Dropdown/UploadInfoDropdown/UploadInfoDropdown";
 import { Loading } from "../../Loading/Loading";
 
 type Props = {
@@ -42,18 +43,19 @@ function UploadedItem({ upload }: Props) {
   };
 
   const actions = (
-    <div className="wpqt-flex wpqt-gap-4 wpqt-justify-end">
+    <div className="wpqt-flex wpqt-gap-4 wpqt-justify-end wpqt-items-center">
       <a
         href={downloadUrl}
         download
         onClick={handleDownloadClick}
         className="focus:wpqt-shadow-none"
       >
-        <ArrowDownTrayIcon className="wpqt-icon-blue wpqt-size-4 :hover:wpqt-text-blue-800 wpqt-cursor-pointer" />
+        <ArrowDownTrayIcon className="wpqt-icon-blue wpqt-size-5 :hover:wpqt-text-blue-800 wpqt-cursor-pointer" />
       </a>
+      <UploadInfoDropdown upload={upload} />
       {isUserAllowedToDelete && (
         <TrashIcon
-          className="wpqt-icon-red wpqt-size-4 :hover:wpqt-text-red-800 wpqt-cursor-pointer"
+          className="wpqt-icon-red wpqt-size-5 :hover:wpqt-text-red-800 wpqt-cursor-pointer"
           onClick={handleDeleteClick}
         />
       )}

@@ -10,6 +10,8 @@ type Upload = {
   entity_id: string;
   entity_type: UploadEntityType;
   created_at: string;
+  uploader_id: string;
+  uploader_name: string;
 };
 
 export { UploadEntityType, type Upload };

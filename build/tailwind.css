@@ -2165,6 +2165,10 @@
   font-weight: 600;
 }
 
+.wpqt-uppercase {
+  text-transform: uppercase;
+}
+
 .wpqt-italic {
   font-style: italic;
 }
