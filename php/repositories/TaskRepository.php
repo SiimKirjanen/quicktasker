@@ -44,25 +44,47 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
             global $wpdb;
 
             $tasks = $wpdb->get_results($wpdb->prepare(
-            "SELECT a.*, b.task_order, b.stage_id, c.name as pipeline_name
+                "SELECT a.*, b.task_order, b.stage_id, c.name as pipeline_name
                 FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
                 LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b ON a.id = b.task_id
                 LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON a.pipeline_id = c.id
                 WHERE a.is_archived = 1"
             ));
+
+            $taskIds = array_map(function($task) {
+                return $task->id;
+            }, $tasks);
         
             if ($addAssignedUsers) {
+                $userRepository = ServiceLocator::get('UserRepository');
+                $assignedUsers = $userRepository->getAssignedUsersByTaskIds($taskIds);
+                $assignedWPUsers = $userRepository->getAssignedWPUsersByTaskIds($taskIds);
+
+                $usersByTask = [];
+                foreach ($assignedUsers as $user) {
+                    $usersByTask[$user->task_id][] = $user;
+                }
+                $wpUsersByTask = [];
+                foreach ($assignedWPUsers as $user) {
+                    $wpUsersByTask[$user->task_id][] = $user;
+                }
+
                 foreach ($tasks as $task) {
-                    $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
-                    $task->assigned_users = $users;
-                    $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id]);
+                    $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
+                    $task->assigned_wp_users = isset($wpUsersByTask[$task->id]) ? $wpUsersByTask[$task->id] : [];
                 }
             }
 
             if ($addAssignedLabels) {
+                $addedLabels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds($taskIds);
+
+                $labelsByTask = [];
+                foreach ($addedLabels as $label) {
+                    $labelsByTask[$label->entity_id][] = $label;
+                }
+
                 foreach ($tasks as $task) {
-                    $labels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds([$task->id]);
-                    $task->assigned_labels = $labels;
+                    $task->assigned_labels = isset($labelsByTask[$task->id]) ? $labelsByTask[$task->id] : [];
                 }
             }
         
