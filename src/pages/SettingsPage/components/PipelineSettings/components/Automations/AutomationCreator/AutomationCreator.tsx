@@ -7,8 +7,10 @@ import { __ } from "@wordpress/i18n";
 import { BsRobot } from "react-icons/bs";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
+import { PremiumAd } from "../../../../../../../components/PremiudAd/PremiumAd";
 import {
   ADD_PIPELINE_AUTOMATION,
+  HAS_AUTOMATIONS,
   RESET_AUTOMATION_TO_ACTION,
   RESET_AUTOMATION_TO_TARGET,
   RESET_AUTOMATION_TO_TRIGGER,
@@ -32,9 +34,10 @@ type props = {
   pipelineId: string;
 };
 function AutomationCreator({ pipelineId }: props) {
-  const { pipelineAutomationsDispatch } = useContext(
-    PipelineAutomationsContext,
-  );
+  const {
+    pipelineAutomationsDispatch,
+    state: { loading, automations },
+  } = useContext(PipelineAutomationsContext);
   const [showCreator, setShowCreator] = useState(false);
   const [automation, automationDispatch] = useReducer(
     automationCreationReducer,
@@ -45,6 +48,8 @@ function AutomationCreator({ pipelineId }: props) {
     automation.automationActionTargetId !== null &&
     automation.automationActionTargetType !== null;
   const hasMeta = automation.metaData !== null;
+  const automationsLimitReached =
+    !HAS_AUTOMATIONS && automations && automations.length >= 1;
 
   const cardStyleClasses = "wpqt-px-3 wpqt-min-w-[60px] wpqt-cursor-pointer";
   const cardTitleClasses =
@@ -56,7 +61,7 @@ function AutomationCreator({ pipelineId }: props) {
       (success: boolean, createdAutomation: Automation | null) => {
         if (success && createdAutomation) {
           resetAutomationState();
-
+          setShowCreator(false);
           pipelineAutomationsDispatch({
             type: ADD_PIPELINE_AUTOMATION,
             payload: createdAutomation,
@@ -69,7 +74,21 @@ function AutomationCreator({ pipelineId }: props) {
     automationDispatch({ type: "RESET" });
   };
 
+  if (loading) {
+    return null;
+  }
+
   if (!showCreator) {
+    if (automationsLimitReached) {
+      return (
+        <PremiumAd
+          description={__(
+            "Free version limit reached. Upgrade to premium to create more automations.",
+            "quicktasker",
+          )}
+        />
+      );
+    }
     return (
       <div>
         <WPQTIconButton

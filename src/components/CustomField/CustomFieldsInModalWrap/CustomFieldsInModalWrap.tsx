@@ -1,9 +1,6 @@
-import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldsContextProvider } from "../../../providers/CustomFieldsContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
-import { PremiumAd } from "../../PremiudAd/PremiumAd";
 import { CustomFieldCreation } from "../CustomFieldCreation/CustomFieldCreation";
 import { CustomFields } from "../CustomFields/CustomFields";
 import { CustomFieldsRecovery } from "../CustomFieldsRecovery/CustomFieldsRecovery";
@@ -62,41 +59,22 @@ type Props = {
   pipelineId?: string | null;
 };
 function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
-  const {
-    state: { is_customFields },
-  } = useContext(AppContext);
-
   const creationDescription = descriptions[entityType];
   const customFieldsTitle = titles[entityType];
   const customFieldsDescription = existingFieldsDescriptions[entityType];
 
   return (
-    <>
-      {is_customFields ? (
-        <div>
-          <CustomFieldsContextProvider
-            entityId={entityId}
-            entityType={entityType}
-          >
-            <h2 className="wpqt-text-center">{customFieldsTitle}</h2>
-            <div className="wpqt-mb-4 wpqt-text-center">
-              {customFieldsDescription}
-            </div>
-            <CustomFields />
-            <CustomFieldCreation description={creationDescription} />
-            <CustomFieldsRecovery />
-          </CustomFieldsContextProvider>
+    <div>
+      <CustomFieldsContextProvider entityId={entityId} entityType={entityType}>
+        <h2 className="wpqt-text-center">{customFieldsTitle}</h2>
+        <div className="wpqt-mb-4 wpqt-text-center">
+          {customFieldsDescription}
         </div>
-      ) : (
-        <PremiumAd
-          title={__("Custom fields", "quicktasker")}
-          description={__(
-            "Premium feature to create and manage custom data fields. Allows to add extra data to tasks and users.",
-            "quicktasker",
-          )}
-        />
-      )}
-    </>
+        <CustomFields />
+        <CustomFieldCreation description={creationDescription} />
+        <CustomFieldsRecovery />
+      </CustomFieldsContextProvider>
+    </div>
   );
 }
 
