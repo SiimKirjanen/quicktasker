@@ -50,6 +50,9 @@ This plugin also has a pro version that enhances the free version with additiona
 
 == Changelog ==
 
+= 1.24.0 =
+* Added ability to create 1 custom field and 1 automation on free version.
+
 = 1.23.0 =
 * Added uploaded file info.
 * Improvements.
