@@ -1,4 +1,4 @@
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
 import { AppContext } from "../../../../../providers/AppContextProvider";
@@ -6,7 +6,7 @@ import {
   CustomField,
   CustomFieldEntityType,
 } from "../../../../../types/custom-field";
-import { WPQTIconButton } from "../../../../common/Button/Button";
+import { WPQTButton, WPQTIconButton } from "../../../../common/Button/Button";
 import { Loading } from "../../../../Loading/Loading";
 
 type CustomFieldActionsProps = {
@@ -49,12 +49,7 @@ function CustomFieldActions({
   return (
     <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2">
       {isAllowedToSave && (
-        <WPQTIconButton
-          onClick={onSave}
-          icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
-          tooltipId={`custom-field-${data.id}-update`}
-          tooltipText={__("Edit custom field value", "quicktasker")}
-        />
+        <WPQTButton onClick={onSave} btnText={__("Save", "quicktasker")} />
       )}
       {isUserAllowedToDelete && (
         <WPQTIconButton

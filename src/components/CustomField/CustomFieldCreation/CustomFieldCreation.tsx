@@ -3,12 +3,14 @@ import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { ADD_CUSTOM_FIELD } from "../../../constants";
 import { useCustomFieldActions } from "../../../hooks/actions/useCustomFieldActions";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
 import { CustomFieldType } from "../../../types/custom-field";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { Option, WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
+import { PremiumAd } from "../../PremiudAd/PremiumAd";
 
 type Props = {
   description: string;
@@ -21,15 +23,19 @@ function CustomFieldCreation({ description }: Props) {
     useState<CustomFieldType>(CustomFieldType.Text);
   const { addCustomField } = useCustomFieldActions();
   const {
-    state: { entityId, entityType },
+    state: { entityId, entityType, customFields, loading: customFieldsLoading },
     customFieldsDispatch,
   } = useContext(CustomFieldsContext);
+  const {
+    state: { is_customFields },
+  } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
 
   const customFieldTypeOptions: Option[] = [
     { value: CustomFieldType.Text, label: "Text" },
     { value: CustomFieldType.Checkbox, label: "Checkbox" },
   ];
+  const isCreationLimited = customFields.length >= 1 && !is_customFields;
 
   const createCustomField = async () => {
     if (!entityId || !entityType) {
@@ -60,10 +66,26 @@ function CustomFieldCreation({ description }: Props) {
     setSelectedCustomFieldType(CustomFieldType.Text);
     setIsCreationOpen(false);
   };
+
+  if (customFieldsLoading) {
+    return null;
+  }
+
   return (
     <div className="wpqt-mb-6 wpqt-flex wpqt-flex-col wpqt-items-center">
       <h2>{__("Custom Fields", "quicktasker")}</h2>
-      <div className="wpqt-mb-4 wpqt-text-center">{description}</div>
+      <div className="wpqt-mb-4 wpqt-text-center">
+        {description}
+        {!is_customFields && (
+          <span className="wpqt-font-semibold">
+            {" "}
+            {__(
+              "Free version allows only one custom field. To add more, please upgrade to premium.",
+              "quicktasker",
+            )}
+          </span>
+        )}
+      </div>
 
       {isCreationOpen && (
         <div className="wpqt-flex wpqt-gap-4">
@@ -93,29 +115,37 @@ function CustomFieldCreation({ description }: Props) {
       )}
 
       <div className="wpqt-flex wpqt-justify-end wpqt-gap-3">
-        <WPQTIconButton
-          text={
-            isCreationOpen
-              ? __("Cancel", "quicktasker")
-              : __("Add new custom field", "quicktasker")
-          }
-          onClick={() => setIsCreationOpen(!isCreationOpen)}
-          icon={
-            isCreationOpen ? (
-              <XCircleIcon className="wpqt-icon-red wpqt-size-5" />
-            ) : (
-              <PlusCircleIcon className="wpqt-icon-green wpqt-size-5" />
-            )
-          }
-        />
-        {isCreationOpen && (
-          <WPQTIconButton
-            text={__("Add", "quicktasker")}
-            onClick={createCustomField}
-            loading={loading}
-            icon={<PlusCircleIcon className="wpqt-icon-green wpqt-size-5" />}
-          />
+        {!isCreationLimited && (
+          <>
+            <WPQTIconButton
+              text={
+                isCreationOpen
+                  ? __("Cancel", "quicktasker")
+                  : __("Add new custom field", "quicktasker")
+              }
+              onClick={() => setIsCreationOpen(!isCreationOpen)}
+              icon={
+                isCreationOpen ? (
+                  <XCircleIcon className="wpqt-icon-red wpqt-size-5" />
+                ) : (
+                  <PlusCircleIcon className="wpqt-icon-green wpqt-size-5" />
+                )
+              }
+            />
+            {isCreationOpen && (
+              <WPQTIconButton
+                text={__("Add", "quicktasker")}
+                onClick={createCustomField}
+                loading={loading}
+                icon={
+                  <PlusCircleIcon className="wpqt-icon-green wpqt-size-5" />
+                }
+              />
+            )}
+          </>
         )}
+
+        {isCreationLimited && <PremiumAd />}
       </div>
     </div>
   );
