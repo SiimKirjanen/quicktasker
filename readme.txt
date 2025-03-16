@@ -4,7 +4,7 @@ Tags: task manager, task management, project manager, project management, task b
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
-Stable tag: 1.24.0
+Stable tag: 1.24.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,12 +26,12 @@ QuickTasker is a plugin that offers the following and more to organize your proj
 * Private and public comments on tasks and users.
 * Attach files to tasks.
 * Logs to track changes and updates.
+* Add custom fields to tasks to capture additional information specific to your workflow. This flexibility allows you to tailor the task details to your project's unique requirements.
+* Automate various tasks with automations.
 
 QuickTasker PRO version
-This plugin also has a pro version that enhances the free version with additional features such as:
-
-**Custom fields**. You can add custom fields to tasks to capture additional information specific to your workflow. This flexibility allows you to tailor the task details to your project's unique requirements.
-**Automations**. Feature to automate various tasks. 
+* No limit on creating custom fields.
+* No limit on creating automations.
 
 == Installation ==
 
@@ -49,6 +49,9 @@ This plugin also has a pro version that enhances the free version with additiona
 
 
 == Changelog ==
+
+= 1.24.1 =
+* Text updates.
 
 = 1.24.0 =
 * Added ability to create 1 custom field and 1 automation on free version.
