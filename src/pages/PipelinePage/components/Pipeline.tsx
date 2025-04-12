@@ -3,21 +3,24 @@ import {
   DraggableLocation,
   DropResult,
 } from "@hello-pangea/dnd";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useCallback, useContext, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { moveTaskRequest } from "../../../api/api";
+import { Info } from "../../../components/Info/Info";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
 import {
+  OPEN_NEW_PIPELINE_MODAL,
   PIPELINE_MOVE_TASK,
   REFETCH_ACTIVE_PIPELINE_INTERVAL,
 } from "../../../constants";
 import useTabVisibility from "../../../hooks/useTabVisibility";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { AddStage } from "./AddStage";
-import { PipelineIntro } from "./PipelineIntro";
 import { Stage } from "./Stage";
 
 const Pipeline = () => {
@@ -27,6 +30,7 @@ const Pipeline = () => {
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
   const { isTabVisible } = useTabVisibility();
+  const { modalDispatch } = useContext(ModalContext);
 
   useEffect(() => {
     const refetchDataInterval = setInterval(() => {
@@ -93,7 +97,23 @@ const Pipeline = () => {
   };
 
   if (!activePipeline) {
-    return <PipelineIntro />;
+    return (
+      <Info
+        infoText={__("Create a new board", "quicktasker")}
+        infoDescription={__(
+          "No boards found. Start by creating your first board to organize and manage your tasks effectively.",
+          "quicktasker",
+        )}
+        actionIcon={
+          <PlusCircleIcon className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer" />
+        }
+        infoActionClick={() => {
+          modalDispatch({
+            type: OPEN_NEW_PIPELINE_MODAL,
+          });
+        }}
+      />
+    );
   }
 
   return (
