@@ -18,7 +18,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * @param int $targetId The ID of the target entity for the automation.
          * @param string $targetType The type of the target entity (e.g., 'task', 'stage').
          * @param string $automationTrigger The trigger that initiates the automation (e.g., 'onCreate', 'onUpdate').
-         * @param object|null $data Additional data to be used in the automation execution.
+         * @param object|null $data Additional data.
          * 
          * @return object An object containing two arrays:
          *                - 'executedAutomations': An array of successfully executed automations.
@@ -27,9 +27,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger, $data = null) {
             $executedAutomations = [];
             $failedAutomations = [];
-            $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
+            $relatedAutomations = ServiceLocator::get('AutomationRepository')->getActiveAutomations($boardId, $targetId, $targetType, $automationTrigger);
 
-            if ( ! empty($relatedAutomations) ) {
+            if ( !empty($relatedAutomations) ) {
                 foreach ($relatedAutomations as $automation) {
                     try {
                         $result = $this->executeAutomation($automation, $targetId, $data);
@@ -40,8 +40,8 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                         }
                     } catch(\Throwable $e) {
                         $failureLogMessage = $this->getAutomationFailedLogMessage($automation);
-                        ServiceLocator::get('LogService')->log($failureLogMessage, $targetType, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION, null, WP_QT_LOG_STATUS_ERROR);
                         $failedAutomations[] = $automation;
+                        ServiceLocator::get('LogService')->log($failureLogMessage, $targetType, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION, null, WP_QT_LOG_STATUS_ERROR);
                     }
                 }
             }

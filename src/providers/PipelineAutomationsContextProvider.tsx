@@ -9,6 +9,7 @@ import {
 } from "../constants";
 import { reducer } from "../reducers/pipeline-automations-reducer";
 import { Automation } from "../types/automation";
+import { convertAutomationsFromServer } from "../utils/automations";
 
 type State = {
   automations: Automation[] | null;
@@ -74,7 +75,9 @@ const PipelineAutomationsContextProvider = ({
       const response = await getPipelineAutomationsRequest(pipelineId);
       pipelineAutomationsDispatch({
         type: SET_PIPELINE_AUTOMATIONS,
-        payload: { automations: response.data.automations },
+        payload: {
+          automations: convertAutomationsFromServer(response.data.automations),
+        },
       });
     } catch (error) {
       console.error(error);

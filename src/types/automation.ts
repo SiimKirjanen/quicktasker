@@ -50,7 +50,7 @@ type AutomationActionType = {
 
 type AutomationExecutionResult = boolean | WPUser | User;
 
-type Automation = {
+type BaseAutomation = {
   id: string;
   pipeline_id: string;
   target_id: string | null;
@@ -62,6 +62,14 @@ type Automation = {
   created_at: string;
   updated_at: string;
   metadata: string | null;
+};
+
+type Automation = BaseAutomation & {
+  active: boolean;
+};
+
+type AutomationFromServer = BaseAutomation & {
+  active: string;
 };
 
 type ExecutedAutomation = Automation & {
@@ -76,5 +84,6 @@ export {
   type Automation,
   type AutomationActionType,
   type AutomationExecutionResult,
+  type AutomationFromServer,
   type ExecutedAutomation,
 };

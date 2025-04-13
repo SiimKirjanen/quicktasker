@@ -1,7 +1,11 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
 import { AutomationCreationState } from "../reducers/automation-creation-reducer";
-import { Automation, ExecutedAutomation } from "../types/automation";
+import {
+  Automation,
+  AutomationFromServer,
+  ExecutedAutomation,
+} from "../types/automation";
 import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
@@ -677,7 +681,7 @@ function getPipelineOverviewData(
 
 function getPipelineAutomationsRequest(pipelineId: string): Promise<
   WPQTResponse<{
-    automations: Automation[];
+    automations: AutomationFromServer[];
   }>
 > {
   return apiFetch({

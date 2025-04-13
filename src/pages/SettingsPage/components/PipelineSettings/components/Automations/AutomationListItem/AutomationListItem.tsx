@@ -3,6 +3,7 @@ import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
+import { Toggle } from "../../../../../../../components/common/Toggle/Toggle";
 import { REMOVE_PIPELINE_AUTOMATION } from "../../../../../../../constants";
 import { useAutomationActions } from "../../../../../../../hooks/actions/useAutomationActions";
 import { PipelineAutomationsContext } from "../../../../../../../providers/PipelineAutomationsContextProvider";
@@ -88,13 +89,19 @@ function AutomationListItem({ automation }: Props) {
         className={`${cardStyleClasses} wpqt-ml-6`}
         titleClassName={cardTitleClasses}
       >
-        <div className="wpqt-flex wpqt-gap-2">
-          <WPQTIconButton
-            loading={deleteLoading}
-            text={__("Delete", "quicktasker")}
-            icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-            onClick={onDelete}
-          />
+        <div className="wpqt-flex wpqt-items-center wpqt-gap-4">
+          <div className="wpqt-flex wpqt-flex-col wpqt-gap-1 wpqt-justify-center wpqt-items-center">
+            <span>{__("Active", "quicktasker")}</span>
+            <Toggle checked={automation.active} handleChange={() => {}} />
+          </div>
+          <div className="wpqt-flex wpqt-gap-2">
+            <WPQTIconButton
+              loading={deleteLoading}
+              text={__("Delete", "quicktasker")}
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+              onClick={onDelete}
+            />
+          </div>
         </div>
       </WPQTCard>
     </div>
