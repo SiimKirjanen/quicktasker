@@ -57,7 +57,7 @@ function AutomationControls({
       pipelineAutomationsDispatch({
         type: UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS,
         payload: {
-          ...automation,
+          id: automation.id,
           active,
         },
       });
