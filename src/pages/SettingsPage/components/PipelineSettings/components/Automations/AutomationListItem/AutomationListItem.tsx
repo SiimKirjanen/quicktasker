@@ -1,11 +1,6 @@
-import { ArrowRightCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useContext, useState } from "@wordpress/element";
+import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
-import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
-import { REMOVE_PIPELINE_AUTOMATION } from "../../../../../../../constants";
-import { useAutomationActions } from "../../../../../../../hooks/actions/useAutomationActions";
-import { PipelineAutomationsContext } from "../../../../../../../providers/PipelineAutomationsContextProvider";
 import { Automation } from "../../../../../../../types/automation";
 import {
   automationActionStrings,
@@ -13,16 +8,12 @@ import {
   automationTriggerStrings,
 } from "../../../../../../../utils/automations";
 import { AutomationActionTarget } from "../AutomationActionTarget/AutomationActionTarget";
+import { AutomationControls } from "../AutomationControls/AutomationControls";
 
 type Props = {
   automation: Automation;
 };
 function AutomationListItem({ automation }: Props) {
-  const { pipelineAutomationsDispatch } = useContext(
-    PipelineAutomationsContext,
-  );
-  const { deleteAutomation } = useAutomationActions();
-  const [deleteLoading, setDeleteLoading] = useState(false);
   const cardStyleClasses =
     "wpqt-px-3 wpqt-pt-1 wpqt-min-w-[60px] wpqt-cursor-default";
   const cardTitleClasses =
@@ -31,19 +22,6 @@ function AutomationListItem({ automation }: Props) {
     automation.automation_action_target_id !== null &&
     automation.automation_action_target_type !== null;
   const hasMeta = automation.metadata !== null;
-
-  const onDelete = async () => {
-    setDeleteLoading(true);
-    await deleteAutomation(automation.pipeline_id, automation.id, (success) => {
-      if (success) {
-        pipelineAutomationsDispatch({
-          type: REMOVE_PIPELINE_AUTOMATION,
-          payload: automation.id,
-        });
-      }
-    });
-    setDeleteLoading(false);
-  };
 
   return (
     <div className="wpqt-flex wpqt-gap-3 wpqt-p-4 wpqt-items-center">
@@ -83,20 +61,12 @@ function AutomationListItem({ automation }: Props) {
           {hasMeta && <div>{automation.metadata}</div>}
         </div>
       </WPQTCard>
-      <WPQTCard
-        title={__("Controls", "quicktasker")}
+
+      <AutomationControls
+        automation={automation}
         className={`${cardStyleClasses} wpqt-ml-6`}
         titleClassName={cardTitleClasses}
-      >
-        <div className="wpqt-flex wpqt-gap-2">
-          <WPQTIconButton
-            loading={deleteLoading}
-            text={__("Delete", "quicktasker")}
-            icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-            onClick={onDelete}
-          />
-        </div>
-      </WPQTCard>
+      />
     </div>
   );
 }

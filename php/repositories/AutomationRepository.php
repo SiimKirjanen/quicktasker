@@ -22,13 +22,38 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE pipeline_id = %d AND target_type = %s AND automation_trigger = %s",
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at, active FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE pipeline_id = %d AND target_type = %s AND automation_trigger = %s",
                 $boardId,
                 $targetType,
                 $automationTrigger
             );
 
             return $wpdb->get_results($query);
+        }
+
+        /**
+         * Retrieves the active automations for a given board, target, and trigger.
+         *
+         * This method fetches all automations matching the specified parameters
+         * and filters them to return only those that are marked as active.
+         *
+         * @param int $boardId The ID of the board to retrieve automations for.
+         * @param int $targetId The ID of the target associated with the automations.
+         * @param string $targetType The type of the target (e.g., "task", "project").
+         * @param string $automationTrigger The trigger type for the automation (e.g., "onCreate", "onUpdate").
+         * 
+         * @return array|null An array of active automations if found, or null if no automations exist.
+         */
+        public function getActiveAutomations($boardId, $targetId, $targetType, $automationTrigger) {
+            $automations = $this->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
+
+            if ($automations === null) {
+                return null;
+            }
+
+            return array_filter($automations, function ($automation) {
+                return $automation->active === '1';
+            });
         }
 
         /**
@@ -41,7 +66,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE id = %d",
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at, active FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE id = %d",
                 $automationID
             );
 
@@ -60,7 +85,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, created_at, metadata, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE pipeline_id = %d",
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, created_at, metadata, updated_at, active FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE pipeline_id = %d",
                 $pipelineId
             );
 

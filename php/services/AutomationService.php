@@ -18,7 +18,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * @param int $targetId The ID of the target entity for the automation.
          * @param string $targetType The type of the target entity (e.g., 'task', 'stage').
          * @param string $automationTrigger The trigger that initiates the automation (e.g., 'onCreate', 'onUpdate').
-         * @param object|null $data Additional data to be used in the automation execution.
+         * @param object|null $data Additional data.
          * 
          * @return object An object containing two arrays:
          *                - 'executedAutomations': An array of successfully executed automations.
@@ -27,9 +27,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger, $data = null) {
             $executedAutomations = [];
             $failedAutomations = [];
-            $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomations($boardId, $targetId, $targetType, $automationTrigger);
+            $relatedAutomations = ServiceLocator::get('AutomationRepository')->getActiveAutomations($boardId, $targetId, $targetType, $automationTrigger);
 
-            if ( ! empty($relatedAutomations) ) {
+            if ( !empty($relatedAutomations) ) {
                 foreach ($relatedAutomations as $automation) {
                     try {
                         $result = $this->executeAutomation($automation, $targetId, $data);
@@ -40,8 +40,8 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                         }
                     } catch(\Throwable $e) {
                         $failureLogMessage = $this->getAutomationFailedLogMessage($automation);
-                        ServiceLocator::get('LogService')->log($failureLogMessage, $targetType, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION, null, WP_QT_LOG_STATUS_ERROR);
                         $failedAutomations[] = $automation;
+                        ServiceLocator::get('LogService')->log($failureLogMessage, $targetType, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION, null, WP_QT_LOG_STATUS_ERROR);
                     }
                 }
             }
@@ -523,7 +523,32 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             return ServiceLocator::get('AutomationRepository')->getAutomation($wpdb->insert_id);
         }
 
-  
+        /**
+         * Updates the active state of an automation in the database.
+         *
+         * @param int $automationId The ID of the automation to update.
+         * @param bool|int $active The new active state (e.g., 1 for active, 0 for inactive).
+         * 
+         * @throws \Exception If the update operation fails.
+         * 
+         * @return array|null The updated automation data retrieved from the repository, or null if not found.
+         */
+        public function updateAutomationActiveState($automationId, $active) {
+            global $wpdb;
+
+            $result = $wpdb->update(
+                TABLE_WP_QUICKTASKER_AUTOMATIONS,
+                ['active' => $active],
+                ['id' => $automationId]
+            );
+
+            if ($result === false) {
+                throw new \Exception('Failed to update the automation active state.');
+            }
+
+            return ServiceLocator::get('AutomationRepository')->getAutomation($automationId);
+        }
+
         /**
          * Deletes an automation by its ID.
          *

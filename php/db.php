@@ -254,6 +254,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				metadata TEXT DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
+				active tinyint(1) DEFAULT 1,
 				PRIMARY KEY  (id),
 				INDEX pipeline_id (pipeline_id),
 				INDEX target_id (target_id),

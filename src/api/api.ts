@@ -1,7 +1,11 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
 import { AutomationCreationState } from "../reducers/automation-creation-reducer";
-import { Automation, ExecutedAutomation } from "../types/automation";
+import {
+  Automation,
+  AutomationFromServer,
+  ExecutedAutomation,
+} from "../types/automation";
 import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
@@ -677,7 +681,7 @@ function getPipelineOverviewData(
 
 function getPipelineAutomationsRequest(pipelineId: string): Promise<
   WPQTResponse<{
-    automations: Automation[];
+    automations: AutomationFromServer[];
   }>
 > {
   return apiFetch({
@@ -703,6 +707,19 @@ function createPipelineAutomationRequest(
       automationActionTargetType: automation.automationActionTargetType,
       automationMetadata: automation.metaData,
     },
+    headers: getCommonHeaders(),
+  });
+}
+
+function updateAutomationActiveStatusRequest(
+  pipelineId: string,
+  automationId: string,
+  isActive: boolean,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations/${automationId}/active`,
+    method: "PATCH",
+    data: { active: isActive },
     headers: getCommonHeaders(),
   });
 }
@@ -917,6 +934,7 @@ export {
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
   unassignLabelFromTaskRequest,
+  updateAutomationActiveStatusRequest,
   updateCustomFieldValueRequest,
   updateLabelRequest,
   updateWPUserPermissionsRequest,

@@ -1,7 +1,9 @@
 import { __ } from "@wordpress/i18n";
 import {
+  Automation,
   AutomationAction,
   AutomationActionType,
+  AutomationFromServer,
   AutomationTrigger,
   TargetType,
 } from "../types/automation";
@@ -146,9 +148,19 @@ const availableAutomations = {
   [TargetType.Task]: taskAutomations,
 };
 
+const convertAutomationsFromServer = (
+  automations: AutomationFromServer[],
+): Automation[] => {
+  return automations.map((automation) => ({
+    ...automation,
+    active: automation.active === "1",
+  }));
+};
+
 export {
   automationActionStrings,
   automationTargetStrings,
   automationTriggerStrings,
   availableAutomations,
+  convertAutomationsFromServer,
 };

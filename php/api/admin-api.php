@@ -2149,6 +2149,46 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
         register_rest_route(
             'wpqt/v1',
+            'pipelines/(?P<id>\d+)/automations/(?P<automation_id>\d+)/active',
+            array(
+                'methods' => 'PATCH',
+                'callback' => function( $data ) {
+                    try {                 
+                        $automation = ServiceLocator::get('AutomationService')->updateAutomationActiveState($data['automation_id'], $data['active']);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'automation' => $automation,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'automation_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'active' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
             'pipelines/(?P<id>\d+)/automations/(?P<automation_id>\d+)',
             array(
                 'methods' => 'DELETE',
