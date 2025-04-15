@@ -3,6 +3,7 @@ import {
   REMOVE_PIPELINE_AUTOMATION,
   SET_PIPELINE_AUTOMATIONS,
   SET_PIPELINE_AUTOMATIONS_LOADING,
+  UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS,
 } from "../constants";
 import { Action, State } from "../providers/PipelineAutomationsContextProvider";
 import { Automation } from "../types/automation";
@@ -32,6 +33,23 @@ const reducer = (state: State, action: Action): State => {
           (automation) => automation.id !== automationId,
         ) ?? null;
 
+      return {
+        ...state,
+        automations,
+      };
+    }
+    case UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS: {
+      const automations = state.automations
+        ? state.automations.map((automation) => {
+            if (automation.id === action.payload.id) {
+              return {
+                ...automation,
+                active: action.payload.active,
+              };
+            }
+            return automation;
+          })
+        : null;
       return {
         ...state,
         automations,

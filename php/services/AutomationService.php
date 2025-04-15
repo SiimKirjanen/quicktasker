@@ -523,7 +523,32 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             return ServiceLocator::get('AutomationRepository')->getAutomation($wpdb->insert_id);
         }
 
-  
+        /**
+         * Updates the active state of an automation in the database.
+         *
+         * @param int $automationId The ID of the automation to update.
+         * @param bool|int $active The new active state (e.g., 1 for active, 0 for inactive).
+         * 
+         * @throws \Exception If the update operation fails.
+         * 
+         * @return array|null The updated automation data retrieved from the repository, or null if not found.
+         */
+        public function updateAutomationActiveState($automationId, $active) {
+            global $wpdb;
+
+            $result = $wpdb->update(
+                TABLE_WP_QUICKTASKER_AUTOMATIONS,
+                ['active' => $active],
+                ['id' => $automationId]
+            );
+
+            if ($result === false) {
+                throw new \Exception('Failed to update the automation active state.');
+            }
+
+            return ServiceLocator::get('AutomationRepository')->getAutomation($automationId);
+        }
+
         /**
          * Deletes an automation by its ID.
          *

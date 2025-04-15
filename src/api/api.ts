@@ -711,6 +711,19 @@ function createPipelineAutomationRequest(
   });
 }
 
+function updateAutomationActiveStatusRequest(
+  pipelineId: string,
+  automationId: string,
+  isActive: boolean,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/automations/${automationId}/active`,
+    method: "PATCH",
+    data: { active: isActive },
+    headers: getCommonHeaders(),
+  });
+}
+
 function deletePipelineAutomationsRequest(
   pipelineId: string,
   automationId: string,
@@ -921,6 +934,7 @@ export {
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
   unassignLabelFromTaskRequest,
+  updateAutomationActiveStatusRequest,
   updateCustomFieldValueRequest,
   updateLabelRequest,
   updateWPUserPermissionsRequest,

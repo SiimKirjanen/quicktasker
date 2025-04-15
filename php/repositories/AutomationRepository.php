@@ -66,7 +66,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE id = %d",
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at, active FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE id = %d",
                 $automationID
             );
 

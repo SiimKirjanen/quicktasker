@@ -6,6 +6,7 @@ import {
   REMOVE_PIPELINE_AUTOMATION,
   SET_PIPELINE_AUTOMATIONS,
   SET_PIPELINE_AUTOMATIONS_LOADING,
+  UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS,
 } from "../constants";
 import { reducer } from "../reducers/pipeline-automations-reducer";
 import { Automation } from "../types/automation";
@@ -39,6 +40,13 @@ type Action =
   | {
       type: typeof ADD_PIPELINE_AUTOMATION;
       payload: Automation;
+    }
+  | {
+      type: typeof UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS;
+      payload: {
+        id: string;
+        active: boolean;
+      };
     };
 
 type Dispatch = (action: Action) => void;

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import {
   createPipelineAutomationRequest,
   deletePipelineAutomationsRequest,
+  updateAutomationActiveStatusRequest,
 } from "../../api/api";
 import {
   PIPELINE_ADD_USER_TO_TASK,
@@ -15,6 +16,7 @@ import { AutomationCreationState } from "../../reducers/automation-creation-redu
 import {
   Automation,
   AutomationAction,
+  AutomationFromServer,
   ExecutedAutomation,
 } from "../../types/automation";
 
@@ -142,6 +144,40 @@ function useAutomationActions() {
     }
   };
 
+  const updateAutomationActiveStatus = async (
+    pipelineId: string,
+    automationId: string,
+    active: boolean,
+  ): Promise<{ success: boolean; data: null | AutomationFromServer }> => {
+    try {
+      const response = await updateAutomationActiveStatusRequest(
+        pipelineId,
+        automationId,
+        active,
+      );
+      toast.success(
+        active
+          ? __("Automation activated", "quicktasker")
+          : __("Automation deactivated", "quicktasker"),
+      );
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        active
+          ? __("Failed to activate automation", "quicktasker")
+          : __("Failed to deactivate automation", "quicktasker"),
+      );
+      return {
+        success: false,
+        data: null,
+      };
+    }
+  };
+
   const deleteAutomation = async (
     pipelineId: string,
     automationId: string,
@@ -163,6 +199,7 @@ function useAutomationActions() {
     handleExecutedAnimationsResults,
     handleExecutedAutomations,
     createAutomation,
+    updateAutomationActiveStatus,
     deleteAutomation,
   };
 }
