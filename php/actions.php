@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 use WPQT\Location\LocationService;
 use WPQT\Asset\AssetRepository;
+use WPQT\ServiceLocator;
 
 /**
  * Hook into 'plugins_loaded' action to update the database.
@@ -112,6 +113,39 @@ if ( ! function_exists( 'wpqt_include_allowed_scripts' ) ) {
 			$dependencies = AssetRepository::getWPQTScriptDependencies();
 			$allowedToLoad = array_merge($dependencies, array('wpqt-script'));
 			$wp_scripts->queue = $allowedToLoad;
+		}
+	}
+}
+
+add_action('woocommerce_new_order', 'quicktasker_handle_woocommerce_new_order', 10, 1);
+if ( ! function_exists( 'quicktasker_handle_woocommerce_new_order' ) ) {
+	function quicktasker_handle_woocommerce_new_order($order_id) {
+		if (!$order_id) {
+			return;
+		}
+
+		$order = wc_get_order($order_id);
+
+		if (!$order) {
+			return;
+		}
+
+		$relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomationsByTrigger(
+			WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED
+		);
+
+		if ( $relatedAutomations ) {
+			foreach ( $relatedAutomations as $automation ) {
+				ServiceLocator::get('AutomationService')->handleAutomations(
+					$automation->pipeline_id, 
+					null, 
+					WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER, 
+					WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED,
+					(object)[
+						'woocommerceOrder' => $order,
+					]
+				);
+			}
 		}
 	}
 }

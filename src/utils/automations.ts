@@ -1,11 +1,13 @@
 import { __ } from "@wordpress/i18n";
 import {
+  AllAutomationTriggers,
   Automation,
   AutomationAction,
   AutomationActionType,
   AutomationFromServer,
   AutomationTrigger,
   TargetType,
+  WoocommerceOrderAutomationTrigger,
 } from "../types/automation";
 
 const automationActionStrings: { [key in AutomationAction]: string } = {
@@ -43,6 +45,7 @@ const automationActionStrings: { [key in AutomationAction]: string } = {
     "Send email notification",
     "quicktasker",
   ),
+  [AutomationAction.CREATE_TASK]: __("Create task", "quicktasker"),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -50,9 +53,10 @@ const automationTargetStrings: { [key in TargetType]: string } = {
   [TargetType.Stage]: __("Stage", "quicktasker"),
   [TargetType.PIPELINE]: __("Board", "quicktasker"),
   [TargetType.quicktasker]: "Quicktasker",
+  [TargetType.WOOCOMMERCE_ORDER]: __("WooCommerce Order", "quicktasker"),
 };
 
-const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
+const automationTriggerStrings: { [key in AllAutomationTriggers]: string } = {
   [AutomationTrigger.TASK_DONE]: __("Task marked as done", "quicktasker"),
   [AutomationTrigger.Task_NOT_DONE]: __(
     "Task marked as not done",
@@ -73,6 +77,19 @@ const automationTriggerStrings: { [key in AutomationTrigger]: string } = {
   [AutomationTrigger.TASK_FILE_UPLOADED]: __("File attached", "quicktasker"),
   [AutomationTrigger.TASK_FILE_DELETED]: __(
     "Attached file deleted",
+    "quicktasker",
+  ),
+  [WoocommerceOrderAutomationTrigger.WOOCOMMERCE_ORDER_ADDED]: __(
+    "Order added",
+    "quicktasker",
+  ),
+};
+
+const woocommerceOrderAutomationTriggerStrings: {
+  [key in WoocommerceOrderAutomationTrigger]: string;
+} = {
+  [WoocommerceOrderAutomationTrigger.WOOCOMMERCE_ORDER_ADDED]: __(
+    "Order added",
     "quicktasker",
   ),
 };
@@ -144,8 +161,19 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
     ],
   };
 
+const woocommerceOrderAutomations: {
+  [key in WoocommerceOrderAutomationTrigger]: AutomationActionType[];
+} = {
+  [WoocommerceOrderAutomationTrigger.WOOCOMMERCE_ORDER_ADDED]: [
+    {
+      id: AutomationAction.CREATE_TASK,
+    },
+  ],
+};
+
 const availableAutomations = {
   [TargetType.Task]: taskAutomations,
+  [TargetType.WOOCOMMERCE_ORDER]: woocommerceOrderAutomations,
 };
 
 const convertAutomationsFromServer = (
@@ -163,4 +191,5 @@ export {
   automationTriggerStrings,
   availableAutomations,
   convertAutomationsFromServer,
+  woocommerceOrderAutomationTriggerStrings,
 };

@@ -20,12 +20,17 @@ function AutomationActionSelection({ automationDispatch, automation }: Props) {
     return null;
   }
   const target = automation.automationTarget;
+  console.log("target", target);
   const trigger = automation.automationTrigger;
+  console.log("trigger", trigger);
+  console.log("availableAutomations", availableAutomations);
   const actionOptions =
     availableAutomations[target as keyof typeof availableAutomations][trigger];
+  console.log("actionOptions", actionOptions);
   return (
     <AutomationSelection title={__("Step 3. Select action", "quicktasker")}>
       {actionOptions.map((actionType) => {
+        console.log("Siim", automationActionStrings[actionType.id]);
         return (
           <Pill
             key={actionType.id}

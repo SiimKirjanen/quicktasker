@@ -15,7 +15,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * Handles the execution of automations based on the provided parameters.
          *
          * @param int $boardId The ID of the board where the automations are defined.
-         * @param int $targetId The ID of the target entity for the automation.
+         * @param int|null $targetId The ID of the target entity for the automation.
          * @param string $targetType The type of the target entity (e.g., 'task', 'stage').
          * @param string $automationTrigger The trigger that initiates the automation (e.g., 'onCreate', 'onUpdate').
          * @param object|null $data Additional data.

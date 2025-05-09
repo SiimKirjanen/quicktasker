@@ -13,11 +13,16 @@ enum AutomationTrigger {
   TASK_FILE_DELETED = "task-attachment-deleted",
 }
 
+enum WoocommerceOrderAutomationTrigger {
+  WOOCOMMERCE_ORDER_ADDED = "woocommerce-order-added",
+}
+
 enum TargetType {
   PIPELINE = "pipeline",
   Stage = "stage",
   Task = "task",
   quicktasker = "quicktasker",
+  WOOCOMMERCE_ORDER = "woocommerce-order",
 }
 
 enum ActionTargetType {
@@ -39,7 +44,12 @@ enum AutomationAction {
   TASK_PRIVATE_COMMENT_ADDED_EMAIL = "task-private-comment-added-email",
   TASK_FILE_UPLOADED_EMAIL = "task-attachment-added-email",
   TASK_FILE_DELETED_EMAIL = "task-attachment-deleted-email",
+  CREATE_TASK = "create-task",
 }
+
+type AllAutomationTriggers =
+  | AutomationTrigger
+  | WoocommerceOrderAutomationTrigger;
 
 type AutomationActionType = {
   id: AutomationAction;
@@ -81,6 +91,8 @@ export {
   AutomationAction,
   AutomationTrigger,
   TargetType,
+  WoocommerceOrderAutomationTrigger,
+  type AllAutomationTriggers,
   type Automation,
   type AutomationActionType,
   type AutomationExecutionResult,

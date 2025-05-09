@@ -102,5 +102,22 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
         public function getAutomationInfoMessage($automation) {
             return "Board ID: {$automation->pipeline_id}, Target ID: {$automation->target_id}, Target Type: {$automation->target_type}, Trigger: {$automation->automation_trigger}, Action: {$automation->automation_action}";
         }
+
+        /**
+         * Retrieves the automation action target ID for a given automation.
+         *
+         * @param object $automation The automation object containing details.
+         * @return int|null The automation action target ID if found, null otherwise.
+         */
+        public function getAutomationsByTrigger($trigger) {
+            global $wpdb;
+
+            $query = $wpdb->prepare(
+                "SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, created_at, metadata, updated_at, active FROM " . TABLE_WP_QUICKTASKER_AUTOMATIONS . " WHERE automation_trigger = %s",
+                $trigger
+            );
+
+            return $wpdb->get_results($query);
+        }
     }
 }
