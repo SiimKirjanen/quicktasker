@@ -13341,16 +13341,12 @@ function AutomationActionSelection({
     return null;
   }
   const target = automation.automationTarget;
-  console.log("target", target);
   const trigger = automation.automationTrigger;
-  console.log("trigger", trigger);
-  console.log("availableAutomations", _utils_automations__WEBPACK_IMPORTED_MODULE_3__.availableAutomations);
-  const actionOptions = _utils_automations__WEBPACK_IMPORTED_MODULE_3__.availableAutomations[target][trigger];
-  console.log("actionOptions", actionOptions);
+  const targetAutomations = _utils_automations__WEBPACK_IMPORTED_MODULE_3__.availableAutomations[target];
+  const actionOptions = targetAutomations && trigger in targetAutomations ? targetAutomations[trigger] : [];
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationSelection_AutomationSelection__WEBPACK_IMPORTED_MODULE_4__.AutomationSelection, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Step 3. Select action", "quicktasker"),
     children: actionOptions.map(actionType => {
-      console.log("Siim", _utils_automations__WEBPACK_IMPORTED_MODULE_3__.automationActionStrings[actionType.id]);
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Pill_Pill__WEBPACK_IMPORTED_MODULE_2__.Pill, {
         value: actionType.id,
         label: _utils_automations__WEBPACK_IMPORTED_MODULE_3__.automationActionStrings[actionType.id],
