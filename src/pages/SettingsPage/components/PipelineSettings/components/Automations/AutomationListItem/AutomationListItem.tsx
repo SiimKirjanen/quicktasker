@@ -23,8 +23,6 @@ function AutomationListItem({ automation }: Props) {
     automation.automation_action_target_type !== null;
   const hasMeta = automation.metadata !== null;
 
-  console.log(automation);
-
   return (
     <div className="wpqt-flex wpqt-gap-3 wpqt-p-4 wpqt-items-center">
       <WPQTCard
