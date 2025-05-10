@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WPQT\Stage\StageRepository' ) ) {
     class StageRepository {
         /**
-         * Retrieves all stages from the database.
+         * Retrieves all pipeline stages from the database.
          *
          * @return array The array of stages retrieved from the database.
          */
@@ -72,6 +72,28 @@ if ( ! class_exists( 'WPQT\Stage\StageRepository' ) ) {
             );
 
             return $result === null ? 0 : $result;
+        }
+
+        /**
+         * Retrieves the first stage of a pipeline.
+         *
+         * @param int $pipelineId The ID of the pipeline.
+
+         * @return object|null The first stage object if found, null otherwise.
+         */
+        public function getFirstStage($pipelineId) {
+            global $wpdb;
+
+            return $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . " AS a
+                    INNER JOIN " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " AS b
+                    ON a.id = b.stage_id
+                    WHERE a.pipeline_id = %d
+                    ORDER BY b.stage_order ASC",
+                    $pipelineId
+                )
+            );
         }
     }
 }

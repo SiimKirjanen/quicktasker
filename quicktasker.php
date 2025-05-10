@@ -7,7 +7,7 @@
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
 	Domain Path: /languages
-	Version: 1.25.0
+	Version: 1.26.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28
 	License: GPLv2 or later
@@ -90,6 +90,7 @@ WPQT\ServiceLocator::register('LabelService', new WPQT\Label\LabelService());
 WPQT\ServiceLocator::register('UploadService', new WPQT\Upload\UploadService());
 WPQT\ServiceLocator::register('FileService', new WPQT\File\FileService());
 WPQT\ServiceLocator::register('UUIDService', new WPQT\UUID\UUIDService());
+WPQT\ServiceLocator::register('StageRepository', new WPQT\Stage\StageRepository());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );

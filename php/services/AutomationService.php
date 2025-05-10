@@ -15,7 +15,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * Handles the execution of automations based on the provided parameters.
          *
          * @param int $boardId The ID of the board where the automations are defined.
-         * @param int $targetId The ID of the target entity for the automation.
+         * @param int|null $targetId The ID of the target entity for the automation.
          * @param string $targetType The type of the target entity (e.g., 'task', 'stage').
          * @param string $automationTrigger The trigger that initiates the automation (e.g., 'onCreate', 'onUpdate').
          * @param object|null $data Additional data.
@@ -268,6 +268,28 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 }
             }
 
+            if( $this->isWoocommerceNewOrderTrigger($automation) ) {
+                if ( $this->isTaskCreateAction($automation) ) {
+                    $stagToCreateTask = ServiceLocator::get('StageRepository')->getFirstStage( $automation->pipeline_id ); 
+                    $woocommerceOrder = $data->woocommerceOrder;
+
+                    if ( $stagToCreateTask === null ) {
+                        throw new \Exception('Pipeline stage not found.');
+                    }
+
+                    if ( !$woocommerceOrder ) {
+                        throw new \Exception('Woocommerce order not found.');
+                    }
+
+                    $orderNumber = $woocommerceOrder->get_order_number();
+                    ServiceLocator::get('TaskService')->createTask($stagToCreateTask->id, array(
+                        'name' => 'Woo #' . $orderNumber,
+                        'description' => 'WooCommerce order #' . $orderNumber,
+                        'pipelineId' => $automation->pipeline_id,
+                    ));
+                }
+            }
+
             return false;
         }
 
@@ -356,6 +378,18 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
         private function isTaskAttachmentDeletedEmailAction($automation) {
             return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_DELETED_EMAIL && $automation->metadata !== null;
+        }
+
+        /**
+         * Determines if the given automation object represents a "create task" action.
+         *
+         * @param object $automation The automation object to evaluate.
+         *                           It is expected to have a property `automation_action`.
+         * @return bool Returns true if the automation action is equal to 
+         *              WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK, otherwise false.
+         */
+        private function isTaskCreateAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK;
         }
 
         /**
@@ -459,6 +493,19 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isTaskAttachmentDeletedTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED;
+        }
+
+        /**
+         * Checks if the given automation is triggered by a new WooCommerce order.
+         *
+         * This method evaluates whether the automation's trigger matches the
+         * predefined constant for a WooCommerce "order added" event.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool True if the automation trigger is for a new WooCommerce order, false otherwise.
+         */
+        private function isWoocommerceNewOrderTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED;
         }
 
         /**
