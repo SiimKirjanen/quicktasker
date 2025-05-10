@@ -90,6 +90,7 @@ WPQT\ServiceLocator::register('LabelService', new WPQT\Label\LabelService());
 WPQT\ServiceLocator::register('UploadService', new WPQT\Upload\UploadService());
 WPQT\ServiceLocator::register('FileService', new WPQT\File\FileService());
 WPQT\ServiceLocator::register('UUIDService', new WPQT\UUID\UUIDService());
+WPQT\ServiceLocator::register('StageRepository', new WPQT\Stage\StageRepository());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
