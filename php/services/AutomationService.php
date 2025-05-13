@@ -97,9 +97,15 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     try {
                         $result = $this->executeAutomation($automation, $targetId, $data);
 
-                        if($result) {
-                            $automation->executionResult = $result;
-                            $executedAutomations[] = $automation;
+                        if( $result ) { 
+                            if( is_object( $result ) ) {
+                                $automation->executionResult = $result->success ?? true;
+                                $rerunTriggers = array_merge($rerunTriggers, $result->rerunTriggers ?? []);
+                            }else {
+                                $automation->executionResult = $result;
+                            }
+
+                            $executedAutomations[] = $automation; 
                         }
                     } catch(\Throwable $e) {
                         $failureLogMessage = $this->getAutomationFailedLogMessage($automation);
@@ -345,11 +351,28 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     }
 
                     $orderNumber = $woocommerceOrder->get_order_number();
-                    ServiceLocator::get('TaskService')->createTask($stagToCreateTask->id, array(
+                    $createdTask = ServiceLocator::get('TaskService')->createTask($stagToCreateTask->id, array(
                         'name' => 'Woo #' . $orderNumber,
                         'description' => 'WooCommerce order #' . $orderNumber,
                         'pipelineId' => $automation->pipeline_id,
                     ));
+
+                    if ( !$createdTask ) {
+                        throw new \Exception('Failed to get new task.');
+                    }
+
+                    return (object)[
+                        'success' => true,
+                        'rerunTriggers' => [
+                            (object)[
+                                'boardId' => $automation->pipeline_id,
+                                'targetId' => $createdTask->id,
+                                'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                                'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
+
+                            ]
+                        ]
+                    ];
                 }
             }
 
