@@ -27,6 +27,69 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         public function handleAutomations($boardId, $targetId, $targetType, $automationTrigger, $data = null) {
             $executedAutomations = [];
             $failedAutomations = [];
+            $rerunTriggers = [];
+            $rerunCounter = 0;
+            $maxRerunCounter = 2;
+
+            $results = $this->processAutomations($boardId, $targetId, $targetType, $automationTrigger, $data);
+
+            $executedAutomations = array_merge($executedAutomations, $results->executedAutomations);
+            $failedAutomations = array_merge($failedAutomations, $results->failedAutomations);
+            $rerunTriggers = array_merge($rerunTriggers, $results->rerunTriggers);
+
+            while (!empty($rerunTriggers) && $rerunCounter < $maxRerunCounter) {
+                $rerunCounter++;
+                $currentRerunTriggers = $rerunTriggers;
+                $rerunTriggers = []; // Reset for the next iteration
+                
+                foreach ($currentRerunTriggers as $trigger) {
+                    $rerunResults = $this->processAutomations(
+                        $trigger->boardId,
+                        $trigger->targetId,
+                        $trigger->targetType,
+                        $trigger->automationTrigger,
+                        $trigger->data ?? null
+                    );
+                    
+                    // Merge results from this rerun iteration
+                    $executedAutomations = array_merge($executedAutomations, $rerunResults->executedAutomations);
+                    $failedAutomations = array_merge($failedAutomations, $rerunResults->failedAutomations);
+                    $rerunTriggers = array_merge($rerunTriggers, $rerunResults->rerunTriggers);
+                }
+            }
+    
+            return (object)[
+                'executedAutomations' => $executedAutomations,
+                'failedAutomations' => $failedAutomations,
+            ];
+           
+        }
+
+        /**
+         * Processes automations based on the provided parameters.
+         *
+         * This method retrieves active automations related to the specified board, target, 
+         * and trigger, and attempts to execute them. It logs any failures and returns 
+         * the results of the executed and failed automations.
+         *
+         * @param int $boardId The ID of the board associated with the automations.
+         * @param int $targetId The ID of the target entity for the automations.
+         * @param string $targetType The type of the target entity (e.g., task, project).
+         * @param string $automationTrigger The trigger that initiates the automations.
+         * @param mixed|null $data Optional additional data to pass to the automation execution.
+         *
+         * @return object An object containing:
+         *                - `executedAutomations` (array): List of successfully executed automations.
+         *                - `failedAutomations` (array): List of automations that failed to execute.
+         *                - `rerunTriggers` (array): Parameters for rerunning automations.
+         *
+         * @throws \Throwable If an unexpected error occurs during automation execution.
+         */
+        public function processAutomations($boardId, $targetId, $targetType, $automationTrigger, $data = null) {
+            $executedAutomations = [];
+            $failedAutomations = [];
+            $rerunTriggers = [];
+
             $relatedAutomations = ServiceLocator::get('AutomationRepository')->getActiveAutomations($boardId, $targetId, $targetType, $automationTrigger);
 
             if ( !empty($relatedAutomations) ) {
@@ -34,9 +97,15 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     try {
                         $result = $this->executeAutomation($automation, $targetId, $data);
 
-                        if($result) {
-                            $automation->executionResult = $result;
-                            $executedAutomations[] = $automation;
+                        if( $result ) { 
+                            if( is_object( $result ) ) {
+                                $automation->executionResult = $result->success ?? true;
+                                $rerunTriggers = array_merge($rerunTriggers, $result->rerunTriggers ?? []);
+                            }else {
+                                $automation->executionResult = $result;
+                            }
+
+                            $executedAutomations[] = $automation; 
                         }
                     } catch(\Throwable $e) {
                         $failureLogMessage = $this->getAutomationFailedLogMessage($automation);
@@ -48,9 +117,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
             return (object)[
                 'executedAutomations' => $executedAutomations,
-                'failedAutomations' => $failedAutomations
+                'failedAutomations' => $failedAutomations,
+                'rerunTriggers' => $rerunTriggers,
             ];
-           
         }
 
         private function executeAutomation($automation, $targetId, $data) {
@@ -282,11 +351,28 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     }
 
                     $orderNumber = $woocommerceOrder->get_order_number();
-                    ServiceLocator::get('TaskService')->createTask($stagToCreateTask->id, array(
+                    $createdTask = ServiceLocator::get('TaskService')->createTask($stagToCreateTask->id, array(
                         'name' => 'Woo #' . $orderNumber,
                         'description' => 'WooCommerce order #' . $orderNumber,
                         'pipelineId' => $automation->pipeline_id,
                     ));
+
+                    if ( !$createdTask ) {
+                        throw new \Exception('Failed to get new task.');
+                    }
+
+                    return (object)[
+                        'success' => true,
+                        'rerunTriggers' => [
+                            (object)[
+                                'boardId' => $automation->pipeline_id,
+                                'targetId' => $createdTask->id,
+                                'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                                'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
+
+                            ]
+                        ]
+                    ];
                 }
             }
 
