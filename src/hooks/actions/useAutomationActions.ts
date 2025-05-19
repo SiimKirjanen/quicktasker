@@ -65,6 +65,10 @@ const actionMessages: { [key in AutomationAction]: string } = {
     "Task created by automation",
     "quicktasker",
   ),
+  [AutomationAction.SEND_SLACK_MESSAGE]: __(
+    "Slack message sent by automation",
+    "quicktasker",
+  ),
 };
 
 function useAutomationActions() {

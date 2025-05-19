@@ -45,6 +45,7 @@ enum AutomationAction {
   TASK_FILE_UPLOADED_EMAIL = "task-attachment-added-email",
   TASK_FILE_DELETED_EMAIL = "task-attachment-deleted-email",
   CREATE_TASK = "create-task",
+  SEND_SLACK_MESSAGE = "send-slack-message",
 }
 
 type AllAutomationTriggers =
@@ -76,10 +77,12 @@ type BaseAutomation = {
 
 type Automation = BaseAutomation & {
   active: boolean;
+  verify_success: boolean;
 };
 
 type AutomationFromServer = BaseAutomation & {
   active: string;
+  verify_success: string;
 };
 
 type ExecutedAutomation = Automation & {

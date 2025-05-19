@@ -46,6 +46,10 @@ const automationActionStrings: { [key in AutomationAction]: string } = {
     "quicktasker",
   ),
   [AutomationAction.CREATE_TASK]: __("Create task", "quicktasker"),
+  [AutomationAction.SEND_SLACK_MESSAGE]: __(
+    "Send Slack message",
+    "quicktasker",
+  ),
 };
 
 const automationTargetStrings: { [key in TargetType]: string } = {
@@ -116,6 +120,10 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
         id: AutomationAction.NEW_ENTITY_EMAIL,
         requireMetaData: true,
       },
+      {
+        id: AutomationAction.SEND_SLACK_MESSAGE,
+        requireMetaData: true,
+      },
     ],
     [AutomationTrigger.TASK_DELETED]: [
       {
@@ -182,6 +190,7 @@ const convertAutomationsFromServer = (
   return automations.map((automation) => ({
     ...automation,
     active: automation.active === "1",
+    verify_success: automation.verify_success === "1",
   }));
 };
 
