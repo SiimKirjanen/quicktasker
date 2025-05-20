@@ -108,7 +108,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                             $executedAutomations[] = $automation; 
                         }
                     } catch(\Throwable $e) {
-                        $failureLogMessage = $this->getAutomationFailedLogMessage($automation);
+                        $failureLogMessage = $this->getAutomationFailedLogMessage($automation) . $e->getMessage(); 
                         $failedAutomations[] = $automation;
                         ServiceLocator::get('LogService')->log($failureLogMessage, $targetType, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION, null, WP_QT_LOG_STATUS_ERROR);
                     }
@@ -155,7 +155,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     return $user;
                 }
 
-                if ( $this->isNewEntityEmailAction($automation) ) {
+                if( $this->isNewEntityEmailAction($automation) ) {
                     $email = $automation->metadata;
                     $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
@@ -167,6 +167,15 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'New Task Created', $emailMessage);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+
+                if( $this->isSlackMessageAction($automation) ) {
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $webhookUrl = $automation->metadata;
+                    $message = 'New task created: ' . $task->name;
+                    ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
 
                     return true;
                 }
@@ -406,6 +415,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
         private function isNewEntityEmailAction($automation) {
             return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY && $automation->metadata !== null;
+        }
+
+        /**
+         * Checks if the automation action is a Slack message action.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool True if the automation action is a Slack message action and metadata is not null, false otherwise.
+         */
+        private function isSlackMessageAction($automation) {
+            return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE && $automation->metadata !== null;
         }
 
         /**
