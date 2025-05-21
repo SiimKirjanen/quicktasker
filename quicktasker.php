@@ -65,6 +65,7 @@ require( 'php/services/LabelService.php' );
 require( 'php/services/UploadService.php' );
 require( 'php/services/UUIDService.php' );
 require( 'php/services/FileService.php' );
+require( 'php/services/SlackService.php' );
 require( 'php/services/ServiceLocator.php' );
 
 
@@ -91,6 +92,7 @@ WPQT\ServiceLocator::register('UploadService', new WPQT\Upload\UploadService());
 WPQT\ServiceLocator::register('FileService', new WPQT\File\FileService());
 WPQT\ServiceLocator::register('UUIDService', new WPQT\UUID\UUIDService());
 WPQT\ServiceLocator::register('StageRepository', new WPQT\Stage\StageRepository());
+WPQT\ServiceLocator::register('SlackService', new WPQT\Slack\SlackService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
