@@ -35,13 +35,21 @@ function SlackWebhookMetaInput({ setAutomationMeta }: Props) {
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-justify-center wpqt-items-center">
       <Alert type="info">
         {__(
-          "Make sure your have configured your Slack webhook URL",
+          "Make sure your have configured your Slack webhook URL.",
           "quicktasker",
         )}
+        <a
+          href="https://api.slack.com/messaging/webhooks"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="wpqt-text-blue-500 hover:underline wpqt-ml-1"
+        >
+          {__("Read more about Slack webhooks.", "quicktasker")}
+        </a>
       </Alert>
       <div className="wpqt-flex wpqt-flex-col">
         <label htmlFor="automation-meta-slack-webhook-input">
-          {__("Message will be sent to", "quicktasker")}
+          {__("Slack webhook URL", "quicktasker")}
         </label>
         <WPQTInput
           inputId="automation-meta-slack-webhook-input"
