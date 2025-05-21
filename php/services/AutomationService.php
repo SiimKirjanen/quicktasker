@@ -99,7 +99,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                         if( $result ) { 
                             if( is_object( $result ) ) {
-                                $automation->executionResult = $result->success ?? true;
+                                $automation->executionResult = $result->data ?? true;
                                 $rerunTriggers = array_merge($rerunTriggers, $result->rerunTriggers ?? []);
                             }else {
                                 $automation->executionResult = $result;
@@ -151,6 +151,11 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     ServiceLocator::get('UserService')->assignTaskToUser($userId, $targetId, $userType);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                     return (object)[
+                        'success' => true,
+                        'data' => $user,
+                    ];
 
                     return $user;
                 }
