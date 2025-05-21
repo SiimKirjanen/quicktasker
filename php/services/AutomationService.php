@@ -156,8 +156,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                         'success' => true,
                         'data' => $user,
                     ];
-
-                    return $user;
                 }
 
                 if( $this->isNewEntityEmailAction($automation) ) {
