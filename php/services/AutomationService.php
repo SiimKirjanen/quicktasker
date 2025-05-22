@@ -652,6 +652,8 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         public function createAutomation($pipelineId, $targetId, $targetType, $trigger, $action, $automationActionTargetId = null, $automationActionTargetType = null, $metadata = null) {
             global $wpdb;
+
+            $encryptMeta = ServiceLocator::get('AutomationRepository')->isSensitiveMetaAutomation($action);
         
             $data = [
                 'pipeline_id' => $pipelineId,
@@ -661,7 +663,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 'automation_action' => $action,
                 'automation_action_target_id' => $automationActionTargetId,
                 'automation_action_target_type' => $automationActionTargetType,
-                'metadata' => $metadata,
+                'metadata' => $encryptMeta ? ServiceLocator::get('SecretsService')->encrypt($metadata) : $metadata,
                 'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ];

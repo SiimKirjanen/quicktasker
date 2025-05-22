@@ -6,8 +6,32 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use WPQT\ServiceLocator;
+
 if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
     class AutomationRepository {
+
+        /**
+         * Decrypts sensitive metadata for a single automation or a list of automations.
+         *
+         * @param object|array $automations A single automation object or an array of automation objects.
+         * @return object|array The automation(s) with decrypted metadata.
+         */
+        private function decryptSensitiveMetadata($automations) {
+            if (is_array($automations)) {
+                foreach ($automations as $automation) {
+                    if ($this->isSensitiveMetaAutomation($automation->automation_action)) {
+                        $automation->metadata = ServiceLocator::get('SecretsService')->decrypt($automation->metadata);
+                    }
+                }
+            } elseif (is_object($automations)) {
+                if ($this->isSensitiveMetaAutomation($automations->automation_action)) {
+                    $automations->metadata = ServiceLocator::get('SecretsService')->decrypt($automations->metadata);
+                }
+            }
+
+            return $automations;
+        }
 
         /**
          * Retrieves automations based on the provided parameters.
@@ -28,7 +52,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
                 $automationTrigger
             );
 
-            return $wpdb->get_results($query);
+            $results = $wpdb->get_results($query);
+
+            return $this->decryptSensitiveMetadata($results);
         }
 
         /**
@@ -70,7 +96,13 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
                 $automationID
             );
 
-            return $wpdb->get_row($query);
+            $automation = $wpdb->get_row($query);
+
+            if ($automation && $this->isSensitiveMetaAutomation($automation->automation_action)) {
+                $automation->metadata = ServiceLocator::get('SecretsService')->decrypt($automation->metadata);
+            }
+
+            return $this->decryptSensitiveMetadata($automation);
         }
 
         /**
@@ -89,7 +121,19 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
                 $pipelineId
             );
 
-            return $wpdb->get_results($query);
+            $results = $wpdb->get_results($query);
+
+            return $this->decryptSensitiveMetadata($results);
+        }
+
+        /**
+         * Checks if the given action contains sensitive metadata
+         *
+         * @param string $action The action to check.
+         * @return bool True if the action is sensitive, false otherwise.
+         */
+        public function isSensitiveMetaAutomation($action) {
+            return in_array($action, WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META);
         }
 
         /**

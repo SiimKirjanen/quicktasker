@@ -527,6 +527,13 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES' ) ) {
     ]);
 }
 
+// Sensitive automation meta
+if ( ! defined( 'WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META' ) ) {
+    define('WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META', [
+        WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE
+    ]);
+}
+
 /*
 ==================================================================================================================================================================================================================
 Filtering constants

@@ -1,6 +1,6 @@
 <?php
 
-namespace WPQT\Encryption;
+namespace WPQT\Secrets;
 
 use Exception;
 
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit(); 
 }
 
-class EncryptionService {
+class SecretsService {
     private static $encryptionMethod = 'aes-256-cbc';
 
     /**

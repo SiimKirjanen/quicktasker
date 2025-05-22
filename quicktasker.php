@@ -67,7 +67,7 @@ require( 'php/services/UUIDService.php' );
 require( 'php/services/FileService.php' );
 require( 'php/services/SlackService.php' );
 require( 'php/services/ServiceLocator.php' );
-require( 'php/services/EncryptionService.php' );
+require( 'php/services/SecretsService.php' );
 
 
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
@@ -94,7 +94,7 @@ WPQT\ServiceLocator::register('FileService', new WPQT\File\FileService());
 WPQT\ServiceLocator::register('UUIDService', new WPQT\UUID\UUIDService());
 WPQT\ServiceLocator::register('StageRepository', new WPQT\Stage\StageRepository());
 WPQT\ServiceLocator::register('SlackService', new WPQT\Slack\SlackService());
-WPQT\ServiceLocator::register('EncryptionService', new WPQT\Encryption\EncryptionService());
+WPQT\ServiceLocator::register('SecretsService', new WPQT\Secrets\SecretsService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
