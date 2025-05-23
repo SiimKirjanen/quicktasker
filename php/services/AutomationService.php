@@ -132,6 +132,14 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     return true;
                 }
+                if( $this->isSlackMessageAction($automation) ) {
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                    $webhookUrl = $automation->metadata;
+                    $message = 'Task marked as done: ' . $task->name;
+                    ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
+
+                    return true;
+                }
             }
 
             if( $this->isTaskNotDoneTrigger($automation) ) {

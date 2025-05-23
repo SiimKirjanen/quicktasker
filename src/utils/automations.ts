@@ -104,6 +104,10 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
       {
         id: AutomationAction.ARCHIVE_TASK,
       },
+      {
+        id: AutomationAction.SEND_SLACK_MESSAGE,
+        requireMetaData: true,
+      },
     ],
     [AutomationTrigger.Task_NOT_DONE]: [
       {

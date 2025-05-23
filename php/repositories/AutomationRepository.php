@@ -98,10 +98,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
 
             $automation = $wpdb->get_row($query);
 
-            if ($automation && $this->isSensitiveMetaAutomation($automation->automation_action)) {
-                $automation->metadata = ServiceLocator::get('SecretsService')->decrypt($automation->metadata);
-            }
-
             return $this->decryptSensitiveMetadata($automation);
         }
 
