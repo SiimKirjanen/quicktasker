@@ -174,6 +174,10 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
         id: AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL,
         requireMetaData: true,
       },
+      {
+        id: AutomationAction.SEND_SLACK_MESSAGE,
+        requireMetaData: true,
+      },
     ],
     [AutomationTrigger.TASK_FILE_UPLOADED]: [
       {
