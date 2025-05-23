@@ -134,6 +134,10 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
         id: AutomationAction.DELETED_ENTITY_EMAIL,
         requireMetaData: true,
       },
+      {
+        id: AutomationAction.SEND_SLACK_MESSAGE,
+        requireMetaData: true,
+      },
     ],
     [AutomationTrigger.TASK_ASSIGNED]: [
       {
