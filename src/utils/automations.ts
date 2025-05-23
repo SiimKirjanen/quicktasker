@@ -154,6 +154,10 @@ const taskAutomations: { [key in AutomationTrigger]: AutomationActionType[] } =
         id: AutomationAction.TASK_UNASSIGNED_EMAIL,
         requireMetaData: true,
       },
+      {
+        id: AutomationAction.SEND_SLACK_MESSAGE,
+        requireMetaData: true,
+      },
     ],
     [AutomationTrigger.TASK_PUBLIC_COMMENT_ADDED]: [
       {

@@ -258,10 +258,11 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             }
 
             if( $this->isTaskUnassignedTrigger($automation) ) {
+                $unassignedUser = $data;
+                $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+
                 if ( $this->isTaskUnassignedEmailAction($automation) ) {
                     $email = $automation->metadata;
-                    $unassignedUser = $data;
-                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
 
                     $templateData = [
@@ -273,6 +274,15 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_UNASSIGNED_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task Unassigned', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+
+                if( $this->isSlackMessageAction($automation) ) {
+                    $webhookUrl = $automation->metadata;
+                    $message = 'Task ' . $task->name . ' has been unassigned from ' . $unassignedUser->name;
+                    ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
