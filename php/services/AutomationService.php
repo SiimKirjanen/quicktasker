@@ -324,13 +324,13 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             }
 
             if ( $this->isTaskPrivateCommentAddedTrigger($automation) ) {
+                $comment = $data;
+                $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                $commentAuthor = ServiceLocator::get('UserRepository')->getUserByIdAndType($comment->author_id, WP_QT_WORDPRESS_USER_TYPE);
+
                 if ( $this->isTaskPrivateCommentAddedEmailAction($automation) ) {
                     $email = $automation->metadata;
-                    $comment = $data;
-                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
-                    $commentAuthor = ServiceLocator::get('UserRepository')->getUserByIdAndType($comment->author_id, WP_QT_WORDPRESS_USER_TYPE);
-
                     $templateData = [
                         'taskName' => $task->name,
                         'boardName' => $pipeline->name,
@@ -341,6 +341,15 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Private Comment Added', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+
+                if( $this->isSlackMessageAction($automation) ) {
+                    $webhookUrl = $automation->metadata;
+                    $message = 'Task ' . $task->name . ' has a new private comment by ' . $commentAuthor->name . ': ' . $comment->text;
+                    ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
