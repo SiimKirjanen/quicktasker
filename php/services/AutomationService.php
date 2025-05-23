@@ -137,6 +137,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = 'Task marked as done: ' . $task->name;
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -187,6 +188,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = 'New task created: ' . $task->name;
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -217,31 +219,42 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = 'Task ' . $deletedTask->name . ' deleted by ' . $deletedByUser->name;
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
             }
 
             if ( $this->isTaskAssignedTrigger($automation) ) {
-              if ( $this->isTaskAssignedEmailAction($automation) ) {
-                $email = $automation->metadata;
                 $assignedUser = $data;
                 $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
-                $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
 
-                $templateData = [
-                    'taskName' => $task->name,
-                    'boardName' => $pipeline->name,
-                    'assignedDate' => ServiceLocator::get('TimeRepository')->getLocalTime(),
-                    'userName' => $assignedUser->name,
-                ];
+                if ( $this->isTaskAssignedEmailAction($automation) ) {
+                    $email = $automation->metadata;
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
 
-                $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_ASSIGNED_TASK_EMAIL_TEMPLATE, $templateData);
-                ServiceLocator::get('EmailService')->sendEmail($email, 'Task Assigned', $emailMessage);
-                ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+                    $templateData = [
+                        'taskName' => $task->name,
+                        'boardName' => $pipeline->name,
+                        'assignedDate' => ServiceLocator::get('TimeRepository')->getLocalTime(),
+                        'userName' => $assignedUser->name,
+                    ];
 
-                return true;
-              }
+                    $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_ASSIGNED_TASK_EMAIL_TEMPLATE, $templateData);
+                    ServiceLocator::get('EmailService')->sendEmail($email, 'Task Assigned', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+
+                if( $this->isSlackMessageAction($automation) ) {
+                    $webhookUrl = $automation->metadata;
+                    $message = 'Task ' . $task->name . ' assigned to ' . $assignedUser->name;
+                    ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
             }
 
             if( $this->isTaskUnassignedTrigger($automation) ) {
