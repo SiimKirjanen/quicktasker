@@ -290,14 +290,14 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             }
 
             if ( $this->isTaskPublicCommentAddedTrigger($automation) ) {
+                $comment = $data;
+                $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
+                $authorUserType = $comment->is_admin_comment ? WP_QT_WORDPRESS_USER_TYPE : WP_QT_QUICKTASKER_USER_TYPE;
+                $commentAuthor = ServiceLocator::get('UserRepository')->getUserByIdAndType($comment->author_id, $authorUserType);
+
                 if ( $this->isTaskPublicCommentAddedEmailAction($automation) ) {
                     $email = $automation->metadata;
-                    $comment = $data;
-                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($task->pipeline_id);
-                    $authorUserType = $comment->is_admin_comment ? WP_QT_WORDPRESS_USER_TYPE : WP_QT_QUICKTASKER_USER_TYPE;
-                    $commentAuthor = ServiceLocator::get('UserRepository')->getUserByIdAndType($comment->author_id, $authorUserType);
-
                     $templateData = [
                         'taskName' => $task->name,
                         'boardName' => $pipeline->name,
@@ -308,6 +308,15 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_NEW_PUBLIC_COMMENT_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Public Comment Added', $emailMessage);
+                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+
+                if( $this->isSlackMessageAction($automation) ) {
+                    $webhookUrl = $automation->metadata;
+                    $message = 'Task ' . $task->name . ' has a new public comment by ' . $commentAuthor->name . ': ' . $comment->text;
+                    ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
