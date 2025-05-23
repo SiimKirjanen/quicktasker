@@ -135,7 +135,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 if( $this->isSlackMessageAction($automation) ) {
                     $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $webhookUrl = $automation->metadata;
-                    $message = 'Task marked as done: ' . $task->name;
+                    $userId = $data->doneByUserId;
+                    $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, WP_QT_WORDPRESS_USER_TYPE);
+                    $message = "Task *{$task->name}* marked as done by *{$user->name}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
@@ -186,7 +188,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 if( $this->isSlackMessageAction($automation) ) {
                     $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $webhookUrl = $automation->metadata;
-                    $message = 'New task created: ' . $task->name;
+                    $message = "Task *{$task->name}* created";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
@@ -217,7 +219,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                 
                 if( $this->isSlackMessageAction($automation) ) {
                     $webhookUrl = $automation->metadata;
-                    $message = 'Task ' . $deletedTask->name . ' deleted by ' . $deletedByUser->name;
+                    $message = "Task *{$deletedTask->name}* deleted by *{$deletedByUser->name}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
@@ -249,7 +251,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                 if( $this->isSlackMessageAction($automation) ) {
                     $webhookUrl = $automation->metadata;
-                    $message = 'Task ' . $task->name . ' assigned to ' . $assignedUser->name;
+                    $message = "Task *{$task->name}* assigned to *{$assignedUser->name}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
@@ -281,7 +283,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                 if( $this->isSlackMessageAction($automation) ) {
                     $webhookUrl = $automation->metadata;
-                    $message = 'Task ' . $task->name . ' has been unassigned from ' . $unassignedUser->name;
+                    $message = "Task *{$task->name}* has been unassigned from *{$unassignedUser->name}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
@@ -315,7 +317,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                 if( $this->isSlackMessageAction($automation) ) {
                     $webhookUrl = $automation->metadata;
-                    $message = 'Task ' . $task->name . ' has a new public comment by ' . $commentAuthor->name . ': ' . $comment->text;
+                    $message = "Task *{$task->name}* has a new public comment by *{$commentAuthor->name}*\n {$comment->text}";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
@@ -348,7 +350,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                 if( $this->isSlackMessageAction($automation) ) {
                     $webhookUrl = $automation->metadata;
-                    $message = 'Task ' . $task->name . ' has a new private comment by ' . $commentAuthor->name . ': ' . $comment->text;
+                    $message = "Task *{$task->name}* has a new private comment by *{$commentAuthor->name}*\n {$comment->text}";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 

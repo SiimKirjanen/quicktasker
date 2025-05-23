@@ -24,7 +24,15 @@ if ( ! class_exists( 'WPQT\Slack\SlackService' ) ) {
             }
             
             $payload = [
-                'text' => $message,
+                'blocks' => [
+                    [
+                        'type' => 'section',
+                        'text' => [
+                            'type' => 'mrkdwn',
+                            'text' => $message,
+                        ],
+                    ],
+                ],
             ];
             
             $payload = array_merge($payload, $additional_data);
