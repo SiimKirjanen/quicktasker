@@ -193,13 +193,13 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             }
 
             if ( $this->isTaskDeletedTrigger($automation) ) {
-                if ($this->isDeletedEntityEmailAction($automation)) {
-                    $email = $automation->metadata;
-                    $deletedTask = $data->deletedTask;
-                    $deletedByUserId = $data->deletedByUserId;
-                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($deletedTask->pipeline_id);
-                    $deletedByUser = ServiceLocator::get('UserRepository')->getUserByIdAndType($deletedByUserId, WP_QT_WORDPRESS_USER_TYPE);
+                $deletedTask = $data->deletedTask;
+                $deletedByUserId = $data->deletedByUserId;
+                $deletedByUser = ServiceLocator::get('UserRepository')->getUserByIdAndType($deletedByUserId, WP_QT_WORDPRESS_USER_TYPE);
 
+                if ( $this->isDeletedEntityEmailAction($automation) ) {
+                    $email = $automation->metadata;
+                    $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($deletedTask->pipeline_id);
                     $templateData = [
                         'taskName' => $deletedTask->name,
                         'boardName' => $pipeline->name,
@@ -209,6 +209,14 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_DELETED_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task Deleted', $emailMessage);
                     ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
+
+                    return true;
+                }
+                
+                if( $this->isSlackMessageAction($automation) ) {
+                    $webhookUrl = $automation->metadata;
+                    $message = 'Task ' . $deletedTask->name . ' deleted by ' . $deletedByUser->name;
+                    ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
 
                     return true;
                 }
