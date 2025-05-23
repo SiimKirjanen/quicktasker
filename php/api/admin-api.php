@@ -627,6 +627,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $settingsValidationService = new SettingsValidationService();
                         $automationService = new AutomationService();
                         $taskMarkedAsDone = $data['done'];
+                        $currentUserId = get_current_user_id();
 
                         if( !$settingsValidationService->isAllowedToMarkTaskDone($data['id']) ) {
                             throw new WPQTException('Task can be marked as done on last stage', true);
@@ -635,14 +636,18 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $task = $taskService->changeTaskDoneStatus( $data['id'], $taskMarkedAsDone);
                         $logMessage = $taskMarkedAsDone ? 'Task ' . $task->name .  ' status changed to completed' : 'Task ' . $task->name .  ' status changed to not completed';
 
-                        $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
+                        $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, $currentUserId);
 
                         /* Handle automations */
                         $trigger = $taskMarkedAsDone ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE;
                         $executionResults = $automationService->handleAutomations(
                             $task->pipeline_id, 
-                            $task->id, WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
-                            $trigger
+                            $task->id, 
+                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
+                            $trigger,
+                            (object)[ 
+                                'doneByUserId' => $currentUserId
+                            ]
                         );
                         /* End of handling automations */
 
