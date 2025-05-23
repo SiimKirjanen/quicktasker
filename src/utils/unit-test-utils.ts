@@ -18,6 +18,7 @@ const dummyTask: Task = {
   is_archived: false,
   assigned_labels: [],
   due_date: null,
+  task_focus_color: null,
 };
 
 const dummyFullPipeline: Pipeline = {

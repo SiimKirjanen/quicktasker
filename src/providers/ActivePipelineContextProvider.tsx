@@ -27,6 +27,7 @@ import {
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
+  PIPELINE_SET_TASK_FOCUS_COLOR,
   PIPELINE_TOGGLE_VIEW,
   SET_FULL_PAGE_LOADING,
 } from "../constants";
@@ -105,7 +106,11 @@ type Action =
       payload: { label: Label };
     }
   | { type: typeof PIPELINE_REMOVE_LABEL; payload: string }
-  | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer };
+  | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer }
+  | {
+      type: typeof PIPELINE_SET_TASK_FOCUS_COLOR;
+      payload: { taskId: string; color: string };
+    };
 
 type Dispatch = (action: Action) => void;
 

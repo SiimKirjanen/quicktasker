@@ -40,6 +40,14 @@ function Task({ task, index, onLastStage }: Props) {
     });
   };
 
+  const taskBorderStyle: React.CSSProperties = task.task_focus_color
+    ? {
+        borderTopColor: task.task_focus_color,
+        borderTopWidth: "6px",
+        borderTopStyle: "solid",
+      }
+    : {};
+
   return (
     <Draggable key={task.id} draggableId={task.id} index={index}>
       {(provided) => (
@@ -48,6 +56,7 @@ function Task({ task, index, onLastStage }: Props) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className="wpqt-relative wpqt-mx-4 wpqt-mb-2 wpqt-flex !wpqt-cursor-pointer wpqt-flex-col wpqt-gap-1 wpqt-rounded wpqt-border wpqt-border-gray-200 wpqt-bg-white wpqt-p-3 wpqt-shadow hover:wpqt-shadow-md"
+          style={taskBorderStyle}
           onClick={openEditTaskModal}
         >
           <div className="wpqt-absolute wpqt-right-[12px] wpqt-top-[12px]">

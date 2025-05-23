@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { moveTaskRequest } from "../../../api/api";
 import { Info } from "../../../components/Info/Info";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
+import { TaskColorModal } from "../../../components/Modal/TaskColorModal/TaskColorModal";
 import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
 import {
   OPEN_NEW_PIPELINE_MODAL,
@@ -132,6 +133,7 @@ const Pipeline = () => {
         stagesLength={activePipeline!.stages?.length}
       />
       <TaskModal deleteTaskCallback={deleteTaskCallback} />
+      <TaskColorModal />
       <StageModal />
     </div>
   );
