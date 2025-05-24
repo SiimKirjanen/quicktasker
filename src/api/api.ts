@@ -210,6 +210,18 @@ function markTaskDoneRequest(
   });
 }
 
+function updateTaskFocusColorRequest(
+  taskId: string,
+  color: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}/focus-color`,
+    method: "PATCH",
+    data: { color },
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   Comment requests
@@ -937,6 +949,7 @@ export {
   updateAutomationActiveStatusRequest,
   updateCustomFieldValueRequest,
   updateLabelRequest,
+  updateTaskFocusColorRequest,
   updateWPUserPermissionsRequest,
   uploadFileRequest,
 };

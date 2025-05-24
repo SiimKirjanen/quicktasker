@@ -6,6 +6,7 @@ import {
   DEFAULT_TASK_FOCUS_COLOR,
   PIPELINE_SET_TASK_FOCUS_COLOR,
 } from "../../../constants";
+import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { WPQTButton } from "../../common/Button/Button";
@@ -17,9 +18,11 @@ function TaskColorModal() {
     modalDispatch,
   } = useContext(ModalContext);
   const { dispatch } = useContext(ActivePipelineContext);
+  const { updateTaskFocusColor } = useTaskActions();
   const [focusColor, setFocusBgColor] = useState<string>(
     DEFAULT_TASK_FOCUS_COLOR,
   );
+  const [loading, setLoading] = useState<boolean>(false);
 
   const closeModal = () => {
     modalDispatch({
@@ -27,8 +30,14 @@ function TaskColorModal() {
     });
   };
 
-  const applyTaskFocusColor = () => {
+  const applyTaskFocusColor = async () => {
     if (!taskToEdit) {
+      return;
+    }
+    setLoading(true);
+    const { success } = await updateTaskFocusColor(taskToEdit.id, focusColor);
+    setLoading(false);
+    if (!success) {
       return;
     }
 
@@ -66,7 +75,7 @@ function TaskColorModal() {
         <WPQTButton
           btnText={__("Apply changes", "quicktasker")}
           onClick={applyTaskFocusColor}
-          /*   loading={loading} */
+          loading={loading}
         />
         <WPQTButton
           btnText={__("Reset color", "quicktasker")}

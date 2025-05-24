@@ -387,5 +387,20 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         public static function validateUploadEntityType($param) {
             return in_array($param, WP_QUICKTASKER_UPLOAD_ENTITY_TYPES);
         }
+
+        /**
+         * Validates the color parameter.
+         *
+         * This method checks if the provided parameter is either null or a valid hexadecimal color code.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is null or a valid hexadecimal color code, false otherwise.
+         */
+        public static function validateColorParam($param) {
+            if (is_null($param) || $param === 'null') {
+                return true; // Allow null values
+            }
+            return self::validateHexColor($param);
+        }
     }
 }
