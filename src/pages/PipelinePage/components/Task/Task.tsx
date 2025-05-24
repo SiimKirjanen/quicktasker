@@ -5,11 +5,7 @@ import { __ } from "@wordpress/i18n";
 import { TaskControlsDropdown } from "../../../../components/Dropdown/TaskControlsDropdown/TaskControlsDropdown";
 import { TaskLabelDropdown } from "../../../../components/Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
-import {
-  OPEN_EDIT_TASK_MODAL,
-  TASK_FOCUS_BORDER_STYLE,
-  TASK_FOCUS_BORDER_WIDTH,
-} from "../../../../constants";
+import { OPEN_EDIT_TASK_MODAL } from "../../../../constants";
 import { useTimezone } from "../../../../hooks/useTimezone";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
@@ -47,8 +43,8 @@ function Task({ task, index, onLastStage }: Props) {
   const taskBorderStyle: React.CSSProperties = task.task_focus_color
     ? {
         borderTopColor: task.task_focus_color,
-        borderTopWidth: TASK_FOCUS_BORDER_WIDTH,
-        borderTopStyle: TASK_FOCUS_BORDER_STYLE,
+        borderTopWidth: "6px",
+        borderTopStyle: "solid",
       }
     : {};
 
@@ -59,37 +55,40 @@ function Task({ task, index, onLastStage }: Props) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="wpqt-relative wpqt-mx-4 wpqt-mb-2 wpqt-flex !wpqt-cursor-pointer wpqt-flex-col wpqt-gap-1 wpqt-rounded wpqt-border wpqt-border-gray-200 wpqt-bg-white wpqt-p-3 wpqt-shadow hover:wpqt-shadow-md"
-          style={taskBorderStyle}
-          onClick={openEditTaskModal}
         >
-          <div className="wpqt-absolute wpqt-right-[12px] wpqt-top-[12px]">
-            <TaskControlsDropdown task={task} />
-          </div>
-
-          <div className="wpqt-text-base">{task.name}</div>
-
-          {task.description && (
-            <div className="wpqt-text-sm wpqt-italic">{task.description}</div>
-          )}
-
-          <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start">
-            <UserAssignementDropdown task={task} />
-            <TaskLabelDropdown task={task} />
-          </div>
-          {task.due_date && (
-            <div className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center">
-              <ClockIcon className="wpqt-size-5 wpqt-icon-blue" />
-              <span className="wpqt-font-semibold">
-                {__("Due date", "quicktasker")}:
-              </span>
-              {convertToWPTimezone(task.due_date)}
+          <div
+            className="wpqt-relative wpqt-mx-4 wpqt-mb-2 wpqt-flex !wpqt-cursor-pointer wpqt-flex-col wpqt-gap-1 wpqt-rounded wpqt-border wpqt-border-gray-200 wpqt-bg-white wpqt-p-3 wpqt-shadow hover:wpqt-shadow-md"
+            onClick={openEditTaskModal}
+            style={taskBorderStyle}
+          >
+            <div className="wpqt-absolute wpqt-right-[12px] wpqt-top-[12px]">
+              <TaskControlsDropdown task={task} />
             </div>
-          )}
-          <TaskActions
-            task={task}
-            allowToMarkTaskAsDone={allowToMarkTaskAsDone}
-          />
+
+            <div className="wpqt-text-base">{task.name}</div>
+
+            {task.description && (
+              <div className="wpqt-text-sm wpqt-italic">{task.description}</div>
+            )}
+
+            <div className="wpqt-mt-2 wpqt-mb-2 wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-start">
+              <UserAssignementDropdown task={task} />
+              <TaskLabelDropdown task={task} />
+            </div>
+            {task.due_date && (
+              <div className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center">
+                <ClockIcon className="wpqt-size-5 wpqt-icon-blue" />
+                <span className="wpqt-font-semibold">
+                  {__("Due date", "quicktasker")}:
+                </span>
+                {convertToWPTimezone(task.due_date)}
+              </div>
+            )}
+            <TaskActions
+              task={task}
+              allowToMarkTaskAsDone={allowToMarkTaskAsDone}
+            />
+          </div>
         </div>
       )}
     </Draggable>
