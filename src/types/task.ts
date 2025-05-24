@@ -12,6 +12,7 @@ type BaseTask = {
   created_at: string;
   assigned_labels: Label[];
   due_date: string | null;
+  task_focus_color: string | null;
 };
 
 type Task = BaseTask & {

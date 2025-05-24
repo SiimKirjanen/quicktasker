@@ -18,6 +18,7 @@ import {
   PIPELINE_REORDER_TASK,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
+  PIPELINE_SET_TASK_FOCUS_COLOR,
   PIPELINE_TOGGLE_VIEW,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
@@ -505,6 +506,38 @@ const activePipelineReducer = (state: State, action: Action) => {
               (assignedLabel) => assignedLabel.id !== labelId,
             ),
           };
+        });
+
+        return {
+          ...stage,
+          tasks: updatedTasks,
+        };
+      });
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          stages: updatedStages,
+        },
+      };
+    }
+    case PIPELINE_SET_TASK_FOCUS_COLOR: {
+      const { taskId, color } = action.payload;
+
+      if (!state.activePipeline) {
+        return state;
+      }
+
+      const updatedStages = state.activePipeline.stages?.map((stage) => {
+        const updatedTasks = stage.tasks?.map((task) => {
+          if (task.id === taskId) {
+            return {
+              ...task,
+              task_focus_color: color,
+            };
+          }
+          return task;
         });
 
         return {

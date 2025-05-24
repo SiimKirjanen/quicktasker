@@ -7,6 +7,7 @@ import {
   moveTaskRequest,
   removeTaskFromUserRequest,
   restoreArchivedTaskRequest,
+  updateTaskFocusColorRequest,
 } from "../../api/api";
 import { UserTypes } from "../../types/user";
 import { useErrorHandler } from "../useErrorHandler";
@@ -107,6 +108,31 @@ const useTaskActions = () => {
     }
   };
 
+  const updateTaskFocusColor = async (taskId: string, color: string) => {
+    const data = {
+      taskId,
+      color,
+    };
+    try {
+      await updateTaskFocusColorRequest(taskId, color);
+
+      toast.success(__("Task focus color changed", "quicktasker"));
+
+      return {
+        success: true,
+        ...data,
+      };
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to change task focus color", "quicktasker"));
+
+      return {
+        success: false,
+        ...data,
+      };
+    }
+  };
+
   return {
     deleteTask,
     archiveTask,
@@ -114,6 +140,7 @@ const useTaskActions = () => {
     removeTaskFromUser,
     changeTaskDoneStatus,
     moveTask,
+    updateTaskFocusColor,
   };
 };
 

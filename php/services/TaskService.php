@@ -508,5 +508,26 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
 
             return $this->taskRepository->getTaskById($taskId);
         }
+
+        /**
+         * Updates the focus color of a task.
+         *
+         * @param int $taskId The ID of the task to update.
+         * @param string $color The new focus color for the task.
+         * @return object The updated task object.
+         * @throws \Exception If the update fails.
+         */
+        public function updateTaskFocusColor($taskId, $color) {
+            global $wpdb;
+
+            $utcTime = $this->timeRepository->getCurrentUTCTime();
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('task_focus_color' => $color, 'updated_at' => $utcTime), array('id' => $taskId));
+
+            if ($result === false) {
+                throw new \Exception('Failed to update task focus color');
+            }
+
+            return $this->taskRepository->getTaskById($taskId);
+        }
     }
 }

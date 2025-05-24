@@ -57,6 +57,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				due_date datetime DEFAULT NULL COMMENT 'UTC',
 				task_completed_at datetime DEFAULT NULL COMMENT 'UTC',
 				task_hash varchar(255) NOT NULL,
+				task_focus_color varchar(255) DEFAULT NULL,
 				PRIMARY KEY  (id),
 				UNIQUE KEY task_hash (task_hash),
 				INDEX pipeline_id (pipeline_id),

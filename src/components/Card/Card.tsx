@@ -9,6 +9,7 @@ type WPQTCardProps = {
   onClick?: () => void;
   dropdown?: React.ReactNode;
   childrenClassName?: string;
+  style?: React.CSSProperties;
 };
 
 function WPQTCard({
@@ -19,6 +20,7 @@ function WPQTCard({
   children,
   dropdown,
   titleClassName = "",
+  style = {},
 }: WPQTCardProps) {
   const hasDropdown = dropdown !== undefined;
 
@@ -29,6 +31,7 @@ function WPQTCard({
         hasDropdown && "wpqt-pr-[24px]",
         className,
       )}
+      style={style}
       onClick={onClick}
     >
       <div className="wpqt-mb-3">

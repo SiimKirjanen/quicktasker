@@ -6,6 +6,7 @@ import {
   CLOSE_MOVE_TASK_MODAL,
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
+  CLOSE_TASK_COLOR_MODAL,
   CLOSE_TASK_MODAL,
   CLOSE_USER_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
@@ -17,6 +18,7 @@ import {
   OPEN_NEW_STAGE_MODAL,
   OPEN_NEW_USER_MODAL,
   OPEN_STAGE_EDIT_MODAL,
+  OPEN_TASK_COLOR_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
@@ -193,6 +195,18 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case CLOSE_MOVE_TASK_MODAL: {
+      return closeModal();
+    }
+    case OPEN_TASK_COLOR_MODAL: {
+      const { task }: { task: Task } = action.payload;
+
+      return {
+        ...state,
+        taskColorModalOpen: true,
+        taskToEdit: task,
+      };
+    }
+    case CLOSE_TASK_COLOR_MODAL: {
       return closeModal();
     }
     default:

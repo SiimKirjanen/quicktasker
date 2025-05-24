@@ -48,6 +48,9 @@
   .wpqt-icon-gray {
     @apply wpqt-text-gray-300;
   }
+  .wpqt-icon-orange {
+    @apply wpqt-text-orange-400;
+  }
   .wpqt-transform-y-center {
     transform: translateY(-50%);
   }
