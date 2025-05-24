@@ -5,7 +5,11 @@ import { __ } from "@wordpress/i18n";
 import { TaskControlsDropdown } from "../../../../components/Dropdown/TaskControlsDropdown/TaskControlsDropdown";
 import { TaskLabelDropdown } from "../../../../components/Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
-import { OPEN_EDIT_TASK_MODAL } from "../../../../constants";
+import {
+  OPEN_EDIT_TASK_MODAL,
+  TASK_FOCUS_BORDER_STYLE,
+  TASK_FOCUS_BORDER_WIDTH,
+} from "../../../../constants";
 import { useTimezone } from "../../../../hooks/useTimezone";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
@@ -43,8 +47,8 @@ function Task({ task, index, onLastStage }: Props) {
   const taskBorderStyle: React.CSSProperties = task.task_focus_color
     ? {
         borderTopColor: task.task_focus_color,
-        borderTopWidth: "6px",
-        borderTopStyle: "solid",
+        borderTopWidth: TASK_FOCUS_BORDER_WIDTH,
+        borderTopStyle: TASK_FOCUS_BORDER_STYLE,
       }
     : {};
 

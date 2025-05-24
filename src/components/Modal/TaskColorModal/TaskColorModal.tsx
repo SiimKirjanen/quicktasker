@@ -9,7 +9,7 @@ import {
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { WPQTButton } from "../../common/Button/Button";
+import { ButtonStyleType, WPQTButton } from "../../common/Button/Button";
 import { WPQTModal } from "../WPQTModal";
 
 function TaskColorModal() {
@@ -63,7 +63,7 @@ function TaskColorModal() {
     <WPQTModal modalOpen={taskColorModalOpen} closeModal={closeModal} size="sm">
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-items-center">
         <div className="wpqt-text-lg">
-          {__("Task border color", "quicktasker")}
+          {__("Task focus color", "quicktasker")}
         </div>
         <Colorful
           color={focusColor || undefined}
@@ -78,6 +78,7 @@ function TaskColorModal() {
           loading={loading}
         />
         <WPQTButton
+          buttonStyleType={ButtonStyleType.DANGER}
           btnText={__("Reset color", "quicktasker")}
           onClick={resetColor}
         />

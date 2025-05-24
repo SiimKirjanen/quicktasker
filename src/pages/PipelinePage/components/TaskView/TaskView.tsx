@@ -6,8 +6,13 @@ import { TaskControlsDropdown } from "../../../../components/Dropdown/TaskContro
 import { TaskLabelDropdown } from "../../../../components/Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
+import { TaskColorModal } from "../../../../components/Modal/TaskColorModal/TaskColorModal";
 import { TaskModal } from "../../../../components/Modal/TaskModal/TaskModal";
-import { OPEN_EDIT_TASK_MODAL } from "../../../../constants";
+import {
+  OPEN_EDIT_TASK_MODAL,
+  TASK_FOCUS_BORDER_STYLE,
+  TASK_FOCUS_BORDER_WIDTH,
+} from "../../../../constants";
 import { useTaskFilter } from "../../../../hooks/filters/useTaskFilter";
 import { useActivePipeline } from "../../../../hooks/useActivePipeline";
 import { useTimezone } from "../../../../hooks/useTimezone";
@@ -33,9 +38,17 @@ function TaskView() {
         const allowToMarkTaskAsDone =
           !activePipelineSettings!.allow_only_last_stage_task_done ||
           onLastStage;
+        const taskBorderStyle: React.CSSProperties = task.task_focus_color
+          ? {
+              borderTopColor: task.task_focus_color,
+              borderTopWidth: TASK_FOCUS_BORDER_WIDTH,
+              borderTopStyle: TASK_FOCUS_BORDER_STYLE,
+            }
+          : {};
         return (
           <WPQTCard
             className="wpqt-cursor-pointer"
+            style={taskBorderStyle}
             key={task.id}
             title={task.name}
             description={task.description}
@@ -75,6 +88,7 @@ function TaskView() {
         );
       })}
       <TaskModal />
+      <TaskColorModal />
     </div>
   );
 }

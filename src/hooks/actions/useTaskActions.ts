@@ -116,7 +116,7 @@ const useTaskActions = () => {
     try {
       await updateTaskFocusColorRequest(taskId, color);
 
-      toast.success(__("Task top border color changed", "quicktasker"));
+      toast.success(__("Task focus color changed", "quicktasker"));
 
       return {
         success: true,
@@ -124,7 +124,7 @@ const useTaskActions = () => {
       };
     } catch (error) {
       console.error(error);
-      toast.error(__("Failed to change task top border color", "quicktasker"));
+      toast.error(__("Failed to change task focus color", "quicktasker"));
 
       return {
         success: false,
