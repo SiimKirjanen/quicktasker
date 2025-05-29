@@ -36,6 +36,9 @@
   .wpqt-icon-red {
     @apply wpqt-text-red-700;
   }
+  .wpqt-pdf-red {
+    color: #f1594e;
+  }
   .wpqt-icon-green {
     @apply wpqt-text-green-700;
   }

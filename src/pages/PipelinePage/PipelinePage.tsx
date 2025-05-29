@@ -3,6 +3,7 @@ import { TasksViewFilter } from "../../components/Filter/TasksViewFilter/TasksVi
 import { MoveTaskModal } from "../../components/Modal/MoveTaskModal/MoveTaskModal";
 import { AddPipelineModal } from "../../components/Modal/PipelineModal/AddPipelineModal/AddPipelineModal";
 import { EditPipelineModal } from "../../components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal";
+import { TaskExportModal } from "../../components/Modal/TaskExportModal/TaskExportModal";
 import {
   ActivePipelineContext,
   ActivePipelineContextProvider,
@@ -26,7 +27,7 @@ const PipelinePage = () => {
 };
 const PipelinePageContent = () => {
   const {
-    state: { view },
+    state: { view, activePipeline },
   } = useContext(ActivePipelineContext);
   const renderPipelineView = view === PipelineView.PIPELINE;
 
@@ -44,6 +45,7 @@ const PipelinePageContent = () => {
       <AddPipelineModal />
       <EditPipelineModal />
       <MoveTaskModal />
+      <TaskExportModal pipelineId={activePipeline} />
     </Page>
   );
 };

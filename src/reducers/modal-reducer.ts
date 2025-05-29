@@ -7,6 +7,7 @@ import {
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
   CLOSE_TASK_COLOR_MODAL,
+  CLOSE_TASK_EXPORT_MODAL,
   CLOSE_TASK_MODAL,
   CLOSE_USER_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
@@ -19,6 +20,7 @@ import {
   OPEN_NEW_USER_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
+  OPEN_TASK_EXPORT_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
@@ -26,7 +28,7 @@ import { Action, State, initialState } from "../providers/ModalContextProvider";
 import { TaskModalSettings } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
-import { Task } from "../types/task";
+import { Task, TaskExportMethods } from "../types/task";
 import { User, WPUser } from "../types/user";
 
 const closeModal = () => {
@@ -207,6 +209,22 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case CLOSE_TASK_COLOR_MODAL: {
+      return closeModal();
+    }
+    case OPEN_TASK_EXPORT_MODAL: {
+      const { selectedMethod }: { selectedMethod: TaskExportMethods } =
+        action.payload;
+
+      return {
+        ...state,
+        taskExportModalOpen: true,
+        taskExportModalSettings: {
+          ...state.taskExportModalSettings,
+          selectedMethod,
+        },
+      };
+    }
+    case CLOSE_TASK_EXPORT_MODAL: {
       return closeModal();
     }
     default:

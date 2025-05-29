@@ -890,6 +890,27 @@ function deleteUploadRequest(uploadId: string): Promise<
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Export requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getTasksPdfExportRequest(
+  pipelineId: string | null,
+): Promise<WPQTResponse> {
+  const queryParams = new URLSearchParams();
+
+  if (pipelineId) {
+    queryParams.append("pipeline_id", pipelineId);
+  }
+
+  return apiFetch({
+    path: `/wpqt/v1/tasks/export-pdf?${queryParams.toString()}`,
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -929,6 +950,7 @@ export {
   getPipelineOverviewData,
   getPipelineSettingsRequest,
   getTaskLogs,
+  getTasksPdfExportRequest,
   getUploadsRequest,
   getUserSessionsRequest,
   getUsersRequest,
