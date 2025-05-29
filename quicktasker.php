@@ -68,7 +68,8 @@ require( 'php/services/FileService.php' );
 require( 'php/services/SlackService.php' );
 require( 'php/services/ServiceLocator.php' );
 require( 'php/services/SecretsService.php' );
-
+require( 'php/services/export/ExportService.php' );
+require( 'php/services/export/PDFExportService.php' );
 
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 WPQT\ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());

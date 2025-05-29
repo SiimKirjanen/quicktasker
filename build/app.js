@@ -5840,7 +5840,16 @@ function TaskExportModal({
   } = (0,_hooks_actions_useExportActions__WEBPACK_IMPORTED_MODULE_4__.useExportActions)();
   const [generating, setGenerating] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const onPdfExportClick = () => __awaiter(this, void 0, void 0, function* () {
-    yield getPipelineTasksPdf(pipelineId);
+    setGenerating(true);
+    const {
+      success,
+      data
+    } = yield getPipelineTasksPdf(pipelineId);
+    setGenerating(false);
+    if (!success || !data) {
+      return;
+    }
+    window.open(data.file_url, "_blank");
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_7__.WPQTModal, {
     modalOpen: taskExportModalOpen,
@@ -9514,8 +9523,17 @@ function useExportActions() {
   const getPipelineTasksPdf = pipelineId => __awaiter(this, void 0, void 0, function* () {
     try {
       const resp = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getTasksPdfExportRequest)(pipelineId);
+      return {
+        success: true,
+        data: resp.data
+      };
     } catch (error) {
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to generate PDF", "quicktasker"));
+      console.error(error);
+      return {
+        success: false,
+        data: null
+      };
     }
   });
   return {
@@ -12184,7 +12202,7 @@ const PipelinePageContent = () => {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_PipelineHeader_PipelineHeader__WEBPACK_IMPORTED_MODULE_13__.PipelineHeader, {}), renderPipelineView ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Pipeline__WEBPACK_IMPORTED_MODULE_12__["default"], {}) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_providers_ActivePipelineTaskViewContextProvider__WEBPACK_IMPORTED_MODULE_8__.ActivePipelineTaskViewContextProvider, {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_TasksViewFilter_TasksViewFilter__WEBPACK_IMPORTED_MODULE_2__.TasksViewFilter, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_TaskView_TaskView__WEBPACK_IMPORTED_MODULE_14__.TaskView, {})]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_PipelineModal_AddPipelineModal_AddPipelineModal__WEBPACK_IMPORTED_MODULE_4__.AddPipelineModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_PipelineModal_EditPipelineModal_EditPipelineModal__WEBPACK_IMPORTED_MODULE_5__.EditPipelineModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_MoveTaskModal_MoveTaskModal__WEBPACK_IMPORTED_MODULE_3__.MoveTaskModal, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_TaskExportModal_TaskExportModal__WEBPACK_IMPORTED_MODULE_6__.TaskExportModal, {
-      pipelineId: activePipeline
+      pipelineId: (activePipeline === null || activePipeline === void 0 ? void 0 : activePipeline.id) || null
     })]
   });
 };

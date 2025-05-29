@@ -6,8 +6,19 @@ function useExportActions() {
   const getPipelineTasksPdf = async (pipelineId: string | null) => {
     try {
       const resp = await getTasksPdfExportRequest(pipelineId);
+
+      return {
+        success: true,
+        data: resp.data,
+      };
     } catch (error) {
       toast.error(__("Failed to generate PDF", "quicktasker"));
+      console.error(error);
+
+      return {
+        success: false,
+        data: null,
+      };
     }
   };
 

@@ -18,7 +18,15 @@ function TaskExportModal({ pipelineId }: Props) {
   const [generating, setGenerating] = useState(false);
 
   const onPdfExportClick = async () => {
-    await getPipelineTasksPdf(pipelineId);
+    setGenerating(true);
+    const { success, data } = await getPipelineTasksPdf(pipelineId);
+    setGenerating(false);
+
+    if (!success || !data) {
+      return;
+    }
+
+    window.open(data.file_url, "_blank");
   };
 
   return (

@@ -898,7 +898,7 @@ function deleteUploadRequest(uploadId: string): Promise<
 
 function getTasksPdfExportRequest(
   pipelineId: string | null,
-): Promise<WPQTResponse> {
+): Promise<WPQTResponse<{ file_url: string }>> {
   const queryParams = new URLSearchParams();
 
   if (pipelineId) {

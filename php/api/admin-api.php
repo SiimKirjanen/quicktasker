@@ -34,6 +34,7 @@ use WPQT\Settings\SettingsValidationService;
 use WPQT\Capability\CapabilityService;
 use WPQT\Automation\AutomationService;
 use WPQT\ServiceLocator;
+use WPQT\Export\PDFExportService;
 
 add_action('rest_api_init', 'wpqt_register_api_routes');
 if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
@@ -2676,6 +2677,42 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
+                ),
+            ),
+        );
+
+        /*
+        ==================================================================================================================================================================================================================
+        Export endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'tasks/export-pdf',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        $pdfService = new PDFExportService($data['pipeline_id']);
+                        $data = $pdfService->generateTasksPdfExport();
+                        
+                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'file_url' => $data->file_url,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'pipeline_id' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    )
                 ),
             ),
         );
