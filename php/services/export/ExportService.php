@@ -15,8 +15,6 @@ if ( ! class_exists( 'WPQT\Export\ExportService' ) ) {
         public function __construct($pipelineId) {
             $this->_pipelineId = $pipelineId;
             $this->_fileName = $this->getFileName();
-
-            ServiceLocator::get('UploadService')->setUpExportsFolders();
         }
 
         protected function getFileName() {

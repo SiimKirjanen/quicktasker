@@ -18,20 +18,8 @@ if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
             }
         }
 
-        public function setUpExportsFolders(){
-            $folderCreated = $this->createExportsFolder();
-
-            if( $folderCreated ){
-                ServiceLocator::get('FileService')->createSilenceIndexFile(WP_QUICKTASKER_TASK_EXPORTS_FOLDER_DIR);
-            }
-        }
-
         public function createTasksUploadFolder(){
             return ServiceLocator::get('FileService')->createDirectory(WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR);
-        }
-
-        public function createExportsFolder() {
-            return ServiceLocator::get('FileService')->createDirectory(WP_QUICKTASKER_TASK_EXPORTS_FOLDER_DIR);
         }
 
         public function uploadFile($entityId, $entityType, $file) {

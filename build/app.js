@@ -5787,37 +5787,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _hooks_actions_useExportActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useExportActions */ "./src/hooks/actions/useExportActions.ts");
+/* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
 
 
 
@@ -5831,26 +5804,16 @@ function TaskExportModal({
 }) {
   const {
     state: {
-      taskExportModalOpen
+      taskExportModalOpen,
+      taskExportModalSettings
     },
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__.ModalContext);
   const {
-    getPipelineTasksPdf
-  } = (0,_hooks_actions_useExportActions__WEBPACK_IMPORTED_MODULE_4__.useExportActions)();
-  const [generating, setGenerating] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const onPdfExportClick = () => __awaiter(this, void 0, void 0, function* () {
-    setGenerating(true);
-    const {
-      success,
-      data
-    } = yield getPipelineTasksPdf(pipelineId);
-    setGenerating(false);
-    if (!success || !data) {
-      return;
+    state: {
+      siteURL
     }
-    window.open(data.file_url, "_blank");
-  });
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_4__.AppContext);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_7__.WPQTModal, {
     modalOpen: taskExportModalOpen,
     closeModal: () => {
@@ -5859,15 +5822,25 @@ function TaskExportModal({
       });
     },
     size: "md",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("form", {
       className: "wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-items-center",
+      action: siteURL,
+      target: "_blank",
+      method: "GET",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-lg",
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Tasks export", "quicktasker")
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTButton, {
-        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Generate export", "quicktasker"),
-        onClick: onPdfExportClick,
-        loading: generating
+        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Open export", "quicktasker"),
+        type: _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.ButtonType.SUBMIT
+      }), pipelineId && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+        type: "hidden",
+        name: "pipeline_id",
+        value: pipelineId
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+        type: "hidden",
+        name: "wpqt-page",
+        value: `${taskExportModalSettings.selectedMethod}-export`
       })]
     })
   });
@@ -9469,75 +9442,6 @@ function useCustomFieldActions() {
     markCustomFieldAsDeleted,
     restoreCustomField,
     updateCustomFieldValue
-  };
-}
-
-
-/***/ }),
-
-/***/ "./src/hooks/actions/useExportActions.ts":
-/*!***********************************************!*\
-  !*** ./src/hooks/actions/useExportActions.ts ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useExportActions: () => (/* binding */ useExportActions)
-/* harmony export */ });
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-
-
-function useExportActions() {
-  const getPipelineTasksPdf = pipelineId => __awaiter(this, void 0, void 0, function* () {
-    try {
-      const resp = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.getTasksPdfExportRequest)(pipelineId);
-      return {
-        success: true,
-        data: resp.data
-      };
-    } catch (error) {
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to generate PDF", "quicktasker"));
-      console.error(error);
-      return {
-        success: false,
-        data: null
-      };
-    }
-  });
-  return {
-    getPipelineTasksPdf
   };
 }
 

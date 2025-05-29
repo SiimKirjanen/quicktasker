@@ -53,6 +53,10 @@ if ( ! defined( 'WP_QUICKTASKER_PUBLIC_USER_PAGE_ID' ) ) {
     define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 }
 
+if ( ! defined( 'WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID' ) ) {
+    define('WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID', 'pdf-export');
+}
+
 /*
 ==================================================================================================================================================================================================================
 DB constants

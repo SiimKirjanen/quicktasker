@@ -2691,15 +2691,13 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             'wpqt/v1',
             'tasks/export-pdf',
             array(
-                'methods' => 'GET',
+                'methods' => 'POST',
                 'callback' => function( $data ) {
                     try {
                         $pdfService = new PDFExportService($data['pipeline_id']);
-                        $data = $pdfService->generateTasksPdfExport();
+                        $pdfService->generateTasksPdfExport();
                         
-                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
-                            'file_url' => $data->file_url,
-                        ]))->toArray(), 200);
+                        exit;
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }

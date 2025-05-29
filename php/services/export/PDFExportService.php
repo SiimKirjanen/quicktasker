@@ -34,13 +34,7 @@ if ( ! class_exists( 'PDFExportService' ) ) {
             $this->_pdf->Cell(0, 10, 'Pipeline ID: ' . $this->_pipelineId, 0, 1);
             $this->_pdf->Cell(0, 10, 'Generated at: ' . date('Y-m-d H:i:s'), 0, 1);
 
-            $this->_pdf->Output('F', WP_QUICKTASKER_TASK_EXPORTS_FOLDER_DIR . '/' . $this->_fileName . '.pdf');    
-            
-            return (object)[
-                'file_name' => $this->_fileName . '.pdf',
-                'file_path' => WP_QUICKTASKER_TASK_EXPORTS_FOLDER_DIR . '/' . $this->_fileName . '.pdf',
-                'file_url' => WP_QUICKTASKER_TASK_EXPORTS_FOLDER_URL . '/' . $this->_fileName . '.pdf'
-            ];
+            $this->_pdf->Output('I', 'tasks-export.pdf');
         }
     }
 }

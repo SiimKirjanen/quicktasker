@@ -1,9 +1,9 @@
-import { useContext, useState } from "@wordpress/element";
+import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { CLOSE_TASK_EXPORT_MODAL } from "../../../constants";
-import { useExportActions } from "../../../hooks/actions/useExportActions";
+import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { WPQTButton } from "../../common/Button/Button";
+import { ButtonType, WPQTButton } from "../../common/Button/Button";
 import { WPQTModal } from "../WPQTModal";
 
 type Props = {
@@ -11,23 +11,12 @@ type Props = {
 };
 function TaskExportModal({ pipelineId }: Props) {
   const {
-    state: { taskExportModalOpen },
+    state: { taskExportModalOpen, taskExportModalSettings },
     modalDispatch,
   } = useContext(ModalContext);
-  const { getPipelineTasksPdf } = useExportActions();
-  const [generating, setGenerating] = useState(false);
-
-  const onPdfExportClick = async () => {
-    setGenerating(true);
-    const { success, data } = await getPipelineTasksPdf(pipelineId);
-    setGenerating(false);
-
-    if (!success || !data) {
-      return;
-    }
-
-    window.open(data.file_url, "_blank");
-  };
+  const {
+    state: { siteURL },
+  } = useContext(AppContext);
 
   return (
     <WPQTModal
@@ -39,14 +28,26 @@ function TaskExportModal({ pipelineId }: Props) {
       }}
       size="md"
     >
-      <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-items-center">
+      <form
+        className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-items-center"
+        action={siteURL}
+        target="_blank"
+        method="GET"
+      >
         <div className="wpqt-text-lg">{__("Tasks export", "quicktasker")}</div>
         <WPQTButton
-          btnText={__("Generate export", "quicktasker")}
-          onClick={onPdfExportClick}
-          loading={generating}
+          btnText={__("Open export", "quicktasker")}
+          type={ButtonType.SUBMIT}
         />
-      </div>
+        {pipelineId && (
+          <input type="hidden" name="pipeline_id" value={pipelineId} />
+        )}
+        <input
+          type="hidden"
+          name="wpqt-page"
+          value={`${taskExportModalSettings.selectedMethod}-export`}
+        />
+      </form>
     </WPQTModal>
   );
 }
