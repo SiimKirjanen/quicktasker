@@ -2680,40 +2680,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 ),
             ),
         );
-
-        /*
-        ==================================================================================================================================================================================================================
-        Export endpoints
-        ==================================================================================================================================================================================================================
-        */
-
-        register_rest_route(
-            'wpqt/v1',
-            'tasks/export-pdf',
-            array(
-                'methods' => 'POST',
-                'callback' => function( $data ) {
-                    try {
-                        $pdfService = new PDFExportService($data['pipeline_id']);
-                        $pdfService->generateTasksPdfExport();
-                        
-                        exit;
-                    } catch (Throwable $e) {
-                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
-                    }
-                },
-                'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
-                },
-                'args' => array(
-                    'pipeline_id' => array(
-                        'required' => false,
-                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
-                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
-                    )
-                ),
-            ),
-        );
     }
 }
 

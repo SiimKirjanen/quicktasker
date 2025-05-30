@@ -65,7 +65,27 @@ if ( ! function_exists( 'quicktasker_custom_pages' ) ) {
 			if ( ! WPQT\Permission\PermissionService::hasRequiredPermissionsForPrivateAPI() ) {
 				wp_die( __( 'You do not have sufficient permissions to access this page.', 'quicktasker' ), 403 );
 			}
-			$pdfService = new PDFExportService($_GET['pipeline_id']);
+			$pipelineId = isset($_GET['pipeline_id']) ? $_GET['pipeline_id'] : null;
+            $taskSearch = isset($_GET['task_search']) ? $_GET['task_search'] : '';
+            $includeArchive = isset($_GET['include_archive']) ? $_GET['include_archive'] : '0';
+
+			if (!WPQT\RequestValidation::validateOptionalNumericParam($pipelineId)) {
+				wp_die('Invalid pipeline ID', 400);
+			}
+
+			if ( !WPQT\RequestValidation::validateStringParam($taskSearch) ) {
+                $task_search = '';
+            }
+
+			if (!WPQT\RequestValidation::validateBooleanParam($includeArchive)) {
+                wp_die('Invalid archive param', 400);
+            }
+
+			$pipelineId = WPQT\RequestValidation::sanitizeOptionalAbsint($pipelineId);
+			$taskSearch = WPQT\RequestValidation::sanitizeStringParam($taskSearch);
+			$includeArchive = WPQT\RequestValidation::sanitizeBooleanParam($includeArchive); 
+
+			$pdfService = new PDFExportService($pipelineId, $taskSearch, $includeArchive);
 			$pdfService->generateTasksPdfExport();
 
 			die();

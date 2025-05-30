@@ -3,8 +3,9 @@ import Switch from "react-switch";
 type Props = {
   checked: boolean;
   handleChange: (checked: boolean) => void;
+  id?: string;
 };
-function Toggle({ checked, handleChange }: Props) {
+function Toggle({ checked, handleChange, id }: Props) {
   return (
     <Switch
       onChange={handleChange}
@@ -13,6 +14,7 @@ function Toggle({ checked, handleChange }: Props) {
       checkedIcon={false}
       height={20}
       width={44}
+      id={id}
     />
   );
 }

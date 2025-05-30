@@ -5790,7 +5790,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../common/Label/WPQTLabel */ "./src/components/common/Label/WPQTLabel.tsx");
+/* harmony import */ var _common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Toggle/Toggle */ "./src/components/common/Toggle/Toggle.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+
+
+
 
 
 
@@ -5814,7 +5820,9 @@ function TaskExportModal({
       siteURL
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_4__.AppContext);
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_7__.WPQTModal, {
+  const [search, setSearch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [includeArchived, setIncludeArchived] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_10__.WPQTModal, {
     modalOpen: taskExportModalOpen,
     closeModal: () => {
       modalDispatch({
@@ -5823,13 +5831,35 @@ function TaskExportModal({
     },
     size: "md",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("form", {
-      className: "wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-items-center",
+      className: "wpqt-flex wpqt-flex-col wpqt-gap-3 wpqt-items-center",
       action: siteURL,
       target: "_blank",
       method: "GET",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-lg",
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Tasks export", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-flex wpqt-flex-col wpqt-items-center",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_8__.WPQTLabel, {
+          labelFor: "export-search-filter",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Filter by task name and desription", "quicktasker")
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_7__.WPQTInput, {
+          value: search,
+          onChange: setSearch,
+          inputId: "export-search-filter",
+          name: "task_search",
+          wrapperClassName: "wpqt-mb-0"
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-flex wpqt-flex-col wpqt-items-center",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_8__.WPQTLabel, {
+          labelFor: "export-include-archive-filter",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Include board archived tasks", "quicktasker")
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_9__.Toggle, {
+          checked: includeArchived,
+          handleChange: setIncludeArchived,
+          id: "export-include-archive-filter"
+        })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTButton, {
         btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Open export", "quicktasker"),
         type: _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.ButtonType.SUBMIT
@@ -5841,6 +5871,10 @@ function TaskExportModal({
         type: "hidden",
         name: "wpqt-page",
         value: `${taskExportModalSettings.selectedMethod}-export`
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+        type: "hidden",
+        name: "include_archive",
+        value: includeArchived ? "1" : "0"
       })]
     })
   });
@@ -8481,7 +8515,8 @@ const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
   disabled = false,
   type = InputType.TEXT,
   loading = false,
-  inputId
+  inputId,
+  name
 }, ref) => {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: `wpqt-inline-block wpqt-relative wpqt-mb-3 ${wrapperClassName}`,
@@ -8493,7 +8528,8 @@ const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
       disabled: disabled,
       onChange: e => onChange(e.target.value),
       type: type,
-      id: inputId
+      id: inputId,
+      name: name
     }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_2__.LoadingOval, {
       width: "24",
       height: "24",
@@ -8733,7 +8769,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function Toggle({
   checked,
-  handleChange
+  handleChange,
+  id
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_switch__WEBPACK_IMPORTED_MODULE_1__["default"], {
     onChange: handleChange,
@@ -8741,7 +8778,8 @@ function Toggle({
     uncheckedIcon: false,
     checkedIcon: false,
     height: 20,
-    width: 44
+    width: 44,
+    id: id
   });
 }
 

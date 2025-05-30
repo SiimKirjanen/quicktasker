@@ -1399,6 +1399,10 @@
   margin-top: auto;
 }
 
+.wpqt-mb-0 {
+  margin-bottom: 0px;
+}
+
 .\!wpqt-block {
   display: block !important;
 }

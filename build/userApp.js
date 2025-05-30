@@ -1773,7 +1773,8 @@ const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
   disabled = false,
   type = InputType.TEXT,
   loading = false,
-  inputId
+  inputId,
+  name
 }, ref) => {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: `wpqt-inline-block wpqt-relative wpqt-mb-3 ${wrapperClassName}`,
@@ -1785,7 +1786,8 @@ const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
       disabled: disabled,
       onChange: e => onChange(e.target.value),
       type: type,
-      id: inputId
+      id: inputId,
+      name: name
     }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_2__.LoadingOval, {
       width: "24",
       height: "24",
