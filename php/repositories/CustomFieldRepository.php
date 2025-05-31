@@ -173,7 +173,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
                 }
                 
                 // If we have pipeline custom fields, get their values for our tasks
-                if (!empty($pipelineCustomFieldIds)) {
+                if ( !empty($pipelineCustomFieldIds) ) {
                     $fieldPlaceholders = implode(',', array_fill(0, count($pipelineCustomFieldIds), '%d'));
                     $valueQuery = $wpdb->prepare(
                         "SELECT cfv.* 
