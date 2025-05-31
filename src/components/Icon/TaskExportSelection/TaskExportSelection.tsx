@@ -21,6 +21,7 @@ function TaskExportSelection() {
       <div className="wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1.5 wpqt-text-gray-500 hover:wpqt-text-gray-700">
         <FaRegFilePdf
           className="wpqt-size-5 wpqt-pdf-red"
+          data-testid="task-export-pdf-icon"
           onClick={() => {
             openTaskExportModal(TaskExportMethods.PDF);
           }}
