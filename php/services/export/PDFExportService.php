@@ -6,11 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\ServiceLocator;
-use WPQT\Export;
 
 require_once( WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'php/libs/tfpdf/tfpdf.php' );
 
-if ( ! class_exists( 'PDFExportService' ) ) {
+if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
     class PDFExportService extends ExportService {
         private $_pdf = null;
 
