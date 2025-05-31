@@ -51,20 +51,22 @@ if ( ! class_exists( 'PDFExportService' ) ) {
                     $taskStage = !empty($task->stage_name) ? $task->stage_name : esc_html__('None', 'quicktasker');
                     $taskCreatedAt = !empty($task->created_at) ? $timeRepository->convertUTCToLocal($task->created_at) : esc_html__('None', 'quicktasker');
                     $dueDate = !empty($task->due_date) ? $timeRepository->convertUTCToLocal($task->due_date) : esc_html__('None', 'quicktasker');
-                    
-                    $this->addField(esc_html__('Task name', 'quicktasker'), $task->name);
-                    $this->addField(esc_html__('Task description', 'quicktasker'), $taskDescription, true);
-                    $this->addField(esc_html__('Task created at', 'quicktasker'), $taskCreatedAt);
-                    $this->addField(esc_html__('Task board', 'quicktasker'), $taskPipeline);
-                    $this->addField(esc_html__('Task stage', 'quicktasker'), $taskStage);
-                    $this->addField(esc_html__('Task due date', 'quicktasker'), $dueDate);
-                    $this->addField(esc_html__('Task completed', 'quicktasker'), $taskDone);
-                    $this->addField(esc_html__('Task archived', 'quicktasker'), $taskArchived);
-                    
-                    // Add spacing between tasks
-                    $this->_pdf->Ln(10);
-                }
-                
+                    $assignedWPUsers = $this->formatAssignedUsers($task->assigned_wp_users);
+                    $assignedQuickTaskers = $this->formatAssignedUsers($task->assigned_users);
+                    $assignedLabels = $this->formatAssignedLabels($task->assigned_labels);
+
+                    $this->addField(esc_html__('Name', 'quicktasker'), $task->name);
+                    $this->addField(esc_html__('Description', 'quicktasker'), $taskDescription, true);
+                    $this->addField(esc_html__('Created at', 'quicktasker'), $taskCreatedAt);
+                    $this->addField(esc_html__('Board', 'quicktasker'), $taskPipeline);
+                    $this->addField(esc_html__('Stage', 'quicktasker'), $taskStage);
+                    $this->addField(esc_html__('Completed', 'quicktasker'), $taskDone);
+                    $this->addField(esc_html__('Due date', 'quicktasker'), $dueDate);
+                    $this->addField(esc_html__('Assigned WordPress users', 'quicktasker'), $assignedWPUsers);
+                    $this->addField(esc_html__('Assigned QuickTaskers', 'quicktasker'), $assignedQuickTaskers);
+                    $this->addField(esc_html__('Added labels', 'quicktasker'), $assignedLabels);
+                    $this->addField(esc_html__('Archived', 'quicktasker'), $taskArchived);
+                } 
             }
 
             $this->_pdf->Output('I', 'tasks-export.pdf');

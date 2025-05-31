@@ -271,6 +271,14 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
             ) );
         }
 
+        /**
+         * Retrieves tasks for export based on the provided pipeline ID, search filter, and archived status.
+         *
+         * @param int|null $pipelineId The ID of the pipeline to filter tasks by.
+         * @param string $searchFilter The search filter to apply to task titles and descriptions.
+         * @param bool $includeArchivedTasks Whether to include archived tasks in the results.
+         * @return array An array of tasks that match the criteria.
+         */
         public function getTasksForExport($pipelineId, $searchFilter, $includeArchivedTasks) {
             global $wpdb;
 
@@ -301,6 +309,37 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
             $sql .= " ORDER BY a.created_at DESC";
             $query = count($args) > 0 ? $wpdb->prepare($sql, $args) : $sql;
             $tasks = $wpdb->get_results($query);
+
+            if ( !empty($tasks) ) {
+                $taskIds = array_map(function($task) {
+                    return $task->id;
+                }, $tasks);
+                
+                $assignedUsers = $this->userRepository->getAssignedUsersByTaskIds($taskIds);
+                $assignedWPUsers = $this->userRepository->getAssignedWPUsersByTaskIds($taskIds);
+                $assignedLabels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds($taskIds);
+                
+                $usersByTask = [];
+                foreach ($assignedUsers as $user) {
+                    $usersByTask[$user->task_id][] = $user;
+                }
+                
+                $wpUsersByTask = [];
+                foreach ($assignedWPUsers as $user) {
+                    $wpUsersByTask[$user->task_id][] = $user;
+                }
+
+                $labelsByTask = [];
+                foreach ($assignedLabels as $label) {
+                    $labelsByTask[$label->entity_id][] = $label;
+                }
+                
+                foreach ($tasks as $task) {
+                    $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
+                    $task->assigned_wp_users = isset($wpUsersByTask[$task->id]) ? $wpUsersByTask[$task->id] : [];
+                    $task->assigned_labels = isset($labelsByTask[$task->id]) ? $labelsByTask[$task->id] : [];
+                }        
+            }
 
             return $tasks;
         }

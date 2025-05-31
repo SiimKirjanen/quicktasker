@@ -32,5 +32,29 @@ if ( ! class_exists( 'WPQT\Export\ExportService' ) ) {
             $tasks = $taskRepository->getTasksForExport($this->_pipelineId, $this->_searchFilter, $this->_includeArchivedTasks);
             $this->_tasks = $tasks;
         }
+
+        protected function formatAssignedUsers($users) {
+            if (empty($users)) {
+                return esc_html__('None', 'quicktasker');
+            }
+            
+            $userNames = array_map(function($user) {
+                return "{$user->name}";
+            }, $users);
+            
+            return implode(', ', $userNames);
+        }
+
+        protected function formatAssignedLabels($labels) {
+            if (empty($labels)) {
+                return esc_html__('None', 'quicktasker');
+            }
+            
+            $labelNames = array_map(function($label) {
+                return $label->name;
+            }, $labels);
+            
+            return implode(', ', $labelNames);
+        }
     }
 }
