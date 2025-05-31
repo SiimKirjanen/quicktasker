@@ -300,7 +300,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
             }
 
             if ( !empty($searchFilter) ) {
-                $sql .= " AND (a.title LIKE %s OR a.description LIKE %s)";
+                $sql .= " AND (a.name LIKE %s OR a.description LIKE %s)";
                 $searchPattern = '%' . $wpdb->esc_like($searchFilter) . '%';
                 $args[] = $searchPattern;
                 $args[] = $searchPattern;
