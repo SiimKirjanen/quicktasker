@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Location\LocationService;
+use WPQT\Export\PDFExportService;
 /**
  * Adds a filter to modify the admin body class.
  *
@@ -45,5 +46,49 @@ if ( ! function_exists( 'wpqt_public_user_page_template' ) ) {
 		}
 
 		return $page_template;
+	}
+}
+
+/**
+ * This function is a filter callback for the 'init' hook.
+ * It checks if the current page is the WP Quick Tasks task PDF export page and generates a PDF export of tasks.
+ * If the user does not have sufficient permissions, it displays an error message.
+ *
+ * @return void
+ */
+add_filter('init', 'quicktasker_custom_pages');
+if ( ! function_exists( 'quicktasker_custom_pages' ) ) {
+	function quicktasker_custom_pages() {
+		$locationService = new LocationService();
+		
+		if ( $locationService->isWPQTTaskPDFExportPage() ) {
+			if ( ! WPQT\Permission\PermissionService::hasRequiredPermissionsForPrivateAPI() ) {
+				wp_die( __( 'You do not have sufficient permissions to access this page.', 'quicktasker' ), 403 );
+			}
+			$pipelineId = isset($_GET['pipeline_id']) ? $_GET['pipeline_id'] : null;
+            $taskSearch = isset($_GET['task_search']) ? $_GET['task_search'] : '';
+            $includeArchive = isset($_GET['include_archive']) ? $_GET['include_archive'] : '0';
+
+			if (!WPQT\RequestValidation::validateOptionalNumericParam($pipelineId)) {
+				wp_die('Invalid pipeline ID', 400);
+			}
+
+			if ( !WPQT\RequestValidation::validateStringParam($taskSearch) ) {
+                $task_search = '';
+            }
+
+			if (!WPQT\RequestValidation::validateBooleanParam($includeArchive)) {
+                wp_die('Invalid archive param', 400);
+            }
+
+			$pipelineId = WPQT\RequestValidation::sanitizeOptionalAbsint($pipelineId);
+			$taskSearch = WPQT\RequestValidation::sanitizeStringParam($taskSearch);
+			$includeArchive = WPQT\RequestValidation::sanitizeBooleanParam($includeArchive); 
+
+			$pdfService = new PDFExportService($pipelineId, $taskSearch, $includeArchive);
+			$pdfService->generateTasksPdfExport();
+
+			die();
+		}
 	}
 }

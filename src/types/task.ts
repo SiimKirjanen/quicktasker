@@ -33,4 +33,10 @@ type TaskFromServer = BaseTask & {
   is_done: string;
 };
 
-export type { Task, TaskFromServer };
+enum TaskExportMethods {
+  PDF = "pdf",
+  CSV = "csv",
+  JSON = "json",
+}
+
+export { TaskExportMethods, type Task, type TaskFromServer };

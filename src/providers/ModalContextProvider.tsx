@@ -8,6 +8,7 @@ import {
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
   CLOSE_TASK_COLOR_MODAL,
+  CLOSE_TASK_EXPORT_MODAL,
   CLOSE_TASK_MODAL,
   CLOSE_USER_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
@@ -20,13 +21,14 @@ import {
   OPEN_NEW_USER_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
+  OPEN_TASK_EXPORT_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { reducer } from "../reducers/modal-reducer";
-import { TaskModalSettings } from "../types/modal";
+import { TaskExportModalSettings, TaskModalSettings } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
-import { Task } from "../types/task";
+import { Task, TaskExportMethods } from "../types/task";
 import { User, WPUser } from "../types/user";
 
 const initialState: State = {
@@ -49,6 +51,10 @@ const initialState: State = {
   userToEdit: null,
   userSettingsModalOpen: false,
   taskColorModalOpen: false,
+  taskExportModalOpen: false,
+  taskExportModalSettings: {
+    selectedMethod: TaskExportMethods.PDF,
+  },
 };
 
 type State = {
@@ -69,6 +75,8 @@ type State = {
   userToEdit: User | null;
   userSettingsModalOpen: boolean;
   taskColorModalOpen: boolean;
+  taskExportModalOpen: boolean;
+  taskExportModalSettings: TaskExportModalSettings;
 };
 
 type Action =
@@ -104,7 +112,14 @@ type Action =
   | { type: typeof CLOSE_MOVE_TASK_MODAL }
   | { type: typeof CLOSE_USER_MODAL }
   | { type: typeof OPEN_TASK_COLOR_MODAL; payload: { task: Task } }
-  | { type: typeof CLOSE_TASK_COLOR_MODAL };
+  | { type: typeof CLOSE_TASK_COLOR_MODAL }
+  | {
+      type: typeof OPEN_TASK_EXPORT_MODAL;
+      payload: {
+        selectedMethod: TaskExportMethods;
+      };
+    }
+  | { type: typeof CLOSE_TASK_EXPORT_MODAL };
 
 type ModalDispatch = (action: Action) => void;
 

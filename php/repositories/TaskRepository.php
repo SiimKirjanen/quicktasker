@@ -270,5 +270,80 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                 WHERE b.task_id IS NULL AND a.is_archived = 0 AND a.free_for_all = 1 ORDER BY a.created_at DESC",
             ) );
         }
+
+        /**
+         * Retrieves tasks for export based on the provided pipeline ID, search filter, and archived status.
+         *
+         * @param int|null $pipelineId The ID of the pipeline to filter tasks by.
+         * @param string $searchFilter The search filter to apply to task titles and descriptions.
+         * @param bool $includeArchivedTasks Whether to include archived tasks in the results.
+         * @return array An array of tasks that match the criteria.
+         */
+        public function getTasksForExport($pipelineId, $searchFilter, $includeArchivedTasks) {
+            global $wpdb;
+
+            $sql = "SELECT a.*, b.task_order, b.stage_id, c.name as pipeline_name, d.name as stage_name
+                    FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+                    LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b ON a.id = b.task_id
+                    LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON a.pipeline_id = c.id
+                    LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . " AS d ON b.stage_id = d.id
+                    WHERE 1=1";
+           $args = [];
+
+            if ( !empty($pipelineId )) {
+                $sql .= " AND a.pipeline_id = %d";
+                $args[] = $pipelineId;
+            }
+
+            if ( !$includeArchivedTasks ) {
+                $sql .= " AND a.is_archived = 0";
+            }
+
+            if ( !empty($searchFilter) ) {
+                $sql .= " AND (a.name LIKE %s OR a.description LIKE %s)";
+                $searchPattern = '%' . $wpdb->esc_like($searchFilter) . '%';
+                $args[] = $searchPattern;
+                $args[] = $searchPattern;
+            }
+
+            $sql .= " ORDER BY a.created_at DESC";
+            $query = count($args) > 0 ? $wpdb->prepare($sql, $args) : $sql;
+            $tasks = $wpdb->get_results($query);
+
+            if ( !empty($tasks) ) {
+                $taskIds = array_map(function($task) {
+                    return $task->id;
+                }, $tasks);
+                
+                $assignedUsers = $this->userRepository->getAssignedUsersByTaskIds($taskIds);
+                $assignedWPUsers = $this->userRepository->getAssignedWPUsersByTaskIds($taskIds);
+                $assignedLabels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds($taskIds);
+                $customFields = ServiceLocator::get('CustomFieldRepository')->getActiveCustomFieldsForTasks($taskIds);
+                
+                $usersByTask = [];
+                foreach ($assignedUsers as $user) {
+                    $usersByTask[$user->task_id][] = $user;
+                }
+                
+                $wpUsersByTask = [];
+                foreach ($assignedWPUsers as $user) {
+                    $wpUsersByTask[$user->task_id][] = $user;
+                }
+
+                $labelsByTask = [];
+                foreach ($assignedLabels as $label) {
+                    $labelsByTask[$label->entity_id][] = $label;
+                }
+                
+                foreach ($tasks as $task) {
+                    $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
+                    $task->assigned_wp_users = isset($wpUsersByTask[$task->id]) ? $wpUsersByTask[$task->id] : [];
+                    $task->assigned_labels = isset($labelsByTask[$task->id]) ? $labelsByTask[$task->id] : [];
+                    $task->custom_fields = isset($customFields[$task->id]) ? $customFields[$task->id] : [];
+                }        
+            }
+
+            return $tasks;
+        }
     }
 }

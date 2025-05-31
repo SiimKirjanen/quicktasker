@@ -1299,6 +1299,10 @@
   margin-bottom: 0px !important;
 }
 
+.wpqt-mb-0 {
+  margin-bottom: 0px;
+}
+
 .wpqt-mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -1345,6 +1349,10 @@
 
 .wpqt-mr-1 {
   margin-right: 0.25rem;
+}
+
+.wpqt-mr-4 {
+  margin-right: 1rem;
 }
 
 .wpqt-mr-auto {
@@ -2403,6 +2411,10 @@
   color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
+.wpqt-pdf-red {
+  color: #f1594e;
+}
+
 .wpqt-icon-green {
   --tw-text-opacity: 1;
   color: rgb(21 128 61 / var(--tw-text-opacity));
@@ -2500,6 +2512,11 @@
 .hover\:wpqt-text-blue-900:hover {
   --tw-text-opacity: 1;
   color: rgb(30 58 138 / var(--tw-text-opacity));
+}
+
+.hover\:wpqt-text-gray-700:hover {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 
 .hover\:wpqt-text-qtBlueHover:hover {

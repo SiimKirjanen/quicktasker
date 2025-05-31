@@ -122,12 +122,10 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * Validates if a given parameter is boolean.
          *
          * @param mixed  $param   The parameter to validate.
-         * @param object $request The request object (not used in the current implementation).
-         * @param string $key     The key associated with the parameter (not used in the current implementation).
          *
          * @return bool Returns true if the parameter is boolean, false otherwise.
          */
-        public static function validateBooleanParam($param, $request, $key) {
+        public static function validateBooleanParam($param) {
             return is_bool($param) || in_array(strtolower($param), array('true', 'false', '1', '0'), true);
         }
 
@@ -135,12 +133,10 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * Sanitizes a boolean parameter to ensure it is safe for use.
          *
          * @param mixed  $param   The parameter to sanitize.
-         * @param object $request The request object (not used in this function).
-         * @param string $key     The key associated with the parameter (not used in this function).
          *
          * @return bool The sanitized boolean value of the parameter.
          */
-        public static function sanitizeBooleanParam($param, $request, $key) {
+        public static function sanitizeBooleanParam($param) {
             return rest_sanitize_boolean($param);
         }
 

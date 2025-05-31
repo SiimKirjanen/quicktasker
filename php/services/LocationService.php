@@ -33,5 +33,13 @@ if ( ! class_exists( 'WPQT\Location\LocationService' ) ) {
 
             return false;
         }
+
+        public function isWPQTTaskPDFExportPage() {
+            if ( isset($_GET['wpqt-page']) && $_GET['wpqt-page'] === WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID ) {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
