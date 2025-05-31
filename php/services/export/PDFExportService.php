@@ -66,6 +66,16 @@ if ( ! class_exists( 'PDFExportService' ) ) {
                     $this->addField(esc_html__('Assigned QuickTaskers', 'quicktasker'), $assignedQuickTaskers);
                     $this->addField(esc_html__('Added labels', 'quicktasker'), $assignedLabels);
                     $this->addField(esc_html__('Archived', 'quicktasker'), $taskArchived);
+
+                    if ( !empty($task->custom_fields) ) {
+                        $this->_pdf->Ln(5);
+                        
+                        foreach ($task->custom_fields as $customField) {
+                            $fieldName = $customField->name;
+                            $fieldValue = !empty($customField->value) ? $customField->value : esc_html__('Not set', 'quicktasker');
+                            $this->addField($fieldName, $fieldValue, false);
+                        }
+                    }
                 } 
             }
 

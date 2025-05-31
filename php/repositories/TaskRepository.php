@@ -318,6 +318,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                 $assignedUsers = $this->userRepository->getAssignedUsersByTaskIds($taskIds);
                 $assignedWPUsers = $this->userRepository->getAssignedWPUsersByTaskIds($taskIds);
                 $assignedLabels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds($taskIds);
+                $customFields = ServiceLocator::get('CustomFieldRepository')->getActiveCustomFieldsForTasks($taskIds);
                 
                 $usersByTask = [];
                 foreach ($assignedUsers as $user) {
@@ -338,6 +339,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                     $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
                     $task->assigned_wp_users = isset($wpUsersByTask[$task->id]) ? $wpUsersByTask[$task->id] : [];
                     $task->assigned_labels = isset($labelsByTask[$task->id]) ? $labelsByTask[$task->id] : [];
+                    $task->custom_fields = isset($customFields[$task->id]) ? $customFields[$task->id] : [];
                 }        
             }
 

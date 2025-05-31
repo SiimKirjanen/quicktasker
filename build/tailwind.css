@@ -1299,6 +1299,10 @@
   margin-bottom: 0px !important;
 }
 
+.wpqt-mb-0 {
+  margin-bottom: 0px;
+}
+
 .wpqt-mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -1397,10 +1401,6 @@
 
 .wpqt-mt-auto {
   margin-top: auto;
-}
-
-.wpqt-mb-0 {
-  margin-bottom: 0px;
 }
 
 .\!wpqt-block {
