@@ -20,7 +20,7 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
         
         private function setUpPdf() {
             $this->_pdf = new \TFPDF();
-            $this->_pdf->SetTitle( 'Title' );
+            $this->_pdf->SetTitle( $this->_pipeline->name );
             $this->_pdf->SetAuthor('QuickTasker WordPress');
             $this->_pdf->AddFont('DejaVu','','DejaVuSans.ttf', true);
             $this->_pdf->AddFont('DejaVu', 'B', 'DejaVuSans-Bold.ttf', true);
@@ -77,8 +77,7 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
                     }
                 } 
             }
-
-            $this->_pdf->Output('I', 'tasks-export.pdf');
+            $this->_pdf->Output('I', "{$this->_fileName}.pdf");
         }
 
         private function setHeaderFont($size = 10) {
