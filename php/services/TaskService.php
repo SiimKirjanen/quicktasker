@@ -58,7 +58,9 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
             global $wpdb;
 
             $defaults = array(
-                'description' => null
+                'description' => null,
+                'task_focus_color' => null,
+                'due_date' => null,
             );
 
             $args = wp_parse_args($args, $defaults);
@@ -73,7 +75,9 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 'pipeline_id' => $args['pipelineId'],
                 'task_hash' => $this->hashService->generateTaskHash($args['name']),
                 'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+                'task_focus_color' => $args['task_focus_color'],
+                'due_date' => $args['due_date'],
             ));
 
             if( $result === false ) {
