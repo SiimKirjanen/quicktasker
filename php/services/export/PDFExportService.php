@@ -17,7 +17,7 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
             parent::__construct($pipelineId, $searchFilter, $includeArchivedTasks);
             $this->setUpPdf();
         }
-
+        
         private function setUpPdf() {
             $this->_pdf = new \TFPDF();
             $this->_pdf->SetTitle( 'Title' );
@@ -28,7 +28,7 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
             $this->_pdf->AddPage();
             $this->_pdf->SetFont('DejaVu','',10);
         }
-
+        
         public function generateTasksPdfExport() {
             
             if ( empty($this->_tasks) ) {

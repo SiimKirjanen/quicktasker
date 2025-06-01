@@ -1,4 +1,3 @@
-import { ClockIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../components/Card/Card";
@@ -6,6 +5,7 @@ import { TaskControlsDropdown } from "../../../../components/Dropdown/TaskContro
 import { TaskLabelDropdown } from "../../../../components/Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
+import { DueDateInfo } from "../../../../components/Icon/DueDateInfo/DueDateInfo";
 import { TaskColorModal } from "../../../../components/Modal/TaskColorModal/TaskColorModal";
 import { TaskModal } from "../../../../components/Modal/TaskModal/TaskModal";
 import {
@@ -15,7 +15,6 @@ import {
 } from "../../../../constants";
 import { useTaskFilter } from "../../../../hooks/filters/useTaskFilter";
 import { useActivePipeline } from "../../../../hooks/useActivePipeline";
-import { useTimezone } from "../../../../hooks/useTimezone";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { TaskActions } from "../Task/TaskActions";
 
@@ -24,7 +23,6 @@ function TaskView() {
   const { activePipelineTasks, activePipelineSettings, isTaskOnLastStage } =
     useActivePipeline();
   const { taskViewFilter } = useTaskFilter();
-  const { convertToWPTimezone } = useTimezone();
   const filteredTasks = activePipelineTasks.filter(taskViewFilter);
 
   if (filteredTasks.length === 0) {
@@ -70,16 +68,7 @@ function TaskView() {
               <TaskLabelDropdown task={task} />
             </div>
 
-            {task.due_date && (
-              <div className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center">
-                <ClockIcon className="wpqt-size-5 wpqt-icon-blue" />
-                <span className="wpqt-font-semibold">
-                  {__("Due date", "quicktasker")}:
-                </span>
-                {convertToWPTimezone(task.due_date)}
-              </div>
-            )}
-
+            <DueDateInfo task={task} />
             <TaskActions
               task={task}
               allowToMarkTaskAsDone={allowToMarkTaskAsDone}

@@ -6,6 +6,7 @@
     "strict": true,
     "moduleResolution": "node",
     "noEmitOnError": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["./node_modules/@types", "./src/vendor-types"]
   }
 }
