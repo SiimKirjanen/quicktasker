@@ -30,7 +30,7 @@ function AutomationsList() {
       <div>
         <WPQTIconButton
           icon={<BsRobot className="wpqt-size-5" />}
-          text={__("Show board automations", "quicktasker")}
+          text={__("Show created automations", "quicktasker")}
           onClick={() => setShowAutomations(true)}
         />
       </div>
@@ -38,18 +38,17 @@ function AutomationsList() {
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-col">
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-3">
+    <div>
+      <WPQTIconButton
+        icon={<BsRobot className="wpqt-size-5" />}
+        text={__("Hide created automations", "quicktasker")}
+        onClick={() => setShowAutomations(false)}
+      />
+
+      <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">
         {automations.map((automation) => (
           <AutomationListItem key={automation.id} automation={automation} />
         ))}
-      </div>
-      <div className="wpqt-flex wpqt-justify-center">
-        <WPQTIconButton
-          icon={<BsRobot className="wpqt-size-5" />}
-          text={__("Hide board automations", "quicktasker")}
-          onClick={() => setShowAutomations(false)}
-        />
       </div>
     </div>
   );

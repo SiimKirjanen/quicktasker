@@ -100,82 +100,83 @@ function AutomationCreator({ pipelineId }: props) {
     );
   }
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-gap-3">
-      <div className="wpqt-flex wpqt-gap-3 wpqt-p-4 wpqt-justify-center wpqt-items-center">
-        <WPQTCard
-          title={__("Target", "quicktasker")}
-          className={cardStyleClasses}
-          titleClassName={cardTitleClasses}
-          onClick={() => {
-            automationDispatch({ type: RESET_AUTOMATION_TO_TARGET });
-          }}
-        >
-          <div className="wpqt-flex wpqt-justify-center">
-            {automation.automationTarget ? (
-              automationTargetStrings[automation.automationTarget]
-            ) : (
-              <QuestionMarkIcon />
-            )}
-          </div>
-        </WPQTCard>
-        <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
-        <WPQTCard
-          title={__("Trigger", "quicktasker")}
-          className={cardStyleClasses}
-          titleClassName={cardTitleClasses}
-          onClick={() => {
-            automationDispatch({ type: RESET_AUTOMATION_TO_TRIGGER });
-          }}
-        >
-          <div className="wpqt-flex wpqt-justify-center">
-            {automation.automationTrigger ? (
-              automationTriggerStrings[automation.automationTrigger]
-            ) : (
-              <QuestionMarkIcon />
-            )}
-          </div>
-        </WPQTCard>
-        <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
-        <WPQTCard
-          title={__("Action", "quicktasker")}
-          className={cardStyleClasses}
-          titleClassName={cardTitleClasses}
-          onClick={() => {
-            automationDispatch({ type: RESET_AUTOMATION_TO_ACTION });
-          }}
-        >
-          <div className="wpqt-flex wpqt-flex-col wpqt-justify-center wpqt-items-center">
-            {automation.automationAction ? (
-              automationActionStrings[automation.automationAction.id]
-            ) : (
-              <QuestionMarkIcon />
-            )}
-            {hasActionTarget && (
-              <AutomationActionTarget
-                actionTargetId={automation.automationActionTargetId}
-                actionTargetType={automation.automationActionTargetType}
-              />
-            )}
-            {hasMeta && <div>{automation.metaData}</div>}
-          </div>
-        </WPQTCard>
-      </div>
-      <div className="wpqt-flex wpqt-justify-center">
-        <AutomationCreationSteps
-          automation={automation}
-          automationDispatch={automationDispatch}
-          createAutomation={onCreateAutomation}
-        />
-      </div>
-      <div className="wpqt-flex wpqt-justify-center">
-        <WPQTIconButton
-          icon={<BsRobot className="wpqt-size-5" />}
-          text={__("Close automation creator", "quicktasker")}
-          onClick={() => {
-            setShowCreator(false);
-            resetAutomationState();
-          }}
-        />
+    <div className="wpqt-w-full">
+      <WPQTIconButton
+        icon={<BsRobot className="wpqt-size-5 wpqt-self-start" />}
+        text={__("Close automation creator", "quicktasker")}
+        onClick={() => {
+          setShowCreator(false);
+          resetAutomationState();
+        }}
+      />
+      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
+        <div className="wpqt-flex wpqt-gap-3 wpqt-p-4 wpqt-justify-center wpqt-items-center">
+          <div className="wpqt-flex wpqt-justify-start"></div>
+          <WPQTCard
+            title={__("Target", "quicktasker")}
+            className={cardStyleClasses}
+            titleClassName={cardTitleClasses}
+            onClick={() => {
+              automationDispatch({ type: RESET_AUTOMATION_TO_TARGET });
+            }}
+          >
+            <div className="wpqt-flex wpqt-justify-center">
+              {automation.automationTarget ? (
+                automationTargetStrings[automation.automationTarget]
+              ) : (
+                <QuestionMarkIcon />
+              )}
+            </div>
+          </WPQTCard>
+          <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
+          <WPQTCard
+            title={__("Trigger", "quicktasker")}
+            className={cardStyleClasses}
+            titleClassName={cardTitleClasses}
+            onClick={() => {
+              automationDispatch({ type: RESET_AUTOMATION_TO_TRIGGER });
+            }}
+          >
+            <div className="wpqt-flex wpqt-justify-center">
+              {automation.automationTrigger ? (
+                automationTriggerStrings[automation.automationTrigger]
+              ) : (
+                <QuestionMarkIcon />
+              )}
+            </div>
+          </WPQTCard>
+          <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
+          <WPQTCard
+            title={__("Action", "quicktasker")}
+            className={cardStyleClasses}
+            titleClassName={cardTitleClasses}
+            onClick={() => {
+              automationDispatch({ type: RESET_AUTOMATION_TO_ACTION });
+            }}
+          >
+            <div className="wpqt-flex wpqt-flex-col wpqt-justify-center wpqt-items-center">
+              {automation.automationAction ? (
+                automationActionStrings[automation.automationAction.id]
+              ) : (
+                <QuestionMarkIcon />
+              )}
+              {hasActionTarget && (
+                <AutomationActionTarget
+                  actionTargetId={automation.automationActionTargetId}
+                  actionTargetType={automation.automationActionTargetType}
+                />
+              )}
+              {hasMeta && <div>{automation.metaData}</div>}
+            </div>
+          </WPQTCard>
+        </div>
+        <div className="wpqt-flex wpqt-justify-center">
+          <AutomationCreationSteps
+            automation={automation}
+            automationDispatch={automationDispatch}
+            createAutomation={onCreateAutomation}
+          />
+        </div>
       </div>
     </div>
   );

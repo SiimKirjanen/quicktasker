@@ -13,9 +13,8 @@ function PipelineAutomations({ pipelineId }: Props) {
         <div className="wpqt-mb-4">
           <AutomationsList />
         </div>
-        <div>
-          <AutomationCreator pipelineId={pipelineId} />
-        </div>
+
+        <AutomationCreator pipelineId={pipelineId} />
       </AutomationsWrapper>
     </PipelineAutomationsContextProvider>
   );

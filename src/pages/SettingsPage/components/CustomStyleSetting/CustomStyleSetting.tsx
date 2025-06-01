@@ -43,7 +43,9 @@ const CustomStyleSetting = () => {
       <WPQTTextarea
         value={userPageCustomStyles}
         onChange={setUserPageCustomStylesState}
+        colsCount={40}
       />
+
       <WPQTIconButton
         text={__("Save", "quicktasker")}
         loading={isSaving}
