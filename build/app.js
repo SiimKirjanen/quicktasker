@@ -5126,6 +5126,7 @@ function AddPipelineModal() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModal, {
     modalOpen: newPipelineModalOpen,
     closeModal: closeModal,
+    size: "sm",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AddPipelineModalContent__WEBPACK_IMPORTED_MODULE_5__.PipelineModalContent, {
       ref: modalContentRef,
       addPipeline: onAddPipeline,
@@ -5186,14 +5187,17 @@ const PipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_3__.WPQTInput, {
           isAutoFocus: true,
           value: pipelineName,
-          onChange: newValue => setPipelineName(newValue)
+          onChange: newValue => setPipelineName(newValue),
+          className: "wpqt-w-full",
+          wrapperClassName: "wpqt-w-full"
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_5__.WPQTModalField, {
         label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Description", "quicktasker"),
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__.WPQTTextarea, {
           rowsCount: 3,
           value: pipelineDescription,
-          onChange: newValue => setPipelineDescription(newValue)
+          onChange: newValue => setPipelineDescription(newValue),
+          className: "wpqt-w-full"
         })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_5__.WPQTModalFooter, {
@@ -5437,7 +5441,9 @@ const EditPipelineModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_
               children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_12__.WPQTInput, {
                 isAutoFocus: true,
                 value: pipelineName,
-                onChange: newValue => setPipelineName(newValue)
+                onChange: newValue => setPipelineName(newValue),
+                className: "wpqt-w-full",
+                wrapperClassName: "wpqt-w-full"
               })
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_15__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Description", "quicktasker"),
