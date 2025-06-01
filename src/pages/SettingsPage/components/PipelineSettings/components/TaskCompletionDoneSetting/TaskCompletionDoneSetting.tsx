@@ -31,7 +31,7 @@ function TaskCompletionDoneSetting({
     <Settings
       title={__("Restrict Task Completion", "quicktasker")}
       description={__(
-        "Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page",
+        "Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page.",
         "quicktasker",
       )}
     >

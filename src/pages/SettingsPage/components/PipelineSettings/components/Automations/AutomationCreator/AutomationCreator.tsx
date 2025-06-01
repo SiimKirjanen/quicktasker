@@ -4,7 +4,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useContext, useReducer, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { BsRobot } from "react-icons/bs";
+import { BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
 import { WPQTCard } from "../../../../../../../components/Card/Card";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
 import { PremiumAd } from "../../../../../../../components/PremiudAd/PremiumAd";
@@ -92,7 +92,7 @@ function AutomationCreator({ pipelineId }: props) {
     return (
       <div>
         <WPQTIconButton
-          icon={<BsRobot className="wpqt-size-5" />}
+          icon={<BsCaretDownFill className="wpqt-size-5" />}
           text={__("Create a new automation", "quicktasker")}
           onClick={() => setShowCreator(true)}
         />
@@ -102,7 +102,7 @@ function AutomationCreator({ pipelineId }: props) {
   return (
     <div className="wpqt-w-full">
       <WPQTIconButton
-        icon={<BsRobot className="wpqt-size-5 wpqt-self-start" />}
+        icon={<BsCaretUpFill className="wpqt-size-5 wpqt-self-start" />}
         text={__("Close automation creator", "quicktasker")}
         onClick={() => {
           setShowCreator(false);

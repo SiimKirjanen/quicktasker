@@ -13662,7 +13662,7 @@ function AutomationCreator({
     }
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_13__.BsRobot, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_13__.BsCaretDownFill, {
           className: "wpqt-size-5"
         }),
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create a new automation", "quicktasker"),
@@ -13673,7 +13673,7 @@ function AutomationCreator({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-w-full",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_13__.BsRobot, {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_13__.BsCaretUpFill, {
         className: "wpqt-size-5 wpqt-self-start"
       }),
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Close automation creator", "quicktasker"),
@@ -14477,7 +14477,7 @@ function AutomationsList() {
   if (!showAutomations) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_8__.BsRobot, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_8__.BsCaretDownFill, {
           className: "wpqt-size-5"
         }),
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Show created automations", "quicktasker"),
@@ -14487,13 +14487,13 @@ function AutomationsList() {
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
-      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_8__.BsRobot, {
+      icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_bs__WEBPACK_IMPORTED_MODULE_8__.BsCaretUpFill, {
         className: "wpqt-size-5"
       }),
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Hide created automations", "quicktasker"),
       onClick: () => setShowAutomations(false)
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-flex wpqt-flex-col wpqt-gap-4",
+      className: "wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-mx-auto wpqt-max-w-7xl",
       children: automations.map(automation => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_AutomationListItem_AutomationListItem__WEBPACK_IMPORTED_MODULE_7__.AutomationListItem, {
         automation: automation
       }, automation.id))
@@ -14527,7 +14527,7 @@ __webpack_require__.r(__webpack_exports__);
 function AutomationsWrapper({
   children
 }) {
-  const description = _constants__WEBPACK_IMPORTED_MODULE_2__.HAS_AUTOMATIONS ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Set up automated processes to help manage your boards", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Set up automated processes to help manage your boards. To create more than one automation, please upgrade to the premium version.", "quicktasker");
+  const description = _constants__WEBPACK_IMPORTED_MODULE_2__.HAS_AUTOMATIONS ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Set up automated processes to help manage your boards.", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Set up automated processes to help manage your boards. To create more than one automation, please upgrade to the premium version.", "quicktasker");
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Settings_Settings__WEBPACK_IMPORTED_MODULE_3__.Settings, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Board automations", "quicktasker"),
     description: description,
@@ -14742,7 +14742,7 @@ function TaskCompletionDoneSetting({
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Settings_Settings__WEBPACK_IMPORTED_MODULE_6__.Settings, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Restrict Task Completion", "quicktasker"),
-    description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page", "quicktasker"),
+    description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page.", "quicktasker"),
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-gap-2 wpqt-items-center",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_3__.Toggle, {
@@ -14778,7 +14778,7 @@ const Settings = ({
   description
 }) => {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-items-start wpqt-mb-5",
+    className: "wpqt-mb-5",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
       className: "wpqt-mb-1",
       children: title
