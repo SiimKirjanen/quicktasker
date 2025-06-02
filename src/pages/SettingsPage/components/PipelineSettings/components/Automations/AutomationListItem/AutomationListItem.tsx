@@ -24,47 +24,52 @@ function AutomationListItem({ automation }: Props) {
   const hasMeta = automation.metadata !== null;
 
   return (
-    <div className="wpqt-flex wpqt-gap-3 wpqt-p-4 wpqt-items-center">
-      <WPQTCard
-        title={__("Target", "quicktasker")}
-        className={cardStyleClasses}
-        titleClassName={cardTitleClasses}
-      >
-        <div className="wpqt-flex wpqt-justify-center">
-          {automationTargetStrings[automation.target_type]}
-        </div>
-      </WPQTCard>
-      <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
-      <WPQTCard
-        title={__("Trigger", "quicktasker")}
-        className={cardStyleClasses}
-        titleClassName={cardTitleClasses}
-      >
-        <div className="wpqt-flex wpqt-justify-center">
-          {automationTriggerStrings[automation.automation_trigger]}
-        </div>
-      </WPQTCard>
-      <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
-      <WPQTCard
-        title={__("Action", "quicktasker")}
-        className={cardStyleClasses}
-        titleClassName={cardTitleClasses}
-      >
-        <div className="wpqt-flex wpqt-flex-col wpqt-justify-center wpqt-items-center">
-          {automationActionStrings[automation.automation_action]}
-          {hasActionTarget && (
-            <AutomationActionTarget
-              actionTargetId={automation.automation_action_target_id}
-              actionTargetType={automation.automation_action_target_type}
-            />
-          )}
-          {hasMeta && <div>{automation.metadata}</div>}
-        </div>
-      </WPQTCard>
+    <div className="wpqt-flex">
+      <div className="wpqt-flex-1 wpqt-flex wpqt-p-4 wpqt-items-center wpqt-justify-center wpqt-gap-3">
+        <WPQTCard
+          title={__("Target", "quicktasker")}
+          className={cardStyleClasses}
+          titleClassName={cardTitleClasses}
+        >
+          <div className="wpqt-flex wpqt-justify-center">
+            {automationTargetStrings[automation.target_type]}
+          </div>
+        </WPQTCard>
 
+        <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
+
+        <WPQTCard
+          title={__("Trigger", "quicktasker")}
+          className={cardStyleClasses}
+          titleClassName={cardTitleClasses}
+        >
+          <div className="wpqt-flex wpqt-justify-center">
+            {automationTriggerStrings[automation.automation_trigger]}
+          </div>
+        </WPQTCard>
+
+        <ArrowRightCircleIcon className="wpqt-icon-blue wpqt-size-6" />
+
+        <WPQTCard
+          title={__("Action", "quicktasker")}
+          className={cardStyleClasses}
+          titleClassName={cardTitleClasses}
+        >
+          <div className="wpqt-flex wpqt-flex-col wpqt-justify-center wpqt-items-center">
+            {automationActionStrings[automation.automation_action]}
+            {hasActionTarget && (
+              <AutomationActionTarget
+                actionTargetId={automation.automation_action_target_id}
+                actionTargetType={automation.automation_action_target_type}
+              />
+            )}
+            {hasMeta && <div>{automation.metadata}</div>}
+          </div>
+        </WPQTCard>
+      </div>
       <AutomationControls
         automation={automation}
-        className={`${cardStyleClasses} wpqt-ml-6`}
+        className={`${cardStyleClasses}`}
         titleClassName={cardTitleClasses}
       />
     </div>

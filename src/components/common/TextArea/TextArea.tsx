@@ -5,12 +5,14 @@ type Props = {
   value: string;
   onChange: (newValue: string) => void;
   rowsCount?: number;
+  colsCount?: number;
   className?: string;
 };
 function WPQTTextarea({
   value,
   onChange,
   rowsCount = 3,
+  colsCount,
   className = "",
 }: Props) {
   return (
@@ -20,6 +22,7 @@ function WPQTTextarea({
         `focus:wpqt-shadow-none focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,
       )}
       rows={rowsCount}
+      cols={colsCount}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />

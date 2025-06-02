@@ -118,6 +118,8 @@ const EditPipelineModalContent = forwardRef(
                     isAutoFocus={true}
                     value={pipelineName}
                     onChange={(newValue: string) => setPipelineName(newValue)}
+                    className="wpqt-w-full"
+                    wrapperClassName="wpqt-w-full"
                   />
                 </WPQTModalField>
                 <WPQTModalField label={__("Description", "quicktasker")}>

@@ -46,7 +46,11 @@ function AddPipelineModal() {
   };
 
   return (
-    <WPQTModal modalOpen={newPipelineModalOpen} closeModal={closeModal}>
+    <WPQTModal
+      modalOpen={newPipelineModalOpen}
+      closeModal={closeModal}
+      size="sm"
+    >
       <PipelineModalContent
         ref={modalContentRef}
         addPipeline={onAddPipeline}

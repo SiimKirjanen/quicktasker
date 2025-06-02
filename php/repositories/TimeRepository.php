@@ -18,6 +18,35 @@ if ( ! class_exists( 'WPQT\Time\TimeRepository' ) ) {
         }
 
         /**
+         * Modifies the current UTC time by adding or subtracting a specified time interval.
+         *
+         * @param int $amount The amount to add (positive) or subtract (negative)
+         * @param string $unit The time unit ('second', 'minute', 'hour', 'day', 'week', 'month', 'year')
+         * @return string The modified UTC time in 'Y-m-d H:i:s' format.
+         */
+        public function modifyUTCTime($amount, $unit = 'hour') {
+            // Validate unit
+            $valid_units = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
+            if (!in_array(strtolower($unit), $valid_units)) {
+                $unit = 'hour'; // Default to hours if invalid unit
+            }
+            
+            // Create DateTime object with current UTC time
+            $date = new \DateTime('now', new \DateTimeZone('UTC'));
+            
+            // Ensure singular form for DateTime::modify
+            if (abs($amount) != 1) {
+                $unit .= 's';
+            }
+            
+            // Add the specified interval
+            $date->modify("$amount $unit");
+            
+            // Return the adjusted time in the same format as getCurrentUTCTime
+            return $date->format('Y-m-d H:i:s');
+        }
+
+        /**
          * Retrieves the WordPress timezone setting.
          *
          * This function fetches the timezone setting from the WordPress options.

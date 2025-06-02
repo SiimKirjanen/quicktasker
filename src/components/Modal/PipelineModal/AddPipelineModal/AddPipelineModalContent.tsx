@@ -40,6 +40,8 @@ const PipelineModalContent = forwardRef(
               isAutoFocus={true}
               value={pipelineName}
               onChange={(newValue: string) => setPipelineName(newValue)}
+              className="wpqt-w-full"
+              wrapperClassName="wpqt-w-full"
             />
           </WPQTModalField>
           <WPQTModalField label={__("Description", "quicktasker")}>
@@ -47,6 +49,7 @@ const PipelineModalContent = forwardRef(
               rowsCount={3}
               value={pipelineDescription}
               onChange={(newValue: string) => setPipelineDescription(newValue)}
+              className="wpqt-w-full"
             />
           </WPQTModalField>
         </WPQTModalFieldSet>

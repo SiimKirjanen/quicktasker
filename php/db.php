@@ -7,6 +7,8 @@ use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Stage\StageService;
 use WPQT\Task\TaskService;
+use WPQT\Label\LabelService;
+use WPQT\Time\TimeRepository;
 
 if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 	function wpqt_set_up_db() {
@@ -323,6 +325,8 @@ if ( ! function_exists( 'wpqt_insert_initial_data' ) ) {
 		$pipeService = new PipelineService();
 		$stageService = new StageService();
 		$taskService = new TaskService();
+		$labelService = new LabelService();
+		$timeRepo = new TimeRepository();
 		$transaction_started = false;
 		
 		try {
@@ -332,33 +336,43 @@ if ( ! function_exists( 'wpqt_insert_initial_data' ) ) {
 				$wpdb->query('START TRANSACTION');
 				$transaction_started = true;
 
-				$newPipeId = $pipeService->createPipeline("QuickTasker Food")->id;
+				$newPipeId = $pipeService->createPipeline("Demo board", array(
+					'description' => 'This is a demo food store board.',
+				))->id;
 				$pipeService->markPipelineAsPrimary($newPipeId);
 				$firstStageId = $stageService->createStage($newPipeId, array('name' => 'Order Received'))->id;
 				$secondStageId = $stageService->createStage($newPipeId, array('name' => 'Preparing Order'))->id;
 				$thirdStageId = $stageService->createStage($newPipeId, array('name' => 'Out for Delivery'))->id;
 				$stageService->createStage($newPipeId, array('name' => 'Delivered'));
 
-				$taskService->createTask($firstStageId, array(
+				$task = $taskService->createTask($firstStageId, array(
 					'name' => 'Order #1001',
 					'description' => 'Large pizza and a soda.',
-					'pipelineId' => $newPipeId
+					'pipelineId' => $newPipeId,
+					'task_focus_color' => '#22D21E',
 				));
 				$taskService->createTask($firstStageId, array(
 					'name' => 'Order #1002',
 					'description' => 'Burger and fries.',
-					'pipelineId' => $newPipeId
+					'pipelineId' => $newPipeId,
+					'due_date' => $timeRepo->modifyUTCTime(4, 'day'),
 				));
 				$taskService->createTask($secondStageId, array(
 					'name' => 'Order #1003',
 					'description' => 'Tacos and nachos.',
-					'pipelineId' => $newPipeId
+					'pipelineId' => $newPipeId,
 				));
-				$taskService->createTask($thirdStageId, array(
+				$task4 = $taskService->createTask($thirdStageId, array(
 					'name' => 'Order #1004',
 					'description' => 'Steak dinner with mashed potatoes.',
-					'pipelineId' => $newPipeId
+					'pipelineId' => $newPipeId,
+					'due_date' => $timeRepo->modifyUTCTime(2, 'hour'),
 				));
+
+				$label = $labelService->createLabel($newPipeId, 'Important', '#FF9800');
+				$label2 = $labelService->createLabel($newPipeId, 'VIP Customer', '#FFD700');
+				$labelService->assignLabel($task->id, 'task', $label->id);
+				$labelService->assignLabel($task4->id, 'task', $label2->id);
 
 				$wpdb->query('COMMIT');
 			}

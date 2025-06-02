@@ -1,6 +1,6 @@
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { BsRobot } from "react-icons/bs";
+import { BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
 import { Alert } from "../../../../../../../components/common/Alert/Alert";
 import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
 import { Loading } from "../../../../../../../components/Loading/Loading";
@@ -29,8 +29,8 @@ function AutomationsList() {
     return (
       <div>
         <WPQTIconButton
-          icon={<BsRobot className="wpqt-size-5" />}
-          text={__("Show board automations", "quicktasker")}
+          icon={<BsCaretDownFill className="wpqt-size-5" />}
+          text={__("Show created automations", "quicktasker")}
           onClick={() => setShowAutomations(true)}
         />
       </div>
@@ -38,18 +38,17 @@ function AutomationsList() {
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-col">
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-3">
+    <div>
+      <WPQTIconButton
+        icon={<BsCaretUpFill className="wpqt-size-5" />}
+        text={__("Hide created automations", "quicktasker")}
+        onClick={() => setShowAutomations(false)}
+      />
+
+      <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-mx-auto wpqt-max-w-7xl">
         {automations.map((automation) => (
           <AutomationListItem key={automation.id} automation={automation} />
         ))}
-      </div>
-      <div className="wpqt-flex wpqt-justify-center">
-        <WPQTIconButton
-          icon={<BsRobot className="wpqt-size-5" />}
-          text={__("Hide board automations", "quicktasker")}
-          onClick={() => setShowAutomations(false)}
-        />
       </div>
     </div>
   );

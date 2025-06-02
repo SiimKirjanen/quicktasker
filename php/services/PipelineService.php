@@ -31,13 +31,19 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
          * @return object The newly created pipeline object.
          * @throws \Exception If the pipeline or pipeline settings could not be created.
          */
-        public function createPipeline($name) {
+        public function createPipeline($name, $args = array()) {
             global $wpdb;
+
+            $defaults = array(
+                'description' => null,
+            );
+            $args = wp_parse_args($args, $defaults);
 
             $activePipeline = $this->pipelineRepository->getActivePipeline();
 
             $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINES, array(
                 'name' => $name,
+                'description' => $args['description'],
                 'is_primary' => $activePipeline ? false : true,
                 'created_at' => $this->timeRepository->getCurrentUTCTime(),
                 'updated_at' => $this->timeRepository->getCurrentUTCTime()
