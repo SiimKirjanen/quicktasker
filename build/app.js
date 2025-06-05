@@ -4885,13 +4885,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
-/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
+/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
+/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _types_pipeline__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../types/pipeline */ "./src/types/pipeline.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../types/imports */ "./src/types/imports.ts");
+/* harmony import */ var _utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../utils/import/normalize-import */ "./src/utils/import/normalize-import.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+
 
 
 
@@ -4909,19 +4911,44 @@ function ImportPipelineModal() {
     },
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__.ModalContext);
-  const [selectedImportSource] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_pipeline__WEBPACK_IMPORTED_MODULE_5__.PipelineImportSource.TRELLO);
+  const [selectedImportSource] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_imports__WEBPACK_IMPORTED_MODULE_5__.PipelineImportSource.TRELLO);
+  const [importData, setImportData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const [importLoading, setImportLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const fileInputRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+  const selectionText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Import from Trello", "quicktasker");
   const handleFileButtonClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_7__.WPQTModal, {
+  const handleFileChange = event => {
+    var _a;
+    const file = (_a = event.target.files) === null || _a === void 0 ? void 0 : _a[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        var _a;
+        try {
+          const parsedData = JSON.parse((_a = e.target) === null || _a === void 0 ? void 0 : _a.result);
+          const normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_6__.normalizeTrelloImport)(parsedData);
+          setImportData(normalizedData);
+        } catch (error) {
+          console.error("Error parsing JSON file:", error);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+  const resetState = () => {
+    setImportData(null);
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_8__.WPQTModal, {
     modalOpen: pipelineImportModalOpen,
     closeModal: () => {
       modalDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_PIPELINE_IMPORT_MODAL
       });
+      resetState();
     },
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3",
@@ -4930,26 +4957,65 @@ function ImportPipelineModal() {
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Import board", "quicktasker")
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-cursor-pointer ${selectedImportSource === _types_pipeline__WEBPACK_IMPORTED_MODULE_5__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500" : ""}`,
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_8__.FaTrello, {
+          className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_5__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500" : ""}`,
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_9__.FaTrello, {
             className: "wpqt-size-5 wpqt-trello-blue"
           })
         })
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+        className: "wpqt-my-0 wpqt-mb-2",
+        children: selectionText
+      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select import file", "quicktasker"),
         onClick: handleFileButtonClick,
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_9__.MdFileUpload, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_10__.MdFileUpload, {
           className: "wpqt-size-5 wpqt-icon-blue"
-        }),
-        className: "wpqt-mt-4"
+        })
+      }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ImportInfo, {
+        importData: importData
+      }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTIconButton, {
+        text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Start import", "quicktasker"),
+        onClick: () => {
+          console.log("Importing data:", importData);
+          resetState();
+        },
+        loading: importLoading
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
         type: "file",
         ref: fileInputRef,
         id: "import-upload",
         className: "wpqt-hidden",
-        accept: ".json"
+        accept: ".json",
+        onChange: handleFileChange
       })]
     })
+  });
+}
+function ImportInfo({
+  importData
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Will create a board", "quicktasker"), " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        className: "wpqt-font-semibold",
+        children: importData.pipelineName
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Number of tasks", "quicktasker"), ":", " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+        className: "wpqt-font-semibold",
+        children: [importData.tasks.length, " (", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("archived", "quicktasker"), " ", importData.tasks.filter(task => task.archived).length, ")"]
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Number of stages", "quicktasker"), ":", " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        className: "wpqt-font-semibold",
+        children: importData.stages.length
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Number of labels", "quicktasker"), ":", " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        className: "wpqt-font-semibold"
+      }), importData.labels.length]
+    })]
   });
 }
 
@@ -19462,6 +19528,24 @@ var WPQTWpUserTypes;
 
 /***/ }),
 
+/***/ "./src/types/imports.ts":
+/*!******************************!*\
+  !*** ./src/types/imports.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PipelineImportSource: () => (/* binding */ PipelineImportSource)
+/* harmony export */ });
+var PipelineImportSource;
+(function (PipelineImportSource) {
+  PipelineImportSource["TRELLO"] = "TRELLO";
+})(PipelineImportSource || (PipelineImportSource = {}));
+
+
+/***/ }),
+
 /***/ "./src/types/label.ts":
 /*!****************************!*\
   !*** ./src/types/label.ts ***!
@@ -19524,7 +19608,6 @@ var LogCreatedByEnum;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   PipelineImportSource: () => (/* binding */ PipelineImportSource),
 /* harmony export */   PipelineView: () => (/* binding */ PipelineView)
 /* harmony export */ });
 var PipelineView;
@@ -19532,10 +19615,6 @@ var PipelineView;
   PipelineView["PIPELINE"] = "PIPELINE-VIEW";
   PipelineView["TASK"] = "TASK-VIEW";
 })(PipelineView || (PipelineView = {}));
-var PipelineImportSource;
-(function (PipelineImportSource) {
-  PipelineImportSource["TRELLO"] = "TRELLO";
-})(PipelineImportSource || (PipelineImportSource = {}));
 
 
 /***/ }),
@@ -19834,6 +19913,50 @@ function getDateDifference(dateString1, dateString2) {
 }
 function getCurrentUTCDateTime() {
   return dayjs__WEBPACK_IMPORTED_MODULE_0___default()().utc().format("YYYY-MM-DD HH:mm:ss");
+}
+
+
+/***/ }),
+
+/***/ "./src/utils/import/normalize-import.ts":
+/*!**********************************************!*\
+  !*** ./src/utils/import/normalize-import.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   normalizeTrelloImport: () => (/* binding */ normalizeTrelloImport)
+/* harmony export */ });
+function normalizeTrelloImport(importData) {
+  const pipelineData = {
+    pipelineName: importData.name,
+    pipelineDescription: importData.desc,
+    stages: importData.lists.filter(list => !list.closed).map(list => ({
+      stageName: list.name,
+      stageDescription: "",
+      stageId: list.id
+    })),
+    tasks: importData.cards.map(card => {
+      return {
+        taskName: card.name,
+        taskDescription: "",
+        stageId: card.idList,
+        archived: card.closed,
+        assignedLabels: card.labels.map(label => ({
+          labelName: label.name,
+          labelId: label.id,
+          color: label.color
+        }))
+      };
+    }),
+    labels: importData.labels.map(label => ({
+      labelName: label.name,
+      labelId: label.id,
+      color: label.color
+    }))
+  };
+  return pipelineData;
 }
 
 
