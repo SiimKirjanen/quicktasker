@@ -39,6 +39,9 @@
   .wpqt-pdf-red {
     color: #f1594e;
   }
+  .wpqt-trello-blue {
+    color: #0079bf;
+  }
   .wpqt-icon-green {
     @apply wpqt-text-green-700;
   }
@@ -53,6 +56,12 @@
   }
   .wpqt-icon-orange {
     @apply wpqt-text-orange-400;
+  }
+  .wpqt-blue-text {
+    @apply wpqt-text-blue-400;
+  }
+  .wpqt-blue-text-hover {
+    @apply hover:wpqt-text-blue-600;
   }
   .wpqt-transform-y-center {
     transform: translateY(-50%);

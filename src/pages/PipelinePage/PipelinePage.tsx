@@ -1,5 +1,6 @@
 import { useContext } from "@wordpress/element";
 import { TasksViewFilter } from "../../components/Filter/TasksViewFilter/TasksViewFilter";
+import { ImportPipelineModal } from "../../components/Modal/ImportPipelineModal/ImportPipelineModal";
 import { MoveTaskModal } from "../../components/Modal/MoveTaskModal/MoveTaskModal";
 import { AddPipelineModal } from "../../components/Modal/PipelineModal/AddPipelineModal/AddPipelineModal";
 import { EditPipelineModal } from "../../components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal";
@@ -46,6 +47,7 @@ const PipelinePageContent = () => {
       <EditPipelineModal />
       <MoveTaskModal />
       <TaskExportModal pipelineId={activePipeline?.id || null} />
+      <ImportPipelineModal />
     </Page>
   );
 };

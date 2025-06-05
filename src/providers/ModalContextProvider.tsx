@@ -5,6 +5,7 @@ import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_MOVE_TASK_MODAL,
+  CLOSE_PIPELINE_IMPORT_MODAL,
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
   CLOSE_TASK_COLOR_MODAL,
@@ -19,6 +20,7 @@ import {
   OPEN_NEW_PIPELINE_MODAL,
   OPEN_NEW_STAGE_MODAL,
   OPEN_NEW_USER_MODAL,
+  OPEN_PIPELINE_IMPORT_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
   OPEN_TASK_EXPORT_MODAL,
@@ -55,6 +57,7 @@ const initialState: State = {
   taskExportModalSettings: {
     selectedMethod: TaskExportMethods.PDF,
   },
+  pipelineImportModalOpen: false,
 };
 
 type State = {
@@ -77,6 +80,7 @@ type State = {
   taskColorModalOpen: boolean;
   taskExportModalOpen: boolean;
   taskExportModalSettings: TaskExportModalSettings;
+  pipelineImportModalOpen: boolean;
 };
 
 type Action =
@@ -119,7 +123,9 @@ type Action =
         selectedMethod: TaskExportMethods;
       };
     }
-  | { type: typeof CLOSE_TASK_EXPORT_MODAL };
+  | { type: typeof CLOSE_TASK_EXPORT_MODAL }
+  | { type: typeof OPEN_PIPELINE_IMPORT_MODAL }
+  | { type: typeof CLOSE_PIPELINE_IMPORT_MODAL };
 
 type ModalDispatch = (action: Action) => void;
 

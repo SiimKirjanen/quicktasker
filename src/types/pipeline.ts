@@ -32,6 +32,10 @@ enum PipelineView {
   TASK = "TASK-VIEW",
 }
 
-export { PipelineView };
+enum PipelineImportSource {
+  TRELLO = "TRELLO",
+}
+
+export { PipelineImportSource, PipelineView };
 
 export type { FullPipelineDataFromServer, Pipeline, PipelineFromServer };

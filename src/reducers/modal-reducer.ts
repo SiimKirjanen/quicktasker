@@ -4,6 +4,7 @@ import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_MOVE_TASK_MODAL,
+  CLOSE_PIPELINE_IMPORT_MODAL,
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
   CLOSE_TASK_COLOR_MODAL,
@@ -18,6 +19,7 @@ import {
   OPEN_NEW_PIPELINE_MODAL,
   OPEN_NEW_STAGE_MODAL,
   OPEN_NEW_USER_MODAL,
+  OPEN_PIPELINE_IMPORT_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
   OPEN_TASK_EXPORT_MODAL,
@@ -225,6 +227,15 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case CLOSE_TASK_EXPORT_MODAL: {
+      return closeModal();
+    }
+    case OPEN_PIPELINE_IMPORT_MODAL: {
+      return {
+        ...state,
+        pipelineImportModalOpen: true,
+      };
+    }
+    case CLOSE_PIPELINE_IMPORT_MODAL: {
       return closeModal();
     }
     default:
