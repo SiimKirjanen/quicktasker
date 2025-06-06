@@ -2114,7 +2114,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
-/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
@@ -2150,7 +2149,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
-
 
 
 
@@ -2258,12 +2256,10 @@ function PipelineSelectionDropdown() {
         })
       })
     }, "new-pipeline"), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_13__.MenuItem, {
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-flex wpqt-gap-1 wpqt-justify-center wpqt-cursor-pointer wpqt-blue-text wpqt-blue-text-hover",
         onClick: openPipelineImportModal,
-        children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Or import", "quicktasker"), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_17__.MdFileUpload, {
-          className: "wpqt-size-5"
-        })]
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Import existing", "quicktasker")
       })
     }, "export-pipeline")]
   });
@@ -4761,7 +4757,9 @@ function Info({
   infoText,
   infoDescription,
   actionIcon,
-  infoActionClick
+  infoActionClick,
+  secondaryInfoText,
+  secondaryInfoActionClick
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-flex wpqt-h-screen-minus-top-bar wpqt-items-center wpqt-justify-center",
@@ -4776,6 +4774,10 @@ function Info({
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
         children: infoDescription
+      }), secondaryInfoText && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+        className: `wpqt-m-0 wpqt-blue-text wpqt-blue-text-hover ${secondaryInfoActionClick ? "wpqt-cursor-pointer" : ""}`,
+        onClick: secondaryInfoActionClick || undefined,
+        children: secondaryInfoText
       })]
     })
   });
@@ -5053,7 +5055,7 @@ function ImportPipelineModal() {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select import file", "quicktasker"),
         onClick: handleFileButtonClick,
         icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_14__.MdFileUpload, {
-          className: "wpqt-size-5 wpqt-icon-blue"
+          className: "wpqt-size-5 wpqt-text-blue-500"
         })
       }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ImportInfo, {
         importData: importData
@@ -12947,6 +12949,12 @@ const Pipeline = () => {
       infoActionClick: () => {
         modalDispatch({
           type: _constants__WEBPACK_IMPORTED_MODULE_9__.OPEN_NEW_PIPELINE_MODAL
+        });
+      },
+      secondaryInfoText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Import an existing board", "quicktasker"),
+      secondaryInfoActionClick: () => {
+        modalDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_9__.OPEN_PIPELINE_IMPORT_MODAL
         });
       }
     });

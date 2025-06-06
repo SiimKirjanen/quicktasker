@@ -7,7 +7,6 @@ import { ChevronDownIcon, StarIcon } from "@heroicons/react/24/solid";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { clsx } from "clsx";
-import { MdFileUpload } from "react-icons/md";
 import { toast } from "react-toastify";
 import { setPipelinePrimaryRequest } from "../../../api/api";
 import {
@@ -121,8 +120,7 @@ function PipelineSelectionDropdown() {
           className="wpqt-flex wpqt-gap-1 wpqt-justify-center wpqt-cursor-pointer wpqt-blue-text wpqt-blue-text-hover"
           onClick={openPipelineImportModal}
         >
-          {__("Or import", "quicktasker")}
-          <MdFileUpload className="wpqt-size-5" />
+          {__("Import existing", "quicktasker")}
         </div>
       </MenuItem>
     </WPQTDropdown>

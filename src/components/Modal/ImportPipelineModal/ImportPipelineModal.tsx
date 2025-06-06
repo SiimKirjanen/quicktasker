@@ -109,7 +109,7 @@ function ImportPipelineModal() {
           <WPQTIconButton
             text={__("Select import file", "quicktasker")}
             onClick={handleFileButtonClick}
-            icon={<MdFileUpload className="wpqt-size-5 wpqt-icon-blue" />}
+            icon={<MdFileUpload className="wpqt-size-5 wpqt-text-blue-500" />}
           />
         )}
 
