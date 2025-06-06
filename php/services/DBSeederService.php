@@ -31,7 +31,7 @@ if ( ! class_exists( 'WPQT\DB\DBSeederService' ) ) {
                 ));
 
                 if ($settingExists == 0) {
-                $this->settingsService->insertSettingsColumnForPipeline($pipeline->id);
+                    $this->settingsService->insertSettingsColumnForPipeline($pipeline->id);
                 }
             }
         }

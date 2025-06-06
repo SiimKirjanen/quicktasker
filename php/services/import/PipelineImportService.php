@@ -123,10 +123,6 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 // Get the new stage ID using the mapped stageId
                 $newStageId = isset($stageIdMap[$task['stageId']]) ? $stageIdMap[$task['stageId']] : null;
 
-                if (!$newStageId) {
-                    throw new Exception("Stage ID {$task['stageId']} not found in mapping.");
-                }
-
                 // Create the task
                 $newTask = $taskService->createTask(
                     $newStageId,
@@ -134,6 +130,7 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                         'name' => $task['taskName'],
                         'description' => $task['taskDescription'],
                         'pipelineId' => $newPipeline->id,
+                        'is_archived' => $task['archived'],
                     ]
                 );
 

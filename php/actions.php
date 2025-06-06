@@ -22,6 +22,20 @@ if ( ! function_exists( 'wpqt_update_db' ) ) {
 	}
 }
 
+add_action( 'plugins_loaded', 'wpqt_db_migrations' );
+if ( ! function_exists( 'wpqt_db_migrations' ) ) {
+	function wpqt_db_migrations() {
+		 $quicktasker_db_migration_trigger = get_option('quicktasker_db_migration_trigger');
+
+        if ($quicktasker_db_migration_trigger !== WP_QUICKTASKER_DB_MIGRATION_TRIGGER) {
+            $DBMigrateService = ServiceLocator::get('DBMigrateService');
+			$DBMigrateService->runMigrations();
+
+            update_option('quicktasker_db_migration_trigger', WP_QUICKTASKER_DB_MIGRATION_TRIGGER);
+        }
+	}
+}
+
 add_action('template_redirect', 'wpqt_custom_http_status_code');
 if ( ! function_exists( 'wpqt_custom_http_status_code' ) ) {
 	function wpqt_custom_http_status_code() {
