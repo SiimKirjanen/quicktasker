@@ -143,6 +143,8 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                     }
                 }
             }
+
+            return $newPipeline->id;
         }
     }
 }

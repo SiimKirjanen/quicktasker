@@ -4902,16 +4902,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
-/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
+/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
+/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useImportActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useImportActions */ "./src/hooks/actions/useImportActions.ts");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../types/imports */ "./src/types/imports.ts");
-/* harmony import */ var _utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../utils/import/normalize-import */ "./src/utils/import/normalize-import.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
+/* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../types/imports */ "./src/types/imports.ts");
+/* harmony import */ var _utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../utils/import/normalize-import */ "./src/utils/import/normalize-import.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -4952,14 +4954,22 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
 function ImportPipelineModal() {
   const {
     state: {
       pipelineImportModalOpen
     },
     modalDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__.ModalContext);
-  const [selectedImportSource] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_imports__WEBPACK_IMPORTED_MODULE_7__.PipelineImportSource.TRELLO);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__.ModalContext);
+  const {
+    pipelinesDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_8__.PipelinesContext);
+  const {
+    fetchAndSetPipelineData
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_6__.ActivePipelineContext);
+  const [selectedImportSource] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.TRELLO);
   const [importData, setImportData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [importLoading, setImportLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const fileInputRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
@@ -4981,7 +4991,7 @@ function ImportPipelineModal() {
         var _a;
         try {
           const parsedData = JSON.parse((_a = e.target) === null || _a === void 0 ? void 0 : _a.result);
-          const normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_8__.normalizeTrelloImport)(parsedData);
+          const normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_10__.normalizeTrelloImport)(parsedData);
           setImportData(normalizedData);
         } catch (error) {
           console.error("Error parsing JSON file:", error);
@@ -4997,15 +5007,26 @@ function ImportPipelineModal() {
     }
     setImportLoading(true);
     const {
-      data,
-      error
+      data
     } = yield importPipeline(selectedImportSource, importData);
+    if (data) {
+      pipelinesDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.PIPELINE_ADD_PIPELINE,
+        payload: data.pipeline
+      });
+      yield fetchAndSetPipelineData(data.pipeline.id);
+      resetState();
+      modalDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.CLOSE_PIPELINE_IMPORT_MODAL
+      });
+      react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board imported", "quicktasker"));
+    }
     setImportLoading(false);
   });
   const resetState = () => {
     setImportData(null);
   };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_10__.WPQTModal, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_12__.WPQTModal, {
     modalOpen: pipelineImportModalOpen,
     closeModal: () => {
       modalDispatch({
@@ -5020,23 +5041,23 @@ function ImportPipelineModal() {
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Import board", "quicktasker")
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_7__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500" : ""}`,
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_11__.FaTrello, {
+          className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500" : ""}`,
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_13__.FaTrello, {
             className: "wpqt-size-5 wpqt-trello-blue"
           })
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
         className: "wpqt-my-0 wpqt-mb-2",
         children: selectionText
-      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_9__.WPQTIconButton, {
+      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_11__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select import file", "quicktasker"),
         onClick: handleFileButtonClick,
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_12__.MdFileUpload, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_14__.MdFileUpload, {
           className: "wpqt-size-5 wpqt-icon-blue"
         })
       }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ImportInfo, {
         importData: importData
-      }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_9__.WPQTIconButton, {
+      }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_11__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Start import", "quicktasker"),
         onClick: handleImportStart,
         loading: importLoading

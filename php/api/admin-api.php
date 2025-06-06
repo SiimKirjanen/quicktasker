@@ -2697,10 +2697,15 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        ServiceLocator::get('PipelineImportService')->importPipeline($data['source'], $data['data']);
+
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
+                        $pipelineId = ServiceLocator::get('PipelineImportService')->importPipeline($data['source'], $data['data']);
+                        $pipeline = $pipelineRepo->getPipelineById($pipelineId);
                         
                         $wpdb->query('COMMIT');
-                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'pipeline' => $pipeline,
+                        ]))->toArray(), 200);
                     } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 

@@ -900,7 +900,11 @@ function deleteUploadRequest(uploadId: string): Promise<
 function importRequest(
   source: PipelineImportSource,
   data: WPQTImport,
-): Promise<WPQTResponse> {
+): Promise<
+  WPQTResponse<{
+    pipeline: PipelineFromServer;
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/import`,
     method: "POST",

@@ -3,9 +3,14 @@ import { __ } from "@wordpress/i18n";
 import { FaTrello } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
 import { toast } from "react-toastify";
-import { CLOSE_PIPELINE_IMPORT_MODAL } from "../../../constants";
+import {
+  CLOSE_PIPELINE_IMPORT_MODAL,
+  PIPELINE_ADD_PIPELINE,
+} from "../../../constants";
 import { useImportActions } from "../../../hooks/actions/useImportActions";
+import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { PipelineImportSource, WPQTImport } from "../../../types/imports";
 import { normalizeTrelloImport } from "../../../utils/import/normalize-import";
 import { WPQTIconButton } from "../../common/Button/Button";
@@ -16,6 +21,8 @@ function ImportPipelineModal() {
     state: { pipelineImportModalOpen },
     modalDispatch,
   } = useContext(ModalContext);
+  const { pipelinesDispatch } = useContext(PipelinesContext);
+  const { fetchAndSetPipelineData } = useContext(ActivePipelineContext);
   const [selectedImportSource] = useState(PipelineImportSource.TRELLO);
   const [importData, setImportData] = useState<WPQTImport | null>(null);
   const [importLoading, setImportLoading] = useState(false);
@@ -54,10 +61,18 @@ function ImportPipelineModal() {
       return;
     }
     setImportLoading(true);
-    const { data, error } = await importPipeline(
-      selectedImportSource,
-      importData,
-    );
+    const { data } = await importPipeline(selectedImportSource, importData);
+
+    if (data) {
+      pipelinesDispatch({
+        type: PIPELINE_ADD_PIPELINE,
+        payload: data.pipeline,
+      });
+      await fetchAndSetPipelineData(data.pipeline.id);
+      resetState();
+      modalDispatch({ type: CLOSE_PIPELINE_IMPORT_MODAL });
+      toast.success(__("Board imported", "quicktasker"));
+    }
     setImportLoading(false);
   };
 
