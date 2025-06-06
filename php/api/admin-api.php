@@ -2680,6 +2680,57 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 ),
             ),
         );
+
+        /*
+        ==================================================================================================================================================================================================================
+        Import endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'import',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+                        ServiceLocator::get('PipelineImportService')->importPipeline($data['source'], $data['data']);
+                        
+                        $wpdb->query('COMMIT');
+                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'source' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateImportSource'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'data' => array(
+                        'required' => true,
+                        'validate_callback' => function( $value, $request, $param ) {
+                             try {
+                                ServiceLocator::get('PipelineImportService')->validateWPQTImport($value);
+
+                                return true;
+                            } catch (Exception $e) {
+                                return new WP_Error('validation_error', $e->getMessage());
+                            }
+                        },
+                    ),
+                ),
+            ),
+        );
     }
 }
 

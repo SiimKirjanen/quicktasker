@@ -70,6 +70,7 @@ require( 'php/services/ServiceLocator.php' );
 require( 'php/services/SecretsService.php' );
 require( 'php/services/export/ExportService.php' );
 require( 'php/services/export/PDFExportService.php' );
+require( 'php/services/import/PipelineImportService.php' );
 
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 WPQT\ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
@@ -96,6 +97,7 @@ WPQT\ServiceLocator::register('UUIDService', new WPQT\UUID\UUIDService());
 WPQT\ServiceLocator::register('StageRepository', new WPQT\Stage\StageRepository());
 WPQT\ServiceLocator::register('SlackService', new WPQT\Slack\SlackService());
 WPQT\ServiceLocator::register('SecretsService', new WPQT\Secrets\SecretsService());
+WPQT\ServiceLocator::register('PipelineImportService', new WPQT\Import\PipelineImportService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );

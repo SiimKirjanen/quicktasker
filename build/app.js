@@ -124,6 +124,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getUserTasksRequest: () => (/* binding */ getUserTasksRequest),
 /* harmony export */   getUsersRequest: () => (/* binding */ getUsersRequest),
 /* harmony export */   getWPUsersRequest: () => (/* binding */ getWPUsersRequest),
+/* harmony export */   importRequest: () => (/* binding */ importRequest),
 /* harmony export */   markCustomFieldAsDeletedRequest: () => (/* binding */ markCustomFieldAsDeletedRequest),
 /* harmony export */   markTaskDoneRequest: () => (/* binding */ markTaskDoneRequest),
 /* harmony export */   moveStageRequest: () => (/* binding */ moveStageRequest),
@@ -784,6 +785,22 @@ function deleteUploadRequest(uploadId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/uploads/${uploadId}`,
     method: "DELETE"
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Import requests
+  ==================================================================================================================================================================================================================
+*/
+function importRequest(source, data) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/import`,
+    method: "POST",
+    data: {
+      source,
+      data
+    },
+    headers: getCommonHeaders()
   });
 }
 
@@ -4885,14 +4902,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
-/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../types/imports */ "./src/types/imports.ts");
-/* harmony import */ var _utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../utils/import/normalize-import */ "./src/utils/import/normalize-import.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
+/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useImportActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useImportActions */ "./src/hooks/actions/useImportActions.ts");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../types/imports */ "./src/types/imports.ts");
+/* harmony import */ var _utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../utils/import/normalize-import */ "./src/utils/import/normalize-import.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
 
 
 
@@ -4910,11 +4958,14 @@ function ImportPipelineModal() {
       pipelineImportModalOpen
     },
     modalDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__.ModalContext);
-  const [selectedImportSource] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_imports__WEBPACK_IMPORTED_MODULE_5__.PipelineImportSource.TRELLO);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__.ModalContext);
+  const [selectedImportSource] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_imports__WEBPACK_IMPORTED_MODULE_7__.PipelineImportSource.TRELLO);
   const [importData, setImportData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [importLoading, setImportLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const fileInputRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+  const {
+    importPipeline
+  } = (0,_hooks_actions_useImportActions__WEBPACK_IMPORTED_MODULE_5__.useImportActions)();
   const selectionText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Import from Trello", "quicktasker");
   const handleFileButtonClick = () => {
     if (fileInputRef.current) {
@@ -4930,23 +4981,35 @@ function ImportPipelineModal() {
         var _a;
         try {
           const parsedData = JSON.parse((_a = e.target) === null || _a === void 0 ? void 0 : _a.result);
-          const normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_6__.normalizeTrelloImport)(parsedData);
+          const normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_8__.normalizeTrelloImport)(parsedData);
           setImportData(normalizedData);
         } catch (error) {
           console.error("Error parsing JSON file:", error);
+          react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Failed to parse import file", "quicktasker"));
         }
       };
       reader.readAsText(file);
     }
   };
+  const handleImportStart = () => __awaiter(this, void 0, void 0, function* () {
+    if (!importData) {
+      return;
+    }
+    setImportLoading(true);
+    const {
+      data,
+      error
+    } = yield importPipeline(selectedImportSource, importData);
+    setImportLoading(false);
+  });
   const resetState = () => {
     setImportData(null);
   };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_8__.WPQTModal, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_10__.WPQTModal, {
     modalOpen: pipelineImportModalOpen,
     closeModal: () => {
       modalDispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_PIPELINE_IMPORT_MODAL
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.CLOSE_PIPELINE_IMPORT_MODAL
       });
       resetState();
     },
@@ -4957,28 +5020,25 @@ function ImportPipelineModal() {
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Import board", "quicktasker")
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_5__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500" : ""}`,
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_9__.FaTrello, {
+          className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_7__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500" : ""}`,
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_11__.FaTrello, {
             className: "wpqt-size-5 wpqt-trello-blue"
           })
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
         className: "wpqt-my-0 wpqt-mb-2",
         children: selectionText
-      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTIconButton, {
+      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_9__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select import file", "quicktasker"),
         onClick: handleFileButtonClick,
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_10__.MdFileUpload, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_12__.MdFileUpload, {
           className: "wpqt-size-5 wpqt-icon-blue"
         })
       }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ImportInfo, {
         importData: importData
-      }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_7__.WPQTIconButton, {
+      }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_9__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Start import", "quicktasker"),
-        onClick: () => {
-          console.log("Importing data:", importData);
-          resetState();
-        },
+        onClick: handleImportStart,
         loading: importLoading
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
         type: "file",
@@ -9707,6 +9767,75 @@ function useCustomFieldActions() {
     markCustomFieldAsDeleted,
     restoreCustomField,
     updateCustomFieldValue
+  };
+}
+
+
+/***/ }),
+
+/***/ "./src/hooks/actions/useImportActions.ts":
+/*!***********************************************!*\
+  !*** ./src/hooks/actions/useImportActions.ts ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useImportActions: () => (/* binding */ useImportActions)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+function useImportActions() {
+  const importPipeline = (source, data) => __awaiter(this, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.importRequest)(source, data);
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Import failed", "quicktasker"));
+      return {
+        success: false,
+        error: error
+      };
+    }
+  });
+  return {
+    importPipeline
   };
 }
 
@@ -19540,7 +19669,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 var PipelineImportSource;
 (function (PipelineImportSource) {
-  PipelineImportSource["TRELLO"] = "TRELLO";
+  PipelineImportSource["TRELLO"] = "TRELLO-IMPORT";
 })(PipelineImportSource || (PipelineImportSource = {}));
 
 

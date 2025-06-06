@@ -72,6 +72,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getUserTasksRequest: () => (/* binding */ getUserTasksRequest),
 /* harmony export */   getUsersRequest: () => (/* binding */ getUsersRequest),
 /* harmony export */   getWPUsersRequest: () => (/* binding */ getWPUsersRequest),
+/* harmony export */   importRequest: () => (/* binding */ importRequest),
 /* harmony export */   markCustomFieldAsDeletedRequest: () => (/* binding */ markCustomFieldAsDeletedRequest),
 /* harmony export */   markTaskDoneRequest: () => (/* binding */ markTaskDoneRequest),
 /* harmony export */   moveStageRequest: () => (/* binding */ moveStageRequest),
@@ -732,6 +733,22 @@ function deleteUploadRequest(uploadId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/uploads/${uploadId}`,
     method: "DELETE"
+  });
+}
+/*
+  ==================================================================================================================================================================================================================
+  Import requests
+  ==================================================================================================================================================================================================================
+*/
+function importRequest(source, data) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/import`,
+    method: "POST",
+    data: {
+      source,
+      data
+    },
+    headers: getCommonHeaders()
   });
 }
 

@@ -67,7 +67,7 @@ type TrelloImportCard = {
 };
 
 enum PipelineImportSource {
-  TRELLO = "TRELLO",
+  TRELLO = "TRELLO-IMPORT",
 }
 
 export {

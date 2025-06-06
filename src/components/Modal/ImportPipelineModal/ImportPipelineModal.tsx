@@ -2,7 +2,9 @@ import { useContext, useRef, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { FaTrello } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
+import { toast } from "react-toastify";
 import { CLOSE_PIPELINE_IMPORT_MODAL } from "../../../constants";
+import { useImportActions } from "../../../hooks/actions/useImportActions";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { PipelineImportSource, WPQTImport } from "../../../types/imports";
 import { normalizeTrelloImport } from "../../../utils/import/normalize-import";
@@ -16,8 +18,9 @@ function ImportPipelineModal() {
   } = useContext(ModalContext);
   const [selectedImportSource] = useState(PipelineImportSource.TRELLO);
   const [importData, setImportData] = useState<WPQTImport | null>(null);
-  const [importLoading] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { importPipeline } = useImportActions();
   const selectionText = __("Import from Trello", "quicktasker");
 
   const handleFileButtonClick = () => {
@@ -39,10 +42,23 @@ function ImportPipelineModal() {
           setImportData(normalizedData);
         } catch (error) {
           console.error("Error parsing JSON file:", error);
+          toast.error(__("Failed to parse import file", "quicktasker"));
         }
       };
       reader.readAsText(file);
     }
+  };
+
+  const handleImportStart = async () => {
+    if (!importData) {
+      return;
+    }
+    setImportLoading(true);
+    const { data, error } = await importPipeline(
+      selectedImportSource,
+      importData,
+    );
+    setImportLoading(false);
   };
 
   const resetState = () => {
@@ -86,10 +102,7 @@ function ImportPipelineModal() {
         {importData && (
           <WPQTIconButton
             text={__("Start import", "quicktasker")}
-            onClick={() => {
-              console.log("Importing data:", importData);
-              resetState();
-            }}
+            onClick={handleImportStart}
             loading={importLoading}
           />
         )}
