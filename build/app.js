@@ -20180,7 +20180,8 @@ function normalizeTrelloImport(importData) {
           labelName: label.name,
           labelId: label.id,
           color: label.color
-        }))
+        })),
+        dueDate: card.due ? card.due : null
       };
     }),
     labels: importData.labels.map(label => ({

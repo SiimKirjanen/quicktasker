@@ -49,7 +49,8 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                     ! isset($task['taskDescription']) ||
                     ! isset($task['stageId']) ||
                     ! isset($task['assignedLabels']) ||
-                    ! isset($task['archived'])
+                    ! isset($task['archived']) ||
+                    ! array_key_exists('dueDate', $task)
                 ) {
                     throw new Exception('Invalid task structure.');
                 }
@@ -133,6 +134,7 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                         'description' => $task['taskDescription'],
                         'pipelineId' => $newPipeline->id,
                         'is_archived' => $task['archived'],
+                        'due_date' => isset($task['dueDate']) ? $task['dueDate'] : null,
                     ]
                 );
 
