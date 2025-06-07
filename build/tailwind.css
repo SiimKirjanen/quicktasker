@@ -1512,6 +1512,10 @@
   max-height: 100%;
 }
 
+.\!wpqt-w-\[200px\] {
+  width: 200px !important;
+}
+
 .wpqt-w-1\/4 {
   width: 25%;
 }
@@ -1554,10 +1558,6 @@
 
 .wpqt-w-screen {
   width: 100vw;
-}
-
-.\!wpqt-w-\[200px\] {
-  width: 200px !important;
 }
 
 .wpqt-min-w-56 {
