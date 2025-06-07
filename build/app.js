@@ -4904,8 +4904,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
-/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
+/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
+/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useImportActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useImportActions */ "./src/hooks/actions/useImportActions.ts");
@@ -4915,7 +4915,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../types/imports */ "./src/types/imports.ts");
 /* harmony import */ var _utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../utils/import/normalize-import */ "./src/utils/import/normalize-import.ts");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -4943,6 +4945,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
+
+
 
 
 
@@ -5028,7 +5032,7 @@ function ImportPipelineModal() {
   const resetState = () => {
     setImportData(null);
   };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_12__.WPQTModal, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_14__.WPQTModal, {
     modalOpen: pipelineImportModalOpen,
     closeModal: () => {
       modalDispatch({
@@ -5044,7 +5048,7 @@ function ImportPipelineModal() {
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500" : ""}`,
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_13__.FaTrello, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_15__.FaTrello, {
             className: "wpqt-size-5 wpqt-trello-blue"
           })
         })
@@ -5054,11 +5058,31 @@ function ImportPipelineModal() {
       }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_11__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select import file", "quicktasker"),
         onClick: handleFileButtonClick,
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_14__.MdFileUpload, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_16__.MdFileUpload, {
           className: "wpqt-size-5 wpqt-text-blue-500"
         })
       }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ImportInfo, {
-        importData: importData
+        importData: importData,
+        onNameChange: newName => {
+          setImportData(prev => {
+            if (prev) {
+              return Object.assign(Object.assign({}, prev), {
+                pipelineName: newName
+              });
+            }
+            return prev;
+          });
+        },
+        onDescriptionChange: newDescription => {
+          setImportData(prev => {
+            if (prev) {
+              return Object.assign(Object.assign({}, prev), {
+                pipelineDescription: newDescription
+              });
+            }
+            return prev;
+          });
+        }
       }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_11__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Start import", "quicktasker"),
         onClick: handleImportStart,
@@ -5075,14 +5099,26 @@ function ImportPipelineModal() {
   });
 }
 function ImportInfo({
-  importData
+  importData,
+  onNameChange,
+  onDescriptionChange
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Will create a board", "quicktasker"), " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        className: "wpqt-font-semibold",
-        children: importData.pipelineName
+      className: "wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-1",
+      children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board name", "quicktasker"), " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_12__.WPQTInput, {
+        value: importData.pipelineName,
+        onChange: onNameChange,
+        wrapperClassName: "wpqt-w-[200px]",
+        className: "wpqt-w-full"
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board description", "quicktasker"), " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_13__.WPQTTextarea, {
+        value: importData.pipelineDescription,
+        onChange: onDescriptionChange,
+        rowsCount: 2,
+        className: "!wpqt-w-[200px]"
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Number of tasks", "quicktasker"), ":", " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {

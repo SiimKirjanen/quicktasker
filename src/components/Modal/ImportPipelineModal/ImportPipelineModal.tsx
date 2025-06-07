@@ -14,6 +14,8 @@ import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { PipelineImportSource, WPQTImport } from "../../../types/imports";
 import { normalizeTrelloImport } from "../../../utils/import/normalize-import";
 import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTInput } from "../../common/Input/Input";
+import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { WPQTModal } from "../WPQTModal";
 
 function ImportPipelineModal() {
@@ -113,7 +115,33 @@ function ImportPipelineModal() {
           />
         )}
 
-        {importData && <ImportInfo importData={importData} />}
+        {importData && (
+          <ImportInfo
+            importData={importData}
+            onNameChange={(newName) => {
+              setImportData((prev) => {
+                if (prev) {
+                  return {
+                    ...prev,
+                    pipelineName: newName,
+                  };
+                }
+                return prev;
+              });
+            }}
+            onDescriptionChange={(newDescription) => {
+              setImportData((prev) => {
+                if (prev) {
+                  return {
+                    ...prev,
+                    pipelineDescription: newDescription,
+                  };
+                }
+                return prev;
+              });
+            }}
+          />
+        )}
         {importData && (
           <WPQTIconButton
             text={__("Start import", "quicktasker")}
@@ -137,14 +165,35 @@ function ImportPipelineModal() {
 
 type ImportInfoProps = {
   importData: WPQTImport;
+  onNameChange: (newName: string) => void;
+  onDescriptionChange: (newDescription: string) => void;
 };
-function ImportInfo({ importData }: ImportInfoProps) {
+function ImportInfo({
+  importData,
+  onNameChange,
+  onDescriptionChange,
+}: ImportInfoProps) {
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2">
-      <div>
-        {__("Will create a board", "quicktasker")}{" "}
-        <span className="wpqt-font-semibold">{importData.pipelineName}</span>
+      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-1">
+        {__("Board name", "quicktasker")}{" "}
+        <WPQTInput
+          value={importData.pipelineName}
+          onChange={onNameChange}
+          wrapperClassName="wpqt-w-[200px]"
+          className="wpqt-w-full"
+        />
       </div>
+      <div>
+        {__("Board description", "quicktasker")}{" "}
+        <WPQTTextarea
+          value={importData.pipelineDescription}
+          onChange={onDescriptionChange}
+          rowsCount={2}
+          className="!wpqt-w-[200px]"
+        />
+      </div>
+
       <div>
         {__("Number of tasks", "quicktasker")}:{" "}
         <span className="wpqt-font-semibold">

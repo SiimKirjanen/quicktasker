@@ -1524,6 +1524,10 @@
   width: 80%;
 }
 
+.wpqt-w-\[200px\] {
+  width: 200px;
+}
+
 .wpqt-w-\[320px\] {
   width: 320px;
 }
@@ -1550,6 +1554,10 @@
 
 .wpqt-w-screen {
   width: 100vw;
+}
+
+.\!wpqt-w-\[200px\] {
+  width: 200px !important;
 }
 
 .wpqt-min-w-56 {
@@ -2321,11 +2329,6 @@
 .wpqt-text-yellow-700 {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity));
-}
-
-.wpqt-text-blue-600 {
-  --tw-text-opacity: 1;
-  color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
 .wpqt-line-through {

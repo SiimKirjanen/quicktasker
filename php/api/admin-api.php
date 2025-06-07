@@ -113,7 +113,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('START TRANSACTION');
                         $pipelineService = new PipelineService();
                         $logService = new LogService();
-                        $newPipeline = $pipelineService->createPipeline($data['name']);
+                        $newPipeline = $pipelineService->createPipeline($data['name'], array(
+                            'description' => $data['description'],
+                        ));
                         $logService->log('Board ' . $newPipeline->name . ' created', WP_QT_LOG_TYPE_PIPELINE, $newPipeline->id, WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                     
                         $wpdb->query('COMMIT');
@@ -132,6 +134,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'description' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam')
                     ),
                 ),
             ),

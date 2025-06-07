@@ -87,7 +87,9 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             //Step 1. Create a new pipeline
             $newPipeline = $pipelineService->createPipeline(
                 $importData['pipelineName'],
-                $importData['pipelineDescription']
+                [
+                    'description' => $importData['pipelineDescription'],
+                ]
             );
 
             // Step 2. Create stages

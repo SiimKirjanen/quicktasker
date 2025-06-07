@@ -28,6 +28,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
          * if there is no active pipeline. It also creates the corresponding pipeline settings.
          *
          * @param string $name The name of the pipeline to be created.
+         * @param array $args Optional arguments for the pipeline.
          * @return object The newly created pipeline object.
          * @throws \Exception If the pipeline or pipeline settings could not be created.
          */
