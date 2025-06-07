@@ -66,7 +66,7 @@ function WPQTButton({
 }
 
 type WPQTIconButtonProps = {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   text?: string;
   onClick: () => void;
   className?: string;

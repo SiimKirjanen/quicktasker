@@ -10,6 +10,7 @@ import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import { WPQTTypes } from "../types/enums";
+import { PipelineImportSource, WPQTImport } from "../types/imports";
 import { Label } from "../types/label";
 import { LogFromServer } from "../types/log";
 import { PipelineOverviewFilter } from "../types/overview";
@@ -890,6 +891,28 @@ function deleteUploadRequest(uploadId: string): Promise<
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Import requests
+  ==================================================================================================================================================================================================================
+*/
+
+function importRequest(
+  source: PipelineImportSource,
+  data: WPQTImport,
+): Promise<
+  WPQTResponse<{
+    pipeline: PipelineFromServer;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/import`,
+    method: "POST",
+    data: { source, data },
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -934,6 +957,7 @@ export {
   getUsersRequest,
   getUserTasksRequest,
   getWPUsersRequest,
+  importRequest,
   markCustomFieldAsDeletedRequest,
   markTaskDoneRequest,
   moveStageRequest,

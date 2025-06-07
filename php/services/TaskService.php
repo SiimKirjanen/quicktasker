@@ -49,7 +49,7 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         /**
          * Creates a task.
          *
-         * @param int $stageId The ID of the stage to add the task to.
+         * @param int|null $stageId The ID of the stage to add the task to.
          * @param array $args The task data.
          * @return object The created task.
          * @throws Exception If required fields are missing or if failed to create task.
@@ -61,6 +61,9 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 'description' => null,
                 'task_focus_color' => null,
                 'due_date' => null,
+                'is_archived' => 0,
+                'task_completed_at' => null,
+                'is_done' => 0,
             );
 
             $args = wp_parse_args($args, $defaults);
@@ -78,6 +81,9 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 'updated_at' => $this->timeRepository->getCurrentUTCTime(),
                 'task_focus_color' => $args['task_focus_color'],
                 'due_date' => $args['due_date'],
+                'is_archived' => $args['is_archived'],
+                'task_completed_at' => $args['task_completed_at'],
+                'is_done' => $args['is_done']
             ));
 
             if( $result === false ) {
@@ -85,9 +91,10 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
             }
 
             $taskId = $wpdb->insert_id;
-            $taskOrder = $this->getNextTaskOrder($stageId);
 
-            $this->addTaskLocation($taskId, $stageId, $taskOrder);
+            $taskOrder = $stageId ? $this->getNextTaskOrder($stageId) : 0;
+
+            $this->addTaskLocation($taskId, $stageId, $taskOrder, $args['is_archived']);
 
             return $this->taskRepository->getTaskById($taskId);
         }
@@ -96,18 +103,20 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
          * Adds a task order to the database.
          *
          * @param int $taskId The ID of the task.
-         * @param int $stageId The ID of the stage.
+         * @param int|null $stageId The ID of the stage.
          * @param int $taskOrder The order of the task.
+         * @param int $isArchived Whether the task is archived (default is 0).
          * @return int The ID of the inserted task order.
          * @throws Exception If failed to add task order.
          */
-        public function addTaskLocation($taskId, $stageId, $taskOrder) {
+        public function addTaskLocation($taskId, $stageId, $taskOrder, $isArchived = 0) {
             global $wpdb;
 
             $result = $wpdb->insert(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array(
                 'task_id' => $taskId,
                 'stage_id' => $stageId,
                 'task_order' => $taskOrder,
+                'is_archived' => $isArchived,
                 'created_at' => $this->timeRepository->getCurrentUTCTime(),
                 'updated_at' => $this->timeRepository->getCurrentUTCTime()
             ));
@@ -375,13 +384,12 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
          * This method updates both the main task table and the task location table.
          * 
          * @param int $taskId The ID of the task to be archived.
-         * @param bool $fromAutomation True if the task is being archived by an automation, false otherwise.
          * 
          * @throws \Exception If the task or task location update fails.
          * 
          * @return object The updated task object after archiving.
          */
-        public function archiveTask($taskId, $fromAutomation = false) {
+        public function archiveTask($taskId) {
             global $wpdb;
 
             $utcTime = $this->timeRepository->getCurrentUTCTime();

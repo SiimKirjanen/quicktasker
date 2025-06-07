@@ -385,6 +385,18 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         }
 
         /**
+         * Validates the import source parameter.
+         *
+         * This method checks if the provided parameter is a valid import source.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is a valid import source, false otherwise.
+         */
+        public static function validateImportSource($param) {
+            return in_array($param, WP_QUICKTASKER_IMPORT_SOURCES);
+        }
+
+        /**
          * Validates the color parameter.
          *
          * This method checks if the provided parameter is either null or a valid hexadecimal color code.

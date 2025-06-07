@@ -56,7 +56,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.31.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.32.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -327,6 +327,10 @@ if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
     define('WP_QUICKTASKER_DB_SEEDER_TRIGGER', "1");
 }
 
+if ( ! defined( 'WP_QUICKTASKER_DB_MIGRATION_TRIGGER' ) ) {
+    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', "1");
+}
+
 /*
 ==================================================================================================================================================================================================================
 Capabilities constants
@@ -592,6 +596,22 @@ if ( ! defined( 'WP_QUICKTASKER_TASK_NEW_ATTACHMENT_EMAIL_TEMPLATE' ) ) {
 
 if ( ! defined( 'WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE' ) ) {
     define('WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE', "task-attachment-deleted");
+}
+
+/*
+==================================================================================================================================================================================================================
+Import constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCE_TRELLO' ) ) {
+    define('WP_QUICKTASKER_IMPORT_SOURCE_TRELLO', "TRELLO-IMPORT");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCES' ) ) {
+    define('WP_QUICKTASKER_IMPORT_SOURCES', [
+        WP_QUICKTASKER_IMPORT_SOURCE_TRELLO
+    ]);
 }
 
 /*

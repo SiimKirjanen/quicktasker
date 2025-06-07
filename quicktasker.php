@@ -7,7 +7,7 @@
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
 	Domain Path: /languages
-	Version: 1.29.1
+	Version: 1.30.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28
 	License: GPLv2 or later
@@ -70,6 +70,8 @@ require( 'php/services/ServiceLocator.php' );
 require( 'php/services/SecretsService.php' );
 require( 'php/services/export/ExportService.php' );
 require( 'php/services/export/PDFExportService.php' );
+require( 'php/services/import/PipelineImportService.php' );
+require( 'php/services/DBMigrateService.php' );
 
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 WPQT\ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
@@ -96,6 +98,8 @@ WPQT\ServiceLocator::register('UUIDService', new WPQT\UUID\UUIDService());
 WPQT\ServiceLocator::register('StageRepository', new WPQT\Stage\StageRepository());
 WPQT\ServiceLocator::register('SlackService', new WPQT\Slack\SlackService());
 WPQT\ServiceLocator::register('SecretsService', new WPQT\Secrets\SecretsService());
+WPQT\ServiceLocator::register('PipelineImportService', new WPQT\Import\PipelineImportService());
+WPQT\ServiceLocator::register('DBMigrateService', new WPQT\DB\DBMigrateService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );

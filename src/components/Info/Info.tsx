@@ -3,6 +3,8 @@ type Props = {
   infoDescription: string;
   actionIcon?: React.ReactNode;
   infoActionClick?: () => void;
+  secondaryInfoText?: string;
+  secondaryInfoActionClick?: () => void;
 };
 
 function Info({
@@ -10,6 +12,8 @@ function Info({
   infoDescription,
   actionIcon,
   infoActionClick,
+  secondaryInfoText,
+  secondaryInfoActionClick,
 }: Props) {
   return (
     <div className="wpqt-flex wpqt-h-screen-minus-top-bar wpqt-items-center wpqt-justify-center">
@@ -22,6 +26,16 @@ function Info({
           <p className="wpqt-m-0 wpqt-font-semibold wpqt-text-lg">{infoText}</p>
         </div>
         <p>{infoDescription}</p>
+        {secondaryInfoText && (
+          <p
+            className={`wpqt-m-0 wpqt-blue-text wpqt-blue-text-hover ${
+              secondaryInfoActionClick ? "wpqt-cursor-pointer" : ""
+            }`}
+            onClick={secondaryInfoActionClick || undefined}
+          >
+            {secondaryInfoText}
+          </p>
+        )}
       </div>
     </div>
   );

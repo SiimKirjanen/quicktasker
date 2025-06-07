@@ -14,6 +14,7 @@ import { TaskColorModal } from "../../../components/Modal/TaskColorModal/TaskCol
 import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
 import {
   OPEN_NEW_PIPELINE_MODAL,
+  OPEN_PIPELINE_IMPORT_MODAL,
   PIPELINE_MOVE_TASK,
   REFETCH_ACTIVE_PIPELINE_INTERVAL,
 } from "../../../constants";
@@ -112,6 +113,10 @@ const Pipeline = () => {
           modalDispatch({
             type: OPEN_NEW_PIPELINE_MODAL,
           });
+        }}
+        secondaryInfoText={__("Import an existing board", "quicktasker")}
+        secondaryInfoActionClick={() => {
+          modalDispatch({ type: OPEN_PIPELINE_IMPORT_MODAL });
         }}
       />
     );

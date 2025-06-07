@@ -85,7 +85,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 
 			$sql5 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " (
 				id int(11) NOT NULL AUTO_INCREMENT,
-				stage_id int(11) NOT NULL,
+				stage_id int(11) DEFAULT NULL,
 				task_id int(11) NOT NULL,
 				task_order int(11),
 				created_at datetime NOT NULL COMMENT 'UTC',
