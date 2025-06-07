@@ -1,4 +1,10 @@
-import { useContext, useEffect, useRef, useState } from "@wordpress/element";
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { FaTrello } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
@@ -8,9 +14,9 @@ import {
   PIPELINE_ADD_PIPELINE,
 } from "../../../constants";
 import { useImportActions } from "../../../hooks/actions/useImportActions";
+import { usePipelines } from "../../../hooks/usePipelines";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import {
   PipelineImportSource,
   WPQTImport,
@@ -18,17 +24,16 @@ import {
 } from "../../../types/imports";
 import { normalizeTrelloImport } from "../../../utils/import/normalize-import";
 import { WPQTIconButton } from "../../common/Button/Button";
-import { WPQTInput } from "../../common/Input/Input";
-import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { Toggle } from "../../common/Toggle/Toggle";
 import { WPQTModal } from "../WPQTModal";
+import { ImportConfig } from "./ImportConfig";
+import { ImportInfo } from "./ImportInfo";
 
 function ImportPipelineModal() {
   const {
     state: { pipelineImportModalOpen },
     modalDispatch,
   } = useContext(ModalContext);
-  const { pipelinesDispatch } = useContext(PipelinesContext);
+  const { pipelinesDispatch, checkIfPipelineNameExists } = usePipelines();
   const { fetchAndSetPipelineData } = useContext(ActivePipelineContext);
   const [selectedImportSource] = useState(PipelineImportSource.TRELLO);
   const [importData, setImportData] = useState<WPQTImport | null>(null);
@@ -41,6 +46,13 @@ function ImportPipelineModal() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { importPipeline } = useImportActions();
   const selectionText = __("Import from Trello", "quicktasker");
+  const pipelineNameExists = useMemo(() => {
+    if (!importData?.pipelineName) {
+      return false;
+    }
+    return checkIfPipelineNameExists(importData.pipelineName);
+  }, [importData?.pipelineName]);
+  const canStartImport = filteredImportData && !pipelineNameExists;
 
   const handleFileButtonClick = () => {
     if (fileInputRef.current) {
@@ -69,7 +81,7 @@ function ImportPipelineModal() {
   };
 
   const handleImportStart = async () => {
-    if (!filteredImportData) {
+    if (!filteredImportData || pipelineNameExists) {
       return;
     }
     setImportLoading(true);
@@ -144,6 +156,7 @@ function ImportPipelineModal() {
           <ImportConfig
             importData={importData}
             importDataFilter={importDataFilter}
+            validation={{ pipelineNameExists: pipelineNameExists }}
             onNameChange={(newName) => {
               setImportData((prev) => {
                 if (prev) {
@@ -171,7 +184,7 @@ function ImportPipelineModal() {
         )}
 
         {filteredImportData && <ImportInfo importData={filteredImportData} />}
-        {filteredImportData && (
+        {canStartImport && (
           <WPQTIconButton
             text={__("Start import", "quicktasker")}
             onClick={handleImportStart}
@@ -189,84 +202,6 @@ function ImportPipelineModal() {
         />
       </div>
     </WPQTModal>
-  );
-}
-
-type ImportConfigProps = {
-  importData: WPQTImport;
-  importDataFilter: WPQTImportFilter;
-  onNameChange: (newName: string) => void;
-  onDescriptionChange: (newDescription: string) => void;
-  onImportDataFilterChange: (newFilter: WPQTImportFilter) => void;
-};
-function ImportConfig({
-  importData,
-  importDataFilter,
-  onNameChange,
-  onDescriptionChange,
-  onImportDataFilterChange,
-}: ImportConfigProps) {
-  return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-1">
-        {__("Board name", "quicktasker")}
-        <WPQTInput
-          value={importData.pipelineName}
-          onChange={onNameChange}
-          wrapperClassName="wpqt-w-[200px] !wpqt-mb-0"
-          className="wpqt-w-full wpqt-mb-0"
-        />
-      </div>
-
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-1">
-        {__("Board description", "quicktasker")}
-        <WPQTTextarea
-          value={importData.pipelineDescription}
-          onChange={onDescriptionChange}
-          rowsCount={2}
-          className="!wpqt-w-[200px] !wpqt-mb-0"
-        />
-      </div>
-
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
-        {__("Import archived tasks?", "quicktasker")}
-        <Toggle
-          checked={importDataFilter.includeArchivedTasks}
-          handleChange={() => {
-            onImportDataFilterChange({
-              ...importDataFilter,
-              includeArchivedTasks: !importDataFilter.includeArchivedTasks,
-            });
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-type ImportInfoProps = {
-  importData: WPQTImport;
-};
-function ImportInfo({ importData }: ImportInfoProps) {
-  return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2">
-      <div>
-        {__("Number of tasks", "quicktasker")}:{" "}
-        <span className="wpqt-font-semibold">
-          {importData.tasks.length} ({__("archived", "quicktasker")}{" "}
-          {importData.tasks.filter((task) => task.archived).length})
-        </span>
-      </div>
-      <div>
-        {__("Number of stages", "quicktasker")}:{" "}
-        <span className="wpqt-font-semibold">{importData.stages.length}</span>
-      </div>
-      <div>
-        {__("Number of labels", "quicktasker")}:{" "}
-        <span className="wpqt-font-semibold"></span>
-        {importData.labels.length}
-      </div>
-    </div>
   );
 }
 
