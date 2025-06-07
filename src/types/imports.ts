@@ -66,6 +66,10 @@ type TrelloImportCard = {
   labels: TrelloImportLabels[];
 };
 
+type WPQTImportFilter = {
+  includeArchivedTasks: boolean;
+};
+
 enum PipelineImportSource {
   TRELLO = "TRELLO-IMPORT",
 }
@@ -74,6 +78,7 @@ export {
   PipelineImportSource,
   TrelloImport,
   WPQTImport,
+  WPQTImportFilter,
   WPQTStageImport,
   WPQTTaskImport,
 };
