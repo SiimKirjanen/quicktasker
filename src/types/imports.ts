@@ -23,6 +23,7 @@ type WPQTTaskImport = {
   assignedLabels: WPQTLabelImport[];
   archived: boolean;
   dueDate: string | null;
+  taskCompletedAt: string | null;
 };
 
 type WPQTLabelImport = {
@@ -66,6 +67,7 @@ type TrelloImportCard = {
   closed: boolean;
   labels: TrelloImportLabels[];
   due: string | null;
+  dateCompleted: string | null;
 };
 
 type WPQTImportFilter = {

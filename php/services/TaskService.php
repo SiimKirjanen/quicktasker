@@ -62,6 +62,8 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 'task_focus_color' => null,
                 'due_date' => null,
                 'is_archived' => 0,
+                'task_completed_at' => null,
+                'is_done' => 0,
             );
 
             $args = wp_parse_args($args, $defaults);
@@ -80,6 +82,8 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 'task_focus_color' => $args['task_focus_color'],
                 'due_date' => $args['due_date'],
                 'is_archived' => $args['is_archived'],
+                'task_completed_at' => $args['task_completed_at'],
+                'is_done' => $args['is_done']
             ));
 
             if( $result === false ) {

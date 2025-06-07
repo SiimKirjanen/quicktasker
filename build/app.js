@@ -20181,7 +20181,8 @@ function normalizeTrelloImport(importData) {
           labelId: label.id,
           color: label.color
         })),
-        dueDate: card.due ? card.due : null
+        dueDate: card.due ? card.due : null,
+        taskCompletedAt: card.dateCompleted ? card.dateCompleted : null
       };
     }),
     labels: importData.labels.map(label => ({

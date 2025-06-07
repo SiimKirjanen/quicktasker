@@ -23,6 +23,7 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
           color: label.color,
         })),
         dueDate: card.due ? card.due : null,
+        taskCompletedAt: card.dateCompleted ? card.dateCompleted : null,
       };
     }),
     labels: importData.labels.map((label) => ({
