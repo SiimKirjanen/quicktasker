@@ -157,4 +157,77 @@ function validateAsanaImport(importData: unknown): true | string {
   return true;
 }
 
-export { validateAsanaImport, validateTrelloImport };
+/**
+ * Validates if the provided data is a valid Pipedrive import
+ * @param importData The data to validate
+ * @returns True if data is valid, or an error message string if invalid
+ */
+function validatePipedriveImport(importData: unknown): true | string {
+  if (!importData || !Array.isArray(importData)) {
+    return "Import data is missing or not an array";
+  }
+
+  // If no deals are found, return error message
+  if (importData.length === 0) {
+    return "Deals array is empty";
+  }
+
+  // Check that each deal has required properties
+  for (const deal of importData as Array<Record<string, unknown>>) {
+    // Required fields
+    if (!deal.title)
+      return `Deal missing title: ${JSON.stringify(deal).substring(0, 100)}...`;
+
+    if (!deal.stage) return `Deal missing stage: ${deal.title || "Unknown"}`;
+
+    if (!deal.status) return `Deal missing status: ${deal.title || "Unknown"}`;
+
+    // Check status is valid
+    const status = String(deal.status).toLowerCase();
+    const validStatuses = ["open", "won", "lost", "deleted"];
+    if (!validStatuses.includes(status)) {
+      return `Invalid deal status: ${status} for deal: ${deal.title || "Unknown"}`;
+    }
+
+    // Type validations for optional properties
+    if (
+      deal.label !== undefined &&
+      deal.label !== null &&
+      typeof deal.label !== "string"
+    ) {
+      return `Deal label must be a string: ${deal.title || "Unknown"}`;
+    }
+
+    if (
+      deal.expected_close_date !== undefined &&
+      deal.expected_close_date !== null &&
+      typeof deal.expected_close_date !== "string"
+    ) {
+      return `Deal expected_close_date must be a string or null: ${deal.title || "Unknown"}`;
+    }
+
+    if (
+      deal.deal_closed_on !== undefined &&
+      deal.deal_closed_on !== null &&
+      typeof deal.deal_closed_on !== "string"
+    ) {
+      return `Deal deal_closed_on must be a string or null: ${deal.title || "Unknown"}`;
+    }
+  }
+
+  // Check for at least one unique stage
+  const uniqueStages = new Set<string>();
+  for (const deal of importData as Array<Record<string, unknown>>) {
+    if (deal.stage && typeof deal.stage === "string") {
+      uniqueStages.add(deal.stage as string);
+    }
+  }
+
+  if (uniqueStages.size === 0) {
+    return "No valid stages found in deals";
+  }
+
+  return true;
+}
+
+export { validateAsanaImport, validatePipedriveImport, validateTrelloImport };

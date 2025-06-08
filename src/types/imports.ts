@@ -111,13 +111,40 @@ type AsanaImportSection = {
   name: string;
 };
 
+/**
+ * Pipedrive Import Types
+ * These types define the structure for importing data from Pipedrive.
+ */
+
+type PipedriveImport = {
+  pipelineName: string;
+  deals: PipedriveDealImport[];
+};
+
+type PipedriveDealImport = {
+  id: number;
+  title: string;
+  value: string;
+  status: string;
+  stage: string;
+  pipeline: string;
+  deal_closed_on: string;
+  archive_status: string;
+  label: string;
+  expected_close_date: string;
+};
+
 type WPQTImportFilter = {
   includeArchivedTasks: boolean;
+  pipedriveFilters: {
+    selectedPipeline: false | string;
+  };
 };
 
 enum PipelineImportSource {
   TRELLO = "TRELLO-IMPORT",
   ASANA = "ASANA-IMPORT",
+  PIPEDRIVE = "PIPEDRIVE-IMPORT",
 }
 
 export {
@@ -125,11 +152,14 @@ export {
   AsanaImportLabel,
   AsanaImportSection,
   AsanaTaskImport,
+  PipedriveDealImport,
+  PipedriveImport,
   PipelineImportSource,
   TrelloImport,
   TrelloImportList,
   WPQTImport,
   WPQTImportFilter,
+  WPQTLabelImport,
   WPQTStageImport,
   WPQTTaskImport,
 };

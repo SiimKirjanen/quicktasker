@@ -13,6 +13,9 @@ describe("ImportConfig Component", () => {
 
   const mockImportDataFilter: WPQTImportFilter = {
     includeArchivedTasks: true,
+    pipedriveFilters: {
+      selectedPipeline: false,
+    },
   };
 
   const mockOnNameChange = jest.fn();

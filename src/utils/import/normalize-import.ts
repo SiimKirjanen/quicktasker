@@ -3,9 +3,12 @@ import {
   AsanaImport,
   AsanaImportLabel,
   AsanaImportSection,
+  PipedriveImport,
   TrelloImport,
   WPQTImport,
+  WPQTLabelImport,
 } from "../../types/imports";
+import { generateUUID } from "../uuid";
 
 function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
   const pipelineData = {
@@ -118,4 +121,111 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
   };
 }
 
-export { normalizeAsanaImport, normalizeTrelloImport };
+function normalizePipedriveImport(importData: PipedriveImport): WPQTImport {
+  if (!importData) {
+    return {
+      pipelineName: "",
+      pipelineDescription: "",
+      stages: [],
+      tasks: [],
+      labels: [],
+    };
+  }
+
+  const stagesMap = new Map<
+    string,
+    {
+      stageId: string;
+      stageName: string;
+    }
+  >();
+  const labelsMap = new Map<
+    string,
+    {
+      labelId: string;
+      labelName: string;
+      color: string;
+    }
+  >();
+
+  importData.deals.forEach((deal) => {
+    if (deal.stage && !stagesMap.has(deal.stage)) {
+      stagesMap.set(deal.stage, {
+        stageId: generateUUID(),
+        stageName: deal.stage,
+      });
+    }
+    if (deal.label) {
+      const labels = deal.label
+        .split(",")
+        .map((label) => label.trim())
+        .filter(Boolean);
+
+      labels.forEach((labelName) => {
+        if (labelName && !labelsMap.has(labelName)) {
+          labelsMap.set(labelName, {
+            labelId: generateUUID(),
+            labelName: labelName,
+            color: DEFAULT_IMPORT_LABEL_COLOR,
+          });
+        }
+      });
+    }
+  });
+
+  const stages = Array.from(stagesMap.values()).map((stage) => ({
+    stageId: stage.stageId,
+    stageName: stage.stageName,
+    stageDescription: "",
+  }));
+
+  const tasks = importData.deals.map((deal) => {
+    const stageInfo = stagesMap.get(deal.stage);
+    const dealStatus = deal.status.toLocaleLowerCase();
+    const taskLabels: WPQTLabelImport[] = [];
+
+    if (deal.label) {
+      const labels = deal.label
+        .split(",")
+        .map((label) => label.trim())
+        .filter(Boolean);
+
+      labels.forEach((labelName) => {
+        const labelInfo = labelsMap.get(labelName);
+
+        if (labelInfo) {
+          taskLabels.push({
+            labelId: labelInfo.labelId,
+            labelName: labelInfo.labelName,
+            color: labelInfo.color,
+          });
+        }
+      });
+    }
+
+    return {
+      taskName: deal.title,
+      taskDescription: "",
+      stageId: stageInfo ? stageInfo.stageId : stages[0]?.stageId || "",
+      archived: dealStatus === "lost" || dealStatus === "deleted",
+      assignedLabels: taskLabels,
+      dueDate: deal.expected_close_date || null,
+      taskCompletedAt:
+        dealStatus === "won" ? deal.deal_closed_on || null : null,
+    };
+  });
+
+  return {
+    pipelineName: importData.pipelineName,
+    pipelineDescription: "",
+    stages,
+    tasks: tasks,
+    labels: [],
+  };
+}
+
+export {
+  normalizeAsanaImport,
+  normalizePipedriveImport,
+  normalizeTrelloImport,
+};

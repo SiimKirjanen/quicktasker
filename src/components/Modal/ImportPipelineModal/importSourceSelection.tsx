@@ -1,0 +1,50 @@
+import { FaTrello } from "react-icons/fa6";
+import { PiLetterCirclePFill } from "react-icons/pi";
+import { TbBrandAsana } from "react-icons/tb";
+import { PipelineImportSource } from "../../../types/imports";
+
+type Props = {
+  selectedImportSource: PipelineImportSource;
+  handleImportSourceChange: (source: PipelineImportSource) => void;
+};
+function ImportSourceSelection({
+  selectedImportSource,
+  handleImportSourceChange,
+}: Props) {
+  return (
+    <div className="wpqt-flex wpqt-gap-2">
+      <div
+        className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
+          selectedImportSource === PipelineImportSource.TRELLO
+            ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
+            : ""
+        }`}
+        onClick={() => handleImportSourceChange(PipelineImportSource.TRELLO)}
+      >
+        <FaTrello className="wpqt-size-5 wpqt-trello-blue" />
+      </div>
+      <div
+        className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
+          selectedImportSource === PipelineImportSource.ASANA
+            ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
+            : ""
+        }`}
+        onClick={() => handleImportSourceChange(PipelineImportSource.ASANA)}
+      >
+        <TbBrandAsana className="wpqt-size-5 wpqt-asana-pink" />
+      </div>
+      <div
+        className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
+          selectedImportSource === PipelineImportSource.PIPEDRIVE
+            ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
+            : ""
+        }`}
+        onClick={() => handleImportSourceChange(PipelineImportSource.PIPEDRIVE)}
+      >
+        <PiLetterCirclePFill className="wpqt-size-5 wpqt-asana-pink" />
+      </div>
+    </div>
+  );
+}
+
+export { ImportSourceSelection };
