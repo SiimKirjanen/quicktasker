@@ -8,6 +8,7 @@ import {
 import { __ } from "@wordpress/i18n";
 import { FaTrello } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
+import { TbBrandAsana } from "react-icons/tb";
 import { toast } from "react-toastify";
 import {
   CLOSE_PIPELINE_IMPORT_MODAL,
@@ -22,7 +23,14 @@ import {
   WPQTImport,
   WPQTImportFilter,
 } from "../../../types/imports";
-import { normalizeTrelloImport } from "../../../utils/import/normalize-import";
+import {
+  normalizeAsanaImport,
+  normalizeTrelloImport,
+} from "../../../utils/import/normalize-import";
+import {
+  validateAsanaImport,
+  validateTrelloImport,
+} from "../../../utils/import/validate-import";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTModal } from "../WPQTModal";
 import { ImportConfig } from "./ImportConfig";
@@ -35,7 +43,9 @@ function ImportPipelineModal() {
   } = useContext(ModalContext);
   const { pipelinesDispatch, checkIfPipelineNameExists } = usePipelines();
   const { fetchAndSetPipelineData } = useContext(ActivePipelineContext);
-  const [selectedImportSource] = useState(PipelineImportSource.TRELLO);
+  const [selectedImportSource, setSelectedImportSource] = useState(
+    PipelineImportSource.TRELLO,
+  );
   const [importData, setImportData] = useState<WPQTImport | null>(null);
   const [importDataFilter, setImportDataFilter] = useState<WPQTImportFilter>({
     includeArchivedTasks: true,
@@ -45,7 +55,6 @@ function ImportPipelineModal() {
   const [importLoading, setImportLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { importPipeline } = useImportActions();
-  const selectionText = __("Import from Trello", "quicktasker");
   const pipelineNameExists = useMemo(() => {
     if (!importData?.pipelineName) {
       return false;
@@ -69,7 +78,39 @@ function ImportPipelineModal() {
       reader.onload = (e) => {
         try {
           const parsedData = JSON.parse(e.target?.result as string);
-          const normalizedData = normalizeTrelloImport(parsedData);
+          let normalizedData: WPQTImport;
+
+          switch (selectedImportSource) {
+            case PipelineImportSource.TRELLO: {
+              const validationResult = validateTrelloImport(parsedData);
+
+              if (validationResult !== true) {
+                toast.error(
+                  `${__("Invalid Trello import", "quicktasker")}: ${validationResult}`,
+                );
+                return;
+              }
+
+              normalizedData = normalizeTrelloImport(parsedData);
+              break;
+            }
+            case PipelineImportSource.ASANA: {
+              const validationResult = validateAsanaImport(parsedData);
+
+              if (validationResult !== true) {
+                toast.error(
+                  `${__("Invalid Asana import", "quicktasker")}: ${validationResult}`,
+                );
+                return;
+              }
+              normalizedData = normalizeAsanaImport(parsedData);
+              break;
+            }
+            default: {
+              throw new Error("Unsupported import source");
+            }
+          }
+
           setImportData(normalizedData);
         } catch (error) {
           console.error("Error parsing JSON file:", error);
@@ -78,6 +119,11 @@ function ImportPipelineModal() {
       };
       reader.readAsText(file);
     }
+  };
+
+  const handleImportSourceChange = (source: PipelineImportSource) => {
+    setSelectedImportSource(source);
+    resetState();
   };
 
   const handleImportStart = async () => {
@@ -103,8 +149,20 @@ function ImportPipelineModal() {
     setImportLoading(false);
   };
 
+  const getSelectionText = () => {
+    switch (selectedImportSource) {
+      case PipelineImportSource.TRELLO:
+        return __("Import from Trello", "quicktasker");
+      case PipelineImportSource.ASANA:
+        return __("Import from Asana", "quicktasker");
+      default:
+        return __("Select import source", "quicktasker");
+    }
+  };
+
   const resetState = () => {
     setImportData(null);
+    setFilteredImportData(null);
   };
 
   useEffect(() => {
@@ -130,19 +188,32 @@ function ImportPipelineModal() {
       <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
         <div className="wpqt-text-lg">{__("Import board", "quicktasker")}</div>
 
-        <div>
+        <div className="wpqt-flex wpqt-gap-2">
           <div
-            className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-cursor-pointer ${
+            className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
               selectedImportSource === PipelineImportSource.TRELLO
-                ? "wpqt-border wpqt-border-blue-500"
+                ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
                 : ""
             }`}
+            onClick={() =>
+              handleImportSourceChange(PipelineImportSource.TRELLO)
+            }
           >
             <FaTrello className="wpqt-size-5 wpqt-trello-blue" />
           </div>
+          <div
+            className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
+              selectedImportSource === PipelineImportSource.ASANA
+                ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
+                : ""
+            }`}
+            onClick={() => handleImportSourceChange(PipelineImportSource.ASANA)}
+          >
+            <TbBrandAsana className="wpqt-size-5 wpqt-asana-pink" />
+          </div>
         </div>
 
-        <p className="wpqt-my-0 wpqt-mb-2">{selectionText}</p>
+        <p className="wpqt-my-0 wpqt-mb-2">{getSelectionText()}</p>
 
         {!importData && (
           <WPQTIconButton

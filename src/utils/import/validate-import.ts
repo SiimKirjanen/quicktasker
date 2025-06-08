@@ -1,0 +1,160 @@
+import { TrelloImportList } from "../../types/imports";
+
+/**
+ * Validates if the provided data is a valid Trello import
+ * @param importData The data to validate
+ * @returns True if data is valid, or an error message string if invalid
+ */
+function validateTrelloImport(importData: unknown): true | string {
+  if (!importData || typeof importData !== "object") {
+    return "Import data is missing or not an object";
+  }
+
+  const data = importData as Record<string, unknown>;
+
+  // Check for required top-level properties
+  if (!data.name) return "Missing board name";
+  if (!data.cards) return "Missing cards array";
+  if (!data.lists) return "Missing lists array";
+  if (!data.labels) return "Missing labels array";
+
+  // Validate that cards is an array
+  if (!Array.isArray(data.cards)) {
+    return "Cards property is not an array";
+  }
+
+  // Validate that lists is an array
+  if (!Array.isArray(data.lists)) {
+    return "Lists property is not an array";
+  }
+
+  // Validate that labels is an array
+  if (!Array.isArray(data.labels)) {
+    return "Labels property is not an array";
+  }
+
+  // Check if any lists are not closed
+  if (
+    data.lists.length > 0 &&
+    !data.lists.some((list: TrelloImportList) => !list.closed)
+  ) {
+    return "All lists are closed, at least one open list is required";
+  }
+
+  // Check that each card has required properties
+  for (const card of data.cards as Array<Record<string, unknown>>) {
+    if (!card.id)
+      return `Card missing ID: ${JSON.stringify(card).substring(0, 100)}...`;
+    if (!card.name) return `Card missing name: ${card.id}`;
+    if (!card.idList) return `Card missing list ID: ${card.id}`;
+
+    // Make sure labels is an array
+    if (!Array.isArray(card.labels)) {
+      return `Card labels is not an array: ${card.id}`;
+    }
+  }
+
+  // Check that each list has required properties
+  for (const list of data.lists as Array<Record<string, unknown>>) {
+    if (!list.id)
+      return `List missing ID: ${JSON.stringify(list).substring(0, 100)}...`;
+    if (!list.name) return `List missing name: ${list.id}`;
+    if (typeof list.closed !== "boolean")
+      return `List closed status is not boolean: ${list.id}`;
+  }
+
+  // Check that each label has required properties
+  for (const label of data.labels as Array<Record<string, unknown>>) {
+    if (!label.id)
+      return `Label missing ID: ${JSON.stringify(label).substring(0, 100)}...`;
+    if (!label.name && label.name !== "")
+      return `Label missing name: ${label.id}`;
+    if (!label.color) return `Label missing color: ${label.id}`;
+  }
+
+  return true;
+}
+
+/**
+ * Validates if the provided data is a valid Asana import
+ * @param importData The data to validate
+ * @returns True if data is valid, or an error message string if invalid
+ */
+function validateAsanaImport(importData: unknown): true | string {
+  if (!importData || typeof importData !== "object") {
+    return "Import data is missing or not an object";
+  }
+
+  const data = importData as Record<string, unknown>;
+
+  // Check for required top-level structure
+  if (!data.data) return "Missing data array";
+  if (!Array.isArray(data.data)) return "Data property is not an array";
+  if (data.data.length === 0) return "Data array is empty";
+
+  // Check each task
+  for (const task of data.data as Array<Record<string, unknown>>) {
+    // Check required task properties
+    if (!task.gid)
+      return `Task missing GID: ${JSON.stringify(task).substring(0, 100)}...`;
+    if (!task.name) return `Task missing name: ${task.gid}`;
+    if (typeof task.completed !== "boolean")
+      return `Task completed status is not boolean: ${task.gid}`;
+
+    // Check that projects exists and is an array
+    if (!Array.isArray(task.projects)) {
+      return `Task projects is not an array: ${task.gid}`;
+    }
+    if (task.projects.length === 0) {
+      return `Task has no projects: ${task.gid}`;
+    }
+
+    // Check that memberships exists and is an array
+    if (!Array.isArray(task.memberships)) {
+      return `Task memberships is not an array: ${task.gid}`;
+    }
+
+    // Check that tags exists and is an array
+    if (!Array.isArray(task.tags)) {
+      return `Task tags is not an array: ${task.gid}`;
+    }
+
+    // Validate project structure
+    for (const project of task.projects as Array<Record<string, unknown>>) {
+      if (!project.gid) return `Project missing GID in task ${task.gid}`;
+      if (!project.name) return `Project missing name in task ${task.gid}`;
+    }
+
+    // Validate membership structure (if any)
+    for (const membership of task.memberships as Array<
+      Record<string, unknown>
+    >) {
+      if (!membership.project)
+        return `Membership missing project in task ${task.gid}`;
+      if (!membership.section)
+        return `Membership missing section in task ${task.gid}`;
+
+      const project = membership.project as Record<string, unknown>;
+      const section = membership.section as Record<string, unknown>;
+
+      if (!project.gid)
+        return `Membership project missing GID in task ${task.gid}`;
+      if (!project.name)
+        return `Membership project missing name in task ${task.gid}`;
+      if (!section.gid)
+        return `Membership section missing GID in task ${task.gid}`;
+      if (!section.name)
+        return `Membership section missing name in task ${task.gid}`;
+    }
+
+    // Validate tag structure (if any)
+    for (const tag of task.tags as Array<Record<string, unknown>>) {
+      if (!tag.gid) return `Tag missing GID in task ${task.gid}`;
+      if (!tag.name) return `Tag missing name in task ${task.gid}`;
+    }
+  }
+
+  return true;
+}
+
+export { validateAsanaImport, validateTrelloImport };

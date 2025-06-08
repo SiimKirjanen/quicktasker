@@ -42,6 +42,9 @@
   .wpqt-trello-blue {
     color: #0079bf;
   }
+  .wpqt-asana-pink {
+    color: #f47d20;
+  }
   .wpqt-icon-green {
     @apply wpqt-text-green-700;
   }

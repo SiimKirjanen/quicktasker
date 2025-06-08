@@ -70,17 +70,64 @@ type TrelloImportCard = {
   dateCompleted: string | null;
 };
 
+/**
+ * Asana Import Types
+ * These types define the structure for importing data from Asana.
+ */
+
+type AsanaImport = {
+  data: AsanaTaskImport[];
+};
+
+type AsanaTaskImport = {
+  gid: string;
+  tags: AsanaImportLabel[];
+  completed: boolean;
+  completed_at: string | null;
+  due_on: string | null;
+  due_at: string | null;
+  name: string;
+  projects: AsanaImportProject[];
+  memberships: AsanaImportMembership[];
+};
+
+type AsanaImportProject = {
+  gid: string;
+  name: string;
+};
+
+type AsanaImportLabel = {
+  gid: string;
+  name: string;
+};
+
+type AsanaImportMembership = {
+  project: AsanaImportProject;
+  section: AsanaImportSection;
+};
+
+type AsanaImportSection = {
+  gid: string;
+  name: string;
+};
+
 type WPQTImportFilter = {
   includeArchivedTasks: boolean;
 };
 
 enum PipelineImportSource {
   TRELLO = "TRELLO-IMPORT",
+  ASANA = "ASANA-IMPORT",
 }
 
 export {
+  AsanaImport,
+  AsanaImportLabel,
+  AsanaImportSection,
+  AsanaTaskImport,
   PipelineImportSource,
   TrelloImport,
+  TrelloImportList,
   WPQTImport,
   WPQTImportFilter,
   WPQTStageImport,
