@@ -5014,9 +5014,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
-/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
-/* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react-icons/tb */ "./node_modules/react-icons/tb/index.mjs");
+/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
+/* harmony import */ var react_icons_md__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! react-icons/md */ "./node_modules/react-icons/md/index.mjs");
+/* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react-icons/tb */ "./node_modules/react-icons/tb/index.mjs");
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useImportActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useImportActions */ "./src/hooks/actions/useImportActions.ts");
@@ -5025,10 +5025,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../types/imports */ "./src/types/imports.ts");
 /* harmony import */ var _utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../utils/import/normalize-import */ "./src/utils/import/normalize-import.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
-/* harmony import */ var _ImportConfig__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ImportConfig */ "./src/components/Modal/ImportPipelineModal/ImportConfig.tsx");
-/* harmony import */ var _ImportInfo__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./ImportInfo */ "./src/components/Modal/ImportPipelineModal/ImportInfo.tsx");
+/* harmony import */ var _utils_import_validate_import__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../utils/import/validate-import */ "./src/utils/import/validate-import.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _ImportConfig__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./ImportConfig */ "./src/components/Modal/ImportPipelineModal/ImportConfig.tsx");
+/* harmony import */ var _ImportInfo__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./ImportInfo */ "./src/components/Modal/ImportPipelineModal/ImportInfo.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -5056,6 +5057,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
+
 
 
 
@@ -5123,13 +5125,29 @@ function ImportPipelineModal() {
           let normalizedData;
           switch (selectedImportSource) {
             case _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.TRELLO:
-              normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_10__.normalizeTrelloImport)(parsedData);
-              break;
+              {
+                const validationResult = (0,_utils_import_validate_import__WEBPACK_IMPORTED_MODULE_11__.validateTrelloImport)(parsedData);
+                if (validationResult !== true) {
+                  react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error(`${(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Invalid Trello import", "quicktasker")}: ${validationResult}`);
+                  return;
+                }
+                normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_10__.normalizeTrelloImport)(parsedData);
+                break;
+              }
             case _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.ASANA:
-              normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_10__.normalizeAsanaImport)(parsedData);
-              break;
+              {
+                const validationResult = (0,_utils_import_validate_import__WEBPACK_IMPORTED_MODULE_11__.validateAsanaImport)(parsedData);
+                if (validationResult !== true) {
+                  react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error(`${(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Invalid Asana import", "quicktasker")}: ${validationResult}`);
+                  return;
+                }
+                normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_10__.normalizeAsanaImport)(parsedData);
+                break;
+              }
             default:
-              throw new Error("Unsupported import source");
+              {
+                throw new Error("Unsupported import source");
+              }
           }
           setImportData(normalizedData);
         } catch (error) {
@@ -5142,6 +5160,7 @@ function ImportPipelineModal() {
   };
   const handleImportSourceChange = source => {
     setSelectedImportSource(source);
+    resetState();
   };
   const handleImportStart = () => __awaiter(this, void 0, void 0, function* () {
     if (!filteredImportData || pipelineNameExists) {
@@ -5177,6 +5196,7 @@ function ImportPipelineModal() {
   };
   const resetState = () => {
     setImportData(null);
+    setFilteredImportData(null);
   };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (importData) {
@@ -5186,7 +5206,7 @@ function ImportPipelineModal() {
       setFilteredImportData(filteredData);
     }
   }, [importData, importDataFilter]);
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_12__.WPQTModal, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_13__.WPQTModal, {
     modalOpen: pipelineImportModalOpen,
     closeModal: () => {
       modalDispatch({
@@ -5204,26 +5224,26 @@ function ImportPipelineModal() {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid" : ""}`,
           onClick: () => handleImportSourceChange(_types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.TRELLO),
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_15__.FaTrello, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_16__.FaTrello, {
             className: "wpqt-size-5 wpqt-trello-blue"
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.ASANA ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid" : ""}`,
           onClick: () => handleImportSourceChange(_types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.ASANA),
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tb__WEBPACK_IMPORTED_MODULE_16__.TbBrandAsana, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tb__WEBPACK_IMPORTED_MODULE_17__.TbBrandAsana, {
             className: "wpqt-size-5 wpqt-asana-pink"
           })
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
         className: "wpqt-my-0 wpqt-mb-2",
         children: getSelectionText()
-      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_11__.WPQTIconButton, {
+      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_12__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select import file", "quicktasker"),
         onClick: handleFileButtonClick,
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_17__.MdFileUpload, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_18__.MdFileUpload, {
           className: "wpqt-size-5 wpqt-text-blue-500"
         })
-      }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ImportConfig__WEBPACK_IMPORTED_MODULE_13__.ImportConfig, {
+      }), importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ImportConfig__WEBPACK_IMPORTED_MODULE_14__.ImportConfig, {
         importData: importData,
         importDataFilter: importDataFilter,
         validation: {
@@ -5250,9 +5270,9 @@ function ImportPipelineModal() {
           });
         },
         onImportDataFilterChange: setImportDataFilter
-      }), filteredImportData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ImportInfo__WEBPACK_IMPORTED_MODULE_14__.ImportInfo, {
+      }), filteredImportData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ImportInfo__WEBPACK_IMPORTED_MODULE_15__.ImportInfo, {
         importData: filteredImportData
-      }), canStartImport && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_11__.WPQTIconButton, {
+      }), canStartImport && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_12__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Start import", "quicktasker"),
         onClick: handleImportStart,
         loading: importLoading
@@ -20391,6 +20411,135 @@ function normalizeAsanaImport(importData) {
     tasks,
     labels
   };
+}
+
+
+/***/ }),
+
+/***/ "./src/utils/import/validate-import.ts":
+/*!*********************************************!*\
+  !*** ./src/utils/import/validate-import.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   validateAsanaImport: () => (/* binding */ validateAsanaImport),
+/* harmony export */   validateTrelloImport: () => (/* binding */ validateTrelloImport)
+/* harmony export */ });
+/**
+ * Validates if the provided data is a valid Trello import
+ * @param importData The data to validate
+ * @returns True if data is valid, or an error message string if invalid
+ */
+function validateTrelloImport(importData) {
+  if (!importData || typeof importData !== "object") {
+    return "Import data is missing or not an object";
+  }
+  const data = importData;
+  // Check for required top-level properties
+  if (!data.name) return "Missing board name";
+  if (!data.cards) return "Missing cards array";
+  if (!data.lists) return "Missing lists array";
+  if (!data.labels) return "Missing labels array";
+  // Validate that cards is an array
+  if (!Array.isArray(data.cards)) {
+    return "Cards property is not an array";
+  }
+  // Validate that lists is an array
+  if (!Array.isArray(data.lists)) {
+    return "Lists property is not an array";
+  }
+  // Validate that labels is an array
+  if (!Array.isArray(data.labels)) {
+    return "Labels property is not an array";
+  }
+  // Check if any lists are not closed
+  if (data.lists.length > 0 && !data.lists.some(list => !list.closed)) {
+    return "All lists are closed, at least one open list is required";
+  }
+  // Check that each card has required properties
+  for (const card of data.cards) {
+    if (!card.id) return `Card missing ID: ${JSON.stringify(card).substring(0, 100)}...`;
+    if (!card.name) return `Card missing name: ${card.id}`;
+    if (!card.idList) return `Card missing list ID: ${card.id}`;
+    // Make sure labels is an array
+    if (!Array.isArray(card.labels)) {
+      return `Card labels is not an array: ${card.id}`;
+    }
+  }
+  // Check that each list has required properties
+  for (const list of data.lists) {
+    if (!list.id) return `List missing ID: ${JSON.stringify(list).substring(0, 100)}...`;
+    if (!list.name) return `List missing name: ${list.id}`;
+    if (typeof list.closed !== "boolean") return `List closed status is not boolean: ${list.id}`;
+  }
+  // Check that each label has required properties
+  for (const label of data.labels) {
+    if (!label.id) return `Label missing ID: ${JSON.stringify(label).substring(0, 100)}...`;
+    if (!label.name && label.name !== "") return `Label missing name: ${label.id}`;
+    if (!label.color) return `Label missing color: ${label.id}`;
+  }
+  return true;
+}
+/**
+ * Validates if the provided data is a valid Asana import
+ * @param importData The data to validate
+ * @returns True if data is valid, or an error message string if invalid
+ */
+function validateAsanaImport(importData) {
+  if (!importData || typeof importData !== "object") {
+    return "Import data is missing or not an object";
+  }
+  const data = importData;
+  // Check for required top-level structure
+  if (!data.data) return "Missing data array";
+  if (!Array.isArray(data.data)) return "Data property is not an array";
+  if (data.data.length === 0) return "Data array is empty";
+  // Check each task
+  for (const task of data.data) {
+    // Check required task properties
+    if (!task.gid) return `Task missing GID: ${JSON.stringify(task).substring(0, 100)}...`;
+    if (!task.name) return `Task missing name: ${task.gid}`;
+    if (typeof task.completed !== "boolean") return `Task completed status is not boolean: ${task.gid}`;
+    // Check that projects exists and is an array
+    if (!Array.isArray(task.projects)) {
+      return `Task projects is not an array: ${task.gid}`;
+    }
+    if (task.projects.length === 0) {
+      return `Task has no projects: ${task.gid}`;
+    }
+    // Check that memberships exists and is an array
+    if (!Array.isArray(task.memberships)) {
+      return `Task memberships is not an array: ${task.gid}`;
+    }
+    // Check that tags exists and is an array
+    if (!Array.isArray(task.tags)) {
+      return `Task tags is not an array: ${task.gid}`;
+    }
+    // Validate project structure
+    for (const project of task.projects) {
+      if (!project.gid) return `Project missing GID in task ${task.gid}`;
+      if (!project.name) return `Project missing name in task ${task.gid}`;
+    }
+    // Validate membership structure (if any)
+    for (const membership of task.memberships) {
+      if (!membership.project) return `Membership missing project in task ${task.gid}`;
+      if (!membership.section) return `Membership missing section in task ${task.gid}`;
+      const project = membership.project;
+      const section = membership.section;
+      if (!project.gid) return `Membership project missing GID in task ${task.gid}`;
+      if (!project.name) return `Membership project missing name in task ${task.gid}`;
+      if (!section.gid) return `Membership section missing GID in task ${task.gid}`;
+      if (!section.name) return `Membership section missing name in task ${task.gid}`;
+    }
+    // Validate tag structure (if any)
+    for (const tag of task.tags) {
+      if (!tag.gid) return `Tag missing GID in task ${task.gid}`;
+      if (!tag.name) return `Tag missing name in task ${task.gid}`;
+    }
+  }
+  return true;
 }
 
 

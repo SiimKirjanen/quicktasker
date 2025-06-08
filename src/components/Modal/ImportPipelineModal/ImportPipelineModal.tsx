@@ -27,6 +27,10 @@ import {
   normalizeAsanaImport,
   normalizeTrelloImport,
 } from "../../../utils/import/normalize-import";
+import {
+  validateAsanaImport,
+  validateTrelloImport,
+} from "../../../utils/import/validate-import";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTModal } from "../WPQTModal";
 import { ImportConfig } from "./ImportConfig";
@@ -77,15 +81,36 @@ function ImportPipelineModal() {
           let normalizedData: WPQTImport;
 
           switch (selectedImportSource) {
-            case PipelineImportSource.TRELLO:
+            case PipelineImportSource.TRELLO: {
+              const validationResult = validateTrelloImport(parsedData);
+
+              if (validationResult !== true) {
+                toast.error(
+                  `${__("Invalid Trello import", "quicktasker")}: ${validationResult}`,
+                );
+                return;
+              }
+
               normalizedData = normalizeTrelloImport(parsedData);
               break;
-            case PipelineImportSource.ASANA:
+            }
+            case PipelineImportSource.ASANA: {
+              const validationResult = validateAsanaImport(parsedData);
+
+              if (validationResult !== true) {
+                toast.error(
+                  `${__("Invalid Asana import", "quicktasker")}: ${validationResult}`,
+                );
+                return;
+              }
               normalizedData = normalizeAsanaImport(parsedData);
               break;
-            default:
+            }
+            default: {
               throw new Error("Unsupported import source");
+            }
           }
+
           setImportData(normalizedData);
         } catch (error) {
           console.error("Error parsing JSON file:", error);
@@ -98,6 +123,7 @@ function ImportPipelineModal() {
 
   const handleImportSourceChange = (source: PipelineImportSource) => {
     setSelectedImportSource(source);
+    resetState();
   };
 
   const handleImportStart = async () => {
@@ -136,6 +162,7 @@ function ImportPipelineModal() {
 
   const resetState = () => {
     setImportData(null);
+    setFilteredImportData(null);
   };
 
   useEffect(() => {

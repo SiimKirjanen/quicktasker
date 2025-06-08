@@ -127,6 +127,7 @@ export {
   AsanaTaskImport,
   PipelineImportSource,
   TrelloImport,
+  TrelloImportList,
   WPQTImport,
   WPQTImportFilter,
   WPQTStageImport,
