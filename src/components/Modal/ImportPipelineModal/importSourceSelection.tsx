@@ -21,7 +21,7 @@ function ImportSourceSelection({
         }`}
         onClick={() => handleImportSourceChange(PipelineImportSource.TRELLO)}
       >
-        <FaTrello className="wpqt-size-5 wpqt-trello-blue" />
+        <FaTrello className="wpqt-size-6 wpqt-trello-blue" />
       </div>
       <div
         className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
@@ -31,7 +31,7 @@ function ImportSourceSelection({
         }`}
         onClick={() => handleImportSourceChange(PipelineImportSource.ASANA)}
       >
-        <TbBrandAsana className="wpqt-size-5 wpqt-asana-pink" />
+        <TbBrandAsana className="wpqt-size-6 wpqt-asana-pink" />
       </div>
       <div
         className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
@@ -41,7 +41,7 @@ function ImportSourceSelection({
         }`}
         onClick={() => handleImportSourceChange(PipelineImportSource.PIPEDRIVE)}
       >
-        <PiLetterCirclePFill className="wpqt-size-5 wpqt-asana-pink" />
+        <PiLetterCirclePFill className="wpqt-size-6 wpqt-pipedrive-green" />
       </div>
     </div>
   );

@@ -3,14 +3,23 @@ import {
   AsanaImport,
   AsanaImportLabel,
   AsanaImportSection,
-  PipedriveImport,
+  PipedriveDealImport,
   TrelloImport,
   WPQTImport,
   WPQTLabelImport,
+  WPQTSourcePipeline,
+  WPQTStageImport,
 } from "../../types/imports";
 import { generateUUID } from "../uuid";
 
 function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
+  const sourcePipelines: WPQTSourcePipeline[] = [
+    {
+      name: importData.name,
+      id: importData.id,
+    },
+  ];
+
   const pipelineData = {
     pipelineName: importData.name,
     pipelineDescription: importData.desc,
@@ -20,6 +29,10 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
         stageName: list.name,
         stageDescription: "",
         stageId: list.id,
+        sourcePipeline: {
+          name: importData.name,
+          id: importData.id,
+        },
       })),
     tasks: importData.cards.map((card) => {
       return {
@@ -34,6 +47,10 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
         })),
         dueDate: card.due ? card.due : null,
         taskCompletedAt: card.dateCompleted ? card.dateCompleted : null,
+        sourcePipeline: {
+          name: importData.name,
+          id: importData.id,
+        },
       };
     }),
     labels: importData.labels.map((label) => ({
@@ -41,6 +58,7 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
       labelId: label.id,
       color: label.color,
     })),
+    sourcePipelines,
   };
 
   return pipelineData;
@@ -54,12 +72,20 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
       stages: [],
       tasks: [],
       labels: [],
+      sourcePipelines: [],
     };
   }
+
   const primaryProjectGid = importData.data[0].projects[0].gid;
   const primaryProjectName = importData.data[0].projects[0].name;
   const sectionsMap = new Map<string, AsanaImportSection>();
   const tagsMap = new Map<string, AsanaImportLabel>();
+  const sourcePipelines: WPQTSourcePipeline[] = [
+    {
+      name: primaryProjectName,
+      id: primaryProjectGid,
+    },
+  ];
 
   importData.data.forEach((task) => {
     task.memberships.forEach((membership) => {
@@ -81,6 +107,10 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
     stageId: section.gid,
     stageName: section.name,
     stageDescription: "",
+    sourcePipeline: {
+      name: primaryProjectName,
+      id: primaryProjectGid,
+    },
   }));
   const labels = Array.from(tagsMap.values()).map((tag) => ({
     labelId: tag.gid,
@@ -109,6 +139,10 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
         labelId: tag.gid,
         color: DEFAULT_IMPORT_LABEL_COLOR,
       })),
+      sourcePipeline: {
+        name: primaryProjectName,
+        id: primaryProjectGid,
+      },
     };
   });
 
@@ -118,10 +152,13 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
     stages,
     tasks,
     labels,
+    sourcePipelines,
   };
 }
 
-function normalizePipedriveImport(importData: PipedriveImport): WPQTImport {
+function normalizePipedriveImport(
+  importData: PipedriveDealImport[],
+): WPQTImport {
   if (!importData) {
     return {
       pipelineName: "",
@@ -129,30 +166,33 @@ function normalizePipedriveImport(importData: PipedriveImport): WPQTImport {
       stages: [],
       tasks: [],
       labels: [],
+      sourcePipelines: [],
     };
   }
 
-  const stagesMap = new Map<
-    string,
-    {
-      stageId: string;
-      stageName: string;
-    }
-  >();
-  const labelsMap = new Map<
-    string,
-    {
-      labelId: string;
-      labelName: string;
-      color: string;
-    }
-  >();
+  const stagesMap = new Map<string, WPQTStageImport>();
+  const labelsMap = new Map<string, WPQTLabelImport>();
+  const pipelinesMap = new Map<string, WPQTSourcePipeline>();
 
-  importData.deals.forEach((deal) => {
+  importData.forEach((deal) => {
+    if (deal.pipeline && !pipelinesMap.has(deal.pipeline)) {
+      pipelinesMap.set(deal.pipeline, {
+        name: deal.pipeline,
+        id: generateUUID(),
+      });
+    }
+  });
+
+  importData.forEach((deal) => {
     if (deal.stage && !stagesMap.has(deal.stage)) {
       stagesMap.set(deal.stage, {
         stageId: generateUUID(),
         stageName: deal.stage,
+        stageDescription: "",
+        sourcePipeline: pipelinesMap.get(deal.pipeline) || {
+          name: "",
+          id: generateUUID(),
+        },
       });
     }
     if (deal.label) {
@@ -177,12 +217,30 @@ function normalizePipedriveImport(importData: PipedriveImport): WPQTImport {
     stageId: stage.stageId,
     stageName: stage.stageName,
     stageDescription: "",
+    sourcePipeline: {
+      name: stage.sourcePipeline.name,
+      id: stage.sourcePipeline.id,
+    },
   }));
 
-  const tasks = importData.deals.map((deal) => {
+  const labels = Array.from(labelsMap.values()).map((label) => ({
+    labelId: label.labelId,
+    labelName: label.labelName,
+    color: label.color,
+  }));
+
+  const pipelines: WPQTSourcePipeline[] = Array.from(pipelinesMap.values()).map(
+    (pipeline) => ({
+      name: pipeline.name,
+      id: pipeline.id,
+    }),
+  );
+
+  const tasks = importData.map((deal) => {
     const stageInfo = stagesMap.get(deal.stage);
     const dealStatus = deal.status.toLocaleLowerCase();
     const taskLabels: WPQTLabelImport[] = [];
+    let taskPipeline: WPQTSourcePipeline | null = null;
 
     if (deal.label) {
       const labels = deal.label
@@ -203,6 +261,17 @@ function normalizePipedriveImport(importData: PipedriveImport): WPQTImport {
       });
     }
 
+    if (deal.pipeline) {
+      const pipelineInfo = pipelinesMap.get(deal.pipeline);
+
+      if (pipelineInfo) {
+        taskPipeline = {
+          name: pipelineInfo.name,
+          id: pipelineInfo.id,
+        };
+      }
+    }
+
     return {
       taskName: deal.title,
       taskDescription: "",
@@ -212,15 +281,17 @@ function normalizePipedriveImport(importData: PipedriveImport): WPQTImport {
       dueDate: deal.expected_close_date || null,
       taskCompletedAt:
         dealStatus === "won" ? deal.deal_closed_on || null : null,
+      sourcePipeline: taskPipeline,
     };
   });
 
   return {
-    pipelineName: importData.pipelineName,
+    pipelineName: "",
     pipelineDescription: "",
     stages,
-    tasks: tasks,
-    labels: [],
+    tasks,
+    labels,
+    sourcePipelines: pipelines,
   };
 }
 

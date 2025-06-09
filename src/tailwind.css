@@ -45,6 +45,9 @@
   .wpqt-asana-pink {
     color: #f47d20;
   }
+  .wpqt-pipedrive-green {
+    color: #017737;
+  }
   .wpqt-icon-green {
     @apply wpqt-text-green-700;
   }

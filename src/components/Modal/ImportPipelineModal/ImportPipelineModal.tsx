@@ -51,9 +51,7 @@ function ImportPipelineModal() {
   const [importData, setImportData] = useState<WPQTImport | null>(null);
   const [importDataFilter, setImportDataFilter] = useState<WPQTImportFilter>({
     includeArchivedTasks: true,
-    pipedriveFilters: {
-      selectedPipeline: false,
-    },
+    sourcePipelinesFilter: [],
   });
   const [filteredImportData, setFilteredImportData] =
     useState<WPQTImport | null>(null);
@@ -127,10 +125,7 @@ function ImportPipelineModal() {
                 );
                 return;
               }
-              normalizedData = normalizePipedriveImport({
-                pipelineName: "",
-                deals: parsedData.deals || [],
-              });
+              normalizedData = normalizePipedriveImport(parsedData);
               break;
             }
             default: {
@@ -140,7 +135,7 @@ function ImportPipelineModal() {
 
           setImportData(normalizedData);
         } catch (error) {
-          console.error("Error parsing JSON file:", error);
+          console.error("Error parsing import file:", error);
           toast.error(__("Failed to parse import file", "quicktasker"));
         }
       };
@@ -189,6 +184,17 @@ function ImportPipelineModal() {
     }
   };
 
+  const getAcceptedFileTypes = () => {
+    switch (selectedImportSource) {
+      case PipelineImportSource.PIPEDRIVE:
+        return ".json, .csv";
+      case PipelineImportSource.TRELLO:
+      case PipelineImportSource.ASANA:
+      default:
+        return ".json";
+    }
+  };
+
   const resetState = () => {
     setImportData(null);
     setFilteredImportData(null);
@@ -196,12 +202,30 @@ function ImportPipelineModal() {
 
   useEffect(() => {
     if (importData) {
+      // Filter out archived tasks if the filter is not set to include them
       const filteredData: WPQTImport = {
         ...importData,
         tasks: importData.tasks.filter(
           (task) => importDataFilter.includeArchivedTasks || !task.archived,
         ),
       };
+
+      // Apply source pipelines filter
+      if (importDataFilter.sourcePipelinesFilter.length > 0) {
+        filteredData.tasks = filteredData.tasks.filter((task) =>
+          importDataFilter.sourcePipelinesFilter.some(
+            (pipeline) =>
+              task.sourcePipeline && pipeline.id === task.sourcePipeline.id,
+          ),
+        );
+
+        filteredData.stages = filteredData.stages.filter((stage) =>
+          importDataFilter.sourcePipelinesFilter.some(
+            (pipeline) => stage.sourcePipeline.id === pipeline.id,
+          ),
+        );
+      }
+
       setFilteredImportData(filteredData);
     }
   }, [importData, importDataFilter]);
@@ -237,6 +261,7 @@ function ImportPipelineModal() {
             importData={importData}
             importDataFilter={importDataFilter}
             validation={{ pipelineNameExists: pipelineNameExists }}
+            selectedImportSource={selectedImportSource}
             onNameChange={(newName) => {
               setImportData((prev) => {
                 if (prev) {
@@ -277,7 +302,7 @@ function ImportPipelineModal() {
           ref={fileInputRef}
           id="import-upload"
           className="wpqt-hidden"
-          accept=".json, .csv"
+          accept={getAcceptedFileTypes()}
           onChange={handleFileChange}
         />
       </div>

@@ -1,5 +1,9 @@
 import { __ } from "@wordpress/i18n";
-import { WPQTImport, WPQTImportFilter } from "../../../types/imports";
+import {
+  PipelineImportSource,
+  WPQTImport,
+  WPQTImportFilter,
+} from "../../../types/imports";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { Toggle } from "../../common/Toggle/Toggle";
@@ -7,6 +11,7 @@ import { Toggle } from "../../common/Toggle/Toggle";
 type ImportConfigProps = {
   importData: WPQTImport;
   importDataFilter: WPQTImportFilter;
+  selectedImportSource: PipelineImportSource;
   onNameChange: (newName: string) => void;
   onDescriptionChange: (newDescription: string) => void;
   onImportDataFilterChange: (newFilter: WPQTImportFilter) => void;
@@ -17,15 +22,19 @@ type ImportConfigProps = {
 function ImportConfig({
   importData,
   importDataFilter,
+  selectedImportSource,
   onNameChange,
   onDescriptionChange,
   onImportDataFilterChange,
   validation,
 }: ImportConfigProps) {
+  const allowSourceSelection =
+    selectedImportSource === PipelineImportSource.PIPEDRIVE;
+
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-3">
       <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-1">
-        {__("Board name", "quicktasker")}
+        <ConfigTitle title={__("Board name", "quicktasker")} />
         <WPQTInput
           value={importData.pipelineName}
           onChange={onNameChange}
@@ -40,7 +49,7 @@ function ImportConfig({
       </div>
 
       <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-1">
-        {__("Board description", "quicktasker")}
+        <ConfigTitle title={__("Board description", "quicktasker")} />
         <WPQTTextarea
           value={importData.pipelineDescription}
           onChange={onDescriptionChange}
@@ -50,7 +59,8 @@ function ImportConfig({
       </div>
 
       <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
-        {__("Import archived tasks?", "quicktasker")}
+        <ConfigTitle title={__("Import archived tasks?", "quicktasker")} />
+
         <Toggle
           checked={importDataFilter.includeArchivedTasks}
           handleChange={() => {
@@ -61,8 +71,66 @@ function ImportConfig({
           }}
         />
       </div>
+
+      {allowSourceSelection && (
+        <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
+          <ConfigTitle title={__("Filter by source", "quicktasker")} />
+
+          {importData.sourcePipelines.map((source) => {
+            const isSourceSelected =
+              importDataFilter.sourcePipelinesFilter.some(
+                (filter) => filter.id === source.id,
+              );
+            const inputId = `source-${source.id}`;
+
+            return (
+              <div
+                key={source.id}
+                className="wpqt-flex wpqt-items-center wpqt-gap-2"
+              >
+                <label htmlFor={inputId}>{source.name}</label>
+                <input
+                  type="checkbox"
+                  value={source.name}
+                  id={inputId}
+                  checked={isSourceSelected}
+                  onChange={() => {
+                    let newSourcePipelinesFilter;
+
+                    if (isSourceSelected) {
+                      // Remove from filter if already selected
+                      newSourcePipelinesFilter =
+                        importDataFilter.sourcePipelinesFilter.filter(
+                          (filter) => filter.id !== source.id,
+                        );
+                    } else {
+                      // Add to filter if not already selected
+                      newSourcePipelinesFilter = [
+                        ...importDataFilter.sourcePipelinesFilter,
+                        source,
+                      ];
+                    }
+
+                    onImportDataFilterChange({
+                      ...importDataFilter,
+                      sourcePipelinesFilter: newSourcePipelinesFilter,
+                    });
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
+}
+
+type ImportConfigTitleProps = {
+  title: string;
+};
+function ConfigTitle({ title }: ImportConfigTitleProps) {
+  return <div className="wpqt-font-semibold">{title}</div>;
 }
 
 export { ImportConfig };
