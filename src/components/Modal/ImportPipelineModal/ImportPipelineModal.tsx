@@ -6,9 +6,7 @@ import {
   useState,
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { FaTrello } from "react-icons/fa6";
 import { MdFileUpload } from "react-icons/md";
-import { TbBrandAsana } from "react-icons/tb";
 import { toast } from "react-toastify";
 import {
   CLOSE_PIPELINE_IMPORT_MODAL,
@@ -23,18 +21,22 @@ import {
   WPQTImport,
   WPQTImportFilter,
 } from "../../../types/imports";
+import { parseCSV } from "../../../utils/import/csv-parse";
 import {
   normalizeAsanaImport,
+  normalizePipedriveImport,
   normalizeTrelloImport,
 } from "../../../utils/import/normalize-import";
 import {
   validateAsanaImport,
+  validatePipedriveImport,
   validateTrelloImport,
 } from "../../../utils/import/validate-import";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTModal } from "../WPQTModal";
 import { ImportConfig } from "./ImportConfig";
 import { ImportInfo } from "./ImportInfo";
+import { ImportSourceSelection } from "./importSourceSelection";
 
 function ImportPipelineModal() {
   const {
@@ -49,6 +51,7 @@ function ImportPipelineModal() {
   const [importData, setImportData] = useState<WPQTImport | null>(null);
   const [importDataFilter, setImportDataFilter] = useState<WPQTImportFilter>({
     includeArchivedTasks: true,
+    sourcePipelinesFilter: [],
   });
   const [filteredImportData, setFilteredImportData] =
     useState<WPQTImport | null>(null);
@@ -74,11 +77,18 @@ function ImportPipelineModal() {
 
     if (file) {
       const reader = new FileReader();
+      const fileExtension = file.name.split(".").pop()?.toLowerCase();
 
       reader.onload = (e) => {
         try {
-          const parsedData = JSON.parse(e.target?.result as string);
+          let parsedData;
           let normalizedData: WPQTImport;
+
+          if (fileExtension === "csv") {
+            parsedData = parseCSV(e.target?.result as string);
+          } else {
+            parsedData = JSON.parse(e.target?.result as string);
+          }
 
           switch (selectedImportSource) {
             case PipelineImportSource.TRELLO: {
@@ -106,6 +116,18 @@ function ImportPipelineModal() {
               normalizedData = normalizeAsanaImport(parsedData);
               break;
             }
+            case PipelineImportSource.PIPEDRIVE: {
+              const validationResult = validatePipedriveImport(parsedData);
+
+              if (validationResult !== true) {
+                toast.error(
+                  `${__("Invalid Pipedrive import", "quicktasker")}: ${validationResult}`,
+                );
+                return;
+              }
+              normalizedData = normalizePipedriveImport(parsedData);
+              break;
+            }
             default: {
               throw new Error("Unsupported import source");
             }
@@ -113,7 +135,7 @@ function ImportPipelineModal() {
 
           setImportData(normalizedData);
         } catch (error) {
-          console.error("Error parsing JSON file:", error);
+          console.error("Error parsing import file:", error);
           toast.error(__("Failed to parse import file", "quicktasker"));
         }
       };
@@ -155,8 +177,21 @@ function ImportPipelineModal() {
         return __("Import from Trello", "quicktasker");
       case PipelineImportSource.ASANA:
         return __("Import from Asana", "quicktasker");
+      case PipelineImportSource.PIPEDRIVE:
+        return __("Import from Pipedrive", "quicktasker");
       default:
         return __("Select import source", "quicktasker");
+    }
+  };
+
+  const getAcceptedFileTypes = () => {
+    switch (selectedImportSource) {
+      case PipelineImportSource.PIPEDRIVE:
+        return ".json, .csv";
+      case PipelineImportSource.TRELLO:
+      case PipelineImportSource.ASANA:
+      default:
+        return ".json";
     }
   };
 
@@ -167,12 +202,30 @@ function ImportPipelineModal() {
 
   useEffect(() => {
     if (importData) {
+      // Filter out archived tasks if the filter is not set to include them
       const filteredData: WPQTImport = {
         ...importData,
         tasks: importData.tasks.filter(
           (task) => importDataFilter.includeArchivedTasks || !task.archived,
         ),
       };
+
+      // Apply source pipelines filter
+      if (importDataFilter.sourcePipelinesFilter.length > 0) {
+        filteredData.tasks = filteredData.tasks.filter((task) =>
+          importDataFilter.sourcePipelinesFilter.some(
+            (pipeline) =>
+              task.sourcePipeline && pipeline.id === task.sourcePipeline.id,
+          ),
+        );
+
+        filteredData.stages = filteredData.stages.filter((stage) =>
+          importDataFilter.sourcePipelinesFilter.some(
+            (pipeline) => stage.sourcePipeline.id === pipeline.id,
+          ),
+        );
+      }
+
       setFilteredImportData(filteredData);
     }
   }, [importData, importDataFilter]);
@@ -188,30 +241,10 @@ function ImportPipelineModal() {
       <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
         <div className="wpqt-text-lg">{__("Import board", "quicktasker")}</div>
 
-        <div className="wpqt-flex wpqt-gap-2">
-          <div
-            className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
-              selectedImportSource === PipelineImportSource.TRELLO
-                ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
-                : ""
-            }`}
-            onClick={() =>
-              handleImportSourceChange(PipelineImportSource.TRELLO)
-            }
-          >
-            <FaTrello className="wpqt-size-5 wpqt-trello-blue" />
-          </div>
-          <div
-            className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
-              selectedImportSource === PipelineImportSource.ASANA
-                ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
-                : ""
-            }`}
-            onClick={() => handleImportSourceChange(PipelineImportSource.ASANA)}
-          >
-            <TbBrandAsana className="wpqt-size-5 wpqt-asana-pink" />
-          </div>
-        </div>
+        <ImportSourceSelection
+          selectedImportSource={selectedImportSource}
+          handleImportSourceChange={handleImportSourceChange}
+        />
 
         <p className="wpqt-my-0 wpqt-mb-2">{getSelectionText()}</p>
 
@@ -228,6 +261,7 @@ function ImportPipelineModal() {
             importData={importData}
             importDataFilter={importDataFilter}
             validation={{ pipelineNameExists: pipelineNameExists }}
+            selectedImportSource={selectedImportSource}
             onNameChange={(newName) => {
               setImportData((prev) => {
                 if (prev) {
@@ -268,7 +302,7 @@ function ImportPipelineModal() {
           ref={fileInputRef}
           id="import-upload"
           className="wpqt-hidden"
-          accept=".json"
+          accept={getAcceptedFileTypes()}
           onChange={handleFileChange}
         />
       </div>

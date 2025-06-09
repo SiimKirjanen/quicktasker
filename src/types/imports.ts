@@ -8,12 +8,14 @@ type WPQTImport = {
   stages: WPQTStageImport[];
   tasks: WPQTTaskImport[];
   labels: WPQTLabelImport[];
+  sourcePipelines: WPQTSourcePipeline[];
 };
 
 type WPQTStageImport = {
   stageName: string;
   stageDescription: string;
   stageId: string;
+  sourcePipeline: WPQTSourcePipeline;
 };
 
 type WPQTTaskImport = {
@@ -24,6 +26,7 @@ type WPQTTaskImport = {
   archived: boolean;
   dueDate: string | null;
   taskCompletedAt: string | null;
+  sourcePipeline: WPQTSourcePipeline | null;
 };
 
 type WPQTLabelImport = {
@@ -32,12 +35,18 @@ type WPQTLabelImport = {
   color: string;
 };
 
+type WPQTSourcePipeline = {
+  name: string;
+  id: string;
+};
+
 /**
  * Trello Import Types
  * These types define the structure for importing data from Trello.
  */
 
 type TrelloImport = {
+  id: string;
   name: string;
   desc: string;
   lists: TrelloImportList[];
@@ -111,13 +120,33 @@ type AsanaImportSection = {
   name: string;
 };
 
+/**
+ * Pipedrive Import Types
+ * These types define the structure for importing data from Pipedrive.
+ */
+
+type PipedriveDealImport = {
+  id: number;
+  title: string;
+  value: string;
+  status: string;
+  stage: string;
+  pipeline: string;
+  deal_closed_on: string;
+  archive_status: string;
+  label: string;
+  expected_close_date: string;
+};
+
 type WPQTImportFilter = {
   includeArchivedTasks: boolean;
+  sourcePipelinesFilter: WPQTSourcePipeline[];
 };
 
 enum PipelineImportSource {
   TRELLO = "TRELLO-IMPORT",
   ASANA = "ASANA-IMPORT",
+  PIPEDRIVE = "PIPEDRIVE-IMPORT",
 }
 
 export {
@@ -125,11 +154,14 @@ export {
   AsanaImportLabel,
   AsanaImportSection,
   AsanaTaskImport,
+  PipedriveDealImport,
   PipelineImportSource,
   TrelloImport,
   TrelloImportList,
   WPQTImport,
   WPQTImportFilter,
+  WPQTLabelImport,
+  WPQTSourcePipeline,
   WPQTStageImport,
   WPQTTaskImport,
 };
