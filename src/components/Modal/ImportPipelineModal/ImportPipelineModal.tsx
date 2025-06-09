@@ -38,6 +38,11 @@ import { ImportConfig } from "./ImportConfig";
 import { ImportInfo } from "./ImportInfo";
 import { ImportSourceSelection } from "./importSourceSelection";
 
+const defaultImportFilter: WPQTImportFilter = {
+  includeArchivedTasks: true,
+  sourcePipelinesFilter: [],
+};
+
 function ImportPipelineModal() {
   const {
     state: { pipelineImportModalOpen },
@@ -50,8 +55,7 @@ function ImportPipelineModal() {
   );
   const [importData, setImportData] = useState<WPQTImport | null>(null);
   const [importDataFilter, setImportDataFilter] = useState<WPQTImportFilter>({
-    includeArchivedTasks: true,
-    sourcePipelinesFilter: [],
+    ...defaultImportFilter,
   });
   const [filteredImportData, setFilteredImportData] =
     useState<WPQTImport | null>(null);
@@ -198,6 +202,7 @@ function ImportPipelineModal() {
   const resetState = () => {
     setImportData(null);
     setFilteredImportData(null);
+    setImportDataFilter({ ...defaultImportFilter });
   };
 
   useEffect(() => {
