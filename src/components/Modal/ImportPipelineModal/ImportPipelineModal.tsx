@@ -187,7 +187,7 @@ function ImportPipelineModal() {
   const getAcceptedFileTypes = () => {
     switch (selectedImportSource) {
       case PipelineImportSource.PIPEDRIVE:
-        return ".json, .csv";
+        return ".csv";
       case PipelineImportSource.TRELLO:
       case PipelineImportSource.ASANA:
       default:
