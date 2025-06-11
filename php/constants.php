@@ -56,7 +56,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.33.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.34.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -171,6 +171,10 @@ if ( ! defined( 'WP_QT_LOG_CREATED_BY_AUTOMATION' ) ) {
 
 if ( ! defined( 'WP_QT_LOG_CREATED_BY_IMPORT' ) ) {
     define('WP_QT_LOG_CREATED_BY_IMPORT', "import");
+}
+
+if ( ! defined( 'WP_QT_LOG_CREATED_BY_SYSTEM' ) ) {
+    define('WP_QT_LOG_CREATED_BY_SYSTEM', "system");
 }
 
 if ( ! defined( 'WP_QT_LOG_CREATED_BY' ) ) {
