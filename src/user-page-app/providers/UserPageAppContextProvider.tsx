@@ -18,7 +18,7 @@ const initialState: State = {
   pageHash: getQueryParam("code") || "",
   userId: "",
   userName: "",
-  cf: false,
+  cf: true,
   timezone: "",
 };
 

@@ -1453,7 +1453,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $user = $userService->resetUserPassword($data['id']);
 
-                        $logService->log('User ' . $user->name . ' password reset', WP_QT_LOG_TYPE_USER, $data['id'], WP_QT_LOG_CREATED_BY_ADMIN, get_current_user_id());
                         $logService->log('User ' . $user->name . ' password reset', [
                             'type' => WP_QT_LOG_TYPE_USER,
                             'type_id' => $data['id'],
@@ -3030,7 +3029,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $pipeline = $pipelineRepo->getPipelineById($pipelineId);
                         
                         $wpdb->query('COMMIT');
-                        
+
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'pipeline' => $pipeline,
                         ]))->toArray(), 200);
