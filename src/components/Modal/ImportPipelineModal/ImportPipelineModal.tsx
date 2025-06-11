@@ -34,6 +34,7 @@ import {
 } from "../../../utils/import/validate-import";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTModal } from "../WPQTModal";
+import { getSelectionInfoText, getSelectionText } from "./import-modal-utils";
 import { ImportConfig } from "./ImportConfig";
 import { ImportInfo } from "./ImportInfo";
 import { ImportSourceSelection } from "./importSourceSelection";
@@ -175,19 +176,6 @@ function ImportPipelineModal() {
     setImportLoading(false);
   };
 
-  const getSelectionText = () => {
-    switch (selectedImportSource) {
-      case PipelineImportSource.TRELLO:
-        return __("Import from Trello", "quicktasker");
-      case PipelineImportSource.ASANA:
-        return __("Import from Asana", "quicktasker");
-      case PipelineImportSource.PIPEDRIVE:
-        return __("Import from Pipedrive", "quicktasker");
-      default:
-        return __("Select import source", "quicktasker");
-    }
-  };
-
   const getAcceptedFileTypes = () => {
     switch (selectedImportSource) {
       case PipelineImportSource.PIPEDRIVE:
@@ -243,7 +231,7 @@ function ImportPipelineModal() {
         resetState();
       }}
     >
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
+      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
         <div className="wpqt-text-lg">{__("Import board", "quicktasker")}</div>
 
         <ImportSourceSelection
@@ -251,7 +239,12 @@ function ImportPipelineModal() {
           handleImportSourceChange={handleImportSourceChange}
         />
 
-        <p className="wpqt-my-0 wpqt-mb-2">{getSelectionText()}</p>
+        <div className="wpqt-text-center wp-mb-4">
+          <p className="wpqt-my-0">{getSelectionText(selectedImportSource)}</p>
+          <p className="wpqt-my-0">
+            {getSelectionInfoText(selectedImportSource)}
+          </p>
+        </div>
 
         {!importData && (
           <WPQTIconButton

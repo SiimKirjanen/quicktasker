@@ -18,7 +18,11 @@ Use Poedit program to generate language .po and .mo files from .pot
 
 ## Publishing free version
 
+`git clone git@github.com:SiimKirjanen/quicktasker.git`
+
 Run cleanup.sh
+
+Commit to WordPress plugin directory
 
 ## Publishing PRO version
 
