@@ -129,6 +129,10 @@ const LogsFilter = ({ filterSettings, setFilterSettings }: Props) => {
               label: __("Import", "quicktasker"),
               value: LogCreatedByEnum.Import,
             },
+            {
+              label: __("System", "quicktasker"),
+              value: LogCreatedByEnum.System,
+            },
           ]}
           onSelectionChange={(selection: string) => {
             setLocalFilterSettings({

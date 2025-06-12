@@ -29,6 +29,7 @@ enum LogCreatedByEnum {
   Quicktasker = "quicktasker_user",
   Automation = "automation",
   Import = "import",
+  System = "system",
   All = "all",
 }
 
