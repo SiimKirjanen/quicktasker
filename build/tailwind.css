@@ -1810,10 +1810,6 @@
   gap: 24px;
 }
 
-.wpqt-gap-0\.5 {
-  gap: 0.125rem;
-}
-
 .wpqt-gap-y-1 {
   row-gap: 0.25rem;
 }
@@ -2335,6 +2331,10 @@
   color: rgb(161 98 7 / var(--tw-text-opacity));
 }
 
+.wpqt-underline {
+  text-decoration-line: underline;
+}
+
 .wpqt-line-through {
   text-decoration-line: line-through;
 }
@@ -2434,7 +2434,14 @@
 
 .wpqt-logs-grid {
   display: grid;
-  grid-template-columns: 0.3fr 1fr 0.3fr;
+  grid-template-columns: 0.3fr 0.3fr 1fr;
+  place-items: center;
+  gap: 2rem;
+}
+
+.wpqt-logs-page-grid {
+  display: grid;
+  grid-template-columns: 0.3fr 0.3fr 0.3fr 1fr;
   place-items: center;
   gap: 2rem;
 }

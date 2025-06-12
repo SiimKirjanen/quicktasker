@@ -3,10 +3,11 @@ import { useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useTimezone } from "../../../hooks/useTimezone";
 import { WPQTComment } from "../../../types/comment";
-import { LoadingOval } from "../../Loading/Loading";
 import { Alert } from "../../common/Alert/Alert";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
+import { LoadingOval } from "../../Loading/Loading";
+import { LogHeader } from "../../Log/LogItem";
 
 type Props<T> = {
   typeId: string;
@@ -110,6 +111,9 @@ function CommentsAndLogsTabContent<T>({
 
       {data.length > 0 && (
         <div className="wpqt-mb-[28px] wpqt-mt-[56px] wpqt-logs-grid">
+          <LogHeader title={__("Author", "quicktasker")} />
+          <LogHeader title={__("Date", "quicktasker")} />
+          <LogHeader title={__("Text", "quicktasker")} />
           {data.map((item) => renderItem(item))}
         </div>
       )}
@@ -149,8 +153,8 @@ function TabContentCommentItem({ item }: { item: WPQTComment }) {
             : __("QuickTasker", "quicktasker")}
         </div>
       </div>
-      <div>{item.text}</div>
       <div>{convertToWPTimezone(item.created_at)}</div>
+      <div>{item.text}</div>
     </>
   );
 }

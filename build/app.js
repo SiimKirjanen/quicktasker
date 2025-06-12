@@ -4953,6 +4953,7 @@ function Loading({
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LogHeader: () => (/* binding */ LogHeader),
 /* harmony export */   LogItem: () => (/* binding */ LogItem)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
@@ -4963,7 +4964,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const LogItem = ({
-  log
+  log,
+  showStatus = false
 }) => {
   const {
     convertToWPTimezone
@@ -4979,12 +4981,22 @@ const LogItem = ({
         children: createdBy
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: log.text
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: convertToWPTimezone(log.created_at)
+    }), showStatus && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: log.log_status
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: log.text
     })]
   });
 };
+function LogHeader({
+  title
+}) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-font-semibold wpqt-text-lg wpqt-underline",
+    children: title
+  });
+}
 
 
 /***/ }),
@@ -7745,17 +7757,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowPathIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ChatBubbleLeftIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/ArrowPathIcon.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _hooks_useTimezone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../hooks/useTimezone */ "./src/hooks/useTimezone.ts");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _common_Alert_Alert__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Alert/Alert */ "./src/components/common/Alert/Alert.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _common_Alert_Alert__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Alert/Alert */ "./src/components/common/Alert/Alert.tsx");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _Log_LogItem__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Log/LogItem */ "./src/components/Log/LogItem.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -7783,6 +7796,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
+
 
 
 
@@ -7833,7 +7847,7 @@ function CommentsAndLogsTabContent({
   if (data === null) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.LoadingOval, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_7__.LoadingOval, {
         width: "30",
         height: "30"
       })
@@ -7842,7 +7856,7 @@ function CommentsAndLogsTabContent({
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     children: [explanation && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-center",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Alert_Alert__WEBPACK_IMPORTED_MODULE_5__.Alert, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Alert_Alert__WEBPACK_IMPORTED_MODULE_4__.Alert, {
         type: "info",
         className: "wpqt-mb-3 wpqt-text-center",
         children: explanation
@@ -7860,23 +7874,29 @@ function CommentsAndLogsTabContent({
       className: "wpqt-flex wpqt-justify-center",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-w-2/3 wpqt-flex wpqt-flex-col wpqt-items-center",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_7__.WPQTTextarea, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__.WPQTTextarea, {
           rowsCount: 3,
           value: newEntry,
           onChange: text => setNewEntry(text),
           className: "wpqt-mb-4 wpqt-w-full"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
           text: "Add comment",
           loading: addingEntry,
           onClick: addEntry,
-          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
             className: "wpqt-icon-blue wpqt-size-5"
           })
         })]
       })
-    }), data.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    }), data.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-mb-[28px] wpqt-mt-[56px] wpqt-logs-grid",
-      children: data.map(item => renderItem(item))
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Log_LogItem__WEBPACK_IMPORTED_MODULE_8__.LogHeader, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Author", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Log_LogItem__WEBPACK_IMPORTED_MODULE_8__.LogHeader, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Date", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Log_LogItem__WEBPACK_IMPORTED_MODULE_8__.LogHeader, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Text", "quicktasker")
+      }), data.map(item => renderItem(item))]
     })]
   });
 }
@@ -7885,10 +7905,10 @@ function CommentsRefresh({
   refreshComemnts
 }) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: isLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.LoadingOval, {
+    children: isLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_7__.LoadingOval, {
       width: "32",
       height: "32"
-    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
       className: "wpqt-icon-blue wpqt-size-8 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover",
       onClick: refreshComemnts
     })
@@ -7910,9 +7930,9 @@ function TabContentCommentItem({
         children: item.is_admin_comment ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Admin", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("QuickTasker", "quicktasker")
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: item.text
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: convertToWPTimezone(item.created_at)
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: item.text
     })]
   });
 }
@@ -12438,11 +12458,20 @@ const Logs = ({
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No logs found", "quicktasker")
     });
   }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-logs-grid",
-    children: logs.map(log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Log_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogItem, {
-      log: log
-    }, log.id))
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-logs-page-grid",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Log_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogHeader, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Author", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Log_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogHeader, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Created at", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Log_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogHeader, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Status", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Log_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogHeader, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Text", "quicktasker")
+    }), logs.map(log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Log_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogItem, {
+      log: log,
+      showStatus: true
+    }, log.id))]
   });
 };
 
