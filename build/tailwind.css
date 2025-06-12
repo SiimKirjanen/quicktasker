@@ -1810,6 +1810,10 @@
   gap: 24px;
 }
 
+.wpqt-gap-0\.5 {
+  gap: 0.125rem;
+}
+
 .wpqt-gap-y-1 {
   row-gap: 0.25rem;
 }

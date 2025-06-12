@@ -35,6 +35,6 @@ enum LogCreatedByEnum {
 type Log = BaseLog;
 type LogFromServer = BaseLog;
 
-export { LogCreatedByEnum, LogTypeEnum };
+export { LogCreatedByEnum, LogStatusEnum, LogTypeEnum };
 
 export type { Log, LogFromServer };

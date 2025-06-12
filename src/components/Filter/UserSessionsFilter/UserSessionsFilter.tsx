@@ -3,7 +3,7 @@ import { __ } from "@wordpress/i18n";
 import { SET_USER_SESSIONS_SEARCH_VALUE } from "../../../constants";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { WPQTInput } from "../../common/Input/Input";
-import { WPQTFilter } from "../WPQTFilter";
+import { WPQTFilter, WPQTFilterSection } from "../WPQTFilter";
 
 function UserSessionsFilter() {
   const {
@@ -19,9 +19,21 @@ function UserSessionsFilter() {
   };
 
   return (
-    <WPQTFilter title={__("Session filtering", "quicktasker")}>
-      <WPQTInput value={sessionsSearchValue} onChange={setSessionSearchValue} />
-    </WPQTFilter>
+    <WPQTFilter
+      title={__("Session filtering", "quicktasker")}
+      searchChildren={
+        <WPQTFilterSection
+          title={__("Search", "quicktasker")}
+          labelIdFor="session-search"
+        >
+          <WPQTInput
+            inputId="session-search"
+            value={sessionsSearchValue}
+            onChange={setSessionSearchValue}
+          />
+        </WPQTFilterSection>
+      }
+    ></WPQTFilter>
   );
 }
 

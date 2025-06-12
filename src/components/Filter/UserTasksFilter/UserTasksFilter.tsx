@@ -7,7 +7,7 @@ import {
 import { UserTasksContext } from "../../../providers/UserTasksContextProvider";
 import { WPQTInput } from "../../common/Input/Input";
 import { PipelineFilterSelect } from "../../common/Select/PipelineFilterSelect/PipelineFilterSelect";
-import { WPQTFilter } from "../WPQTFilter";
+import { WPQTFilter, WPQTFilterSection } from "../WPQTFilter";
 
 function UserTasksFilter() {
   const {
@@ -25,16 +25,28 @@ function UserTasksFilter() {
     });
   };
   return (
-    <WPQTFilter title={__("Filter tasks", "quicktasker")}>
-      <WPQTInput
-        value={searchValue}
-        onChange={onValueChange}
-        className="!wpqt-mb-0"
-      />
-      <PipelineFilterSelect
-        selectedOptionValue={filteredPipelineId}
-        selectionChange={onPipelineChange}
-      />
+    <WPQTFilter
+      title={__("Filter tasks", "quicktasker")}
+      searchChildren={
+        <WPQTFilterSection
+          title={__("Search", "quicktasker")}
+          labelIdFor="user-tasks-search"
+        >
+          <WPQTInput
+            inputId="user-tasks-search"
+            value={searchValue}
+            onChange={onValueChange}
+            className="!wpqt-mb-0"
+          />
+        </WPQTFilterSection>
+      }
+    >
+      <WPQTFilterSection title={__("Board", "quicktasker")}>
+        <PipelineFilterSelect
+          selectedOptionValue={filteredPipelineId}
+          selectionChange={onPipelineChange}
+        />
+      </WPQTFilterSection>
     </WPQTFilter>
   );
 }
