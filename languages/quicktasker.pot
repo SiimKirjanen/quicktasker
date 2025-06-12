@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.20.0\n"
+"Project-Id-Version: QuickTasker 1.31.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-06T20:27:56+00:00\n"
+"POT-Creation-Date: 2025-06-11T11:33:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: quicktasker\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #. Description of the plugin
 #: quicktasker.php
-msgid "Task management plugin to get tasks done with the help of assigned users."
+msgid "Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently."
 msgstr ""
 
 #. Author of the plugin
@@ -71,17 +71,113 @@ msgstr ""
 msgid "Guide"
 msgstr ""
 
-#: php/hooks.php:18
-msgid "QuickTasker cannot be activated because QuickTasker Pro is already active."
+#: php/filters.php:68
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: php/filters.php:91
+msgid "Board not found"
+msgstr ""
+
+#: php/filters.php:100
+msgid "Failed to generate PDF"
 msgstr ""
 
 #: php/hooks.php:19
-#: php/hooks.php:25
+msgid "QuickTasker cannot be activated because QuickTasker Pro is already active. Please deactivate Pro version first."
+msgstr ""
+
+#: php/hooks.php:20
+#: php/hooks.php:26
 msgid "Plugin Activation Error"
 msgstr ""
 
-#: php/hooks.php:24
-msgid "QuickTasker Pro cannot be activated because QuickTasker is already active."
+#: php/hooks.php:25
+msgid "QuickTasker Pro cannot be activated because QuickTasker is already active. Please deactivate free version first."
+msgstr ""
+
+#: php/services/export/ExportService.php:37
+#: php/services/export/ExportService.php:49
+#: php/services/export/PDFExportService.php:46
+#: php/services/export/PDFExportService.php:49
+#: php/services/export/PDFExportService.php:50
+#: php/services/export/PDFExportService.php:51
+#: php/services/export/PDFExportService.php:52
+msgid "None"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:47
+#: php/services/export/PDFExportService.php:48
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "No"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:48
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Yes"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:57
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Name"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:58
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Description"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:59
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Created at"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:60
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Board"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:61
+#: build/app.js:1
+msgid "Stage"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:62
+#: build/app.js:1
+msgid "Completed"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:63
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Due date"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:64
+#: build/app.js:1
+msgid "Assigned WordPress users"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:65
+msgid "Assigned QuickTaskers"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:66
+msgid "Added labels"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:67
+msgid "Archived"
+msgstr ""
+
+#: php/services/export/PDFExportService.php:74
+msgid "Not set"
 msgstr ""
 
 #: build/app.js:1
@@ -106,10 +202,6 @@ msgid "All status"
 msgstr ""
 
 #: build/app.js:1
-msgid "Completed"
-msgstr ""
-
-#: build/app.js:1
 msgid "Not completed"
 msgstr ""
 
@@ -130,11 +222,35 @@ msgid "Email notification sent by automation"
 msgstr ""
 
 #: build/app.js:1
+msgid "Task created by automation"
+msgstr ""
+
+#: build/app.js:1
+msgid "Slack message sent by automation"
+msgstr ""
+
+#: build/app.js:1
 msgid "Automation created"
 msgstr ""
 
 #: build/app.js:1
 msgid "Failed to create automation"
+msgstr ""
+
+#: build/app.js:1
+msgid "Automation activated"
+msgstr ""
+
+#: build/app.js:1
+msgid "Automation deactivated"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to activate automation"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to deactivate automation"
 msgstr ""
 
 #: build/app.js:1
@@ -196,15 +312,19 @@ msgid "Failed to move a task"
 msgstr ""
 
 #: build/app.js:1
+msgid "Task focus color changed"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to change task focus color"
+msgstr ""
+
+#: build/app.js:1
 msgid "Failed to fetch users"
 msgstr ""
 
 #: build/app.js:1
 msgid "Failed to fetch custom fields"
-msgstr ""
-
-#: build/app.js:1
-msgid "Get the premium version"
 msgstr ""
 
 #: build/app.js:1
@@ -228,17 +348,15 @@ msgid "Failed to update custom field value"
 msgstr ""
 
 #: build/app.js:1
+msgid "Get the premium version"
+msgstr ""
+
+#: build/app.js:1
 msgid "Custom Fields"
 msgstr ""
 
 #: build/app.js:1
-#: build/userApp.js:1
-msgid "Name"
-msgstr ""
-
-#: build/app.js:1
-#: build/userApp.js:1
-msgid "Description"
+msgid "Free version allows only one custom field. To add more, please upgrade to premium."
 msgstr ""
 
 #: build/app.js:1
@@ -258,7 +376,8 @@ msgid "Add"
 msgstr ""
 
 #: build/app.js:1
-msgid "Edit custom field value"
+#: build/userApp.js:1
+msgid "Save"
 msgstr ""
 
 #: build/app.js:1
@@ -267,19 +386,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "No related custom fields created"
-msgstr ""
-
-#: build/app.js:1
-msgid "Hide custom fields"
-msgstr ""
-
-#: build/app.js:1
-msgid "Show custom fields"
-msgstr ""
-
-#: build/app.js:1
-#: build/userApp.js:1
-msgid "Board"
 msgstr ""
 
 #: build/app.js:1
@@ -304,6 +410,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Level:"
+msgstr ""
+
+#: build/app.js:1
+msgid "Deleted:"
 msgstr ""
 
 #: build/app.js:1
@@ -379,14 +489,6 @@ msgid "Task custom fields"
 msgstr ""
 
 #: build/app.js:1
-msgid "Custom fields"
-msgstr ""
-
-#: build/app.js:1
-msgid "Premium feature to create and manage custom data fields. Allows to add extra data to tasks and users."
-msgstr ""
-
-#: build/app.js:1
 msgid "Create new label"
 msgstr ""
 
@@ -396,11 +498,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Edit label"
-msgstr ""
-
-#: build/app.js:1
-#: build/userApp.js:1
-msgid "Save"
 msgstr ""
 
 #: build/app.js:1
@@ -436,19 +533,19 @@ msgid "Failed to update label"
 msgstr ""
 
 #: build/app.js:1
-msgid "Label assigned to task"
+msgid "Label added to task"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to assign label to task"
+msgid "Failed to add label to task"
 msgstr ""
 
 #: build/app.js:1
-msgid "Label unassigned from task"
+msgid "Label removed from task"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to unassign label from task"
+msgid "Failed to remove label from task"
 msgstr ""
 
 #: build/app.js:1
@@ -469,10 +566,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "No quicktaskers assigned"
-msgstr ""
-
-#: build/app.js:1
-msgid "Assigned WordPress users"
 msgstr ""
 
 #: build/app.js:1
@@ -517,6 +610,66 @@ msgid "Failed to add comment"
 msgstr ""
 
 #: build/app.js:1
+msgid "File uploaded successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to upload a file"
+msgstr ""
+
+#: build/app.js:1
+msgid "File deleted successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to delete a file"
+msgstr ""
+
+#: build/app.js:1
+msgid "File name"
+msgstr ""
+
+#: build/app.js:1
+msgid "File link"
+msgstr ""
+
+#: build/app.js:1
+msgid "Created by"
+msgstr ""
+
+#: build/app.js:1
+msgid "File was not found"
+msgstr ""
+
+#: build/app.js:1
+msgid "Select file to upload (Max size: %d MB)"
+msgstr ""
+
+#: build/app.js:1
+msgid "Allowed characters in file name: Latin letters, numbers, underscores, hyphens, and dots."
+msgstr ""
+
+#: build/app.js:1
+msgid "File size exceeds the maximum limit of %d MB"
+msgstr ""
+
+#: build/app.js:1
+msgid "Invalid file name"
+msgstr ""
+
+#: build/app.js:1
+msgid "The selected file is empty"
+msgstr ""
+
+#: build/app.js:1
+msgid "Upload"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to fetch uploads"
+msgstr ""
+
+#: build/app.js:1
 #: build/userApp.js:1
 msgid "Assigned users"
 msgstr ""
@@ -534,12 +687,11 @@ msgid "When enabled, all QuickTasker users have the ability to self-assign or un
 msgstr ""
 
 #: build/app.js:1
-#: build/userApp.js:1
-msgid "Due date"
+msgid "Saving..."
 msgstr ""
 
 #: build/app.js:1
-msgid "Saving..."
+msgid "File attachment"
 msgstr ""
 
 #: build/app.js:1
@@ -598,11 +750,11 @@ msgid "All types"
 msgstr ""
 
 #: build/app.js:1
-msgid "Stage"
+msgid "Everyone"
 msgstr ""
 
 #: build/app.js:1
-msgid "Everyone"
+msgid "Import"
 msgstr ""
 
 #: build/app.js:1
@@ -674,6 +826,14 @@ msgid "Overview"
 msgstr ""
 
 #: build/app.js:1
+msgid "No overview to display"
+msgstr ""
+
+#: build/app.js:1
+msgid "You need to first create a board to see the overview."
+msgstr ""
+
+#: build/app.js:1
 msgid "Filter tasks"
 msgstr ""
 
@@ -687,6 +847,110 @@ msgstr ""
 
 #: build/app.js:1
 msgid "All users"
+msgstr ""
+
+#: build/app.js:1
+msgid "Import from Trello."
+msgstr ""
+
+#: build/app.js:1
+msgid "Import from Asana."
+msgstr ""
+
+#: build/app.js:1
+msgid "Import from Pipedrive."
+msgstr ""
+
+#: build/app.js:1
+msgid "Select import source"
+msgstr ""
+
+#: build/app.js:1
+msgid "Export your Trello board as JSON format and use it for import."
+msgstr ""
+
+#: build/app.js:1
+msgid "Export your Asana project as JSON format and use it for import"
+msgstr ""
+
+#: build/app.js:1
+msgid "Export your Pipedrive deals as CSV format and use it for import. Please not that generated CSV file column headers should be in English."
+msgstr ""
+
+#: build/app.js:1
+msgid "Select an import source to get started"
+msgstr ""
+
+#: build/app.js:1
+msgid "Board name"
+msgstr ""
+
+#: build/app.js:1
+msgid "This board name already exists."
+msgstr ""
+
+#: build/app.js:1
+msgid "Board description"
+msgstr ""
+
+#: build/app.js:1
+msgid "Import archived tasks?"
+msgstr ""
+
+#: build/app.js:1
+msgid "Filter by source"
+msgstr ""
+
+#: build/app.js:1
+msgid "Number of tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "archived"
+msgstr ""
+
+#: build/app.js:1
+msgid "Number of stages"
+msgstr ""
+
+#: build/app.js:1
+msgid "Number of labels"
+msgstr ""
+
+#: build/app.js:1
+msgid "Import failed"
+msgstr ""
+
+#: build/app.js:1
+msgid "Import board"
+msgstr ""
+
+#: build/app.js:1
+msgid "Select import file"
+msgstr ""
+
+#: build/app.js:1
+msgid "Start import"
+msgstr ""
+
+#: build/app.js:1
+msgid "Board imported"
+msgstr ""
+
+#: build/app.js:1
+msgid "Invalid Trello import"
+msgstr ""
+
+#: build/app.js:1
+msgid "Invalid Asana import"
+msgstr ""
+
+#: build/app.js:1
+msgid "Invalid Pipedrive import"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to parse import file"
 msgstr ""
 
 #: build/app.js:1
@@ -738,6 +1002,22 @@ msgid "Board deleted"
 msgstr ""
 
 #: build/app.js:1
+msgid "Tasks export"
+msgstr ""
+
+#: build/app.js:1
+msgid "Filter by task name and desription"
+msgstr ""
+
+#: build/app.js:1
+msgid "Include board archived tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Open export"
+msgstr ""
+
+#: build/app.js:1
 msgid "Edit Stage"
 msgstr ""
 
@@ -766,11 +1046,19 @@ msgid "Failed to create stage"
 msgstr ""
 
 #: build/app.js:1
-msgid "Add first stage"
+msgid "Task focus color"
 msgstr ""
 
 #: build/app.js:1
-msgid "Add your first Board"
+msgid "Apply changes"
+msgstr ""
+
+#: build/app.js:1
+msgid "Reset color"
+msgstr ""
+
+#: build/app.js:1
+msgid "Add first stage"
 msgstr ""
 
 #: build/app.js:1
@@ -838,7 +1126,23 @@ msgid "Edit task"
 msgstr ""
 
 #: build/app.js:1
+msgid "Color"
+msgstr ""
+
+#: build/app.js:1
 msgid "Move task"
+msgstr ""
+
+#: build/app.js:1
+msgid "Create a new board"
+msgstr ""
+
+#: build/app.js:1
+msgid "No boards found. Start by creating your first board to organize and manage your tasks effectively."
+msgstr ""
+
+#: build/app.js:1
+msgid "Import an existing board"
 msgstr ""
 
 #: build/app.js:1
@@ -851,6 +1155,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Add new board"
+msgstr ""
+
+#: build/app.js:1
+msgid "Import existing"
 msgstr ""
 
 #: build/app.js:1
@@ -886,6 +1194,18 @@ msgid "Send email notification"
 msgstr ""
 
 #: build/app.js:1
+msgid "Create task"
+msgstr ""
+
+#: build/app.js:1
+msgid "Send Slack message"
+msgstr ""
+
+#: build/app.js:1
+msgid "WooCommerce Order"
+msgstr ""
+
+#: build/app.js:1
 msgid "Task marked as done"
 msgstr ""
 
@@ -907,6 +1227,18 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Private comment added"
+msgstr ""
+
+#: build/app.js:1
+msgid "File attached"
+msgstr ""
+
+#: build/app.js:1
+msgid "Attached file deleted"
+msgstr ""
+
+#: build/app.js:1
+msgid "Order added"
 msgstr ""
 
 #: build/app.js:1
@@ -938,6 +1270,26 @@ msgid "Set email"
 msgstr ""
 
 #: build/app.js:1
+msgid "Make sure your have configured your Slack webhook URL."
+msgstr ""
+
+#: build/app.js:1
+msgid "Read more about Slack webhooks."
+msgstr ""
+
+#: build/app.js:1
+msgid "Slack webhook URL"
+msgstr ""
+
+#: build/app.js:1
+msgid "Invalid Slack webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Set webhook URL"
+msgstr ""
+
+#: build/app.js:1
 msgid "Step 1. Select a target"
 msgstr ""
 
@@ -947,6 +1299,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Create automation"
+msgstr ""
+
+#: build/app.js:1
+msgid "Close automation creator"
 msgstr ""
 
 #: build/app.js:1
@@ -962,7 +1318,7 @@ msgid "Action"
 msgstr ""
 
 #: build/app.js:1
-msgid "Close automation creator"
+msgid "Free version limit reached. Upgrade to premium to create more automations."
 msgstr ""
 
 #: build/app.js:1
@@ -974,15 +1330,15 @@ msgid "Controls"
 msgstr ""
 
 #: build/app.js:1
-msgid "Note that automation won't trigger other automations"
+msgid "Active"
 msgstr ""
 
 #: build/app.js:1
-msgid "Hide board automations"
+msgid "Hide created automations"
 msgstr ""
 
 #: build/app.js:1
-msgid "Show board automations"
+msgid "Show created automations"
 msgstr ""
 
 #: build/app.js:1
@@ -990,15 +1346,15 @@ msgid "No automations created for this board"
 msgstr ""
 
 #: build/app.js:1
+msgid "Set up automated processes to help manage your boards."
+msgstr ""
+
+#: build/app.js:1
+msgid "Set up automated processes to help manage your boards. To create more than one automation, please upgrade to the premium version."
+msgstr ""
+
+#: build/app.js:1
 msgid "Board automations"
-msgstr ""
-
-#: build/app.js:1
-msgid "Allows to automate various tasks"
-msgstr ""
-
-#: build/app.js:1
-msgid "Premium feature to automate various tasks."
 msgstr ""
 
 #: build/app.js:1
@@ -1006,7 +1362,7 @@ msgid "Restrict Task Completion"
 msgstr ""
 
 #: build/app.js:1
-msgid "Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page"
+msgid "Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page."
 msgstr ""
 
 #: build/app.js:1
@@ -1075,26 +1431,11 @@ msgstr ""
 
 #: build/app.js:1
 #: build/userApp.js:1
-msgid "Created at"
-msgstr ""
-
-#: build/app.js:1
-#: build/userApp.js:1
 msgid "Assigned tasks count"
 msgstr ""
 
 #: build/app.js:1
 msgid "Setup completed"
-msgstr ""
-
-#: build/app.js:1
-#: build/userApp.js:1
-msgid "Yes"
-msgstr ""
-
-#: build/app.js:1
-#: build/userApp.js:1
-msgid "No"
 msgstr ""
 
 #: build/app.js:1
@@ -1171,6 +1512,14 @@ msgid "Actions"
 msgstr ""
 
 #: build/app.js:1
+msgid "No sessions"
+msgstr ""
+
+#: build/app.js:1
+msgid "No QuickTasker sessions found"
+msgstr ""
+
+#: build/app.js:1
 msgid "User filtering"
 msgstr ""
 
@@ -1240,10 +1589,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "View user details"
-msgstr ""
-
-#: build/app.js:1
-msgid "Active"
 msgstr ""
 
 #: build/app.js:1

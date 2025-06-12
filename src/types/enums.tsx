@@ -8,6 +8,7 @@ enum WPQTLogCreatedBy {
   Admin = "admin",
   WPQTUser = "quicktasker_user",
   Automation = "automation",
+  Import = "import",
 }
 
 enum WPQTArchiveDoneFilter {

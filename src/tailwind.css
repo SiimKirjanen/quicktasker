@@ -28,7 +28,10 @@
     @apply wpqt-flex wpqt-flex-col wpqt-flex-wrap wpqt-justify-center wpqt-gap-2 md:wpqt-flex-row;
   }
   .wpqt-logs-grid {
-    @apply wpqt-grid wpqt-grid-cols-[0.3fr_1fr_0.3fr] wpqt-place-items-center wpqt-gap-8;
+    @apply wpqt-grid wpqt-grid-cols-[0.3fr_0.3fr_1fr] wpqt-place-items-center wpqt-gap-8;
+  }
+  .wpqt-logs-page-grid {
+    @apply wpqt-grid wpqt-grid-cols-[0.3fr_0.3fr_0.3fr_1fr] wpqt-place-items-center wpqt-gap-8;
   }
   .wpqt-main-border {
     @apply wpqt-rounded-md wpqt-border wpqt-border-solid wpqt-border-qtBorder;

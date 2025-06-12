@@ -89,7 +89,12 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             throw new WPQTException('User page setup has already been completed', true);
                         }
                         $passwordService->storePassword($userPage->user_id, $data['password']);
-                        $logService->log('User page setup completed', WP_QT_LOG_TYPE_USER, $userPage->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $userPage->user_id);
+                        $logService->log('User page setup completed', [
+                            'user_id' => $userPage->user_id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'type' => WP_QT_LOG_TYPE_USER,
+                            'type_id' => $userPage->user_id,
+                        ]);
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch(WPQTException $e) {
@@ -137,7 +142,12 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         
                         $userPage = $userPageRepository->getPageUserByHash($data['hash']);
                         $userSession = $sessionService->createSession($userPage->user_id, $data['hash']);
-                        $logService->log('User logged in', WP_QT_LOG_TYPE_USER, $userPage->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $userPage->user_id);
+                        $logService->log('User logged in', [
+                            'user_id' => $userPage->user_id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'type' => WP_QT_LOG_TYPE_USER,
+                            'type_id' => $userPage->user_id,
+                        ]);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'sessionToken' => $userSession->session_token,
@@ -176,7 +186,12 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $sessionToken = sanitize_text_field($_COOKIE['wpqt-session-token-' . $data['hash']]);
                         $sessionService->markSessionInactive($sessionToken);
 
-                        $logService->log('User logged out', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log('User logged out', [
+                            'user_id' => $session->user_id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'type' => WP_QT_LOG_TYPE_USER,
+                            'type_id' => $session->user_id,
+                        ]);
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);  
                     } catch(WPQTException $e) {
@@ -380,6 +395,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
+
                         $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                         $taskRepository = new TaskRepository();
                         $permissionService = new PermissionService();
@@ -396,7 +412,12 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             throw new WPQTException('Not allowed', true);
                         }
                         $newComment = $commentService->createComment($task->id, 'task', false, $data['comment'], $session->user_id, false);
-                        $logService->log('User posted a comment on '. $task->name . ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log('User posted a comment on '. $task->name . ' task', [
+                            'type' => WP_QT_LOG_TYPE_TASK,
+                            'type_id' => $task->id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'user_id' => $session->user_id
+                        ]);
                         $comments = $commentRepository->getComments($task->id, 'task', false);
 
                         $automationExecutionResults = ServiceLocator::get('AutomationService')->handleAutomations(
@@ -497,7 +518,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
         register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/user/comments', array(
             'methods' => 'POST',
             'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
+
                         $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                         $commentRepository = new CommentRepository();
                         $commentService = new CommentService();
@@ -505,12 +530,22 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         
                         $commentService->createComment($session->user_id, 'user', false, $data['comment'], $session->user_id, false);
                         $userComments = $commentRepository->getComments($session->user_id, 'user', false);
-                        $logService->log('User posted a comment on its profile', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log('User posted a comment on its profile', [
+                            'type' => WP_QT_LOG_TYPE_USER,
+                            'type_id' => $session->user_id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'user_id' => $session->user_id
+                        ]);
+
+                        $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $userComments))->toArray(), 200);
                     } catch(WPQTException $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
                      
                         return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
@@ -554,13 +589,39 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                                 throw new WPQTException('Not allowed to assign', true);
                             }
                             $userService->assignTaskToUser($session->user_id, $taskId);
-                            $logService->log('Assigned itself to ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
-                            $logService->log($userPage->name . ' assigned itself to the task', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+
+                            $logService->log('Assigned itself to ' . $task->name .  ' task', [
+                                'type' => WP_QT_LOG_TYPE_USER,
+                                'type_id' => $session->user_id,
+                                'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                                'user_id' => $session->user_id
+                            ]);
+
+                            $logService->log($userPage->name . ' assigned itself to the task ' . $task->name, [
+                                'type' => WP_QT_LOG_TYPE_TASK,
+                                'type_id' => $taskId,
+                                'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                                'user_id' => $session->user_id,
+                                'pipeline_id' => $task->pipeline_id
+                            ]);
                         } elseif ($data->get_method() === 'DELETE') {
                             $automationTrigger = WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED;
                             $userService->removeTaskFromUser($session->user_id, $taskId);
-                            $logService->log('Unassigned itself from ' . $task->name .  ' task', WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
-                            $logService->log($userPage->name . ' unassigned itself from the task', WP_QT_LOG_TYPE_TASK, $taskId, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+
+                            $logService->log('Unassigned itself from ' . $task->name .  ' task', [
+                                'type' => WP_QT_LOG_TYPE_USER,
+                                'type_id' => $session->user_id,
+                                'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                                'user_id' => $session->user_id,
+                                'pipeline_id' => $task->pipeline_id
+                            ]);
+                            $logService->log($userPage->name . ' unassigned itself from the task', [
+                                'type' => WP_QT_LOG_TYPE_TASK,
+                                'type_id' => $taskId,
+                                'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                                'user_id' => $session->user_id,
+                                'pipeline_id' => $task->pipeline_id
+                            ]);
                         }
 
                         $task = $taskRepository->getTaskByHash($data['task_hash'], true);
@@ -608,7 +669,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
         register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/stage', array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
+
                         $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                         $taskRepository = new TaskRepository();
                         $permissionService = new PermissionService();
@@ -626,13 +691,30 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $stage = $stageRepository->getStageById($moveInfo->newStageId);
                         $userPage = $userPageRepository->getPageUserByHash($data['hash']); 
 
-                        $logService->log('User ' . $userPage->name . ' changed task stage to ' . $stage->name, WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
-                        $logService->log('User changed task ' . $task->name . ' stage to ' . $stage->name, WP_QT_LOG_TYPE_USER, $session->user_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log('User ' . $userPage->name . ' changed task stage to ' . $stage->name, [
+                            'type' => WP_QT_LOG_TYPE_TASK,
+                            'type_id' => $task->id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'user_id' => $session->user_id,
+                            'pipeline_id' => $task->pipeline_id
+                        ]);
+                        $logService->log('User changed task ' . $task->name . ' stage to ' . $stage->name, [
+                            'type' => WP_QT_LOG_TYPE_USER,
+                            'type_id' => $session->user_id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'user_id' => $session->user_id,
+                            'pipeline_id' => $task->pipeline_id
+                        ]);
+
+                        $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch(WPQTException $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
                      
                         return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
@@ -660,7 +742,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
         register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/tasks/(?P<task_hash>[a-zA-Z0-9]+)/done', array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
+
                         $session = RequestValidation::validateUserPageApiRequest($data)['session'];
                         $permissionService = new PermissionService();
                         $taskService = new TaskService();
@@ -684,12 +770,31 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $taskService->changeTaskDoneStatus($task->id, $data['done']);
                         $logMessage = $userPage->name . ' changed task to ' . ($data['done'] === true ? 'completed' : 'not completed');
 
-                        $logService->log($logMessage, WP_QT_LOG_TYPE_TASK, $task->id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        $logService->log($logMessage, [
+                            'type' => WP_QT_LOG_TYPE_USER,
+                            'type_id' => $session->user_id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'user_id' => $session->user_id,
+                            'pipeline_id' => $task->pipeline_id
+                        ]);
+
+                        $logService->log($logMessage, [
+                            'type' => WP_QT_LOG_TYPE_TASK,
+                            'type_id' => $task->id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'user_id' => $session->user_id,
+                            'pipeline_id' => $task->pipeline_id
+                        ]);
+
+                        $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch(WPQTException $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
                      
                         return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }
@@ -754,7 +859,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
         register_rest_route('wpqt/v1', 'user-pages/(?P<hash>[a-zA-Z0-9]+)/custom-fields/(?P<custom_field_id>\d+)', array(
             'methods' => 'PATCH',
             'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
+
                         $session = RequestValidation::validateUserPageApiRequest($data)['session'];
 
                         if($data['entityType'] === 'task') {
@@ -773,12 +882,24 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
 
                         $customField = $customFieldRepo->getCustomFieldById($data['custom_field_id']);
                         $customFieldService->updateCustomFieldValue($data['customFieldId'], $data['entityId'], $data['entityType'], $data['value']);
-                        $logService->log('Custom field ' . $customField->name . ' value updated', $customField->entity_type, $customField->entity_id, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, $session->user_id);
+                        
+                        $logService->log('Custom field ' . $customField->name . ' value updated', [
+                            'type' => $customField->entity_type,
+                            'type_id' => $customField->entity_id,
+                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'user_id' => $session->user_id,
+                            'pipeline_id' => $data['entityType'] == WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE ? $data['entityId'] : null,
+                        ]);
+
+                        $wpdb->query('COMMIT');
                     
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
                     } catch(WPQTException $e) {
+                        $wpdb->query('ROLLBACK');
+
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
                     } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
                      
                         return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
                     }

@@ -2,7 +2,12 @@ import { useEffect, useState } from "@wordpress/element";
 import { toast } from "react-toastify";
 import { getGlobalLogsRequest } from "../../../../api/api";
 import { LogsFilter } from "../../../../components/Filter/LogsFilter/LogsFilter";
-import { Log, LogCreatedByEnum, LogTypeEnum } from "../../../../types/log";
+import {
+  Log,
+  LogCreatedByEnum,
+  LogStatusEnum,
+  LogTypeEnum,
+} from "../../../../types/log";
 import { Logs } from "../Logs/Logs";
 
 enum LogOrderEnum {
@@ -17,15 +22,26 @@ enum LogNumberEnum {
   All = "all",
 }
 
+enum LogStatusFilterEnum {
+  All = "all",
+  Success = LogStatusEnum.Success,
+  Error = LogStatusEnum.Error,
+}
+
 type LogsFilterType = {
   numberOfLogs: string;
   type: LogTypeEnum;
   typeId: string;
   createdBy: LogCreatedByEnum;
   order: LogOrderEnum;
+  search: string;
+  status: string;
 };
 type ServerLogsFilterType = Partial<
-  Pick<LogsFilterType, "numberOfLogs" | "type" | "createdBy" | "typeId">
+  Pick<
+    LogsFilterType,
+    "numberOfLogs" | "type" | "createdBy" | "typeId" | "status"
+  >
 >;
 
 const LogsPageContent = () => {
@@ -36,6 +52,8 @@ const LogsPageContent = () => {
     typeId: "",
     createdBy: LogCreatedByEnum.All,
     order: LogOrderEnum.Desc,
+    search: "",
+    status: LogStatusFilterEnum.All,
   });
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [shouldFetchLogs, setShouldFetchLogs] = useState(true);
@@ -62,6 +80,9 @@ const LogsPageContent = () => {
       }
       if (filter.createdBy === LogCreatedByEnum.All) {
         delete filter.createdBy;
+      }
+      if (filter.status === LogStatusFilterEnum.All) {
+        delete filter.status;
       }
       const response = await getGlobalLogsRequest(filter);
       setLogs(response.data);
@@ -94,6 +115,7 @@ export {
   LogNumberEnum,
   LogOrderEnum,
   LogsPageContent,
+  LogStatusFilterEnum,
   LogTypeEnum,
   type LogsFilterType,
   type ServerLogsFilterType,

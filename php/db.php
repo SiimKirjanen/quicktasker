@@ -116,10 +116,11 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 
 			$sql7 = "CREATE TABLE " . TABLE_WP_QUICKTASKS_LOGS . " (
 				id int(11) NOT NULL AUTO_INCREMENT,
+				pipeline_id int(11) DEFAULT NULL,
 				text text NOT NULL,
 				type_id int(11) DEFAULT NULL,
 				type ENUM('task', 'pipeline', 'stage', 'user', 'users') NOT NULL,
-				created_by ENUM('system', 'admin', 'quicktasker_user', 'automation') NOT NULL,
+				created_by ENUM('system', 'admin', 'quicktasker_user', 'automation', 'import') NOT NULL,
 				user_id int(11) DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				log_status ENUM('success', 'error') DEFAULT 'success',

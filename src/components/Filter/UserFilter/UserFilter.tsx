@@ -1,9 +1,9 @@
-import { Input } from "@headlessui/react";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { SET_USERS_SEARCH_VALUE } from "../../../constants";
 import { UserContext } from "../../../providers/UserContextProvider";
-import { WPQTFilter } from "../WPQTFilter";
+import { WPQTInput } from "../../common/Input/Input";
+import { WPQTFilter, WPQTFilterSection } from "../WPQTFilter";
 
 function UserFilter() {
   const {
@@ -11,23 +11,29 @@ function UserFilter() {
     userDispatch,
   } = useContext(UserContext);
 
-  const setArchiveSearchValue = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const setArchiveSearchValue = (newValue: string) => {
     userDispatch({
       type: SET_USERS_SEARCH_VALUE,
-      payload: event.target.value,
+      payload: newValue,
     });
   };
 
   return (
-    <WPQTFilter title={__("User filtering", "quicktasker")}>
-      <Input
-        type="text"
-        value={usersSearchValue}
-        onChange={setArchiveSearchValue}
-      />
-    </WPQTFilter>
+    <WPQTFilter
+      title={__("User filtering", "quicktasker")}
+      searchChildren={
+        <WPQTFilterSection
+          title={__("Search", "quicktasker")}
+          labelIdFor="user-search"
+        >
+          <WPQTInput
+            inputId="user-search"
+            value={usersSearchValue}
+            onChange={setArchiveSearchValue}
+          />
+        </WPQTFilterSection>
+      }
+    ></WPQTFilter>
   );
 }
 

@@ -56,7 +56,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.32.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.34.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -169,8 +169,16 @@ if ( ! defined( 'WP_QT_LOG_CREATED_BY_AUTOMATION' ) ) {
     define('WP_QT_LOG_CREATED_BY_AUTOMATION', "automation");
 }
 
+if ( ! defined( 'WP_QT_LOG_CREATED_BY_IMPORT' ) ) {
+    define('WP_QT_LOG_CREATED_BY_IMPORT', "import");
+}
+
+if ( ! defined( 'WP_QT_LOG_CREATED_BY_SYSTEM' ) ) {
+    define('WP_QT_LOG_CREATED_BY_SYSTEM', "system");
+}
+
 if ( ! defined( 'WP_QT_LOG_CREATED_BY' ) ) {
-    define('WP_QT_LOG_CREATED_BY', [WP_QT_LOG_CREATED_BY_ADMIN, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, WP_QT_LOG_CREATED_BY_AUTOMATION]);
+    define('WP_QT_LOG_CREATED_BY', [WP_QT_LOG_CREATED_BY_ADMIN, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, WP_QT_LOG_CREATED_BY_AUTOMATION, WP_QT_LOG_CREATED_BY_IMPORT]);
 }
 
 if ( ! defined( 'WP_QT_LOG_STATUS_SUCCESS' ) ) {

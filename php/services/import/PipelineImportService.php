@@ -85,12 +85,22 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             $stageService = new StageService();
             $labelService = ServiceLocator::get('LabelService');
             $taskService = ServiceLocator::get('TaskService');
+            $logService = ServiceLocator::get('LogService');
+            $currentUserId = get_current_user_id();
 
             //Step 1. Create a new pipeline
             $newPipeline = $pipelineService->createPipeline(
                 $importData['pipelineName'],
                 [
                     'description' => $importData['pipelineDescription'],
+                ]
+            );
+            $logService->log("Board {$newPipeline->name} created by {$source}", [
+                    'type' => WP_QT_LOG_TYPE_PIPELINE,
+                    'type_id' => $newPipeline->id,
+                    'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                    'pipeline_id' => $newPipeline->id,
+                    'user_id' => $currentUserId,
                 ]
             );
 
@@ -107,6 +117,14 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
 
                 // Map original stageId to newly created stage ID
                 $stageIdMap[$stage['stageId']] = $newStage->id;
+
+                $logService->log("Stage {$newStage->name} created by {$source}", [
+                    'type' => WP_QT_LOG_TYPE_PIPELINE,
+                    'type_id' => $newPipeline->id,
+                    'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                    'pipeline_id' => $newPipeline->id,
+                    'user_id' => $currentUserId,
+                ]);
             }
 
             // Step 3. Add labels to the pipeline
@@ -120,6 +138,14 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
 
                 // Map original labelId to newly created label ID
                 $labelIdMap[$label['labelId']] = $newLabel->id;
+
+                $logService->log("Label {$newLabel->name} created by {$source}", [
+                    'type' => WP_QT_LOG_TYPE_PIPELINE,
+                    'type_id' => $newPipeline->id,
+                    'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                    'pipeline_id' => $newPipeline->id,
+                    'user_id' => $currentUserId,
+                ]);
             }
             
             // Step 4. Create tasks and assign them to stages and labels
@@ -140,6 +166,14 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                         'is_done' => isset($task['taskCompletedAt']) ? true : false,
                     ]
                 );
+
+                $logService->log("Task {$newTask->name} created by {$source}", [
+                    'type' => WP_QT_LOG_TYPE_TASK,
+                    'type_id' => $newTask->id,
+                    'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                    'pipeline_id' => $newPipeline->id,
+                    'user_id' => $currentUserId,
+                ]);
 
                 // Assign labels to the task
                 foreach ($task['assignedLabels'] as $label) {

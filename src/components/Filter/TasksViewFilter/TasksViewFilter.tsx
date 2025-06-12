@@ -6,9 +6,8 @@ import { useUser } from "../../../hooks/useUser";
 import { ActivePipelineTaskViewContext } from "../../../providers/ActivePipelineTaskViewContextProvider";
 import { UserTypes } from "../../../types/user";
 import { userTypeStrings } from "../../../utils/user";
-import { WPQTLabel } from "../../common/Label/WPQTLabel";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
-import { WPQTFilter } from "../WPQTFilter";
+import { WPQTFilter, WPQTFilterSection } from "../WPQTFilter";
 
 function TasksViewFilter() {
   const {
@@ -48,14 +47,8 @@ function TasksViewFilter() {
   };
 
   return (
-    <WPQTFilter title={__("Filter tasks", "quicktasker")}>
-      <div>
-        <WPQTLabel
-          labelFor="task-view-stage-filter"
-          className="wpqt-block wpqt-text-center"
-        >
-          {__("Stage", "quicktasker")}
-        </WPQTLabel>
+    <WPQTFilter title={__("Filter tasks", "quicktasker")} searchChildren={null}>
+      <WPQTFilterSection title={__("Stage", "quicktasker")}>
         <WPQTSelect
           id="task-view-stage-filter"
           allSelectorLabel={__("All stages", "quicktasker")}
@@ -63,14 +56,8 @@ function TasksViewFilter() {
           options={stageOptions}
           onSelectionChange={onStageSelectionChange}
         />
-      </div>
-      <div>
-        <WPQTLabel
-          labelFor="task-view-assigned-user-filter"
-          className="wpqt-block wpqt-text-center"
-        >
-          {__("Assigned user", "quicktasker")}
-        </WPQTLabel>
+      </WPQTFilterSection>
+      <WPQTFilterSection title={__("Assigned user", "quicktasker")}>
         <WPQTSelect
           id="task-view-assigned-user-filter"
           allSelectorLabel={__("All users", "quicktasker")}
@@ -78,7 +65,7 @@ function TasksViewFilter() {
           options={userOptions}
           onSelectionChange={onUserSelectionChange}
         />
-      </div>
+      </WPQTFilterSection>
     </WPQTFilter>
   );
 }

@@ -28,12 +28,13 @@ enum LogCreatedByEnum {
   Admin = "admin",
   Quicktasker = "quicktasker_user",
   Automation = "automation",
+  Import = "import",
   All = "all",
 }
 
 type Log = BaseLog;
 type LogFromServer = BaseLog;
 
-export { LogCreatedByEnum, LogTypeEnum };
+export { LogCreatedByEnum, LogStatusEnum, LogTypeEnum };
 
 export type { Log, LogFromServer };

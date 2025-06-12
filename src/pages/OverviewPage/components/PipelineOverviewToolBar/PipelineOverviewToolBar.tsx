@@ -36,6 +36,7 @@ function PipelineOverviewToolBar({
         title={__("Statistics filtering", "quicktasker")}
         titleClassName="wpqt-text-center"
         childrenClassName="wpqt-gap-6 wpqt-justify-center"
+        searchChildren={null}
       >
         <div>
           <div className="wpqt-mb-2">

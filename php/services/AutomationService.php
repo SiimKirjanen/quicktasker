@@ -104,13 +104,28 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                             }else {
                                 $automation->executionResult = $result;
                             }
-
+                            $logMessage = $this->getAutomationLogMessage($automation);
+                            ServiceLocator::get('LogService')->log($logMessage, [
+                                'type' => $targetType,
+                                'type_id' => $targetId,
+                                'log_status' => WP_QT_LOG_STATUS_SUCCESS,
+                                'user_id' => null,
+                                'created_by' => WP_QT_LOG_CREATED_BY_AUTOMATION,
+                                'pipeline_id' => $boardId,
+                            ]);
                             $executedAutomations[] = $automation; 
                         }
                     } catch(\Throwable $e) {
                         $failureLogMessage = $this->getAutomationFailedLogMessage($automation) . $e->getMessage(); 
                         $failedAutomations[] = $automation;
-                        ServiceLocator::get('LogService')->log($failureLogMessage, $targetType, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION, null, WP_QT_LOG_STATUS_ERROR);
+                        ServiceLocator::get('LogService')->log($failureLogMessage, [
+                            'type' => $targetType,
+                            'type_id' => $targetId,
+                            'log_status' => WP_QT_LOG_STATUS_ERROR,
+                            'user_id' => null,
+                            'created_by' => WP_QT_LOG_CREATED_BY_AUTOMATION,
+                            'pipeline_id' => $boardId,
+                        ]);
                     }
                 }
             }
@@ -123,12 +138,10 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         }
 
         private function executeAutomation($automation, $targetId, $data) {
-            $logMessage = $this->getAutomationLogMessage($automation);
-
+            
             if( $this->isTaskDoneTrigger($automation) ) {
                 if( $this->isArchiveTaskAction($automation) ) {
                     ServiceLocator::get('TaskService')->archiveTask($targetId, true);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -139,8 +152,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, WP_QT_WORDPRESS_USER_TYPE);
                     $message = "Task *{$task->name}* marked as done by *{$user->name}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
-
+                    
                     return true;
                 }
             }
@@ -148,7 +160,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             if( $this->isTaskNotDoneTrigger($automation) ) {
                 if( $this->isArchiveTaskAction($automation) ) {
                     ServiceLocator::get('TaskService')->archiveTask($targetId, false);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -161,7 +172,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, $userType);
 
                     ServiceLocator::get('UserService')->assignTaskToUser($userId, $targetId, $userType);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                      return (object)[
                         'success' => true,
@@ -180,7 +190,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     ];
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'New Task Created', $emailMessage);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -190,7 +199,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = "Task *{$task->name}* created";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -212,7 +220,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     ];
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_DELETED_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task Deleted', $emailMessage);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -221,7 +228,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = "Task *{$deletedTask->name}* deleted by *{$deletedByUser->name}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -244,7 +250,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_ASSIGNED_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task Assigned', $emailMessage);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -253,7 +258,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = "Task *{$task->name}* assigned to *{$assignedUser->name}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -276,7 +280,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_UNASSIGNED_TASK_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task Unassigned', $emailMessage);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -285,7 +288,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = "Task *{$task->name}* has been unassigned from *{$unassignedUser->name}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -310,7 +312,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_NEW_PUBLIC_COMMENT_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Public Comment Added', $emailMessage);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -319,7 +320,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = "Task *{$task->name}* has a new public comment by *{$commentAuthor->name}*\n {$comment->text}";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -343,7 +343,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Private Comment Added', $emailMessage);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -352,7 +351,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $webhookUrl = $automation->metadata;
                     $message = "Task *{$task->name}* has a new private comment by *{$commentAuthor->name}*\n {$comment->text}";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -376,7 +374,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     ];
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_NEW_ATTACHMENT_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task attachment added', $emailMessage);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
                 }
@@ -401,7 +398,6 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     $emailMessage = ServiceLocator::get('EmailService')->renderTemplate(WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE, $templateData);
                     ServiceLocator::get('EmailService')->sendEmail($email, 'Task attachment deleted', $emailMessage);
-                    ServiceLocator::get('LogService')->log($logMessage, WP_QT_LOG_TYPE_TASK, $targetId, WP_QT_LOG_CREATED_BY_AUTOMATION);
 
                     return true;
 

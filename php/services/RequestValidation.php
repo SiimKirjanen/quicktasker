@@ -312,6 +312,18 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         }
 
         /**
+         * Validates the log status parameter.
+         *
+         * This method checks if the provided parameter is a valid log status.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a valid log status, false otherwise.
+         */
+        public static function validateLogStatus($param) {
+            return in_array($param, WP_QT_LOG_STATUS, true);
+        }
+
+        /**
          * Validates the log created for parameter.
          *
          * This method checks if the provided parameter is a valid log created for value.

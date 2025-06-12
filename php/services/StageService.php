@@ -213,10 +213,11 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
         }
 
         /**
-         * Deletes a stage.
+         * Deletes a stage from the pipeline.
          *
          * @param int $stageId The ID of the stage to delete.
-         * @return void
+         * @return Stage The deleted stage object.
+         * @throws \Exception If the stage has tasks or if the deletion fails.
          */
         public function deleteStage($stageId) {
             global $wpdb;
@@ -225,6 +226,7 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
             if( count( $this->taskRepository->getTasksByStageId($stageId) ) > 0 ) {
                 throw new \Exception('Stage has tasks. Please delete/relocate the tasks first.');
             }
+            $stage = $this->stageRepository->getStageById($stageId);
 
             // Delete the stage from the pipeline stages table
             $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array('id' => $stageId));
@@ -238,7 +240,7 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
                 throw new \Exception('Failed to delete the stage.');
             }
 
-            return $result;
+            return $stage;
         }
 
         /**

@@ -23,29 +23,45 @@ if ( ! class_exists( 'WPQT\Log\LogService' ) ) {
          * Logs a message to the database.
          *
          * @param string $text The log message text.
-         * @param string $type The type of log message.
-         * @param int|string $typeId The ID associated with the log type. String 'null' if we are dealing with users.
-         * @param string $createdBy The user type who created the log.
-         * @param int|null $userId The ID of the user who is associated with the log.
-         * @param string $logStatus The status of the log message.
+         * @param array $args Arguments for the log entry.
+         *                   - 'type': (Required) The type of log entry.
+         *                   - 'type_id': The ID of the type associated with the log.
+         *                   - 'log_status': The status of the log (default is WP_QT_LOG_STATUS_SUCCESS).
+         *                   - 'user_id': The ID of the user associated with the log (default is null).
+         *                   - 'created_by': The creator of the log entry (default is WP_QT_LOG_CREATED_BY_SYSTEM).
+         *                   - 'pipeline_id': The ID of the pipeline associated with the log (default is null).
          * @return mixed The log entry retrieved by its ID.
-         * @throws \Exception If the log entry could not be added to the database.
+         * @throws \Exception If the log type is not provided or if the log insertion fails.
          */
-        public function log($text, $type, $typeId, $createdBy, $userId = null, $logStatus = WP_QT_LOG_STATUS_SUCCESS) {
+        public function log($text, $args) {
             global $wpdb;
 
-            if($typeId === 'null') {
-                $typeId = null; 
+            $defaults = array(
+                'type_id' => null,
+                'log_status' => WP_QT_LOG_STATUS_SUCCESS,
+                'user_id' => null,
+                'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+                'pipeline_id' => null,
+            );
+            $args = wp_parse_args($args, $defaults);
+
+            if ( empty($args['type']) ) {
+                throw new \Exception('Log type is required in args array');
+            }
+
+            if ( isset($args['type_id']) && $args['type_id'] === 'null' ) {
+                $args['type_id'] = null;
             }
 
             $result = $wpdb->insert(TABLE_WP_QUICKTASKS_LOGS, array(
                 'text' => $text,
-                'type' => $type,
-                'type_id' => $typeId,
-                'user_id' => $userId,
-                'created_by' => $createdBy,
+                'type' => $args['type'],
+                'type_id' => $args['type_id'],
+                'user_id' => $args['user_id'],
+                'created_by' => $args['created_by'],
                 'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                'log_status' => $logStatus
+                'log_status' => $args['log_status'],
+                'pipeline_id' => $args['pipeline_id'],
             ));
 
             if( $result === false ) {
