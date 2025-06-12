@@ -12371,6 +12371,9 @@ const LogsPageContent = () => {
       if (filter.createdBy === _types_log__WEBPACK_IMPORTED_MODULE_5__.LogCreatedByEnum.All) {
         delete filter.createdBy;
       }
+      if (filter.status === LogStatusFilterEnum.All) {
+        delete filter.status;
+      }
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_3__.getGlobalLogsRequest)(filter);
       setLogs(response.data);
     } catch (error) {

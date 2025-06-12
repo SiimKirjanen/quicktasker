@@ -38,7 +38,10 @@ type LogsFilterType = {
   status: string;
 };
 type ServerLogsFilterType = Partial<
-  Pick<LogsFilterType, "numberOfLogs" | "type" | "createdBy" | "typeId">
+  Pick<
+    LogsFilterType,
+    "numberOfLogs" | "type" | "createdBy" | "typeId" | "status"
+  >
 >;
 
 const LogsPageContent = () => {
@@ -77,6 +80,9 @@ const LogsPageContent = () => {
       }
       if (filter.createdBy === LogCreatedByEnum.All) {
         delete filter.createdBy;
+      }
+      if (filter.status === LogStatusFilterEnum.All) {
+        delete filter.status;
       }
       const response = await getGlobalLogsRequest(filter);
       setLogs(response.data);
