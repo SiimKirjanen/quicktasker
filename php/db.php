@@ -9,6 +9,7 @@ use WPQT\Stage\StageService;
 use WPQT\Task\TaskService;
 use WPQT\Label\LabelService;
 use WPQT\Time\TimeRepository;
+use WPQT\Log\LogService;
 
 if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 	function wpqt_set_up_db() {
@@ -328,7 +329,9 @@ if ( ! function_exists( 'wpqt_insert_initial_data' ) ) {
 		$taskService = new TaskService();
 		$labelService = new LabelService();
 		$timeRepo = new TimeRepository();
+		$logService = new LogService();
 		$transaction_started = false;
+		$currentUserId = get_current_user_id();
 		
 		try {
 			$pipelines = $pipeRepo->getPipelines();
@@ -337,43 +340,151 @@ if ( ! function_exists( 'wpqt_insert_initial_data' ) ) {
 				$wpdb->query('START TRANSACTION');
 				$transaction_started = true;
 
-				$newPipeId = $pipeService->createPipeline("Demo board", array(
+				$newPipeline = $pipeService->createPipeline("Demo board", array(
 					'description' => 'This is a demo food store board.',
-				))->id;
-				$pipeService->markPipelineAsPrimary($newPipeId);
-				$firstStageId = $stageService->createStage($newPipeId, array('name' => 'Order Received'))->id;
-				$secondStageId = $stageService->createStage($newPipeId, array('name' => 'Preparing Order'))->id;
-				$thirdStageId = $stageService->createStage($newPipeId, array('name' => 'Out for Delivery'))->id;
-				$stageService->createStage($newPipeId, array('name' => 'Delivered'));
+				));
+				$newPipeId = (int) $newPipeline->id;
 
-				$task = $taskService->createTask($firstStageId, array(
+				$logService->log("Board {$newPipeline->name} created", [
+					'type' => WP_QT_LOG_TYPE_PIPELINE,
+					'type_id' => $newPipeId,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
+
+				$pipeService->markPipelineAsPrimary($newPipeId);
+				$firstStage = $stageService->createStage($newPipeId, array('name' => 'Order Received'));
+				$firstStageId = (int) $firstStage->id;
+				$logService->log('Stage ' . $firstStage->name .  ' created', [
+					'type' => WP_QT_LOG_TYPE_PIPELINE,
+					'type_id' => $newPipeId,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
+
+				$secondStage = $stageService->createStage($newPipeId, array('name' => 'Preparing Order'));
+				$secondStageId = (int) $secondStage->id;
+				$logService->log('Stage ' . $secondStage->name .  ' created', [
+					'type' => WP_QT_LOG_TYPE_PIPELINE,
+					'type_id' => $newPipeId,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
+
+
+				$thirdStage = $stageService->createStage($newPipeId, array('name' => 'Out for Delivery'));
+				$thirdStageId = (int) $thirdStageId->id;
+				$logService->log('Stage ' . $thirdStage->name .  ' created', [
+					'type' => WP_QT_LOG_TYPE_PIPELINE,
+					'type_id' => $newPipeId,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
+
+				$fourthStage = $stageService->createStage($newPipeId, array('name' => 'Delivered'));
+				$fourthStageId = (int) $fourthStage->id;
+				$logService->log('Stage ' . $fourthStage->name .  ' created', [
+					'type' => WP_QT_LOG_TYPE_PIPELINE,
+					'type_id' => $newPipeId,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
+
+				$task1 = $taskService->createTask($firstStageId, array(
 					'name' => 'Order #1001',
 					'description' => 'Large pizza and a soda.',
 					'pipelineId' => $newPipeId,
 					'task_focus_color' => '#22D21E',
 				));
-				$taskService->createTask($firstStageId, array(
+				$logService->log('Task ' . $task1->name . ' created', [
+					'type' => WP_QT_LOG_TYPE_TASK,
+					'type_id' => $task1->id,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
+
+				$task2 = $taskService->createTask($firstStageId, array(
 					'name' => 'Order #1002',
 					'description' => 'Burger and fries.',
 					'pipelineId' => $newPipeId,
 					'due_date' => $timeRepo->modifyUTCTime(4, 'day'),
 				));
-				$taskService->createTask($secondStageId, array(
+				$logService->log('Task ' . $task2->name . ' created', [
+					'type' => WP_QT_LOG_TYPE_TASK,
+					'type_id' => $task2->id,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
+
+				$task3 = $taskService->createTask($secondStageId, array(
 					'name' => 'Order #1003',
 					'description' => 'Tacos and nachos.',
 					'pipelineId' => $newPipeId,
 				));
+				$logService->log('Task ' . $task3->name . ' created', [
+					'type' => WP_QT_LOG_TYPE_TASK,
+					'type_id' => $task3->id,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
+
 				$task4 = $taskService->createTask($thirdStageId, array(
 					'name' => 'Order #1004',
 					'description' => 'Steak dinner with mashed potatoes.',
 					'pipelineId' => $newPipeId,
 					'due_date' => $timeRepo->modifyUTCTime(2, 'hour'),
 				));
+				$logService->log('Task ' . $task4->name . ' created', [
+					'type' => WP_QT_LOG_TYPE_TASK,
+					'type_id' => $task4->id,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId
+				]);
 
 				$label = $labelService->createLabel($newPipeId, 'Important', '#FF9800');
+				$logService->log('Label ' . $label->name . ' created', [
+					'type' => WP_QT_LOG_TYPE_PIPELINE,
+					'type_id' => $newPipeId,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId,
+				]);
+
 				$label2 = $labelService->createLabel($newPipeId, 'VIP Customer', '#FFD700');
-				$labelService->assignLabel($task->id, 'task', $label->id);
+				$logService->log('Label ' . $label2->name . ' created', [
+					'type' => WP_QT_LOG_TYPE_PIPELINE,
+					'type_id' => $newPipeId,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $newPipeId,
+				]);
+
+				$labelService->assignLabel($task1->id, 'task', $label->id);
+				$logService->log('Label ' . $label->name . ' added to task ' . $task1->name, [
+					'type' => WP_QT_LOG_TYPE_TASK,
+					'type_id' => $task1->id,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $task1->pipeline_id,
+				]);
+
 				$labelService->assignLabel($task4->id, 'task', $label2->id);
+				$logService->log('Label ' . $label2->name . ' added to task ' . $task4->name, [
+					'type' => WP_QT_LOG_TYPE_TASK,
+					'type_id' => $task4->id,
+					'user_id' => $currentUserId,
+					'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
+					'pipeline_id' => $task4->pipeline_id,
+				]);
 
 				$wpdb->query('COMMIT');
 			}
