@@ -7,7 +7,7 @@
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
 	Domain Path: /languages
-	Version: 1.32.0
+	Version: 1.33.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28
 	License: GPLv2 or later
@@ -70,6 +70,7 @@ require( 'php/services/ServiceLocator.php' );
 require( 'php/services/SecretsService.php' );
 require( 'php/services/export/ExportService.php' );
 require( 'php/services/export/PDFExportService.php' );
+require( 'php/services/export/JSONExportService.php' );
 require( 'php/services/import/PipelineImportService.php' );
 require( 'php/services/DBMigrateService.php' );
 

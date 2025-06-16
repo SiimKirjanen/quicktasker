@@ -2,6 +2,7 @@ import { FaTrello } from "react-icons/fa6";
 import { PiLetterCirclePFill } from "react-icons/pi";
 import { TbBrandAsana } from "react-icons/tb";
 import { PipelineImportSource } from "../../../types/imports";
+import WPQTIcon from "./../../../../img/icon-80x80.png";
 
 type Props = {
   selectedImportSource: PipelineImportSource;
@@ -42,6 +43,18 @@ function ImportSourceSelection({
         onClick={() => handleImportSourceChange(PipelineImportSource.PIPEDRIVE)}
       >
         <PiLetterCirclePFill className="wpqt-size-6 wpqt-pipedrive-green" />
+      </div>
+      <div
+        className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
+          selectedImportSource === PipelineImportSource.QUICKTASKER
+            ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
+            : ""
+        }`}
+        onClick={() =>
+          handleImportSourceChange(PipelineImportSource.QUICKTASKER)
+        }
+      >
+        <img src={WPQTIcon} className="wpqt-size-6" />
       </div>
     </div>
   );

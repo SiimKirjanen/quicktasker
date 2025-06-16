@@ -49,6 +49,10 @@ if ( ! defined( 'WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID' ) ) {
     define('WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID', 'pdf-export');
 }
 
+if ( ! defined( 'WP_QUICKTASKER_TASK_JSON_EXPORT_PAGE_ID' ) ) {
+    define('WP_QUICKTASKER_TASK_JSON_EXPORT_PAGE_ID', 'json-export');
+}
+
 /*
 ==================================================================================================================================================================================================================
 DB constants
@@ -624,11 +628,16 @@ if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCE_PIPEDRIVE' ) ) {
     define('WP_QUICKTASKER_IMPORT_SOURCE_PIPEDRIVE', "PIPEDRIVE-IMPORT");
 }
 
+if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCE_QUICKTASKER' ) ) {
+    define('WP_QUICKTASKER_IMPORT_SOURCE_QUICKTASKER', "QUICKTASKER-IMPORT");
+}
+
 if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCES' ) ) {
     define('WP_QUICKTASKER_IMPORT_SOURCES', [
         WP_QUICKTASKER_IMPORT_SOURCE_TRELLO,
         WP_QUICKTASKER_IMPORT_SOURCE_ASANA,
-        WP_QUICKTASKER_IMPORT_SOURCE_PIPEDRIVE
+        WP_QUICKTASKER_IMPORT_SOURCE_PIPEDRIVE,
+        WP_QUICKTASKER_IMPORT_SOURCE_QUICKTASKER
     ]);
 }
 

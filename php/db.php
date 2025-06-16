@@ -376,7 +376,7 @@ if ( ! function_exists( 'wpqt_insert_initial_data' ) ) {
 
 
 				$thirdStage = $stageService->createStage($newPipeId, array('name' => 'Out for Delivery'));
-				$thirdStageId = (int) $thirdStageId->id;
+				$thirdStageId = (int) $thirdStage->id;
 				$logService->log('Stage ' . $thirdStage->name .  ' created', [
 					'type' => WP_QT_LOG_TYPE_PIPELINE,
 					'type_id' => $newPipeId,

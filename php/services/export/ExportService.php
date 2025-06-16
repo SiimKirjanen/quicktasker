@@ -15,6 +15,8 @@ if ( ! class_exists( 'WPQT\Export\ExportService' ) ) {
         protected $_includeArchivedTasks;
         protected $_fileName;
         protected $_tasks = [];
+        protected $_stages = [];
+        protected $_labels = [];
 
         public function __construct($pipelineId, $searchFilter, $includeArchivedTasks) {
             $this->_pipelineId = $pipelineId;
@@ -26,9 +28,13 @@ if ( ! class_exists( 'WPQT\Export\ExportService' ) ) {
         private function init() {
             $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($this->_pipelineId);
             $tasks = ServiceLocator::get('TaskRepository')->getTasksForExport($this->_pipelineId, $this->_searchFilter, $this->_includeArchivedTasks);
+            $stages = ServiceLocator::get('StageRepository')->getStagesByPipelineId($this->_pipelineId);
+            $labels = ServiceLocator::get('LabelRepository')->getPipelineLabels($this->_pipelineId);
 
             $this->_tasks = $tasks;
             $this->_pipeline = $pipeline;
+            $this->_stages = $stages;
+            $this->_labels = $labels;
             $this->_fileName = strtolower($this->_pipeline->name) . '-tasks-export';
         }
 
