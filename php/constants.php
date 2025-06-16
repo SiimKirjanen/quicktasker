@@ -49,6 +49,10 @@ if ( ! defined( 'WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID' ) ) {
     define('WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID', 'pdf-export');
 }
 
+if ( ! defined( 'WP_QUICKTASKER_TASK_JSON_EXPORT_PAGE_ID' ) ) {
+    define('WP_QUICKTASKER_TASK_JSON_EXPORT_PAGE_ID', 'json-export');
+}
+
 /*
 ==================================================================================================================================================================================================================
 DB constants

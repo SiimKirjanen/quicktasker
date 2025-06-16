@@ -1408,6 +1408,14 @@
   margin-top: auto;
 }
 
+.wpqt-mr-5 {
+  margin-right: 1.25rem;
+}
+
+.wpqt-mr-6 {
+  margin-right: 1.5rem;
+}
+
 .\!wpqt-block {
   display: block !important;
 }

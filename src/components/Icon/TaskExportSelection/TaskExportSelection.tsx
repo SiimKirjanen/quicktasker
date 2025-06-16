@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { BsFiletypeJson } from "react-icons/bs";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { OPEN_TASK_EXPORT_MODAL } from "../../../constants";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -17,16 +18,21 @@ function TaskExportSelection() {
   };
 
   return (
-    <div className="wpqt-flex wpqt-mr-4">
-      <div className="wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1.5 wpqt-text-gray-500 hover:wpqt-text-gray-700">
-        <FaRegFilePdf
-          className="wpqt-size-5 wpqt-pdf-red"
-          data-testid="task-export-pdf-icon"
-          onClick={() => {
-            openTaskExportModal(TaskExportMethods.PDF);
-          }}
-        />
-      </div>
+    <div className="wpqt-flex wpqt-mr-5 wpqt-gap-2">
+      <FaRegFilePdf
+        className="wpqt-size-5 wpqt-pdf-red wpqt-cursor-pointer"
+        data-testid="task-export-pdf-icon"
+        onClick={() => {
+          openTaskExportModal(TaskExportMethods.PDF);
+        }}
+      />
+      <BsFiletypeJson
+        className="wpqt-size-5 wpqt-cursor-pointer"
+        data-testid="task-export-pdf-json-icon"
+        onClick={() => {
+          openTaskExportModal(TaskExportMethods.JSON);
+        }}
+      />
     </div>
   );
 }

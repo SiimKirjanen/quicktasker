@@ -70,6 +70,7 @@ require( 'php/services/ServiceLocator.php' );
 require( 'php/services/SecretsService.php' );
 require( 'php/services/export/ExportService.php' );
 require( 'php/services/export/PDFExportService.php' );
+require( 'php/services/export/JSONExportService.php' );
 require( 'php/services/import/PipelineImportService.php' );
 require( 'php/services/DBMigrateService.php' );
 

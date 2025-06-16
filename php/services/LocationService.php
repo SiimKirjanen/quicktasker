@@ -34,12 +34,39 @@ if ( ! class_exists( 'WPQT\Location\LocationService' ) ) {
             return false;
         }
 
+        /**
+         * Checks if the current page is the task PDF export page.
+         *
+         * @return bool Returns true if the current page is the WP Quick Tasks task PDF export page, false otherwise.
+         */
         public function isWPQTTaskPDFExportPage() {
             if ( isset($_GET['wpqt-page']) && $_GET['wpqt-page'] === WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID ) {
                 return true;
             }
 
             return false;
+        }
+
+        /**
+         * Checks if the current page is the task JSON export page.
+         *
+         * @return bool Returns true if the current page is the WP Quick Tasks task JSON export page, false otherwise.
+         */
+        public function isWPQTTaskJSONExportPage() {
+            if ( isset($_GET['wpqt-page']) && $_GET['wpqt-page'] === WP_QUICKTASKER_TASK_JSON_EXPORT_PAGE_ID ) {
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Checks if the current page is a WP Quick Tasks task export page (either PDF or JSON).
+         *
+         * @return bool Returns true if the current page is a WP Quick Tasks task export page, false otherwise.
+         */
+        public function isWPQTTaskExportPage() {
+            return $this->isWPQTTaskPDFExportPage() || $this->isWPQTTaskJSONExportPage();
         }
     }
 }
