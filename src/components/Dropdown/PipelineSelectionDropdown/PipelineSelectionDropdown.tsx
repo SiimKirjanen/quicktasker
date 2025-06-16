@@ -40,6 +40,9 @@ function PipelineSelectionDropdown() {
         type: PIPELINE_SET_PRIMARY,
         payload: pipeline.id,
       });
+      toast.success(
+        __("Primary board has been set successfully.", "quicktasker"),
+      );
     } catch (e) {
       console.error(e);
       toast.error(__("Failed to set primary board", "quicktasker"));
