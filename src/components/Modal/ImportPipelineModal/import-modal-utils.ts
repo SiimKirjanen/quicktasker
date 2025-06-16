@@ -9,6 +9,8 @@ const getSelectionText = (selectedImportSource: PipelineImportSource) => {
       return __("Import from Asana.", "quicktasker");
     case PipelineImportSource.PIPEDRIVE:
       return __("Import from Pipedrive.", "quicktasker");
+    case PipelineImportSource.QUICKTASKER:
+      return __("Import from QuickTasker.", "quicktasker");
     default:
       return __("Select import source", "quicktasker");
   }
@@ -29,6 +31,11 @@ const getSelectionInfoText = (selectedImportSource: PipelineImportSource) => {
     case PipelineImportSource.PIPEDRIVE:
       return __(
         "Export your Pipedrive deals as CSV format and use it for import. Please not that generated CSV file column headers should be in English.",
+        "quicktasker",
+      );
+    case PipelineImportSource.QUICKTASKER:
+      return __(
+        "Import your QuickTasker board from JSON format.",
         "quicktasker",
       );
     default:

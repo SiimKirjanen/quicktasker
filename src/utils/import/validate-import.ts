@@ -230,4 +230,119 @@ function validatePipedriveImport(importData: unknown): true | string {
   return true;
 }
 
-export { validateAsanaImport, validatePipedriveImport, validateTrelloImport };
+/**
+ * Validates a QuickTasker JSON import
+ *
+ * @param importData The parsed JSON data to validate
+ * @returns true if valid, error message string if invalid
+ */
+function validateQuicktaskerImport(importData: unknown): true | string {
+  if (!importData || typeof importData !== "object") {
+    return "Invalid import data: Not a valid object";
+  }
+
+  const data = importData as Record<string, unknown>;
+
+  if (!data.pipelineName) {
+    return "Pipeline name is required";
+  }
+
+  // Validate stages
+  if (!Array.isArray(data.stages)) {
+    return "Stages must be an array";
+  }
+
+  for (let i = 0; i < data.stages.length; i++) {
+    const stage = data.stages[i];
+
+    if (
+      !stage.stageName ||
+      typeof stage.stageName !== "string" ||
+      !stage.stageName.trim()
+    ) {
+      return `Stage #${i + 1} is missing a name`;
+    }
+
+    if (stage.stageId === undefined || stage.stageId === null) {
+      return `Stage #${i + 1} is missing an ID`;
+    }
+  }
+
+  if (data.tasks && Array.isArray(data.tasks)) {
+    for (let i = 0; i < data.tasks.length; i++) {
+      const task = data.tasks[i];
+
+      if (
+        !task.taskName ||
+        typeof task.taskName !== "string" ||
+        !task.taskName.trim()
+      ) {
+        return `Task #${i + 1} is missing a name`;
+      }
+
+      if (task.stageId === undefined || task.stageId === null) {
+        return `Task #${i + 1} is missing a stage ID`;
+      }
+
+      // Validate that referenced stage exists
+      const stageExists = data.stages.some(
+        (stage: { stageId: unknown }) => stage.stageId == task.stageId,
+      );
+
+      if (!stageExists) {
+        return `Task "${task.taskName}" references a stage ID that does not exist in the import data`;
+      }
+
+      // Validate assigned labels if present
+      if (task.assignedLabels && Array.isArray(task.assignedLabels)) {
+        for (let j = 0; j < task.assignedLabels.length; j++) {
+          const label = task.assignedLabels[j];
+          console.log(label);
+
+          if (
+            label.labelId === undefined ||
+            label.labelId === null ||
+            !label.labelName
+          ) {
+            return `Task "${task.taskName}" has an invalid label at position ${j + 1}`;
+          }
+        }
+      }
+    }
+  }
+
+  // Validate labels (optional but must be well-formed if present)
+  if (data.labels && Array.isArray(data.labels)) {
+    for (let i = 0; i < data.labels.length; i++) {
+      const label = data.labels[i];
+
+      if (
+        !label.labelName ||
+        typeof label.labelName !== "string" ||
+        !label.labelName.trim()
+      ) {
+        return `Label #${i + 1} is missing a name`;
+      }
+
+      if (label.labelId === undefined || label.labelId === null) {
+        return `Label #${i + 1} is missing an ID`;
+      }
+
+      if (
+        !label.color ||
+        typeof label.color !== "string" ||
+        !label.color.trim()
+      ) {
+        return `Label "${label.labelName || i + 1}" is missing a color`;
+      }
+    }
+  }
+
+  return true;
+}
+export {
+  validateAsanaImport,
+  validatePipedriveImport,
+  validateQuicktaskerImport,
+  validateTrelloImport,
+};

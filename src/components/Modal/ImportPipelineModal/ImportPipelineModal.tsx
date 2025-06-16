@@ -30,6 +30,7 @@ import {
 import {
   validateAsanaImport,
   validatePipedriveImport,
+  validateQuicktaskerImport,
   validateTrelloImport,
 } from "../../../utils/import/validate-import";
 import { WPQTIconButton } from "../../common/Button/Button";
@@ -133,6 +134,19 @@ function ImportPipelineModal() {
               normalizedData = normalizePipedriveImport(parsedData);
               break;
             }
+            case PipelineImportSource.QUICKTASKER: {
+              const validationResult = validateQuicktaskerImport(parsedData);
+
+              if (validationResult !== true) {
+                toast.error(
+                  `${__("Invalid Quicktasker import", "quicktasker")}: ${validationResult}`,
+                );
+                return;
+              }
+              normalizedData = parsedData as WPQTImport;
+
+              break;
+            }
             default: {
               throw new Error("Unsupported import source");
             }
@@ -182,6 +196,8 @@ function ImportPipelineModal() {
         return ".csv";
       case PipelineImportSource.TRELLO:
       case PipelineImportSource.ASANA:
+      case PipelineImportSource.QUICKTASKER:
+        return ".json";
       default:
         return ".json";
     }

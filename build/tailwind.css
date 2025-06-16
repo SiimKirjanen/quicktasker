@@ -1360,6 +1360,10 @@
   margin-right: 1rem;
 }
 
+.wpqt-mr-5 {
+  margin-right: 1.25rem;
+}
+
 .wpqt-mr-auto {
   margin-right: auto;
 }
@@ -1406,14 +1410,6 @@
 
 .wpqt-mt-auto {
   margin-top: auto;
-}
-
-.wpqt-mr-5 {
-  margin-right: 1.25rem;
-}
-
-.wpqt-mr-6 {
-  margin-right: 1.5rem;
 }
 
 .\!wpqt-block {

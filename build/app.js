@@ -5336,6 +5336,16 @@ function ImportPipelineModal() {
                 normalizedData = (0,_utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_11__.normalizePipedriveImport)(parsedData);
                 break;
               }
+            case _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.QUICKTASKER:
+              {
+                const validationResult = (0,_utils_import_validate_import__WEBPACK_IMPORTED_MODULE_12__.validateQuicktaskerImport)(parsedData);
+                if (validationResult !== true) {
+                  react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.error(`${(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Invalid Quicktasker import", "quicktasker")}: ${validationResult}`);
+                  return;
+                }
+                normalizedData = parsedData;
+                break;
+              }
             default:
               {
                 throw new Error("Unsupported import source");
@@ -5382,6 +5392,8 @@ function ImportPipelineModal() {
         return ".csv";
       case _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.TRELLO:
       case _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.ASANA:
+      case _types_imports__WEBPACK_IMPORTED_MODULE_9__.PipelineImportSource.QUICKTASKER:
+        return ".json";
       default:
         return ".json";
     }
@@ -5509,6 +5521,8 @@ const getSelectionText = selectedImportSource => {
       return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Import from Asana.", "quicktasker");
     case _types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.PIPEDRIVE:
       return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Import from Pipedrive.", "quicktasker");
+    case _types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.QUICKTASKER:
+      return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Import from QuickTasker.", "quicktasker");
     default:
       return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Select import source", "quicktasker");
   }
@@ -5521,6 +5535,8 @@ const getSelectionInfoText = selectedImportSource => {
       return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Export your Asana project as JSON format and use it for import", "quicktasker");
     case _types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.PIPEDRIVE:
       return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Export your Pipedrive deals as CSV format and use it for import. Please not that generated CSV file column headers should be in English.", "quicktasker");
+    case _types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.QUICKTASKER:
+      return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Import your QuickTasker board from JSON format.", "quicktasker");
     default:
       return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Select an import source to get started", "quicktasker");
   }
@@ -5541,10 +5557,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
-/* harmony import */ var react_icons_pi__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-icons/pi */ "./node_modules/react-icons/pi/index.mjs");
-/* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-icons/tb */ "./node_modules/react-icons/tb/index.mjs");
+/* harmony import */ var react_icons_fa6__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-icons/fa6 */ "./node_modules/react-icons/fa6/index.mjs");
+/* harmony import */ var react_icons_pi__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-icons/pi */ "./node_modules/react-icons/pi/index.mjs");
+/* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-icons/tb */ "./node_modules/react-icons/tb/index.mjs");
 /* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../types/imports */ "./src/types/imports.ts");
+/* harmony import */ var _img_icon_80x80_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../../../../img/icon-80x80.png */ "./img/icon-80x80.png");
+
 
 
 
@@ -5559,20 +5577,27 @@ function ImportSourceSelection({
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.TRELLO ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid" : ""}`,
       onClick: () => handleImportSourceChange(_types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.TRELLO),
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_2__.FaTrello, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_fa6__WEBPACK_IMPORTED_MODULE_3__.FaTrello, {
         className: "wpqt-size-6 wpqt-trello-blue"
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.ASANA ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid" : ""}`,
       onClick: () => handleImportSourceChange(_types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.ASANA),
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tb__WEBPACK_IMPORTED_MODULE_3__.TbBrandAsana, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tb__WEBPACK_IMPORTED_MODULE_4__.TbBrandAsana, {
         className: "wpqt-size-6 wpqt-asana-pink"
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.PIPEDRIVE ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid" : ""}`,
       onClick: () => handleImportSourceChange(_types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.PIPEDRIVE),
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_pi__WEBPACK_IMPORTED_MODULE_4__.PiLetterCirclePFill, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_pi__WEBPACK_IMPORTED_MODULE_5__.PiLetterCirclePFill, {
         className: "wpqt-size-6 wpqt-pipedrive-green"
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: `wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${selectedImportSource === _types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.QUICKTASKER ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid" : ""}`,
+      onClick: () => handleImportSourceChange(_types_imports__WEBPACK_IMPORTED_MODULE_1__.PipelineImportSource.QUICKTASKER),
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+        src: _img_icon_80x80_png__WEBPACK_IMPORTED_MODULE_2__,
+        className: "wpqt-size-6"
       })
     })]
   });
@@ -20245,6 +20270,7 @@ var PipelineImportSource;
   PipelineImportSource["TRELLO"] = "TRELLO-IMPORT";
   PipelineImportSource["ASANA"] = "ASANA-IMPORT";
   PipelineImportSource["PIPEDRIVE"] = "PIPEDRIVE-IMPORT";
+  PipelineImportSource["QUICKTASKER"] = "QUICKTASKER-IMPORT";
 })(PipelineImportSource || (PipelineImportSource = {}));
 
 
@@ -20989,6 +21015,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   validateAsanaImport: () => (/* binding */ validateAsanaImport),
 /* harmony export */   validatePipedriveImport: () => (/* binding */ validatePipedriveImport),
+/* harmony export */   validateQuicktaskerImport: () => (/* binding */ validateQuicktaskerImport),
 /* harmony export */   validateTrelloImport: () => (/* binding */ validateTrelloImport)
 /* harmony export */ });
 /**
@@ -21150,6 +21177,76 @@ function validatePipedriveImport(importData) {
   }
   if (uniqueStages.size === 0) {
     return "No valid stages found in deals";
+  }
+  return true;
+}
+/**
+ * Validates a QuickTasker JSON import
+ *
+ * @param importData The parsed JSON data to validate
+ * @returns true if valid, error message string if invalid
+ */
+function validateQuicktaskerImport(importData) {
+  if (!importData || typeof importData !== "object") {
+    return "Invalid import data: Not a valid object";
+  }
+  const data = importData;
+  if (!data.pipelineName) {
+    return "Pipeline name is required";
+  }
+  // Validate stages
+  if (!Array.isArray(data.stages)) {
+    return "Stages must be an array";
+  }
+  for (let i = 0; i < data.stages.length; i++) {
+    const stage = data.stages[i];
+    if (!stage.stageName || typeof stage.stageName !== "string" || !stage.stageName.trim()) {
+      return `Stage #${i + 1} is missing a name`;
+    }
+    if (stage.stageId === undefined || stage.stageId === null) {
+      return `Stage #${i + 1} is missing an ID`;
+    }
+  }
+  if (data.tasks && Array.isArray(data.tasks)) {
+    for (let i = 0; i < data.tasks.length; i++) {
+      const task = data.tasks[i];
+      if (!task.taskName || typeof task.taskName !== "string" || !task.taskName.trim()) {
+        return `Task #${i + 1} is missing a name`;
+      }
+      if (task.stageId === undefined || task.stageId === null) {
+        return `Task #${i + 1} is missing a stage ID`;
+      }
+      // Validate that referenced stage exists
+      const stageExists = data.stages.some(stage => stage.stageId == task.stageId);
+      if (!stageExists) {
+        return `Task "${task.taskName}" references a stage ID that does not exist in the import data`;
+      }
+      // Validate assigned labels if present
+      if (task.assignedLabels && Array.isArray(task.assignedLabels)) {
+        for (let j = 0; j < task.assignedLabels.length; j++) {
+          const label = task.assignedLabels[j];
+          console.log(label);
+          if (label.labelId === undefined || label.labelId === null || !label.labelName) {
+            return `Task "${task.taskName}" has an invalid label at position ${j + 1}`;
+          }
+        }
+      }
+    }
+  }
+  // Validate labels (optional but must be well-formed if present)
+  if (data.labels && Array.isArray(data.labels)) {
+    for (let i = 0; i < data.labels.length; i++) {
+      const label = data.labels[i];
+      if (!label.labelName || typeof label.labelName !== "string" || !label.labelName.trim()) {
+        return `Label #${i + 1} is missing a name`;
+      }
+      if (label.labelId === undefined || label.labelId === null) {
+        return `Label #${i + 1} is missing an ID`;
+      }
+      if (!label.color || typeof label.color !== "string" || !label.color.trim()) {
+        return `Label "${label.labelName || i + 1}" is missing a color`;
+      }
+    }
   }
   return true;
 }
@@ -21458,6 +21555,16 @@ function generateUUID() {
 
 /***/ }),
 
+/***/ "./img/icon-80x80.png":
+/*!****************************!*\
+  !*** ./img/icon-80x80.png ***!
+  \****************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__.p + "images/icon-80x80.78f40056.png";
+
+/***/ }),
+
 /***/ "react":
 /*!************************!*\
   !*** external "React" ***!
@@ -21634,6 +21741,18 @@ module.exports = window["wp"]["i18n"];
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -21648,6 +21767,29 @@ module.exports = window["wp"]["i18n"];
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript && document.currentScript.tagName.toUpperCase() === 'SCRIPT')
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && (!scriptUrl || !/^http(s?):/.test(scriptUrl))) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */

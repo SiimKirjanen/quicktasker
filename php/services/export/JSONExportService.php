@@ -41,7 +41,13 @@ if ( ! class_exists( 'WPQT\Export\JSONExportService' ) ) {
                     'archived' => (bool)$task->is_archived,
                     'dueDate' => $task->due_date,
                     'taskCompletedAt' => $task->task_completed_at,
-                    'assignedLabels' => $task->assigned_labels,
+                    'assignedLabels' => $task->assigned_labels ? array_map(function($label) {
+                        return [
+                            'labelName' => $label->name,
+                            'labelId' => $label->id,
+                            'color' => $label->color
+                        ];
+                    }, $task->assigned_labels) : [],
                 ];
             }
 
