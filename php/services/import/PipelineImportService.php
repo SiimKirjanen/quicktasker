@@ -164,6 +164,7 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                         'due_date' => isset($task['dueDate']) ? $task['dueDate'] : null,
                         'task_completed_at' => isset($task['taskCompletedAt']) ? $task['taskCompletedAt'] : null,
                         'is_done' => isset($task['taskCompletedAt']) ? true : false,
+                        'task_focus_color' => isset($task['taskFocusColor']) ? $task['taskFocusColor'] : null,
                     ]
                 );
 

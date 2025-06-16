@@ -48,6 +48,7 @@ if ( ! class_exists( 'WPQT\Export\JSONExportService' ) ) {
                             'color' => $label->color
                         ];
                     }, $task->assigned_labels) : [],
+                    'taskFocusColor' => $task->task_focus_color ?: null,
                 ];
             }
 
