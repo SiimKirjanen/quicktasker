@@ -9,6 +9,7 @@ type WPQTImport = {
   tasks: WPQTTaskImport[];
   labels: WPQTLabelImport[];
   sourcePipelines: WPQTSourcePipeline[];
+  taskComments: WPQTTaskComment[];
 };
 
 type WPQTStageImport = {
@@ -19,6 +20,7 @@ type WPQTStageImport = {
 };
 
 type WPQTTaskImport = {
+  taskId: string;
   taskName: string;
   taskDescription: string;
   stageId: string;
@@ -39,6 +41,16 @@ type WPQTLabelImport = {
 type WPQTSourcePipeline = {
   name: string;
   id: string;
+};
+
+type WPQTTaskComment = {
+  commentId: string;
+  taskId: string;
+  createdAt: string;
+  commentText: string;
+  authorId: string;
+  isAuthorAdmin: boolean;
+  isPrivate: boolean;
 };
 
 /**
@@ -130,7 +142,7 @@ type AsanaImportSection = {
  */
 
 type PipedriveDealImport = {
-  id: number;
+  id: string;
   title: string;
   value: string;
   status: string;

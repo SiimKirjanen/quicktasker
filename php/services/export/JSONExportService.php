@@ -35,6 +35,7 @@ if ( ! class_exists( 'WPQT\Export\JSONExportService' ) ) {
 
             foreach ( $this->_tasks as $task ) {                
                 $exportTasks[] = [
+                    'taskId' => $task->id,
                     'taskName' => $task->name,
                     'taskDescription' => $task->description ?: '',
                     'stageId' => $task->stage_id,
@@ -58,6 +59,7 @@ if ( ! class_exists( 'WPQT\Export\JSONExportService' ) ) {
                 'stages' => $exportStages,
                 'tasks' => $exportTasks,
                 'labels' => $exportLabels,
+                'taskComments' => $this->_taskComments,
             ];
 
             return json_encode($exportData, JSON_PRETTY_PRINT);

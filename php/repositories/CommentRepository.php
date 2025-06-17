@@ -112,5 +112,36 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
 
             return array_merge($userComments, $tasksComments);
         }
+
+        public function getCommentsOfTasks($tasks) {
+            global $wpdb;
+
+            if ( empty($tasks) ) {
+                return [];
+            }
+
+            $taskIds = array_map(function($task) {
+                return $task->id;
+            }, $tasks);
+
+            $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
+            $query = "
+                SELECT comments.*, 
+                    CASE 
+                        WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
+                        ELSE users.name 
+                    END AS author_name
+                FROM " . TABLE_WP_QUICKTASKER_COMMENTS . " AS comments
+                LEFT JOIN " . TABLE_WP_QUICKTASKER_USERS . " AS users ON comments.author_id = users.id AND comments.is_admin_comment = 0
+                LEFT JOIN " . $wpdb->users . " AS wp_users ON comments.author_id = wp_users.ID AND comments.is_admin_comment = 1
+                WHERE comments.type_id IN ($placeholders) 
+                AND comments.type = 'task' 
+                ORDER BY comments.created_at DESC
+            ";
+
+            $prepared_query = $wpdb->prepare($query, $taskIds);
+
+            return $wpdb->get_results($prepared_query);
+        }
     }
 }
