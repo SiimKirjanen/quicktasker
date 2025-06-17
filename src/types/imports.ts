@@ -26,6 +26,7 @@ type WPQTTaskImport = {
   archived: boolean;
   dueDate: string | null;
   taskCompletedAt: string | null;
+  taskFocusColor: string | null;
   sourcePipeline: WPQTSourcePipeline | null;
 };
 
@@ -77,6 +78,9 @@ type TrelloImportCard = {
   labels: TrelloImportLabels[];
   due: string | null;
   dateCompleted: string | null;
+  cover: {
+    color: string | null;
+  };
 };
 
 /**

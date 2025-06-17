@@ -47,6 +47,7 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
         })),
         dueDate: card.due ? card.due : null,
         taskCompletedAt: card.dateCompleted ? card.dateCompleted : null,
+        taskFocusColor: card.cover?.color ?? null,
         sourcePipeline: {
           name: importData.name,
           id: importData.id,
@@ -139,6 +140,7 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
         labelId: tag.gid,
         color: DEFAULT_IMPORT_LABEL_COLOR,
       })),
+      taskFocusColor: null,
       sourcePipeline: {
         name: primaryProjectName,
         id: primaryProjectGid,
@@ -279,6 +281,7 @@ function normalizePipedriveImport(
       archived: dealStatus === "lost" || dealStatus === "deleted",
       assignedLabels: taskLabels,
       dueDate: deal.expected_close_date || null,
+      taskFocusColor: null,
       taskCompletedAt:
         dealStatus === "won" ? deal.deal_closed_on || null : null,
       sourcePipeline: taskPipeline,
