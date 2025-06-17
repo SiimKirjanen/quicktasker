@@ -20264,8 +20264,15 @@ var WPQTWpUserTypes;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   PipelineImportSource: () => (/* binding */ PipelineImportSource)
+/* harmony export */   PipelineImportSource: () => (/* binding */ PipelineImportSource),
+/* harmony export */   TrelloActionType: () => (/* binding */ TrelloActionType)
 /* harmony export */ });
+var TrelloActionType;
+(function (TrelloActionType) {
+  TrelloActionType["ADD_CARD"] = "addCard";
+  TrelloActionType["UPDATE_CARD"] = "updateCard";
+  TrelloActionType["Comment_CARD"] = "commentCard";
+})(TrelloActionType || (TrelloActionType = {}));
 var PipelineImportSource;
 (function (PipelineImportSource) {
   PipelineImportSource["TRELLO"] = "TRELLO-IMPORT";
@@ -20760,7 +20767,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   normalizeTrelloImport: () => (/* binding */ normalizeTrelloImport)
 /* harmony export */ });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants */ "./src/constants.ts");
-/* harmony import */ var _uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../uuid */ "./src/utils/uuid.ts");
+/* harmony import */ var _types_imports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../types/imports */ "./src/types/imports.ts");
+/* harmony import */ var _uuid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../uuid */ "./src/utils/uuid.ts");
+
 
 
 const EMPTY_IMPORT = {
@@ -20777,6 +20786,7 @@ function normalizeTrelloImport(importData) {
     name: importData.name,
     id: importData.id
   }];
+  const commentActions = importData.actions.filter(action => action.type === _types_imports__WEBPACK_IMPORTED_MODULE_1__.TrelloActionType.Comment_CARD);
   const pipelineData = {
     pipelineName: importData.name,
     pipelineDescription: importData.desc,
@@ -20817,7 +20827,18 @@ function normalizeTrelloImport(importData) {
       color: label.color
     })),
     sourcePipelines,
-    taskComments: []
+    taskComments: commentActions.map(action => {
+      var _a, _b, _c;
+      return {
+        commentId: action.id,
+        taskId: (_b = (_a = action.data.card) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : "",
+        createdAt: action.date,
+        commentText: (_c = action.data.text) !== null && _c !== void 0 ? _c : "",
+        authorId: action.idMemberCreator,
+        isAuthorAdmin: false,
+        isPrivate: true
+      };
+    })
   };
   return pipelineData;
 }
@@ -20909,19 +20930,19 @@ function normalizePipedriveImport(importData) {
     if (deal.pipeline && !pipelinesMap.has(deal.pipeline)) {
       pipelinesMap.set(deal.pipeline, {
         name: deal.pipeline,
-        id: (0,_uuid__WEBPACK_IMPORTED_MODULE_1__.generateUUID)()
+        id: (0,_uuid__WEBPACK_IMPORTED_MODULE_2__.generateUUID)()
       });
     }
   });
   importData.forEach(deal => {
     if (deal.stage && !stagesMap.has(deal.stage)) {
       stagesMap.set(deal.stage, {
-        stageId: (0,_uuid__WEBPACK_IMPORTED_MODULE_1__.generateUUID)(),
+        stageId: (0,_uuid__WEBPACK_IMPORTED_MODULE_2__.generateUUID)(),
         stageName: deal.stage,
         stageDescription: "",
         sourcePipeline: pipelinesMap.get(deal.pipeline) || {
           name: "",
-          id: (0,_uuid__WEBPACK_IMPORTED_MODULE_1__.generateUUID)()
+          id: (0,_uuid__WEBPACK_IMPORTED_MODULE_2__.generateUUID)()
         }
       });
     }
@@ -20930,7 +20951,7 @@ function normalizePipedriveImport(importData) {
       labels.forEach(labelName => {
         if (labelName && !labelsMap.has(labelName)) {
           labelsMap.set(labelName, {
-            labelId: (0,_uuid__WEBPACK_IMPORTED_MODULE_1__.generateUUID)(),
+            labelId: (0,_uuid__WEBPACK_IMPORTED_MODULE_2__.generateUUID)(),
             labelName: labelName,
             color: _constants__WEBPACK_IMPORTED_MODULE_0__.DEFAULT_IMPORT_LABEL_COLOR
           });

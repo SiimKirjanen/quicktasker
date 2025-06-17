@@ -65,6 +65,7 @@ type TrelloImport = {
   lists: TrelloImportList[];
   labels: TrelloImportLabels[];
   cards: TrelloImportCard[];
+  actions: TrelloImportAction[];
 };
 
 type TrelloImportList = {
@@ -92,6 +93,42 @@ type TrelloImportCard = {
   dateCompleted: string | null;
   cover: {
     color: string | null;
+  };
+};
+
+enum TrelloActionType {
+  ADD_CARD = "addCard",
+  UPDATE_CARD = "updateCard",
+  Comment_CARD = "commentCard",
+}
+
+type TrelloImportAction = {
+  id: string;
+  idMemberCreator: string;
+  data: {
+    card?: {
+      id: string;
+      name: string;
+    };
+    text?: string;
+    list?: {
+      id: string;
+      name: string;
+    };
+    board?: {
+      id: string;
+      name: string;
+    };
+    old?: {
+      [key: string]: unknown;
+    };
+  };
+  type: TrelloActionType;
+  date: string;
+  memberCreator: {
+    id: string;
+    username: string;
+    fullName: string;
   };
 };
 
@@ -173,6 +210,7 @@ export {
   AsanaTaskImport,
   PipedriveDealImport,
   PipelineImportSource,
+  TrelloActionType,
   TrelloImport,
   TrelloImportList,
   WPQTImport,
