@@ -7954,14 +7954,23 @@ function TabContentCommentItem({
   const {
     convertToWPTimezone
   } = (0,_hooks_useTimezone__WEBPACK_IMPORTED_MODULE_3__.useTimezone)();
+  const isUnknownAuthor = item.author_name === null && item.author_id === null;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [!isUnknownAuthor && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-center wpqt-mb-1",
         children: item.author_name
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-text-center",
         children: item.is_admin_comment ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Admin", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("QuickTasker", "quicktasker")
+      })]
+    }), isUnknownAuthor && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-text-center wpqt-mb-1",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Unknown", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-text-center",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Author not found", "quicktasker")
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       children: convertToWPTimezone(item.created_at)

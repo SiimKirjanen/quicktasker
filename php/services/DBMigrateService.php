@@ -11,6 +11,7 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
 
         public function runMigrations() {
             $this->changeTaskLocationStageIdToNullable();
+            $this->changeCommentAuthorIdToNullable();
         }
 
         private function changeTaskLocationStageIdToNullable() {
@@ -18,6 +19,14 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
 
             $wpdb->query(
                 "ALTER TABLE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " MODIFY stage_id INT(11) DEFAULT NULL"
+            );
+        }
+
+        private function changeCommentAuthorIdToNullable() {
+            global $wpdb;
+
+            $wpdb->query(
+                "ALTER TABLE " . TABLE_WP_QUICKTASKER_COMMENTS . " MODIFY author_id INT(11) DEFAULT NULL"
             );
         }
     }

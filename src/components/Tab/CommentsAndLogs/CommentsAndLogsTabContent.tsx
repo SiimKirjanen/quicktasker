@@ -142,17 +142,30 @@ function CommentsRefresh({ isLoading, refreshComemnts }: CommentsRefreshProps) {
 
 function TabContentCommentItem({ item }: { item: WPQTComment }) {
   const { convertToWPTimezone } = useTimezone();
+  const isUnknownAuthor = item.author_name === null && item.author_id === null;
 
   return (
     <>
-      <div>
-        <div className="wpqt-text-center wpqt-mb-1">{item.author_name}</div>
-        <div className="wpqt-text-center">
-          {item.is_admin_comment
-            ? __("Admin", "quicktasker")
-            : __("QuickTasker", "quicktasker")}
+      {!isUnknownAuthor && (
+        <div>
+          <div className="wpqt-text-center wpqt-mb-1">{item.author_name}</div>
+          <div className="wpqt-text-center">
+            {item.is_admin_comment
+              ? __("Admin", "quicktasker")
+              : __("QuickTasker", "quicktasker")}
+          </div>
         </div>
-      </div>
+      )}
+      {isUnknownAuthor && (
+        <div>
+          <div className="wpqt-text-center wpqt-mb-1">
+            {__("Unknown", "quicktasker")}
+          </div>
+          <div className="wpqt-text-center">
+            {__("Author not found", "quicktasker")}
+          </div>
+        </div>
+      )}
       <div>{convertToWPTimezone(item.created_at)}</div>
       <div>{item.text}</div>
     </>

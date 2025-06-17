@@ -35,6 +35,7 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
             $query = "
                 SELECT comments.*, 
                     CASE 
+                        WHEN comments.author_id IS NULL THEN NULL 
                         WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
                         ELSE users.name 
                     END AS author_name
@@ -66,7 +67,8 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
         
             $query = "
                 SELECT comments.*, 
-                    CASE 
+                    CASE
+                        WHEN comments.author_id IS NULL THEN NULL 
                         WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
                         ELSE users.name 
                     END AS author_name
@@ -127,7 +129,8 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
             $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
             $query = "
                 SELECT comments.*, 
-                    CASE 
+                    CASE
+                        WHEN comments.author_id IS NULL THEN NULL 
                         WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
                         ELSE users.name 
                     END AS author_name
