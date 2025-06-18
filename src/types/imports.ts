@@ -9,6 +9,7 @@ type WPQTImport = {
   tasks: WPQTTaskImport[];
   labels: WPQTLabelImport[];
   sourcePipelines: WPQTSourcePipeline[];
+  taskComments: WPQTTaskComment[];
 };
 
 type WPQTStageImport = {
@@ -19,6 +20,7 @@ type WPQTStageImport = {
 };
 
 type WPQTTaskImport = {
+  taskId: string;
   taskName: string;
   taskDescription: string;
   stageId: string;
@@ -41,6 +43,16 @@ type WPQTSourcePipeline = {
   id: string;
 };
 
+type WPQTTaskComment = {
+  commentId: string;
+  taskId: string;
+  createdAt: string;
+  commentText: string;
+  authorId: string;
+  isAuthorAdmin: boolean;
+  isPrivate: boolean;
+};
+
 /**
  * Trello Import Types
  * These types define the structure for importing data from Trello.
@@ -53,6 +65,7 @@ type TrelloImport = {
   lists: TrelloImportList[];
   labels: TrelloImportLabels[];
   cards: TrelloImportCard[];
+  actions: TrelloImportAction[];
 };
 
 type TrelloImportList = {
@@ -80,6 +93,42 @@ type TrelloImportCard = {
   dateCompleted: string | null;
   cover: {
     color: string | null;
+  };
+};
+
+enum TrelloActionType {
+  ADD_CARD = "addCard",
+  UPDATE_CARD = "updateCard",
+  Comment_CARD = "commentCard",
+}
+
+type TrelloImportAction = {
+  id: string;
+  idMemberCreator: string;
+  data: {
+    card?: {
+      id: string;
+      name: string;
+    };
+    text?: string;
+    list?: {
+      id: string;
+      name: string;
+    };
+    board?: {
+      id: string;
+      name: string;
+    };
+    old?: {
+      [key: string]: unknown;
+    };
+  };
+  type: TrelloActionType;
+  date: string;
+  memberCreator: {
+    id: string;
+    username: string;
+    fullName: string;
   };
 };
 
@@ -130,7 +179,7 @@ type AsanaImportSection = {
  */
 
 type PipedriveDealImport = {
-  id: number;
+  id: string;
   title: string;
   value: string;
   status: string;
@@ -161,6 +210,7 @@ export {
   AsanaTaskImport,
   PipedriveDealImport,
   PipelineImportSource,
+  TrelloActionType,
   TrelloImport,
   TrelloImportList,
   WPQTImport,

@@ -3,8 +3,8 @@ type BaseComment = {
   text: string;
   type: "task" | "user";
   type_id: string;
-  author_id: string;
-  author_name: string;
+  author_id: string | null;
+  author_name: string | null;
   created_at: string;
   subject_name?: string;
   subject_hash?: string;

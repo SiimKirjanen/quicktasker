@@ -141,7 +141,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				type ENUM('task', 'user') NOT NULL,
 				is_private tinyint(1) DEFAULT 1,
 				created_at datetime NOT NULL COMMENT 'UTC',
-				author_id int(11) NOT NULL,
+				author_id int(11) DEFAULT NULL,
 				is_admin_comment tinyint(1) DEFAULT 0,
 				PRIMARY KEY  (id),
 				INDEX type_id (type_id),

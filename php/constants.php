@@ -340,7 +340,7 @@ if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_DB_MIGRATION_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', "1");
+    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', "2");
 }
 
 /*

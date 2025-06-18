@@ -297,7 +297,6 @@ function validateQuicktaskerImport(importData: unknown): true | string {
       if (task.assignedLabels && Array.isArray(task.assignedLabels)) {
         for (let j = 0; j < task.assignedLabels.length; j++) {
           const label = task.assignedLabels[j];
-          console.log(label);
 
           if (
             label.labelId === undefined ||

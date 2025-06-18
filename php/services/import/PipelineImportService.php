@@ -10,6 +10,7 @@ use Exception;
 use WPQT\ServiceLocator;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Stage\StageService;
+use WPQT\Comment\CommentService;
 
 if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
     class PipelineImportService {
@@ -26,7 +27,8 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 ! isset($importData['pipelineDescription']) ||
                 ! isset($importData['stages']) ||
                 ! isset($importData['tasks']) ||
-                ! isset($importData['labels'])
+                ! isset($importData['labels']) ||
+                ! isset($importData['taskComments'])
             ) {
                 throw new Exception('Invalid WPQTImport structure.');
             }
@@ -45,6 +47,7 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             // Validate tasks
             foreach ($importData['tasks'] as $task) {
                 if (
+                    ! isset($task['taskId']) ||
                     ! isset($task['taskName']) ||
                     ! isset($task['taskDescription']) ||
                     ! isset($task['stageId']) ||
@@ -78,14 +81,29 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                     throw new Exception('Invalid label structure.');
                 }
             }
+
+            // Validate task public comments
+            foreach ($importData['taskComments'] as $comment) {
+                if (
+                    ! isset($comment['commentId']) ||
+                    ! isset($comment['taskId']) ||
+                    ! isset($comment['createdAt']) ||
+                    ! isset($comment['commentText']) ||
+                    ! isset($comment['isPrivate'])
+                ) {
+                    throw new Exception('Invalid comment structure.');
+                }
+            }
         }
 
         public function importPipeline($source, $importData) {
             $pipelineService = new PipelineService();
             $stageService = new StageService();
+            $commentService = new CommentService();
             $labelService = ServiceLocator::get('LabelService');
             $taskService = ServiceLocator::get('TaskService');
             $logService = ServiceLocator::get('LogService');
+        
             $currentUserId = get_current_user_id();
 
             //Step 1. Create a new pipeline
@@ -183,6 +201,31 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                     if ($newLabelId) {
                         $labelService->assignLabel($newTask->id, 'task', $newLabelId);
                     }
+                }
+
+                // Add comments to the task
+                $taskComments = isset($importData['taskComments']) ? array_filter($importData['taskComments'], function($comment) use ($task) {
+                    return $comment['taskId'] === $task['taskId'];
+                }) : [];
+
+                foreach ($taskComments as $comment) {
+                    $commentService->createComment(
+                        $newTask->id,
+                        WP_QUICKTASKER_COMMENT_TYPE_TASK,
+                        (bool) $comment['isPrivate'],
+                        $comment['commentText'],
+                        $comment['authorId'],
+                        (bool) $comment['isAuthorAdmin'],
+                        $comment['createdAt']
+                    );
+
+                    $logService->log("Comment was added to a task {$newTask->name} by {$source}", [
+                        'type' => WP_QT_LOG_TYPE_TASK,
+                        'type_id' => $newTask->id,
+                        'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                        'pipeline_id' => $newPipeline->id,
+                        'user_id' => $comment['authorId'],
+                    ]);
                 }
             }
 

@@ -4,6 +4,7 @@ import {
   AsanaImportLabel,
   AsanaImportSection,
   PipedriveDealImport,
+  TrelloActionType,
   TrelloImport,
   WPQTImport,
   WPQTLabelImport,
@@ -12,6 +13,16 @@ import {
 } from "../../types/imports";
 import { generateUUID } from "../uuid";
 
+const EMPTY_IMPORT: WPQTImport = {
+  pipelineName: "",
+  pipelineDescription: "",
+  stages: [],
+  tasks: [],
+  labels: [],
+  sourcePipelines: [],
+  taskComments: [],
+};
+
 function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
   const sourcePipelines: WPQTSourcePipeline[] = [
     {
@@ -19,6 +30,9 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
       id: importData.id,
     },
   ];
+  const commentActions = importData.actions.filter(
+    (action) => action.type === TrelloActionType.Comment_CARD,
+  );
 
   const pipelineData = {
     pipelineName: importData.name,
@@ -36,6 +50,7 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
       })),
     tasks: importData.cards.map((card) => {
       return {
+        taskId: card.id,
         taskName: card.name,
         taskDescription: "",
         stageId: card.idList,
@@ -60,6 +75,17 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
       color: label.color,
     })),
     sourcePipelines,
+    taskComments: commentActions.map((action) => {
+      return {
+        commentId: action.id,
+        taskId: action.data.card?.id ?? "",
+        createdAt: action.date,
+        commentText: action.data.text ?? "",
+        authorId: action.idMemberCreator,
+        isAuthorAdmin: false,
+        isPrivate: true,
+      };
+    }),
   };
 
   return pipelineData;
@@ -68,12 +94,7 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
 function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
   if (!importData.data || importData.data.length === 0) {
     return {
-      pipelineName: "",
-      pipelineDescription: "",
-      stages: [],
-      tasks: [],
-      labels: [],
-      sourcePipelines: [],
+      ...EMPTY_IMPORT,
     };
   }
 
@@ -129,6 +150,7 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
     const stageId = membership?.section.gid || stages[0]?.stageId || "";
 
     return {
+      taskId: task.gid,
       taskName: task.name,
       taskDescription: "",
       stageId: stageId,
@@ -155,6 +177,7 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
     tasks,
     labels,
     sourcePipelines,
+    taskComments: [],
   };
 }
 
@@ -163,12 +186,7 @@ function normalizePipedriveImport(
 ): WPQTImport {
   if (!importData) {
     return {
-      pipelineName: "",
-      pipelineDescription: "",
-      stages: [],
-      tasks: [],
-      labels: [],
-      sourcePipelines: [],
+      ...EMPTY_IMPORT,
     };
   }
 
@@ -275,6 +293,7 @@ function normalizePipedriveImport(
     }
 
     return {
+      taskId: deal.id,
       taskName: deal.title,
       taskDescription: "",
       stageId: stageInfo ? stageInfo.stageId : stages[0]?.stageId || "",
@@ -295,6 +314,7 @@ function normalizePipedriveImport(
     tasks,
     labels,
     sourcePipelines: pipelines,
+    taskComments: [],
   };
 }
 
