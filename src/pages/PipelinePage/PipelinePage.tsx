@@ -4,7 +4,8 @@ import { ImportPipelineModal } from "../../components/Modal/ImportPipelineModal/
 import { MoveTaskModal } from "../../components/Modal/MoveTaskModal/MoveTaskModal";
 import { AddPipelineModal } from "../../components/Modal/PipelineModal/AddPipelineModal/AddPipelineModal";
 import { EditPipelineModal } from "../../components/Modal/PipelineModal/EditPipelineModal/EditPipelineModal";
-import { TaskExportModal } from "../../components/Modal/TaskExportModal/TaskExportModal";
+
+import { PipelineExportModal } from "../../components/Modal/PipelineExportModal/PipelineExportModal";
 import {
   ActivePipelineContext,
   ActivePipelineContextProvider,
@@ -46,7 +47,7 @@ const PipelinePageContent = () => {
       <AddPipelineModal />
       <EditPipelineModal />
       <MoveTaskModal />
-      <TaskExportModal pipelineId={activePipeline?.id || null} />
+      <PipelineExportModal pipelineId={activePipeline?.id || null} />
       <ImportPipelineModal />
     </Page>
   );

@@ -89,4 +89,10 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export { AppContext, AppContextProvider, type Action, type State };
+export {
+  AppContext,
+  AppContextProvider,
+  initialState,
+  type Action,
+  type State,
+};

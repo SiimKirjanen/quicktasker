@@ -9,10 +9,13 @@ import { WPQTLabel } from "../../common/Label/WPQTLabel";
 import { Toggle } from "../../common/Toggle/Toggle";
 import { WPQTModal } from "../WPQTModal";
 
+import { getModalCtaBtnText } from "./export-modal-utils/export-modal-utils";
+import { PipelineExportTypeSelection } from "./PipelineExportTypeSelection/PipelineExportTypeSelection";
+
 type Props = {
   pipelineId: string | null;
 };
-function TaskExportModal({ pipelineId }: Props) {
+function PipelineExportModal({ pipelineId }: Props) {
   const {
     state: { taskExportModalOpen, taskExportModalSettings },
     modalDispatch,
@@ -40,6 +43,7 @@ function TaskExportModal({ pipelineId }: Props) {
         method="GET"
       >
         <div className="wpqt-text-lg">{__("Tasks export", "quicktasker")}</div>
+        <PipelineExportTypeSelection />
         <div className="wpqt-flex wpqt-flex-col wpqt-items-center">
           <WPQTLabel labelFor="export-search-filter">
             {__("Filter by task name and desription", "quicktasker")}
@@ -65,7 +69,7 @@ function TaskExportModal({ pipelineId }: Props) {
         </div>
 
         <WPQTButton
-          btnText={__("Open export", "quicktasker")}
+          btnText={getModalCtaBtnText(taskExportModalSettings.selectedMethod)}
           type={ButtonType.SUBMIT}
         />
         {pipelineId && (
@@ -86,4 +90,4 @@ function TaskExportModal({ pipelineId }: Props) {
   );
 }
 
-export { TaskExportModal };
+export { PipelineExportModal };

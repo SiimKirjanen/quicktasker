@@ -2,6 +2,7 @@ import { createContext, useReducer } from "@wordpress/element";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CHANGE_TASK_DONE_STATUS,
+  CHANGE_TASK_EXPORT_MODAL_METHOD,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_MOVE_TASK_MODAL,
@@ -122,6 +123,10 @@ type Action =
       payload: {
         selectedMethod: TaskExportMethods;
       };
+    }
+  | {
+      type: typeof CHANGE_TASK_EXPORT_MODAL_METHOD;
+      payload: { selectedMethod: TaskExportMethods };
     }
   | { type: typeof CLOSE_TASK_EXPORT_MODAL }
   | { type: typeof OPEN_PIPELINE_IMPORT_MODAL }

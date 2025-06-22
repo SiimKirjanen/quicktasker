@@ -42,6 +42,7 @@ function WPQTModal({ modalOpen, closeModal, children, size = "sm" }: Props) {
             <div
               className="wpqt-group wpqt-absolute wpqt-right-[-20px] wpqt-top-[-20px] wpqt-flex wpqt-h-[40px] wpqt-w-[40px] wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-rounded-full wpqt-border wpqt-border-solid wpqt-bg-white wpqt-text-qtBorder"
               onClick={closeModal}
+              data-testid="wpqt-modal-close-button"
             >
               <XMarkIcon className="wpqt-icon-blue group-hover:wpqt-icon-red wpqt-size-5" />
             </div>
