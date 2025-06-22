@@ -20,6 +20,7 @@ FILES_TO_REMOVE=(
     "convert-to-pro.sh"
     "jest.config.js"
     "jest.setup.ts"
+    "custom.d.ts"
     "node_modules"
 )
 
