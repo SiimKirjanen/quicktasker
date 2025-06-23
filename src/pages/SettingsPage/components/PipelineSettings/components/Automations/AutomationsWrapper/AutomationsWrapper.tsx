@@ -7,12 +7,9 @@ type Props = {
 };
 function AutomationsWrapper({ children }: Props) {
   const description = HAS_AUTOMATIONS
-    ? __(
-        "Set up automated processes to help manage your boards.",
-        "quicktasker",
-      )
+    ? __("Set up automated processes to help manage your board.", "quicktasker")
     : __(
-        "Set up automated processes to help manage your boards. To create more than one automation, please upgrade to the premium version.",
+        "Set up automated processes to help manage your board. To create more than one automation, please upgrade to the premium version.",
         "quicktasker",
       );
   return (

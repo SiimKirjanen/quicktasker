@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { getPipelineAutomationsRequest } from "../api/api";
 import {
@@ -89,7 +90,7 @@ const PipelineAutomationsContextProvider = ({
       });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load board automations");
+      toast.error(__("Failed to load board automations", "quicktasker"));
     } finally {
       pipelineAutomationsDispatch({
         type: SET_PIPELINE_AUTOMATIONS_LOADING,

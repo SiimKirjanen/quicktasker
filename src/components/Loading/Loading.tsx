@@ -38,7 +38,7 @@ function FullLoading() {
 }
 
 function Loading({
-  className,
+  className = "",
   ovalSize,
 }: {
   className?: string;

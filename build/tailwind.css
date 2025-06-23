@@ -1746,6 +1746,10 @@
   flex-wrap: wrap;
 }
 
+.\!wpqt-items-start {
+  align-items: flex-start !important;
+}
+
 .wpqt-items-start {
   align-items: flex-start;
 }
@@ -2121,6 +2125,14 @@
 
 .wpqt-pt-3 {
   padding-top: 0.75rem;
+}
+
+.wpqt-pl-1 {
+  padding-left: 0.25rem;
+}
+
+.wpqt-text-left {
+  text-align: left;
 }
 
 .wpqt-text-center {
