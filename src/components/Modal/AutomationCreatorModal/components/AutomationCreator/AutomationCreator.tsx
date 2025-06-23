@@ -12,7 +12,7 @@ import {
   RESET_AUTOMATION_TO_TRIGGER,
 } from "../../../../../constants";
 import { useAutomationActions } from "../../../../../hooks/actions/useAutomationActions";
-import { AutomationActionTarget } from "../../../../../pages/SettingsPage/components/PipelineSettings/components/Automations/AutomationActionTarget/AutomationActionTarget";
+
 import { PipelineAutomationsContext } from "../../../../../providers/PipelineAutomationsContextProvider";
 import {
   automationCreationInitialState,
@@ -26,6 +26,7 @@ import {
 } from "../../../../../utils/automations";
 import { WPQTCard } from "../../../../Card/Card";
 import { PremiumAd } from "../../../../PremiudAd/PremiumAd";
+import { AutomationActionTarget } from "../../../AutomationsModal/components/AutomationActionTarget/AutomationActionTarget";
 import { AutomationCreationSteps } from "./components/AutomationCreationSteps/AutomationCreationSteps";
 
 type props = {

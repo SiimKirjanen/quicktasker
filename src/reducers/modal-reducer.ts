@@ -5,6 +5,7 @@ import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_AUTOMATION_CREATOR_MODAL,
+  CLOSE_AUTOMATIONS_MODAL,
   CLOSE_MOVE_TASK_MODAL,
   CLOSE_PIPELINE_IMPORT_MODAL,
   CLOSE_PIPELINE_MODAL,
@@ -15,6 +16,7 @@ import {
   CLOSE_USER_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_AUTOMATION_CREATOR_MODAL,
+  OPEN_AUTOMATIONS_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
   OPEN_EDIT_TASK_MODAL,
   OPEN_EDIT_USER_MODAL,
@@ -29,7 +31,7 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
-import { Action, State, initialState } from "../providers/ModalContextProvider";
+import { Action, initialState, State } from "../providers/ModalContextProvider";
 import { TaskModalSettings } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
@@ -260,6 +262,15 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case CLOSE_AUTOMATION_CREATOR_MODAL: {
+      return closeModal();
+    }
+    case OPEN_AUTOMATIONS_MODAL: {
+      return {
+        ...state,
+        automationsModalOpen: true,
+      };
+    }
+    case CLOSE_AUTOMATIONS_MODAL: {
       return closeModal();
     }
     default:

@@ -1,7 +1,8 @@
 import { __ } from "@wordpress/i18n";
-import { useUser } from "../../../../../../../hooks/useUser";
-import { ActionTargetType } from "../../../../../../../types/automation";
-import { mapActionTargetTypeToUserType } from "../../../../../../../utils/user";
+
+import { useUser } from "../../../../../hooks/useUser";
+import { ActionTargetType } from "../../../../../types/automation";
+import { mapActionTargetTypeToUserType } from "../../../../../utils/user";
 
 type Props = {
   actionTargetId: string | null;

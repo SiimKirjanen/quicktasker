@@ -2,9 +2,11 @@ import { useContext } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
 import { Loading } from "../../../../../../../components/Loading/Loading";
 import { AutomationCreatorModal } from "../../../../../../../components/Modal/AutomationCreatorModal/AutomationCreatorModal";
+import { AutomationsModal } from "../../../../../../../components/Modal/AutomationsModal/AutomationsModal";
 import {
   HAS_AUTOMATIONS,
   OPEN_AUTOMATION_CREATOR_MODAL,
+  OPEN_AUTOMATIONS_MODAL,
 } from "../../../../../../../constants";
 import { useAutomations } from "../../../../../../../hooks/useAutomations";
 import { ModalContext } from "../../../../../../../providers/ModalContextProvider";
@@ -29,12 +31,7 @@ function PipelineAutomationSetting({ pipelineId }: Props) {
         description={description}
       >
         <PipelineAutomationsInfo />
-
-        {/*  <div className="wpqt-mb-4">
-          <AutomationsList />
-        </div>
-
-        <AutomationCreator pipelineId={pipelineId} /> */}
+        <AutomationsModal />
         <AutomationCreatorModal pipelineId={pipelineId} />
       </Settings>
     </PipelineAutomationsContextProvider>
@@ -55,26 +52,35 @@ function PipelineAutomationsInfo() {
     <div className="wpqt-text-left">
       <div className="wpqt-mb-2">
         {automationsLenght === 0 ? (
-          <>
+          <p>
             {__(
               "There are no automations configured for this board.",
               "quicktasker",
             )}
-          </>
+          </p>
         ) : (
-          <>
-            {sprintf(
-              /* translators: %d: number of automations */
-              __(
-                "There are %d automations configured for this board.",
-                "quicktasker",
-              ),
-              automationsLenght,
-            )}
-            <span className="wpqt-text-blue-500 hover:wpqt-underline wpqt-pl-1">
+          <div>
+            <p>
+              {sprintf(
+                /* translators: %d: number of automations */
+                __(
+                  "There are %d automations configured for this board.",
+                  "quicktasker",
+                ),
+                automationsLenght,
+              )}
+            </p>
+            <div
+              className="wpqt-cursor-pointer wpqt-text-blue-500 hover:wpqt-underline"
+              onClick={() => {
+                modalDispatch({
+                  type: OPEN_AUTOMATIONS_MODAL,
+                });
+              }}
+            >
               {__("Manage board automations", "quicktasker")}
-            </span>
-          </>
+            </div>
+          </div>
         )}
       </div>
       {canCreateNewAutomation && (

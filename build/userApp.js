@@ -1864,6 +1864,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CHANGE_USER_STATUS: () => (/* binding */ CHANGE_USER_STATUS),
 /* harmony export */   CHANGE_USER_TASK_DONE_STATUS: () => (/* binding */ CHANGE_USER_TASK_DONE_STATUS),
 /* harmony export */   CLOSE_ARCHIVE_TASK_MODAL: () => (/* binding */ CLOSE_ARCHIVE_TASK_MODAL),
+/* harmony export */   CLOSE_AUTOMATIONS_MODAL: () => (/* binding */ CLOSE_AUTOMATIONS_MODAL),
 /* harmony export */   CLOSE_AUTOMATION_CREATOR_MODAL: () => (/* binding */ CLOSE_AUTOMATION_CREATOR_MODAL),
 /* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
 /* harmony export */   CLOSE_MOVE_TASK_MODAL: () => (/* binding */ CLOSE_MOVE_TASK_MODAL),
@@ -1891,6 +1892,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   INIT_APP_STATE: () => (/* binding */ INIT_APP_STATE),
 /* harmony export */   MAX_UPLOAD_FILE_SIZE: () => (/* binding */ MAX_UPLOAD_FILE_SIZE),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
+/* harmony export */   OPEN_AUTOMATIONS_MODAL: () => (/* binding */ OPEN_AUTOMATIONS_MODAL),
 /* harmony export */   OPEN_AUTOMATION_CREATOR_MODAL: () => (/* binding */ OPEN_AUTOMATION_CREATOR_MODAL),
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
@@ -2045,6 +2047,8 @@ const OPEN_PIPELINE_IMPORT_MODAL = "OPEN_PIPELINE_IMPORT_MODAL";
 const CLOSE_PIPELINE_IMPORT_MODAL = "CLOSE_PIPELINE_IMPORT_MODAL";
 const OPEN_AUTOMATION_CREATOR_MODAL = "OPEN_AUTOMATION_CREATOR_MODAL";
 const CLOSE_AUTOMATION_CREATOR_MODAL = "CLOSE_AUTOMATION_CREATOR_MODAL";
+const OPEN_AUTOMATIONS_MODAL = "OPEN_AUTOMATIONS_MODAL";
+const CLOSE_AUTOMATIONS_MODAL = "CLOSE_AUTOMATIONS_MODAL";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";
@@ -2125,7 +2129,7 @@ const REMOVE_UPLOAD = "REMOVE_UPLOAD";
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 //Misc
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
-const HAS_AUTOMATIONS = false;
+const HAS_AUTOMATIONS = true;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
 //Styles
 const DEFAULT_TASK_FOCUS_COLOR = "#ffffff";

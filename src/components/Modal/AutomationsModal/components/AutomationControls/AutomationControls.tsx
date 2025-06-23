@@ -1,17 +1,17 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTCard } from "../../../../../../../components/Card/Card";
-import { WPQTIconButton } from "../../../../../../../components/common/Button/Button";
-import { Toggle } from "../../../../../../../components/common/Toggle/Toggle";
-import { Loading } from "../../../../../../../components/Loading/Loading";
 import {
   REMOVE_PIPELINE_AUTOMATION,
   UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS,
-} from "../../../../../../../constants";
-import { useAutomationActions } from "../../../../../../../hooks/actions/useAutomationActions";
-import { PipelineAutomationsContext } from "../../../../../../../providers/PipelineAutomationsContextProvider";
-import { Automation } from "../../../../../../../types/automation";
+} from "../../../../../constants";
+import { useAutomationActions } from "../../../../../hooks/actions/useAutomationActions";
+import { PipelineAutomationsContext } from "../../../../../providers/PipelineAutomationsContextProvider";
+import { Automation } from "../../../../../types/automation";
+import { WPQTCard } from "../../../../Card/Card";
+import { Loading } from "../../../../Loading/Loading";
+import { WPQTIconButton } from "../../../../common/Button/Button";
+import { Toggle } from "../../../../common/Toggle/Toggle";
 
 type Props = {
   automation: Automation;

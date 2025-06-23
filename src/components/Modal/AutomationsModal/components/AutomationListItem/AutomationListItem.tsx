@@ -1,12 +1,13 @@
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { __ } from "@wordpress/i18n";
-import { WPQTCard } from "../../../../../../../components/Card/Card";
-import { Automation } from "../../../../../../../types/automation";
+
+import { Automation } from "../../../../../types/automation";
 import {
   automationActionStrings,
   automationTargetStrings,
   automationTriggerStrings,
-} from "../../../../../../../utils/automations";
+} from "../../../../../utils/automations";
+import { WPQTCard } from "../../../../Card/Card";
 import { AutomationActionTarget } from "../AutomationActionTarget/AutomationActionTarget";
 import { AutomationControls } from "../AutomationControls/AutomationControls";
 

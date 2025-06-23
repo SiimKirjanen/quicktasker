@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { useUser } from "../../../../../../../hooks/useUser";
-import { ActionTargetType } from "../../../../../../../types/automation";
+
+import { useUser } from "../../../../../hooks/useUser";
+import { ActionTargetType } from "../../../../../types/automation";
 import { AutomationActionTarget } from "./AutomationActionTarget";
 
 // Mock the useUser hook
