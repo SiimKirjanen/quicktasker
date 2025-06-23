@@ -17,12 +17,17 @@ enum WoocommerceOrderAutomationTrigger {
   WOOCOMMERCE_ORDER_ADDED = "woocommerce-order-added",
 }
 
+enum SeatRegAutomationTrigger {
+  SEATREG_BOOKING_CREATED = "seatreg-booking-created",
+}
+
 enum TargetType {
   PIPELINE = "pipeline",
   Stage = "stage",
   Task = "task",
   quicktasker = "quicktasker",
   WOOCOMMERCE_ORDER = "woocommerce-order",
+  SEATREG_BOOKING = "seatreg-booking",
 }
 
 enum ActionTargetType {
@@ -50,7 +55,8 @@ enum AutomationAction {
 
 type AllAutomationTriggers =
   | AutomationTrigger
-  | WoocommerceOrderAutomationTrigger;
+  | WoocommerceOrderAutomationTrigger
+  | SeatRegAutomationTrigger;
 
 type AutomationActionType = {
   id: AutomationAction;
@@ -93,6 +99,7 @@ export {
   ActionTargetType,
   AutomationAction,
   AutomationTrigger,
+  SeatRegAutomationTrigger,
   TargetType,
   WoocommerceOrderAutomationTrigger,
   type AllAutomationTriggers,

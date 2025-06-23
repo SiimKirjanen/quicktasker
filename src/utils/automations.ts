@@ -6,6 +6,7 @@ import {
   AutomationActionType,
   AutomationFromServer,
   AutomationTrigger,
+  SeatRegAutomationTrigger,
   TargetType,
   WoocommerceOrderAutomationTrigger,
 } from "../types/automation";
@@ -58,6 +59,7 @@ const automationTargetStrings: { [key in TargetType]: string } = {
   [TargetType.PIPELINE]: __("Board", "quicktasker"),
   [TargetType.quicktasker]: "Quicktasker",
   [TargetType.WOOCOMMERCE_ORDER]: __("WooCommerce Order", "quicktasker"),
+  [TargetType.SEATREG_BOOKING]: __("SeatReg Booking", "quicktasker"),
 };
 
 const automationTriggerStrings: { [key in AllAutomationTriggers]: string } = {
@@ -85,6 +87,10 @@ const automationTriggerStrings: { [key in AllAutomationTriggers]: string } = {
   ),
   [WoocommerceOrderAutomationTrigger.WOOCOMMERCE_ORDER_ADDED]: __(
     "Order added",
+    "quicktasker",
+  ),
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_CREATED]: __(
+    "Booking created",
     "quicktasker",
   ),
 };
@@ -203,9 +209,20 @@ const woocommerceOrderAutomations: {
   ],
 };
 
+const seatregBookingAutomations: {
+  [key in SeatRegAutomationTrigger]: AutomationActionType[];
+} = {
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_CREATED]: [
+    {
+      id: AutomationAction.CREATE_TASK,
+    },
+  ],
+};
+
 const availableAutomations = {
   [TargetType.Task]: taskAutomations,
   [TargetType.WOOCOMMERCE_ORDER]: woocommerceOrderAutomations,
+  [TargetType.SEATREG_BOOKING]: seatregBookingAutomations,
 };
 
 const convertAutomationsFromServer = (

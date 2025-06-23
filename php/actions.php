@@ -138,6 +138,10 @@ if ( ! function_exists( 'quicktasker_handle_woocommerce_new_order' ) ) {
 			return;
 		}
 
+		if (!function_exists('wc_get_order')) {
+			return;
+		}
+
 		$order = wc_get_order($order_id);
 
 		if (!$order) {
@@ -160,6 +164,51 @@ if ( ! function_exists( 'quicktasker_handle_woocommerce_new_order' ) ) {
 					]
 				);
 			}
+		}
+	}
+}
+
+add_action('seatreg_action_booking_submitted', 'quicktasker_handle_seatreg_booking_submitted', 10, 1);
+if ( ! function_exists( 'quicktasker_handle_seatreg_booking_submitted' ) ) {
+	function quicktasker_handle_seatreg_booking_submitted($bookingId) {
+		if ( !$bookingId ) {
+			return;
+		}
+
+		if ( !class_exists('SeatregBookingRepository') || !class_exists('SeatregRegistrationRepository') ) {
+			return;
+		}
+		
+		$relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomationsByTrigger(
+			WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED
+		);
+
+		if ( !$relatedAutomations ) {
+			return;
+		}
+
+		$bookingRepository = new SeatregBookingRepository();
+		$registrationRepository = new SeatregRegistrationRepository();
+	
+		$seatregBookings = $bookingRepository->getBookingsById($bookingId);
+
+		if ( !$seatregBookings ) {
+			return;
+		}
+
+		$registration = $registrationRepository->getRegistrationByCode( $seatregBookings[0]->registration_code );
+
+		foreach ( $relatedAutomations as $automation ) {
+			ServiceLocator::get('AutomationService')->handleAutomations(
+				$automation->pipeline_id, 
+				null, 
+				WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING, 
+				WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED,
+				(object)[
+					'seatregBookings' => $seatregBookings,
+					'registration' => $registration
+				]
+			);
 		}
 	}
 }

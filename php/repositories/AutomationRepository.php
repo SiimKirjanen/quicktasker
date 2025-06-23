@@ -144,10 +144,12 @@ if ( ! class_exists( 'WPQT\Automation\AutomationRepository' ) ) {
         }
 
         /**
-         * Retrieves the automation action target ID for a given automation.
+         * Retrieves automations based on a specific trigger.
          *
-         * @param object $automation The automation object containing details.
-         * @return int|null The automation action target ID if found, null otherwise.
+         * This function queries the database to fetch all automation records that match the specified trigger.
+         *
+         * @param string $trigger The automation trigger to filter by.
+         * @return array|null An array of automation objects if found, null otherwise.
          */
         public function getAutomationsByTrigger($trigger) {
             global $wpdb;

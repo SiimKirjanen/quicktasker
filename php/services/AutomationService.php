@@ -425,7 +425,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     ));
 
                     if ( !$createdTask ) {
-                        throw new \Exception('Failed to get new task.');
+                        throw new \Exception('Failed to create a new task.');
                     }
 
                     return (object)[
@@ -437,6 +437,41 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                                 'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
                                 'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
 
+                            ]
+                        ]
+                    ];
+                }
+            }
+
+            if ( $this->isSeatregNewBookingTrigger($automation) ) {
+                if ( $this->isTaskCreateAction($automation) ) {
+                    $stageToCreateTask = ServiceLocator::get('StageRepository')->getFirstStage( $automation->pipeline_id );
+                    $seatregBookings = $data->seatregBookings; 
+                    $registration = $data->registration;
+                    $bookingId = $seatregBookings[0]->booking_id;
+
+                    if ( $stageToCreateTask === null ) {
+                        throw new \Exception('Pipeline stage not found.');
+                    }
+
+                    $createdTask = ServiceLocator::get('TaskService')->createTask($stageToCreateTask->id, array(
+                        'name' => $registration->registration_name . ' booking',
+                        'description' => $bookingId,
+                        'pipelineId' => $automation->pipeline_id,
+                    ));
+
+                    if ( !$createdTask ) {
+                        throw new \Exception('Failed to create a new task.');
+                    }
+
+                    return (object)[
+                        'success' => true,
+                        'rerunTriggers' => [
+                            (object)[
+                                'boardId' => $automation->pipeline_id,
+                                'targetId' => $createdTask->id,
+                                'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                                'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
                             ]
                         ]
                     ];
@@ -669,6 +704,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isWoocommerceNewOrderTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED;
+        }
+
+        /**
+         * Checks if the automation is triggered by a new booking in Seatreg.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool Returns true if the automation trigger is for a new Seatreg booking, false otherwise.
+         */
+        private function isSeatregNewBookingTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED;
         }
 
         /**
