@@ -4,7 +4,7 @@ import { Loading } from "../../../../../../components/Loading/Loading";
 import { Pipeline } from "../../../../../../types/pipeline";
 import { PipelineSettings } from "../../../../../../types/pipeline-settings";
 import { convertPipelineSettingsFromServer } from "../../../../../../utils/pipeline-settings";
-import { PipelineAutomations } from "../Automations/PipelineAutomations/PipelineAutomations";
+import { PipelineAutomationSetting } from "../Automations/PipelineAutomationSettings/PipelineAutomationSetting";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
 
 type Props = {
@@ -47,7 +47,7 @@ function PipelineSettings({ pipeline }: Props) {
           settings.allow_only_last_stage_task_done
         }
       />
-      <PipelineAutomations pipelineId={pipeline.id} />
+      <PipelineAutomationSetting pipelineId={pipeline.id} />
     </div>
   );
 }

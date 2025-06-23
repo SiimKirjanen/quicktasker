@@ -5,6 +5,8 @@ import {
   CHANGE_TASK_EXPORT_MODAL_METHOD,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
+  CLOSE_AUTOMATION_CREATOR_MODAL,
+  CLOSE_AUTOMATIONS_MODAL,
   CLOSE_MOVE_TASK_MODAL,
   CLOSE_PIPELINE_IMPORT_MODAL,
   CLOSE_PIPELINE_MODAL,
@@ -14,6 +16,8 @@ import {
   CLOSE_TASK_MODAL,
   CLOSE_USER_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
+  OPEN_AUTOMATION_CREATOR_MODAL,
+  OPEN_AUTOMATIONS_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
   OPEN_EDIT_TASK_MODAL,
   OPEN_EDIT_USER_MODAL,
@@ -59,6 +63,8 @@ const initialState: State = {
     selectedMethod: TaskExportMethods.PDF,
   },
   pipelineImportModalOpen: false,
+  automationCreatorModalOpen: false,
+  automationsModalOpen: false,
 };
 
 type State = {
@@ -82,6 +88,8 @@ type State = {
   taskExportModalOpen: boolean;
   taskExportModalSettings: TaskExportModalSettings;
   pipelineImportModalOpen: boolean;
+  automationCreatorModalOpen: boolean;
+  automationsModalOpen: boolean;
 };
 
 type Action =
@@ -130,7 +138,11 @@ type Action =
     }
   | { type: typeof CLOSE_TASK_EXPORT_MODAL }
   | { type: typeof OPEN_PIPELINE_IMPORT_MODAL }
-  | { type: typeof CLOSE_PIPELINE_IMPORT_MODAL };
+  | { type: typeof CLOSE_PIPELINE_IMPORT_MODAL }
+  | { type: typeof OPEN_AUTOMATION_CREATOR_MODAL }
+  | { type: typeof CLOSE_AUTOMATION_CREATOR_MODAL }
+  | { type: typeof OPEN_AUTOMATIONS_MODAL }
+  | { type: typeof CLOSE_AUTOMATIONS_MODAL };
 
 type ModalDispatch = (action: Action) => void;
 
