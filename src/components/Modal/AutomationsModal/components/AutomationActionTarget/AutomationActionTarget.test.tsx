@@ -5,7 +5,7 @@ import { ActionTargetType } from "../../../../../types/automation";
 import { AutomationActionTarget } from "./AutomationActionTarget";
 
 // Mock the useUser hook
-jest.mock("../../../../../../../hooks/useUser");
+jest.mock("../../../../../hooks/useUser");
 
 const mockUseUser = useUser as jest.MockedFunction<typeof useUser>;
 
