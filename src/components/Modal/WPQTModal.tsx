@@ -54,11 +54,17 @@ function WPQTModal({ modalOpen, closeModal, children, size = "sm" }: Props) {
   );
 }
 
-function WPQTModalTitle({ children }: { children: React.ReactNode }) {
+function WPQTModalTitle({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <DialogTitle
       as="div"
-      className="wpqt-text-base/7 wpqt-font-medium wpqt-text-black"
+      className={`wpqt-text-base wpqt-font-semibold wpqt-text-black wpqt-mb-2 ${className}`}
     >
       {children}
     </DialogTitle>

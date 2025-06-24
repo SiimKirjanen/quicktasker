@@ -93,6 +93,10 @@ const automationTriggerStrings: { [key in AllAutomationTriggers]: string } = {
     "Booking created",
     "quicktasker",
   ),
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_APPROVED]: __(
+    "Booking approved",
+    "quicktasker",
+  ),
 };
 
 const woocommerceOrderAutomationTriggerStrings: {
@@ -213,6 +217,11 @@ const seatregBookingAutomations: {
   [key in SeatRegAutomationTrigger]: AutomationActionType[];
 } = {
   [SeatRegAutomationTrigger.SEATREG_BOOKING_CREATED]: [
+    {
+      id: AutomationAction.CREATE_TASK,
+    },
+  ],
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_APPROVED]: [
     {
       id: AutomationAction.CREATE_TASK,
     },

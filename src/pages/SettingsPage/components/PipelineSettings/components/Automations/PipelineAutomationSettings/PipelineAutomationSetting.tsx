@@ -70,29 +70,33 @@ function PipelineAutomationsInfo() {
                 automationsLenght,
               )}
             </p>
-            <div
-              className="wpqt-cursor-pointer wpqt-text-blue-500 hover:wpqt-underline"
-              onClick={() => {
-                modalDispatch({
-                  type: OPEN_AUTOMATIONS_MODAL,
-                });
-              }}
-            >
-              {__("Manage board automations", "quicktasker")}
+            <div>
+              <span
+                className="wpqt-cursor-pointer wpqt-text-blue-500 hover:wpqt-underline"
+                onClick={() => {
+                  modalDispatch({
+                    type: OPEN_AUTOMATIONS_MODAL,
+                  });
+                }}
+              >
+                {__("Manage board automations", "quicktasker")}
+              </span>
             </div>
           </div>
         )}
       </div>
       {canCreateNewAutomation && (
-        <div
-          className="wpqt-cursor-pointer wpqt-text-blue-500 hover:wpqt-underline wpqt-flex"
-          onClick={() => {
-            modalDispatch({
-              type: OPEN_AUTOMATION_CREATOR_MODAL,
-            });
-          }}
-        >
-          {__("Create a new automation", "quicktasker")}
+        <div>
+          <span
+            className="wpqt-cursor-pointer wpqt-text-blue-500 hover:wpqt-underline"
+            onClick={() => {
+              modalDispatch({
+                type: OPEN_AUTOMATION_CREATOR_MODAL,
+              });
+            }}
+          >
+            {__("Create a new automation", "quicktasker")}
+          </span>
         </div>
       )}
     </div>

@@ -252,7 +252,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				pipeline_id int(11) NOT NULL,
 				target_id int(11) DEFAULT NULL,
 				target_type ENUM('stage', 'task', 'quicktasker', 'pipeline', 'woocommerce-order', 'seatreg-booking') NOT NULL,
-				automation_trigger ENUM('task-done', 'task-created', 'task-not-done', 'task-deleted', 'task-assigned', 'task-unassigned', 'task-public-comment-added', 'task-private-comment-added', 'task-attachment-added', 'task-attachment-deleted', 'woocommerce-order-added', 'seatreg-booking-created') NOT NULL,
+				automation_trigger ENUM('task-done', 'task-created', 'task-not-done', 'task-deleted', 'task-assigned', 'task-unassigned', 'task-public-comment-added', 'task-private-comment-added', 'task-attachment-added', 'task-attachment-deleted', 'woocommerce-order-added', 'seatreg-booking-created', 'seatreg-booking-approved') NOT NULL,
 				automation_action ENUM('archive-task', 'assign-user', 'new-entity-email', 'deleted-entity-email', 'task-assigned-email', 'task-unassigned-email', 'task-public-comment-added-email', 'task-private-comment-added-email', 'task-attachment-added-email', 'task-attachment-deleted-email', 'create-task', 'send-slack-message') NOT NULL,
 				automation_action_target_id int(11) DEFAULT NULL,
 				automation_action_target_type ENUM('stage', 'task', 'quicktasker', 'pipeline', 'wp-user') DEFAULT NULL,

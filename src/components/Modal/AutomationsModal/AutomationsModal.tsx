@@ -1,7 +1,8 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { CLOSE_AUTOMATIONS_MODAL } from "../../../constants";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { WPQTModal } from "../WPQTModal";
+import { WPQTModal, WPQTModalTitle } from "../WPQTModal";
 import { AutomationsList } from "./components/AutomationsList/AutomationsList";
 
 function AutomationsModal() {
@@ -18,6 +19,9 @@ function AutomationsModal() {
       }}
       size="lg"
     >
+      <WPQTModalTitle className="wpqt-text-center">
+        {__("Manage board automations", "quicktasker")}
+      </WPQTModalTitle>
       <AutomationsList />
     </WPQTModal>
   );
