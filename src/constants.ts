@@ -162,7 +162,7 @@ const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
 
 //Misc
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
-const HAS_AUTOMATIONS = true;
+const HAS_AUTOMATIONS = false;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
 
 //Styles

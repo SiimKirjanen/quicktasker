@@ -1,7 +1,8 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { CLOSE_AUTOMATION_CREATOR_MODAL } from "../../../constants";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { WPQTModal } from "../WPQTModal";
+import { WPQTModal, WPQTModalTitle } from "../WPQTModal";
 import { AutomationCreator } from "./components/AutomationCreator/AutomationCreator";
 
 type Props = {
@@ -21,6 +22,9 @@ function AutomationCreatorModal({ pipelineId }: Props) {
       }}
       size="lg"
     >
+      <WPQTModalTitle className="wpqt-text-center">
+        {__("Create a new automation", "quicktasker")}
+      </WPQTModalTitle>
       <AutomationCreator pipelineId={pipelineId} />
     </WPQTModal>
   );
