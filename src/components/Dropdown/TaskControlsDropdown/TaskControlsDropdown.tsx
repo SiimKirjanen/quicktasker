@@ -18,6 +18,7 @@ import { ActivePipelineContext } from "../../../providers/ActivePipelineContextP
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
+import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
@@ -101,20 +102,30 @@ function TaskControlsDropdown({ task }: Props) {
         }}
       />
       {isUserAllowedToDelete && (
-        <WPQTDropdownItem
-          text={__("Delete task", "quicktasker")}
-          icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-          loading={deleteLoading}
-          onClick={async (e: React.MouseEvent) => {
-            e.stopPropagation();
+        <WPQTConfirmTooltip
+          onConfirm={async () => {
             setDeleteLoading(true);
             await deleteTask(task.id, () => {
               fetchAndSetPipelineData(activePipeline!.id);
             });
             setDeleteLoading(false);
           }}
-          className="!wpqt-mb-0"
-        />
+          confirmMessage={__(
+            "Are you sure you want to delete this task?",
+            "quicktasker",
+          )}
+          confirmButtonText={__("Delete", "quicktasker")}
+        >
+          {({ onClick }) => (
+            <WPQTDropdownItem
+              text={__("Delete task", "quicktasker")}
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+              loading={deleteLoading}
+              onClick={onClick}
+              className="!wpqt-mb-0"
+            />
+          )}
+        </WPQTConfirmTooltip>
       )}
     </WPQTDropdown>
   );
