@@ -1255,6 +1255,10 @@
   z-index: 20;
 }
 
+.wpqt-z-50 {
+  z-index: 50;
+}
+
 .wpqt-z-9999 {
   z-index: 9999;
 }
@@ -1620,6 +1624,10 @@
   transform-origin: top;
 }
 
+.wpqt-origin-top-right {
+  transform-origin: top right;
+}
+
 @keyframes wpqt-bellShake {
   0% {
     transform: rotate(0deg);
@@ -1820,6 +1828,12 @@
 
 .wpqt-gap-y-4 {
   row-gap: 1rem;
+}
+
+.wpqt-space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .wpqt-self-start {
@@ -2510,10 +2524,6 @@
 
 .wpqt-transform-y-center {
   transform: translateY(-50%);
-}
-
-.wpqt-transform-x-center {
-  transform: translateX(-50%);
 }
 
 .wpqt-transform-center {

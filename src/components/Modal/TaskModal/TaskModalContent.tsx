@@ -44,6 +44,7 @@ import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { Toggle } from "../../common/Toggle/Toggle";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
+import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { LoadingOval } from "../../Loading/Loading";
@@ -280,11 +281,12 @@ const TaskModalContent = forwardRef(
               />
             )}
             {!isTaskArchived && (
-              <WPQTIconButton
-                icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-5" />}
-                text={__("Archive task", "quicktasker")}
-                loading={archiveLoading}
-                onClick={() => {
+              <WPQTConfirmTooltip
+                confirmMessage={__(
+                  "Are you sure you want to archive this task?",
+                  "quicktasker",
+                )}
+                onConfirm={() => {
                   setArchiveLoading(true);
                   archiveTask(taskToEdit.id, () => {
                     modalDispatch({ type: CLOSE_TASK_MODAL });
@@ -292,21 +294,38 @@ const TaskModalContent = forwardRef(
                     setArchiveLoading(false);
                   });
                 }}
-              />
+              >
+                {({ onClick }) => (
+                  <WPQTIconButton
+                    icon={
+                      <ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-5" />
+                    }
+                    text={__("Archive task", "quicktasker")}
+                    loading={archiveLoading}
+                    onClick={onClick}
+                  />
+                )}
+              </WPQTConfirmTooltip>
             )}
 
             {isUserAllowedToDelete && (
-              <WPQTIconButton
-                icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-                text={__("Delete task", "quicktasker")}
-                loading={isDeletingTask}
-                onClick={async () => {
+              <WPQTConfirmTooltip
+                onConfirm={async () => {
                   setIsDeletingTask(true);
                   await deleteTask(taskToEdit);
                   modalDispatch({ type: CLOSE_TASK_MODAL });
                   setIsDeletingTask(false);
                 }}
-              />
+              >
+                {({ onClick }) => (
+                  <WPQTIconButton
+                    icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+                    text={__("Delete task", "quicktasker")}
+                    loading={isDeletingTask}
+                    onClick={onClick}
+                  />
+                )}
+              </WPQTConfirmTooltip>
             )}
           </div>
         </div>

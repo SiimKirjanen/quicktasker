@@ -22,6 +22,7 @@ import { ActivePipelineContext } from "../../../providers/ActivePipelineContextP
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Stage, StageChangeDirection } from "../../../types/stage";
+import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
@@ -137,19 +138,29 @@ function StageControlsDropdown({ stage }: Props) {
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openStageEditModal}
       />
-      <WPQTDropdownItem
-        text={__("Archive all stage tasks", "quicktasker")}
-        icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
-        loading={archiveLoading}
-        onClick={archiveAllStageTasks}
-        disabled={stageTasksLenght === 0}
-        id={`item-dropdown-${stage.id}-archive`}
-        tooltipText={
-          stageTasksLenght === 0
-            ? __("No tasks to archive on the stage", "quicktasker")
-            : undefined
-        }
-      />
+      <WPQTConfirmTooltip
+        onConfirm={archiveAllStageTasks}
+        confirmMessage={__(
+          "Are you sure you want to archive all tasks on the stage?",
+          "quicktasker",
+        )}
+      >
+        {({ onClick }) => (
+          <WPQTDropdownItem
+            text={__("Archive all stage tasks", "quicktasker")}
+            icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
+            loading={archiveLoading}
+            onClick={onClick}
+            disabled={stageTasksLenght === 0}
+            id={`item-dropdown-${stage.id}-archive`}
+            tooltipText={
+              stageTasksLenght === 0
+                ? __("No tasks to archive on the stage", "quicktasker")
+                : undefined
+            }
+          />
+        )}
+      </WPQTConfirmTooltip>
 
       {isUserAllowedToDelete && (
         <WPQTDropdownItem

@@ -25,6 +25,7 @@ import { WPQTIconButton } from "../../../common/Button/Button";
 import { WPQTInput } from "../../../common/Input/Input";
 import { WPQTTextarea } from "../../../common/TextArea/TextArea";
 import { CustomFieldsInModalWrap } from "../../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
+import { WPQTConfirmTooltip } from "../../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
   WPQTModalField,
   WPQTModalFieldSet,
@@ -139,12 +140,22 @@ const EditPipelineModalContent = forwardRef(
             </div>
           </div>
           <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
-            <WPQTIconButton
-              icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-              loading={isDeletingBoard}
-              text={__("Delete board", "quicktasker")}
-              onClick={onDeletePipeline}
-            />
+            <WPQTConfirmTooltip
+              onConfirm={onDeletePipeline}
+              confirmMessage={__(
+                "Are you sure you want to delete this board?",
+                "quicktasker",
+              )}
+            >
+              {({ onClick }) => (
+                <WPQTIconButton
+                  icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+                  loading={isDeletingBoard}
+                  text={__("Delete board", "quicktasker")}
+                  onClick={onClick}
+                />
+              )}
+            </WPQTConfirmTooltip>
           </div>
         </div>
         <WPQTModalFooter

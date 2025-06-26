@@ -99,7 +99,7 @@ function WPQTDropdownItem({
           <LoadingOval
             width="16"
             height="16"
-            className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-y-center wpqt-transform-x-center"
+            className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
           />
         )}
         <WPQTTooltip id={id} />

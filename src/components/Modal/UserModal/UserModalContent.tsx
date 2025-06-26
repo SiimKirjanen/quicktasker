@@ -30,6 +30,7 @@ import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
+import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
 import {
   WPQTModalField,
@@ -218,11 +219,12 @@ const UserModalContent = forwardRef(function UserModalContent(
             />
           )}
           {isUserAllowedToDelete && (
-            <WPQTIconButton
-              icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-              text={__("Delete user", "quicktasker")}
-              loading={isDeleteLoading}
-              onClick={async () => {
+            <WPQTConfirmTooltip
+              confirmMessage={__(
+                "Are you sure you want to delete this user?",
+                "quicktasker",
+              )}
+              onConfirm={async () => {
                 setIsDeleteLoading(true);
                 await deleteUser(userToEdit!.id, (userId) => {
                   userDispatch({
@@ -235,7 +237,18 @@ const UserModalContent = forwardRef(function UserModalContent(
                 });
                 setIsDeleteLoading(false);
               }}
-            />
+              containerClassName="wpqt-flex"
+            >
+              {({ onClick }) => (
+                <WPQTIconButton
+                  icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+                  text={__("Delete user", "quicktasker")}
+                  loading={isDeleteLoading}
+                  onClick={onClick}
+                  className="wpqt-w-full"
+                />
+              )}
+            </WPQTConfirmTooltip>
           )}
         </div>
       </div>
