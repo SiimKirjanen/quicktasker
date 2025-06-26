@@ -17,24 +17,57 @@ const useTaskActions = () => {
   const { handleExecutedAutomations } = useAutomationActions();
   const { displayErrorMessages } = useErrorHandler();
 
-  const deleteTask = async (taskId: string, callback?: () => void) => {
+  const deleteTask = async (
+    taskId: string,
+    callback?: (args: {
+      success: boolean;
+      taskId: string;
+    }) => Promise<void> | void,
+  ) => {
     try {
       const response = await deleteTaskRequest(taskId);
-      if (callback) callback();
+
+      if (callback) {
+        callback({
+          success: true,
+          taskId,
+        });
+      }
       toast.success(__("Task deleted", "quicktasker"));
       handleExecutedAutomations(response.data.executedAutomations, taskId);
     } catch (error) {
+      if (callback) {
+        callback({
+          success: false,
+          taskId,
+        });
+      }
       console.error(error);
       toast.error(__("Failed to delete a task", "quicktasker"));
     }
   };
 
-  const archiveTask = async (taskId: string, callback?: () => void) => {
+  const archiveTask = async (
+    taskId: string,
+    callback?: (args: { success: boolean; taskId: string }) => void,
+  ) => {
     try {
       await archiveTaskRequest(taskId);
-      if (callback) callback();
+      if (callback) {
+        callback({
+          success: true,
+          taskId,
+        });
+      }
+
       toast.success(__("Task archived", "quicktasker"));
     } catch (error) {
+      if (callback) {
+        callback({
+          success: false,
+          taskId,
+        });
+      }
       console.error(error);
       toast.error(__("Failed to archive a task", "quicktasker"));
     }

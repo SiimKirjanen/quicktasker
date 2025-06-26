@@ -12,6 +12,7 @@ import {
   OPEN_EDIT_TASK_MODAL,
   OPEN_MOVE_TASK_MODAL,
   OPEN_TASK_COLOR_MODAL,
+  PIPELINE_REMOVE_TASK,
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
@@ -31,15 +32,15 @@ type Props = {
 
 function TaskControlsDropdown({ task }: Props) {
   const { modalDispatch } = useContext(ModalContext);
-  const {
-    state: { activePipeline },
-    fetchAndSetPipelineData,
-  } = useContext(ActivePipelineContext);
+  const { dispatch: activePipelineDispatch } = useContext(
+    ActivePipelineContext,
+  );
   const {
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
   const { deleteTask, archiveTask } = useTaskActions();
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [archiveLoading, setArchiveLoading] = useState(false);
 
   const openTaskEditModal = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -70,16 +71,34 @@ function TaskControlsDropdown({ task }: Props) {
         />
       )}
     >
-      <WPQTDropdownItem
-        text={__("Archive task", "quicktasker")}
-        icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
-        onClick={(e: React.MouseEvent) => {
-          e.stopPropagation();
-          archiveTask(task.id, () => {
-            fetchAndSetPipelineData(activePipeline!.id);
+      <WPQTConfirmTooltip
+        confirmMessage={__(
+          "Are you sure you want to archive this task?",
+          "quicktasker",
+        )}
+        onConfirm={async () => {
+          setArchiveLoading(true);
+          archiveTask(task.id, ({ success }) => {
+            if (success) {
+              activePipelineDispatch({
+                type: PIPELINE_REMOVE_TASK,
+                payload: task.id,
+              });
+            }
+            setArchiveLoading(false);
           });
         }}
-      />
+      >
+        {({ onClick }) => (
+          <WPQTDropdownItem
+            text={__("Archive task", "quicktasker")}
+            icon={<ArchiveBoxIcon className="wpqt-icon-blue wpqt-size-4" />}
+            onClick={onClick}
+            loading={archiveLoading}
+          />
+        )}
+      </WPQTConfirmTooltip>
+
       <WPQTDropdownItem
         text={__("Edit task", "quicktasker")}
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
@@ -105,10 +124,15 @@ function TaskControlsDropdown({ task }: Props) {
         <WPQTConfirmTooltip
           onConfirm={async () => {
             setDeleteLoading(true);
-            await deleteTask(task.id, () => {
-              fetchAndSetPipelineData(activePipeline!.id);
+            await deleteTask(task.id, ({ success }) => {
+              if (success) {
+                activePipelineDispatch({
+                  type: PIPELINE_REMOVE_TASK,
+                  payload: task.id,
+                });
+              }
+              setDeleteLoading(false);
             });
-            setDeleteLoading(false);
           }}
           confirmMessage={__(
             "Are you sure you want to delete this task?",

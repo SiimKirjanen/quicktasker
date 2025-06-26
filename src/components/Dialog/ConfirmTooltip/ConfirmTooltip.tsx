@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import type { ReactNode } from "react";
-import { WPQTButton } from "../../common/Button/Button";
+import { ButtonStyleType, WPQTButton } from "../../common/Button/Button";
 
+type TooltipPosition = "top" | "right" | "bottom" | "left";
 type Props = {
   onConfirm: () => void | Promise<void>;
   confirmMessage?: string;
   confirmButtonText?: string;
   cancelButtonText?: string;
   children: (props: { onClick: (e: React.MouseEvent) => void }) => ReactNode;
+  position?: TooltipPosition;
+  containerClassName?: string;
 };
 
 function WPQTConfirmTooltip({
@@ -17,21 +20,51 @@ function WPQTConfirmTooltip({
   confirmButtonText = __("Yes", "quicktasker"),
   cancelButtonText = __("No", "quicktasker"),
   children,
+  position = "bottom",
+  containerClassName = "",
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const tooltipWidth = 224;
 
   useEffect(() => {
     if (isOpen && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      setTooltipPosition({
-        top: rect.bottom,
-        left: rect.right - 224, // 224px = width of tooltip (w-56)
-      });
+      const tooltipHeight = 100; // Approximate height, adjust as needed
+      const spacing = 8; // Gap between trigger and tooltip
+
+      let top = 0;
+      let left = 0;
+
+      switch (position) {
+        case "top":
+          top = rect.top - tooltipHeight - spacing;
+          left = rect.left + rect.width / 2 - tooltipWidth / 2;
+          break;
+        case "right":
+          top = rect.top;
+          left = rect.right + spacing;
+          break;
+        case "bottom":
+          top = rect.bottom + spacing;
+          left = rect.left + rect.width / 2 - tooltipWidth / 2;
+          break;
+        case "left":
+          top = rect.top;
+          left = rect.left - tooltipWidth - spacing;
+          break;
+      }
+
+      // Ensure tooltip doesn't go off-screen
+      top = Math.max(0, top);
+      left = Math.max(0, left);
+      left = Math.min(left, window.innerWidth - tooltipWidth - 10);
+
+      setTooltipPosition({ top, left });
     }
-  }, [isOpen]);
+  }, [isOpen, position]);
 
   const handleOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -73,7 +106,7 @@ function WPQTConfirmTooltip({
   }, [isOpen]);
 
   return (
-    <div className="wpqt-relative" ref={triggerRef}>
+    <div className={`wpqt-relative ${containerClassName}`} ref={triggerRef}>
       {children({ onClick: handleOpen })}
 
       {isOpen && (
@@ -86,14 +119,22 @@ function WPQTConfirmTooltip({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="wpqt-w-56 wpqt-origin-top-right wpqt-rounded-md wpqt-bg-white wpqt-shadow-lg wpqt-ring-1 wpqt-ring-black wpqt-ring-opacity-5">
+          <div
+            className="wpqt-origin-top-right wpqt-main-border wpqt-bg-white wpqt-transition"
+            style={{ width: `${tooltipWidth}px` }}
+          >
             <div className="wpqt-p-3">
               <div className="wpqt-text-sm wpqt-mb-2">{confirmMessage}</div>
               <div className="wpqt-flex wpqt-justify-end wpqt-space-x-2">
-                <WPQTButton btnText={cancelButtonText} onClick={handleClose} />
+                <WPQTButton
+                  btnText={cancelButtonText}
+                  onClick={handleClose}
+                  buttonStyleType={ButtonStyleType.SECONDARY}
+                />
                 <WPQTButton
                   btnText={confirmButtonText}
                   onClick={handleConfirm}
+                  buttonStyleType={ButtonStyleType.DANGER}
                 />
               </div>
             </div>
