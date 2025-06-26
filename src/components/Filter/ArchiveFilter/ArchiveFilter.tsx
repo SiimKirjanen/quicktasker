@@ -4,12 +4,14 @@ import { __ } from "@wordpress/i18n";
 import {
   CHANGE_ARCHIVE_TASK_DONE_FILTER,
   CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
+  SET_ARCHIVE_FILTER_ORDER,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_SEARCH_VALUE,
 } from "../../../constants";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import {
   WPQTArchiveDoneFilter,
+  WPQTArchiveOrder,
   WPQTArvhiveTaskLimit,
 } from "../../../types/enums";
 import { WPQTIconButton } from "../../common/Button/Button";
@@ -25,6 +27,7 @@ function ArchiveFilter() {
       archiveFilteredPipelineId,
       archiveTaskDoneFilter,
       archivedTaskLimit,
+      archiveFilterOrder,
     },
     archiveDispatch,
     fetchAndSetArchivedTasks,
@@ -82,17 +85,14 @@ function ArchiveFilter() {
         </WPQTFilterSection>
       }
     >
-      <WPQTFilterSection title={__("Board", "quicktasker")}>
+      <WPQTFilterSection title={__("Task board", "quicktasker")}>
         <PipelineFilterSelect
           selectedOptionValue={archiveFilteredPipelineId}
           selectionChange={onSelectionChange}
-          extraOptions={[
-            { value: "DELETED", label: __("DELETED", "quicktasker") },
-          ]}
         />
       </WPQTFilterSection>
 
-      <WPQTFilterSection title={__("Status", "quicktasker")}>
+      <WPQTFilterSection title={__("Task status", "quicktasker")}>
         <WPQTSelect
           allSelector={false}
           selectedOptionValue={archiveTaskDoneFilter}
@@ -145,6 +145,29 @@ function ArchiveFilter() {
             archiveDispatch({
               type: CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
               payload: selection as WPQTArvhiveTaskLimit,
+            });
+          }}
+        />
+      </WPQTFilterSection>
+
+      <WPQTFilterSection title={__("Task order", "quicktasker")}>
+        <WPQTSelect
+          allSelector={false}
+          selectedOptionValue={archiveFilterOrder}
+          options={[
+            {
+              label: __("Desc", "quicktasker"),
+              value: WPQTArchiveOrder.DESC,
+            },
+            {
+              label: __("Asc", "quicktasker"),
+              value: WPQTArchiveOrder.ASC,
+            },
+          ]}
+          onSelectionChange={(selection: string) => {
+            archiveDispatch({
+              type: SET_ARCHIVE_FILTER_ORDER,
+              payload: selection as WPQTArchiveOrder,
             });
           }}
         />

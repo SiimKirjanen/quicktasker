@@ -12,13 +12,18 @@ import {
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   REMOVE_LABEL_ARCHIVED_TASK,
+  SET_ARCHIVE_FILTER_ORDER,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_LOADING,
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
 } from "../constants";
 import { reducer } from "../reducers/archive-reducer";
-import { WPQTArchiveDoneFilter, WPQTArvhiveTaskLimit } from "../types/enums";
+import {
+  WPQTArchiveDoneFilter,
+  WPQTArchiveOrder,
+  WPQTArvhiveTaskLimit,
+} from "../types/enums";
 import { Label } from "../types/label";
 import { Task, TaskFromServer } from "../types/task";
 import { User, WPUser } from "../types/user";
@@ -30,6 +35,7 @@ const initialState: State = {
   archiveFilteredPipelineId: "",
   archiveTaskDoneFilter: WPQTArchiveDoneFilter.All,
   archivedTaskLimit: WPQTArvhiveTaskLimit.ONE_HUNDRED,
+  archiveFilterOrder: WPQTArchiveOrder.DESC,
 };
 
 type State = {
@@ -39,6 +45,7 @@ type State = {
   archiveFilteredPipelineId: string;
   archiveTaskDoneFilter: WPQTArchiveDoneFilter;
   archivedTaskLimit: WPQTArvhiveTaskLimit;
+  archiveFilterOrder: WPQTArchiveOrder;
 };
 
 type Action =
@@ -74,6 +81,10 @@ type Action =
   | {
       type: typeof SET_ARCHIVE_LOADING;
       payload: boolean;
+    }
+  | {
+      type: typeof SET_ARCHIVE_FILTER_ORDER;
+      payload: WPQTArchiveOrder;
     }
   | {
       type: typeof CHANGE_ARCHIVED_TASKS_LIMIT_FILTER;
@@ -113,6 +124,7 @@ const ArchiveContextProvider = ({
         pipelineId: state.archiveFilteredPipelineId,
         doneFilter: state.archiveTaskDoneFilter,
         limit: state.archivedTaskLimit,
+        order: state.archiveFilterOrder,
       });
 
       archiveDispatch({ type: SET_ARCHIVE_TASKS, payload: data });

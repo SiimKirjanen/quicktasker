@@ -8,6 +8,7 @@ import {
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   REMOVE_LABEL_ARCHIVED_TASK,
+  SET_ARCHIVE_FILTER_ORDER,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_LOADING,
   SET_ARCHIVE_SEARCH_VALUE,
@@ -15,6 +16,7 @@ import {
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, State } from "../providers/ArchiveContextProvider";
+import { WPQTArchiveOrder } from "../types/enums";
 import { TaskFromServer } from "../types/task";
 import { convertTaskFromServer } from "../utils/task";
 
@@ -203,6 +205,14 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         archiveLoading,
+      };
+    }
+    case SET_ARCHIVE_FILTER_ORDER: {
+      const archiveFilterOrder: WPQTArchiveOrder = action.payload;
+
+      return {
+        ...state,
+        archiveFilterOrder,
       };
     }
     default: {

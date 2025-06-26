@@ -49,6 +49,9 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
             $defaults = array(
                 'limit' => null,
                 'search' => null,
+                'pipelineId' => null,
+                'status' => null,
+                'order' => 'DESC',
             );
             $args = wp_parse_args($args, $defaults);
             $query_args = [];
@@ -66,7 +69,21 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                 $query_args[] = $search_term;
             }
 
-            $sql .= " ORDER BY a.created_at DESC";
+            if ( $args['pipelineId'] !== null ) {
+                $sql .= " AND a.pipeline_id = %d";
+                $query_args[] = $args['pipelineId'];
+            }
+
+            if ( $args['status'] !== null ) {
+                $sql .= " AND a.is_done = %s";
+                $query_args[] = $args['status'];
+            }
+
+            if ( !empty($args['order']) && in_array(strtoupper($args['order']), ['ASC', 'DESC']) ) {
+                $sql .= " ORDER BY a.created_at " . strtoupper($args['order']);
+            } else {
+                $sql .= " ORDER BY a.created_at DESC";
+            }
 
             if ($args['limit'] !== null) {
                 $sql .= " LIMIT %d";

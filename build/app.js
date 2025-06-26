@@ -278,6 +278,9 @@ function getArchivedTasksRequest(filter) {
   if (filter.limit !== null) {
     queryParams.set("limit", String(filter.limit));
   }
+  if (filter.order) {
+    queryParams.set("order", filter.order);
+  }
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/tasks/archived?${queryParams}`,
     method: "GET",
@@ -4271,7 +4274,8 @@ function ArchiveFilter() {
       archiveSearchValue,
       archiveFilteredPipelineId,
       archiveTaskDoneFilter,
-      archivedTaskLimit
+      archivedTaskLimit,
+      archiveFilterOrder
     },
     archiveDispatch,
     fetchAndSetArchivedTasks
@@ -4320,17 +4324,13 @@ function ArchiveFilter() {
       })
     }),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_10__.WPQTFilterSection, {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board", "quicktasker"),
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task board", "quicktasker"),
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_8__.PipelineFilterSelect, {
         selectedOptionValue: archiveFilteredPipelineId,
-        selectionChange: onSelectionChange,
-        extraOptions: [{
-          value: "DELETED",
-          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("DELETED", "quicktasker")
-        }]
+        selectionChange: onSelectionChange
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_10__.WPQTFilterSection, {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Status", "quicktasker"),
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task status", "quicktasker"),
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_9__.WPQTSelect, {
         allSelector: false,
         selectedOptionValue: archiveTaskDoneFilter,
@@ -4373,6 +4373,25 @@ function ArchiveFilter() {
         onSelectionChange: selection => {
           archiveDispatch({
             type: _constants__WEBPACK_IMPORTED_MODULE_3__.CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
+            payload: selection
+          });
+        }
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTFilter__WEBPACK_IMPORTED_MODULE_10__.WPQTFilterSection, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task order", "quicktasker"),
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_9__.WPQTSelect, {
+        allSelector: false,
+        selectedOptionValue: archiveFilterOrder,
+        options: [{
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Desc", "quicktasker"),
+          value: _types_enums__WEBPACK_IMPORTED_MODULE_5__.WPQTArchiveOrder.DESC
+        }, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Asc", "quicktasker"),
+          value: _types_enums__WEBPACK_IMPORTED_MODULE_5__.WPQTArchiveOrder.ASC
+        }],
+        onSelectionChange: selection => {
+          archiveDispatch({
+            type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_ARCHIVE_FILTER_ORDER,
             payload: selection
           });
         }
@@ -11296,6 +11315,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RESET_LABEL_CONTEXT: () => (/* binding */ RESET_LABEL_CONTEXT),
 /* harmony export */   RESET_PASSWORD: () => (/* binding */ RESET_PASSWORD),
 /* harmony export */   SET_ARCHIVE_FILTERED_PIPELINE: () => (/* binding */ SET_ARCHIVE_FILTERED_PIPELINE),
+/* harmony export */   SET_ARCHIVE_FILTER_ORDER: () => (/* binding */ SET_ARCHIVE_FILTER_ORDER),
 /* harmony export */   SET_ARCHIVE_LOADING: () => (/* binding */ SET_ARCHIVE_LOADING),
 /* harmony export */   SET_ARCHIVE_SEARCH_VALUE: () => (/* binding */ SET_ARCHIVE_SEARCH_VALUE),
 /* harmony export */   SET_ARCHIVE_TASKS: () => (/* binding */ SET_ARCHIVE_TASKS),
@@ -11411,6 +11431,7 @@ const ADD_LABEL_ARCHIVED_TASK = "ADD_LABEL_ARCHIVED_TASK";
 const REMOVE_LABEL_ARCHIVED_TASK = "REMOVE_LABEL_ARCHIVED_TASK";
 const CHANGE_ARCHIVED_TASKS_LIMIT_FILTER = "CHANGE_ARCHIVED_TASKS_LIMIT_FILTER";
 const SET_ARCHIVE_LOADING = "SET_ARCHIVE_LOADING";
+const SET_ARCHIVE_FILTER_ORDER = "SET_ARCHIVE_FILTER_ORDER";
 //User reducer constants
 const SET_USERS = "SET_USERS";
 const SET_WP_USERS = "SET_WP_USERS";
@@ -18070,7 +18091,8 @@ const initialState = {
   archiveSearchValue: "",
   archiveFilteredPipelineId: "",
   archiveTaskDoneFilter: _types_enums__WEBPACK_IMPORTED_MODULE_7__.WPQTArchiveDoneFilter.All,
-  archivedTaskLimit: _types_enums__WEBPACK_IMPORTED_MODULE_7__.WPQTArvhiveTaskLimit.ONE_HUNDRED
+  archivedTaskLimit: _types_enums__WEBPACK_IMPORTED_MODULE_7__.WPQTArvhiveTaskLimit.ONE_HUNDRED,
+  archiveFilterOrder: _types_enums__WEBPACK_IMPORTED_MODULE_7__.WPQTArchiveOrder.DESC
 };
 const ArchiveContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -18096,7 +18118,8 @@ const ArchiveContextProvider = ({
         search: state.archiveSearchValue,
         pipelineId: state.archiveFilteredPipelineId,
         doneFilter: state.archiveTaskDoneFilter,
-        limit: state.archivedTaskLimit
+        limit: state.archivedTaskLimit,
+        order: state.archiveFilterOrder
       });
       archiveDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_ARCHIVE_TASKS,
@@ -19644,6 +19667,13 @@ const reducer = (state, action) => {
           archiveLoading
         });
       }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_ARCHIVE_FILTER_ORDER:
+      {
+        const archiveFilterOrder = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          archiveFilterOrder
+        });
+      }
     default:
       {
         return state;
@@ -20765,6 +20795,7 @@ var CustomFieldEntityType;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WPQTArchiveDoneFilter: () => (/* binding */ WPQTArchiveDoneFilter),
+/* harmony export */   WPQTArchiveOrder: () => (/* binding */ WPQTArchiveOrder),
 /* harmony export */   WPQTArvhiveTaskLimit: () => (/* binding */ WPQTArvhiveTaskLimit),
 /* harmony export */   WPQTLogCreatedBy: () => (/* binding */ WPQTLogCreatedBy),
 /* harmony export */   WPQTTypes: () => (/* binding */ WPQTTypes),
@@ -20785,9 +20816,9 @@ var WPQTLogCreatedBy;
 })(WPQTLogCreatedBy || (WPQTLogCreatedBy = {}));
 var WPQTArchiveDoneFilter;
 (function (WPQTArchiveDoneFilter) {
-  WPQTArchiveDoneFilter["All"] = "all";
-  WPQTArchiveDoneFilter["Completed"] = "completed";
-  WPQTArchiveDoneFilter["NotCompleted"] = "not_completed";
+  WPQTArchiveDoneFilter["All"] = "";
+  WPQTArchiveDoneFilter["Completed"] = "1";
+  WPQTArchiveDoneFilter["NotCompleted"] = "0";
 })(WPQTArchiveDoneFilter || (WPQTArchiveDoneFilter = {}));
 var WPQTWpUserTypes;
 (function (WPQTWpUserTypes) {
@@ -20796,11 +20827,16 @@ var WPQTWpUserTypes;
 })(WPQTWpUserTypes || (WPQTWpUserTypes = {}));
 var WPQTArvhiveTaskLimit;
 (function (WPQTArvhiveTaskLimit) {
-  WPQTArvhiveTaskLimit["ALL"] = "all";
+  WPQTArvhiveTaskLimit["ALL"] = "";
   WPQTArvhiveTaskLimit["ONE_HUNDRED"] = "100";
   WPQTArvhiveTaskLimit["TWO_HUNDRED"] = "200";
   WPQTArvhiveTaskLimit["FIVE_HUNDRED"] = "500";
 })(WPQTArvhiveTaskLimit || (WPQTArvhiveTaskLimit = {}));
+var WPQTArchiveOrder;
+(function (WPQTArchiveOrder) {
+  WPQTArchiveOrder["ASC"] = "ASC";
+  WPQTArchiveOrder["DESC"] = "DESC";
+})(WPQTArchiveOrder || (WPQTArchiveOrder = {}));
 
 
 /***/ }),

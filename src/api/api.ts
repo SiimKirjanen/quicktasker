@@ -11,6 +11,7 @@ import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import {
   WPQTArchiveDoneFilter,
+  WPQTArchiveOrder,
   WPQTArvhiveTaskLimit,
   WPQTTypes,
 } from "../types/enums";
@@ -195,6 +196,7 @@ function getArchivedTasksRequest(filter: {
   pipelineId: string;
   doneFilter: WPQTArchiveDoneFilter;
   limit: WPQTArvhiveTaskLimit;
+  order: WPQTArchiveOrder;
 }): Promise<WPQTResponse<TaskFromServer[]>> {
   const queryParams = new URLSearchParams();
 
@@ -209,6 +211,9 @@ function getArchivedTasksRequest(filter: {
   }
   if (filter.limit !== null) {
     queryParams.set("limit", String(filter.limit));
+  }
+  if (filter.order) {
+    queryParams.set("order", filter.order);
   }
 
   return apiFetch({
