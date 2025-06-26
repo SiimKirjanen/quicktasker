@@ -35,21 +35,47 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
          * Retrieves archived tasks from the database.
          *
          * This function fetches tasks that are marked as archived from the database.
-         * Optionally, it can also fetch and include the users assigned to each task.
+         * Optionally, it can include assigned users and labels for each task.
          *
-         * @param bool $addAssignedUsers Optional. Whether to include assigned users for each task. Default false.
+         * @param bool $addAssignedUsers. Whether to include assigned users for each task. Default false.
+         * @param bool $addAssignedLabels Whether to include assigned labels for each task. Default false.
+         * @param array $args Optional. An array of arguments to modify the query.
+         * 
          * @return array An array of archived tasks. Each task may include assigned users if $addAssignedUsers is true.
          */
-        public function getArchivedTasks($addAssignedUsers = false, $addAssignedLabels = false) {
+        public function getArchivedTasks($addAssignedUsers = false, $addAssignedLabels = false, $args = []) {
             global $wpdb;
 
-            $tasks = $wpdb->get_results($wpdb->prepare(
-                "SELECT a.*, b.task_order, b.stage_id, c.name as pipeline_name
-                FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
-                LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b ON a.id = b.task_id
-                LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON a.pipeline_id = c.id
-                WHERE a.is_archived = 1"
-            ));
+            $defaults = array(
+                'limit' => null,
+                'search' => null,
+            );
+            $args = wp_parse_args($args, $defaults);
+            $query_args = [];
+            $tasks = [];
+            $sql = "SELECT a.*, b.task_order, b.stage_id, c.name as pipeline_name
+                        FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+                        LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b ON a.id = b.task_id
+                        LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON a.pipeline_id = c.id
+                        WHERE a.is_archived = 1";
+
+            if ( $args['search'] !== null ) {
+                $sql .= " AND (a.name LIKE %s OR a.description LIKE %s)";
+                $search_term = '%' . $wpdb->esc_like($args['search']) . '%';
+                $query_args[] = $search_term;
+                $query_args[] = $search_term;
+            }
+
+            $sql .= " ORDER BY a.created_at DESC";
+
+            if ($args['limit'] !== null) {
+                $sql .= " LIMIT %d";
+                $query_args[] = $args['limit'];
+            }
+            
+            $tasks = !empty($query_args) 
+                ? $wpdb->get_results($wpdb->prepare($sql, $query_args))
+                : $wpdb->get_results($sql);
 
             $taskIds = array_map(function($task) {
                 return $task->id;

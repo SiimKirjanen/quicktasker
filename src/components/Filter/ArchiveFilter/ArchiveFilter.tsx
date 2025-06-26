@@ -1,12 +1,18 @@
+import { FunnelIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
   CHANGE_ARCHIVE_TASK_DONE_FILTER,
+  CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
   SET_ARCHIVE_FILTERED_PIPELINE,
   SET_ARCHIVE_SEARCH_VALUE,
 } from "../../../constants";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
-import { WPQTArchiveDoneFilter } from "../../../types/enums";
+import {
+  WPQTArchiveDoneFilter,
+  WPQTArvhiveTaskLimit,
+} from "../../../types/enums";
+import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { PipelineFilterSelect } from "../../common/Select/PipelineFilterSelect/PipelineFilterSelect";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
@@ -18,8 +24,10 @@ function ArchiveFilter() {
       archiveSearchValue,
       archiveFilteredPipelineId,
       archiveTaskDoneFilter,
+      archivedTaskLimit,
     },
     archiveDispatch,
+    fetchAndSetArchivedTasks,
   } = useContext(ArchiveContext);
 
   const setArchiveSearchValue = (newValue: string) => {
@@ -49,9 +57,18 @@ function ArchiveFilter() {
     }
   };
 
+  const applySearch = (
+    <WPQTIconButton
+      text={__("Apply filter", "quicktasker")}
+      icon={<FunnelIcon className="wpqt-size-5 wpqt-icon-blue" />}
+      onClick={fetchAndSetArchivedTasks}
+    />
+  );
+
   return (
     <WPQTFilter
       title={__("Archive filtering", "quicktasker")}
+      applyFilterChildren={applySearch}
       searchChildren={
         <WPQTFilterSection
           title={__("Search", "quicktasker")}
@@ -98,6 +115,36 @@ function ArchiveFilter() {
             archiveDispatch({
               type: CHANGE_ARCHIVE_TASK_DONE_FILTER,
               payload: filter,
+            });
+          }}
+        />
+      </WPQTFilterSection>
+      <WPQTFilterSection title={__("Number of tasks", "quicktasker")}>
+        <WPQTSelect
+          allSelector={false}
+          selectedOptionValue={archivedTaskLimit}
+          options={[
+            {
+              label: __("Show all", "quicktasker"),
+              value: WPQTArvhiveTaskLimit.ALL,
+            },
+            {
+              label: __("Show 100", "quicktasker"),
+              value: WPQTArvhiveTaskLimit.ONE_HUNDRED,
+            },
+            {
+              label: __("Show 200", "quicktasker"),
+              value: WPQTArvhiveTaskLimit.TWO_HUNDRED,
+            },
+            {
+              label: __("Show 500", "quicktasker"),
+              value: WPQTArvhiveTaskLimit.FIVE_HUNDRED,
+            },
+          ]}
+          onSelectionChange={(selection: string) => {
+            archiveDispatch({
+              type: CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
+              payload: selection as WPQTArvhiveTaskLimit,
             });
           }}
         />

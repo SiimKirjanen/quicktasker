@@ -589,6 +589,25 @@ if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL' ) ) {
     define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL', "user-minimal");
 }
 
+if ( ! defined( 'WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_ALL' ) ) {
+    define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_ALL', "all");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_COMPLETED' ) ) {
+    define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_COMPLETED', "completed");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_NOT_COMPLETED' ) ) {
+    define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_NOT_COMPLETED', "not_completed");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ARCHIVE_STATUS_FILTER' ) ) {
+    define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER', [
+        WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_ALL,
+        WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_COMPLETED,
+        WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_NOT_COMPLETED
+    ]);
+}
 
 /*
 ==================================================================================================================================================================================================================

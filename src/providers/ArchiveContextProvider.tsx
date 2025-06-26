@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-} from "@wordpress/element";
+import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { getArchivedTasksRequest } from "../api/api";
@@ -12,21 +7,21 @@ import {
   ADD_LABEL_ARCHIVED_TASK,
   CHANGE_ARCHIVE_TASK_DONE_FILTER,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
+  CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
   EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   REMOVE_LABEL_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
+  SET_ARCHIVE_LOADING,
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
-  SET_FULL_PAGE_LOADING,
 } from "../constants";
 import { reducer } from "../reducers/archive-reducer";
-import { WPQTArchiveDoneFilter } from "../types/enums";
+import { WPQTArchiveDoneFilter, WPQTArvhiveTaskLimit } from "../types/enums";
 import { Label } from "../types/label";
 import { Task, TaskFromServer } from "../types/task";
 import { User, WPUser } from "../types/user";
-import { LoadingContext } from "./LoadingContextProvider";
 
 const initialState: State = {
   archivedTasks: null,
@@ -34,6 +29,7 @@ const initialState: State = {
   archiveSearchValue: "",
   archiveFilteredPipelineId: "",
   archiveTaskDoneFilter: WPQTArchiveDoneFilter.All,
+  archivedTaskLimit: WPQTArvhiveTaskLimit.ONE_HUNDRED,
 };
 
 type State = {
@@ -42,6 +38,7 @@ type State = {
   archiveSearchValue: string;
   archiveFilteredPipelineId: string;
   archiveTaskDoneFilter: WPQTArchiveDoneFilter;
+  archivedTaskLimit: WPQTArvhiveTaskLimit;
 };
 
 type Action =
@@ -73,6 +70,14 @@ type Action =
   | {
       type: typeof CHANGE_ARCHIVED_TASK_DONE_STATUS;
       payload: { taskId: string; done: boolean };
+    }
+  | {
+      type: typeof SET_ARCHIVE_LOADING;
+      payload: boolean;
+    }
+  | {
+      type: typeof CHANGE_ARCHIVED_TASKS_LIMIT_FILTER;
+      payload: WPQTArvhiveTaskLimit;
     };
 
 type Dispatch = (action: Action) => void;
@@ -80,11 +85,13 @@ type Dispatch = (action: Action) => void;
 type ArchiveContextType = {
   state: State;
   archiveDispatch: Dispatch;
+  fetchAndSetArchivedTasks: () => Promise<void>;
 };
 
 const ArchiveContext = createContext<ArchiveContextType>({
   state: initialState,
   archiveDispatch: () => {},
+  fetchAndSetArchivedTasks: async () => {},
 });
 
 const ArchiveContextProvider = ({
@@ -93,7 +100,6 @@ const ArchiveContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, archiveDispatch] = useReducer(reducer, initialState);
-  const { loadingDispatch } = useContext(LoadingContext);
 
   useEffect(() => {
     fetchAndSetArchivedTasks();
@@ -101,26 +107,27 @@ const ArchiveContextProvider = ({
 
   const fetchAndSetArchivedTasks = async () => {
     try {
-      loadingDispatch({
-        type: SET_FULL_PAGE_LOADING,
-        payload: true,
+      archiveDispatch({ type: SET_ARCHIVE_LOADING, payload: true });
+      const { data } = await getArchivedTasksRequest({
+        search: state.archiveSearchValue,
+        pipelineId: state.archiveFilteredPipelineId,
+        doneFilter: state.archiveTaskDoneFilter,
+        limit: state.archivedTaskLimit,
       });
-      const { data } = await getArchivedTasksRequest();
 
       archiveDispatch({ type: SET_ARCHIVE_TASKS, payload: data });
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to fetch archived tasks", "quicktasker"));
     } finally {
-      loadingDispatch({
-        type: SET_FULL_PAGE_LOADING,
-        payload: false,
-      });
+      archiveDispatch({ type: SET_ARCHIVE_LOADING, payload: false });
     }
   };
 
   return (
-    <ArchiveContext.Provider value={{ state, archiveDispatch }}>
+    <ArchiveContext.Provider
+      value={{ state, archiveDispatch, fetchAndSetArchivedTasks }}
+    >
       {children}
     </ArchiveContext.Provider>
   );

@@ -14,7 +14,7 @@ enum WPQTLogCreatedBy {
 enum WPQTArchiveDoneFilter {
   All = "all",
   Completed = "completed",
-  NotCompleted = "not completed",
+  NotCompleted = "not_completed",
 }
 
 enum WPQTWpUserTypes {
@@ -22,4 +22,17 @@ enum WPQTWpUserTypes {
   Other = "other",
 }
 
-export { WPQTArchiveDoneFilter, WPQTLogCreatedBy, WPQTTypes, WPQTWpUserTypes };
+enum WPQTArvhiveTaskLimit {
+  ALL = "all",
+  ONE_HUNDRED = "100",
+  TWO_HUNDRED = "200",
+  FIVE_HUNDRED = "500",
+}
+
+export {
+  WPQTArchiveDoneFilter,
+  WPQTArvhiveTaskLimit,
+  WPQTLogCreatedBy,
+  WPQTTypes,
+  WPQTWpUserTypes,
+};

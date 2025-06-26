@@ -3,11 +3,13 @@ import {
   ADD_LABEL_ARCHIVED_TASK,
   CHANGE_ARCHIVE_TASK_DONE_FILTER,
   CHANGE_ARCHIVED_TASK_DONE_STATUS,
+  CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
   EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   REMOVE_LABEL_ARCHIVED_TASK,
   SET_ARCHIVE_FILTERED_PIPELINE,
+  SET_ARCHIVE_LOADING,
   SET_ARCHIVE_SEARCH_VALUE,
   SET_ARCHIVE_TASKS,
 } from "../constants";
@@ -185,6 +187,22 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         archivedTasks,
+      };
+    }
+    case CHANGE_ARCHIVED_TASKS_LIMIT_FILTER: {
+      const archivedTaskLimit = action.payload;
+
+      return {
+        ...state,
+        archivedTaskLimit,
+      };
+    }
+    case SET_ARCHIVE_LOADING: {
+      const archiveLoading: boolean = action.payload;
+
+      return {
+        ...state,
+        archiveLoading,
       };
     }
     default: {

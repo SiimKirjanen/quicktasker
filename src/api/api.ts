@@ -9,7 +9,11 @@ import {
 import { WPUserCapabilities } from "../types/capabilities";
 import { WPQTCommentFromServer } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
-import { WPQTTypes } from "../types/enums";
+import {
+  WPQTArchiveDoneFilter,
+  WPQTArvhiveTaskLimit,
+  WPQTTypes,
+} from "../types/enums";
 import { PipelineImportSource, WPQTImport } from "../types/imports";
 import { Label } from "../types/label";
 import { LogFromServer } from "../types/log";
@@ -186,9 +190,29 @@ function restoreArchivedTaskRequest(taskId: string): Promise<WPQTResponse> {
   });
 }
 
-function getArchivedTasksRequest(): Promise<WPQTResponse<TaskFromServer[]>> {
+function getArchivedTasksRequest(filter: {
+  search: string;
+  pipelineId: string;
+  doneFilter: WPQTArchiveDoneFilter;
+  limit: WPQTArvhiveTaskLimit;
+}): Promise<WPQTResponse<TaskFromServer[]>> {
+  const queryParams = new URLSearchParams();
+
+  if (filter.search) {
+    queryParams.set("search", filter.search);
+  }
+  if (filter.pipelineId) {
+    queryParams.set("pipelineId", filter.pipelineId);
+  }
+  if (filter.doneFilter) {
+    queryParams.set("status", filter.doneFilter);
+  }
+  if (filter.limit !== null) {
+    queryParams.set("limit", String(filter.limit));
+  }
+
   return apiFetch({
-    path: `/wpqt/v1/tasks/archived`,
+    path: `/wpqt/v1/tasks/archived?${queryParams}`,
     method: "GET",
     headers: getCommonHeaders(),
   });
