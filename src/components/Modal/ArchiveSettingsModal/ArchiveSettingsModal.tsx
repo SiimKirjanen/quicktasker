@@ -1,8 +1,12 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { LiaBroomSolid } from "react-icons/lia";
-import { ARCHIVE_SETTINGS_MODAL_OPEN } from "../../../constants";
+import {
+  ARCHIVE_SETTINGS_MODAL_OPEN,
+  REMOVE_ARCHIVED_TASKS,
+} from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
+import { useArchive } from "../../../hooks/useArchive";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { WPQTModal } from "../WPQTModal";
 import { ArchiveSetting } from "./components/ArchiveSetting/ArchiveSettings";
@@ -13,6 +17,7 @@ function ArchiveSettingsModal() {
     modalDispatch,
   } = useContext(ModalContext);
   const { cleanupTaskArchive } = useTaskActions();
+  const { archiveDispatch } = useArchive();
 
   return (
     <WPQTModal
@@ -36,7 +41,11 @@ function ArchiveSettingsModal() {
           onSave={async () => {
             const { success, deletedTaskIds } = await cleanupTaskArchive();
 
-            if (success) {
+            if (success && deletedTaskIds.length > 0) {
+              archiveDispatch({
+                type: REMOVE_ARCHIVED_TASKS,
+                payload: deletedTaskIds,
+              });
             }
           }}
         />

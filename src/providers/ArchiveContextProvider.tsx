@@ -10,6 +10,7 @@ import {
   CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
   EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
+  REMOVE_ARCHIVED_TASKS,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   REMOVE_LABEL_ARCHIVED_TASK,
   SET_ARCHIVE_FILTER_ORDER,
@@ -61,6 +62,7 @@ type Action =
       payload: { taskId: string; user: User | WPUser };
     }
   | { type: typeof REMOVE_ARCHIVED_TASK; payload: string }
+  | { type: typeof REMOVE_ARCHIVED_TASKS; payload: string[] }
   | { type: typeof EDIT_ARCHIVED_TASK; payload: TaskFromServer }
   | {
       type: typeof CHANGE_ARCHIVE_TASK_DONE_FILTER;

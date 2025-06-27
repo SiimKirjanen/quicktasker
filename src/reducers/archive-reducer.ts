@@ -6,6 +6,7 @@ import {
   CHANGE_ARCHIVED_TASKS_LIMIT_FILTER,
   EDIT_ARCHIVED_TASK,
   REMOVE_ARCHIVED_TASK,
+  REMOVE_ARCHIVED_TASKS,
   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK,
   REMOVE_LABEL_ARCHIVED_TASK,
   SET_ARCHIVE_FILTER_ORDER,
@@ -49,6 +50,18 @@ const reducer = (state: State, action: Action): State => {
     case REMOVE_ARCHIVED_TASK: {
       const archivedTasks = (state.archivedTasks ?? []).filter(
         (task) => task.id !== action.payload,
+      );
+
+      return {
+        ...state,
+        archivedTasks,
+      };
+    }
+    case REMOVE_ARCHIVED_TASKS: {
+      const taskIdsToRemove: string[] = action.payload;
+
+      const archivedTasks = (state.archivedTasks ?? []).filter(
+        (task) => !taskIdsToRemove.includes(task.id),
       );
 
       return {

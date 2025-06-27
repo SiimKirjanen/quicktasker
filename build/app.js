@@ -5291,12 +5291,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_icons_lia__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-icons/lia */ "./node_modules/react-icons/lia/index.mjs");
+/* harmony import */ var react_icons_lia__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-icons/lia */ "./node_modules/react-icons/lia/index.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
-/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
-/* harmony import */ var _components_ArchiveSetting_ArchiveSettings__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/ArchiveSetting/ArchiveSettings */ "./src/components/Modal/ArchiveSettingsModal/components/ArchiveSetting/ArchiveSettings.tsx");
+/* harmony import */ var _hooks_useArchive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/useArchive */ "./src/hooks/useArchive.tsx");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _components_ArchiveSetting_ArchiveSettings__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/ArchiveSetting/ArchiveSettings */ "./src/components/Modal/ArchiveSettingsModal/components/ArchiveSetting/ArchiveSettings.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -5333,17 +5334,21 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function ArchiveSettingsModal() {
   const {
     state: {
       archiveSettingsModalOpen
     },
     modalDispatch
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__.ModalContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_6__.ModalContext);
   const {
     cleanupTaskArchive
   } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__.useTaskActions)();
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_6__.WPQTModal, {
+  const {
+    archiveDispatch
+  } = (0,_hooks_useArchive__WEBPACK_IMPORTED_MODULE_5__.useArchive)();
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_7__.WPQTModal, {
     modalOpen: archiveSettingsModalOpen,
     closeModal: () => {
       modalDispatch({
@@ -5354,10 +5359,10 @@ function ArchiveSettingsModal() {
     size: "md",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-flex-col wpqt-gap-3",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ArchiveSetting_ArchiveSettings__WEBPACK_IMPORTED_MODULE_7__.ArchiveSetting, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ArchiveSetting_ArchiveSettings__WEBPACK_IMPORTED_MODULE_8__.ArchiveSetting, {
         title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Archive cleanup", "quicktasker"),
         description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Remote tasks from archive that have no parent board.", "quicktasker"),
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_lia__WEBPACK_IMPORTED_MODULE_8__.LiaBroomSolid, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_lia__WEBPACK_IMPORTED_MODULE_9__.LiaBroomSolid, {
           className: "wpqt-size-6"
         }),
         onSave: () => __awaiter(this, void 0, void 0, function* () {
@@ -5365,7 +5370,12 @@ function ArchiveSettingsModal() {
             success,
             deletedTaskIds
           } = yield cleanupTaskArchive();
-          if (success) {}
+          if (success && deletedTaskIds.length > 0) {
+            archiveDispatch({
+              type: _constants__WEBPACK_IMPORTED_MODULE_3__.REMOVE_ARCHIVED_TASKS,
+              payload: deletedTaskIds
+            });
+          }
         })
       })
     })
@@ -11499,6 +11509,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PIPELINE_TOGGLE_VIEW: () => (/* binding */ PIPELINE_TOGGLE_VIEW),
 /* harmony export */   REFETCH_ACTIVE_PIPELINE_INTERVAL: () => (/* binding */ REFETCH_ACTIVE_PIPELINE_INTERVAL),
 /* harmony export */   REMOVE_ARCHIVED_TASK: () => (/* binding */ REMOVE_ARCHIVED_TASK),
+/* harmony export */   REMOVE_ARCHIVED_TASKS: () => (/* binding */ REMOVE_ARCHIVED_TASKS),
 /* harmony export */   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_EDITING_TASK),
 /* harmony export */   REMOVE_ASSIGNED_USER_FROM_USER_TASK: () => (/* binding */ REMOVE_ASSIGNED_USER_FROM_USER_TASK),
 /* harmony export */   REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK: () => (/* binding */ REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK),
@@ -11621,6 +11632,7 @@ const CLOSE_ARCHIVE_TASK_MODAL = "CLOSE_ARCHIVE_TASK_MODAL";
 const SET_ARCHIVE_SEARCH_VALUE = "SET_ARCHIVE_SEARCH_VALUE";
 const SET_ARCHIVE_FILTERED_PIPELINE = "SET_ARCHIVE_FILTERED_PIPELINE";
 const REMOVE_ARCHIVED_TASK = "REMOVE_ARCHIVED_TASK";
+const REMOVE_ARCHIVED_TASKS = "REMOVE_ARCHIVED_TASKS";
 const ADD_ASSIGNED_USER_TO_ARCHIVED_TASK = "ADD_ASSIGNED_USER_TO_ARCHIVED_TASK";
 const REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK = "REMOVE_ASSINGED_USER_FROM_ARCHIVED_TASK";
 const CHANGE_ARCHIVED_TASK_DONE_STATUS = "CHANGE_ARCHIVED_TASK_DONE_STATUS";
@@ -12751,10 +12763,12 @@ const useTaskActions = () => {
   const cleanupTaskArchive = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
       const resp = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.cleanArchiveTasksRequest)();
-      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task archive cleaned up", "quicktasker"));
+      const deletedTaskIds = resp.data.deletedTaskIds;
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.sprintf)(/* translators: %d: number of tasks removed */
+      (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Removed %d orphaned tasks from archive", "quicktasker"), deletedTaskIds.length));
       return {
         success: true,
-        deletedTaskIds: resp.data.deletedTaskIds
+        deletedTaskIds
       };
     } catch (error) {
       console.error(error);
@@ -13247,6 +13261,33 @@ function useActivePipeline() {
     activePipelineSettings,
     isTaskOnLastStage,
     stageOptions
+  };
+}
+
+
+/***/ }),
+
+/***/ "./src/hooks/useArchive.tsx":
+/*!**********************************!*\
+  !*** ./src/hooks/useArchive.tsx ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useArchive: () => (/* binding */ useArchive)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
+
+
+function useArchive() {
+  const {
+    archiveDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_1__.ArchiveContext);
+  return {
+    archiveDispatch
   };
 }
 
@@ -19764,7 +19805,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const reducer = (state, action) => {
-  var _a, _b, _c, _d, _e, _f, _g;
+  var _a, _b, _c, _d, _e, _f, _g, _h;
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_ARCHIVE_TASKS:
       {
@@ -19794,13 +19835,21 @@ const reducer = (state, action) => {
           archivedTasks
         });
       }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.REMOVE_ARCHIVED_TASKS:
+      {
+        const taskIdsToRemove = action.payload;
+        const archivedTasks = ((_b = state.archivedTasks) !== null && _b !== void 0 ? _b : []).filter(task => !taskIdsToRemove.includes(task.id));
+        return Object.assign(Object.assign({}, state), {
+          archivedTasks
+        });
+      }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_ASSIGNED_USER_TO_ARCHIVED_TASK:
       {
         const {
           taskId,
           user
         } = action.payload;
-        const archivedTasks = ((_b = state.archivedTasks) !== null && _b !== void 0 ? _b : []).map(task => {
+        const archivedTasks = ((_c = state.archivedTasks) !== null && _c !== void 0 ? _c : []).map(task => {
           if (task.id === taskId) {
             return Object.assign(Object.assign({}, task), {
               assigned_users: (0,_guards_user_guard__WEBPACK_IMPORTED_MODULE_1__.isUser)(user) ? [user, ...task.assigned_users] : task.assigned_users,
@@ -19819,7 +19868,7 @@ const reducer = (state, action) => {
           taskId,
           user
         } = action.payload;
-        const archivedTasks = ((_c = state.archivedTasks) !== null && _c !== void 0 ? _c : []).map(task => {
+        const archivedTasks = ((_d = state.archivedTasks) !== null && _d !== void 0 ? _d : []).map(task => {
           if (task.id === taskId) {
             return Object.assign(Object.assign({}, task), {
               assigned_users: (0,_guards_user_guard__WEBPACK_IMPORTED_MODULE_1__.isUser)(user) ? task.assigned_users.filter(assignedUser => assignedUser.id !== user.id) : task.assigned_users,
@@ -19838,7 +19887,7 @@ const reducer = (state, action) => {
           taskId,
           done
         } = action.payload;
-        const archivedTasks = ((_d = state.archivedTasks) !== null && _d !== void 0 ? _d : []).map(task => {
+        const archivedTasks = ((_e = state.archivedTasks) !== null && _e !== void 0 ? _e : []).map(task => {
           if (task.id === taskId) {
             return Object.assign(Object.assign({}, task), {
               is_done: done
@@ -19853,7 +19902,7 @@ const reducer = (state, action) => {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.EDIT_ARCHIVED_TASK:
       {
         const editedTask = action.payload;
-        const archivedTasks = ((_e = state.archivedTasks) !== null && _e !== void 0 ? _e : []).map(task => {
+        const archivedTasks = ((_f = state.archivedTasks) !== null && _f !== void 0 ? _f : []).map(task => {
           if (task.id === editedTask.id) {
             return (0,_utils_task__WEBPACK_IMPORTED_MODULE_2__.convertTaskFromServer)(editedTask);
           }
@@ -19876,7 +19925,7 @@ const reducer = (state, action) => {
           taskId,
           label
         } = action.payload;
-        const archivedTasks = ((_f = state.archivedTasks) !== null && _f !== void 0 ? _f : []).map(task => {
+        const archivedTasks = ((_g = state.archivedTasks) !== null && _g !== void 0 ? _g : []).map(task => {
           if (task.id === taskId) {
             return Object.assign(Object.assign({}, task), {
               assigned_labels: [...task.assigned_labels, label]
@@ -19894,7 +19943,7 @@ const reducer = (state, action) => {
           taskId,
           labelId
         } = action.payload;
-        const archivedTasks = ((_g = state.archivedTasks) !== null && _g !== void 0 ? _g : []).map(task => {
+        const archivedTasks = ((_h = state.archivedTasks) !== null && _h !== void 0 ? _h : []).map(task => {
           if (task.id === taskId) {
             return Object.assign(Object.assign({}, task), {
               assigned_labels: task.assigned_labels.filter(label => label.id !== labelId)
