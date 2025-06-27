@@ -21,6 +21,8 @@ function WPUserItem({ user }: Props) {
         "quicktasker_admin_role_manage_users" in user.allcaps,
       quicktasker_admin_role_manage_settings:
         "quicktasker_admin_role_manage_settings" in user.allcaps,
+      quicktasker_admin_role_manage_archive:
+        "quicktasker_admin_role_manage_archive" in user.allcaps,
     });
   const [updating, setUpdating] = useState(false);
   const { updateWPUserCapabilities } = useCapabilityActions();
@@ -92,6 +94,18 @@ function WPUserItem({ user }: Props) {
 
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
+          {__("Access to archive page", "quicktasker")}
+        </div>
+        <Toggle
+          checked={capabilitySettings.quicktasker_admin_role_manage_archive}
+          handleChange={(checked: boolean) => {
+            onToggleChange(checked, "quicktasker_admin_role_manage_archive");
+          }}
+        />
+      </div>
+
+      <div className="wpqt-mb-2">
+        <div className="wpqt-mb-2">
           {__("Allow to delete resources", "quicktasker")}
         </div>
         <Toggle
@@ -101,6 +115,7 @@ function WPUserItem({ user }: Props) {
           }}
         />
       </div>
+
       {updating && <Loading ovalSize="24" />}
     </WPQTCard>
   );

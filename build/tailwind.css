@@ -1368,6 +1368,10 @@
   margin-right: auto;
 }
 
+.wpqt-mt-0 {
+  margin-top: 0px;
+}
+
 .wpqt-mt-1 {
   margin-top: 0.25rem;
 }
@@ -2504,7 +2508,7 @@
 
 .wpqt-icon-gray {
   --tw-text-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-text-opacity));
+  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
 .wpqt-icon-orange {

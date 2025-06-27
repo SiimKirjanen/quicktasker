@@ -463,6 +463,53 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         }
 
         /**
+         * Deletes archived tasks that do not belong to any pipeline.
+         *
+         * This method retrieves orphaned archived tasks and deletes them from both the main tasks table
+         * and the tasks location table. It returns an array of deleted task IDs.
+         *
+         * @return  array An array of deleted task IDs.
+         * @throws \Exception If the deletion fails.
+         */
+        public function deleteArchivedTasksWithoutPipeline() {
+            global $wpdb;
+
+            $orphanedTaks = $this->taskRepository->getOrphanedArchivedTasks();
+
+            if ( empty($orphanedTaks) ) {
+                return [];
+            }
+
+            $taskIds = wp_list_pluck($orphanedTaks, 'id');
+            $taskIdsPlaceholders = implode(',', array_fill(0, count($taskIds), '%d'));
+
+            // Delete tasks from the main tasks table
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE id IN ($taskIdsPlaceholders) AND is_archived = 1",
+                    $taskIds
+                )
+            );
+            if ($result === false) {
+                throw new \Exception('Failed to delete orphaned archived tasks');
+            }
+
+            // Delete tasks from the tasks location table
+            $result2 = $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " WHERE task_id IN ($taskIdsPlaceholders) AND is_archived = 1",
+                    $taskIds
+                )
+            );
+
+            if ($result2 === false) {
+                throw new \Exception('Failed to delete orphaned archived tasks location');
+            }
+
+            return $taskIds;
+        }
+
+        /**
          * Shifts the task order after a task is deleted or archived.
          *
          * @param int $deletedTaskOrder The order of the deleted task.

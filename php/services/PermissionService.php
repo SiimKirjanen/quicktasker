@@ -63,6 +63,18 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
         }
 
         /**
+         * Checks if the current user has the required permissions for private API archive endpoints.
+         *
+         * This function verifies if the current user has the capability defined by the
+         * WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE constant.
+         *
+         * @return bool True if the user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredPermissionsForPrivateAPIArchiveEndpoints() {
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE );
+        }
+
+        /**
          * Checks if a user is allowed to view a task.
          *
          * @param int $userId The ID of the user.

@@ -135,6 +135,25 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
         }
 
         /**
+         * Retrieves archived tasks that have no associated board.
+         *
+         * This function fetches tasks that are marked as archived and do not have an associated board.
+         * It returns the results as an array of task objects.
+         *
+         * @return array An array of archived tasks that have no associated board.
+         */
+        public function getOrphanedArchivedTasks() {
+            global $wpdb;
+
+            $sql = "SELECT a.*, b.name as pipeline_name
+                    FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+                    LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS b ON a.pipeline_id = b.id
+                    WHERE a.is_archived = 1 AND b.name IS NULL";
+
+            return $wpdb->get_results($sql);
+        }
+
+        /**
          * Retrieves a task by its ID.
          *
          * @param int $id The ID of the task to retrieve.

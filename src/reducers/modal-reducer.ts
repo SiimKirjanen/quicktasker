@@ -1,5 +1,6 @@
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
+  ARCHIVE_SETTINGS_MODAL_OPEN,
   CHANGE_TASK_DONE_STATUS,
   CHANGE_TASK_EXPORT_MODAL_METHOD,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
@@ -271,6 +272,17 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case CLOSE_AUTOMATIONS_MODAL: {
+      return closeModal();
+    }
+    case ARCHIVE_SETTINGS_MODAL_OPEN: {
+      const open: boolean = action.payload;
+
+      if (open) {
+        return {
+          ...state,
+          archiveSettingsModalOpen: true,
+        };
+      }
       return closeModal();
     }
     default:

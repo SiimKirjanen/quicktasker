@@ -333,7 +333,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIArchiveEndpoints();
                 },
                 'args' => array(
                     'limit' => array(
@@ -1747,7 +1747,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             WP_QUICKTASKER_ADMIN_ROLE => $data[WP_QUICKTASKER_ADMIN_ROLE],
                             WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE => $data[WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE],
                             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS],
-                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS]
+                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS],
+                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE]
                         ];
                           
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
@@ -1778,6 +1779,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                     ),
                     WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE => array(
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
@@ -2366,6 +2372,43 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                     ),
                 ),
+            ),
+        );
+
+        /*
+        ==================================================================================================================================================================================================================
+        Archive settings endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'archive/settings/task-cleanup',
+            array(
+                'methods' => 'PATCH',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+                        
+                        $taskService = new TaskService();
+                        $deletedTaskIds = $taskService->deleteArchivedTasksWithoutPipeline();
+
+                        $wpdb->query('COMMIT');
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'deletedTaskIds' => $deletedTaskIds,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIArchiveEndpoints();
+                },
             ),
         );
 

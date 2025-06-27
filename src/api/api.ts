@@ -540,6 +540,8 @@ function updateWPUserPermissionsRequest(
         capabilities.quicktasker_admin_role_manage_users,
       quicktasker_admin_role_manage_settings:
         capabilities.quicktasker_admin_role_manage_settings,
+      quicktasker_admin_role_manage_archive:
+        capabilities.quicktasker_admin_role_manage_archive,
     },
     headers: getCommonHeaders(),
   });
@@ -688,6 +690,24 @@ function saveTaskCompletionDoneSettingRequest(
     path: `/wpqt/v1/pipelines/${pipelineId}/settings/task-completion-done-restriction`,
     method: "PATCH",
     data: { allow_task_completion_only_on_last_stage: checked },
+    headers: getCommonHeaders(),
+  });
+}
+
+/*
+  ==================================================================================================================================================================================================================
+  Archive settings requests
+  ==================================================================================================================================================================================================================
+*/
+
+function cleanArchiveTasksRequest(): Promise<
+  WPQTResponse<{
+    deletedTaskIds: string[];
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/archive/settings/task-cleanup`,
+    method: "PATCH",
     headers: getCommonHeaders(),
   });
 }
@@ -951,6 +971,7 @@ export {
   assignTaskToUserRequest,
   changeUserSessionStatusRequest,
   changeUserStatusRequest,
+  cleanArchiveTasksRequest,
   createNewStageRequest,
   createPipelineAutomationRequest,
   createPipelineLabelRequest,

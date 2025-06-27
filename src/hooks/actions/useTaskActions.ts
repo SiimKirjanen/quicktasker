@@ -1,7 +1,8 @@
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
   archiveTaskRequest,
+  cleanArchiveTasksRequest,
   deleteTaskRequest,
   markTaskDoneRequest,
   moveTaskRequest,
@@ -166,6 +167,34 @@ const useTaskActions = () => {
     }
   };
 
+  const cleanupTaskArchive = async () => {
+    try {
+      const resp = await cleanArchiveTasksRequest();
+      const deletedTaskIds = resp.data.deletedTaskIds;
+
+      toast.success(
+        sprintf(
+          /* translators: %d: number of tasks removed */
+          __("Removed %d orphaned tasks from archive", "quicktasker"),
+          deletedTaskIds.length,
+        ),
+      );
+
+      return {
+        success: true,
+        deletedTaskIds,
+      };
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to clean up task archive", "quicktasker"));
+
+      return {
+        success: false,
+        deletedTaskIds: [],
+      };
+    }
+  };
+
   return {
     deleteTask,
     archiveTask,
@@ -174,6 +203,7 @@ const useTaskActions = () => {
     changeTaskDoneStatus,
     moveTask,
     updateTaskFocusColor,
+    cleanupTaskArchive,
   };
 };
 
