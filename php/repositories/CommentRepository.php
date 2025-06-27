@@ -6,16 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Task\TaskRepository;
-
 if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
     class CommentRepository {
-
-        protected $taskRepository;
-
-        public function __construct() {
-            $this->taskRepository = new TaskRepository();
-        }
         /**
          * Retrieves a comment by its ID.
          *

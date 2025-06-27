@@ -5,17 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\User\UserRepository;
 use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
     class TaskRepository {
-
-        protected $userRepository;
-
-        public function __construct() {
-            $this->userRepository = new UserRepository();
-        }
 
         /**
          * Retrieves all tasks from the database.
@@ -29,7 +22,6 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                 "SELECT * FROM " . TABLE_WP_QUICKTASKER_TASKS
             );
         }
-
 
         /**
          * Retrieves archived tasks from the database.
@@ -172,7 +164,7 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
             ) );
 
             if ( $task && $addAssignedUsers) {
-                $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
+                $users = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($task->id);
                 $task->assigned_users = $users;
             }
 
@@ -202,8 +194,8 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
             ) );
 
             if ( $task && $addAssignedUsers) {
-                $task->assigned_users = $this->userRepository->getAssignedUsersByTaskId($task->id);
-                $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id], $userObjectFiltering);
+                $task->assigned_users = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($task->id);
+                $task->assigned_wp_users = ServiceLocator::get('UserRepository')->getAssignedWPUsersByTaskIds([$task->id], $userObjectFiltering);
             }
 
             return $task;
@@ -306,9 +298,9 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
         
             if ($addAssignedUsers) {
                 foreach ($tasks as $task) {
-                    $users = $this->userRepository->getAssignedUsersByTaskId($task->id);
+                    $users = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($task->id);
                     $task->assigned_users = $users;
-                    $task->assigned_wp_users = $this->userRepository->getAssignedWPUsersByTaskIds([$task->id]);
+                    $task->assigned_wp_users = ServiceLocator::get('UserRepository')->getAssignedWPUsersByTaskIds([$task->id]);
                 }
             }
         
@@ -377,8 +369,8 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                     return $task->id;
                 }, $tasks);
                 
-                $assignedUsers = $this->userRepository->getAssignedUsersByTaskIds($taskIds);
-                $assignedWPUsers = $this->userRepository->getAssignedWPUsersByTaskIds($taskIds);
+                $assignedUsers = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskIds($taskIds);
+                $assignedWPUsers = ServiceLocator::get('UserRepository')->getAssignedWPUsersByTaskIds($taskIds);
                 $assignedLabels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds($taskIds);
                 $customFields = ServiceLocator::get('CustomFieldRepository')->getActiveCustomFieldsForTasks($taskIds);
                 

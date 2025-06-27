@@ -6,16 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Stage\StageRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Overview\OverViewRepository' ) ) {
     class OverViewRepository {
-        protected $stageRepository;
-
-        public function __construct() {
-            $this->stageRepository = new StageRepository();
-        }
-
         public function getPipelineOverview($pipelineId, $taskStartDate, $taskDoneDate) {
             global $wpdb;
 
@@ -27,7 +21,7 @@ if ( ! class_exists( 'WPQT\Overview\OverViewRepository' ) ) {
                 'notDoneTasksCount' => 0,
             ];
 
-            $pipelineStages = $this->stageRepository->getStagesByPipelineId($pipelineId);
+            $pipelineStages = ServiceLocator::get('StageRepository')->getStagesByPipelineId($pipelineId);
 
             foreach ($pipelineStages as $stage) {
                 $query = "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " tl

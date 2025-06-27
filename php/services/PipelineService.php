@@ -162,7 +162,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
                 'id' => $pipelineId
             ));
             if ($result === false) {
-                throw new \Exception('Failed to delete a board');
+                throw new \Exception('Failed to delete the board');
             }
 
             // Delete the pipeline stages

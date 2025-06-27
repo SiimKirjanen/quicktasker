@@ -6,17 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Task\TaskRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
     class CustomFieldRepository {
-
-        protected $taskRepository;
-
-        public function __construct() {
-            $this->taskRepository = new TaskRepository();
-        }
-
         /**
          * Retrieves a custom field by its ID.
          *
@@ -94,7 +87,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
             global $wpdb;
 
             $isDeletedCondition = $activeFields ? 0 : 1;
-            $task = $this->taskRepository->getTaskById($taskId);
+            $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
             
             $query = $wpdb->prepare(
                 "SELECT custom_fields.*, custom_field_values.value 
