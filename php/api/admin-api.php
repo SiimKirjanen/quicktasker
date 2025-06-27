@@ -313,7 +313,18 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'GET',
                 'callback' => function( $data ) {
                     try {
-                        $archivedTasks = ServiceLocator::get('TaskRepository')->getArchivedTasks(true, true);
+                        $limit = $data['limit'] ?? null;
+                        $search = $data['search'] ?? null;
+                        $pipelineId = $data['pipelineId'] ?? null;
+                        $status = $data['status'] ?? null;
+
+                        $archivedTasks = ServiceLocator::get('TaskRepository')->getArchivedTasks(true, true, [
+                            'limit' => $limit,
+                            'search' => $search,
+                            'pipelineId' => $pipelineId,
+                            'status' => $status,
+                            'order' => $data['order'] ?? 'DESC',
+                        ]);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $archivedTasks))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -323,7 +334,34 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 },
                 'permission_callback' => function() {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
-                }
+                },
+                'args' => array(
+                    'limit' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'pipelineId' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'status' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateArchiveStatusFilter'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'search' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'order' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'valdiateQueryOrder'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
             ),
         );
 

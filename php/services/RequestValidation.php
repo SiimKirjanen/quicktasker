@@ -422,5 +422,17 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
             }
             return self::validateHexColor($param);
         }
+
+        /**
+         * Validates the archive status filter parameter.
+         *
+         * This method checks if the provided parameter is a valid archive status filter.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is a valid archive status filter, false otherwise.
+         */
+        public static function validateArchiveStatusFilter($param) {
+            return in_array($param, WP_QUICKTASKER_ARCHIVE_STATUS_FILTER, true);
+        }
     }
 }
