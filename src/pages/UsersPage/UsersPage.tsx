@@ -41,7 +41,7 @@ function UsersPage() {
         )}
         icon={
           <Cog8ToothIcon
-            className="wpqt-icon-gray wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+            className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
             onClick={() => {
               modalDispatch({
                 type: CHANGE_USER_SETTINGS_MODAL_OPEN,

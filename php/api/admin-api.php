@@ -2369,6 +2369,44 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        /*
+        ==================================================================================================================================================================================================================
+        Archive settings endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'archive/settings/task-cleanup',
+            array(
+                'methods' => 'PATCH',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+                        
+                        $taskService = new TaskService();
+                        $deletedTaskIds = $taskService->deleteArchivedTasksWithoutPipeline();
+
+                        $wpdb->query('COMMIT');
+                        
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'deletedTaskIds' => $deletedTaskIds,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    //return PermissionService::hasRequiredPermissionsForPrivateAPIArchiveEndpoints();
+                    return true;
+                },
+            ),
+        );
+
          /*
         ==================================================================================================================================================================================================================
         Overview endpoints

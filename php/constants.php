@@ -363,6 +363,10 @@ if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS' ) ) {
 
 if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS' ) ) {
     define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS", "quicktasker_admin_role_manage_settings"); // Allows access to Settings page and related private API endpoints
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE' ) ) {
+    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE", "quicktasker_admin_role_manage_archive"); // Allows access to Archive page and related private API endpoints
 }  
 
 /*

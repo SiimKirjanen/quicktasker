@@ -694,6 +694,24 @@ function saveTaskCompletionDoneSettingRequest(
 
 /*
   ==================================================================================================================================================================================================================
+  Archive settings requests
+  ==================================================================================================================================================================================================================
+*/
+
+function cleanArchiveTasksRequest(): Promise<
+  WPQTResponse<{
+    deletedTaskIds: string[];
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/archive/settings/task-cleanup`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+  });
+}
+
+/*
+  ==================================================================================================================================================================================================================
   Overview requests
   ==================================================================================================================================================================================================================
 */
@@ -951,6 +969,7 @@ export {
   assignTaskToUserRequest,
   changeUserSessionStatusRequest,
   changeUserStatusRequest,
+  cleanArchiveTasksRequest,
   createNewStageRequest,
   createPipelineAutomationRequest,
   createPipelineLabelRequest,

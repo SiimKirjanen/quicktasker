@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "@wordpress/element";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
+  ARCHIVE_SETTINGS_MODAL_OPEN,
   CHANGE_TASK_DONE_STATUS,
   CHANGE_TASK_EXPORT_MODAL_METHOD,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
@@ -65,6 +66,7 @@ const initialState: State = {
   pipelineImportModalOpen: false,
   automationCreatorModalOpen: false,
   automationsModalOpen: false,
+  archiveSettingsModalOpen: false,
 };
 
 type State = {
@@ -90,6 +92,7 @@ type State = {
   pipelineImportModalOpen: boolean;
   automationCreatorModalOpen: boolean;
   automationsModalOpen: boolean;
+  archiveSettingsModalOpen: boolean;
 };
 
 type Action =
@@ -142,6 +145,7 @@ type Action =
   | { type: typeof OPEN_AUTOMATION_CREATOR_MODAL }
   | { type: typeof CLOSE_AUTOMATION_CREATOR_MODAL }
   | { type: typeof OPEN_AUTOMATIONS_MODAL }
+  | { type: typeof ARCHIVE_SETTINGS_MODAL_OPEN; payload: boolean }
   | { type: typeof CLOSE_AUTOMATIONS_MODAL };
 
 type ModalDispatch = (action: Action) => void;
