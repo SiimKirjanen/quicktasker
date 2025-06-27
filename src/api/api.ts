@@ -540,6 +540,8 @@ function updateWPUserPermissionsRequest(
         capabilities.quicktasker_admin_role_manage_users,
       quicktasker_admin_role_manage_settings:
         capabilities.quicktasker_admin_role_manage_settings,
+      quicktasker_admin_role_manage_archive:
+        capabilities.quicktasker_admin_role_manage_archive,
     },
     headers: getCommonHeaders(),
   });

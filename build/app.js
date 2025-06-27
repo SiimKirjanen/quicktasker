@@ -532,7 +532,8 @@ function updateWPUserPermissionsRequest(userId, capabilities) {
       quicktasker_admin_role: capabilities.quicktasker_admin_role,
       quicktasker_admin_role_allow_delete: capabilities.quicktasker_admin_role_allow_delete,
       quicktasker_admin_role_manage_users: capabilities.quicktasker_admin_role_manage_users,
-      quicktasker_admin_role_manage_settings: capabilities.quicktasker_admin_role_manage_settings
+      quicktasker_admin_role_manage_settings: capabilities.quicktasker_admin_role_manage_settings,
+      quicktasker_admin_role_manage_archive: capabilities.quicktasker_admin_role_manage_archive
     },
     headers: getCommonHeaders()
   });
@@ -17941,7 +17942,8 @@ function WPUserItem({
     quicktasker_admin_role: "quicktasker_admin_role" in user.allcaps,
     quicktasker_admin_role_allow_delete: "quicktasker_admin_role_allow_delete" in user.allcaps,
     quicktasker_admin_role_manage_users: "quicktasker_admin_role_manage_users" in user.allcaps,
-    quicktasker_admin_role_manage_settings: "quicktasker_admin_role_manage_settings" in user.allcaps
+    quicktasker_admin_role_manage_settings: "quicktasker_admin_role_manage_settings" in user.allcaps,
+    quicktasker_admin_role_manage_archive: "quicktasker_admin_role_manage_archive" in user.allcaps
   });
   const [updating, setUpdating] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
@@ -17999,6 +18001,17 @@ function WPUserItem({
         checked: capabilitySettings.quicktasker_admin_role_manage_settings,
         handleChange: checked => {
           onToggleChange(checked, "quicktasker_admin_role_manage_settings");
+        }
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-mb-2",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-mb-2",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Access to archive page", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_5__.Toggle, {
+        checked: capabilitySettings.quicktasker_admin_role_manage_archive,
+        handleChange: checked => {
+          onToggleChange(checked, "quicktasker_admin_role_manage_archive");
         }
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {

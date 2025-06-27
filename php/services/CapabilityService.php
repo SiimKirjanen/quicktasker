@@ -12,7 +12,7 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
         /**
          * Adds QuickTasker admin capabilities to the administrator role.
          *
-         * This function checks if the administrator role has specific QuickTasker capabilities.
+         * This function checks if the WordPress administrator role has specific QuickTasker capabilities.
          * If the capabilities are not present, they are added to the administrator role.
          *
          * Capabilities added:
@@ -20,6 +20,7 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
          * - WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS
+         * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE
          *
          * @return void
          */
@@ -41,6 +42,10 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
             if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS) ) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS);
             }
+
+            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE) ) {
+                $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE);
+            }
         }
 
          /**
@@ -51,6 +56,7 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
          * - WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS
+         * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE
          *
          * If any of these capabilities are found, they are removed from the administrator role.
          *
@@ -73,6 +79,10 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
 
             if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS) ) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS);
+            }
+
+            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE) ) {
+                $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE);
             }
         }
 

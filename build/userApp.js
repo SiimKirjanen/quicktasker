@@ -480,7 +480,8 @@ function updateWPUserPermissionsRequest(userId, capabilities) {
       quicktasker_admin_role: capabilities.quicktasker_admin_role,
       quicktasker_admin_role_allow_delete: capabilities.quicktasker_admin_role_allow_delete,
       quicktasker_admin_role_manage_users: capabilities.quicktasker_admin_role_manage_users,
-      quicktasker_admin_role_manage_settings: capabilities.quicktasker_admin_role_manage_settings
+      quicktasker_admin_role_manage_settings: capabilities.quicktasker_admin_role_manage_settings,
+      quicktasker_admin_role_manage_archive: capabilities.quicktasker_admin_role_manage_archive
     },
     headers: getCommonHeaders()
   });

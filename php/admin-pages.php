@@ -29,7 +29,7 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
             'wp-quick-tasks',
             'Overview',
             'Overview',
-            'manage_options',
+            WP_QUICKTASKER_ADMIN_ROLE,
             'wp-quick-tasks#/overview',
             'wp_quick_taks_generate_app_page'
         );
@@ -65,7 +65,7 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
             'wp-quick-tasks',
             esc_html__('Archive', 'quicktasker'),
             esc_html__('Archive', 'quicktasker'),
-            WP_QUICKTASKER_ADMIN_ROLE,
+            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE,
             'wp-quick-tasks#/archive',
             'wp_quick_taks_generate_app_page'
         );
