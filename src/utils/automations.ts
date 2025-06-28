@@ -101,6 +101,14 @@ const automationTriggerStrings: { [key in AllAutomationTriggers]: string } = {
     "Booking gets pending state",
     "quicktasker",
   ),
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_APPROVED_VIA_MANAGER]: __(
+    "Booking gets approved state manually with booking manager",
+    "quicktasker",
+  ),
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_PENDING_VIA_MANAGER]: __(
+    "Booking gets pending state manually with booking manager",
+    "quicktasker",
+  ),
 };
 
 const woocommerceOrderAutomationTriggerStrings: {
@@ -231,6 +239,16 @@ const seatregBookingAutomations: {
     },
   ],
   [SeatRegAutomationTrigger.SEATREG_BOOKING_PENDING]: [
+    {
+      id: AutomationAction.CREATE_TASK,
+    },
+  ],
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_APPROVED_VIA_MANAGER]: [
+    {
+      id: AutomationAction.CREATE_TASK,
+    },
+  ],
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_PENDING_VIA_MANAGER]: [
     {
       id: AutomationAction.CREATE_TASK,
     },

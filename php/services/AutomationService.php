@@ -445,110 +445,86 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
             if ( $this->isSeatregNewBookingTrigger($automation) ) {
                 if ( $this->isTaskCreateAction($automation) ) {
-                    $stageToCreateTask = ServiceLocator::get('StageRepository')->getFirstStage( $automation->pipeline_id );
-                    $seatregBookings = $data->seatregBookings; 
-                    $registration = $data->registration;
-                    $bookingId = $seatregBookings[0]->booking_id;
-
-                    if ( $stageToCreateTask === null ) {
-                        throw new \Exception('Pipeline stage not found.');
-                    }
-
-                    $createdTask = ServiceLocator::get('TaskService')->createTask($stageToCreateTask->id, array(
-                        'name' => $registration->registration_name . ' booking',
-                        'description' => $bookingId,
-                        'pipelineId' => $automation->pipeline_id,
-                    ));
-
-                    if ( !$createdTask ) {
-                        throw new \Exception('Failed to create a new task.');
-                    }
-
-                    return (object)[
-                        'success' => true,
-                        'rerunTriggers' => [
-                            (object)[
-                                'boardId' => $automation->pipeline_id,
-                                'targetId' => $createdTask->id,
-                                'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
-                                'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
-                            ]
-                        ]
-                    ];
+                    return $this->handleSeatregTaskCreation(
+                        $automation, 
+                        $data->seatregBookings, 
+                        $data->registration
+                    );
                 }
             }
 
             if ( $this->isSeatregBookingApprovedTrigger($automation) ) {
                 if ( $this->isTaskCreateAction($automation) ) {
-                    $stageToCreateTask = ServiceLocator::get('StageRepository')->getFirstStage( $automation->pipeline_id );
-                    $seatregBookings = $data->seatregBookings; 
-                    $registration = $data->registration;
-                    $bookingId = $seatregBookings[0]->booking_id;
-
-                    if ( $stageToCreateTask === null ) {
-                        throw new \Exception('Pipeline stage not found.');
-                    }
-
-                    $createdTask = ServiceLocator::get('TaskService')->createTask($stageToCreateTask->id, array(
-                        'name' => $registration->registration_name . ' booking',
-                        'description' => $bookingId,
-                        'pipelineId' => $automation->pipeline_id,
-                    ));
-
-                    if ( !$createdTask ) {
-                        throw new \Exception('Failed to create a new task.');
-                    }
-
-                    return (object)[
-                        'success' => true,
-                        'rerunTriggers' => [
-                            (object)[
-                                'boardId' => $automation->pipeline_id,
-                                'targetId' => $createdTask->id,
-                                'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
-                                'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
-                            ]
-                        ]
-                    ];
+                    return $this->handleSeatregTaskCreation(
+                        $automation, 
+                        $data->seatregBookings, 
+                        $data->registration
+                    );
                 }
             }
 
             if ( $this->isSeatregBookingPendingTrigger($automation) ) {
                 if ( $this->isTaskCreateAction($automation) ) {
-                    $stageToCreateTask = ServiceLocator::get('StageRepository')->getFirstStage( $automation->pipeline_id );
-                    $seatregBookings = $data->seatregBookings; 
-                    $registration = $data->registration;
-                    $bookingId = $seatregBookings[0]->booking_id;
+                    return $this->handleSeatregTaskCreation(
+                        $automation, 
+                        $data->seatregBookings, 
+                        $data->registration
+                    );
+                }
+            }
 
-                    if ( $stageToCreateTask === null ) {
-                        throw new \Exception('Pipeline stage not found.');
-                    }
+            if ( $this->isSeatregBookingApprovedViaManagerTrigger($automation) ) {
+                if ( $this->isTaskCreateAction($automation) ) {
+                    return $this->handleSeatregTaskCreation(
+                        $automation, 
+                        $data->seatregBookings, 
+                        $data->registration
+                    );
+                }
+            }
 
-                    $createdTask = ServiceLocator::get('TaskService')->createTask($stageToCreateTask->id, array(
-                        'name' => $registration->registration_name . ' booking',
-                        'description' => $bookingId,
-                        'pipelineId' => $automation->pipeline_id,
-                    ));
-
-                    if ( !$createdTask ) {
-                        throw new \Exception('Failed to create a new task.');
-                    }
-
-                    return (object)[
-                        'success' => true,
-                        'rerunTriggers' => [
-                            (object)[
-                                'boardId' => $automation->pipeline_id,
-                                'targetId' => $createdTask->id,
-                                'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
-                                'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
-                            ]
-                        ]
-                    ];
+            if ( $this->isSeatregBookingPendingViaManagerTrigger($automation) ) {
+                if ( $this->isTaskCreateAction($automation) ) {
+                     return $this->handleSeatregTaskCreation(
+                        $automation, 
+                        $data->seatregBookings, 
+                        $data->registration
+                    );
                 }
             }
 
             return false;
+        }
+
+        private function handleSeatregTaskCreation($automation, $seatregBookings, $registration) {
+            $stageToCreateTask = ServiceLocator::get('StageRepository')->getFirstStage($automation->pipeline_id);
+            $bookingId = $seatregBookings[0]->booking_id;
+
+            if ($stageToCreateTask === null) {
+                throw new \Exception('Pipeline stage not found.');
+            }
+
+            $createdTask = ServiceLocator::get('TaskService')->createTask($stageToCreateTask->id, array(
+                'name' => $registration->registration_name . ' booking',
+                'description' => $bookingId,
+                'pipelineId' => $automation->pipeline_id,
+            ));
+
+            if (!$createdTask) {
+                throw new \Exception('Failed to create a new task.');
+            }
+
+            return (object)[
+                'success' => true,
+                'rerunTriggers' => [
+                    (object)[
+                        'boardId' => $automation->pipeline_id,
+                        'targetId' => $createdTask->id,
+                        'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                        'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
+                    ]
+                ]
+            ];
         }
 
         /**
@@ -797,6 +773,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
         }
 
         /**
+         * Checks if the automation is triggered by an approved booking via manager in Seatreg.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool Returns true if the automation trigger is for an approved booking via manager in Seatreg, false otherwise.
+         */
+        private function isSeatregBookingApprovedViaManagerTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED_VIA_MANAGER;
+        }
+
+        /**
          * Checks if the automation is triggered by a pending booking in Seatreg.
          *
          * @param object $automation The automation object to check.
@@ -804,6 +790,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          */
         private function isSeatregBookingPendingTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING;
+        }
+
+        /**
+         * Checks if the automation is triggered by a pending booking via manager in Seatreg.
+         *
+         * @param object $automation The automation object to check.
+         * @return bool Returns true if the automation trigger is for a pending booking via manager in Seatreg, false otherwise.
+         */
+        private function isSeatregBookingPendingViaManagerTrigger($automation) {
+            return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING_VIA_MANAGER;
         }
 
         /**

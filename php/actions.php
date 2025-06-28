@@ -255,3 +255,23 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_pending' ) ) {
         );
     }
 }
+
+add_action('seatreg_action_booking_pending_via_manager', 'quicktasker_handle_seatreg_booking_pending_via_manager', 10, 1);
+if ( ! function_exists( 'quicktasker_handle_seatreg_booking_pending_via_manager' ) ) {
+    function quicktasker_handle_seatreg_booking_pending_via_manager($bookingId) {
+        quicktasker_handle_seatreg_booking_action(
+            $bookingId,
+            WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING_VIA_MANAGER
+        );
+    }
+}
+
+add_action('seatreg_action_booking_approved_via_manager', 'quicktasker_handle_seatreg_booking_approved_via_manager', 10, 1);
+if ( ! function_exists( 'quicktasker_handle_seatreg_booking_approved_via_manager' ) ) {
+    function quicktasker_handle_seatreg_booking_approved_via_manager($bookingId) {
+        quicktasker_handle_seatreg_booking_action(
+            $bookingId,
+            WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED_VIA_MANAGER
+        );
+    }
+}

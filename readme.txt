@@ -54,7 +54,8 @@ QuickTasker PRO version
 * Added confirmation dialogs for critical actions to prevent accidental changes.
 * Archive page filtering improvements.
 * Added new capability to allow access to archive page.
-* Added new setting to archive page for removing orphaned tasks (tasks without associated boards).
+* Added setting to archive page for removing orphaned tasks (tasks without associated boards).
+* Seatreg booking pending and approved via booking manager automations.
 
 = 1.34.0 =
 * Added SeatReg automations.
