@@ -20,6 +20,7 @@ enum WoocommerceOrderAutomationTrigger {
 enum SeatRegAutomationTrigger {
   SEATREG_BOOKING_CREATED = "seatreg-booking-created",
   SEATREG_BOOKING_APPROVED = "seatreg-booking-approved",
+  SEATREG_BOOKING_PENDING = "seatreg-booking-pending",
 }
 
 enum TargetType {

@@ -16,9 +16,11 @@ function AutomationsList() {
 
   if (!automations || automations.length === 0) {
     return (
-      <Alert type="info">
-        {__("No automations created for this board", "quicktasker")}
-      </Alert>
+      <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-4">
+        <Alert type="info">
+          {__("No automations created for this board", "quicktasker")}
+        </Alert>
+      </div>
     );
   }
 

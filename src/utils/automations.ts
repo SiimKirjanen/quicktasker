@@ -94,7 +94,11 @@ const automationTriggerStrings: { [key in AllAutomationTriggers]: string } = {
     "quicktasker",
   ),
   [SeatRegAutomationTrigger.SEATREG_BOOKING_APPROVED]: __(
-    "Booking approved",
+    "Booking gets approved state",
+    "quicktasker",
+  ),
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_PENDING]: __(
+    "Booking gets pending state",
     "quicktasker",
   ),
 };
@@ -222,6 +226,11 @@ const seatregBookingAutomations: {
     },
   ],
   [SeatRegAutomationTrigger.SEATREG_BOOKING_APPROVED]: [
+    {
+      id: AutomationAction.CREATE_TASK,
+    },
+  ],
+  [SeatRegAutomationTrigger.SEATREG_BOOKING_PENDING]: [
     {
       id: AutomationAction.CREATE_TASK,
     },

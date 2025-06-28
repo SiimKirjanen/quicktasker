@@ -172,101 +172,86 @@ if ( ! function_exists( 'quicktasker_handle_woocommerce_new_order' ) ) {
 	}
 }
 
+/**
+ * Common handler for SeatReg booking actions
+ * 
+ * @param int $bookingId The booking ID
+ * @param string $triggerType The automation trigger type constant
+ * @return void
+ */
+if ( ! function_exists( 'quicktasker_handle_seatreg_booking_action' ) ) {
+    function quicktasker_handle_seatreg_booking_action($bookingId, $triggerType) {
+        try {
+            if ( !$bookingId ) {
+                return;
+            }
+
+            if ( !class_exists('SeatregBookingRepository') || !class_exists('SeatregRegistrationRepository') ) {
+                return;
+            }
+        
+            $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomationsByTrigger($triggerType);
+
+            if ( !$relatedAutomations ) {
+                return;
+            }
+
+            $bookingRepository = new SeatregBookingRepository();
+            $registrationRepository = new SeatregRegistrationRepository();
+        
+            $seatregBookings = $bookingRepository->getBookingsById($bookingId);
+
+            if ( !$seatregBookings ) {
+                return;
+            }
+
+            $registration = $registrationRepository->getRegistrationByCode($seatregBookings[0]->registration_code);
+
+            foreach ( $relatedAutomations as $automation ) {
+                ServiceLocator::get('AutomationService')->handleAutomations(
+                    $automation->pipeline_id, 
+                    null, 
+                    WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING, 
+                    $triggerType,
+                    (object)[
+                        'seatregBookings' => $seatregBookings,
+                        'registration' => $registration
+                    ]
+                );
+            }
+        } catch(Exception $e) {
+            error_log('QuickTasker SeatReg ' . $triggerType . ' action error: ' . $e->getMessage());
+        }
+    }
+}
+
 add_action('seatreg_action_booking_submitted', 'quicktasker_handle_seatreg_booking_submitted', 10, 1);
 add_action('seatreg_action_booking_manually_added', 'quicktasker_handle_seatreg_booking_submitted', 10, 1);
 if ( ! function_exists( 'quicktasker_handle_seatreg_booking_submitted' ) ) {
-	function quicktasker_handle_seatreg_booking_submitted($bookingId) {
-		try {
-			if ( !$bookingId ) {
-				return;
-			}
-
-			if ( !class_exists('SeatregBookingRepository') || !class_exists('SeatregRegistrationRepository') ) {
-				return;
-			}
-		
-			$relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomationsByTrigger(
-				WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED
-			);
-
-			if ( !$relatedAutomations ) {
-				return;
-			}
-
-			$bookingRepository = new SeatregBookingRepository();
-			$registrationRepository = new SeatregRegistrationRepository();
-		
-			$seatregBookings = $bookingRepository->getBookingsById($bookingId);
-
-			if ( !$seatregBookings ) {
-				return;
-			}
-
-			$registration = $registrationRepository->getRegistrationByCode( $seatregBookings[0]->registration_code );
-
-			foreach ( $relatedAutomations as $automation ) {
-				ServiceLocator::get('AutomationService')->handleAutomations(
-					$automation->pipeline_id, 
-					null, 
-					WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING, 
-					WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED,
-					(object)[
-						'seatregBookings' => $seatregBookings,
-						'registration' => $registration
-					]
-				);
-			}
-		} catch(Exception $e) {
-			error_log('QuickTasker SeatReg seatreg_action_booking_submitted action error: ' . $e->getMessage());
-		}
-	}
+    function quicktasker_handle_seatreg_booking_submitted($bookingId) {
+        quicktasker_handle_seatreg_booking_action(
+            $bookingId,
+            WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED
+        );
+    }
 }
 
 add_action('seatreg_action_booking_approved', 'quicktasker_handle_seatreg_booking_approved', 10, 1);
 if ( ! function_exists( 'quicktasker_handle_seatreg_booking_approved' ) ) {
-	function quicktasker_handle_seatreg_booking_approved($bookingId) {
-		try {
-			if ( !$bookingId ) {
-				return;
-			}
+    function quicktasker_handle_seatreg_booking_approved($bookingId) {
+        quicktasker_handle_seatreg_booking_action(
+            $bookingId,
+            WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED
+        );
+    }
+}
 
-			if ( !class_exists('SeatregBookingRepository') || !class_exists('SeatregRegistrationRepository') ) {
-				return;
-			}
-		
-			$relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomationsByTrigger(
-				WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED
-			);
-
-			if ( !$relatedAutomations ) {
-				return;
-			}
-
-			$bookingRepository = new SeatregBookingRepository();
-			$registrationRepository = new SeatregRegistrationRepository();
-		
-			$seatregBookings = $bookingRepository->getBookingsById($bookingId);
-
-			if ( !$seatregBookings ) {
-				return;
-			}
-
-			$registration = $registrationRepository->getRegistrationByCode( $seatregBookings[0]->registration_code );
-
-			foreach ( $relatedAutomations as $automation ) {
-				ServiceLocator::get('AutomationService')->handleAutomations(
-					$automation->pipeline_id, 
-					null, 
-					WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING, 
-					WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED,
-					(object)[
-						'seatregBookings' => $seatregBookings,
-						'registration' => $registration
-					]
-				);
-			}
-		} catch(Exception $e) {
-			error_log('QuickTasker SeatReg seatreg_action_booking_approved action error: ' . $e->getMessage());
-		}
-	}
+add_action('seatreg_action_booking_pending', 'quicktasker_handle_seatreg_booking_pending', 10, 1);
+if ( ! function_exists( 'quicktasker_handle_seatreg_booking_pending' ) ) {
+    function quicktasker_handle_seatreg_booking_pending($bookingId) {
+        quicktasker_handle_seatreg_booking_action(
+            $bookingId,
+            WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING
+        );
+    }
 }
