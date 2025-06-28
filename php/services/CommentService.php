@@ -6,20 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Comment\CommentRepository;
 use WPQT\WPQTException;
-use WPQT\Time\TimeRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Comment\CommentService' ) ) {
     class CommentService {
-        protected $commentRepository;
-        protected $timeRepository;
-
-        public function __construct() {
-            $this->commentRepository = new CommentRepository();
-            $this->timeRepository = new TimeRepository();
-        }
-
         /**
          * Creates a new comment in the database.
          *
@@ -44,7 +35,7 @@ if ( ! class_exists( 'WPQT\Comment\CommentService' ) ) {
                 'text' => $text,
                 'author_id' => $userId,
                 'is_admin_comment' => $isAdminComment,
-                'created_at' => $this->timeRepository->getCurrentUTCTime(),
+                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
             ));
 
             if( $result === false ) {
@@ -53,7 +44,7 @@ if ( ! class_exists( 'WPQT\Comment\CommentService' ) ) {
 
             $commentId = $wpdb->insert_id;
 
-            return $this->commentRepository->getCommentById($commentId);
+            return ServiceLocator::get('CommentRepository')->getCommentById($commentId);
         }
     }
 }

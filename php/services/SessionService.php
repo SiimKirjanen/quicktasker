@@ -1,9 +1,8 @@
 <?php
 namespace WPQT\Session;
 
-use WPQT\Session\SessionRepository;
 use WPQT\WPQTException;
-use WPQT\Time\TimeRepository;
+use WPQT\ServiceLocator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
@@ -11,14 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
     class SessionService {
-        protected $sessionRepository;
-        protected $timeRepository;
-
-        public function __construct() {
-            $this->sessionRepository = new SessionRepository();
-            $this->timeRepository = new TimeRepository();
-        }
-
         /**
          * Calculates the expiry date for a new token.
          *
@@ -62,7 +53,7 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
                 array(
                     'user_id' => $userId,
                     'page_hash' => $userPageHash,
-                    'created_at_utc' => $this->timeRepository->getCurrentUTCTime(),
+                    'created_at_utc' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                     'expires_at_utc' => $this->getNewTokenExpiryDate(),
                     'session_token' => $this->generateSessionToken()
                 )
@@ -72,7 +63,7 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
                 throw new WPQTException('Failed to create new session');
             }
             
-            return $this->sessionRepository->getUserSessionById($wpdb->insert_id);
+            return ServiceLocator::get('SessionRepository')->getUserSessionById($wpdb->insert_id);
         }
 
     
@@ -169,7 +160,7 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          */
         public function verifySessionToken($pageHash) {
             $sessionToken = sanitize_text_field($_COOKIE['wpqt-session-token-' . $pageHash]);
-            $session = $this->sessionRepository->getUserSession($sessionToken);
+            $session = ServiceLocator::get('SessionRepository')->getUserSession($sessionToken);
 
             if( $session === null ) {
                 throw new WPQTException(esc_html(WP_QUICKTASKER_INVALID_SESSION_TOKEN), true);

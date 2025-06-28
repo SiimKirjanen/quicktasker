@@ -1,20 +1,14 @@
 <?php
 namespace WPQT\Password;
 
-use WPQT\Password\PasswordRepository;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
+use WPQT\ServiceLocator;
+
 if ( ! class_exists( 'WPQT\Password\PasswordService' ) ) {
     class PasswordService {
-        protected $passwordRepository;
-
-        public function __construct() {
-            $this->passwordRepository = new PasswordRepository();
-        }
-
         /**
          * Creates a password hash using the default algorithm.
          *
@@ -34,7 +28,7 @@ if ( ! class_exists( 'WPQT\Password\PasswordService' ) ) {
          * @throws Exception Throws an exception if failed to retrieve the stored password.
          */
         public function verifyPassword($pageHash, $password) {
-            $storedPassword = $this->passwordRepository->getUserPagePasswordByHash($pageHash);
+            $storedPassword = ServiceLocator::get('PasswordRepository')->getUserPagePasswordByHash($pageHash);
 
             if( !$storedPassword ) {
                 throw new \Exception('Failed to retrieve stored password');

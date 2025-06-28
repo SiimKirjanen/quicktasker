@@ -6,19 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Log\LogRepository;
-use WPQT\Time\TimeRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Log\LogService' ) ) {
-    class LogService {
-        protected $logRepository;
-        protected $timeRepository;
-
-        public function __construct() {
-            $this->logRepository = new LogRepository();
-            $this->timeRepository = new TimeRepository();
-        }
-        
+    class LogService {        
         /**
          * Logs a message to the database.
          *
@@ -59,7 +50,7 @@ if ( ! class_exists( 'WPQT\Log\LogService' ) ) {
                 'type_id' => $args['type_id'],
                 'user_id' => $args['user_id'],
                 'created_by' => $args['created_by'],
-                'created_at' => $this->timeRepository->getCurrentUTCTime(),
+                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'log_status' => $args['log_status'],
                 'pipeline_id' => $args['pipeline_id'],
             ));
@@ -68,7 +59,7 @@ if ( ! class_exists( 'WPQT\Log\LogService' ) ) {
                 throw new \Exception('Failed to add a log');
             }
 
-            return $this->logRepository->getLogById( $wpdb->insert_id );
+            return ServiceLocator::get('LogRepository')->getLogById( $wpdb->insert_id );
         }
     }
 }

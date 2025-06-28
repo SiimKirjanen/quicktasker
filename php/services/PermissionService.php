@@ -5,18 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Task\TaskRepository;
-use WPQT\User\UserRepository; 
+use WPQT\ServiceLocator; 
 
 if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
     class PermissionService {
-        protected $userRepository;
-        protected $taskRepository;
-
-        public function __construct() {
-            $this->userRepository = new UserRepository();
-            $this->taskRepository = new TaskRepository();
-        }
         /**
          * Checks if the current user has the required permissions to access the private API.
          *
@@ -84,12 +76,12 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
         public function checkIfUserIsAllowedToViewTask($userId, $taskId) {
             global $wpdb;
 
-            $task = $this->taskRepository->getTaskById($taskId);
+            $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
             if($task->is_archived === '1') {
                 return false;
             }
 
-            $assignedUsers = $this->userRepository->getAssignedUsersByTaskId($taskId);
+            $assignedUsers = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($taskId);
             $isAssignedToTask = false;
 
             foreach ($assignedUsers as $user) {
@@ -120,11 +112,11 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
         public function checkIfUserCanBeAssignedToTask($userId, $taskId) {
             global $wpdb;
 
-            $task = $this->taskRepository->getTaskById($taskId);
+            $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
             if($task->is_archived === '1') {
                 return false;
             }
-            $assignedUsers = $this->userRepository->getAssignedUsersByTaskId($taskId);
+            $assignedUsers = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($taskId);
             
 
             if ($task->free_for_all === '1' && count($assignedUsers) === 0) {
@@ -145,12 +137,12 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
         public function checkIfUserIsAllowedToEditTask($userId, $taskId) {
             global $wpdb;
 
-            $task = $this->taskRepository->getTaskById($taskId);
+            $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
             if($task->is_archived === '1') {
                 return false;
             }
 
-            $isAssignedToUser = $this->userRepository->checkIfUserHasAssignedToTask($userId, $taskId);
+            $isAssignedToUser = ServiceLocator::get('UserRepository')->checkIfUserHasAssignedToTask($userId, $taskId);
 
             if ($isAssignedToUser === true) {
                 return true;

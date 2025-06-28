@@ -7,16 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Settings\SettingRepository;
-use WPQT\Time\TimeRepository;
+use WPQT\ServiceLocator; 
 
 if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
     class SettingsService {
-        protected $timeRepository;
-
-        public function __construct() {
-            $this->timeRepository = new TimeRepository();
-        }
-
         /**
          * Validates the custom styles provided by the user for a page.
          *
@@ -63,8 +57,8 @@ if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
 
             $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, array(
                 'pipeline_id' => $pipelineId,
-                'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ));
 
             if ($result == false) {
@@ -86,7 +80,7 @@ if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
 
             $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, array(
                 'allow_only_last_stage_task_done' => $allowOnlyLastStageTaskDone,
-                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ), array(
                 'pipeline_id' => $pipelineId
             ));

@@ -7,7 +7,7 @@
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
 	Domain Path: /languages
-	Version: 1.34.0
+	Version: 1.35.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28
 	License: GPLv2 or later
@@ -101,6 +101,9 @@ WPQT\ServiceLocator::register('SlackService', new WPQT\Slack\SlackService());
 WPQT\ServiceLocator::register('SecretsService', new WPQT\Secrets\SecretsService());
 WPQT\ServiceLocator::register('PipelineImportService', new WPQT\Import\PipelineImportService());
 WPQT\ServiceLocator::register('DBMigrateService', new WPQT\DB\DBMigrateService());
+WPQT\ServiceLocator::register('PasswordRepository', new WPQT\Password\PasswordRepository());
+WPQT\ServiceLocator::register('SettingService', new WPQT\Settings\SettingsService());
+WPQT\ServiceLocator::register('SessionRepository', new WPQT\Session\SessionRepository());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );

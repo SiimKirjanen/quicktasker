@@ -5,22 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Pipeline\PipelineRepository;
-use WPQT\Time\TimeRepository;
-use WPQT\Settings\SettingsService;
+use WPQT\ServiceLocator; 
 
 if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
     class PipelineService {
-        protected $pipelineRepository;
-        protected $timeRepository;
-        protected $settingsService;
-
-        public function __construct() {
-            $this->pipelineRepository = new PipelineRepository();
-            $this->timeRepository = new TimeRepository();
-            $this->settingsService = new SettingsService();
-        }
-
         /**
          * Creates a new pipeline with the given name.
          *
@@ -40,14 +28,14 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
             );
             $args = wp_parse_args($args, $defaults);
 
-            $activePipeline = $this->pipelineRepository->getActivePipeline();
+            $activePipeline = ServiceLocator::get('PipelineRepository')->getActivePipeline();
 
             $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINES, array(
                 'name' => $name,
                 'description' => $args['description'],
                 'is_primary' => $activePipeline ? false : true,
-                'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ));
 
             if ($result == false) {
@@ -56,9 +44,9 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
 
             $pipelineId = $wpdb->insert_id;
 
-            $this->settingsService->insertSettingsColumnForPipeline($pipelineId);
+            ServiceLocator::get('SettingService')->insertSettingsColumnForPipeline($pipelineId);
             
-            return $this->pipelineRepository->getPipelineById($pipelineId);
+            return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);
         }
 
         /**
@@ -86,7 +74,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
             $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINES, array(
                 'name' => $args['name'],
                 'description' => $args['description'],
-                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ), array(
                 'id' => $pipelineId
             ));
@@ -95,7 +83,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
                 throw new \Exception('Failed to edit pipeline');
             }
 
-            return $this->pipelineRepository->getPipelineById($pipelineId);       
+            return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);       
         }
 
         /**
@@ -111,7 +99,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
         public function markPipelineAsPrimary($pipelineId) {
             global $wpdb;
 
-            $current_time_utc = $this->timeRepository->getCurrentUTCTime();
+            $current_time_utc = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
             $result = $wpdb->query(
                 $wpdb->prepare(
                     "UPDATE " . TABLE_WP_QUICKTASKER_PIPELINES . "
@@ -129,7 +117,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
                 throw new \Exception('Failed to mark pipeline as primary');
             }
 
-            return $this->pipelineRepository->getPipelineById($pipelineId);   
+            return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);   
         }
 
 
@@ -150,7 +138,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
         public function deletePipeline($pipelineId) {
             global $wpdb;
 
-            $pipeline = $this->pipelineRepository->getPipelineById($pipelineId);
+            $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);
             $pipelineIdToLoadAfterDelete = null;
 
             if ($pipeline === null) {
@@ -199,7 +187,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
                     $pipelineIdToLoadAfterDelete = $newActivePipeline->id;
                 }
             }else {
-                $currentActivePipeline = $this->pipelineRepository->getActivePipeline();
+                $currentActivePipeline = ServiceLocator::get('PipelineRepository')->getActivePipeline();
                 if( $currentActivePipeline === null ) {
                     throw new \Exception('Failed to get active board');
                 }

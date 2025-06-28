@@ -4,7 +4,7 @@ Tags: task manager, task management, project manager, project management, task b
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
-Stable tag: 1.34.0
+Stable tag: 1.35.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,12 @@ QuickTasker PRO version
 
 
 == Changelog ==
+
+= 1.35.0 =
+* Added confirmation dialogs for critical actions to prevent accidental changes.
+* Archive page filtering improvements.
+* Added new capability to allow access to archive page.
+* Added new setting to archive page for removing orphaned tasks (tasks without associated boards).
 
 = 1.34.0 =
 * Added SeatReg automations.

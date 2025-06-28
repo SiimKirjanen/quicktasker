@@ -7,19 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\WPQTException;
-use WPQT\Customfield\CustomFieldRepository;
-use WPQT\Time\TimeRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
     class CustomFieldService {
-        protected $customFieldRepository;
-        protected $timeRepository;
-
-        public function __construct() {
-            $this->customFieldRepository = new CustomFieldRepository();
-            $this->timeRepository = new TimeRepository();
-        }
-
     /**
      * Creates a custom field in the database.
      *
@@ -47,8 +38,8 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
                     'type' => $type,
                     'entity_type' => $entityType,
                     'entity_id' => $entityId,
-                    'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                    'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
                 ),
                 array('%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s')
             ); 
@@ -62,7 +53,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
 
             $customFieldId = $wpdb->insert_id;
 
-            return $this->customFieldRepository->getCustomFieldById($customFieldId);
+            return ServiceLocator::get('CustomFieldRepository')->getCustomFieldById($customFieldId);
         }
 
         /**
@@ -78,7 +69,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
         public function markCustomFieldAsDeleted($customFieldId) {
             global $wpdb;
 
-            $currentTime = $this->timeRepository->getCurrentUTCTime();
+            $currentTime = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
@@ -131,7 +122,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
                     TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES,
                     array(
                         'value' => $value,
-                        'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                        'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
                     ),
                     array(
                         'id' => $existingValue
@@ -148,8 +139,8 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
                         'entity_id' => $entityId,
                         'entity_type' => $entityType,
                         'value' => $value,
-                        'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                        'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                        'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                        'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
                     )
                 );
             }
@@ -175,7 +166,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
                 TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
                 array(
                     'is_deleted' => 0,
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
                 ),
                 array(
                     'id' => $customFieldId
@@ -188,7 +179,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
                 throw new WPQTException('Failed to restore the custom field');
             }
 
-            return $this->customFieldRepository->getCustomFieldById($customFieldId);
+            return ServiceLocator::get('CustomFieldRepository')->getCustomFieldById($customFieldId);
         }
     }
 }
