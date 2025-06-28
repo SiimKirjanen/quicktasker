@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.31.0\n"
+"Project-Id-Version: QuickTasker 1.35.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-11T11:33:53+00:00\n"
+"POT-Creation-Date: 2025-06-28T13:04:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: quicktasker\n"
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Guide"
 msgstr ""
 
-#: php/filters.php:68
+#: php/filters.php:69
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
@@ -79,8 +79,12 @@ msgstr ""
 msgid "Board not found"
 msgstr ""
 
-#: php/filters.php:100
+#: php/filters.php:102
 msgid "Failed to generate PDF"
+msgstr ""
+
+#: php/filters.php:114
+msgid "Failed to generate JSON"
 msgstr ""
 
 #: php/hooks.php:19
@@ -96,8 +100,8 @@ msgstr ""
 msgid "QuickTasker Pro cannot be activated because QuickTasker is already active. Please deactivate free version first."
 msgstr ""
 
-#: php/services/export/ExportService.php:37
-#: php/services/export/ExportService.php:49
+#: php/services/export/ExportService.php:56
+#: php/services/export/ExportService.php:68
 #: php/services/export/PDFExportService.php:46
 #: php/services/export/PDFExportService.php:49
 #: php/services/export/PDFExportService.php:50
@@ -183,26 +187,6 @@ msgstr ""
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "Something went wrong. Please refresh the page."
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to fetch archived tasks"
-msgstr ""
-
-#: build/app.js:1
-msgid "Archive filtering"
-msgstr ""
-
-#: build/app.js:1
-msgid "DELETED"
-msgstr ""
-
-#: build/app.js:1
-msgid "All status"
-msgstr ""
-
-#: build/app.js:1
-msgid "Not completed"
 msgstr ""
 
 #: build/app.js:1
@@ -317,6 +301,86 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Failed to change task focus color"
+msgstr ""
+
+#: build/app.js:1
+msgid "Removed %d orphaned tasks from archive"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to clean up task archive"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to fetch archived tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Archive cleanup"
+msgstr ""
+
+#: build/app.js:1
+msgid "Remote tasks from archive that have no parent board."
+msgstr ""
+
+#: build/app.js:1
+msgid "Apply filter"
+msgstr ""
+
+#: build/app.js:1
+msgid "Archive filtering"
+msgstr ""
+
+#: build/app.js:1
+msgid "Search"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task board"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task status"
+msgstr ""
+
+#: build/app.js:1
+msgid "All"
+msgstr ""
+
+#: build/app.js:1
+msgid "Not completed"
+msgstr ""
+
+#: build/app.js:1
+msgid "Number of tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Show all"
+msgstr ""
+
+#: build/app.js:1
+msgid "Show 100"
+msgstr ""
+
+#: build/app.js:1
+msgid "Show 200"
+msgstr ""
+
+#: build/app.js:1
+msgid "Show 500"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task order"
+msgstr ""
+
+#: build/app.js:1
+msgid "Desc"
+msgstr ""
+
+#: build/app.js:1
+msgid "Asc"
 msgstr ""
 
 #: build/app.js:1
@@ -489,6 +553,10 @@ msgid "Task custom fields"
 msgstr ""
 
 #: build/app.js:1
+msgid "Are you sure?"
+msgstr ""
+
+#: build/app.js:1
 msgid "Create new label"
 msgstr ""
 
@@ -602,6 +670,30 @@ msgid "System"
 msgstr ""
 
 #: build/app.js:1
+msgid "Import"
+msgstr ""
+
+#: build/app.js:1
+msgid "Author"
+msgstr ""
+
+#: build/app.js:1
+msgid "Date"
+msgstr ""
+
+#: build/app.js:1
+msgid "Text"
+msgstr ""
+
+#: build/app.js:1
+msgid "Unknown"
+msgstr ""
+
+#: build/app.js:1
+msgid "Author not found"
+msgstr ""
+
+#: build/app.js:1
 msgid "Comment added"
 msgstr ""
 
@@ -699,6 +791,10 @@ msgid "Restore task"
 msgstr ""
 
 #: build/app.js:1
+msgid "Are you sure you want to archive this task?"
+msgstr ""
+
+#: build/app.js:1
 msgid "Archive task"
 msgstr ""
 
@@ -726,7 +822,7 @@ msgid "Board is deleted!"
 msgstr ""
 
 #: build/app.js:1
-msgid "No tasks archived"
+msgid "No match"
 msgstr ""
 
 #: build/app.js:1
@@ -754,15 +850,11 @@ msgid "Everyone"
 msgstr ""
 
 #: build/app.js:1
-msgid "Import"
+msgid "Number of logs"
 msgstr ""
 
 #: build/app.js:1
-msgid "Show 100"
-msgstr ""
-
-#: build/app.js:1
-msgid "Show 200"
+msgid "Order"
 msgstr ""
 
 #: build/app.js:1
@@ -774,7 +866,15 @@ msgid "Descending"
 msgstr ""
 
 #: build/app.js:1
-msgid "Apply filter"
+msgid "Status"
+msgstr ""
+
+#: build/app.js:1
+msgid "Success"
+msgstr ""
+
+#: build/app.js:1
+msgid "Error"
 msgstr ""
 
 #: build/app.js:1
@@ -862,6 +962,10 @@ msgid "Import from Pipedrive."
 msgstr ""
 
 #: build/app.js:1
+msgid "Import from QuickTasker."
+msgstr ""
+
+#: build/app.js:1
 msgid "Select import source"
 msgstr ""
 
@@ -875,6 +979,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Export your Pipedrive deals as CSV format and use it for import. Please not that generated CSV file column headers should be in English."
+msgstr ""
+
+#: build/app.js:1
+msgid "Import your QuickTasker board from JSON format."
 msgstr ""
 
 #: build/app.js:1
@@ -899,10 +1007,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Filter by source"
-msgstr ""
-
-#: build/app.js:1
-msgid "Number of tasks"
 msgstr ""
 
 #: build/app.js:1
@@ -950,6 +1054,10 @@ msgid "Invalid Pipedrive import"
 msgstr ""
 
 #: build/app.js:1
+msgid "Invalid Quicktasker import"
+msgstr ""
+
+#: build/app.js:1
 msgid "Failed to parse import file"
 msgstr ""
 
@@ -994,11 +1102,27 @@ msgid "Failed to update board"
 msgstr ""
 
 #: build/app.js:1
+msgid "Board deleted"
+msgstr ""
+
+#: build/app.js:1
+msgid "Are you sure you want to delete this board?"
+msgstr ""
+
+#: build/app.js:1
 msgid "Delete board"
 msgstr ""
 
 #: build/app.js:1
-msgid "Board deleted"
+msgid "Export as PDF"
+msgstr ""
+
+#: build/app.js:1
+msgid "Export as JSON"
+msgstr ""
+
+#: build/app.js:1
+msgid "Export"
 msgstr ""
 
 #: build/app.js:1
@@ -1011,10 +1135,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Include board archived tasks"
-msgstr ""
-
-#: build/app.js:1
-msgid "Open export"
 msgstr ""
 
 #: build/app.js:1
@@ -1078,15 +1198,19 @@ msgid "Edit stage"
 msgstr ""
 
 #: build/app.js:1
-msgid "Archive all stage tasks"
-msgstr ""
-
-#: build/app.js:1
 msgid "Archived all %s tasks"
 msgstr ""
 
 #: build/app.js:1
 msgid "Failed to archive stage %s tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Are you sure you want to archive all tasks on the stage?"
+msgstr ""
+
+#: build/app.js:1
+msgid "Archive all stage tasks"
 msgstr ""
 
 #: build/app.js:1
@@ -1134,6 +1258,10 @@ msgid "Move task"
 msgstr ""
 
 #: build/app.js:1
+msgid "Are you sure you want to delete this task?"
+msgstr ""
+
+#: build/app.js:1
 msgid "Create a new board"
 msgstr ""
 
@@ -1143,6 +1271,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Import an existing board"
+msgstr ""
+
+#: build/app.js:1
+msgid "Primary board has been set successfully."
 msgstr ""
 
 #: build/app.js:1
@@ -1206,6 +1338,10 @@ msgid "WooCommerce Order"
 msgstr ""
 
 #: build/app.js:1
+msgid "SeatReg Booking"
+msgstr ""
+
+#: build/app.js:1
 msgid "Task marked as done"
 msgstr ""
 
@@ -1239,6 +1375,30 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Order added"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking created"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking gets approved state"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking gets pending state"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking gets approved state manually with booking manager"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking gets pending state manually with booking manager"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load board automations"
 msgstr ""
 
 #: build/app.js:1
@@ -1302,7 +1462,7 @@ msgid "Create automation"
 msgstr ""
 
 #: build/app.js:1
-msgid "Close automation creator"
+msgid "Free version limit reached. Upgrade to premium to create more automations."
 msgstr ""
 
 #: build/app.js:1
@@ -1318,10 +1478,6 @@ msgid "Action"
 msgstr ""
 
 #: build/app.js:1
-msgid "Free version limit reached. Upgrade to premium to create more automations."
-msgstr ""
-
-#: build/app.js:1
 msgid "Create a new automation"
 msgstr ""
 
@@ -1334,27 +1490,31 @@ msgid "Active"
 msgstr ""
 
 #: build/app.js:1
-msgid "Hide created automations"
-msgstr ""
-
-#: build/app.js:1
-msgid "Show created automations"
-msgstr ""
-
-#: build/app.js:1
 msgid "No automations created for this board"
 msgstr ""
 
 #: build/app.js:1
-msgid "Set up automated processes to help manage your boards."
+msgid "Manage board automations"
 msgstr ""
 
 #: build/app.js:1
-msgid "Set up automated processes to help manage your boards. To create more than one automation, please upgrade to the premium version."
+msgid "Set up automated processes to help manage your board."
+msgstr ""
+
+#: build/app.js:1
+msgid "Set up automated processes to help manage your board. To create more than one automation, please upgrade to the premium version."
 msgstr ""
 
 #: build/app.js:1
 msgid "Board automations"
+msgstr ""
+
+#: build/app.js:1
+msgid "There are no automations configured for this board."
+msgstr ""
+
+#: build/app.js:1
+msgid "There are %d automations configured for this board."
 msgstr ""
 
 #: build/app.js:1
@@ -1504,10 +1664,6 @@ msgid "Expires at"
 msgstr ""
 
 #: build/app.js:1
-msgid "Status"
-msgstr ""
-
-#: build/app.js:1
 msgid "Actions"
 msgstr ""
 
@@ -1568,6 +1724,10 @@ msgid "Public comments"
 msgstr ""
 
 #: build/app.js:1
+msgid "Are you sure you want to delete this user?"
+msgstr ""
+
+#: build/app.js:1
 msgid "User name"
 msgstr ""
 
@@ -1613,6 +1773,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Access to settings page"
+msgstr ""
+
+#: build/app.js:1
+msgid "Access to archive page"
 msgstr ""
 
 #: build/app.js:1
