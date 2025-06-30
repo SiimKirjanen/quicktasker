@@ -340,27 +340,41 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
             $result = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS, array('id' => $taskId));
 
             if ($result === false) {
-                throw new \Exception('Failed to delete task');
-            }
-
-            $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('task_id' => $taskId));
-
-            if ($result2 === false) {
-                throw new \Exception('Failed to delete task location');
+                throw new \Exception('Failed to delete the task');
             }
 
             $this->shiftTaskOrder($taskToDelete->task_order, $taskToDelete->stage_id);
 
-            $results3 = $wpdb->delete(TABLE_WP_QUICKTASKER_USER_TASK, array('task_id' => $taskId));
-
-            if ($results3 === false) {
-                throw new \Exception('Failed to unassign users from the task');
-            }
-
             return $taskToDelete;
         }
 
-    
+        /**
+         * Deletes all non-archived tasks associated with a specific pipeline.
+         *
+         * @param int $pipelineId The ID of the pipeline whose tasks should be deleted
+         * @return int|false The number of rows affected, or false on error
+         * @throws \Exception If the deletion fails
+         */
+        public function deleteTasksByPipelineId($pipelineId, $args = array()) {
+            global $wpdb;
+
+            $defaults = array(
+                'is_archived' => 0
+            );
+            $args = wp_parse_args($args, $defaults);
+            
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS, array(
+                'pipeline_id' => $pipelineId,
+                'is_archived' => $args['is_archived']
+            ));
+            
+            if ($result === false) {
+                throw new \Exception('Failed to delete board tasks');
+            }
+            
+            return $result;
+        }
+
         /**
          * Archives a task by setting its 'is_archived' status to 1 and updating the 'updated_at' timestamp.
          * This method updates both the main task table and the task location table.

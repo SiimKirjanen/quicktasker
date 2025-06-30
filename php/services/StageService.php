@@ -229,6 +229,40 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
         }
 
         /**
+         * Deletes all stages associated with a given pipeline ID.
+         *
+         * This function deletes all stages from the pipeline stages table and
+         * their corresponding locations from the stages location table.
+         *
+         * @param int $pipelineId The ID of the pipeline whose stages are to be deleted.
+         * @return bool True if the deletion was successful, false otherwise.
+         * @throws \Exception If the deletion fails.
+         */
+        public function deleteStagesByPipelineId($pipelineId) {
+            global $wpdb;
+            
+            // Delete the pipeline stages
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
+                'pipeline_id' => $pipelineId
+            ));
+            
+            if ($result === false) {
+                throw new \Exception('Failed to delete board stages');
+            }
+            
+            // Delete the pipeline stages location
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
+                'pipeline_id' => $pipelineId
+            ));
+            
+            if ($result === false) {
+                throw new \Exception('Failed to delete board stages location');
+            }
+            
+            return true;
+        }
+
+        /**
          * Archives all tasks associated with a given stage.
          *
          * This function updates the tasks and their locations to mark them as archived.

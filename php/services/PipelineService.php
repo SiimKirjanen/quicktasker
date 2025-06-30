@@ -149,24 +149,9 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
             $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINES, array(
                 'id' => $pipelineId
             ));
+
             if ($result === false) {
                 throw new \Exception('Failed to delete the board');
-            }
-
-            // Delete the pipeline stages
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
-                'pipeline_id' => $pipelineId
-            ));
-            if ($result === false) {
-                throw new \Exception('Failed to delete board stages');
-            }
-
-            // Delete the pipeline stages location
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
-                'pipeline_id' => $pipelineId
-            ));
-            if ($result === false) {
-                throw new \Exception('Failed to delete board stages location');
             }
 
             // Delete not archived tasks
@@ -188,6 +173,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
                 }
             }else {
                 $currentActivePipeline = ServiceLocator::get('PipelineRepository')->getActivePipeline();
+                
                 if( $currentActivePipeline === null ) {
                     throw new \Exception('Failed to get active board');
                 }
