@@ -106,6 +106,7 @@ WPQT\ServiceLocator::register('SettingService', new WPQT\Settings\SettingsServic
 WPQT\ServiceLocator::register('SessionRepository', new WPQT\Session\SessionRepository());
 WPQT\ServiceLocator::register('HashService', new WPQT\Hash\HashService());
 WPQT\ServiceLocator::register('UserPageRepository', new WPQT\UserPage\UserPageRepository());
+WPQT\ServiceLocator::register('StageService', new WPQT\Stage\StageService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
