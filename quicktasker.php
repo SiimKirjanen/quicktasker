@@ -104,6 +104,8 @@ WPQT\ServiceLocator::register('DBMigrateService', new WPQT\DB\DBMigrateService()
 WPQT\ServiceLocator::register('PasswordRepository', new WPQT\Password\PasswordRepository());
 WPQT\ServiceLocator::register('SettingService', new WPQT\Settings\SettingsService());
 WPQT\ServiceLocator::register('SessionRepository', new WPQT\Session\SessionRepository());
+WPQT\ServiceLocator::register('HashService', new WPQT\Hash\HashService());
+WPQT\ServiceLocator::register('UserPageRepository', new WPQT\UserPage\UserPageRepository());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );

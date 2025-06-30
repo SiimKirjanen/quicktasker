@@ -5,19 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\UserPage\UserPageRepository;
-use WPQT\User\UserService;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\UserPage\UserPageService' ) ) {
-    class UserPageService {
-        protected $userPageRepository;
-        protected $userService;
-
-        public function __construct() {
-            $this->userPageRepository = new UserPageRepository();
-            $this->userService = new UserService();
-        }
-        
+    class UserPageService {        
         /**
          * Check if a user page hash exists.
          *
@@ -25,13 +16,13 @@ if ( ! class_exists( 'WPQT\UserPage\UserPageService' ) ) {
          * @return bool Returns true if the user page hash exists, false otherwise.
          */
         public function checkIfUserPageHashExists($pageHash) {
-            $userPage = $this->userPageRepository->getUserPageByHash($pageHash);
+            $userPage = ServiceLocator::get('UserPageRepository')->getUserPageByHash($pageHash);
 
             return $userPage !== null;
         }
 
         public function checkIfUserPageSetupCompleted($userId) {
-            $hasPassword = $this->userService->checkIfUserHasPassword($userId);
+            $hasPassword = ServiceLocator::get('UserService')->checkIfUserHasPassword($userId);
 
             if( !$hasPassword ) {
                 return false;
