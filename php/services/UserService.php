@@ -6,27 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\User\UserRepository;
-use WPQT\Hash\HashService;
 use WPQT\WPQTException;
-use WPQT\Task\TaskRepository;
-use WPQT\Time\TimeRepository;
 use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\User\UserService' ) ) {
     class UserService {
-        protected $userRepository;
-        protected $taskRepository;
-        protected $hashService;
-        protected $timeRepository;
-
-        public function __construct() {
-            $this->userRepository = new UserRepository();
-            $this->hashService = new HashService();
-            $this->taskRepository = new TaskRepository();
-            $this->timeRepository = new TimeRepository();
-        }
-
         /**
          * Creates a new quicktasker user.
          *
@@ -42,8 +26,8 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 array(
                     'name' => $args['name'],
                     'description' => $args['description'],
-                    'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+                    'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
                 ),
                 array('%s', '%s', '%s', '%s')
             );
@@ -53,15 +37,15 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
             }
 
             $newUserId = $wpdb->insert_id;
-            $pageHash = $this->hashService->generateUserPageHash($args['name']);
+            $pageHash = ServiceLocator::get("HashService")->generateUserPageHash($args['name']);
 
             $result2 = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_USER_PAGES,
                 array(
                     'user_id' => $newUserId,
                     'page_hash' => $pageHash,
-                    'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+                    'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
                 ),
                 array('%d', '%s', '%s', '%s')
             );
@@ -70,7 +54,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 throw new \Exception('Failed to create a user page');
             }
 
-            return $this->userRepository->getUserById($newUserId);
+            return ServiceLocator::get("UserRepository")->getUserById($newUserId);
         }
 
         /**
@@ -91,7 +75,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 array(
                     'name' => $args['name'],
                     'description' => $args['description'],
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
                 ),
                 array('id' => $userId),
                 array('%s', '%s', '%s'),
@@ -102,7 +86,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 throw new \Exception('Failed to update a user');
             }
 
-            return $this->userRepository->getUserById($userId);
+            return ServiceLocator::get("UserRepository")->getUserById($userId);
         }
 
         /**
@@ -120,7 +104,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 TABLE_WP_QUICKTASKER_USERS,
                 array(
                     'is_active' => $status,
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
                 ),
                 array('id' => $userId),
                 array('%d', '%s'),
@@ -130,7 +114,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 throw new \Exception('Failed to disable a user');
             }
 
-            return $this->userRepository->getUserById($userId);
+            return ServiceLocator::get("UserRepository")->getUserById($userId);
         }
 
         /**
@@ -147,7 +131,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 TABLE_WP_QUICKTASKER_USERS,
                 array(
                     'deleted' => 1,
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
                 ),
                 array('id' => $userId),
                 array('%d', '%s')
@@ -157,7 +141,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 throw new \Exception('Failed to delete a user');
             }
 
-            return $this->userRepository->getUserById($userId);
+            return ServiceLocator::get("UserRepository")->getUserById($userId);
         }
 
         /**
@@ -210,8 +194,8 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                     'user_id' => $userId,
                     'task_id' => $taskId,
                     'user_type' => $userType,
-                    'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+                    'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
                 ),
                 array('%d', '%d', '%s', '%s', '%s')
             );
@@ -220,7 +204,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 throw new \Exception('Failed to assign a task to a user');
             }
 
-            return $this->taskRepository->getTaskById($taskId);
+            return ServiceLocator::get("TaskRepository")->getTaskById($taskId);
         }
 
         /**
@@ -251,10 +235,8 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 throw new \Exception('Failed to remove user from a task');
             }
 
-            return $this->taskRepository->getTaskById($taskId);
+            return ServiceLocator::get("TaskRepository")->getTaskById($taskId);
         }
-
-
 
         /**
          * Resets the password for a given user.
@@ -281,7 +263,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 TABLE_WP_QUICKTASKER_USERS,
                 array(
                     'password' => null,
-                    'updated_at' => $this->timeRepository->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
                 ),
                 array('id' => $userId),
                 array('%s', '%s'),
@@ -301,7 +283,7 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
                 throw new \Exception('Failed to reset a user sessions');
             }
 
-            return $this->userRepository->getUserById($userId);
+            return ServiceLocator::get("UserRepository")->getUserById($userId);
         }
     }
 }

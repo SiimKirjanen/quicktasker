@@ -4,25 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Log\LogService;
-use WPQT\Stage\StageRepository;
-use WPQT\Task\TaskRepository;
-use WPQT\Time\TimeRepository;
+use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
     class StageService {
-        protected $stageRepository;
-        protected $taskRepository;
-        protected $logService;
-        protected $timeRepository;
-
-        public function __construct() {
-            $this->stageRepository = new StageRepository();
-            $this->taskRepository = new TaskRepository();
-            $this->logService = new LogService();
-            $this->timeRepository = new TimeRepository();
-        }
-
         /**
          * Creates a stage for a pipeline.
          *
@@ -49,8 +34,8 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
                 'pipeline_id' => $pipelineId,
                 'name' => $args['name'],
                 'description' => $args['description'],
-                'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
+                'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime()
             ));
 
             if( $result === false ) {
@@ -58,11 +43,11 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
             }
 
             $stageId = $wpdb->insert_id;
-            $stageOrder = $this->stageRepository->getNextStageOrder($pipelineId);
+            $stageOrder = ServiceLocator::get("StageRepository")->getNextStageOrder($pipelineId);
 
             $this->addStageLocation($pipelineId, $stageId, $stageOrder);
 
-            return $this->stageRepository->getStageById($stageId);
+            return ServiceLocator::get("StageRepository")->getStageById($stageId);
         }
 
         /**
@@ -80,8 +65,8 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
                 'pipeline_id' => $pipelineId,
                 'stage_id' => $stageId,
                 'stage_order' => $stageOrder,
-                'created_at' => $this->timeRepository->getCurrentUTCTime(),
-                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
+                'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime()
             ));
         }
 
@@ -102,14 +87,14 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
             $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
                 'name' => $args['name'],
                 'description' => $args['description'],
-                'updated_at' => $this->timeRepository->getCurrentUTCTime()
+                'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime()
             ), array('id' => $stageId));
 
             if( $result === false ) {
                 throw new \Exception('Failed to update the stage');
             }
 
-            return $this->stageRepository->getStageById($stageId);
+            return ServiceLocator::get("StageRepository")->getStageById($stageId);
         }
 
         /**
@@ -131,8 +116,8 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
                 throw new \Exception('Required fields are missing');
             }
 
-            $stage = $this->stageRepository->getStageById($stageId);
-            $stages = $this->stageRepository->getStagesByPipelineId($stage->pipeline_id);
+            $stage = ServiceLocator::get("StageRepository")->getStageById($stageId);
+            $stages = ServiceLocator::get("StageRepository")->getStagesByPipelineId($stage->pipeline_id);
             $direction = $args['direction'];
 
             if ( !$stage ) {
@@ -152,7 +137,7 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
 
             $this->updateStageOrder($stageId, $stage->pipeline_id, $newOrder, $currentOrder);
 
-            return $this->stageRepository->getStageById($stageId);
+            return ServiceLocator::get("StageRepository")->getStageById($stageId);
         }
 
         /**
@@ -168,7 +153,7 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
         private function updateStageOrder($stageId, $pipelineId, $newOrder, $currentOrder) {
             global $wpdb;
 
-            $currentUtcTime = $this->timeRepository->getCurrentUTCTime();
+            $currentUtcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
 
             if ( $currentOrder < $newOrder) {
                 $result = $wpdb->query(
@@ -223,10 +208,10 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
             global $wpdb;
             
             // Check if the stage has tasks
-            if( count( $this->taskRepository->getTasksByStageId($stageId) ) > 0 ) {
+            if( count( ServiceLocator::get("TaskRepository")->getTasksByStageId($stageId) ) > 0 ) {
                 throw new \Exception('Stage has tasks. Please delete/relocate the tasks first.');
             }
-            $stage = $this->stageRepository->getStageById($stageId);
+            $stage = ServiceLocator::get("StageRepository")->getStageById($stageId);
 
             // Delete the stage from the pipeline stages table
             $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array('id' => $stageId));
@@ -244,6 +229,40 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
         }
 
         /**
+         * Deletes all stages associated with a given pipeline ID.
+         *
+         * This function deletes all stages from the pipeline stages table and
+         * their corresponding locations from the stages location table.
+         *
+         * @param int $pipelineId The ID of the pipeline whose stages are to be deleted.
+         * @return bool True if the deletion was successful, false otherwise.
+         * @throws \Exception If the deletion fails.
+         */
+        public function deleteStagesByPipelineId($pipelineId) {
+            global $wpdb;
+            
+            // Delete the pipeline stages
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
+                'pipeline_id' => $pipelineId
+            ));
+            
+            if ($result === false) {
+                throw new \Exception('Failed to delete board stages');
+            }
+            
+            // Delete the pipeline stages location
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
+                'pipeline_id' => $pipelineId
+            ));
+            
+            if ($result === false) {
+                throw new \Exception('Failed to delete board stages location');
+            }
+            
+            return true;
+        }
+
+        /**
          * Archives all tasks associated with a given stage.
          *
          * This function updates the tasks and their locations to mark them as archived.
@@ -257,8 +276,8 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
         public function archiveStageTasks($stageId) {
             global $wpdb;
 
-            $currentUtcTime = $this->timeRepository->getCurrentUTCTime();
-            $tasksToArvhive = $this->taskRepository->getTasksByStageId($stageId);
+            $currentUtcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
+            $tasksToArvhive = ServiceLocator::get("TaskRepository")->getTasksByStageId($stageId);
 
             $sql = "
                 UPDATE " . TABLE_WP_QUICKTASKER_TASKS . " AS a

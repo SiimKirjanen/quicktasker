@@ -114,11 +114,11 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
         }
 
         /**
-         * Deletes a label and its relations from the database.
+         * Deletes a label from the database.
          *
          * @param int $labelId The ID of the label to delete.
          * @return mixed The deleted label object.
-         * @throws \Exception If the label or its relations could not be deleted.
+         * @throws \Exception If the label could not be deleted.
          */
         public function deleteLabel($labelId) {
             global $wpdb;
@@ -127,13 +127,7 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
             $result = $wpdb->delete(TABLE_WP_QUICKTASKER_LABELS, array('id' => $labelId), array('%d'));
 
             if( $result === false ) {
-                throw new \Exception('Failed to delete label');
-            }
-
-            $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, array('label_id' => $labelId), array('%d'));
-
-            if( $result2 === false ) {
-                throw new \Exception('Failed to delete label relations');
+                throw new \Exception('Failed to delete the label');
             }
 
             return $deletedLabel;
