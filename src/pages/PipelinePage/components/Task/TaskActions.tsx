@@ -38,7 +38,7 @@ function TaskActions({ task, allowToMarkTaskAsDone }: TaskActionsProps) {
     <div className="wpqt-flex wpqt-justify-center">
       {isTaskCompleted ? (
         <CheckBadgeIcon
-          className="wpqt-size-6 wpqt-icon-green"
+          className="wpqt-size-6 wpqt-icon-green hover:wpqt-icon-gray"
           onClick={(e) => {
             e.stopPropagation();
             changeDone(false);
@@ -46,7 +46,7 @@ function TaskActions({ task, allowToMarkTaskAsDone }: TaskActionsProps) {
         />
       ) : (
         <CheckBadgeIcon
-          className="wpqt-size-6 wpqt-icon-gray"
+          className="wpqt-size-6 wpqt-icon-gray hover:wpqt-icon-green"
           onClick={(e) => {
             e.stopPropagation();
             changeDone(true);

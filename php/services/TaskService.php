@@ -331,13 +331,14 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
          *
          * @param int $taskId The ID of the task to delete.
          * @return object The deleted task.
-         * @throws Exception If there is an error deleting the task or its location.
+         * @throws Exception If there is an error deleting the task.
          */
         public function deleteTask($taskId) {
             global $wpdb;
 
             $taskToDelete = ServiceLocator::get("TaskRepository")->getTaskById($taskId);
             $result = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS, array('id' => $taskId));
+            ServiceLocator::get("CommentService")->deleteCommentsByTypeIdAndType($taskId, WP_QUICKTASKER_COMMENT_TYPE_TASK);
 
             if ($result === false) {
                 throw new \Exception('Failed to delete the task');
@@ -349,9 +350,10 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         }
 
         /**
-         * Deletes all non-archived tasks associated with a specific pipeline.
+         * Deletes tasks associated with a specific pipeline.
          *
          * @param int $pipelineId The ID of the pipeline whose tasks should be deleted
+         * @param array $args Optional arguments to filter the deletion
          * @return int|false The number of rows affected, or false on error
          * @throws \Exception If the deletion fails
          */

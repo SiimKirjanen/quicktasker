@@ -12,6 +12,7 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
         public function runMigrations() {
             $this->changeTaskLocationStageIdToNullable();
             $this->changeCommentAuthorIdToNullable();
+            $this->changeTaskPipelineIdToNullable();
             $this->addForeignKeys();
         }
 
@@ -28,6 +29,14 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
 
             $wpdb->query(
                 "ALTER TABLE " . TABLE_WP_QUICKTASKER_COMMENTS . " MODIFY author_id INT(11) DEFAULT NULL"
+            );
+        }
+
+        private function changeTaskPipelineIdToNullable() {
+            global $wpdb;
+
+            $wpdb->query(
+                "ALTER TABLE " . TABLE_WP_QUICKTASKER_TASKS . " MODIFY pipeline_id INT(11) DEFAULT NULL"
             );
         }
 
@@ -70,6 +79,17 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
                     'id', 
                     'CASCADE'
                 );
+
+                // Add foreign key to tasks table
+                $this->addForeignKeyIfNotExists(
+                    TABLE_WP_QUICKTASKER_TASKS, 
+                    'fk_tasks_pipeline_id', 
+                    'pipeline_id', 
+                    TABLE_WP_QUICKTASKER_PIPELINES, 
+                    'id', 
+                    'SET NULL'
+                );
+
                 // Add foreign key to tasks location table
                 $this->addForeignKeyIfNotExists(
                     TABLE_WP_QUICKTASKER_TASKS_LOCATION, 

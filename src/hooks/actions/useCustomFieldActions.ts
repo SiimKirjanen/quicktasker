@@ -76,6 +76,7 @@ function useCustomFieldActions() {
         entityId,
         entityType,
       );
+      toast.success(__("Custom field value updated", "quicktasker"));
       if (callback) callback();
     } catch (error) {
       console.error(error);

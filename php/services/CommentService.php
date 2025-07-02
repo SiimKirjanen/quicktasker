@@ -46,5 +46,61 @@ if ( ! class_exists( 'WPQT\Comment\CommentService' ) ) {
 
             return ServiceLocator::get('CommentRepository')->getCommentById($commentId);
         }
+
+        /**
+         * Deletes comments by type ID and type.
+         *
+         * @param int $typeId The ID of the type associated with the comments.
+         * @param string $type The type of the comments.
+         * 
+         * @return int The number of rows deleted.
+         * 
+         * @throws WPQTException If there is an error deleting the comments.
+         */
+        public function deleteCommentsByTypeIdAndType($typeId, $type) {
+            global $wpdb;
+
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_COMMENTS, array(
+                'type_id' => $typeId,
+                'type' => $type,
+            ));
+
+            if( $result === false ) {
+                throw new WPQTException('Failed to delete comments');
+            }
+
+            return $result;
+        }
+
+        /**
+         * Deletes comments for tasks by their IDs.
+         *
+         * @param array $taskIds An array of task IDs for which comments should be deleted.
+         * 
+         * @return int The number of rows deleted.
+         * 
+         * @throws WPQTException If there is an error deleting the comments.
+         */
+        public function deleteTasksComments( $taskIds ) {
+            if ( empty($taskIds) ) {
+                return 0;
+            }
+
+            global $wpdb;
+
+            $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
+            $query = $wpdb->prepare(
+                "DELETE FROM " . TABLE_WP_QUICKTASKER_COMMENTS . " WHERE type_id IN ($placeholders) AND type = 'task'",
+                $taskIds
+            );
+
+            $result = $wpdb->query($query);
+
+            if ($result === false) {
+                throw new WPQTException('Failed to delete task comments');
+            }
+
+            return $results;
+        }
     }
 }
