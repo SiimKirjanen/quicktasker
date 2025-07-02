@@ -24,10 +24,14 @@ function WPQTConfirmTooltip({
   containerClassName = "",
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const [tooltipPosition, setTooltipPosition] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const tooltipWidth = 224;
+  const showTooltip = isOpen && tooltipPosition !== null;
 
   useEffect(() => {
     if (isOpen && triggerRef.current) {
@@ -85,7 +89,7 @@ function WPQTConfirmTooltip({
   };
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!showTooltip) return;
 
     const handleClickOutside = (event: MouseEvent) => {
       // If click is outside both the trigger and the tooltip, close the tooltip
@@ -103,13 +107,13 @@ function WPQTConfirmTooltip({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen]);
+  }, [showTooltip]);
 
   return (
     <div className={`wpqt-relative ${containerClassName}`} ref={triggerRef}>
       {children({ onClick: handleOpen })}
 
-      {isOpen && (
+      {showTooltip && (
         <div
           ref={tooltipRef}
           className="wpqt-fixed wpqt-z-50"

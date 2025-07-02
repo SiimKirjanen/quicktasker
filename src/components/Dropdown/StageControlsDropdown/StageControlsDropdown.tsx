@@ -171,10 +171,14 @@ function StageControlsDropdown({ stage }: Props) {
           disabled={stageTasksLenght > 0}
           className="!wpqt-mb-0"
           id={`item-dropdown-${stage.id}`}
-          tooltipText={__(
-            "Stage can be deleted when there are no tasks on it",
-            "quicktasker",
-          )}
+          tooltipText={
+            stageTasksLenght > 0
+              ? __(
+                  "Stage can be deleted when there are no tasks on it",
+                  "quicktasker",
+                )
+              : undefined
+          }
         />
       )}
     </WPQTDropdown>

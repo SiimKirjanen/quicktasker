@@ -1,41 +1,28 @@
 type Props = {
-  infoText: string;
+  infoTitle?: string;
   infoDescription: string;
-  actionIcon?: React.ReactNode;
-  infoActionClick?: () => void;
-  secondaryInfoText?: string;
-  secondaryInfoActionClick?: () => void;
+  infoTitleClick?: () => void;
+  children?: React.ReactNode;
 };
 
-function Info({
-  infoText,
-  infoDescription,
-  actionIcon,
-  infoActionClick,
-  secondaryInfoText,
-  secondaryInfoActionClick,
-}: Props) {
+function Info({ infoTitle, infoDescription, infoTitleClick, children }: Props) {
   return (
     <div className="wpqt-flex wpqt-h-screen-minus-top-bar wpqt-items-center wpqt-justify-center">
       <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-1">
-        <div
-          className="wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-cursor-pointer"
-          onClick={infoActionClick}
-        >
-          {actionIcon}
-          <p className="wpqt-m-0 wpqt-font-semibold wpqt-text-lg">{infoText}</p>
-        </div>
-        <p>{infoDescription}</p>
-        {secondaryInfoText && (
-          <p
-            className={`wpqt-m-0 wpqt-blue-text wpqt-blue-text-hover ${
-              secondaryInfoActionClick ? "wpqt-cursor-pointer" : ""
+        {infoTitle && (
+          <div
+            className={`wpqt-flex wpqt-items-center wpqt-gap-2 ${
+              infoTitleClick ? "wpqt-cursor-pointer" : ""
             }`}
-            onClick={secondaryInfoActionClick || undefined}
+            onClick={infoTitleClick || undefined}
           >
-            {secondaryInfoText}
-          </p>
+            <p className="wpqt-m-0 wpqt-font-semibold wpqt-text-lg">
+              {infoTitle}
+            </p>
+          </div>
         )}
+        <p>{infoDescription}</p>
+        {children}
       </div>
     </div>
   );

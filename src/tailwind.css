@@ -54,6 +54,9 @@
   .wpqt-icon-green {
     @apply wpqt-text-green-700;
   }
+  .wpqt-icon-green-hover {
+    @apply hover:wpqt-text-green-800;
+  }
   .wpqt-icon-blue {
     @apply wpqt-text-blue-700;
   }

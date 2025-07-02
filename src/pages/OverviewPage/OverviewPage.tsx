@@ -34,7 +34,7 @@ function OverviewPage() {
         </>
       ) : (
         <Info
-          infoText={__("No overview to display", "quicktasker")}
+          infoTitle={__("No overview to display", "quicktasker")}
           infoDescription={__(
             "You need to first create a board to see the overview.",
             "quicktasker",

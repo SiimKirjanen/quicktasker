@@ -29,7 +29,7 @@ function UserSessionsPageContent() {
   if (!hasSessions) {
     return (
       <Info
-        infoText={__("No sessions", "quicktasker")}
+        infoTitle={__("No sessions", "quicktasker")}
         infoDescription={__("No QuickTasker sessions found", "quicktasker")}
       />
     );

@@ -11,16 +11,47 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
     class TaskRepository {
 
         /**
-         * Retrieves all tasks from the database.
+         * Retrieves tasks from the database.
          *
-         * @return array The array of tasks retrieved from the database.
+         * This function fetches tasks from the database based on the provided arguments.
+         * It can filter tasks by their archived status and pipeline ID.
+         *
+         * @param array $args Optional. An array of arguments to modify the query.
+         * 
+         * @return array An array of tasks. Each task may include additional information like task order and stage ID.
          */
-        public function getTasks() {
+        public function getTasks($args = []) {
             global $wpdb;
-        
-            return $wpdb->get_results(
-                "SELECT * FROM " . TABLE_WP_QUICKTASKER_TASKS
+
+            $defaults = array(
+                'is_archived' => null,
+                'pipeline_id' => null,
             );
+            $args = wp_parse_args($args, $defaults);
+            $query_args = [];
+        
+            $sql = "SELECT a.*, b.task_order, b.stage_id, c.name as pipeline_name
+                FROM ". TABLE_WP_QUICKTASKER_TASKS . " AS a
+                LEFT JOIN ". TABLE_WP_QUICKTASKER_TASKS_LOCATION ." AS b ON a.id = b.task_id
+                LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON a.pipeline_id = c.id
+                WHERE 1=1";
+
+            if ($args['is_archived'] !== null) {
+                $sql .= " AND a.is_archived = %d";
+                $query_args[] = $args['is_archived'];
+            }
+            if ($args['pipeline_id'] !== null) {
+                $sql .= " AND a.pipeline_id = %d";
+                $query_args[] = $args['pipeline_id'];
+            }
+
+            $sql .= " ORDER BY a.created_at DESC";
+
+            if ( !empty($query_args) ) {
+                return $wpdb->get_results($wpdb->prepare($sql, $query_args));
+            } else {
+                return $wpdb->get_results($sql);
+            }
         }
 
         /**

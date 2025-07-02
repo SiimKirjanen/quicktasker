@@ -8,6 +8,7 @@ import { useCallback, useContext, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { moveTaskRequest } from "../../../api/api";
+import { WPQTIconButton } from "../../../components/common/Button/Button";
 import { Info } from "../../../components/Info/Info";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { TaskColorModal } from "../../../components/Modal/TaskColorModal/TaskColorModal";
@@ -101,24 +102,32 @@ const Pipeline = () => {
   if (!activePipeline) {
     return (
       <Info
-        infoText={__("Create a new board", "quicktasker")}
         infoDescription={__(
-          "No boards found. Start by creating your first board to organize and manage your tasks effectively.",
+          "No boards found. Start by creating a board to organize and manage your tasks effectively.",
           "quicktasker",
         )}
-        actionIcon={
-          <PlusCircleIcon className="wpqt-icon-green wpqt-size-6 wpqt-cursor-pointer" />
-        }
-        infoActionClick={() => {
-          modalDispatch({
-            type: OPEN_NEW_PIPELINE_MODAL,
-          });
-        }}
-        secondaryInfoText={__("Import an existing board", "quicktasker")}
-        secondaryInfoActionClick={() => {
-          modalDispatch({ type: OPEN_PIPELINE_IMPORT_MODAL });
-        }}
-      />
+      >
+        <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-center">
+          <WPQTIconButton
+            text={__("Create a new board", "quicktasker")}
+            icon={<PlusCircleIcon className="wpqt-size-6 wpqt-icon-green" />}
+            onClick={() => {
+              modalDispatch({
+                type: OPEN_NEW_PIPELINE_MODAL,
+              });
+            }}
+          />
+          <span>{__("or", "quicktasker")}</span>
+          <div
+            className="wpqt-blue-text wpqt-blue-text-hover wpqt-cursor-pointer"
+            onClick={() => {
+              modalDispatch({ type: OPEN_PIPELINE_IMPORT_MODAL });
+            }}
+          >
+            {__("Import an existing board", "quicktasker")}
+          </div>
+        </div>
+      </Info>
     );
   }
 

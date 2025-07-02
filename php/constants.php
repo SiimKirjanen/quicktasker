@@ -60,7 +60,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.39.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.40.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -340,7 +340,7 @@ if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_DB_MIGRATION_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', "3");
+    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', "7");
 }
 
 /*
