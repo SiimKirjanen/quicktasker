@@ -15,6 +15,7 @@ import {
   CLOSE_TASK_COLOR_MODAL,
   CLOSE_TASK_EXPORT_MODAL,
   CLOSE_TASK_MODAL,
+  CLOSE_TASK_RESTORE_MODAL,
   CLOSE_USER_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_AUTOMATION_CREATOR_MODAL,
@@ -30,10 +31,15 @@ import {
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
   OPEN_TASK_EXPORT_MODAL,
+  OPEN_TASK_RESTORE_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { reducer } from "../reducers/modal-reducer";
-import { TaskExportModalSettings, TaskModalSettings } from "../types/modal";
+import {
+  TaskExportModalSettings,
+  TaskModalSettings,
+  TaskRestoreModalSettings,
+} from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { Task, TaskExportMethods } from "../types/task";
@@ -67,6 +73,10 @@ const initialState: State = {
   automationCreatorModalOpen: false,
   automationsModalOpen: false,
   archiveSettingsModalOpen: false,
+  taskRestoreModalOpen: false,
+  taskRestoreModalSettings: {
+    taskToRestore: null,
+  },
 };
 
 type State = {
@@ -93,6 +103,8 @@ type State = {
   automationCreatorModalOpen: boolean;
   automationsModalOpen: boolean;
   archiveSettingsModalOpen: boolean;
+  taskRestoreModalOpen: boolean;
+  taskRestoreModalSettings: TaskRestoreModalSettings;
 };
 
 type Action =
@@ -146,6 +158,11 @@ type Action =
   | { type: typeof CLOSE_AUTOMATION_CREATOR_MODAL }
   | { type: typeof OPEN_AUTOMATIONS_MODAL }
   | { type: typeof ARCHIVE_SETTINGS_MODAL_OPEN; payload: boolean }
+  | {
+      type: typeof OPEN_TASK_RESTORE_MODAL;
+      payload: { taskToRestore: Task };
+    }
+  | { type: typeof CLOSE_TASK_RESTORE_MODAL }
   | { type: typeof CLOSE_AUTOMATIONS_MODAL };
 
 type ModalDispatch = (action: Action) => void;

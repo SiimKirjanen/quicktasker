@@ -3,6 +3,7 @@ import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { ArchiveSettingsModal } from "../../components/Modal/ArchiveSettingsModal/ArchiveSettingsModal";
+import { TaskRestoreModal } from "../../components/Modal/TaskRestoreModal/TaskRestoreModal";
 import { ARCHIVE_SETTINGS_MODAL_OPEN } from "../../constants";
 import { ArchiveContextProvider } from "../../providers/ArchiveContextProvider";
 import { LabelsContextProvider } from "../../providers/LabelsContextProvider";
@@ -35,6 +36,7 @@ function ArchivePage() {
           </WPQTPageHeader>
           <Archive />
           <ArchiveSettingsModal />
+          <TaskRestoreModal />
         </Page>
       </LabelsContextProvider>
     </ArchiveContextProvider>

@@ -74,13 +74,28 @@ const useTaskActions = () => {
     }
   };
 
-  const restoreArchivedTask = async (taskId: string, callback?: () => void) => {
+  const restoreArchivedTask = async (
+    taskId: string,
+    boardId: string,
+    callback?: (args: { success: boolean }) => void,
+  ) => {
     try {
-      await restoreArchivedTaskRequest(taskId);
-      if (callback) callback();
+      await restoreArchivedTaskRequest(taskId, boardId);
+
+      if (callback) {
+        callback({
+          success: true,
+        });
+      }
       toast.success(__("Task restored", "quicktasker"));
     } catch (error) {
       console.error(error);
+
+      if (callback) {
+        callback({
+          success: false,
+        });
+      }
       toast.error(__("Failed to restore a task", "quicktasker"));
     }
   };

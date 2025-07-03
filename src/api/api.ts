@@ -183,10 +183,14 @@ function archiveTaskRequest(taskId: string): Promise<WPQTResponse> {
   });
 }
 
-function restoreArchivedTaskRequest(taskId: string): Promise<WPQTResponse> {
+function restoreArchivedTaskRequest(
+  taskId: string,
+  boardId: string,
+): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/tasks/${taskId}/archive-restore`,
     method: "PATCH",
+    data: { boardId },
     headers: getCommonHeaders(),
   });
 }

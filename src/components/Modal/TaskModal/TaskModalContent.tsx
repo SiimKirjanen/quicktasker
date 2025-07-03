@@ -75,6 +75,7 @@ const TaskModalContent = forwardRef(
     const [taskDescription, setTaskDescription] = useState("");
     const [freeForAllTask, setFreeForAllTask] = useState(false);
     const [dueDateTime, setDueDateTime] = useState<Date | null>(null);
+    const [restoringTask, setRestoringTask] = useState(false);
     const [assignedTaskLabels, setAssignedTaskLabels] = useState<Label[]>([]);
     const { archiveTask, restoreArchivedTask } = useTaskActions();
     const {
@@ -86,7 +87,6 @@ const TaskModalContent = forwardRef(
     const { convertUTCDateTimeToWPTimezone } = useTimezone();
 
     const isTaskArchived = taskToEdit?.is_archived;
-    const pipelineExists = taskToEdit?.pipeline_name !== null;
 
     useEffect(() => {
       if (taskToEdit) {
@@ -263,20 +263,29 @@ const TaskModalContent = forwardRef(
           </div>
 
           <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
-            {isTaskArchived && pipelineExists && (
+            {isTaskArchived && (
               <WPQTIconButton
                 icon={
                   <ArrowUturnUpIcon className="wpqt-icon-green wpqt-size-5" />
                 }
                 text={__("Restore task", "quicktasker")}
-                onClick={() => {
-                  restoreArchivedTask(taskToEdit.id, () => {
-                    modalDispatch({ type: CLOSE_TASK_MODAL });
-                    archiveDispatch({
-                      type: REMOVE_ARCHIVED_TASK,
-                      payload: taskToEdit.id,
-                    });
-                  });
+                loading={restoringTask}
+                onClick={async () => {
+                  setRestoringTask(true);
+                  await restoreArchivedTask(
+                    taskToEdit.id,
+                    taskToEdit.pipeline_id,
+                    ({ success }) => {
+                      if (success) {
+                        modalDispatch({ type: CLOSE_TASK_MODAL });
+                        archiveDispatch({
+                          type: REMOVE_ARCHIVED_TASK,
+                          payload: taskToEdit.id,
+                        });
+                      }
+                    },
+                  );
+                  setRestoringTask(false);
                 }}
               />
             )}

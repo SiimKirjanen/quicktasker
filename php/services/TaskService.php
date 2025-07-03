@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Exceptions\WPQTException;
+use WPQT\WPQTException;
 use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
@@ -409,7 +409,7 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
             return ServiceLocator::get("TaskRepository")->getTaskById($taskId);
         }
 
-        public function restoreArchivedTask($taskId) {
+        public function restoreArchivedTask($taskId, $pipelineId) {
             global $wpdb;
 
             $utcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
@@ -419,7 +419,7 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 throw new WPQTException('Task not found', true);
             }
 
-            $pipeline = ServiceLocator::get("PipelineRepository")->getPipelineById($task->pipeline_id);
+            $pipeline = ServiceLocator::get("PipelineRepository")->getPipelineById($pipelineId);
 
             if (!$pipeline) {
                 throw new WPQTException('Board not found', true);
@@ -431,21 +431,17 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 throw new WPQTException('No stages in board', true);
             }
 
-            $stageExists = false;
-            foreach ($pipelineStages as $stage) {
-                if ($stage->id == $task->stage_id) {
-                    $stageExists = true;
-                    break;
-                }
-            }
-        
-            if ($stageExists) {
-                $this->moveTask($taskId, $task->stage_id, $task->task_order);
-            }else {
-                $this->moveTask($taskId, $pipelineStages[0]->id, $task->task_order);
-            }
-            
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_archived' => 0, 'updated_at' => $utcTime), array('id' => $taskId));
+            $this->moveTask($taskId, $pipelineStages[0]->id, 0);
+         
+            $result = $wpdb->update(
+                TABLE_WP_QUICKTASKER_TASKS, 
+                array(
+                    'is_archived' => 0, 
+                    'updated_at' => $utcTime, 
+                    'pipeline_id' => $pipelineId
+                ), 
+                array('id' => $taskId)
+            );
 
             if ($result === false) {
                 throw new WPQTException('Failed to restore task');
