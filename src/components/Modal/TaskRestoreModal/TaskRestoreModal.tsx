@@ -1,6 +1,6 @@
 import { ArrowUturnUpIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect, useMemo, useState } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import {
   CLOSE_TASK_RESTORE_MODAL,
   REMOVE_ARCHIVED_TASK,
@@ -12,7 +12,7 @@ import { ModalContext } from "../../../providers/ModalContextProvider";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTLabel } from "../../common/Label/WPQTLabel";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
-import { WPQTModal } from "../WPQTModal";
+import { WPQTModal, WPQTModalTitle } from "../WPQTModal";
 
 function TaskRestoreModal() {
   const {
@@ -81,10 +81,20 @@ function TaskRestoreModal() {
       modalOpen={taskRestoreModalOpen}
       closeModal={() => {
         modalDispatch({ type: CLOSE_TASK_RESTORE_MODAL });
+        setErrorMessages([]);
       }}
     >
       <div>
         <div className="wpqt-flex wpqt-flex-col wpqt-items-start">
+          <WPQTModalTitle>
+            {
+              /* translators: %s is the name of the task being restored */
+              sprintf(
+                __("Restore %s", "quicktasker"),
+                taskRestoreModalSettings?.taskToRestore?.name || "",
+              )
+            }
+          </WPQTModalTitle>
           <WPQTLabel labelFor="task-restore-pipeline-select">
             {__("Select the board to restore to", "quicktasker")}
           </WPQTLabel>
