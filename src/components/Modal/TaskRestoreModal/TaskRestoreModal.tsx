@@ -32,6 +32,7 @@ function TaskRestoreModal() {
   );
   const [selectedPipelineId, setSelectedPipelineId] = useState("");
   const [restoringTast, setRestoringTask] = useState(false);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   useEffect(() => {
     const targetPipelineId =
@@ -54,21 +55,26 @@ function TaskRestoreModal() {
     }
 
     setRestoringTask(true);
-    await restoreArchivedTask(taskToRestore.id, selectedPipelineId, (args) => {
-      if (args.success) {
-        archiveDispatch({
-          type: REMOVE_ARCHIVED_TASK,
-          payload: taskToRestore.id,
-        });
-        modalDispatch({ type: CLOSE_TASK_RESTORE_MODAL });
-      }
-    });
+    await restoreArchivedTask(
+      taskToRestore.id,
+      selectedPipelineId,
+      ({ success, messages }) => {
+        if (success) {
+          archiveDispatch({
+            type: REMOVE_ARCHIVED_TASK,
+            payload: taskToRestore.id,
+          });
+          modalDispatch({ type: CLOSE_TASK_RESTORE_MODAL });
+        } else {
+          if (messages && messages.length > 0) {
+            setErrorMessages(messages);
+          }
+        }
+      },
+    );
 
-    /*   */
     setRestoringTask(false);
   };
-  console.log(selectedPipelineId);
-  console.log(taskRestoreModalSettings.taskToRestore);
 
   return (
     <WPQTModal
@@ -89,10 +95,20 @@ function TaskRestoreModal() {
             selectedOptionValue={selectedPipelineId}
             id="task-restore-pipeline-select"
             onSelectionChange={(selectedValue) => {
-              console.log("what");
               setSelectedPipelineId(selectedValue);
+              setErrorMessages([]);
             }}
           />
+
+          {errorMessages.length > 0 && (
+            <div className="wpqt-text-red-500">
+              {errorMessages.map((message, index) => (
+                <p key={index} className="wpqt-mt-0 wpqt-mb-1">
+                  {message}
+                </p>
+              ))}
+            </div>
+          )}
 
           <div className="wpqt-flex wpqt-justify-end wpqt-w-full">
             <WPQTIconButton

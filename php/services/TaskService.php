@@ -415,20 +415,20 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
             $utcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
             $task = ServiceLocator::get("TaskRepository")->getTaskById($taskId);
 
-            if ($task === null) {
+            if ( $task === null ) {
                 throw new WPQTException('Task not found', true);
             }
 
             $pipeline = ServiceLocator::get("PipelineRepository")->getPipelineById($pipelineId);
 
-            if (!$pipeline) {
+            if ( !$pipeline ) {
                 throw new WPQTException('Board not found', true);
             }
 
             $pipelineStages = ServiceLocator::get("StageRepository")->getStagesByPipelineId($pipeline->id);
 
-            if (empty($pipelineStages)) {
-                throw new WPQTException('No stages in board', true);
+            if ( empty($pipelineStages) ) {
+                throw new WPQTException(esc_html__('Cannot restore the task. The selected board needs at least one stage.', "quicktasker"), true);
             }
 
             $this->moveTask($taskId, $pipelineStages[0]->id, 0);
