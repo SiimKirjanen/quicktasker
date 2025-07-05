@@ -350,28 +350,31 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         }
 
         /**
-         * Deletes tasks associated with a specific pipeline.
+         * Deletes tasks by their IDs.
          *
-         * @param int $pipelineId The ID of the pipeline whose tasks should be deleted
-         * @param array $args Optional arguments to filter the deletion
-         * @return int|false The number of rows affected, or false on error
+         * @param array $taskIds The IDs of the task to delete.
+         * @return int The number of rows affected.
          * @throws \Exception If the deletion fails
          */
-        public function deleteTasksByPipelineId($pipelineId, $args = array()) {
+        public function deleteTasksByTaskIds($taskIds) {
             global $wpdb;
 
-            $defaults = array(
-                'is_archived' => 0
-            );
-            $args = wp_parse_args($args, $defaults);
+            if ( empty($taskIds) ) {
+                return 0;
+            }
+
+            $taskIds = (array)$taskIds;
+            $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
             
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS, array(
-                'pipeline_id' => $pipelineId,
-                'is_archived' => $args['is_archived']
-            ));
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE id IN ($placeholders)",
+                    $taskIds
+                )
+            );
             
             if ($result === false) {
-                throw new \Exception('Failed to delete board tasks');
+                throw new \Exception('Failed to delete the tasks');
             }
             
             return $result;

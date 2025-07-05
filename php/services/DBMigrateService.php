@@ -80,14 +80,10 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
                     'CASCADE'
                 );
 
-                // Add foreign key to tasks table
-                $this->addForeignKeyIfNotExists(
+                // Remove existing task foreign key if it exists
+                $this->removeForeignKeyIfExists(
                     TABLE_WP_QUICKTASKER_TASKS, 
-                    'fk_tasks_pipeline_id', 
-                    'pipeline_id', 
-                    TABLE_WP_QUICKTASKER_PIPELINES, 
-                    'id', 
-                    'SET NULL'
+                    'fk_tasks_pipeline_id'
                 );
 
                 // Add foreign key to tasks location table
@@ -177,6 +173,34 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
         }
 
         /**
+         * Removes a foreign key constraint if it exists
+         *
+         * @param string $table Table name
+         * @param string $constraintName Constraint name to remove
+         * @return bool True if removed or did not exist, false otherwise
+         */
+        private function removeForeignKeyIfExists($table, $constraintName) {
+            global $wpdb;
+            
+            if (!$this->foreignKeyExists($table, $constraintName)) {
+                return true;
+            }
+            
+            // Remove the foreign key constraint
+            $result = $wpdb->query("
+                ALTER TABLE {$table} 
+                DROP FOREIGN KEY {$constraintName}
+            ");
+            
+            if ($result === false) {
+                error_log("Failed to remove foreign key {$constraintName}: " . $wpdb->last_error);
+                return false;
+            }
+            
+            return true;
+        }
+
+        /**
          * Checks if a foreign key constraint already exists
          *
          * @param string $table Table name
@@ -185,7 +209,6 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
          */
         private function foreignKeyExists($table, $constraintName) {
             global $wpdb;
-            
             
             // Check if constraint exists using information_schema
             $constraintExists = $wpdb->get_var($wpdb->prepare("
