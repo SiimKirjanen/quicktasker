@@ -88,7 +88,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				id int(11) NOT NULL AUTO_INCREMENT,
 				stage_id int(11) DEFAULT NULL,
 				task_id int(11) NOT NULL,
-				task_order int(11),
+				task_order int(11) DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
 				is_archived tinyint(1) DEFAULT 0,
