@@ -1,4 +1,4 @@
-import { TaskExportMethods } from "./task";
+import { Task, TaskExportMethods } from "./task";
 
 type TaskModalSettings = {
   allowToMarkTaskAsDone: boolean;
@@ -8,4 +8,12 @@ type TaskExportModalSettings = {
   selectedMethod: TaskExportMethods;
 };
 
-export type { TaskExportModalSettings, TaskModalSettings };
+type TaskRestoreModalSettings = {
+  taskToRestore: Task | null;
+};
+
+export type {
+  TaskExportModalSettings,
+  TaskModalSettings,
+  TaskRestoreModalSettings,
+};

@@ -13,8 +13,21 @@ function useErrorHandler() {
     }
   };
 
+  const getMessagesFromResponse = (error: unknown): string[] => {
+    if (
+      error !== null &&
+      typeof error === "object" &&
+      "messages" in error &&
+      Array.isArray(error.messages)
+    ) {
+      return error.messages;
+    }
+    return [];
+  };
+
   return {
     displayErrorMessages,
+    getMessagesFromResponse,
   };
 }
 

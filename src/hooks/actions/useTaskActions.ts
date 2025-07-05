@@ -16,7 +16,7 @@ import { useAutomationActions } from "./useAutomationActions";
 
 const useTaskActions = () => {
   const { handleExecutedAutomations } = useAutomationActions();
-  const { displayErrorMessages } = useErrorHandler();
+  const { displayErrorMessages, getMessagesFromResponse } = useErrorHandler();
 
   const deleteTask = async (
     taskId: string,
@@ -74,13 +74,30 @@ const useTaskActions = () => {
     }
   };
 
-  const restoreArchivedTask = async (taskId: string, callback?: () => void) => {
+  const restoreArchivedTask = async (
+    taskId: string,
+    boardId: string,
+    callback?: (args: { success: boolean; messages: string[] }) => void,
+  ) => {
     try {
-      await restoreArchivedTaskRequest(taskId);
-      if (callback) callback();
+      await restoreArchivedTaskRequest(taskId, boardId);
+
+      if (callback) {
+        callback({
+          success: true,
+          messages: [],
+        });
+      }
       toast.success(__("Task restored", "quicktasker"));
     } catch (error) {
       console.error(error);
+
+      if (callback) {
+        callback({
+          success: false,
+          messages: getMessagesFromResponse(error),
+        });
+      }
       toast.error(__("Failed to restore a task", "quicktasker"));
     }
   };

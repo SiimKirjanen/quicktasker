@@ -709,10 +709,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        $taskService = new TaskService();
-                        $logService = new LogService();
+                        $taskService = ServiceLocator::get('TaskService');
+                        $logService = ServiceLocator::get('LogService');
 
-                        $task = $taskService->restoreArchivedTask( $data['id'] );
+                        $task = $taskService->restoreArchivedTask( $data['id'], $data['boardId'] );
+                        
                         $logService->log('Task ' . $task->name . ' restored from the archive', [
                             'type' => WP_QT_LOG_TYPE_TASK,
                             'type_id' => $task->id,
@@ -739,6 +740,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
+                    'boardId' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    )    
                 ),
             ),
         );

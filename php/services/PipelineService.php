@@ -152,8 +152,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
             $tasksToDelteIds = array_map(function($task) {
                 return $task->id;
             }, $tasksToDelete);
-
-            // Delete the pipeline
+            
             $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINES, array(
                 'id' => $pipelineId
             ));
@@ -162,11 +161,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
                 throw new \Exception('Failed to delete the board');
             }
 
-            // Delete not archived tasks
-            ServiceLocator::get('TaskService')->deleteTasksByPipelineId($pipelineId, [
-                'is_archived' => 0
-            ]);
-            // Delete comments related to the deleted tasks
+            ServiceLocator::get('TaskService')->deleteTasksByTaskIds($tasksToDelteIds);
             ServiceLocator::get('CommentService')->deleteTasksComments($tasksToDelteIds);
 
             // If the pipeline was the primary pipeline, mark another pipeline as primary

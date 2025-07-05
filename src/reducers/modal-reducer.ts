@@ -14,6 +14,7 @@ import {
   CLOSE_TASK_COLOR_MODAL,
   CLOSE_TASK_EXPORT_MODAL,
   CLOSE_TASK_MODAL,
+  CLOSE_TASK_RESTORE_MODAL,
   CLOSE_USER_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_AUTOMATION_CREATOR_MODAL,
@@ -29,6 +30,7 @@ import {
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
   OPEN_TASK_EXPORT_MODAL,
+  OPEN_TASK_RESTORE_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
@@ -283,6 +285,21 @@ const reducer = (state: State, action: Action): State => {
           archiveSettingsModalOpen: true,
         };
       }
+      return closeModal();
+    }
+    case OPEN_TASK_RESTORE_MODAL: {
+      const { taskToRestore }: { taskToRestore: Task } = action.payload;
+
+      return {
+        ...state,
+        taskRestoreModalOpen: true,
+        taskRestoreModalSettings: {
+          ...state.taskRestoreModalSettings,
+          taskToRestore,
+        },
+      };
+    }
+    case CLOSE_TASK_RESTORE_MODAL: {
       return closeModal();
     }
     default:

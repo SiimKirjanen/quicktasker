@@ -5,10 +5,15 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
-import { REMOVE_ARCHIVED_TASK } from "../../../constants";
+import { __ } from "@wordpress/i18n";
+import {
+  OPEN_TASK_RESTORE_MODAL,
+  REMOVE_ARCHIVED_TASK,
+} from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
 import {
   WPQTDropdown,
@@ -25,11 +30,9 @@ function ArchivedTaskDropdown({ task }: Props) {
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
   const { archiveDispatch } = useContext(ArchiveContext);
-  const { deleteTask, restoreArchivedTask } = useTaskActions();
-  const [isRestoring, setIsRestoring] = useState(false);
+  const { deleteTask } = useTaskActions();
+  const { modalDispatch } = useContext(ModalContext);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const pipelineExists = task.pipeline_name !== null;
 
   return (
     <WPQTDropdown
@@ -41,37 +44,33 @@ function ArchivedTaskDropdown({ task }: Props) {
       )}
     >
       <WPQTDropdownItem
-        text="View task"
+        text={__("View task", "quicktasker")}
         icon={<EyeIcon className="wpqt-icon-blue wpqt-size-4" />}
       />
 
       <WPQTDropdownItem
-        text="Restore task"
-        loading={isRestoring}
+        text={__("Restore task", "quicktasker")}
         icon={<ArrowUturnUpIcon className="wpqt-icon-green wpqt-size-4" />}
-        disabled={!pipelineExists}
-        id={`restore-task-${task.id}-dropdown-item`}
-        tooltipText="Task cannot be restored because the board has been deleted."
         onClick={async (e: React.MouseEvent) => {
           e.stopPropagation();
-          setIsRestoring(true);
-          await restoreArchivedTask(task.id, () => {
-            archiveDispatch({
-              type: REMOVE_ARCHIVED_TASK,
-              payload: task.id,
-            });
+
+          modalDispatch({
+            type: OPEN_TASK_RESTORE_MODAL,
+            payload: {
+              taskToRestore: task,
+            },
           });
-          setIsRestoring(false);
         }}
       />
 
       {isUserAllowedToDelete && (
         <WPQTDropdownItem
-          text="Delete"
+          text={__("Delete", "quicktasker")}
           loading={isDeleting}
           icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
           onClick={async (e: React.MouseEvent) => {
             e.stopPropagation();
+
             setIsDeleting(true);
             await deleteTask(task.id, () => {
               archiveDispatch({

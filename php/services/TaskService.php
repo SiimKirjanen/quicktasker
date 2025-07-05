@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\Exceptions\WPQTException;
+use WPQT\WPQTException;
 use WPQT\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
@@ -124,21 +124,22 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
 
             $currentTask = ServiceLocator::get("TaskRepository")->getTaskById($taskId);
 
-            if (!$currentTask) {
+            if ( !$currentTask ) {
                 throw new WPQTException('Task not found');
             }
             $currentStageId = $currentTask->stage_id;
             $currentOrder = $currentTask->task_order;
             $stageChanged = $currentStageId != $newStageId;
 
-            if (!$stageChanged) {
+            if ( $currentOrder === null ) {
+                $this->updateTaskOrderAfterTaskRestore($newStageId, $newOrder);
+            } else if ( !$stageChanged ) {
                 $this->updateTaskOrderWithinStage($currentStageId, $currentOrder, $newOrder);
             } else {
                 $this->updateTaskOrderAcrossStages($currentStageId, $currentOrder, $newStageId, $newOrder);
             }
 
-            // Update the stage_id and task_order of the moved task
-            $rowsUpdated = $wpdb->update(
+            $locationUpdated = $wpdb->update(
                 TABLE_WP_QUICKTASKER_TASKS_LOCATION,
                 array(
                     'stage_id' => $newStageId,
@@ -155,8 +156,8 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 )
             );
 
-            if ($rowsUpdated === false) {
-                throw new WPQTException('Failed to move task');
+            if ( $locationUpdated === false ) {
+                throw new WPQTException('Failed to move the task');
             }
     
             return (object)[
@@ -166,13 +167,37 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 'task' => ServiceLocator::get("TaskRepository")->getTaskById($taskId)
             ];
         }
+
+        private function updateTaskOrderAfterTaskRestore($stageId, $newOrder) {
+            global $wpdb;
+        
+            $utcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
+
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . "
+                    SET task_order = task_order + 1, updated_at = %s
+                    WHERE stage_id = %d AND task_order >= %d AND is_archived = 0",
+                    $utcTime,
+                    $stageId,
+                    $newOrder
+                )
+            );
+
+            if ( $result === false ) {
+                throw new \Exception('Failed to update task order after task restore');
+            }
+
+            return $result;
+        }
         
         /**
          * Updates the task order within a stage.
          *
          * @param int $stageId The ID of the stage.
-         * @param int $currentOrder The current task order.
+         * @param int $currentOrder The current task order. Archived tasks will have this as null.
          * @param int $newOrder The new task order.
+         * @throws \Exception If the current order is null or if the update fails.
          * @return void
          */
         private function updateTaskOrderWithinStage($stageId, $currentOrder, $newOrder) {
@@ -180,7 +205,11 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         
             $utcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
 
-            if ($currentOrder < $newOrder) {
+            if( $currentOrder === null ) {
+                throw new \Exception('Current order cannot be null when updating task order within a stage');
+            }
+
+            if ( $currentOrder < $newOrder ) {
                 // Moving down within the same stage
                 $result = $wpdb->query(
                     $wpdb->prepare(
@@ -216,7 +245,8 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         /**
          * Updates the task order across stages.
          *
-         * This function updates the task order of tasks in different stages based on the provided parameters.
+         * If task location changed to different stage, it will decrement the task order of tasks in the current stage
+         * and increment the task order of tasks in the new stage.
          *
          * @param int $currentStageId The ID of the current stage.
          * @param int $currentOrder The current task order.
@@ -350,28 +380,31 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
         }
 
         /**
-         * Deletes tasks associated with a specific pipeline.
+         * Deletes tasks by their IDs.
          *
-         * @param int $pipelineId The ID of the pipeline whose tasks should be deleted
-         * @param array $args Optional arguments to filter the deletion
-         * @return int|false The number of rows affected, or false on error
+         * @param array $taskIds The IDs of the task to delete.
+         * @return int The number of rows affected.
          * @throws \Exception If the deletion fails
          */
-        public function deleteTasksByPipelineId($pipelineId, $args = array()) {
+        public function deleteTasksByTaskIds($taskIds) {
             global $wpdb;
 
-            $defaults = array(
-                'is_archived' => 0
-            );
-            $args = wp_parse_args($args, $defaults);
+            if ( empty($taskIds) ) {
+                return 0;
+            }
+
+            $taskIds = (array)$taskIds;
+            $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
             
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_TASKS, array(
-                'pipeline_id' => $pipelineId,
-                'is_archived' => $args['is_archived']
-            ));
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM " . TABLE_WP_QUICKTASKER_TASKS . " WHERE id IN ($placeholders)",
+                    $taskIds
+                )
+            );
             
             if ($result === false) {
-                throw new \Exception('Failed to delete board tasks');
+                throw new \Exception('Failed to delete the tasks');
             }
             
             return $result;
@@ -398,7 +431,7 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 throw new \Exception('Failed to archive task');
             }
 
-            $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 1, 'updated_at' => $utcTime), array('task_id' => $taskId));
+            $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 1, 'updated_at' => $utcTime, 'task_order' => null), array('task_id' => $taskId));
 
             if ($result2 === false) {
                 throw new \Exception('Failed to archive task location');
@@ -409,46 +442,40 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
             return ServiceLocator::get("TaskRepository")->getTaskById($taskId);
         }
 
-        public function restoreArchivedTask($taskId) {
+        public function restoreArchivedTask($taskId, $pipelineId) {
             global $wpdb;
 
             $utcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
             $task = ServiceLocator::get("TaskRepository")->getTaskById($taskId);
 
-            if ($task === null) {
+            if ( $task === null ) {
                 throw new WPQTException('Task not found', true);
             }
 
-            $pipeline = ServiceLocator::get("PipelineRepository")->getPipelineById($task->pipeline_id);
+            $pipeline = ServiceLocator::get("PipelineRepository")->getPipelineById($pipelineId);
 
-            if (!$pipeline) {
+            if ( !$pipeline ) {
                 throw new WPQTException('Board not found', true);
             }
 
             $pipelineStages = ServiceLocator::get("StageRepository")->getStagesByPipelineId($pipeline->id);
 
-            if (empty($pipelineStages)) {
-                throw new WPQTException('No stages in board', true);
+            if ( empty($pipelineStages) ) {
+                throw new WPQTException(esc_html__('Cannot restore the task. The selected board needs at least one stage.', "quicktasker"), true);
             }
 
-            $stageExists = false;
-            foreach ($pipelineStages as $stage) {
-                if ($stage->id == $task->stage_id) {
-                    $stageExists = true;
-                    break;
-                }
-            }
-        
-            if ($stageExists) {
-                $this->moveTask($taskId, $task->stage_id, $task->task_order);
-            }else {
-                $this->moveTask($taskId, $pipelineStages[0]->id, $task->task_order);
-            }
-            
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS, array('is_archived' => 0, 'updated_at' => $utcTime), array('id' => $taskId));
+            $result = $wpdb->update(
+                TABLE_WP_QUICKTASKER_TASKS, 
+                array(
+                    'is_archived' => 0, 
+                    'updated_at' => $utcTime, 
+                    'pipeline_id' => $pipelineId
+                ), 
+                array('id' => $taskId)
+            );
 
             if ($result === false) {
-                throw new WPQTException('Failed to restore task');
+                throw new WPQTException('Failed to restore the task');
             }
 
             $result2 = $wpdb->update(TABLE_WP_QUICKTASKER_TASKS_LOCATION, array('is_archived' => 0, 'updated_at' => $utcTime), array('task_id' => $taskId));
@@ -457,6 +484,8 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
                 throw new WPQTException('Failed to restore task location');
             }
 
+            $this->moveTask($taskId, $pipelineStages[0]->id, 0);
+         
             return ServiceLocator::get("TaskRepository")->getTaskById($taskId);
         }
 
