@@ -657,6 +657,18 @@ function updateCustomFieldValueRequest(
   });
 }
 
+function updateCustomFieldDefaultValueRequest(
+  customFieldId: string,
+  value: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/custom-fields/${customFieldId}/default-value`,
+    method: "PATCH",
+    data: { value },
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   Settings requests
@@ -1025,6 +1037,7 @@ export {
   setPipelinePrimaryRequest,
   unassignLabelFromTaskRequest,
   updateAutomationActiveStatusRequest,
+  updateCustomFieldDefaultValueRequest,
   updateCustomFieldValueRequest,
   updateLabelRequest,
   updateTaskFocusColorRequest,

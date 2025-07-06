@@ -153,6 +153,39 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
         }
 
         /**
+         * Updates the default value of a custom field for a given entity.
+         *
+         * This method updates the 'default_value' of a custom field in the database.
+         *
+         * @param int $customFieldId The ID of the custom field to update.
+         * @param mixed $value The new default value to set for the custom field.
+         * @return bool True on success, throws WPQTException on failure.
+         * @throws WPQTException If the entity type does not support default values or if the update fails.
+         */
+        public function updateCustomFieldDefaultValue($customFieldId, $value) {
+            global $wpdb;
+
+            $result = $wpdb->update(
+                TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
+                array(
+                    'default_value' => $value,
+                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+                ),
+                array(
+                    'id' => $customFieldId,
+                ),
+                array('%s', '%s'),
+                array('%d')
+            );
+
+            if ($result === false) {
+                throw new WPQTException('Failed to update the custom field default value');
+            }
+
+            return true;
+        }
+
+        /**
          * Restores a custom field by setting its 'is_deleted' status to 0.
          *
          * @param int $customFieldId The ID of the custom field to restore.

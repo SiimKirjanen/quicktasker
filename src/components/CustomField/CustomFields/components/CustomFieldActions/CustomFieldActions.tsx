@@ -29,6 +29,7 @@ function CustomFieldActions({
   const isAllowedToDelete = data.entity_type === locationOfCustomFields;
   const isAllowedToSave =
     locationOfCustomFields === CustomFieldEntityType.Task ||
+    locationOfCustomFields === CustomFieldEntityType.Pipeline ||
     locationOfCustomFields === CustomFieldEntityType.User;
   const entityTypeDisplay =
     data.entity_type === CustomFieldEntityType.Pipeline

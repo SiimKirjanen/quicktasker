@@ -2239,6 +2239,58 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
         register_rest_route(
             'wpqt/v1',
+            'custom-fields/(?P<custom_field_id>\d+)/default-value',
+            array(
+                'methods' => 'PATCH',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+
+                        $customFieldService = ServiceLocator::get('CustomFieldService');
+                        $logService = ServiceLocator::get('LogService');
+                        $customFieldRepo = ServiceLocator::get('CustomFieldRepository');
+
+                        $customField = $customFieldRepo->getCustomFieldById($data['custom_field_id']);
+                        $customFieldService->updateCustomFieldDefaultValue($data['custom_field_id'], $data['value']);
+                        $logService->log('Custom field ' . $customField->name . ' default value updated', [
+                            'type' => $customField->entity_type,
+                            'type_id' => $customField->entity_id,
+                            'user_id' => get_current_user_id(),
+                            'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'pipeline_id' => $customField->entity_id,
+                        ]);
+
+                        $wpdb->query('COMMIT');
+
+                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'custom_field_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'value' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
             'custom-fields/(?P<custom_field_id>\d+)/restore',
             array(
                 'methods' => 'PATCH',

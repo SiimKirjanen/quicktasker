@@ -20,27 +20,52 @@ function CustomField({ data }: Props) {
     state: { entityType, entityId },
     customFieldsDispatch,
   } = useContext(CustomFieldsContext);
-  const { updateCustomFieldValue, markCustomFieldAsDeleted } =
-    useCustomFieldActions();
+  const {
+    updateCustomFieldValue,
+    markCustomFieldAsDeleted,
+    updateCustomFieldDefaultValue,
+  } = useCustomFieldActions();
   const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     if (data.value) {
       setValue(data.value);
+    } else if (data.default_value) {
+      setValue(data.default_value);
     }
-  }, [data.value]);
+  }, [data.value, data.default_value]);
 
   const handleSave = async () => {
     if (
       entityType === CustomFieldEntityType.User ||
       entityType === CustomFieldEntityType.Task
     ) {
-      setActionLoading(true);
-      await updateCustomFieldValue(data.id, value, entityId, entityType);
-      setActionLoading(false);
+      await handleCustomFieldValueUpdate();
+    } else if (entityType === CustomFieldEntityType.Pipeline) {
+      await handleCustomFieldDefaultValueUpdate();
     } else {
       console.error("Invalid entity type for saving custom field value");
     }
+  };
+
+  const handleCustomFieldValueUpdate = async () => {
+    if (
+      entityType !== CustomFieldEntityType.User ||
+      entityType !== CustomFieldEntityType.User
+    ) {
+      return;
+    }
+    setActionLoading(true);
+    await updateCustomFieldValue(data.id, value, entityId, entityType);
+    setActionLoading(false);
+  };
+  const handleCustomFieldDefaultValueUpdate = async () => {
+    if (entityType !== CustomFieldEntityType.Pipeline) {
+      return;
+    }
+    setActionLoading(true);
+    await updateCustomFieldDefaultValue(data.id, value);
+    setActionLoading(false);
   };
 
   const handleDelete = async () => {

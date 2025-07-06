@@ -25,6 +25,7 @@ type CustomField = {
   updated_at: string;
   deleted_at: string;
   value?: string;
+  default_value: string;
 };
 
 export { CustomFieldEntityType, CustomFieldType, type CustomField };

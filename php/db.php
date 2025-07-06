@@ -211,6 +211,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				updated_at datetime NOT NULL COMMENT 'UTC',
 				deleted_at datetime DEFAULT NULL COMMENT 'UTC',
 				is_deleted tinyint(1) DEFAULT 0,
+				default_value TEXT,
 				PRIMARY KEY  (id),
 				INDEX entity_type (entity_type),
 				INDEX entity_id (entity_id),
