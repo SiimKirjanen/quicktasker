@@ -20,27 +20,51 @@ function CustomField({ data }: Props) {
     state: { entityType, entityId },
     customFieldsDispatch,
   } = useContext(CustomFieldsContext);
-  const { updateCustomFieldValue, markCustomFieldAsDeleted } =
-    useCustomFieldActions();
+  const {
+    updateCustomFieldValue,
+    markCustomFieldAsDeleted,
+    updateCustomFieldDefaultValue,
+  } = useCustomFieldActions();
   const [actionLoading, setActionLoading] = useState(false);
+  const allowCustomFieldValueUpdate =
+    entityType === CustomFieldEntityType.User ||
+    entityType === CustomFieldEntityType.Task;
+  const allowCustomFieldDefaultValueUpdate =
+    entityType === CustomFieldEntityType.Pipeline;
 
   useEffect(() => {
     if (data.value) {
       setValue(data.value);
+    } else if (data.default_value) {
+      setValue(data.default_value);
     }
-  }, [data.value]);
+  }, [data.value, data.default_value]);
 
   const handleSave = async () => {
-    if (
-      entityType === CustomFieldEntityType.User ||
-      entityType === CustomFieldEntityType.Task
-    ) {
-      setActionLoading(true);
-      await updateCustomFieldValue(data.id, value, entityId, entityType);
-      setActionLoading(false);
+    if (allowCustomFieldValueUpdate) {
+      await handleCustomFieldValueUpdate();
+    } else if (allowCustomFieldDefaultValueUpdate) {
+      await handleCustomFieldDefaultValueUpdate();
     } else {
       console.error("Invalid entity type for saving custom field value");
     }
+  };
+
+  const handleCustomFieldValueUpdate = async () => {
+    if (allowCustomFieldValueUpdate === false) {
+      return;
+    }
+    setActionLoading(true);
+    await updateCustomFieldValue(data.id, value, entityId, entityType);
+    setActionLoading(false);
+  };
+  const handleCustomFieldDefaultValueUpdate = async () => {
+    if (allowCustomFieldDefaultValueUpdate === false) {
+      return;
+    }
+    setActionLoading(true);
+    await updateCustomFieldDefaultValue(data.id, value);
+    setActionLoading(false);
   };
 
   const handleDelete = async () => {

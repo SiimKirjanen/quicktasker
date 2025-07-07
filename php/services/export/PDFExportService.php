@@ -71,7 +71,14 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
                         
                         foreach ($task->custom_fields as $customField) {
                             $fieldName = $customField->name;
-                            $fieldValue = !empty($customField->value) ? $customField->value : esc_html__('Not set', 'quicktasker');
+                            $fieldValue = esc_html__('Not set', 'quicktasker');
+
+                            if ( !empty($customField->value) ) {
+                                $fieldValue = $customField->value;
+                            } elseif ( !empty($customField->default_value) ) {
+                                $fieldValue = $customField->default_value;
+                            }
+
                             $this->addField($fieldName, $fieldValue, false);
                         }
                     }

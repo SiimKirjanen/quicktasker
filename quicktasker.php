@@ -108,6 +108,7 @@ WPQT\ServiceLocator::register('HashService', new WPQT\Hash\HashService());
 WPQT\ServiceLocator::register('UserPageRepository', new WPQT\UserPage\UserPageRepository());
 WPQT\ServiceLocator::register('StageService', new WPQT\Stage\StageService());
 WPQT\ServiceLocator::register('CommentService', new WPQT\Comment\CommentService());
+WPQT\ServiceLocator::register('CustomFieldService', new WPQT\Customfield\CustomFieldService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );

@@ -4,6 +4,7 @@ import {
   addCustomFieldRequest,
   markCustomFieldAsDeletedRequest,
   restoreCustomFieldRequest,
+  updateCustomFieldDefaultValueRequest,
   updateCustomFieldValueRequest,
 } from "../../api/api";
 import {
@@ -84,11 +85,34 @@ function useCustomFieldActions() {
     }
   };
 
+  const updateCustomFieldDefaultValue = async (
+    customFieldId: string,
+    value: string,
+  ): Promise<{ success: boolean }> => {
+    try {
+      await updateCustomFieldDefaultValueRequest(customFieldId, value);
+      toast.success(__("Custom field default value updated", "quicktasker"));
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        __("Failed to update custom field default value", "quicktasker"),
+      );
+      return {
+        success: false,
+      };
+    }
+  };
+
   return {
     addCustomField,
     markCustomFieldAsDeleted,
     restoreCustomField,
     updateCustomFieldValue,
+    updateCustomFieldDefaultValue,
   };
 }
 

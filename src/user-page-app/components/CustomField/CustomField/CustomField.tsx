@@ -57,8 +57,8 @@ function TextCustomField({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setValue(data.value || "");
-  }, [data.value]);
+    setValue(data.value || data.default_value || "");
+  }, [data.value, data.default_value]);
 
   const debouncedHandleChange = useCallback(
     debounce(async (newValue: string) => {
