@@ -26,6 +26,11 @@ function CustomField({ data }: Props) {
     updateCustomFieldDefaultValue,
   } = useCustomFieldActions();
   const [actionLoading, setActionLoading] = useState(false);
+  const allowCustomFieldValueUpdate =
+    entityType === CustomFieldEntityType.User ||
+    entityType === CustomFieldEntityType.Task;
+  const allowCustomFieldDefaultValueUpdate =
+    entityType === CustomFieldEntityType.Pipeline;
 
   useEffect(() => {
     if (data.value) {
@@ -36,12 +41,9 @@ function CustomField({ data }: Props) {
   }, [data.value, data.default_value]);
 
   const handleSave = async () => {
-    if (
-      entityType === CustomFieldEntityType.User ||
-      entityType === CustomFieldEntityType.Task
-    ) {
+    if (allowCustomFieldValueUpdate) {
       await handleCustomFieldValueUpdate();
-    } else if (entityType === CustomFieldEntityType.Pipeline) {
+    } else if (allowCustomFieldDefaultValueUpdate) {
       await handleCustomFieldDefaultValueUpdate();
     } else {
       console.error("Invalid entity type for saving custom field value");
@@ -49,10 +51,7 @@ function CustomField({ data }: Props) {
   };
 
   const handleCustomFieldValueUpdate = async () => {
-    if (
-      entityType !== CustomFieldEntityType.User ||
-      entityType !== CustomFieldEntityType.User
-    ) {
+    if (allowCustomFieldValueUpdate === false) {
       return;
     }
     setActionLoading(true);
@@ -60,7 +59,7 @@ function CustomField({ data }: Props) {
     setActionLoading(false);
   };
   const handleCustomFieldDefaultValueUpdate = async () => {
-    if (entityType !== CustomFieldEntityType.Pipeline) {
+    if (allowCustomFieldDefaultValueUpdate === false) {
       return;
     }
     setActionLoading(true);
