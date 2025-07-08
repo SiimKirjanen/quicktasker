@@ -760,15 +760,15 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        $session = RequestValidation::validateUserPageApiRequest($data)['session'];
+                        $requestData = RequestValidation::validateUserPageApiRequest($data);
 
                         if($data['entityType'] === 'task') {
                             $permissionService = new PermissionService();
-                            if(!$permissionService->checkIfUserIsAllowedToEditTask($session->user_id, $data['entityId'])) {
+                            if(!$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $data['entityId'])) {
                                 throw new WPQTException('Not allowed to edit task custom fields', true);
                             }
                         } else {
-                            if($session->user_id !== $data['entityId']) {
+                            if($requestData['session']->user_id !== $data['entityId']) {
                                 throw new WPQTException('Entity ID and session user mismatch', true);
                             }
                         } 
@@ -783,7 +783,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             'type' => $customField->entity_type,
                             'type_id' => $customField->entity_id,
                             'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
-                            'user_id' => $session->user_id,
+                            'user_id' => $requestData['session']->user_id,
                             'pipeline_id' => $data['entityType'] == WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE ? $data['entityId'] : null,
                         ]);
 
