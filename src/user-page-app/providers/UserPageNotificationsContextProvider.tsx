@@ -124,7 +124,7 @@ const UserPageNotificationsContextProvider = ({
     try {
       setLoading(true);
       const storedComments = await getStoredComments();
-      const response = await getUserPageCommentsRequest(pageHash);
+      const response = await getUserPageCommentsRequest();
       const comments = response.data.map(convertCommentFromServer);
       const newComments = filterNewComments(comments, storedComments);
 

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "@wordpress/element";
+import { useEffect, useState } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
 import { useParams } from "react-router-dom";
 import { WPQTComment } from "../../../../types/comment";
@@ -7,16 +7,11 @@ import { convertCommentFromServer } from "../../../../utils/comment";
 import { convertTaskFromServer } from "../../../../utils/task";
 import { useCommentActions } from "../../../hooks/actions/useCommentActions";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
-import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { UserPageTaskResponse } from "../../../types/user-page-task-response";
 import { CommentsApp } from "../../CommentsApp/CommentsApp";
 import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 
 function TaskCommentsPage() {
-  const {
-    state: { pageHash },
-  } = useContext(UserPageAppContext);
-
   const { taskHash } = useParams<{ taskHash: string }>();
   const [loading, setLoading] = useState(true);
   const [task, setTask] = useState<Task | null>(null);
@@ -30,13 +25,13 @@ function TaskCommentsPage() {
   }, []);
 
   const loadTask = async () => {
-    await getTask(pageHash, taskHash!, (data: UserPageTaskResponse) => {
+    await getTask(taskHash!, (data: UserPageTaskResponse) => {
       setTask(convertTaskFromServer(data.task));
     });
   };
   const loadComments = async () => {
     setLoading(true);
-    await loadTaskComments(pageHash, taskHash!, (comments) => {
+    await loadTaskComments(taskHash!, (comments) => {
       setComments(comments.map(convertCommentFromServer));
     });
     setLoading(false);

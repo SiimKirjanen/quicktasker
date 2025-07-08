@@ -4,35 +4,52 @@ import { WPQTCommentFromServer } from "../../types/comment";
 import { CustomFieldEntityType } from "../../types/custom-field";
 import { WPQTResponse } from "../../types/response";
 import { TaskFromServer } from "../../types/task";
+import { getUserPageCodeParam } from "../../utils/url";
 import { UserPageOverview } from "../types/user-page-overview";
 import { ServerUserPageStatus } from "../types/user-page-status";
 import { UserPageTaskResponse } from "../types/user-page-task-response";
 import { UserPageUserResponse } from "../types/user-page-user-response";
 import { UserSession } from "../types/user-session";
 
+type UserPageApiHeaders = {
+  "Content-Type": string;
+  "X-WPQT-USER-API-Nonce": string;
+  "X-WPQT-USER-PAGE-CODE"?: string;
+};
+
 function getCommonHeaders() {
-  return {
+  const userPageCode = getUserPageCodeParam();
+
+  let headers: UserPageApiHeaders = {
     "Content-Type": "application/json",
     "X-WPQT-USER-API-Nonce": window.wpqt_user.userApiNonce,
   };
+
+  if (userPageCode) {
+    headers = {
+      ...headers,
+      "X-WPQT-USER-PAGE-CODE": userPageCode,
+    };
+  }
+
+  return headers;
 }
 
-function getUserPageStatusRequest(
-  pageHash: string,
-): Promise<WPQTResponse<ServerUserPageStatus>> {
+function getUserPageStatusRequest(): Promise<
+  WPQTResponse<ServerUserPageStatus>
+> {
   return apiFetch({
-    path: `/wpqt/v1/user-pages/${pageHash}/status`,
+    path: `/wpqt/v1/user-page/status`,
     method: "GET",
     headers: getCommonHeaders(),
   });
 }
 
-function setUpUserPageRequest(
-  pageHash: string,
-  data: { password: string },
-): Promise<WPQTResponse> {
+function setUpUserPageRequest(data: {
+  password: string;
+}): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/user-pages/${pageHash}/setup`,
+    path: `/wpqt/v1/user-page/setup`,
     data,
     method: "POST",
     headers: getCommonHeaders(),
@@ -40,62 +57,51 @@ function setUpUserPageRequest(
 }
 
 function logInUserPageRequest(
-  pageHash: string,
   password: string,
 ): Promise<WPQTResponse<UserSession>> {
   return apiFetch({
-    path: `/wpqt/v1/user-pages/${pageHash}/login`,
+    path: `/wpqt/v1/user-page/login`,
     method: "POST",
     data: { password },
     headers: getCommonHeaders(),
   });
 }
 
-function getOverviewRequest(
-  pageHash: string,
-): Promise<WPQTResponse<UserPageOverview>> {
+function getOverviewRequest(): Promise<WPQTResponse<UserPageOverview>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/overview`,
+    path: `/wpqt/v1/user-page/overview`,
     headers: getCommonHeaders(),
   });
 }
 
-function getAssignedTasksRequest(
-  pageHash: string,
-): Promise<WPQTResponse<TaskFromServer[]>> {
+function getAssignedTasksRequest(): Promise<WPQTResponse<TaskFromServer[]>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/assigned-tasks`,
+    path: `/wpqt/v1/user-page/assigned-tasks`,
     headers: getCommonHeaders(),
   });
 }
 
-function getAssignableTasksRequest(
-  pageHash: string,
-): Promise<WPQTResponse<TaskFromServer[]>> {
+function getAssignableTasksRequest(): Promise<WPQTResponse<TaskFromServer[]>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/assignable-tasks`,
+    path: `/wpqt/v1/user-page/assignable-tasks`,
     headers: getCommonHeaders(),
   });
 }
 
 function getTaskDataRequest(
-  pageHash: string,
   taskHash: string,
 ): Promise<WPQTResponse<UserPageTaskResponse>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}`,
+    path: `/wpqt/v1/user-page/tasks/${taskHash}`,
     headers: getCommonHeaders(),
   });
 }
 
-function assignTaskToUser(
-  pageHash: string,
-  taskHash: string,
-): Promise<
+function assignTaskToUser(taskHash: string): Promise<
   WPQTResponse<{
     task: TaskFromServer;
     executedAutomations: ExecutedAutomation[];
@@ -103,118 +109,112 @@ function assignTaskToUser(
 > {
   return apiFetch({
     method: "POST",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/users`,
+    path: `/wpqt/v1/user-page/tasks/${taskHash}/users`,
     headers: getCommonHeaders(),
   });
 }
 
 function unAssignTaskFromUser(
-  pageHash: string,
   taskHash: string,
 ): Promise<WPQTResponse<TaskFromServer>> {
   return apiFetch({
     method: "DELETE",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/users`,
+    path: `/wpqt/v1/user-page/tasks/${taskHash}/users`,
     headers: getCommonHeaders(),
   });
 }
 
 function changeTaskStageRequest(
-  pageHash: string,
   taskHash: string,
   stageId: string,
 ): Promise<WPQTResponse> {
   return apiFetch({
     method: "PATCH",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/stage`,
+    path: `/wpqt/v1/user-page/tasks/${taskHash}/stage`,
     data: { stageId },
     headers: getCommonHeaders(),
   });
 }
 
 function changeTaskDoneStatusRequest(
-  pageHash: string,
   taskHash: string,
   isDone: boolean,
 ): Promise<WPQTResponse> {
   return apiFetch({
     method: "PATCH",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/done`,
+    path: `/wpqt/v1/user-page/tasks/${taskHash}/done`,
     data: { done: isDone },
     headers: getCommonHeaders(),
   });
 }
 
-function logoutUserPageRequest(pageHash: string): Promise<WPQTResponse> {
+function logoutUserPageRequest(): Promise<WPQTResponse> {
   return apiFetch({
     method: "POST",
-    path: `/wpqt/v1/user-pages/${pageHash}/logout`,
+    path: `/wpqt/v1/user-page/logout`,
     headers: getCommonHeaders(),
   });
 }
 
 function getTaskCommentsRequest(
-  pageHash: string,
   taskHash: string,
 ): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/comments`,
+    path: `/wpqt/v1/user-page/tasks/${taskHash}/comments`,
     headers: getCommonHeaders(),
   });
 }
 
 function addTaskCommentRequest(
-  pageHash: string,
   taskHash: string,
   comment: string,
 ): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
   return apiFetch({
     method: "POST",
-    path: `/wpqt/v1/user-pages/${pageHash}/tasks/${taskHash}/comments`,
+    path: `/wpqt/v1/user-page/tasks/${taskHash}/comments`,
     data: { comment },
     headers: getCommonHeaders(),
   });
 }
 
-function getUserCommentsRequest(
-  pageHash: string,
-): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+function getUserCommentsRequest(): Promise<
+  WPQTResponse<WPQTCommentFromServer[]>
+> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/user/comments`,
+    path: `/wpqt/v1/user-page/user/comments`,
     headers: getCommonHeaders(),
   });
 }
 
 function addUserCommentRequest(
-  pageHash: string,
   comment: string,
 ): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
   return apiFetch({
     method: "POST",
-    path: `/wpqt/v1/user-pages/${pageHash}/user/comments`,
+    path: `/wpqt/v1/user-page/user/comments`,
     data: { comment },
     headers: getCommonHeaders(),
   });
 }
 
-function getUserPageCommentsRequest(
-  pageHash: string,
-): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+function getUserPageCommentsRequest(): Promise<
+  WPQTResponse<WPQTCommentFromServer[]>
+> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/comments`,
+    path: `/wpqt/v1/user-page/comments`,
     headers: getCommonHeaders(),
   });
 }
 
-function getUserPageUserDataRequest(
-  pageHash: string,
-): Promise<WPQTResponse<UserPageUserResponse>> {
+function getUserPageUserDataRequest(): Promise<
+  WPQTResponse<UserPageUserResponse>
+> {
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-pages/${pageHash}/user`,
+    path: `/wpqt/v1/user-page/user`,
     headers: getCommonHeaders(),
   });
 }
@@ -226,7 +226,6 @@ function getUserPageUserDataRequest(
 */
 
 function updateCustomFieldValueRequest(
-  pageHash: string,
   entityId: string,
   entityType: CustomFieldEntityType.Task | CustomFieldEntityType.User,
   customFieldId: string,
@@ -234,7 +233,7 @@ function updateCustomFieldValueRequest(
 ): Promise<WPQTResponse> {
   return apiFetch({
     method: "PATCH",
-    path: `/wpqt/v1/user-pages/${pageHash}/custom-fields/${customFieldId}`,
+    path: `/wpqt/v1/user-page/custom-fields/${customFieldId}`,
     data: { entityId, entityType, customFieldId, value },
     headers: getCommonHeaders(),
   });

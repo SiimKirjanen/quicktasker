@@ -14,12 +14,11 @@ import { UserPageTaskContext } from "../../../providers/UserPageTaskContextProvi
 type Props = {
   task: Task;
   stages: Stage[];
-  pageHash: string;
   open: boolean;
   onClose: () => void;
 };
 
-function StageSelectionModal({ task, stages, pageHash, open, onClose }: Props) {
+function StageSelectionModal({ task, stages, open, onClose }: Props) {
   const { userTaskDispatch } = useContext(UserPageTaskContext);
   const [selectedStageId, setSelectedStageId] = useState(task.stage_id);
   const [loading, setLoading] = useState(false);
@@ -27,7 +26,7 @@ function StageSelectionModal({ task, stages, pageHash, open, onClose }: Props) {
 
   const onSave = async () => {
     setLoading(true);
-    await changeTaskStage(task.task_hash, selectedStageId, pageHash, () => {
+    await changeTaskStage(task.task_hash, selectedStageId, () => {
       userTaskDispatch({
         type: UPDATE_USER_PAGE_TASK_STAGE,
         payload: selectedStageId,

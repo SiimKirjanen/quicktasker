@@ -71,7 +71,7 @@ const UserPageUserContextProvider = ({
         type: SET_USER_PAGE_USER_LOADING,
         payload: true,
       });
-      const response = await getUserPageUserDataRequest(pageHash);
+      const response = await getUserPageUserDataRequest();
       useUserPageUserDispatch({
         type: SET_USER_PAGE_USER_DATA,
         payload: response.data,

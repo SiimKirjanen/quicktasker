@@ -1,13 +1,8 @@
-import { useContext } from "@wordpress/element";
 import { CustomFieldEntityType } from "../../../types/custom-field";
 import { updateCustomFieldValueRequest } from "../../api/user-page-api";
-import { UserPageAppContext } from "../../providers/UserPageAppContextProvider";
 import { useErrorHandler } from "../useErrorHandler";
 
 function useCustomFieldActions() {
-  const {
-    state: { pageHash },
-  } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
 
   const updateCustomFieldValue = async (
@@ -19,7 +14,6 @@ function useCustomFieldActions() {
   ) => {
     try {
       await updateCustomFieldValueRequest(
-        pageHash,
         entityId,
         entityType,
         customFieldId,

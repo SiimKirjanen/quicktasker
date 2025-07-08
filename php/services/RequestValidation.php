@@ -10,6 +10,7 @@ use WPQT\WPQTException;
 use WPQT\UserPage\UserPageService;
 use WPQT\Session\SessionService;
 use WPQT\User\UserRepository;
+use WPQT\ServiceLocator; 
 
 if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
     class RequestValidation {
@@ -18,7 +19,7 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * Validates the user page API request.
          *
          * This method validates the incoming request data based on the provided arguments.
-         * It checks for nonce, hash, and session validity.
+         * It checks for nonce, user page hash, and session validity.
          *
          * @param object $data The request data object.
          * @param array $args Optional. An array of arguments to control the validation process.
@@ -27,12 +28,13 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          *                    - 'hash' => true (validates the user page hash)
          *                    - 'session' => true (validates the session token)
          *
-         * @return array An array containing the session information if session validation is enabled.
+         * @return array An array containing the session information.
          *
          * @throws WPQTException If the user page hash does not exist.
          */
         public static function validateUserPageApiRequest($data, $args = array()) {
-            $returnValue = array();
+            $userPageHash = ServiceLocator::get('HeaderRepository')->getUserPageHash($data);
+            $returnValue = array('userPageHash' => $userPageHash);
             $defaults = array(
                 'nonce' => true,
                 'hash' => true,
@@ -48,14 +50,15 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
 
             if ($args['hash'] === true) {
                 $userPageService = new UserPageService();
-                if( !$userPageService->checkIfUserPageHashExists($data['hash']) ) {
+
+                if( !$userPageService->checkIfUserPageHashExists($userPageHash) ) {
                     throw new WPQTException('User page does not exist', true);
                 }
             }
 
             if ($args['session'] === true) {
                 $sessionService = new SessionService();
-                $session = $sessionService->verifySessionToken($data['hash']);
+                $session = $sessionService->verifySessionToken($userPageHash);
                 $returnValue['session'] = $session;
             }
 
@@ -66,12 +69,10 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
                 if (!$isActive) {
                     throw new WPQTException('User is not active', true);
                 }
-                
             }
 
             return $returnValue;
         }
-
 
         /**
          * Validates if a given parameter is numeric.

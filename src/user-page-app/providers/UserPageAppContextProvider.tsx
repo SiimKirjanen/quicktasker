@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { getQueryParam } from "../../utils/url";
+import { getUserPageCodeParam } from "../../utils/url";
 import { getUserPageStatusRequest } from "../api/user-page-api";
 import {
   SET_INIT_DATA,
@@ -15,7 +15,7 @@ const initialState: State = {
   isActiveUser: false,
   setupCompleted: false,
   isLoggedIn: false,
-  pageHash: getQueryParam("code") || "",
+  pageHash: getUserPageCodeParam(),
   userId: "",
   userName: "",
   cf: false,
@@ -27,7 +27,7 @@ type State = {
   isActiveUser: boolean;
   setupCompleted: boolean;
   isLoggedIn: boolean;
-  pageHash: string;
+  pageHash: string | null;
   userId: string;
   userName: string;
   cf: boolean;
@@ -93,7 +93,7 @@ const UserPageAppContextProvider = ({
 
       if (pageHash) {
         const userLoggedIn = isLoggedIn();
-        const { data } = await getUserPageStatusRequest(pageHash);
+        const { data } = await getUserPageStatusRequest();
 
         userPageAppDispatch({
           type: SET_USER_PAGE_STATUS,

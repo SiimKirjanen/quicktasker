@@ -62,7 +62,7 @@ const UserAssignedTasksContextProvider = ({
         type: SET_ASSIGNED_TASKS_LOADING,
         payload: true,
       });
-      const response = await getAssignedTasksRequest(pageHash);
+      const response = await getAssignedTasksRequest();
 
       userAssignedTasksDispatch({
         type: SET_ASSIGNED_TASKS,

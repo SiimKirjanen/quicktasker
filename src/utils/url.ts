@@ -4,4 +4,8 @@ const getQueryParam = (param: string): string | null => {
   return searchParams.get(param);
 };
 
-export { getQueryParam };
+const getUserPageCodeParam = (): string | null => {
+  return getQueryParam("code");
+};
+
+export { getQueryParam, getUserPageCodeParam };

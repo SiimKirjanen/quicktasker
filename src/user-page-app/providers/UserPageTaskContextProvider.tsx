@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-} from "@wordpress/element";
+import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { CustomField } from "../../types/custom-field";
 import { PublicPipelineSettings } from "../../types/pipeline-settings";
 import { Stage } from "../../types/stage";
@@ -19,7 +14,6 @@ import {
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { reducer } from "../reducers/user-page-task-reducer";
 import { UserPageTaskResponse } from "../types/user-page-task-response";
-import { UserPageAppContext } from "./UserPageAppContextProvider";
 
 const initialState: State = {
   task: null,
@@ -74,9 +68,6 @@ const UserPageTaskContextProvider = ({
     reducer,
     initialState,
   );
-  const {
-    state: { pageHash },
-  } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
@@ -87,7 +78,7 @@ const UserPageTaskContextProvider = ({
     if (taskHash) {
       try {
         userTaskDispatch({ type: SET_USER_PAGE_TASK_LOADING, payload: true });
-        const response = await getTaskDataRequest(pageHash, taskHash);
+        const response = await getTaskDataRequest(taskHash);
         userTaskDispatch({
           type: SET_USER_PAGE_TASK_DATA,
           payload: response.data,

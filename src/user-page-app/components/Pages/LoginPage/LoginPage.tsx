@@ -21,7 +21,7 @@ import { PageScreenMiddle, PageTitle } from "../Page/Page";
 
 function LoginPage() {
   const {
-    state: { pageHash, userName },
+    state: { userName },
     userPageAppDispatch,
   } = useContext(UserPageAppContext);
   const { setSessionCookie } = useSession();
@@ -38,7 +38,7 @@ function LoginPage() {
     }
     try {
       setLoading(true);
-      const response = await logInUserPageRequest(pageHash, password);
+      const response = await logInUserPageRequest(password);
       await setSessionCookie(response.data);
       userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: true });
     } catch (error) {

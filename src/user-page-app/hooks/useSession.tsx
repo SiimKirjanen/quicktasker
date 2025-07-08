@@ -55,10 +55,13 @@ function useSession() {
   /**
    * Retrieves the remaining session time for a given page hash.
    *
-   * @param {string} pageHash - The unique identifier for the user page.
+   * @param {string | null} pageHash - The unique identifier for the user page.
    * @returns {number | null} - The time left in minutes, or null if no expiration is found.
    */
-  const getSessionTimeLeft = (pageHash: string) => {
+  const getSessionTimeLeft = (pageHash: string | null) => {
+    if (!pageHash) {
+      return null;
+    }
     const expirationString = localStorage.getItem(
       `wpqt-session-expiration-${pageHash}`,
     );

@@ -4,6 +4,7 @@ import {
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
 import { WPQTIconButton } from "../../../../../components/common/Button/Button";
 import { Task } from "../../../../../types/task";
@@ -18,7 +19,7 @@ type Props = {
 };
 function TaskControls({ task }: Props) {
   const {
-    state: { pageHash, userId },
+    state: { userId },
   } = useContext(UserPageAppContext);
   const { userTaskDispatch } = useContext(UserPageTaskContext);
   const { assignToTask, unAssignFromTask } = useTaskActions();
@@ -35,7 +36,7 @@ function TaskControls({ task }: Props) {
 
   const onAssignToTask = async () => {
     setLoading(true);
-    await assignToTask(pageHash, task.task_hash, (data) => {
+    await assignToTask(task.task_hash, (data) => {
       userTaskDispatch({ type: UPDATE_USER_PAGE_TASK_DATA, payload: data });
     });
     setLoading(false);
@@ -43,7 +44,7 @@ function TaskControls({ task }: Props) {
 
   const onUnassignFromTask = async () => {
     setLoading(true);
-    await unAssignFromTask(pageHash, task.task_hash, () => {
+    await unAssignFromTask(task.task_hash, () => {
       navigate(`/`);
     });
     setLoading(false);
@@ -55,14 +56,14 @@ function TaskControls({ task }: Props) {
         <WPQTIconButton
           loading={loading}
           icon={<UserMinusIcon className="wpqt-icon-red wpqt-size-5" />}
-          text="Unassign from task"
+          text={__("Unassign from task", "quicktasker")}
           onClick={onUnassignFromTask}
         />
       )}
       {isAssignedToTask && (
         <WPQTIconButton
           icon={<ChatBubbleLeftIcon className="wpqt-icon-blue wpqt-size-5" />}
-          text="Manage task comments"
+          text={__("Manage task comments", "quicktasker")}
           onClick={() => {
             navigate(`/tasks/${task.task_hash}/comments`);
           }}
@@ -72,7 +73,7 @@ function TaskControls({ task }: Props) {
         <WPQTIconButton
           loading={loading}
           icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
-          text="Assing to task"
+          text={__("Assing to task", "quicktasker")}
           onClick={onAssignToTask}
         />
       )}

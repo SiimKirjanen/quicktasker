@@ -15,7 +15,7 @@ function TaskStageSelect({ task }: Props) {
     state: { taskStages },
   } = useContext(UserPageTaskContext);
   const {
-    state: { pageHash, userId },
+    state: { userId },
   } = useContext(UserPageAppContext);
   const [selectionModalOpen, setSelectionModalOpen] = useState(false);
   const changeEnabled = task?.assigned_users.some((user) => user.id === userId);
@@ -45,7 +45,6 @@ function TaskStageSelect({ task }: Props) {
       <StageSelectionModal
         stages={taskStages}
         task={task}
-        pageHash={pageHash}
         open={selectionModalOpen}
         onClose={() => setSelectionModalOpen(false)}
       />
