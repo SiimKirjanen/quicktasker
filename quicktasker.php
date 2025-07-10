@@ -112,6 +112,7 @@ WPQT\ServiceLocator::register('CommentService', new WPQT\Comment\CommentService(
 WPQT\ServiceLocator::register('CustomFieldService', new WPQT\Customfield\CustomFieldService());
 WPQT\ServiceLocator::register('HeaderRepository', new WPQT\Header\HeaderRepository());
 WPQT\ServiceLocator::register('UserPageService', new WPQT\UserPage\UserPageService());
+WPQT\ServiceLocator::register('PermissionService', new WPQT\Permission\PermissionService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );

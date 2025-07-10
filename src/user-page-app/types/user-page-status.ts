@@ -2,15 +2,16 @@ type BaseUserPageStatus = {
   isLoggedIn: boolean;
   userId: string;
   userName: string;
+  isActiveUser: boolean;
+  isQuicktaskerUser: boolean;
+  isWordPressUser: boolean;
 };
 
 type UserPageStatus = BaseUserPageStatus & {
-  isActiveUser: boolean;
   setupCompleted: boolean;
 };
 
 type ServerUserPageStatus = BaseUserPageStatus & {
-  isActiveUser: string;
   setupCompleted: boolean;
 };
 

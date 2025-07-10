@@ -67,6 +67,18 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
         }
 
         /**
+         * Checks if the current user has the required permissions to access the user page app.
+         *
+         * This function verifies if the current user has the capability defined by the constant
+         * WP_QUICKTASKER_ACCESS_USER_PAGE_APP.
+         *
+         * @return bool True if the user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredPermissionsForUserPageApp() {
+            return current_user_can( WP_QUICKTASKER_ACCESS_USER_PAGE_APP );
+        }
+
+        /**
          * Checks if a user is allowed to view a task.
          *
          * @param int $userId The ID of the user.

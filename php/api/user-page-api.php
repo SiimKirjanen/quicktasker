@@ -37,18 +37,37 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
             'callback' => function( $data ) {
                     try {
                         $requestData = RequestValidation::validateUserPageApiRequest($data, array('session' => false));
-                        $userPage = ServiceLocator::get('UserPageRepository')->getPageUserByHash($requestData['userPageHash']);
+                        $hasSetupCompleted = true;
+                        $isUserActive = true;
+                        $userId = null;
+                        $userName = null;
 
-                        if( $userPage === null ) {
-                            throw new WPQTException('User page not found', true);
+                        if ( $requestData['isQuicktaskerUser'] ) {
+                            $userPage = ServiceLocator::get('UserPageRepository')->getPageUserByHash($requestData['userPageHash']);
+
+                            if( $userPage === null ) {
+                                throw new WPQTException('User page not found', true);
+                            }
+                            $hasSetupCompleted = ServiceLocator::get('UserPageService')->checkIfUserPageSetupCompleted($userPage->user_id);
+                            $isUserActive = $userPage->is_active;
+                            $userId = $userPage->user_id;
+                            $userName = $userPage->name;
+                        } else {
+                            $userId = $requestData['loggedInWPUserId'];
+
+                            if ( $userId ) {
+                                $userName = ServiceLocator::get('UserRepository')->getWPUserById($userId)->name ?? null;
+                                $isUserActive = ServiceLocator::get('PermissionService')->hasRequiredPermissionsForUserPageApp($userId);
+                            }   
                         }
-                        $hasSetupCompleted = ServiceLocator::get('UserPageService')->checkIfUserPageSetupCompleted($userPage->user_id);
 
                         $userPageStatus = (object)[
-                            'isActiveUser' => $userPage->is_active,
+                            'isActiveUser' => $isUserActive,
                             'setupCompleted' => $hasSetupCompleted,
-                            'userId' => $userPage->user_id,
-                            'userName' => $userPage->name,
+                            'userId' => $userId,
+                            'userName' => $userName,
+                            'isQuicktaskerUser' => $requestData['isQuicktaskerUser'],
+                            'isWordPressUser' => $requestData['isWordPressUser']
                         ];
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $userPageStatus))->toArray(), 200);

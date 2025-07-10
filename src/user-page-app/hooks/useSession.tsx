@@ -5,7 +5,7 @@ import { UserSession } from "../types/user-session";
 
 function useSession() {
   const {
-    state: { pageHash },
+    state: { pageHash, isQuicktaskerUser, isWordPressUser, userId },
   } = useContext(UserPageAppContext);
 
   /**
@@ -34,7 +34,13 @@ function useSession() {
   };
 
   const isLoggedIn = (): boolean => {
-    return !!Cookies.get(`wpqt-session-token-${pageHash}`);
+    if (isQuicktaskerUser) {
+      return !!Cookies.get(`wpqt-session-token-${pageHash}`);
+    } else if (isWordPressUser) {
+      return !!userId;
+    }
+
+    return false;
   };
 
   /**

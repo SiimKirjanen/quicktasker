@@ -8,17 +8,26 @@ import { Action, State } from "../providers/UserPageAppContextProvider";
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case SET_USER_PAGE_STATUS: {
-      const { isActiveUser, isLoggedIn, setupCompleted, userId, userName } =
-        action.payload;
+      const {
+        isActiveUser,
+        isLoggedIn,
+        setupCompleted,
+        userId,
+        userName,
+        isQuicktaskerUser,
+        isWordPressUser,
+      } = action.payload;
 
       return {
         ...state,
-        isActiveUser: isActiveUser === "1",
+        isActiveUser,
         isLoggedIn,
         setupCompleted,
         initialLoading: false,
         userId,
         userName,
+        isQuicktaskerUser,
+        isWordPressUser,
       };
     }
     case SET_USER_LOGGED_IN: {

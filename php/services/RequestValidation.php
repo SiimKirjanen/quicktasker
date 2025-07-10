@@ -34,7 +34,13 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          */
         public static function validateUserPageApiRequest($data, $args = array()) {
             $userPageHash = ServiceLocator::get('HeaderRepository')->getUserPageHash($data);
-            $returnValue = array('userPageHash' => $userPageHash);
+            $loggeIndWPUserId = get_current_user_id() ?: null;
+            $requestData = array(
+                'userPageHash' => $userPageHash,
+                'loggedInWPUserId' => $loggeIndWPUserId,
+                'isQuicktaskerUser' => $userPageHash ? true : false,
+                'isWordPressUser' => !$userPageHash ? true : false
+            );
             $defaults = array(
                 'nonce' => true,
                 'hash' => true,
@@ -43,35 +49,44 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
             );
             $args = wp_parse_args($args, $defaults);
 
-            if ($args['nonce'] === true) {
+            if ( $args['nonce'] === true ) {
                 $nonce = $data->get_header('X-WPQT-USER-API-Nonce');
                 NonceService::verifyNonce($nonce, WPQT_USER_API_NONCE);
             }
+            
+            if ( $userPageHash ) {
+                // We are dealing with QuickTasker user type
 
-            if ($args['hash'] === true) {
-                $userPageService = new UserPageService();
+                if ( $args['hash'] === true ) {
+                    $userPageService = new UserPageService();
 
-                if( !$userPageService->checkIfUserPageHashExists($userPageHash) ) {
-                    throw new WPQTException('User page does not exist', true);
+                    if( !$userPageService->checkIfUserPageHashExists($userPageHash) ) {
+                        throw new WPQTException('User page does not exist', true);
+                    }
                 }
-            }
 
-            if ($args['session'] === true) {
-                $sessionService = new SessionService();
-                $session = $sessionService->verifySessionToken($userPageHash);
-                $returnValue['session'] = $session;
-            }
-
-            if ($args['userActive'] === true && isset($returnValue['session'])) {
-                $userRepo = new UserRepository();
-                $isActive = $userRepo->isUserActive($returnValue['session']->user_id);
-
-                if (!$isActive) {
-                    throw new WPQTException('User is not active', true);
+                if ( $args['session'] === true ) {
+                    $sessionService = new SessionService();
+                    $session = $sessionService->verifySessionToken($userPageHash);
+                    $requestData['session'] = $session;
                 }
+
+                if ( $args['userActive'] === true && isset($requestData['session']) ) {
+                    $userRepo = new UserRepository();
+                    $isActive = $userRepo->isUserActive($requestData['session']->user_id);
+
+                    if ( !$isActive ) {
+                        throw new WPQTException('User is not active', true);
+                    }
+                }
+            } else {
+                // We are dealing with WordPress user type
+
+              
+                
             }
 
-            return $returnValue;
+            return $requestData;
         }
 
         /**

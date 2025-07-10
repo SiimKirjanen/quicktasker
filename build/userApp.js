@@ -4152,18 +4152,110 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
+/* harmony import */ var _components_QuickTaskerUserLogin_QuickTaskerUserLogin__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/QuickTaskerUserLogin/QuickTaskerUserLogin */ "./src/user-page-app/components/Pages/LoginPage/components/QuickTaskerUserLogin/QuickTaskerUserLogin.tsx");
+
+
+
+
+
+
+function LoginPage() {
+  const {
+    state: {
+      userName,
+      isQuicktaskerUser,
+      isWordPressUser
+    }
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_3__.UserPageAppContext);
+  if (isQuicktaskerUser) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_QuickTaskerUserLogin_QuickTaskerUserLogin__WEBPACK_IMPORTED_MODULE_5__.QuickTaskerUserLogin, {});
+  }
+  if (isWordPressUser) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_4__.PageScreenMiddle, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_4__.PageTitle, {
+        titleClassName: "wpqt-font-normal",
+        className: "wpqt-mb-2",
+        description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Your WordPress session has expired", "quicktasker"),
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Hello", "quicktasker"), userName)
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please log in to continue", "quicktasker")
+      })]
+    });
+  }
+  return null;
+}
+
+
+/***/ }),
+
+/***/ "./src/user-page-app/components/Pages/LoginPage/components/ForgotPassword/ForgotPassword.tsx":
+/*!***************************************************************************************************!*\
+  !*** ./src/user-page-app/components/Pages/LoginPage/components/ForgotPassword/ForgotPassword.tsx ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ForgotPassword: () => (/* binding */ ForgotPassword)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+function ForgotPassword() {
+  const [guideOpen, setGuideOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-flex-col wpqt-gap3 wpqt-items-center wpqt-mt-2 wpqt-text-sm wpqt-cursor-pointer wpqt-relative wpqt-min-w-[300px] wpqt-text-blue-500",
+    onClick: () => setGuideOpen(!guideOpen),
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-mb-2",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Forgot the password?", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: `wpqt-text-center wpqt-absolute wpqt-top-full wpqt-left-0 wpqt-w-full ${guideOpen ? "wpqt-animate-fadeIn" : "wpqt-animate-fadeOut"} ${!guideOpen && "wpqt-hidden"}`,
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please contact the site admin to reset your password", "quicktasker")
+    })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/user-page-app/components/Pages/LoginPage/components/QuickTaskerUserLogin/QuickTaskerUserLogin.tsx":
+/*!***************************************************************************************************************!*\
+  !*** ./src/user-page-app/components/Pages/LoginPage/components/QuickTaskerUserLogin/QuickTaskerUserLogin.tsx ***!
+  \***************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   QuickTaskerUserLogin: () => (/* binding */ QuickTaskerUserLogin)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _components_common_Form_Field__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../components/common/Form/Field */ "./src/components/common/Form/Field.tsx");
-/* harmony import */ var _components_common_Form_FieldSet__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../components/common/Form/FieldSet */ "./src/components/common/Form/FieldSet.tsx");
-/* harmony import */ var _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../components/common/Input/Input */ "./src/components/common/Input/Input.tsx");
-/* harmony import */ var _components_Loading_Loading__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../components/Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../constants */ "./src/user-page-app/constants.ts");
-/* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
-/* harmony import */ var _hooks_useSession__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../hooks/useSession */ "./src/user-page-app/hooks/useSession.tsx");
-/* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
-/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
+/* harmony import */ var _components_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../../components/Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _components_common_Form_Field__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../../components/common/Form/Field */ "./src/components/common/Form/Field.tsx");
+/* harmony import */ var _components_common_Form_FieldSet__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../../components/common/Form/FieldSet */ "./src/components/common/Form/FieldSet.tsx");
+/* harmony import */ var _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../../components/common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../../constants */ "./src/user-page-app/constants.ts");
+/* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../../../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
+/* harmony import */ var _hooks_useSession__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../../../hooks/useSession */ "./src/user-page-app/hooks/useSession.tsx");
+/* harmony import */ var _providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../../../providers/UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
+/* harmony import */ var _ForgotPassword_ForgotPassword__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../ForgotPassword/ForgotPassword */ "./src/user-page-app/components/Pages/LoginPage/components/ForgotPassword/ForgotPassword.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -4206,18 +4298,19 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-function LoginPage() {
+
+function QuickTaskerUserLogin() {
   const {
     state: {
       userName
     },
     userPageAppDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_13__.UserPageAppContext);
+  const [password, setPassword] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
     setSessionCookie
   } = (0,_hooks_useSession__WEBPACK_IMPORTED_MODULE_12__.useSession)();
-  const [password, setPassword] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const {
     handleError
   } = (0,_hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_11__.useErrorHandler)();
@@ -4248,38 +4341,24 @@ function LoginPage() {
       children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Hello %s", "quicktasker"), userName)
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("form", {
       onSubmit: login,
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_common_Form_FieldSet__WEBPACK_IMPORTED_MODULE_6__.WPQTFieldSet, {
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Form_Field__WEBPACK_IMPORTED_MODULE_5__.WPQTField, {
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Input_Input__WEBPACK_IMPORTED_MODULE_7__.WPQTInput, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_common_Form_FieldSet__WEBPACK_IMPORTED_MODULE_7__.WPQTFieldSet, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Form_Field__WEBPACK_IMPORTED_MODULE_6__.WPQTField, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Input_Input__WEBPACK_IMPORTED_MODULE_8__.WPQTInput, {
             value: password,
             onChange: setPassword,
-            type: _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_7__.InputType.PASSWORD
+            type: _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_8__.InputType.PASSWORD
           })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Form_Field__WEBPACK_IMPORTED_MODULE_5__.WPQTField, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Form_Field__WEBPACK_IMPORTED_MODULE_6__.WPQTField, {
           className: "wpqt-flex wpqt-justify-center",
-          children: loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_8__.Loading, {
+          children: loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.Loading, {
             ovalSize: "32"
-          }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTButton, {
+          }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
             btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Login", "quicktasker"),
-            type: _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.ButtonType.SUBMIT
+            type: _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.ButtonType.SUBMIT
           })
         })]
       })
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ForgotPassword, {})]
-  });
-}
-function ForgotPassword() {
-  const [guideOpen, setGuideOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-gap3 wpqt-items-center wpqt-mt-2 wpqt-text-sm wpqt-cursor-pointer wpqt-relative wpqt-min-w-[300px] wpqt-text-blue-500",
-    onClick: () => setGuideOpen(!guideOpen),
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-mb-2",
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Forgot the password?", "quicktasker")
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: `wpqt-text-center wpqt-absolute wpqt-top-full wpqt-left-0 wpqt-w-full ${guideOpen ? "wpqt-animate-fadeIn" : "wpqt-animate-fadeOut"} ${!guideOpen && "wpqt-hidden"}`,
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please contact the site admin to reset your password", "quicktasker")
-    })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ForgotPassword_ForgotPassword__WEBPACK_IMPORTED_MODULE_15__.ForgotPassword, {})]
   });
 }
 
@@ -6143,7 +6222,10 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 function useSession() {
   const {
     state: {
-      pageHash
+      pageHash,
+      isQuicktaskerUser,
+      isWordPressUser,
+      userId
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_2__.UserPageAppContext);
   /**
@@ -6165,7 +6247,12 @@ function useSession() {
     return js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get(`wpqt-session-token-${pageHash}`);
   };
   const isLoggedIn = () => {
-    return !!js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get(`wpqt-session-token-${pageHash}`);
+    if (isQuicktaskerUser) {
+      return !!js_cookie__WEBPACK_IMPORTED_MODULE_1__["default"].get(`wpqt-session-token-${pageHash}`);
+    } else if (isWordPressUser) {
+      return !!userId;
+    }
+    return false;
   };
   /**
    * Deletes the session cookie and removes the session expiration from local storage.
@@ -6530,10 +6617,12 @@ const initialState = {
   setupCompleted: false,
   isLoggedIn: false,
   pageHash: (0,_utils_url__WEBPACK_IMPORTED_MODULE_2__.getUserPageCodeParam)(),
-  userId: "",
-  userName: "",
+  userId: null,
+  userName: null,
   cf: false,
-  timezone: ""
+  timezone: "",
+  isQuicktaskerUser: false,
+  isWordPressUser: false
 };
 const UserPageAppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -6564,19 +6653,16 @@ const UserPageAppContextProvider = ({
   }, []);
   const loadUserPageStatus = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-      const pageHash = state.pageHash;
-      if (pageHash) {
-        const userLoggedIn = isLoggedIn();
-        const {
-          data
-        } = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getUserPageStatusRequest)();
-        userPageAppDispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_4__.SET_USER_PAGE_STATUS,
-          payload: Object.assign(Object.assign({}, data), {
-            isLoggedIn: userLoggedIn
-          })
-        });
-      }
+      const userLoggedIn = isLoggedIn();
+      const {
+        data
+      } = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_3__.getUserPageStatusRequest)();
+      userPageAppDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_4__.SET_USER_PAGE_STATUS,
+        payload: Object.assign(Object.assign({}, data), {
+          isLoggedIn: userLoggedIn
+        })
+      });
     } catch (error) {
       handleError(error);
     }
@@ -7087,15 +7173,19 @@ const reducer = (state, action) => {
           isLoggedIn,
           setupCompleted,
           userId,
-          userName
+          userName,
+          isQuicktaskerUser,
+          isWordPressUser
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
-          isActiveUser: isActiveUser === "1",
+          isActiveUser,
           isLoggedIn,
           setupCompleted,
           initialLoading: false,
           userId,
-          userName
+          userName,
+          isQuicktaskerUser,
+          isWordPressUser
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USER_LOGGED_IN:
