@@ -1754,7 +1754,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE => $data[WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE],
                             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS],
                             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS],
-                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE]
+                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE],
+                            WP_QUICKTASKER_ACCESS_USER_PAGE_APP => $data[WP_QUICKTASKER_ACCESS_USER_PAGE_APP],
                         ];
                           
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
@@ -1790,6 +1791,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                     ),
                     WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    WP_QUICKTASKER_ACCESS_USER_PAGE_APP => array(
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),

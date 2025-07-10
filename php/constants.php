@@ -367,7 +367,11 @@ if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS' ) ) {
 
 if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE' ) ) {
     define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE", "quicktasker_admin_role_manage_archive"); // Allows access to Archive page and related private API endpoints
-}  
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ACCESS_USER_PAGE_APP' ) ) {
+    define("WP_QUICKTASKER_ACCESS_USER_PAGE_APP", "quicktasker_access_user_page_app"); // Allows access to user page app
+} 
 
 /*
 ==================================================================================================================================================================================================================
