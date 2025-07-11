@@ -33,6 +33,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
       loading = false,
       inputId,
       name,
+      ...restProps
     },
     ref,
   ) => {
@@ -50,6 +51,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
           type={type}
           id={inputId}
           name={name}
+          {...restProps}
         />
         {loading && (
           <LoadingOval

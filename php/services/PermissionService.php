@@ -83,17 +83,26 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
          *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
+         * @param string $userType The type of user (default is WP_QT_QUICKTASKER_USER_TYPE).
          * @return bool Returns true if the user is allowed to view the task, false otherwise.
          */
-        public function checkIfUserIsAllowedToViewTask($userId, $taskId) {
+        public function checkIfUserIsAllowedToViewTask($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
             $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+
             if($task->is_archived === '1') {
                 return false;
             }
 
-            $assignedUsers = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($taskId);
+            $assignedUsers = [];
+
+            if ($userType === WP_QT_QUICKTASKER_USER_TYPE) {
+                $assignedUsers = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($taskId);
+            } else {
+                $assignedUsers = ServiceLocator::get('UserRepository')->getAssignedWPUsersByTaskIds([$taskId]);
+            }
+
             $isAssignedToTask = false;
 
             foreach ($assignedUsers as $user) {
@@ -140,27 +149,25 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
         }
 
         /**
-         * Check if a user is allowed to edit a task.
+         * Check if a user page user is allowed to edit a task.
          *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
+         * @param string $userType The type of user (default is WP_QT_QUICKTASKER_USER_TYPE).
          * @return bool Returns true if the user is allowed to edit the task, false otherwise.
          */
-        public function checkIfUserIsAllowedToEditTask($userId, $taskId) {
+        public function checkIfUserIsAllowedToEditTask($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
             $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
-            if($task->is_archived === '1') {
+
+            if( $task->is_archived === '1' ) {
                 return false;
             }
 
-            $isAssignedToUser = ServiceLocator::get('UserRepository')->checkIfUserHasAssignedToTask($userId, $taskId);
+            $isAssignedToUser = ServiceLocator::get('UserRepository')->checkIfUserHasAssignedToTask($userId, $taskId, $userType);
 
-            if ($isAssignedToUser === true) {
-                return true;
-            } else {
-                return false;
-            }
+            return $isAssignedToUser;
         }
     }
 }

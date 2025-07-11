@@ -64,6 +64,7 @@ function QuickTaskerUserLogin() {
               value={password}
               onChange={setPassword}
               type={InputType.PASSWORD}
+              data-testid="password-input"
             />
           </WPQTField>
           <WPQTField className="wpqt-flex wpqt-justify-center">

@@ -95,7 +95,14 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
             return $comments;
         }
 
-        public function getCommentsRelatedToUser($userId) {
+        /**
+         * Retrieves comments related to a specific user and tasks assigned to that user.
+         *
+         * @param int $userId The ID of the user.
+         * @param string $userType The type of user (default is WP_QT_QUICKTASKER_USER_TYPE).
+         * @return array An array of comments related to the user and their assigned tasks.
+         */
+        public function getCommentsRelatedToUser($userId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
             //Fetch comments related to user

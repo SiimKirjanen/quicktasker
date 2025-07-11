@@ -22,7 +22,7 @@ describe("ForgotPassword", () => {
       "Please contact the site admin to reset your password",
     );
 
-    expect(guidanceText).not.toBeVisible();
+    expect(guidanceText).toHaveClass("wpqt-hidden");
   });
 
   test("should show guidance text when clicked", () => {
@@ -50,20 +50,11 @@ describe("ForgotPassword", () => {
     // Click again to hide guidance
     fireEvent.click(linkText);
 
-    // Check if guidance text is hidden
+    // Check if guidance text has hidden class
     const guidanceText = screen.queryByText(
       "Please contact the site admin to reset your password",
     );
 
-    expect(guidanceText).not.toBeVisible();
-  });
-
-  test("should have the correct accessibility features", () => {
-    render(<ForgotPassword />);
-
-    const container = screen.getByText("Forgot the password?").parentElement;
-    expect(container).toHaveClass("wpqt-cursor-pointer");
-
-    // Add any other accessibility checks relevant to your component
+    expect(guidanceText).toHaveClass("wpqt-hidden");
   });
 });

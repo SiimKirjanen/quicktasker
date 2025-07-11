@@ -152,6 +152,15 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
         }
 
         /**
+         * Logs out the current WordPress user by clearing the authentication cookie.
+         *
+         * This function is used to log out the current user from the WordPress session.
+         */
+        public function logOutCurrentWPUser() {
+            wp_clear_auth_cookie();
+        }
+
+        /**
          * Verifies the session token.
          *
          * @throws \Exception If the session token is invalid or has expired.

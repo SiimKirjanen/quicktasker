@@ -117,6 +117,7 @@ const UserPageAppContextProvider = ({
 };
 
 export {
+  initialState,
   UserPageAppContext,
   UserPageAppContextProvider,
   type Action,

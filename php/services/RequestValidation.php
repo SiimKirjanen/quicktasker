@@ -30,7 +30,7 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          *
          * @return array An array containing the session information.
          *
-         * @throws WPQTException If the user page hash does not exist.
+         * @throws WPQTException 
          */
         public static function validateUserPageApiRequest($data, $args = array()) {
             $userPageHash = ServiceLocator::get('HeaderRepository')->getUserPageHash($data);
@@ -39,7 +39,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
                 'userPageHash' => $userPageHash,
                 'loggedInWPUserId' => $loggeIndWPUserId,
                 'isQuicktaskerUser' => $userPageHash ? true : false,
-                'isWordPressUser' => !$userPageHash ? true : false
+                'isWordPressUser' => !$userPageHash ? true : false,
+                'userType' => $userPageHash ? WP_QT_QUICKTASKER_USER_TYPE : WP_QT_WORDPRESS_USER_TYPE,
             );
             $defaults = array(
                 'nonce' => true,
@@ -82,7 +83,21 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
             } else {
                 // We are dealing with WordPress user type
 
-              
+                if ( $args['session'] === true ) {
+
+                    if( $loggeIndWPUserId === 0 ) {
+                        throw new WPQTException('User is not logged in', true);
+                    }
+                    $hasPermissions = ServiceLocator::get('PermissionService')->hasRequiredPermissionsForUserPageApp($loggeIndWPUserId);
+
+                    if ( !$hasPermissions ) {
+                        throw new WPQTException('User does not have permissions to access the user page app', true);
+                    }
+
+                    $requestData['session'] = (object)[
+                        'user_id' => $loggeIndWPUserId
+                    ];
+                }
                 
             }
 

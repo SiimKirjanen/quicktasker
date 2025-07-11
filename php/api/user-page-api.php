@@ -92,6 +92,10 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $passwordService = new PasswordService();
                         $logService = new LogService();
 
+                        if ( !$requestData['isQuicktaskerUser'] ) {
+                            throw new WPQTException('Setup not available for WordPress users');
+                        }
+
                         $userPage = $userPageRepository->getPageUserByHash($requestData['userPageHash']);
                         $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage->user_id);
 
@@ -135,7 +139,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $userPageRepository = new UserPageRepository();
                         $logService = new LogService();
 
-                        if($data['password'] === null) {
+                        if ( !$requestData['isQuicktaskerUser'] ) {
+                            throw new WPQTException('Login not available for WordPress users');
+                        }
+
+                        if( $data['password'] === null ) {
                             throw new WPQTException('Password is required');
                         }
                     
@@ -182,17 +190,21 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $requestData = RequestValidation::validateUserPageApiRequest($data);
                         $sessionService = new SessionService();
                         $logService = new LogService();
+
+                        if ( $requestData['isQuicktaskerUser'] ) {
+                            $sessionToken = sanitize_text_field($_COOKIE['wpqt-session-token-' . $requestData['userPageHash']]);
+                            $sessionService->markSessionInactive($sessionToken);
+
+                             $logService->log('User logged out', [
+                                'user_id' => $requestData['session']->user_id,
+                                'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                                'type' => WP_QT_LOG_TYPE_USER,
+                                'type_id' => $requestData['session']->user_id,
+                            ]);
+                        }else {
+                            $sessionService->logOutCurrentWPUser();
+                        }
                         
-                        $sessionToken = sanitize_text_field($_COOKIE['wpqt-session-token-' . $requestData['userPageHash']]);
-                        $sessionService->markSessionInactive($sessionToken);
-
-                        $logService->log('User logged out', [
-                            'user_id' => $requestData['session']->user_id,
-                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
-                            'type' => WP_QT_LOG_TYPE_USER,
-                            'type_id' => $requestData['session']->user_id,
-                        ]);
-
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);  
                     } catch(WPQTException $e) {
                         return new WP_REST_Response((new ApiResponse(false, array($e->getMessage())))->toArray(), 400);
@@ -210,8 +222,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                     try {
                         $requestData = RequestValidation::validateUserPageApiRequest($data);
                         $taskRepository = new TaskRepository();
-                        $assignedTasks = $taskRepository->getTasksAssignedToUser($requestData['session']->user_id);
-                        $assignableTasks = $taskRepository->getTasksAssignableToUser($requestData['session']->user_id);
+
+                        $assignedTasks = $taskRepository->getTasksAssignedToUser($requestData['session']->user_id, false, $requestData['userType']);
+                        $assignableTasks = $taskRepository->getTasksAssignableToUser();
 
                         $overviewData = (object)[
                             'assignedTasksCount' => count($assignedTasks),
@@ -235,7 +248,8 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                     try {
                         $requestData = RequestValidation::validateUserPageApiRequest($data);
                         $taskRepository = new TaskRepository();
-                        $assignedTasks = $taskRepository->getTasksAssignedToUser($requestData['session']->user_id);
+
+                        $assignedTasks = $taskRepository->getTasksAssignedToUser($requestData['session']->user_id, false, $requestData['userType']);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $assignedTasks))->toArray(), 200);
                     } catch(WPQTException $e) {
@@ -252,9 +266,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
             'methods' => 'GET',
             'callback' => function( $data ) {
                     try {
-                        $requestData = RequestValidation::validateUserPageApiRequest($data);
+                        RequestValidation::validateUserPageApiRequest($data);
                         $taskRepository = new TaskRepository();
-                        $assignableTasks = $taskRepository->getTasksAssignableToUser($requestData['session']->user_id);
+                        $assignableTasks = $taskRepository->getTasksAssignableToUser();
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $assignableTasks))->toArray(), 200);
                     } catch(WPQTException $e) {
@@ -282,8 +296,8 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $task = $taskRepository->getTaskByHash($data['task_hash'], true, WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL);
                         $pipelineSettings = $settingsRepository->getPublicPipelineSettings($task->pipeline_id);
                     
-                        if(!$permissionService->checkIfUserIsAllowedToViewTask($requestData['session']->user_id, $task->id)) {
-                            throw new WPQTException('Not allowed', true);
+                        if(!$permissionService->checkIfUserIsAllowedToViewTask($requestData['session']->user_id, $task->id, $requestData['userType'])) {
+                            throw new WPQTException('Not allowed to view the task data', true);
                         }
 
                         $data = (object)[
@@ -325,8 +339,8 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         if($task === null) {
                             throw new WPQTException('Task not found', true);
                         }
-                        if(!$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $task->id)) {
-                            throw new WPQTException('Not allowed', true);
+                        if(!$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $task->id, $requestData['userType'])) {
+                            throw new WPQTException('Not allowed to edit the task', true);
                         }
 
                         $comments = $commentRepository->getComments($task->id, 'task', false);
@@ -366,19 +380,22 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
 
                         $task = $taskRepository->getTaskByHash($data['task_hash']);
 
-                        if($task === null) {
+                        if ( $task === null ) {
                             throw new WPQTException('Task not found', true);
                         }
-                        if(!$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $task->id)) {
-                            throw new WPQTException('Not allowed', true);
+                        if ( !$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $task->id, $requestData['userType']) ) {
+                            throw new WPQTException('Not allowed to edit the task', true);
                         }
-                        $newComment = $commentService->createComment($task->id, 'task', false, $data['comment'], $requestData['session']->user_id, false);
+                        $adminComment = $requestData['isQuicktaskerUser'] ? false : true;
+                        $newComment = $commentService->createComment($task->id, 'task', false, $data['comment'], $requestData['session']->user_id, $adminComment);
+                        
                         $logService->log('User posted a comment on '. $task->name . ' task', [
                             'type' => WP_QT_LOG_TYPE_TASK,
                             'type_id' => $task->id,
-                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
+                            'created_by' => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN,
                             'user_id' => $requestData['session']->user_id
                         ]);
+
                         $comments = $commentRepository->getComments($task->id, 'task', false);
 
                         $automationExecutionResults = ServiceLocator::get('AutomationService')->handleAutomations(
@@ -444,7 +461,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $requestData = RequestValidation::validateUserPageApiRequest($data);
                         $commentRepository = new CommentRepository();
                         
-                        $comments = $commentRepository->getCommentsRelatedToUser($requestData['session']->user_id);
+                        $comments = $commentRepository->getCommentsRelatedToUser($requestData['session']->user_id, $requestData['userType']);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
                     } catch(WPQTException $e) {
