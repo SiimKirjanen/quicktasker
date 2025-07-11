@@ -1824,6 +1824,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
 
 
 
@@ -1833,21 +1841,23 @@ var InputType;
   InputType["TEXT"] = "text";
   InputType["PASSWORD"] = "password";
 })(InputType || (InputType = {}));
-const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(({
-  value,
-  onChange,
-  isAutoFocus,
-  className = "",
-  wrapperClassName = "",
-  disabled = false,
-  type = InputType.TEXT,
-  loading = false,
-  inputId,
-  name
-}, ref) => {
+const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((_a, ref) => {
+  var {
+      value,
+      onChange,
+      isAutoFocus,
+      className = "",
+      wrapperClassName = "",
+      disabled = false,
+      type = InputType.TEXT,
+      loading = false,
+      inputId,
+      name
+    } = _a,
+    restProps = __rest(_a, ["value", "onChange", "isAutoFocus", "className", "wrapperClassName", "disabled", "type", "loading", "inputId", "name"]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: `wpqt-inline-block wpqt-relative wpqt-mb-3 ${wrapperClassName}`,
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Input, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Input, Object.assign({
       ref: ref,
       autoFocus: isAutoFocus,
       className: `wpqt-block wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,
@@ -1857,7 +1867,7 @@ const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
       type: type,
       id: inputId,
       name: name
-    }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_2__.LoadingOval, {
+    }, restProps)), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_2__.LoadingOval, {
       width: "24",
       height: "24",
       className: "wpqt-absolute wpqt-right-[-32px] wpqt-top-1/2 wpqt-transform-y-center"
@@ -4346,7 +4356,8 @@ function QuickTaskerUserLogin() {
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Input_Input__WEBPACK_IMPORTED_MODULE_8__.WPQTInput, {
             value: password,
             onChange: setPassword,
-            type: _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_8__.InputType.PASSWORD
+            type: _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_8__.InputType.PASSWORD,
+            "data-testid": "password-input"
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Form_Field__WEBPACK_IMPORTED_MODULE_6__.WPQTField, {
           className: "wpqt-flex wpqt-justify-center",
@@ -5043,9 +5054,11 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 function TaskControls({
   task
 }) {
+  var _a, _b;
   const {
     state: {
-      userId
+      userId,
+      userType
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_6__.UserPageAppContext);
   const {
@@ -5057,7 +5070,7 @@ function TaskControls({
   } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_5__.useTaskActions)();
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.useNavigate)();
-  const isAssignedToTask = task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId);
+  const isAssignedToTask = ((_a = task === null || task === void 0 ? void 0 : task.assigned_users) === null || _a === void 0 ? void 0 : _a.some(user => user.id === userId && user.user_type === userType)) || ((_b = task === null || task === void 0 ? void 0 : task.assigned_wp_users) === null || _b === void 0 ? void 0 : _b.some(wpUser => wpUser.id === userId && wpUser.user_type === userType));
   if (task === null) {
     return null;
   }
@@ -6564,7 +6577,8 @@ const UserAssignedTasksContextProvider = ({
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   UserPageAppContext: () => (/* binding */ UserPageAppContext),
-/* harmony export */   UserPageAppContextProvider: () => (/* binding */ UserPageAppContextProvider)
+/* harmony export */   UserPageAppContextProvider: () => (/* binding */ UserPageAppContextProvider),
+/* harmony export */   initialState: () => (/* binding */ initialState)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
@@ -6622,7 +6636,8 @@ const initialState = {
   cf: false,
   timezone: "",
   isQuicktaskerUser: false,
-  isWordPressUser: false
+  isWordPressUser: false,
+  userType: null
 };
 const UserPageAppContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -6969,7 +6984,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants */ "./src/user-page-app/constants.ts");
 /* harmony import */ var _hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../hooks/useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
 /* harmony import */ var _reducers_user_page_user_recuder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../reducers/user-page-user-recuder */ "./src/user-page-app/reducers/user-page-user-recuder.ts");
-/* harmony import */ var _UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UserPageAppContextProvider */ "./src/user-page-app/providers/UserPageAppContextProvider.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -7003,7 +7017,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
 const initialState = {
   user: null,
   customFields: [],
@@ -7019,17 +7032,10 @@ const UserPageUserContextProvider = ({
 }) => {
   const [state, useUserPageUserDispatch] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useReducer)(_reducers_user_page_user_recuder__WEBPACK_IMPORTED_MODULE_5__.reducer, initialState);
   const {
-    state: {
-      pageHash
-    }
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_6__.UserPageAppContext);
-  const {
     handleError
   } = (0,_hooks_useErrorHandler__WEBPACK_IMPORTED_MODULE_4__.useErrorHandler)();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (pageHash) {
-      loadUserData();
-    }
+    loadUserData();
   }, []);
   const loadUserData = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -7175,7 +7181,8 @@ const reducer = (state, action) => {
           userId,
           userName,
           isQuicktaskerUser,
-          isWordPressUser
+          isWordPressUser,
+          userType
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
           isActiveUser,
@@ -7185,7 +7192,8 @@ const reducer = (state, action) => {
           userId,
           userName,
           isQuicktaskerUser,
-          isWordPressUser
+          isWordPressUser,
+          userType
         });
       }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_USER_LOGGED_IN:

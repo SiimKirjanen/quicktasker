@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-} from "@wordpress/element";
+import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { CustomField } from "../../types/custom-field";
 import { User } from "../../types/user";
 import { getUserPageUserDataRequest } from "../api/user-page-api";
@@ -14,7 +9,6 @@ import {
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { reducer } from "../reducers/user-page-user-recuder";
 import { UserPageUserResponse } from "../types/user-page-user-response";
-import { UserPageAppContext } from "./UserPageAppContextProvider";
 
 const initialState: State = {
   user: null,
@@ -54,15 +48,10 @@ const UserPageUserContextProvider = ({
   const [state, useUserPageUserDispatch] = useReducer<
     React.Reducer<State, Action>
   >(reducer, initialState);
-  const {
-    state: { pageHash },
-  } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
-    if (pageHash) {
-      loadUserData();
-    }
+    loadUserData();
   }, []);
 
   const loadUserData = async () => {

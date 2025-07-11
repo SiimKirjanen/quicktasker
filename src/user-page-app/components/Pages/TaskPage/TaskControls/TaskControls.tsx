@@ -8,7 +8,7 @@ import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
 import { WPQTIconButton } from "../../../../../components/common/Button/Button";
 import { Task } from "../../../../../types/task";
-import { User } from "../../../../../types/user";
+import { User, WPUser } from "../../../../../types/user";
 import { UPDATE_USER_PAGE_TASK_DATA } from "../../../../constants";
 import { useTaskActions } from "../../../../hooks/actions/useTaskActions";
 import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
@@ -19,16 +19,20 @@ type Props = {
 };
 function TaskControls({ task }: Props) {
   const {
-    state: { userId },
+    state: { userId, userType },
   } = useContext(UserPageAppContext);
   const { userTaskDispatch } = useContext(UserPageTaskContext);
   const { assignToTask, unAssignFromTask } = useTaskActions();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const isAssignedToTask = task?.assigned_users.some(
-    (user: User) => user.id === userId,
-  );
+  const isAssignedToTask =
+    task?.assigned_users?.some(
+      (user: User) => user.id === userId && user.user_type === userType,
+    ) ||
+    task?.assigned_wp_users?.some(
+      (wpUser: WPUser) => wpUser.id === userId && wpUser.user_type === userType,
+    );
 
   if (task === null) {
     return null;

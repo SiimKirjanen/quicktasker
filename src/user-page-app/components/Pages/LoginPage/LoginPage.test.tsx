@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { UserTypes } from "../../../../types/user";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { LoginPage } from "./LoginPage";
 import { QuickTaskerUserLogin } from "./components/QuickTaskerUserLogin/QuickTaskerUserLogin";
@@ -31,6 +32,7 @@ describe("LoginPage", () => {
       userId: "user123",
       cf: false,
       timezone: "UTC",
+      userType: UserTypes.QUICKTASKER,
       ...overrides,
     },
     userPageAppDispatch: jest.fn(),

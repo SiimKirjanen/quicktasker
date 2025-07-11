@@ -134,18 +134,18 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
             global $wpdb;
 
             $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
-            if($task->is_archived === '1') {
+
+            if( $task->is_archived === '1' ) {
                 return false;
             }
+            
             $assignedUsers = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($taskId);
             
-
             if ($task->free_for_all === '1' && count($assignedUsers) === 0) {
                 return true;
             } else {
                 return false;
             }
-
         }
 
         /**

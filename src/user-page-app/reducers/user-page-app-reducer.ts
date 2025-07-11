@@ -16,6 +16,7 @@ const reducer = (state: State, action: Action): State => {
         userName,
         isQuicktaskerUser,
         isWordPressUser,
+        userType,
       } = action.payload;
 
       return {
@@ -28,6 +29,7 @@ const reducer = (state: State, action: Action): State => {
         userName,
         isQuicktaskerUser,
         isWordPressUser,
+        userType,
       };
     }
     case SET_USER_LOGGED_IN: {

@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
+import { UserTypes } from "../../types/user";
 import { getUserPageCodeParam } from "../../utils/url";
 import { getUserPageStatusRequest } from "../api/user-page-api";
 import {
@@ -22,6 +23,7 @@ const initialState: State = {
   timezone: "",
   isQuicktaskerUser: false,
   isWordPressUser: false,
+  userType: null,
 };
 
 type State = {
@@ -36,6 +38,7 @@ type State = {
   timezone: string;
   isQuicktaskerUser: boolean;
   isWordPressUser: boolean;
+  userType: UserTypes | null;
 };
 
 type Action =
@@ -49,6 +52,7 @@ type Action =
         userName: string;
         isQuicktaskerUser: boolean;
         isWordPressUser: boolean;
+        userType: UserTypes;
       };
     }
   | { type: typeof SET_INIT_DATA; payload: { timezone: string } }
