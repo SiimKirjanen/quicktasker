@@ -779,7 +779,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
 
                         $data = (object)[
                             'user' => $userRepository->getUserByIdAndType($requestData['session']->user_id, $requestData['userType']),
-                            'customFields' => $customFieldRepository->getRelatedCustomFields($requestData['session']->user_id, 'user')
+                            'customFields' => $customFieldRepository->getRelatedCustomFields($requestData['session']->user_id, $requestData['userType']),
                         ];
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $data))->toArray(), 200);

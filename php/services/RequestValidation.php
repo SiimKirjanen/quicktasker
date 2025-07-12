@@ -16,28 +16,19 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
     class RequestValidation {
 
         /**
-         * Validates the user page API request.
-         *
-         * This method validates the incoming request data based on the provided arguments.
-         * It checks for nonce, user page hash, and session validity.
-         *
+         * Validates the user page API request and return request data.
+         * 
          * @param object $data The request data object.
-         * @param array $args Optional. An array of arguments to control the validation process.
-         *                    Default values:
-         *                    - 'nonce' => true (validates the nonce)
-         *                    - 'hash' => true (validates the user page hash)
-         *                    - 'session' => true (validates the session token)
-         *
-         * @return array An array containing the session information.
-         *
-         * @throws WPQTException 
+         * @param array $args Optional arguments for validation.
+         * @return array Returns an array with validated request data.
+         * @throws WPQTException If validation fails.
          */
         public static function validateUserPageApiRequest($data, $args = array()) {
             $userPageHash = ServiceLocator::get('HeaderRepository')->getUserPageHash($data);
-            $loggeIndWPUserId = get_current_user_id() ?: null;
+            $loggedInWPUserId = get_current_user_id() ?: null;
             $requestData = array(
                 'userPageHash' => $userPageHash,
-                'loggedInWPUserId' => $loggeIndWPUserId,
+                'loggedInWPUserId' => $loggedInWPUserId,
                 'isQuicktaskerUser' => $userPageHash ? true : false,
                 'isWordPressUser' => !$userPageHash ? true : false,
                 'userType' => $userPageHash ? WP_QT_QUICKTASKER_USER_TYPE : WP_QT_WORDPRESS_USER_TYPE,
@@ -85,17 +76,17 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
 
                 if ( $args['session'] === true ) {
 
-                    if( $loggeIndWPUserId === 0 ) {
+                    if( $loggedInWPUserId === 0 ) {
                         throw new WPQTException('User is not logged in', true);
                     }
-                    $hasPermissions = ServiceLocator::get('PermissionService')->hasRequiredPermissionsForUserPageApp($loggeIndWPUserId);
+                    $hasPermissions = ServiceLocator::get('PermissionService')->hasRequiredPermissionsForUserPageApp($loggedInWPUserId);
 
                     if ( !$hasPermissions ) {
                         throw new WPQTException('User does not have permissions to access the user page app', true);
                     }
 
                     $requestData['session'] = (object)[
-                        'user_id' => $loggeIndWPUserId
+                        'user_id' => $loggedInWPUserId
                     ];
                 }
                 

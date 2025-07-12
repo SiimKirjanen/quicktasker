@@ -1,8 +1,8 @@
 import { CustomField } from "../../types/custom-field";
-import { ServerUser } from "../../types/user";
+import { ServerUser, WPUser } from "../../types/user";
 
 type UserPageUserResponse = {
-  user: ServerUser;
+  user: ServerUser | WPUser;
   customFields: CustomField[];
 };
 

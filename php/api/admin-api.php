@@ -2081,8 +2081,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $customFieldService = new CustomFieldService();
                         $logService = new LogService();
+                        $entityId = $data['entityId'] === 0 ? null : $data['entityId'];
 
-                        $customField = $customFieldService->createCustomField($data['name'], $data['description'], $data['type'], $data['entityType'], $data['entityId']);
+                        $customField = $customFieldService->createCustomField($data['name'], $data['description'], $data['type'], $data['entityType'], $entityId);
                         $logService->log('Custom field ' . $data['name'] . ' created', [
                             'type' => $data['entityType'],
                             'type_id' => $data['entityId'],

@@ -1,12 +1,12 @@
 import { useContext } from "@wordpress/element";
-import { __, sprintf } from "@wordpress/i18n";
+import { __ } from "@wordpress/i18n";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { PageScreenMiddle, PageTitle } from "../Page/Page";
 import { QuickTaskerUserLogin } from "./components/QuickTaskerUserLogin/QuickTaskerUserLogin";
 
 function LoginPage() {
   const {
-    state: { userName, isQuicktaskerUser, isWordPressUser },
+    state: { isQuicktaskerUser, isWordPressUser },
   } = useContext(UserPageAppContext);
 
   if (isQuicktaskerUser) {
@@ -19,11 +19,11 @@ function LoginPage() {
         <PageTitle
           titleClassName="wpqt-font-normal"
           className="wpqt-mb-2"
-          description={__("Your WordPress session has expired", "quicktasker")}
+          description={__("Your session has expired", "quicktasker")}
         >
-          {sprintf(__("Hello", "quicktasker"), userName)}
+          {__("Hello", "quicktasker")}
         </PageTitle>
-        <p>{__("Please log in to continue", "quicktasker")}</p>
+        <p>{__("Please log in to WordPress", "quicktasker")}</p>
       </PageScreenMiddle>
     );
   }

@@ -1,6 +1,7 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { CustomFieldEntityType } from "../../../../types/custom-field";
+import { UserTypes } from "../../../../types/user";
 import {
   UserPageUserContext,
   UserPageUserContextProvider,
@@ -28,6 +29,19 @@ function ProfilePageContent() {
     return null;
   }
 
+  const mapUserTypeToEntityType = (
+    userType: UserTypes,
+  ): CustomFieldEntityType.QUICKTASKER | CustomFieldEntityType.WP_USER => {
+    switch (userType) {
+      case UserTypes.QUICKTASKER:
+        return CustomFieldEntityType.QUICKTASKER;
+      case UserTypes.WP_USER:
+        return CustomFieldEntityType.WP_USER;
+      default:
+        throw new Error(`Unsupported user type: ${userType}`);
+    }
+  };
+
   return (
     <PageWrap loading={loading} onRefresh={loadUserData}>
       <PageContentWrap>
@@ -36,7 +50,7 @@ function ProfilePageContent() {
           <UserDetails user={user} />
           <CustomFieldsWrap
             entityId={user.id}
-            entityType={CustomFieldEntityType.User}
+            entityType={mapUserTypeToEntityType(user.user_type)}
             entity={user}
             customFields={customFields}
           />

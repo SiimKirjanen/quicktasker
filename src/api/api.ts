@@ -649,7 +649,7 @@ function updateCustomFieldValueRequest(
   customFieldId: string,
   value: string,
   entityId: string,
-  entityType: "user" | "task",
+  entityType: "quicktasker" | "task",
 ): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/custom-fields/${customFieldId}/value`,

@@ -27,7 +27,7 @@ function CustomField({ data }: Props) {
   } = useCustomFieldActions();
   const [actionLoading, setActionLoading] = useState(false);
   const allowCustomFieldValueUpdate =
-    entityType === CustomFieldEntityType.User ||
+    entityType === CustomFieldEntityType.QUICKTASKER ||
     entityType === CustomFieldEntityType.Task;
   const allowCustomFieldDefaultValueUpdate =
     entityType === CustomFieldEntityType.Pipeline;

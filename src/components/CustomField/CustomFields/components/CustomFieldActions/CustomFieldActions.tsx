@@ -30,7 +30,7 @@ function CustomFieldActions({
   const isAllowedToSave =
     locationOfCustomFields === CustomFieldEntityType.Task ||
     locationOfCustomFields === CustomFieldEntityType.Pipeline ||
-    locationOfCustomFields === CustomFieldEntityType.User;
+    locationOfCustomFields === CustomFieldEntityType.QUICKTASKER;
   const entityTypeDisplay =
     data.entity_type === CustomFieldEntityType.Pipeline
       ? "board"

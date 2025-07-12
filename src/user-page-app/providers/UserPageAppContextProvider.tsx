@@ -19,7 +19,7 @@ const initialState: State = {
   pageHash: getUserPageCodeParam(),
   userId: null,
   userName: null,
-  cf: false,
+  cf: true,
   timezone: "",
   isQuicktaskerUser: false,
   isWordPressUser: false,

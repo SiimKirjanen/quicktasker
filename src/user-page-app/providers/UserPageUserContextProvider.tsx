@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { CustomField } from "../../types/custom-field";
-import { User } from "../../types/user";
+import { User, WPUser } from "../../types/user";
 import { getUserPageUserDataRequest } from "../api/user-page-api";
 import {
   SET_USER_PAGE_USER_DATA,
@@ -17,7 +17,7 @@ const initialState: State = {
 };
 
 type State = {
-  user: User | null;
+  user: User | WPUser | null;
   customFields: CustomField[];
   loading: boolean;
 };

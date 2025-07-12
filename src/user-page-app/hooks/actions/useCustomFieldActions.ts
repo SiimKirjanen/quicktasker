@@ -7,7 +7,10 @@ function useCustomFieldActions() {
 
   const updateCustomFieldValue = async (
     entityId: string,
-    entityType: CustomFieldEntityType.Task | CustomFieldEntityType.User,
+    entityType:
+      | CustomFieldEntityType.Task
+      | CustomFieldEntityType.QUICKTASKER
+      | CustomFieldEntityType.WP_USER,
     customFieldId: string,
     value: string,
     callback?: () => void,

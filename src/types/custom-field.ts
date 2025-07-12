@@ -8,7 +8,8 @@ enum CustomFieldType {
 }
 
 enum CustomFieldEntityType {
-  User = "user",
+  QUICKTASKER = "quicktasker",
+  WP_USER = "wp-user",
   Pipeline = "pipeline",
   Users = "users",
   Task = "task",

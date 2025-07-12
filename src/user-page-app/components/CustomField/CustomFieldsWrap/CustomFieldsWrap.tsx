@@ -4,15 +4,18 @@ import {
   CustomFieldEntityType,
 } from "../../../../types/custom-field";
 import { Task } from "../../../../types/task";
-import { User } from "../../../../types/user";
+import { User, WPUser } from "../../../../types/user";
 import { useCustomFieldActions } from "../../../hooks/actions/useCustomFieldActions";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { CustomField as CustomFieldComponent } from "../CustomField/CustomField";
 
 type Props = {
   entityId: string;
-  entityType: CustomFieldEntityType.Task | CustomFieldEntityType.User;
-  entity: Task | User;
+  entityType:
+    | CustomFieldEntityType.Task
+    | CustomFieldEntityType.QUICKTASKER
+    | CustomFieldEntityType.WP_USER;
+  entity: Task | User | WPUser;
   customFields: CustomField[];
 };
 
@@ -27,7 +30,7 @@ function CustomFieldsWrap({
   } = useContext(UserPageAppContext);
   const { updateCustomFieldValue } = useCustomFieldActions();
   const valueChangeEnabled =
-    entityType === CustomFieldEntityType.User ||
+    entityType === CustomFieldEntityType.QUICKTASKER ||
     (entityType === CustomFieldEntityType.Task &&
       "assigned_users" in entity &&
       entity.assigned_users.some((user: User) => user.id === userId));

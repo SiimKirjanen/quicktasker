@@ -6,7 +6,11 @@ import { CustomFields } from "../CustomFields/CustomFields";
 import { CustomFieldsRecovery } from "../CustomFieldsRecovery/CustomFieldsRecovery";
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
-  [CustomFieldEntityType.User]: __(
+  [CustomFieldEntityType.QUICKTASKER]: __(
+    "Add user-specific custom fields. If you want to add custom fields to all users, please go to users settings.",
+    "quicktasker",
+  ),
+  [CustomFieldEntityType.WP_USER]: __(
     "Add user-specific custom fields. If you want to add custom fields to all users, please go to users settings.",
     "quicktasker",
   ),
@@ -25,7 +29,11 @@ const descriptions: { [key in CustomFieldEntityType]: string } = {
 };
 
 const existingFieldsDescriptions: { [key in CustomFieldEntityType]: string } = {
-  [CustomFieldEntityType.User]: __(
+  [CustomFieldEntityType.QUICKTASKER]: __(
+    "Custom fields applied to this user, including both user-specific and global users fields.",
+    "quicktasker",
+  ),
+  [CustomFieldEntityType.WP_USER]: __(
     "Custom fields applied to this user, including both user-specific and global users fields.",
     "quicktasker",
   ),
@@ -44,7 +52,8 @@ const existingFieldsDescriptions: { [key in CustomFieldEntityType]: string } = {
 };
 
 const titles: { [key in CustomFieldEntityType]: string } = {
-  [CustomFieldEntityType.User]: __("User custom fields", "quicktasker"),
+  [CustomFieldEntityType.QUICKTASKER]: __("User custom fields", "quicktasker"),
+  [CustomFieldEntityType.WP_USER]: __("User custom fields", "quicktasker"),
   [CustomFieldEntityType.Users]: __(
     "Global users custom fields",
     "quicktasker",

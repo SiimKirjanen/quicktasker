@@ -967,7 +967,7 @@ function CustomFieldActions({
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_3__.AppContext);
   const isAllowedToDelete = data.entity_type === locationOfCustomFields;
-  const isAllowedToSave = locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Task || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Pipeline || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.User;
+  const isAllowedToSave = locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Task || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Pipeline || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.QUICKTASKER;
   const entityTypeDisplay = data.entity_type === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Pipeline ? "board" : data.entity_type;
   const handleDelete = () => __awaiter(this, void 0, void 0, function* () {
     if (!isAllowedToDelete) {
@@ -1074,7 +1074,7 @@ function CustomField({
     updateCustomFieldDefaultValue
   } = (0,_hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_3__.useCustomFieldActions)();
   const [actionLoading, setActionLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const allowCustomFieldValueUpdate = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.User || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Task;
+  const allowCustomFieldValueUpdate = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.QUICKTASKER || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Task;
   const allowCustomFieldDefaultValueUpdate = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Pipeline;
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (data.value) {
@@ -2371,7 +2371,7 @@ const initialState = {
   siteURL: "",
   pluginURL: "",
   publicUserPageId: "",
-  is_customFields: false,
+  is_customFields: true,
   timezone: "",
   isUserAllowedToDelete: false,
   userPageCustomStyles: "",
@@ -2755,7 +2755,8 @@ var CustomFieldType;
 })(CustomFieldType || (CustomFieldType = {}));
 var CustomFieldEntityType;
 (function (CustomFieldEntityType) {
-  CustomFieldEntityType["User"] = "user";
+  CustomFieldEntityType["QUICKTASKER"] = "quicktasker";
+  CustomFieldEntityType["WP_USER"] = "wp-user";
   CustomFieldEntityType["Pipeline"] = "pipeline";
   CustomFieldEntityType["Users"] = "users";
   CustomFieldEntityType["Task"] = "task";
@@ -3512,7 +3513,7 @@ function CustomFieldsWrap({
   const {
     updateCustomFieldValue
   } = (0,_hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_3__.useCustomFieldActions)();
-  const valueChangeEnabled = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.User || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Task && "assigned_users" in entity && entity.assigned_users.some(user => user.id === userId);
+  const valueChangeEnabled = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.QUICKTASKER || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Task && "assigned_users" in entity && entity.assigned_users.some(user => user.id === userId);
   const saveCustomFieldValueChange = (customFieldId, value) => __awaiter(this, void 0, void 0, function* () {
     yield updateCustomFieldValue(entityId, entityType, customFieldId, value);
   });
@@ -4174,7 +4175,6 @@ __webpack_require__.r(__webpack_exports__);
 function LoginPage() {
   const {
     state: {
-      userName,
       isQuicktaskerUser,
       isWordPressUser
     }
@@ -4187,10 +4187,10 @@ function LoginPage() {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_4__.PageTitle, {
         titleClassName: "wpqt-font-normal",
         className: "wpqt-mb-2",
-        description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Your WordPress session has expired", "quicktasker"),
-        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Hello", "quicktasker"), userName)
+        description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Your session has expired", "quicktasker"),
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Hello", "quicktasker")
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please log in to continue", "quicktasker")
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please log in to WordPress", "quicktasker")
       })]
     });
   }
@@ -4579,11 +4579,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../types/custom-field */ "./src/types/custom-field.ts");
-/* harmony import */ var _providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/UserPageUserContextProvider */ "./src/user-page-app/providers/UserPageUserContextProvider.tsx");
-/* harmony import */ var _CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../CustomField/CustomFieldsWrap/CustomFieldsWrap */ "./src/user-page-app/components/CustomField/CustomFieldsWrap/CustomFieldsWrap.tsx");
-/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
-/* harmony import */ var _components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/ProfileActions/ProfileActions */ "./src/user-page-app/components/Pages/ProfilePage/components/ProfileActions/ProfileActions.tsx");
-/* harmony import */ var _components_UserDetails_UserDetails__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/UserDetails/UserDetails */ "./src/user-page-app/components/Pages/ProfilePage/components/UserDetails/UserDetails.tsx");
+/* harmony import */ var _types_user__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../types/user */ "./src/types/user.ts");
+/* harmony import */ var _providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/UserPageUserContextProvider */ "./src/user-page-app/providers/UserPageUserContextProvider.tsx");
+/* harmony import */ var _CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../CustomField/CustomFieldsWrap/CustomFieldsWrap */ "./src/user-page-app/components/CustomField/CustomFieldsWrap/CustomFieldsWrap.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
+/* harmony import */ var _components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/ProfileActions/ProfileActions */ "./src/user-page-app/components/Pages/ProfilePage/components/ProfileActions/ProfileActions.tsx");
+/* harmony import */ var _components_UserDetails_UserDetails__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/UserDetails/UserDetails */ "./src/user-page-app/components/Pages/ProfilePage/components/UserDetails/UserDetails.tsx");
+
 
 
 
@@ -4594,7 +4596,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function PprofilePage() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageUserContextProvider, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserPageUserContextProvider, {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ProfilePageContent, {})
   });
 }
@@ -4606,26 +4608,36 @@ function ProfilePageContent() {
       customFields
     },
     loadUserData
-  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageUserContext);
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageUserContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserPageUserContext);
   if (!user) {
     return null;
   }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_6__.PageWrap, {
+  const mapUserTypeToEntityType = userType => {
+    switch (userType) {
+      case _types_user__WEBPACK_IMPORTED_MODULE_4__.UserTypes.QUICKTASKER:
+        return _types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.QUICKTASKER;
+      case _types_user__WEBPACK_IMPORTED_MODULE_4__.UserTypes.WP_USER:
+        return _types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.WP_USER;
+      default:
+        throw new Error(`Unsupported user type: ${userType}`);
+    }
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_7__.PageWrap, {
     loading: loading,
     onRefresh: loadUserData,
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_6__.PageContentWrap, {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_6__.PageTitle, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_7__.PageContentWrap, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_7__.PageTitle, {
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("User details", "quicktasker")
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_UserDetails_UserDetails__WEBPACK_IMPORTED_MODULE_8__.UserDetails, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_UserDetails_UserDetails__WEBPACK_IMPORTED_MODULE_9__.UserDetails, {
           user: user
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_5__.CustomFieldsWrap, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsWrap_CustomFieldsWrap__WEBPACK_IMPORTED_MODULE_6__.CustomFieldsWrap, {
           entityId: user.id,
-          entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.User,
+          entityType: mapUserTypeToEntityType(user.user_type),
           entity: user,
           customFields: customFields
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_7__.ProfileActions, {})]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_ProfileActions_ProfileActions__WEBPACK_IMPORTED_MODULE_8__.ProfileActions, {})]
       })]
     })
   });
@@ -4711,10 +4723,6 @@ function UserDetails({
         label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Description", "quicktasker"),
         className: rowClasses,
         children: user.description
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_DataDisplay_DataDisplay__WEBPACK_IMPORTED_MODULE_2__.DisplayRow, {
-        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Assigned tasks count", "quicktasker"),
-        className: rowClasses,
-        children: user.assigned_tasks_count
       })]
     })
   });
@@ -6633,7 +6641,7 @@ const initialState = {
   pageHash: (0,_utils_url__WEBPACK_IMPORTED_MODULE_2__.getUserPageCodeParam)(),
   userId: null,
   userName: null,
-  cf: false,
+  cf: true,
   timezone: "",
   isQuicktaskerUser: false,
   isWordPressUser: false,

@@ -1264,19 +1264,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const descriptions = {
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add user-specific custom fields. If you want to add custom fields to all users, please go to users settings.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.QUICKTASKER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add user-specific custom fields. If you want to add custom fields to all users, please go to users settings.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.WP_USER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add user-specific custom fields. If you want to add custom fields to all users, please go to users settings.", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add custom fields to all users. If you want to add custom fields to a specific user only, please go to that user settings.", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add board level custom fields.", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add task-specific custom fields. If you want to add custom fields to all tasks in this board, please go to board settings.", "quicktasker")
 };
 const existingFieldsDescriptions = {
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Custom fields applied to this user, including both user-specific and global users fields.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.QUICKTASKER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Custom fields applied to this user, including both user-specific and global users fields.", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.WP_USER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Custom fields applied to this user, including both user-specific and global users fields.", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Global user custom field are applied to all users.", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Board level fields are applied to all tasks in this board.", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Custom fields applied to this task, including both task-specific and board-level fields.", "quicktasker")
 };
 const titles = {
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("User custom fields", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.QUICKTASKER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("User custom fields", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.WP_USER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("User custom fields", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Global users custom fields", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Board custom fields", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_3__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Task custom fields", "quicktasker")
@@ -1697,7 +1700,7 @@ function CustomFieldActions({
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_3__.AppContext);
   const isAllowedToDelete = data.entity_type === locationOfCustomFields;
-  const isAllowedToSave = locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Task || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Pipeline || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.User;
+  const isAllowedToSave = locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Task || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Pipeline || locationOfCustomFields === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.QUICKTASKER;
   const entityTypeDisplay = data.entity_type === _types_custom_field__WEBPACK_IMPORTED_MODULE_4__.CustomFieldEntityType.Pipeline ? "board" : data.entity_type;
   const handleDelete = () => __awaiter(this, void 0, void 0, function* () {
     if (!isAllowedToDelete) {
@@ -1804,7 +1807,7 @@ function CustomField({
     updateCustomFieldDefaultValue
   } = (0,_hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_3__.useCustomFieldActions)();
   const [actionLoading, setActionLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const allowCustomFieldValueUpdate = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.User || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Task;
+  const allowCustomFieldValueUpdate = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.QUICKTASKER || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Task;
   const allowCustomFieldDefaultValueUpdate = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_5__.CustomFieldEntityType.Pipeline;
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (data.value) {
@@ -9434,7 +9437,7 @@ const UserModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             })
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_13__.CustomFieldsInModalWrap, {
             entityId: userToEdit.id,
-            entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_9__.CustomFieldEntityType.User
+            entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_9__.CustomFieldEntityType.QUICKTASKER
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_16__.WPQTModalFooter, {
           onSave: saveUser,
@@ -18554,7 +18557,7 @@ const initialState = {
   siteURL: "",
   pluginURL: "",
   publicUserPageId: "",
-  is_customFields: false,
+  is_customFields: true,
   timezone: "",
   isUserAllowedToDelete: false,
   userPageCustomStyles: "",
@@ -21392,7 +21395,8 @@ var CustomFieldType;
 })(CustomFieldType || (CustomFieldType = {}));
 var CustomFieldEntityType;
 (function (CustomFieldEntityType) {
-  CustomFieldEntityType["User"] = "user";
+  CustomFieldEntityType["QUICKTASKER"] = "quicktasker";
+  CustomFieldEntityType["WP_USER"] = "wp-user";
   CustomFieldEntityType["Pipeline"] = "pipeline";
   CustomFieldEntityType["Users"] = "users";
   CustomFieldEntityType["Task"] = "task";
@@ -21821,7 +21825,8 @@ __webpack_require__.r(__webpack_exports__);
 const CustomFieldEntityTypeString = {
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.Pipeline]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Board", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.Task]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Task", "quicktasker"),
-  [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.User]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("User", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.QUICKTASKER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Quicktasker", "quicktasker"),
+  [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.WP_USER]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("WordPress user", "quicktasker"),
   [_types_custom_field__WEBPACK_IMPORTED_MODULE_1__.CustomFieldEntityType.Users]: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Global users", "quicktasker")
 };
 
