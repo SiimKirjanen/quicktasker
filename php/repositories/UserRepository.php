@@ -216,24 +216,23 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
          *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
+         * @param string $userType The type of user (default is WP_QT_QUICKTASKER_USER_TYPE).
          * @return bool True if the user is assigned to the task, false otherwise.
          */
-        public function checkIfUserHasAssignedToTask($userId, $taskId) {
+        public function checkIfUserHasAssignedToTask($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
             $result = $wpdb->get_var(
                 $wpdb->prepare(
-                    "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " WHERE user_id = %d AND task_id = %d",
+                    "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " 
+                    WHERE user_id = %d AND task_id = %d AND user_type = %s",
                     $userId,
-                    $taskId
+                    $taskId,
+                    $userType
                 )
             );
 
-            if ($result > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return ($result > 0);
         }
 
         /**

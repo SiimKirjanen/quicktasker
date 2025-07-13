@@ -1,20 +1,16 @@
 type BaseComment = {
   id: string;
   text: string;
-  type: "task" | "user";
+  type: "task" | "quicktasker" | "wp-user";
   type_id: string;
   author_id: string | null;
+  author_type: "quicktasker" | "wp-user";
   author_name: string | null;
   created_at: string;
   subject_name?: string;
   subject_hash?: string;
 };
 
-type WPQTComment = BaseComment & {
-  is_admin_comment: boolean;
-};
-type WPQTCommentFromServer = BaseComment & {
-  is_admin_comment: string;
-};
+type WPQTComment = BaseComment;
 
-export type { WPQTComment, WPQTCommentFromServer };
+export type { WPQTComment };

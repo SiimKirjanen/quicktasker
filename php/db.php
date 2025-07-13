@@ -138,17 +138,16 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				id int(11) NOT NULL AUTO_INCREMENT,
 				text text NOT NULL,
 				type_id int(11) NOT NULL,
-				type ENUM('task', 'user') NOT NULL,
+				type ENUM('task', 'quicktasker', 'wp-user') NOT NULL,
 				is_private tinyint(1) DEFAULT 1,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				author_id int(11) DEFAULT NULL,
-				is_admin_comment tinyint(1) DEFAULT 0,
+				author_type ENUM('quicktasker', 'wp-user') NOT NULL,
 				PRIMARY KEY  (id),
 				INDEX type_id (type_id),
 				INDEX type (type),
 				INDEX is_private (is_private),
 				INDEX author_id (author_id),
-				INDEX is_admin_comment (is_admin_comment)
 			) $charset_collate;";
 
 			dbDelta( $sql8 ); 
@@ -205,7 +204,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				name varchar(255) NOT NULL,
 				description text,
 				type ENUM('text', 'select', 'checkbox', 'radio', 'datetime', 'file') NOT NULL,
-				entity_type ENUM('task', 'user', 'pipeline', 'users') NOT NULL,
+				entity_type ENUM('task', 'quicktasker', 'pipeline', 'users', 'wp-user') NOT NULL,
 				entity_id int(11) DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
@@ -224,7 +223,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				id int(11) NOT NULL AUTO_INCREMENT,
 				custom_field_id int(11) NOT NULL,
 				entity_id int(11) NOT NULL,
-				entity_type ENUM('task', 'user') NOT NULL,
+				entity_type ENUM('task', 'quicktasker', 'wp-user') NOT NULL,
 				value TEXT,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',

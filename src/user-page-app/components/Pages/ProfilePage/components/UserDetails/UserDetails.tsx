@@ -3,10 +3,10 @@ import {
   DataDisplay,
   DisplayRow,
 } from "../../../../../../components/common/DataDisplay/DataDisplay";
-import { User } from "../../../../../../types/user";
+import { User, WPUser } from "../../../../../../types/user";
 
 type Props = {
-  user: User | null;
+  user: User | WPUser | null;
 };
 function UserDetails({ user }: Props) {
   if (!user) {
@@ -29,12 +29,12 @@ function UserDetails({ user }: Props) {
             {user.description}
           </DisplayRow>
         )}
-        <DisplayRow
+        {/*    <DisplayRow
           label={__("Assigned tasks count", "quicktasker")}
           className={rowClasses}
         >
           {user.assigned_tasks_count}
-        </DisplayRow>
+        </DisplayRow> */}
       </DataDisplay>
     </div>
   );

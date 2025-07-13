@@ -19,10 +19,16 @@ function TaskDoneStatus({ task }: Props) {
     userTaskDispatch,
   } = useContext(UserPageTaskContext);
   const {
-    state: { userId },
+    state: { userId, userType },
   } = useContext(UserPageAppContext);
 
-  const isAssigned = task?.assigned_users.some((user) => user.id === userId);
+  const isAssigned =
+    task?.assigned_users.some(
+      (user) => user.id === userId && user.user_type === userType,
+    ) ||
+    task?.assigned_wp_users.some(
+      (user) => user.id === userId && user.user_type === userType,
+    );
   const isDone = task.is_done;
   const doneMessage = isDone
     ? __("Task is completed", "quicktasker")

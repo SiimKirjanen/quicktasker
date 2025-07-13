@@ -7,7 +7,7 @@ import {
   ExecutedAutomation,
 } from "../types/automation";
 import { WPUserCapabilities } from "../types/capabilities";
-import { WPQTCommentFromServer } from "../types/comment";
+import { WPQTComment } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import {
   WPQTArchiveDoneFilter,
@@ -266,7 +266,7 @@ function getComments(
   typeId: string,
   type: string,
   isPrivate: boolean,
-): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+): Promise<WPQTResponse<WPQTComment[]>> {
   const queryParams = new URLSearchParams({
     typeId,
     type,
@@ -286,7 +286,7 @@ function addCommentRequest(
   comment: string,
 ): Promise<
   WPQTResponse<{
-    newComment: WPQTCommentFromServer;
+    newComment: WPQTComment;
   }>
 > {
   return apiFetch({
@@ -546,6 +546,8 @@ function updateWPUserPermissionsRequest(
         capabilities.quicktasker_admin_role_manage_settings,
       quicktasker_admin_role_manage_archive:
         capabilities.quicktasker_admin_role_manage_archive,
+      quicktasker_access_user_page_app:
+        capabilities.quicktasker_access_user_page_app,
     },
     headers: getCommonHeaders(),
   });
@@ -647,7 +649,7 @@ function updateCustomFieldValueRequest(
   customFieldId: string,
   value: string,
   entityId: string,
-  entityType: "user" | "task",
+  entityType: "quicktasker" | "task",
 ): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/custom-fields/${customFieldId}/value`,

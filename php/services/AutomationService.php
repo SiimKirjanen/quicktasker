@@ -296,7 +296,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             if ( $this->isTaskPublicCommentAddedTrigger($automation) ) {
                 $comment = $data;
                 $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
-                $authorUserType = $comment->is_admin_comment ? WP_QT_WORDPRESS_USER_TYPE : WP_QT_QUICKTASKER_USER_TYPE;
+                $authorUserType = $comment->author_type;
                 $commentAuthor = ServiceLocator::get('UserRepository')->getUserByIdAndType($comment->author_id, $authorUserType);
 
                 if ( $this->isTaskPublicCommentAddedEmailAction($automation) ) {

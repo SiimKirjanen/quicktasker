@@ -22,12 +22,12 @@ if ( ! class_exists( 'WPQT\Location\LocationService' ) ) {
         }
 
         /**
-         * Checks if the current page is the WP Quick Tasks public user page.
+         * Checks if the current page is the user page app.
          *
          * @return bool Returns true if the current page is the WP Quick Tasks public user page, false otherwise.
          */
         public function isWPQTPublicUserPage() {
-            if ( isset($_GET['page']) && $_GET['page'] === WP_QUICKTASKER_PUBLIC_USER_PAGE_ID && isset($_GET['code']) ) {
+            if ( isset($_GET['page']) && $_GET['page'] === WP_QUICKTASKER_PUBLIC_USER_PAGE_ID ) {
                 return true;
             }
 

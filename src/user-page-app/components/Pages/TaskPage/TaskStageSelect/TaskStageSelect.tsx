@@ -15,10 +15,16 @@ function TaskStageSelect({ task }: Props) {
     state: { taskStages },
   } = useContext(UserPageTaskContext);
   const {
-    state: { pageHash, userId },
+    state: { userId, userType },
   } = useContext(UserPageAppContext);
   const [selectionModalOpen, setSelectionModalOpen] = useState(false);
-  const changeEnabled = task?.assigned_users.some((user) => user.id === userId);
+  const changeEnabled =
+    task?.assigned_users.some(
+      (user) => user.id === userId && user.user_type === userType,
+    ) ||
+    task?.assigned_wp_users.some(
+      (user) => user.id === userId && user.user_type === userType,
+    );
   const currentTaskStage = taskStages.find(
     (stage) => stage.id === task?.stage_id,
   );
@@ -45,7 +51,6 @@ function TaskStageSelect({ task }: Props) {
       <StageSelectionModal
         stages={taskStages}
         task={task}
-        pageHash={pageHash}
         open={selectionModalOpen}
         onClose={() => setSelectionModalOpen(false)}
       />

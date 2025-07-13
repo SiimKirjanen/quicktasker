@@ -5,7 +5,7 @@ import { UserSession } from "../types/user-session";
 
 function useSession() {
   const {
-    state: { pageHash },
+    state: { pageHash, isQuicktaskerUser, isWordPressUser, userId },
   } = useContext(UserPageAppContext);
 
   /**
@@ -34,7 +34,13 @@ function useSession() {
   };
 
   const isLoggedIn = (): boolean => {
-    return !!Cookies.get(`wpqt-session-token-${pageHash}`);
+    if (isQuicktaskerUser) {
+      return !!Cookies.get(`wpqt-session-token-${pageHash}`);
+    } else if (isWordPressUser) {
+      return !!userId;
+    }
+
+    return false;
   };
 
   /**
@@ -55,10 +61,13 @@ function useSession() {
   /**
    * Retrieves the remaining session time for a given page hash.
    *
-   * @param {string} pageHash - The unique identifier for the user page.
+   * @param {string | null} pageHash - The unique identifier for the user page.
    * @returns {number | null} - The time left in minutes, or null if no expiration is found.
    */
-  const getSessionTimeLeft = (pageHash: string) => {
+  const getSessionTimeLeft = (pageHash: string | null) => {
+    if (!pageHash) {
+      return null;
+    }
     const expirationString = localStorage.getItem(
       `wpqt-session-expiration-${pageHash}`,
     );

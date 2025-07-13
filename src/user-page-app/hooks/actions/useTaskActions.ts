@@ -1,4 +1,3 @@
-import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { TaskFromServer } from "../../../types/task";
@@ -9,23 +8,18 @@ import {
   getTaskDataRequest,
   unAssignTaskFromUser,
 } from "../../api/user-page-api";
-import { UserPageAppContext } from "../../providers/UserPageAppContextProvider";
 import { UserPageTaskResponse } from "../../types/user-page-task-response";
 import { useErrorHandler } from "../useErrorHandler";
 
 function useTaskActions() {
-  const {
-    state: { pageHash },
-  } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
 
   const getTask = async (
-    pageHash: string,
     taskHash: string,
     callback?: (data: UserPageTaskResponse) => void,
   ) => {
     try {
-      const response = await getTaskDataRequest(pageHash, taskHash);
+      const response = await getTaskDataRequest(taskHash);
       if (callback) callback(response.data);
     } catch (error) {
       handleError(error);
@@ -33,12 +27,11 @@ function useTaskActions() {
   };
 
   const assignToTask = async (
-    pageHash: string,
     taskHash: string,
     callback?: (task: TaskFromServer) => void,
   ) => {
     try {
-      const response = await assignTaskToUser(pageHash, taskHash);
+      const response = await assignTaskToUser(taskHash);
       toast.success(__("Task assigned successfully", "quicktasker"));
       if (callback) callback(response.data.task);
     } catch (error) {
@@ -47,12 +40,11 @@ function useTaskActions() {
   };
 
   const unAssignFromTask = async (
-    pageHash: string,
     taskHash: string,
     callback?: (task: TaskFromServer) => void,
   ) => {
     try {
-      const response = await unAssignTaskFromUser(pageHash, taskHash);
+      const response = await unAssignTaskFromUser(taskHash);
       toast.success(__("Task unassigned successfully", "quicktasker"));
       if (callback) callback(response.data);
     } catch (error) {
@@ -63,11 +55,10 @@ function useTaskActions() {
   const changeTaskStage = async (
     taskHash: string,
     stageId: string,
-    pageHash: string,
     callback?: () => void,
   ) => {
     try {
-      await changeTaskStageRequest(pageHash, taskHash, stageId);
+      await changeTaskStageRequest(taskHash, stageId);
       toast.success(__("Task stage changed successfully", "quicktasker"));
       if (callback) callback();
     } catch (error) {
@@ -84,7 +75,7 @@ function useTaskActions() {
       const successMessage = doneStatus
         ? __("Task marked as completed", "quicktasker")
         : __("Task marked as incomplete", "quicktasker");
-      await changeTaskDoneStatusRequest(pageHash, taskHash, doneStatus);
+      await changeTaskDoneStatusRequest(taskHash, doneStatus);
       toast.success(successMessage);
       if (callback) callback(doneStatus);
     } catch (error) {

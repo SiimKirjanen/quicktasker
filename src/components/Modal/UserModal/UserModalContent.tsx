@@ -126,7 +126,7 @@ const UserModalContent = forwardRef(function UserModalContent(
             </div>
             <CustomFieldsInModalWrap
               entityId={userToEdit!.id}
-              entityType={CustomFieldEntityType.User}
+              entityType={CustomFieldEntityType.QUICKTASKER}
             />
           </div>
 

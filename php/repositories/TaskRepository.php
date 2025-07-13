@@ -311,12 +311,14 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
          * Retrieves tasks assigned to a specific user.
          *
          * @param int $userId The ID of the user.
+         * @param bool $addAssignedUsers Whether to include assigned users in the task object.
+         * @param string $userType The type of user (default is 'quicktasker').
          * @return array The tasks assigned to the user.
          */
-        public function getTasksAssignedToUser($userId, $addAssignedUsers = false) {
+        public function getTasksAssignedToUser($userId, $addAssignedUsers = false, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
         
-            $tasks = $wpdb->get_results($wpdb->prepare(
+            /* $tasks = $wpdb->get_results($wpdb->prepare(
                 "SELECT b.*, c.name as pipeline_name FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS a
                 LEFT JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS b ON a.task_id = b.id
                 LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON b.pipeline_id = c.id
@@ -325,10 +327,24 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
                 AND b.is_archived = 0
                 ORDER BY b.created_at DESC",
                 $userId
-            ));
+            )); */
+
+            $sql = "SELECT b.*, c.name as pipeline_name FROM " . TABLE_WP_QUICKTASKER_USER_TASK . " AS a
+                LEFT JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS b ON a.task_id = b.id
+                LEFT JOIN " . TABLE_WP_QUICKTASKER_PIPELINES . " AS c ON b.pipeline_id = c.id
+                WHERE a.user_id = %d";
+            $args = [$userId];
+            
+            if ( $userType !== null ) {
+                $sql .= " AND a.user_type = %s";
+                $args[] = $userType;
+            }
+
+            $sql .= " AND b.is_archived = 0 ORDER BY b.created_at DESC";
+            $tasks = $wpdb->get_results($wpdb->prepare($sql, $args));
         
-            if ($addAssignedUsers) {
-                foreach ($tasks as $task) {
+            if ( $addAssignedUsers ) {
+                foreach ( $tasks as $task ) {
                     $users = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId($task->id);
                     $task->assigned_users = $users;
                     $task->assigned_wp_users = ServiceLocator::get('UserRepository')->getAssignedWPUsersByTaskIds([$task->id]);
@@ -341,10 +357,9 @@ if ( ! class_exists( 'WPQT\Task\TaskRepository' ) ) {
         /**
          * Retrieves tasks that are assignable to a specific user.
          *
-         * @param int $userId The ID of the user.
          * @return array The list of tasks that are assignable to the user.
          */
-        public function getTasksAssignableToUser($userId) {
+        public function getTasksAssignableToUser() {
             global $wpdb;
         
             return $wpdb->get_results( $wpdb->prepare(

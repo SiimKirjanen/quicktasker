@@ -6,7 +6,7 @@ import { NotificationItem } from "./components/NotificationItem";
 
 type NotificationItemType = {
   typeId: string;
-  type: "task" | "user";
+  type: "task" | "wp-user" | "quicktasker";
   numberOfComments: number;
   subjectName: string;
   subjectHash: string;

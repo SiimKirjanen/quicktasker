@@ -60,7 +60,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.42.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.44.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -207,12 +207,16 @@ if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_TASK' ) ) {
     define('WP_QUICKTASKER_COMMENT_TYPE_TASK', "task");
 }
 
-if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_USER' ) ) {
-    define('WP_QUICKTASKER_COMMENT_TYPE_USER', "user");
+if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_QUICKTASKER' ) ) {
+    define('WP_QUICKTASKER_COMMENT_TYPE_QUICKTASKER', "quicktasker");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_WP_USER' ) ) {
+    define('WP_QUICKTASKER_COMMENT_TYPE_WP_USER', "wp-user");
 }
 
 if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPES' ) ) {
-    define('WP_QUICKTASKER_COMMENT_TYPES', [WP_QUICKTASKER_COMMENT_TYPE_TASK, WP_QUICKTASKER_COMMENT_TYPE_USER]);
+    define('WP_QUICKTASKER_COMMENT_TYPES', [WP_QUICKTASKER_COMMENT_TYPE_TASK, WP_QUICKTASKER_COMMENT_TYPE_QUICKTASKER, WP_QUICKTASKER_COMMENT_TYPE_WP_USER]);
 }
 
 /*
@@ -225,8 +229,12 @@ if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK' ) ) {
     define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK', "task");
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USER' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USER', "user");
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_QUICKTASKER' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_QUICKTASKER', "quicktasker");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_WP_USER' ) ) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_WP_USER', "wp-user");
 }
 
 if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS' ) ) {
@@ -240,7 +248,8 @@ if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE' ) ) {
 if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES' ) ) {
     define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES', [
         WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK, 
-        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USER,
+        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_QUICKTASKER,
+        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_WP_USER,
         WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS,
         WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE
     ]);
@@ -332,7 +341,7 @@ if ( ! defined( 'WP_QUICKTASKER_INVALID_SESSION_TOKEN' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_SIDE_EFFECT_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "7");
+    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "8");
 }
 
 if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
@@ -340,7 +349,7 @@ if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_DB_MIGRATION_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', "8");
+    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', "11");
 }
 
 /*
@@ -367,7 +376,11 @@ if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS' ) ) {
 
 if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE' ) ) {
     define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE", "quicktasker_admin_role_manage_archive"); // Allows access to Archive page and related private API endpoints
-}  
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ACCESS_USER_PAGE_APP' ) ) {
+    define("WP_QUICKTASKER_ACCESS_USER_PAGE_APP", "quicktasker_access_user_page_app"); // Allows access to user page app
+} 
 
 /*
 ==================================================================================================================================================================================================================

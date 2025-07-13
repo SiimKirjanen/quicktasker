@@ -1,18 +1,14 @@
 import { EyeIcon } from "@heroicons/react/24/outline";
-import { useContext, useEffect, useState } from "@wordpress/element";
+import { useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
 import { WPQTIconButton } from "../../../../components/common/Button/Button";
 import { getOverviewRequest } from "../../../api/user-page-api";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
-import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 import { UserPageOverview } from "../../../types/user-page-overview";
 import { PageContentWrap, PageWrap } from "../Page/Page";
 
 function HomePage() {
-  const {
-    state: { pageHash },
-  } = useContext(UserPageAppContext);
   const [loading, setLoading] = useState(true);
   const [overview, setOverview] = useState<null | UserPageOverview>(null);
   const navigate = useNavigate();
@@ -25,7 +21,7 @@ function HomePage() {
   const getOverviewData = async () => {
     try {
       setLoading(true);
-      const response = await getOverviewRequest(pageHash);
+      const response = await getOverviewRequest();
 
       setOverview(response.data);
     } catch (error) {

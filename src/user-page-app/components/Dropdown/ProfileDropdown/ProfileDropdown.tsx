@@ -17,18 +17,15 @@ import { useSession } from "../../../hooks/useSession";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 
 function ProfileDropdown() {
-  const {
-    state: { pageHash },
-    loadUserPageStatus,
-    userPageAppDispatch,
-  } = useContext(UserPageAppContext);
+  const { loadUserPageStatus, userPageAppDispatch } =
+    useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const { deleteSessionCookie } = useSession();
   const navigate = useNavigate();
 
   const logOut = async () => {
     try {
-      await logoutUserPageRequest(pageHash);
+      await logoutUserPageRequest();
       await deleteSessionCookie();
       userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: false });
       loadUserPageStatus();

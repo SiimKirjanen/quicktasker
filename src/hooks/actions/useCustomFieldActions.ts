@@ -67,7 +67,7 @@ function useCustomFieldActions() {
     customFieldId: string,
     value: string,
     entityId: string,
-    entityType: "user" | "task",
+    entityType: "quicktasker" | "task",
     callback?: () => void,
   ) => {
     try {

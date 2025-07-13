@@ -2,8 +2,7 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { addCommentRequest, getComments } from "../../../../api/api";
 import { WPQTComment } from "../../../../types/comment";
-import { WPQTTypes } from "../../../../types/enums";
-import { convertCommentFromServer } from "../../../../utils/comment";
+import { UserTypes } from "../../../../types/user";
 import {
   CommentsAndLogsTabContent,
   TabContentCommentItem,
@@ -18,12 +17,12 @@ function PrivateCommentsTabContent({ userId }: Props) {
     try {
       const response = await addCommentRequest(
         userId,
-        WPQTTypes.User,
+        UserTypes.QUICKTASKER,
         true,
         newEntry,
       );
 
-      return convertCommentFromServer(response.data.newComment);
+      return response.data.newComment;
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to add private comment", "quicktasker"));
@@ -32,9 +31,9 @@ function PrivateCommentsTabContent({ userId }: Props) {
 
   const fetchPrivateComments = async () => {
     try {
-      const response = await getComments(userId, WPQTTypes.User, true);
+      const response = await getComments(userId, UserTypes.QUICKTASKER, true);
 
-      return response.data.map(convertCommentFromServer);
+      return response.data;
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to load private comments", "quicktasker"));

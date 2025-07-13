@@ -27,8 +27,8 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
 
         add_submenu_page(
             'wp-quick-tasks',
-            'Overview',
-            'Overview',
+            esc_html__('Overview', 'quicktasker'),
+            esc_html__('Overview', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE,
             'wp-quick-tasks#/overview',
             'wp_quick_taks_generate_app_page'
@@ -45,10 +45,19 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
 
         add_submenu_page(
             'wp-quick-tasks',
-            'Users',
-            'Users',
+            esc_html__('User management', 'quicktasker'),
+            esc_html__('User management', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS,
             'wp-quick-tasks#/users',
+            'wp_quick_taks_generate_app_page'
+        );
+
+        add_submenu_page(
+            'wp-quick-tasks',
+            esc_html__('User page', 'quicktasker'),
+            esc_html__('User page', 'quicktasker'),
+            WP_QUICKTASKER_ACCESS_USER_PAGE_APP,
+            'wp-quick-tasks#/user-page-link',
             'wp_quick_taks_generate_app_page'
         );
 
@@ -79,12 +88,10 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
             'wp_quick_taks_generate_app_page'
         );
 
-      
-
         add_submenu_page(
             'wp-quick-tasks',
-            esc_html__('Guide', 'quicktasker'),
-            esc_html__('Guide', 'quicktasker'),
+            esc_html__('About', 'quicktasker'),
+            esc_html__('About', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE,
             'wp-quick-tasks#/guide',
             'wp_quick_taks_generate_app_page'

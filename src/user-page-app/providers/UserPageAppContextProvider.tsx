@@ -1,5 +1,6 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { getQueryParam } from "../../utils/url";
+import { UserTypes } from "../../types/user";
+import { getUserPageCodeParam } from "../../utils/url";
 import { getUserPageStatusRequest } from "../api/user-page-api";
 import {
   SET_INIT_DATA,
@@ -15,11 +16,14 @@ const initialState: State = {
   isActiveUser: false,
   setupCompleted: false,
   isLoggedIn: false,
-  pageHash: getQueryParam("code") || "",
-  userId: "",
-  userName: "",
+  pageHash: getUserPageCodeParam(),
+  userId: null,
+  userName: null,
   cf: false,
   timezone: "",
+  isQuicktaskerUser: false,
+  isWordPressUser: false,
+  userType: null,
 };
 
 type State = {
@@ -27,22 +31,28 @@ type State = {
   isActiveUser: boolean;
   setupCompleted: boolean;
   isLoggedIn: boolean;
-  pageHash: string;
-  userId: string;
-  userName: string;
+  pageHash: string | null;
+  userId: string | null;
+  userName: string | null;
   cf: boolean;
   timezone: string;
+  isQuicktaskerUser: boolean;
+  isWordPressUser: boolean;
+  userType: UserTypes | null;
 };
 
 type Action =
   | {
       type: typeof SET_USER_PAGE_STATUS;
       payload: {
-        isActiveUser: string;
+        isActiveUser: boolean;
         isLoggedIn: boolean;
         setupCompleted: boolean;
         userId: string;
         userName: string;
+        isQuicktaskerUser: boolean;
+        isWordPressUser: boolean;
+        userType: UserTypes;
       };
     }
   | { type: typeof SET_INIT_DATA; payload: { timezone: string } }
@@ -89,17 +99,13 @@ const UserPageAppContextProvider = ({
 
   const loadUserPageStatus = async () => {
     try {
-      const pageHash = state.pageHash;
+      const userLoggedIn = isLoggedIn();
+      const { data } = await getUserPageStatusRequest();
 
-      if (pageHash) {
-        const userLoggedIn = isLoggedIn();
-        const { data } = await getUserPageStatusRequest(pageHash);
-
-        userPageAppDispatch({
-          type: SET_USER_PAGE_STATUS,
-          payload: { ...data, isLoggedIn: userLoggedIn },
-        });
-      }
+      userPageAppDispatch({
+        type: SET_USER_PAGE_STATUS,
+        payload: { ...data, isLoggedIn: userLoggedIn },
+      });
     } catch (error) {
       handleError(error);
     }
@@ -115,6 +121,7 @@ const UserPageAppContextProvider = ({
 };
 
 export {
+  initialState,
   UserPageAppContext,
   UserPageAppContextProvider,
   type Action,

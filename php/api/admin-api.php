@@ -1754,7 +1754,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE => $data[WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE],
                             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS],
                             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS],
-                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE]
+                            WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE],
+                            WP_QUICKTASKER_ACCESS_USER_PAGE_APP => $data[WP_QUICKTASKER_ACCESS_USER_PAGE_APP],
                         ];
                           
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
@@ -1790,6 +1791,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                     ),
                     WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    WP_QUICKTASKER_ACCESS_USER_PAGE_APP => array(
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
@@ -1958,7 +1964,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     try {
                         $commentService = new CommentService();
                         $adminId = get_current_user_id();
-                        $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment'], $adminId, true);
+                        $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment'], $adminId, WP_QT_WORDPRESS_USER_TYPE);
                         $automationExecutionResults = [];
                         
                           /* Handle automations */
@@ -2075,8 +2081,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $customFieldService = new CustomFieldService();
                         $logService = new LogService();
+                        $entityId = $data['entityId'] === 0 ? null : $data['entityId'];
 
-                        $customField = $customFieldService->createCustomField($data['name'], $data['description'], $data['type'], $data['entityType'], $data['entityId']);
+                        $customField = $customFieldService->createCustomField($data['name'], $data['description'], $data['type'], $data['entityType'], $entityId);
                         $logService->log('Custom field ' . $data['name'] . ' created', [
                             'type' => $data['entityType'],
                             'type_id' => $data['entityId'],

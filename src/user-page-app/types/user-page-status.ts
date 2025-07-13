@@ -1,16 +1,20 @@
+import { UserTypes } from "../../types/user";
+
 type BaseUserPageStatus = {
   isLoggedIn: boolean;
   userId: string;
   userName: string;
+  isActiveUser: boolean;
+  isQuicktaskerUser: boolean;
+  isWordPressUser: boolean;
+  userType: UserTypes;
 };
 
 type UserPageStatus = BaseUserPageStatus & {
-  isActiveUser: boolean;
   setupCompleted: boolean;
 };
 
 type ServerUserPageStatus = BaseUserPageStatus & {
-  isActiveUser: string;
   setupCompleted: boolean;
 };
 

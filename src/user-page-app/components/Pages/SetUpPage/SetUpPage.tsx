@@ -19,7 +19,7 @@ import { PageScreenMiddle, PageTitle } from "../Page/Page";
 
 function SetUpPage() {
   const {
-    state: { pageHash, userName },
+    state: { userName },
   } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const [password, setPassword] = useState("");
@@ -49,7 +49,7 @@ function SetUpPage() {
 
     try {
       setLoading(true);
-      await setUpUserPageRequest(pageHash, data);
+      await setUpUserPageRequest(data);
       window.location.reload();
     } catch (error) {
       handleError(error);

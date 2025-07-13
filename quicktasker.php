@@ -7,7 +7,7 @@
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
 	Domain Path: /languages
-	Version: 1.36.0
+	Version: 1.37.0
 	Requires at least: 5.3
 	Requires PHP: 7.2.28
 	License: GPLv2 or later
@@ -39,6 +39,7 @@ require( 'php/repositories/AutomationRepository.php' );
 require( 'php/repositories/EmailRepository.php' );
 require( 'php/repositories/LabelRepository.php' );
 require( 'php/repositories/UploadRepository.php' );
+require( 'php/repositories/HeaderRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
@@ -109,6 +110,9 @@ WPQT\ServiceLocator::register('UserPageRepository', new WPQT\UserPage\UserPageRe
 WPQT\ServiceLocator::register('StageService', new WPQT\Stage\StageService());
 WPQT\ServiceLocator::register('CommentService', new WPQT\Comment\CommentService());
 WPQT\ServiceLocator::register('CustomFieldService', new WPQT\Customfield\CustomFieldService());
+WPQT\ServiceLocator::register('HeaderRepository', new WPQT\Header\HeaderRepository());
+WPQT\ServiceLocator::register('UserPageService', new WPQT\UserPage\UserPageService());
+WPQT\ServiceLocator::register('PermissionService', new WPQT\Permission\PermissionService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
