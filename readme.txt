@@ -50,10 +50,10 @@ QuickTasker PRO version
 
 == Changelog ==
 
-= 1.37.0
+= 1.37.0 =
 * WordPress users can now also access to user app.
 
-= 1.36.0
+= 1.36.0 =
 * Added default value support for board level custom fields.
 * Improved task restore.
 * Updated translations template.
