@@ -14,7 +14,7 @@ describe("CommentItem", () => {
     author_id: "admin1",
     author_name: "Admin User",
     text: "This is an admin comment",
-    is_admin_comment: true,
+    author_type: "wp-user",
     created_at: "2023-07-10T12:00:00",
     type: "task", // or the appropriate type for your app
     type_id: "task1", // or the appropriate type_id for your app
@@ -25,7 +25,7 @@ describe("CommentItem", () => {
     author_id: "user1",
     author_name: "Regular User",
     text: "This is a regular user comment",
-    is_admin_comment: false,
+    author_type: "quicktasker",
     created_at: "2023-07-10T13:00:00",
     type: "task", // or the appropriate type for your app
     type_id: "task2", // or the appropriate type_id for your app

@@ -150,7 +150,7 @@ function TabContentCommentItem({ item }: { item: WPQTComment }) {
         <div>
           <div className="wpqt-text-center wpqt-mb-1">{item.author_name}</div>
           <div className="wpqt-text-center">
-            {item.is_admin_comment
+            {item.author_type === "wp-user"
               ? __("Admin", "quicktasker")
               : __("QuickTasker", "quicktasker")}
           </div>

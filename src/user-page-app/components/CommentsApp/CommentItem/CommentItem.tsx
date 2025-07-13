@@ -2,7 +2,7 @@ import { __ } from "@wordpress/i18n";
 import { WPQTComment } from "../../../../types/comment";
 
 function CommentItem({ comment }: { comment: WPQTComment }) {
-  const isAdminComment = comment.is_admin_comment;
+  const isAdminComment = comment.author_type === "wp-user";
 
   return (
     <>

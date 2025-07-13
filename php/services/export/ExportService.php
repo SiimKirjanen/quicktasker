@@ -44,7 +44,7 @@ if ( ! class_exists( 'WPQT\Export\ExportService' ) ) {
                     'createdAt' => $comment->created_at,
                     'commentText' => $comment->text,
                     'authorId' => $comment->author_id,
-                    'isAuthorAdmin' => $comment->is_admin_comment,
+                    'author_type' => $comment->author_type,
                     'isPrivate' => (bool) $comment->is_private,
                 ];
             }, $taskComments) : [];

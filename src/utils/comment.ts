@@ -1,11 +1,4 @@
-import { WPQTComment, WPQTCommentFromServer } from "../types/comment";
-
-const convertCommentFromServer = (
-  comment: WPQTCommentFromServer,
-): WPQTComment => ({
-  ...comment,
-  is_admin_comment: comment.is_admin_comment === "1",
-});
+import { WPQTComment } from "../types/comment";
 
 const filterNewComments = (
   comments: WPQTComment[],
@@ -16,4 +9,4 @@ const filterNewComments = (
   );
 };
 
-export { convertCommentFromServer, filterNewComments };
+export { filterNewComments };

@@ -31,6 +31,7 @@ function CustomFieldsWrap({
   const { updateCustomFieldValue } = useCustomFieldActions();
   const valueChangeEnabled =
     entityType === CustomFieldEntityType.QUICKTASKER ||
+    entityType === CustomFieldEntityType.WP_USER ||
     (entityType === CustomFieldEntityType.Task &&
       "assigned_users" in entity &&
       entity.assigned_users.some((user: User) => user.id === userId));

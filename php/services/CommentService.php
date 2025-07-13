@@ -19,13 +19,13 @@ if ( ! class_exists( 'WPQT\Comment\CommentService' ) ) {
          * @param bool $isPrivate Indicates if the comment is private.
          * @param string $text The text content of the comment.
          * @param int $userId The ID of the user creating the comment.
-         * @param boolean $isAdminComment Is comment created by WordPress admin.
+         * @param string $authorType The type of the author (default is 'quicktasker').
          * 
          * @return mixed The created comment object.
          * 
          * @throws \Exception If the comment could not be added to the database.
          */
-        public function createComment($typeId, $type, $isPrivate, $text, $userId, $isAdminComment = false) {
+        public function createComment($typeId, $type, $isPrivate, $text, $userId, $authorType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
             $result = $wpdb->insert(TABLE_WP_QUICKTASKER_COMMENTS, array(
@@ -34,12 +34,12 @@ if ( ! class_exists( 'WPQT\Comment\CommentService' ) ) {
                 'is_private' => $isPrivate,
                 'text' => $text,
                 'author_id' => $userId,
-                'is_admin_comment' => $isAdminComment,
+                'author_type' => $authorType,
                 'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
             ));
 
             if( $result === false ) {
-                throw new WPQTException('Failed to add a comment');
+                throw new WPQTException('Failed to add the comment');
             }
 
             $commentId = $wpdb->insert_id;
@@ -66,7 +66,7 @@ if ( ! class_exists( 'WPQT\Comment\CommentService' ) ) {
             ));
 
             if( $result === false ) {
-                throw new WPQTException('Failed to delete comments');
+                throw new WPQTException('Failed to delete the comments');
             }
 
             return $result;

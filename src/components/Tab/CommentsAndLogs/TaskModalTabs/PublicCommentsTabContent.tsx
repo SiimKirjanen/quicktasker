@@ -3,7 +3,6 @@ import { getComments } from "../../../../api/api";
 import { useCommentActions } from "../../../../hooks/actions/useCommentActions";
 import { WPQTComment } from "../../../../types/comment";
 import { WPQTTypes } from "../../../../types/enums";
-import { convertCommentFromServer } from "../../../../utils/comment";
 import {
   CommentsAndLogsTabContent,
   TabContentCommentItem,
@@ -20,7 +19,7 @@ function PublicCommentsTabContent({ taskId }: Props) {
     const response = await addComment(taskId, WPQTTypes.Task, false, newEntry);
 
     if (response) {
-      return convertCommentFromServer(response);
+      return response;
     }
   };
 
@@ -28,7 +27,7 @@ function PublicCommentsTabContent({ taskId }: Props) {
     try {
       const response = await getComments(taskId, WPQTTypes.Task, false);
 
-      return response.data.map(convertCommentFromServer);
+      return response.data;
     } catch (error) {
       console.error(error);
       toast.error("Failed to load comments");

@@ -28,12 +28,12 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
                 SELECT comments.*, 
                     CASE 
                         WHEN comments.author_id IS NULL THEN NULL 
-                        WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
+                        WHEN comments.author_type = 'wp-user' THEN wp_users.display_name 
                         ELSE users.name 
                     END AS author_name
                 FROM $comments_table comments
-                LEFT JOIN $users_table users ON comments.author_id = users.id AND comments.is_admin_comment = 0
-                LEFT JOIN $wp_users_table wp_users ON comments.author_id = wp_users.ID AND comments.is_admin_comment = 1
+                LEFT JOIN $users_table users ON comments.author_id = users.id AND comments.author_type = 'quicktasker'
+                LEFT JOIN $wp_users_table wp_users ON comments.author_id = wp_users.ID AND comments.author_type = 'wp-user'
                 WHERE comments.id = %d
             ";
         
@@ -48,41 +48,28 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
          * @param int $typeId The ID of the type to filter comments by.
          * @param string $type The type to filter comments by.
          * @param int $isPrivate The privacy status to filter comments by (1 for private, 0 for public).
-         * @param string|null $userType The type of user (default is WP_QT_QUICKTASKER_USER_TYPE).
          * @return array The list of comments matching the specified criteria.
          */
-        public function getComments($typeId, $type, $isPrivate, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
+        public function getComments($typeId, $type, $isPrivate = 0) {
             global $wpdb;
         
             $comments_table = TABLE_WP_QUICKTASKER_COMMENTS;
             $users_table = TABLE_WP_QUICKTASKER_USERS;
             $wp_users_table = $wpdb->users;
-            $isAdminCommentFilter = null;
-
-            if ($userType === WP_QT_QUICKTASKER_USER_TYPE) {
-                $isAdminCommentFilter = "comments.is_admin_comment = 0";
-            } else if ($userType === WP_QT_WORDPRESS_USER_TYPE) {
-                $isAdminCommentFilter = "comments.is_admin_comment = 1";
-            }
         
             $query = "
                 SELECT comments.*, 
                     CASE
                         WHEN comments.author_id IS NULL THEN NULL 
-                        WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
+                        WHEN comments.author_type = 'wp-user' THEN wp_users.display_name 
                         ELSE users.name 
                     END AS author_name
                 FROM $comments_table comments
-                LEFT JOIN $users_table users ON comments.author_id = users.id AND comments.is_admin_comment = 0
-                LEFT JOIN $wp_users_table wp_users ON comments.author_id = wp_users.ID AND comments.is_admin_comment = 1
+                LEFT JOIN $users_table users ON comments.author_id = users.id AND comments.author_type = 'quicktasker'
+                LEFT JOIN $wp_users_table wp_users ON comments.author_id = wp_users.ID AND comments.author_type = 'wp-user'
                 WHERE comments.type_id = %d AND comments.type = %s AND comments.is_private = %d
+                ORDER BY comments.created_at DESC
             ";
-
-            if ($isAdminCommentFilter !== null) {
-                $query .= " AND $isAdminCommentFilter";
-            }
-
-            $query .= " ORDER BY comments.created_at DESC";
         
             $prepared_query = $wpdb->prepare($query, $typeId, $type, $isPrivate);
         
@@ -126,8 +113,8 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
         public function getCommentsRelatedToUser($userId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
             global $wpdb;
 
-            //Fetch comments related to user
-            $userComments = $this->getComments($userId, 'user', 0, $userType);
+            //Fetch public comments related to user
+            $userComments = $this->getComments($userId, $userType, 0);
 
             //Fetch comments related to tasks assigned to user
             $tasksComments = $this->getCommentsRelatedtoTasksAssignedToUser($userId, $userType);
@@ -151,12 +138,12 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
                 SELECT comments.*, 
                     CASE
                         WHEN comments.author_id IS NULL THEN NULL 
-                        WHEN comments.is_admin_comment = 1 THEN wp_users.display_name 
+                        WHEN comments.author_type = 'wp-user' THEN wp_users.display_name 
                         ELSE users.name 
                     END AS author_name
                 FROM " . TABLE_WP_QUICKTASKER_COMMENTS . " AS comments
-                LEFT JOIN " . TABLE_WP_QUICKTASKER_USERS . " AS users ON comments.author_id = users.id AND comments.is_admin_comment = 0
-                LEFT JOIN " . $wpdb->users . " AS wp_users ON comments.author_id = wp_users.ID AND comments.is_admin_comment = 1
+                LEFT JOIN " . TABLE_WP_QUICKTASKER_USERS . " AS users ON comments.author_id = users.id AND comments.author_type = 'quicktasker'
+                LEFT JOIN " . $wpdb->users . " AS wp_users ON comments.author_id = wp_users.ID AND comments.author_type = 'wp-user'
                 WHERE comments.type_id IN ($placeholders) 
                 AND comments.type = 'task' 
                 ORDER BY comments.created_at DESC

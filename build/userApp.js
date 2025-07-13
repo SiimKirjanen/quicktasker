@@ -3143,7 +3143,7 @@ __webpack_require__.r(__webpack_exports__);
 function CommentItem({
   comment
 }) {
-  const isAdminComment = comment.is_admin_comment;
+  const isAdminComment = comment.author_type === "wp-user";
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-flex-col wpqt-items-center",
@@ -3513,7 +3513,7 @@ function CustomFieldsWrap({
   const {
     updateCustomFieldValue
   } = (0,_hooks_actions_useCustomFieldActions__WEBPACK_IMPORTED_MODULE_3__.useCustomFieldActions)();
-  const valueChangeEnabled = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.QUICKTASKER || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Task && "assigned_users" in entity && entity.assigned_users.some(user => user.id === userId);
+  const valueChangeEnabled = entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.QUICKTASKER || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.WP_USER || entityType === _types_custom_field__WEBPACK_IMPORTED_MODULE_2__.CustomFieldEntityType.Task && "assigned_users" in entity && entity.assigned_users.some(user => user.id === userId);
   const saveCustomFieldValueChange = (customFieldId, value) => __awaiter(this, void 0, void 0, function* () {
     yield updateCustomFieldValue(entityId, entityType, customFieldId, value);
   });
@@ -4900,13 +4900,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
-/* harmony import */ var _utils_comment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../utils/comment */ "./src/utils/comment.ts");
-/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../utils/task */ "./src/utils/task.ts");
-/* harmony import */ var _hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useCommentActions */ "./src/user-page-app/hooks/actions/useCommentActions.ts");
-/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/user-page-app/hooks/actions/useTaskActions.ts");
-/* harmony import */ var _CommentsApp_CommentsApp__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../CommentsApp/CommentsApp */ "./src/user-page-app/components/CommentsApp/CommentsApp.tsx");
-/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var _utils_task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../utils/task */ "./src/utils/task.ts");
+/* harmony import */ var _hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../hooks/actions/useCommentActions */ "./src/user-page-app/hooks/actions/useCommentActions.ts");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/user-page-app/hooks/actions/useTaskActions.ts");
+/* harmony import */ var _CommentsApp_CommentsApp__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../CommentsApp/CommentsApp */ "./src/user-page-app/components/CommentsApp/CommentsApp.tsx");
+/* harmony import */ var _Page_Page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Page/Page */ "./src/user-page-app/components/Pages/Page/Page.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -4943,34 +4942,33 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
-
 function TaskCommentsPage() {
   const {
     taskHash
-  } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.useParams)();
+  } = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.useParams)();
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const [task, setTask] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [comments, setComments] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const {
     loadTaskComments,
     addTaskComment
-  } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_5__.useCommentActions)();
+  } = (0,_hooks_actions_useCommentActions__WEBPACK_IMPORTED_MODULE_4__.useCommentActions)();
   const {
     getTask
-  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_6__.useTaskActions)();
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_5__.useTaskActions)();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     loadTask();
     loadComments();
   }, []);
   const loadTask = () => __awaiter(this, void 0, void 0, function* () {
     yield getTask(taskHash, data => {
-      setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_4__.convertTaskFromServer)(data.task));
+      setTask((0,_utils_task__WEBPACK_IMPORTED_MODULE_3__.convertTaskFromServer)(data.task));
     });
   });
   const loadComments = () => __awaiter(this, void 0, void 0, function* () {
     setLoading(true);
     yield loadTaskComments(taskHash, comments => {
-      setComments(comments.map(_utils_comment__WEBPACK_IMPORTED_MODULE_3__.convertCommentFromServer));
+      setComments(comments);
     });
     setLoading(false);
   });
@@ -4979,14 +4977,14 @@ function TaskCommentsPage() {
       setComments(comments);
     });
   });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_8__.PageWrap, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_7__.PageWrap, {
     loading: loading,
     onRefresh: loadComments,
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_8__.PageContentWrap, {
-      children: [task && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_8__.PageTitle, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Page_Page__WEBPACK_IMPORTED_MODULE_7__.PageContentWrap, {
+      children: [task && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Page_Page__WEBPACK_IMPORTED_MODULE_7__.PageTitle, {
         description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Comments related to the task", "quicktasker"),
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("%s comments", "quicktasker"), task.name)
-      }), comments && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsApp_CommentsApp__WEBPACK_IMPORTED_MODULE_7__.CommentsApp, {
+      }), comments && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CommentsApp_CommentsApp__WEBPACK_IMPORTED_MODULE_6__.CommentsApp, {
         comments: comments,
         addComments: onAddComment
       })]
@@ -5275,10 +5273,11 @@ function TaskDoneStatus({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_7__.UserPageTaskContext);
   const {
     state: {
-      userId
+      userId,
+      userType
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_6__.UserPageAppContext);
-  const isAssigned = task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId);
+  const isAssigned = (task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId && user.user_type === userType)) || (task === null || task === void 0 ? void 0 : task.assigned_wp_users.some(user => user.id === userId && user.user_type === userType));
   const isDone = task.is_done;
   const doneMessage = isDone ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task is completed", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task is incomplete", "quicktasker");
   const lastStage = taskStages.reduce((prev, current) => {
@@ -5455,11 +5454,12 @@ function TaskStageSelect({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageTaskContextProvider__WEBPACK_IMPORTED_MODULE_5__.UserPageTaskContext);
   const {
     state: {
-      userId
+      userId,
+      userType
     }
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_UserPageAppContextProvider__WEBPACK_IMPORTED_MODULE_4__.UserPageAppContext);
   const [selectionModalOpen, setSelectionModalOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const changeEnabled = task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId);
+  const changeEnabled = (task === null || task === void 0 ? void 0 : task.assigned_users.some(user => user.id === userId && user.user_type === userType)) || (task === null || task === void 0 ? void 0 : task.assigned_wp_users.some(user => user.id === userId && user.user_type === userType));
   const currentTaskStage = taskStages.find(stage => stage.id === (task === null || task === void 0 ? void 0 : task.stage_id));
   if (task === null) {
     return null;
@@ -5794,9 +5794,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   useCommentActions: () => (/* binding */ useCommentActions)
 /* harmony export */ });
-/* harmony import */ var _utils_comment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../utils/comment */ "./src/utils/comment.ts");
-/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
-/* harmony import */ var _useErrorHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
+/* harmony import */ var _api_user_page_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api/user-page-api */ "./src/user-page-app/api/user-page-api.ts");
+/* harmony import */ var _useErrorHandler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../useErrorHandler */ "./src/user-page-app/hooks/useErrorHandler.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -5826,14 +5825,13 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 };
 
 
-
 function useCommentActions() {
   const {
     handleError
-  } = (0,_useErrorHandler__WEBPACK_IMPORTED_MODULE_2__.useErrorHandler)();
+  } = (0,_useErrorHandler__WEBPACK_IMPORTED_MODULE_1__.useErrorHandler)();
   const loadTaskComments = (taskHash, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_1__.getTaskCommentsRequest)(taskHash);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_0__.getTaskCommentsRequest)(taskHash);
       if (callback) callback(response.data);
     } catch (error) {
       handleError(error);
@@ -5841,27 +5839,24 @@ function useCommentActions() {
   });
   const addTaskComment = (taskHash, comment, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_1__.addTaskCommentRequest)(taskHash, comment);
-      const comments = response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_0__.convertCommentFromServer);
-      if (callback) callback(comments);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_0__.addTaskCommentRequest)(taskHash, comment);
+      if (callback) callback(response.data);
     } catch (error) {
       handleError(error);
     }
   });
   const loadUserComments = callback => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_1__.getUserCommentsRequest)();
-      const comments = response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_0__.convertCommentFromServer);
-      callback(comments);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_0__.getUserCommentsRequest)();
+      callback(response.data);
     } catch (error) {
       handleError(error);
     }
   });
   const addUserComment = (commentText, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
-      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_1__.addUserCommentRequest)(commentText);
-      const comments = response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_0__.convertCommentFromServer);
-      callback(comments);
+      const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_0__.addUserCommentRequest)(commentText);
+      callback(response.data);
     } catch (error) {
       handleError(error);
     }
@@ -6836,8 +6831,7 @@ const UserPageNotificationsContextProvider = ({
       setLoading(true);
       const storedComments = yield getStoredComments();
       const response = yield (0,_api_user_page_api__WEBPACK_IMPORTED_MODULE_5__.getUserPageCommentsRequest)();
-      const comments = response.data.map(_utils_comment__WEBPACK_IMPORTED_MODULE_4__.convertCommentFromServer);
-      const newComments = (0,_utils_comment__WEBPACK_IMPORTED_MODULE_4__.filterNewComments)(comments, storedComments);
+      const newComments = (0,_utils_comment__WEBPACK_IMPORTED_MODULE_4__.filterNewComments)(response.data, storedComments);
       userPageNotificationsDispatch({
         type: _constants__WEBPACK_IMPORTED_MODULE_6__.SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS,
         payload: newComments
@@ -7358,7 +7352,7 @@ const reducer = (state, action) => {
           customFields
         } = action.payload;
         return Object.assign(Object.assign({}, state), {
-          user: (0,_utils_user__WEBPACK_IMPORTED_MODULE_0__.convertUserFromServer)(user),
+          user: (0,_utils_user__WEBPACK_IMPORTED_MODULE_0__.convertUserPageUserFromServer)(user),
           customFields
         });
       }
@@ -7385,12 +7379,8 @@ const reducer = (state, action) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   convertCommentFromServer: () => (/* binding */ convertCommentFromServer),
 /* harmony export */   filterNewComments: () => (/* binding */ filterNewComments)
 /* harmony export */ });
-const convertCommentFromServer = comment => Object.assign(Object.assign({}, comment), {
-  is_admin_comment: comment.is_admin_comment === "1"
-});
 const filterNewComments = (comments, storedComments) => {
   return comments.filter(comment => !storedComments.find(c => c.id === comment.id));
 };
@@ -7626,6 +7616,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   convertExtendedUserFromServer: () => (/* binding */ convertExtendedUserFromServer),
 /* harmony export */   convertUserFromServer: () => (/* binding */ convertUserFromServer),
+/* harmony export */   convertUserPageUserFromServer: () => (/* binding */ convertUserPageUserFromServer),
 /* harmony export */   mapActionTargetTypeToUserType: () => (/* binding */ mapActionTargetTypeToUserType),
 /* harmony export */   userTypeStrings: () => (/* binding */ userTypeStrings)
 /* harmony export */ });
@@ -7637,6 +7628,12 @@ const convertUserFromServer = user => Object.assign(Object.assign({}, user), {
   is_active: user.is_active === "1",
   has_password: user.has_password === "1"
 });
+const convertUserPageUserFromServer = user => {
+  if (user.user_type === _types_user__WEBPACK_IMPORTED_MODULE_1__.UserTypes.WP_USER) {
+    return user;
+  }
+  return convertUserFromServer(user);
+};
 const convertExtendedUserFromServer = user => Object.assign(Object.assign({}, user), {
   is_active: user.is_active === "1"
 });

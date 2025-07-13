@@ -341,10 +341,10 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             throw new WPQTException('Task not found', true);
                         }
                         if( !$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $task->id, $requestData['userType']) ) {
-                            throw new WPQTException('Not allowed to edit the task', true);
+                            throw new WPQTException('Not allowed to view the comments', true);
                         }
 
-                        $comments = $commentRepository->getComments($task->id, 'task', false, $requestData['userType']);
+                        $comments = $commentRepository->getComments($task->id, 'task', false);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
                     } catch(WPQTException $e) {
@@ -384,11 +384,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         if ( $task === null ) {
                             throw new WPQTException('Task not found', true);
                         }
+
                         if ( !$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $task->id, $requestData['userType']) ) {
                             throw new WPQTException('Not allowed to edit the task', true);
                         }
-                        $adminComment = $requestData['isQuicktaskerUser'] ? false : true;
-                        $newComment = $commentService->createComment($task->id, 'task', false, $data['comment'], $requestData['session']->user_id, $adminComment);
+                        $newComment = $commentService->createComment($task->id, 'task', false, $data['comment'], $requestData['session']->user_id, $requestData['userType']);
                         
                         $logService->log('User posted a comment on '. $task->name . ' task', [
                             'type' => WP_QT_LOG_TYPE_TASK,
@@ -397,7 +397,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             'user_id' => $requestData['session']->user_id
                         ]);
 
-                        $comments = $commentRepository->getComments($task->id, 'task', false, $requestData['userType']);
+                        $comments = $commentRepository->getComments($task->id, 'task', false);
 
                         $automationExecutionResults = ServiceLocator::get('AutomationService')->handleAutomations(
                             $task->pipeline_id, 
@@ -442,7 +442,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $requestData = RequestValidation::validateUserPageApiRequest($data);
                         $commentRepository = new CommentRepository();
                         
-                        $userComments = $commentRepository->getComments($requestData['session']->user_id, 'user', false, $requestData['userType']);
+                        $userComments = $commentRepository->getComments($requestData['session']->user_id, $requestData['userType'], false);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $userComments))->toArray(), 200);
                     } catch(WPQTException $e) {
@@ -489,8 +489,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $logService = new LogService();
                         $adminComment = $requestData['isQuicktaskerUser'] ? false : true;
                         
-                        $commentService->createComment($requestData['session']->user_id, 'user', false, $data['comment'], $requestData['session']->user_id, $adminComment);
-                        $userComments = $commentRepository->getComments($requestData['session']->user_id, 'user', false, $requestData['userType']);
+                        $commentService->createComment($requestData['session']->user_id, $requestData['userType'], false, $data['comment'], $requestData['session']->user_id, $requestData['userType']);
+                        $userComments = $commentRepository->getComments($requestData['session']->user_id, $requestData['userType'], false);
+
                         $logService->log('User posted a comment on its profile', [
                             'type' => WP_QT_LOG_TYPE_USER,
                             'type_id' => $requestData['session']->user_id,
@@ -816,7 +817,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                                 throw new WPQTException('Not allowed to edit task custom fields', true);
                             }
                         } else {
-                            if( $requestData['session']->user_id !== $data['entityId'] ) {
+                            if( (int)$requestData['session']->user_id !== $data['entityId'] ) {
                                 throw new WPQTException('Entity ID and session user mismatch', true);
                             }
                         } 
@@ -852,8 +853,8 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
             'args' => array(
                 'entityId' => array(
                     'required' => true,
-                    'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
-                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                    'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                 ),
                 'entityType' => array(
                     'required' => true,

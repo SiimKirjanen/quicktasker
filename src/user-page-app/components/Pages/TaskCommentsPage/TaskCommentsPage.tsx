@@ -3,7 +3,6 @@ import { __, sprintf } from "@wordpress/i18n";
 import { useParams } from "react-router-dom";
 import { WPQTComment } from "../../../../types/comment";
 import { Task } from "../../../../types/task";
-import { convertCommentFromServer } from "../../../../utils/comment";
 import { convertTaskFromServer } from "../../../../utils/task";
 import { useCommentActions } from "../../../hooks/actions/useCommentActions";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
@@ -32,7 +31,7 @@ function TaskCommentsPage() {
   const loadComments = async () => {
     setLoading(true);
     await loadTaskComments(taskHash!, (comments) => {
-      setComments(comments.map(convertCommentFromServer));
+      setComments(comments);
     });
     setLoading(false);
   };

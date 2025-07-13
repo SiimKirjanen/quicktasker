@@ -1,5 +1,4 @@
-import { WPQTComment, WPQTCommentFromServer } from "../../../types/comment";
-import { convertCommentFromServer } from "../../../utils/comment";
+import { WPQTComment } from "../../../types/comment";
 import {
   addTaskCommentRequest,
   addUserCommentRequest,
@@ -13,7 +12,7 @@ function useCommentActions() {
 
   const loadTaskComments = async (
     taskHash: string,
-    callback?: (comments: WPQTCommentFromServer[]) => void,
+    callback?: (comments: WPQTComment[]) => void,
   ) => {
     try {
       const response = await getTaskCommentsRequest(taskHash);
@@ -29,8 +28,8 @@ function useCommentActions() {
   ) => {
     try {
       const response = await addTaskCommentRequest(taskHash, comment);
-      const comments = response.data.map(convertCommentFromServer);
-      if (callback) callback(comments);
+
+      if (callback) callback(response.data);
     } catch (error) {
       handleError(error);
     }
@@ -41,8 +40,8 @@ function useCommentActions() {
   ) => {
     try {
       const response = await getUserCommentsRequest();
-      const comments = response.data.map(convertCommentFromServer);
-      callback(comments);
+
+      callback(response.data);
     } catch (error) {
       handleError(error);
     }
@@ -54,8 +53,8 @@ function useCommentActions() {
   ) => {
     try {
       const response = await addUserCommentRequest(commentText);
-      const comments = response.data.map(convertCommentFromServer);
-      callback(comments);
+
+      callback(response.data);
     } catch (error) {
       handleError(error);
     }

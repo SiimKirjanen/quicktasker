@@ -1,6 +1,6 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ExecutedAutomation } from "../../types/automation";
-import { WPQTCommentFromServer } from "../../types/comment";
+import { WPQTComment } from "../../types/comment";
 import { CustomFieldEntityType } from "../../types/custom-field";
 import { WPQTResponse } from "../../types/response";
 import { TaskFromServer } from "../../types/task";
@@ -158,7 +158,7 @@ function logoutUserPageRequest(): Promise<WPQTResponse> {
 
 function getTaskCommentsRequest(
   taskHash: string,
-): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+): Promise<WPQTResponse<WPQTComment[]>> {
   return apiFetch({
     method: "GET",
     path: `/wpqt/v1/user-page/tasks/${taskHash}/comments`,
@@ -169,7 +169,7 @@ function getTaskCommentsRequest(
 function addTaskCommentRequest(
   taskHash: string,
   comment: string,
-): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+): Promise<WPQTResponse<WPQTComment[]>> {
   return apiFetch({
     method: "POST",
     path: `/wpqt/v1/user-page/tasks/${taskHash}/comments`,
@@ -178,9 +178,7 @@ function addTaskCommentRequest(
   });
 }
 
-function getUserCommentsRequest(): Promise<
-  WPQTResponse<WPQTCommentFromServer[]>
-> {
+function getUserCommentsRequest(): Promise<WPQTResponse<WPQTComment[]>> {
   return apiFetch({
     method: "GET",
     path: `/wpqt/v1/user-page/user/comments`,
@@ -190,7 +188,7 @@ function getUserCommentsRequest(): Promise<
 
 function addUserCommentRequest(
   comment: string,
-): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+): Promise<WPQTResponse<WPQTComment[]>> {
   return apiFetch({
     method: "POST",
     path: `/wpqt/v1/user-page/user/comments`,
@@ -199,9 +197,7 @@ function addUserCommentRequest(
   });
 }
 
-function getUserPageCommentsRequest(): Promise<
-  WPQTResponse<WPQTCommentFromServer[]>
-> {
+function getUserPageCommentsRequest(): Promise<WPQTResponse<WPQTComment[]>> {
   return apiFetch({
     method: "GET",
     path: `/wpqt/v1/user-page/comments`,

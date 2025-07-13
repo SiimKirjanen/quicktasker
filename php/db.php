@@ -138,17 +138,16 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				id int(11) NOT NULL AUTO_INCREMENT,
 				text text NOT NULL,
 				type_id int(11) NOT NULL,
-				type ENUM('task', 'user') NOT NULL,
+				type ENUM('task', 'quicktasker', 'wp-user') NOT NULL,
 				is_private tinyint(1) DEFAULT 1,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				author_id int(11) DEFAULT NULL,
-				is_admin_comment tinyint(1) DEFAULT 0,
+				author_type ENUM('quicktasker', 'wp-user') NOT NULL,
 				PRIMARY KEY  (id),
 				INDEX type_id (type_id),
 				INDEX type (type),
 				INDEX is_private (is_private),
 				INDEX author_id (author_id),
-				INDEX is_admin_comment (is_admin_comment)
 			) $charset_collate;";
 
 			dbDelta( $sql8 ); 

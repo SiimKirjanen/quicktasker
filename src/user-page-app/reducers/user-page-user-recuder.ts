@@ -1,4 +1,4 @@
-import { convertUserFromServer } from "../../utils/user";
+import { convertUserPageUserFromServer } from "../../utils/user";
 import {
   SET_USER_PAGE_USER_DATA,
   SET_USER_PAGE_USER_LOADING,
@@ -13,7 +13,7 @@ const reducer = (state: State, action: Action): State => {
 
       return {
         ...state,
-        user: convertUserFromServer(user),
+        user: convertUserPageUserFromServer(user),
         customFields,
       };
     }

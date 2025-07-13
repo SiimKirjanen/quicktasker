@@ -7,10 +7,7 @@ import {
 import { __, sprintf } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { WPQTComment } from "../../types/comment";
-import {
-  convertCommentFromServer,
-  filterNewComments,
-} from "../../utils/comment";
+import { filterNewComments } from "../../utils/comment";
 import { getUserPageCommentsRequest } from "../api/user-page-api";
 import {
   CHANGE_USER_PAGE_NOTIFICATIONS_LOADING,
@@ -125,8 +122,7 @@ const UserPageNotificationsContextProvider = ({
       setLoading(true);
       const storedComments = await getStoredComments();
       const response = await getUserPageCommentsRequest();
-      const comments = response.data.map(convertCommentFromServer);
-      const newComments = filterNewComments(comments, storedComments);
+      const newComments = filterNewComments(response.data, storedComments);
 
       userPageNotificationsDispatch({
         type: SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS,

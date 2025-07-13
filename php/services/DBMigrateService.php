@@ -13,6 +13,7 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
             $this->changeTaskLocationStageIdToNullable();
             $this->changeCommentAuthorIdToNullable();
             $this->changeTaskPipelineIdToNullable();
+            $this->dropCommentsIsAdminCommentColumn();
             $this->addForeignKeys();
         }
 
@@ -37,6 +38,14 @@ if ( ! class_exists( 'WPQT\DB\DBMigrateService' ) ) {
 
             $wpdb->query(
                 "ALTER TABLE " . TABLE_WP_QUICKTASKER_TASKS . " MODIFY pipeline_id INT(11) DEFAULT NULL"
+            );
+        }
+
+        private function dropCommentsIsAdminCommentColumn() {
+            global $wpdb;
+
+            $wpdb->query(
+                "ALTER TABLE " . TABLE_WP_QUICKTASKER_COMMENTS . " DROP COLUMN is_admin_comment"
             );
         }
 

@@ -1,12 +1,12 @@
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { addCommentRequest } from "../../api/api";
-import { WPQTTypes } from "../../types/enums";
+import { UserTypes } from "../../types/user";
 
 function useCommentActions() {
   const addComment = async (
     typeId: string,
-    type: WPQTTypes,
+    type: UserTypes | "task",
     isPrivate: boolean,
     commentText: string,
   ) => {

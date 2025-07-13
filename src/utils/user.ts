@@ -5,6 +5,7 @@ import {
   ServerUser,
   User,
   UserTypes,
+  WPUser,
 } from "../types/user";
 
 const convertUserFromServer = (user: ServerUser): User => ({
@@ -12,6 +13,14 @@ const convertUserFromServer = (user: ServerUser): User => ({
   is_active: user.is_active === "1",
   has_password: user.has_password === "1",
 });
+
+const convertUserPageUserFromServer = (user: ServerUser | WPUser) => {
+  if (user.user_type === UserTypes.WP_USER) {
+    return user;
+  }
+
+  return convertUserFromServer(user);
+};
 
 const convertExtendedUserFromServer = (
   user: ServerExtendedUser,
@@ -41,6 +50,7 @@ const userTypeStrings = {
 export {
   convertExtendedUserFromServer,
   convertUserFromServer,
+  convertUserPageUserFromServer,
   mapActionTargetTypeToUserType,
   userTypeStrings,
 };

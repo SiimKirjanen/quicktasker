@@ -169,7 +169,7 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @return bool Returns true if the parameter is 'task' or 'user', false otherwise.
          */
         public static function validateUserPageCustomFieldEntityType($param) {
-            return in_array($param, array('task', 'user'));
+            return in_array($param, array('task', 'quicktasker', 'wp-user'));
         }
 
         /**

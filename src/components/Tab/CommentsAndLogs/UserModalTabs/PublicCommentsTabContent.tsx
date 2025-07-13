@@ -3,8 +3,7 @@ import { toast } from "react-toastify";
 import { getComments } from "../../../../api/api";
 import { useCommentActions } from "../../../../hooks/actions/useCommentActions";
 import { WPQTComment } from "../../../../types/comment";
-import { WPQTTypes } from "../../../../types/enums";
-import { convertCommentFromServer } from "../../../../utils/comment";
+import { UserTypes } from "../../../../types/user";
 import {
   CommentsAndLogsTabContent,
   TabContentCommentItem,
@@ -20,21 +19,21 @@ function PublicCommentsTabContent({ userId }: Props) {
   const onAddComment = async (newEntry: string) => {
     const commentFromServer = await addComment(
       userId,
-      WPQTTypes.User,
+      UserTypes.QUICKTASKER,
       false,
       newEntry,
     );
 
     if (commentFromServer) {
-      return convertCommentFromServer(commentFromServer);
+      return commentFromServer;
     }
   };
 
   const fetchComments = async () => {
     try {
-      const response = await getComments(userId, WPQTTypes.User, false);
+      const response = await getComments(userId, UserTypes.QUICKTASKER, false);
 
-      return response.data.map(convertCommentFromServer);
+      return response.data;
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to load comments", "quicktasker"));

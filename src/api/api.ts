@@ -7,7 +7,7 @@ import {
   ExecutedAutomation,
 } from "../types/automation";
 import { WPUserCapabilities } from "../types/capabilities";
-import { WPQTCommentFromServer } from "../types/comment";
+import { WPQTComment } from "../types/comment";
 import { CustomField, CustomFieldEntityType } from "../types/custom-field";
 import {
   WPQTArchiveDoneFilter,
@@ -266,7 +266,7 @@ function getComments(
   typeId: string,
   type: string,
   isPrivate: boolean,
-): Promise<WPQTResponse<WPQTCommentFromServer[]>> {
+): Promise<WPQTResponse<WPQTComment[]>> {
   const queryParams = new URLSearchParams({
     typeId,
     type,
@@ -286,7 +286,7 @@ function addCommentRequest(
   comment: string,
 ): Promise<
   WPQTResponse<{
-    newComment: WPQTCommentFromServer;
+    newComment: WPQTComment;
   }>
 > {
   return apiFetch({
