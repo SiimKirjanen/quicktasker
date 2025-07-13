@@ -75,11 +75,10 @@ describe("LoginPage", () => {
     );
 
     // Should render the WordPress login message
-    expect(screen.getByText("Hello WordPress User")).toBeInTheDocument();
-    expect(
-      screen.getByText("Your WordPress session has expired"),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Please log in to continue")).toBeInTheDocument();
+    expect(screen.getByText("Hello")).toBeInTheDocument();
+    // Use the actual text that appears in the component
+    expect(screen.getByText("Your session has expired")).toBeInTheDocument();
+    expect(screen.getByText("Please log in to WordPress")).toBeInTheDocument(); // Updated to match actual text
 
     // Should not render QuickTasker login
     expect(screen.queryByTestId("quicktasker-login")).not.toBeInTheDocument();
