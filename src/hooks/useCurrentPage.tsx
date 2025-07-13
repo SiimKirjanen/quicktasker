@@ -5,6 +5,7 @@ import { LogsPage } from "../pages/LogsPage/LogsPage";
 import { OverviewPage } from "../pages/OverviewPage/OverviewPage";
 import { PipelinePage } from "../pages/PipelinePage/PipelinePage";
 import { SettingsPage } from "../pages/SettingsPage/SettingsPage";
+import { UserAppLinkPage } from "../pages/UserAppLinkPage/UserAppLinkPage";
 import { UserPage } from "../pages/UserPage/UserPage";
 import { UserSessionsPage } from "../pages/UserSessionsPage/UserSessionsPage";
 import { UsersPage } from "../pages/UsersPage/UsersPage";
@@ -64,6 +65,8 @@ const getPageFromUrl = () => {
         return <SettingsPage />;
       case "#/guide":
         return <GuidePage />;
+      case "#/user-page-link":
+        return <UserAppLinkPage />;
       default:
         return <PipelinePage />;
     }
@@ -87,6 +90,7 @@ const setSubMenuItemActive = () => {
     "#/overview": "#/overview",
     "#/archive": "#/archive",
     "#/user-sessions": "#/user-sessions",
+    "#/user-page-link": "#/user-page-link",
     "#/logs": "#/logs",
     "#/settings": "#/settings",
     "#/guide": "#/guide",
