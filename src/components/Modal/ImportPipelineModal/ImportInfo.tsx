@@ -15,6 +15,12 @@ function ImportInfo({ importData }: ImportInfoProps) {
         </span>
       </div>
       <div>
+        {__("Number of task comments", "quicktasker")}:{" "}
+        <span className="wpqt-font-semibold">
+          {importData.taskComments.length}
+        </span>
+      </div>
+      <div>
         {__("Number of stages", "quicktasker")}:{" "}
         <span className="wpqt-font-semibold">{importData.stages.length}</span>
       </div>

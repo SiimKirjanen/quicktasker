@@ -388,7 +388,13 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         if ( !$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $task->id, $requestData['userType']) ) {
                             throw new WPQTException('Not allowed to edit the task', true);
                         }
-                        $newComment = $commentService->createComment($task->id, 'task', false, $data['comment'], $requestData['session']->user_id, $requestData['userType']);
+
+                        $newComment = $commentService->createComment($task->id, 'task', array(
+                            'isPrivate' => false,
+                            'text' => $data['comment'],
+                            'authorId' => $requestData['session']->user_id,
+                            'authorType' => $requestData['userType']
+                        ));
                         
                         $logService->log('User posted a comment on '. $task->name . ' task', [
                             'type' => WP_QT_LOG_TYPE_TASK,
@@ -489,7 +495,13 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $logService = new LogService();
                         $adminComment = $requestData['isQuicktaskerUser'] ? false : true;
                         
-                        $commentService->createComment($requestData['session']->user_id, $requestData['userType'], false, $data['comment'], $requestData['session']->user_id, $requestData['userType']);
+                        $commentService->createComment($requestData['session']->user_id, $requestData['userType'], array(
+                            'isPrivate' => false,
+                            'text' => $data['comment'],
+                            'authorId' => $requestData['session']->user_id,
+                            'authorType' => $requestData['userType']
+                        ));
+
                         $userComments = $commentRepository->getComments($requestData['session']->user_id, $requestData['userType'], false);
 
                         $logService->log('User posted a comment on its profile', [

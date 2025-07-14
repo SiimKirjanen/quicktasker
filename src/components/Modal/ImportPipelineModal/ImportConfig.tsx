@@ -72,6 +72,20 @@ function ImportConfig({
         />
       </div>
 
+      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
+        <ConfigTitle title={__("Import task comments?", "quicktasker")} />
+
+        <Toggle
+          checked={importDataFilter.includeTaskComments}
+          handleChange={() => {
+            onImportDataFilterChange({
+              ...importDataFilter,
+              includeTaskComments: !importDataFilter.includeTaskComments,
+            });
+          }}
+        />
+      </div>
+
       {allowSourceSelection && (
         <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
           <ConfigTitle title={__("Filter by source", "quicktasker")} />

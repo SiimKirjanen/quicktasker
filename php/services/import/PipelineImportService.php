@@ -209,14 +209,17 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 }) : [];
 
                 foreach ($taskComments as $comment) {
+                    
                     $commentService->createComment(
                         $newTask->id,
                         WP_QUICKTASKER_COMMENT_TYPE_TASK,
-                        (bool) $comment['isPrivate'],
-                        $comment['commentText'],
-                        $comment['authorId'],
-                        (bool) $comment['isAuthorAdmin'],
-                        $comment['createdAt']
+                        array(
+                            'isPrivate' => (bool) $comment['isPrivate'],
+                            'text' => $comment['commentText'],
+                            'authorId' => $comment['authorId'],
+                            'authorType' => $comment['authorType'],
+                            'createdAt' => $comment['createdAt'],
+                        )
                     );
 
                     $logService->log("Comment was added to a task {$newTask->name} by {$source}", [
