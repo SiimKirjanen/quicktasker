@@ -1964,7 +1964,13 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     try {
                         $commentService = new CommentService();
                         $adminId = get_current_user_id();
-                        $newComemnt = $commentService->createComment($data['typeId'], $data['type'], $data['isPrivate'], $data['comment'], $adminId, WP_QT_WORDPRESS_USER_TYPE);
+                        
+                        $newComemnt = $commentService->createComment($data['typeId'], $data['type'], array(
+                            'isPrivate' => $data['isPrivate'],
+                            'text' => $data['comment'],
+                            'authorId' => $adminId,
+                            'authorType' => WP_QT_WORDPRESS_USER_TYPE,
+                        ));
                         $automationExecutionResults = [];
                         
                           /* Handle automations */

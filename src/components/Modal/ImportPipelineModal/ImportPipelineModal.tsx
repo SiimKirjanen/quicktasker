@@ -42,6 +42,7 @@ import { ImportSourceSelection } from "./importSourceSelection";
 
 const defaultImportFilter: WPQTImportFilter = {
   includeArchivedTasks: true,
+  includeTaskComments: false,
   sourcePipelinesFilter: [],
 };
 
@@ -211,12 +212,27 @@ function ImportPipelineModal() {
 
   useEffect(() => {
     if (importData) {
+      // First, filter the tasks based on archive status
+      const filteredTasks = importData.tasks.filter(
+        (task) => importDataFilter.includeArchivedTasks || !task.archived,
+      );
+
+      // Create a set of valid task IDs for quick lookup
+      const validTaskIds = new Set(filteredTasks.map((task) => task.taskId));
+
+      // Filter task comments - only include those related to non-archived tasks
+      // and only if includeTaskComments is true
+      const filteredTaskComments = importDataFilter.includeTaskComments
+        ? importData.taskComments.filter((comment) =>
+            validTaskIds.has(comment.taskId),
+          )
+        : [];
+
       // Filter out archived tasks if the filter is not set to include them
       const filteredData: WPQTImport = {
         ...importData,
-        tasks: importData.tasks.filter(
-          (task) => importDataFilter.includeArchivedTasks || !task.archived,
-        ),
+        tasks: filteredTasks,
+        taskComments: filteredTaskComments,
       };
 
       // Apply source pipelines filter

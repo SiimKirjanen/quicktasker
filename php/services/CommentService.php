@@ -16,26 +16,35 @@ if ( ! class_exists( 'WPQT\Comment\CommentService' ) ) {
          *
          * @param int $typeId The ID of the type associated with the comment.
          * @param string $type The type of the comment.
-         * @param bool $isPrivate Indicates if the comment is private.
-         * @param string $text The text content of the comment.
-         * @param int $userId The ID of the user creating the comment.
-         * @param string $authorType The type of the author (default is 'quicktasker').
+         * @param array $args Optional arguments for the comment.
          * 
          * @return mixed The created comment object.
          * 
          * @throws \Exception If the comment could not be added to the database.
          */
-        public function createComment($typeId, $type, $isPrivate, $text, $userId, $authorType = WP_QT_QUICKTASKER_USER_TYPE) {
+        public function createComment($typeId, $type, $args = array()) {
             global $wpdb;
+
+            $defaults = array(
+                'isPrivate' => false,
+                'text' => '',
+                'authorType' => WP_QT_QUICKTASKER_USER_TYPE,
+                'createdAt' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+            );
+            $args = wp_parse_args($args, $defaults);
+
+            if ( empty($typeId) || empty($type) || empty($args['authorId']) || empty($args['authorType']) ) {
+                throw new WPQTException('Required fields are missing for creating a comment');
+            }
 
             $result = $wpdb->insert(TABLE_WP_QUICKTASKER_COMMENTS, array(
                 'type_id' => $typeId,
                 'type' => $type,
-                'is_private' => $isPrivate,
-                'text' => $text,
-                'author_id' => $userId,
-                'author_type' => $authorType,
-                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'is_private' => $args['isPrivate'],
+                'text' => $args['text'],
+                'author_id' => $args['authorId'],
+                'author_type' => $args['authorType'],
+                'created_at' => $args['createdAt'],
             ));
 
             if( $result === false ) {
