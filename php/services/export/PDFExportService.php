@@ -13,8 +13,8 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
     class PDFExportService extends ExportService {
         private $_pdf = null;
 
-        public function __construct($pipelineId, $searchFilter, $includeArchivedTasks) {
-            parent::__construct($pipelineId, $searchFilter, $includeArchivedTasks);
+        public function __construct($pipelineId, $searchFilter, $includeArchivedTasks, $includePipelineCustomFields) {
+            parent::__construct($pipelineId, $searchFilter, $includeArchivedTasks, $includePipelineCustomFields);
             $this->setUpPdf();
         }
         
@@ -66,7 +66,7 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
                     $this->addField(esc_html__('Added labels', 'quicktasker'), $assignedLabels);
                     $this->addField(esc_html__('Archived', 'quicktasker'), $taskArchived);
 
-                    if ( !empty($task->custom_fields) ) {
+                    if ( !empty($task->custom_fields) && $this->_includePipelineCustomFields ) {
                         $this->_pdf->Ln(5);
                         
                         foreach ($task->custom_fields as $customField) {

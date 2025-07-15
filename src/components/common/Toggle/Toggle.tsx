@@ -4,8 +4,9 @@ type Props = {
   checked: boolean;
   handleChange: (checked: boolean) => void;
   id?: string;
+  dataTestId?: string;
 };
-function Toggle({ checked, handleChange, id }: Props) {
+function Toggle({ checked, handleChange, id, dataTestId = undefined }: Props) {
   return (
     <Switch
       onChange={handleChange}
@@ -15,6 +16,7 @@ function Toggle({ checked, handleChange, id }: Props) {
       height={20}
       width={44}
       id={id}
+      data-testid={dataTestId}
     />
   );
 }

@@ -134,7 +134,8 @@ describe("PipelineExportModal Component", () => {
       </AppContext.Provider>,
     );
 
-    const archiveToggle = screen.getByRole("switch");
+    // Find the archive toggle specifically by using its id or label
+    const archiveToggle = screen.getByLabelText("Include board archived tasks");
     expect(archiveToggle).not.toBeChecked();
 
     fireEvent.click(archiveToggle);

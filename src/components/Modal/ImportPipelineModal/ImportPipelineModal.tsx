@@ -43,6 +43,7 @@ import { ImportSourceSelection } from "./importSourceSelection";
 const defaultImportFilter: WPQTImportFilter = {
   includeArchivedTasks: true,
   includeTaskComments: false,
+  includeTaskCustomFields: true,
   sourcePipelinesFilter: [],
 };
 
@@ -227,6 +228,13 @@ function ImportPipelineModal() {
             validTaskIds.has(comment.taskId),
           )
         : [];
+
+      // Filter task custom fields if includeTaskCustomFields is false
+      if (!importDataFilter.includeTaskCustomFields) {
+        filteredTasks.forEach((task) => {
+          task.customFields = [];
+        });
+      }
 
       // Filter out archived tasks if the filter is not set to include them
       const filteredData: WPQTImport = {

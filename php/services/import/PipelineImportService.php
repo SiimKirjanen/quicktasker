@@ -69,6 +69,19 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                         throw new Exception('Invalid label structure in task.');
                     }
                 }
+
+                // Validate custom fields
+                foreach ($task['customFields'] as $field) {
+                    if (
+                        ! isset($field['name']) ||
+                        ! isset($field['type']) ||
+                        ! isset($field['entity_type']) ||
+                        ! isset($field['entity_id']) ||
+                        ! isset($field['task_id'])
+                    ) {
+                        throw new Exception('Invalid task custom field structure.');
+                    }
+                }
             }
 
             // Validate labels
@@ -103,6 +116,7 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             $labelService = ServiceLocator::get('LabelService');
             $taskService = ServiceLocator::get('TaskService');
             $logService = ServiceLocator::get('LogService');
+            $customFieldService = ServiceLocator::get('CustomFieldService');
         
             $currentUserId = get_current_user_id();
 
@@ -165,8 +179,37 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                     'user_id' => $currentUserId,
                 ]);
             }
-            
-            // Step 4. Create tasks and assign them to stages and labels
+
+            // Step 4. Create pipeline level custom fields
+            $pipelineLevelCustomFields = [];
+            foreach ($importData['tasks'] as $task) {
+                if ( isset($task['customFields']) && is_array($task['customFields']) ) {
+                    foreach ( $task['customFields'] as $field ) {
+                        if ( $field['entity_type'] === WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE && !isset($pipelineLevelCustomFields[$field['id']])) {
+                            $pipelineLevelCustomFields[$field['id']] = $field;
+
+                            $newCustomField = $customFieldService->createCustomField(
+                                $field['name'],
+                                $field['description'],
+                                $field['type'],
+                                WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE,
+                                $newPipeline->id,
+                            );
+
+                            if ( $field['value'] ) {
+                                $customFieldService->updateCustomFieldValue(
+                                    $newCustomField->id,
+                                    $newPipeline->id,
+                                    WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE,
+                                    $field['value']
+                                );
+                            }
+                        } 
+                    }
+                }
+            }
+
+            // Step 5. Create tasks and assign them to stages and labels
             foreach ($importData['tasks'] as $task) {
                 // Get the new stage ID using the mapped stageId
                 $newStageId = isset($stageIdMap[$task['stageId']]) ? $stageIdMap[$task['stageId']] : null;
@@ -229,6 +272,30 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                         'pipeline_id' => $newPipeline->id,
                         'user_id' => $comment['authorId'],
                     ]);
+                }
+
+                // Add task level custom fields
+                if ( isset($task['customFields']) && is_array($task['customFields']) ) {
+                    foreach ( $task['customFields'] as $field ) {
+                        if ( $field['entity_type'] === WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK ) {
+                            $createdCustomField = $customFieldService->createCustomField(
+                                $field['name'],
+                                $field['description'],
+                                $field['type'],
+                                WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK,
+                                $newTask->id
+                            );
+
+                            if ( $field['value'] ) {
+                                $customFieldService->updateCustomFieldValue(
+                                    $createdCustomField->id,
+                                    $newTask->id,
+                                    WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK,
+                                    $field['value'] 
+                                );
+                            }
+                        }
+                    }
                 }
             }
 

@@ -25,6 +25,8 @@ function PipelineExportModal({ pipelineId }: Props) {
   } = useContext(AppContext);
   const [search, setSearch] = useState("");
   const [includeArchived, setIncludeArchived] = useState(false);
+  const [includePipelineCustomFields, setIncludePipelineCustomFields] =
+    useState(true);
 
   return (
     <WPQTModal
@@ -44,6 +46,7 @@ function PipelineExportModal({ pipelineId }: Props) {
       >
         <div className="wpqt-text-lg">{__("Tasks export", "quicktasker")}</div>
         <PipelineExportTypeSelection />
+
         <div className="wpqt-flex wpqt-flex-col wpqt-items-center">
           <WPQTLabel labelFor="export-search-filter">
             {__("Filter by task name and desription", "quicktasker")}
@@ -68,6 +71,17 @@ function PipelineExportModal({ pipelineId }: Props) {
           />
         </div>
 
+        <div className="wpqt-flex wpqt-flex-col wpqt-items-center">
+          <WPQTLabel labelFor="export-include-archive-filter">
+            {__("Include board custom fields", "quicktasker")}
+          </WPQTLabel>
+          <Toggle
+            checked={includePipelineCustomFields}
+            handleChange={setIncludePipelineCustomFields}
+            id="export-include-task-custom-fields-filter"
+          />
+        </div>
+
         <WPQTButton
           btnText={getModalCtaBtnText(taskExportModalSettings.selectedMethod)}
           type={ButtonType.SUBMIT}
@@ -84,6 +98,11 @@ function PipelineExportModal({ pipelineId }: Props) {
           type="hidden"
           name="include_archive"
           value={includeArchived ? "1" : "0"}
+        />
+        <input
+          type="hidden"
+          name="include_custom_fields"
+          value={includePipelineCustomFields ? "1" : "0"}
         />
       </form>
     </WPQTModal>

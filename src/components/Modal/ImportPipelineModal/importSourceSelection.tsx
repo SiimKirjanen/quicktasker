@@ -15,6 +15,7 @@ function ImportSourceSelection({
   return (
     <div className="wpqt-flex wpqt-gap-2">
       <div
+        data-testid="trello-container"
         className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
           selectedImportSource === PipelineImportSource.TRELLO
             ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
@@ -22,9 +23,13 @@ function ImportSourceSelection({
         }`}
         onClick={() => handleImportSourceChange(PipelineImportSource.TRELLO)}
       >
-        <FaTrello className="wpqt-size-6 wpqt-trello-blue" />
+        <FaTrello
+          className="wpqt-size-6 wpqt-trello-blue"
+          data-testid="trello-icon"
+        />
       </div>
       <div
+        data-testid="asana-container"
         className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
           selectedImportSource === PipelineImportSource.ASANA
             ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
@@ -32,9 +37,13 @@ function ImportSourceSelection({
         }`}
         onClick={() => handleImportSourceChange(PipelineImportSource.ASANA)}
       >
-        <TbBrandAsana className="wpqt-size-6 wpqt-asana-pink" />
+        <TbBrandAsana
+          className="wpqt-size-6 wpqt-asana-pink"
+          data-testid="asana-icon"
+        />
       </div>
       <div
+        data-testid="pipedrive-container"
         className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
           selectedImportSource === PipelineImportSource.PIPEDRIVE
             ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
@@ -42,9 +51,13 @@ function ImportSourceSelection({
         }`}
         onClick={() => handleImportSourceChange(PipelineImportSource.PIPEDRIVE)}
       >
-        <PiLetterCirclePFill className="wpqt-size-6 wpqt-pipedrive-green" />
+        <PiLetterCirclePFill
+          className="wpqt-size-6 wpqt-pipedrive-green"
+          data-testid="pipedrive-icon"
+        />
       </div>
       <div
+        data-testid="quicktasker-container"
         className={`wpqt-flex wpqt-items-center wpqt-justify-center wpqt-p-1 wpqt-rounded-lg wpqt-border-none wpqt-cursor-pointer ${
           selectedImportSource === PipelineImportSource.QUICKTASKER
             ? "wpqt-border wpqt-border-blue-500 !wpqt-border-solid"
@@ -54,7 +67,11 @@ function ImportSourceSelection({
           handleImportSourceChange(PipelineImportSource.QUICKTASKER)
         }
       >
-        <img src={WPQTIcon} className="wpqt-size-6" />
+        <img
+          src={WPQTIcon}
+          className="wpqt-size-6"
+          data-testid="quicktasker-icon"
+        />
       </div>
     </div>
   );

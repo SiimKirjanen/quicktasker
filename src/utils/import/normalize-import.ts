@@ -67,6 +67,7 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
           name: importData.name,
           id: importData.id,
         },
+        customFields: [],
       };
     }),
     labels: importData.labels.map((label) => ({
@@ -167,6 +168,7 @@ function normalizeAsanaImport(importData: AsanaImport): WPQTImport {
         name: primaryProjectName,
         id: primaryProjectGid,
       },
+      customFields: [],
     };
   });
 
@@ -304,6 +306,7 @@ function normalizePipedriveImport(
       taskCompletedAt:
         dealStatus === "won" ? deal.deal_closed_on || null : null,
       sourcePipeline: taskPipeline,
+      customFields: [],
     };
   });
 
