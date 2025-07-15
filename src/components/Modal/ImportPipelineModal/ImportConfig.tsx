@@ -74,6 +74,22 @@ function ImportConfig({
       </div>
 
       <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
+        <ConfigTitle title={__("Import task custom fields?", "quicktasker")} />
+
+        <Toggle
+          checked={importDataFilter.includeTaskCustomFields}
+          handleChange={() => {
+            onImportDataFilterChange({
+              ...importDataFilter,
+              includeTaskCustomFields:
+                !importDataFilter.includeTaskCustomFields,
+            });
+          }}
+          dataTestId="import-task-custom-fields-toggle"
+        />
+      </div>
+
+      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
         <ConfigTitle title={__("Import task comments?", "quicktasker")} />
 
         <Toggle

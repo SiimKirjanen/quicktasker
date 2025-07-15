@@ -197,6 +197,7 @@ type PipedriveDealImport = {
 type WPQTImportFilter = {
   includeArchivedTasks: boolean;
   includeTaskComments: boolean;
+  includeTaskCustomFields: boolean;
   sourcePipelinesFilter: WPQTSourcePipeline[];
 };
 

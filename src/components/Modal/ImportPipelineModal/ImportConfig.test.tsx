@@ -29,6 +29,7 @@ describe("ImportConfig", () => {
   const defaultImportDataFilter: WPQTImportFilter = {
     includeArchivedTasks: false,
     includeTaskComments: true,
+    includeTaskCustomFields: false,
     sourcePipelinesFilter: [],
   };
 
@@ -144,6 +145,21 @@ describe("ImportConfig", () => {
     expect(defaultProps.onImportDataFilterChange).toHaveBeenCalledWith({
       ...defaultImportDataFilter,
       includeTaskComments: false,
+    });
+  });
+
+  test("toggles includeTaskCustomFields when checkbox is clicked", () => {
+    render(<ImportConfig {...defaultProps} />);
+
+    // Use the data-testid to find the toggle
+    const taskCustomFieldsToggle = screen.getByTestId(
+      "import-task-custom-fields-toggle",
+    );
+    fireEvent.click(taskCustomFieldsToggle);
+
+    expect(defaultProps.onImportDataFilterChange).toHaveBeenCalledWith({
+      ...defaultImportDataFilter,
+      includeTaskCustomFields: true,
     });
   });
 
