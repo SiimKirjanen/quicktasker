@@ -307,6 +307,17 @@ function validateQuicktaskerImport(importData: unknown): true | string {
           }
         }
       }
+
+      // Validate custom fields if present
+      if (task.customFields && Array.isArray(task.customFields)) {
+        for (let j = 0; j < task.customFields.length; j++) {
+          const customField = task.customFields[j];
+
+          if (!customField.task_id) {
+            return `Task "${task.taskName}" has a custom field without task_id`;
+          }
+        }
+      }
     }
   }
 

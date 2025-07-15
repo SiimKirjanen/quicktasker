@@ -13,16 +13,18 @@ if ( ! class_exists( 'WPQT\Export\ExportService' ) ) {
         protected $_pipeline;
         protected $_searchFilter;
         protected $_includeArchivedTasks;
+        protected $_includePipelineCustomFields;
         protected $_fileName;
         protected $_tasks = [];
         protected $_stages = [];
         protected $_labels = [];
         protected $_taskComments = [];
 
-        public function __construct($pipelineId, $searchFilter, $includeArchivedTasks) {
+        public function __construct($pipelineId, $searchFilter, $includeArchivedTasks, $includePipelineCustomFields) {
             $this->_pipelineId = $pipelineId;
             $this->_searchFilter = $searchFilter;
             $this->_includeArchivedTasks = $includeArchivedTasks;
+            $this->_includePipelineCustomFields = $includePipelineCustomFields;
             $this->init();
         }
 

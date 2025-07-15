@@ -25,8 +25,19 @@ type CustomField = {
   created_at: string;
   updated_at: string;
   deleted_at: string;
-  value?: string;
-  default_value: string;
+  is_deleted: string;
+  value?: string | null;
+  default_value: string | null;
 };
 
-export { CustomFieldEntityType, CustomFieldType, type CustomField };
+type WPQTTaskCustomFieldImport = CustomField & {
+  task_id: string;
+  pipeline_id: string;
+};
+
+export {
+  CustomFieldEntityType,
+  CustomFieldType,
+  type CustomField,
+  type WPQTTaskCustomFieldImport,
+};

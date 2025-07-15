@@ -1,3 +1,5 @@
+import { CustomField } from "./custom-field";
+
 /**
  * WPQT Import Types
  * These types define the structure for importing pipelines, stages, tasks, and labels.
@@ -30,6 +32,7 @@ type WPQTTaskImport = {
   taskCompletedAt: string | null;
   taskFocusColor: string | null;
   sourcePipeline: WPQTSourcePipeline | null;
+  customFields: CustomField[];
 };
 
 type WPQTLabelImport = {

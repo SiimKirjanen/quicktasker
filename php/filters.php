@@ -72,6 +72,7 @@ if ( ! function_exists( 'quicktasker_custom_pages' ) ) {
 			$pipelineId = isset($_GET['pipeline_id']) ? $_GET['pipeline_id'] : null;
 			$taskSearch = isset($_GET['task_search']) ? $_GET['task_search'] : '';
 			$includeArchive = isset($_GET['include_archive']) ? $_GET['include_archive'] : '0';
+			$includePipelineCustomFields = isset($_GET['include_custom_fields']) ? $_GET['include_custom_fields'] : '0';
 
 			if (!WPQT\RequestValidation::validateOptionalNumericParam($pipelineId)) {
 				wp_die('Invalid pipeline ID', 400);
@@ -80,12 +81,16 @@ if ( ! function_exists( 'quicktasker_custom_pages' ) ) {
 				$task_search = '';
 			}
 			if (!WPQT\RequestValidation::validateBooleanParam($includeArchive)) {
-				wp_die('Invalid archive param', 400);
+				wp_die('Invalid archive filter param', 400);
+			}
+			if (!WPQT\RequestValidation::validateBooleanParam($includePipelineCustomFields)) {
+				wp_die('Invalid custom field filter param', 400);
 			}
 
 			$pipelineId = WPQT\RequestValidation::sanitizeOptionalAbsint($pipelineId);
 			$taskSearch = WPQT\RequestValidation::sanitizeStringParam($taskSearch);
 			$includeArchive = WPQT\RequestValidation::sanitizeBooleanParam($includeArchive);
+			$includePipelineCustomFields = WPQT\RequestValidation::sanitizeBooleanParam($includePipelineCustomFields);
 
 			if ( $pipelineId && ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId) === null ) {
 				wp_die( __( 'Board not found', 'quicktasker' ), 404 );
@@ -93,7 +98,7 @@ if ( ! function_exists( 'quicktasker_custom_pages' ) ) {
 
 			if ( $locationService->isWPQTTaskPDFExportPage() ) {
 				try {
-					$pdfService = new PDFExportService($pipelineId, $taskSearch, $includeArchive);
+					$pdfService = new PDFExportService($pipelineId, $taskSearch, $includeArchive, $includePipelineCustomFields);
 					$pdfService->generateTasksPdfExport();
 
 					die();
@@ -105,7 +110,7 @@ if ( ! function_exists( 'quicktasker_custom_pages' ) ) {
 
 			if ( $locationService->isWPQTTaskJSONExportPage() ) {
 				try {
-					$jsonExportService = new JSONExportService($pipelineId, $taskSearch, $includeArchive);
+					$jsonExportService = new JSONExportService($pipelineId, $taskSearch, $includeArchive, $includePipelineCustomFields);
 					$jsonExportService->downloadJSON();
 
 					die();

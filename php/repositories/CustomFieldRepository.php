@@ -114,12 +114,11 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldRepository' ) ) {
 
             // Get task-level custom fields with their values (direct task fields)
             $taskSpecificCFquery = $wpdb->prepare(
-                "SELECT cf.*, cfv.value, cfv.entity_id as task_id
+                "SELECT cf.*, cf.entity_id as task_id, cfv.value
                 FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS . " cf
                 LEFT JOIN " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES . " cfv
                 ON cf.id = cfv.custom_field_id 
-                WHERE cfv.entity_id IN ($taskIdsplaceholders) 
-                AND cfv.entity_type = 'task'
+                WHERE cf.entity_id IN ($taskIdsplaceholders) 
                 AND cf.entity_type = 'task'
                 AND cf.is_deleted = 0",
                 $taskIds

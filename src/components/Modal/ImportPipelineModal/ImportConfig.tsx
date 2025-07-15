@@ -69,6 +69,7 @@ function ImportConfig({
               includeArchivedTasks: !importDataFilter.includeArchivedTasks,
             });
           }}
+          dataTestId="import-archived-tasks-toggle"
         />
       </div>
 
@@ -83,6 +84,7 @@ function ImportConfig({
               includeTaskComments: !importDataFilter.includeTaskComments,
             });
           }}
+          dataTestId="import-task-comments-toggle"
         />
       </div>
 

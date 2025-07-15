@@ -101,7 +101,7 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
          *
          * @param int $customFieldId The ID of the custom field.
          * @param int $entityId The ID of the entity to which the custom field belongs.
-         * @param string $entityType The type of the entity (e.g., 'post', 'user').
+         * @param string $entityType The type of the entity (e.g., 'pipeline', 'task').
          * @param mixed $value The value to be set for the custom field.
          * @return bool True on success, throws WPQTException on failure.
          * @throws WPQTException If the custom field value update or insert fails.

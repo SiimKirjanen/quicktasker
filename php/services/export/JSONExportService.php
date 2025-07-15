@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WPQT\Export\JSONExportService' ) ) {
     class JSONExportService extends ExportService {
 
-        public function __construct($pipelineId, $searchFilter, $includeArchivedTasks) {
-            parent::__construct($pipelineId, $searchFilter, $includeArchivedTasks);
+        public function __construct($pipelineId, $searchFilter, $includeArchivedTasks, $includePipelineCustomFields) {
+            parent::__construct($pipelineId, $searchFilter, $includeArchivedTasks, $includePipelineCustomFields);
         }
 
         public function generateTasksJSONExport() {
@@ -50,6 +50,7 @@ if ( ! class_exists( 'WPQT\Export\JSONExportService' ) ) {
                         ];
                     }, $task->assigned_labels) : [],
                     'taskFocusColor' => $task->task_focus_color ?: null,
+                    'customFields' => $task->custom_fields 
                 ];
             }
 
