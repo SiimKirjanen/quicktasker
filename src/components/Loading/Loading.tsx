@@ -49,6 +49,7 @@ function Loading({
   return (
     <div
       className={`wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center ${className}`}
+      data-testid="loading-oval"
     >
       <LoadingOval {...ovalProps} />
     </div>
