@@ -208,11 +208,19 @@ enum PipelineImportSource {
   QUICKTASKER = "QUICKTASKER-IMPORT",
 }
 
+type importSourceConfig = {
+  supportsArchiveTaskToggle: boolean;
+  supportTaskCustomFieldsToggle: boolean;
+  supportTaskCommentsToggle: boolean;
+  allowSourceSelection: boolean;
+};
+
 export {
   AsanaImport,
   AsanaImportLabel,
   AsanaImportSection,
   AsanaTaskImport,
+  importSourceConfig,
   PipedriveDealImport,
   PipelineImportSource,
   TrelloActionType,

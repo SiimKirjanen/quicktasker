@@ -4,6 +4,7 @@ import {
   WPQTImport,
   WPQTImportFilter,
 } from "../../../types/imports";
+import { getImportSourceConfig } from "../../../utils/import/import-utils";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { Toggle } from "../../common/Toggle/Toggle";
@@ -28,8 +29,7 @@ function ImportConfig({
   onImportDataFilterChange,
   validation,
 }: ImportConfigProps) {
-  const allowSourceSelection =
-    selectedImportSource === PipelineImportSource.PIPEDRIVE;
+  const config = getImportSourceConfig(selectedImportSource);
 
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-3">
@@ -58,53 +58,61 @@ function ImportConfig({
         />
       </div>
 
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
-        <ConfigTitle title={__("Import archived tasks?", "quicktasker")} />
+      {config.supportsArchiveTaskToggle && (
+        <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
+          <ConfigTitle title={__("Import archived tasks?", "quicktasker")} />
 
-        <Toggle
-          checked={importDataFilter.includeArchivedTasks}
-          handleChange={() => {
-            onImportDataFilterChange({
-              ...importDataFilter,
-              includeArchivedTasks: !importDataFilter.includeArchivedTasks,
-            });
-          }}
-          dataTestId="import-archived-tasks-toggle"
-        />
-      </div>
+          <Toggle
+            checked={importDataFilter.includeArchivedTasks}
+            handleChange={() => {
+              onImportDataFilterChange({
+                ...importDataFilter,
+                includeArchivedTasks: !importDataFilter.includeArchivedTasks,
+              });
+            }}
+            dataTestId="import-archived-tasks-toggle"
+          />
+        </div>
+      )}
 
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
-        <ConfigTitle title={__("Import task custom fields?", "quicktasker")} />
+      {config.supportTaskCustomFieldsToggle && (
+        <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
+          <ConfigTitle
+            title={__("Import task custom fields?", "quicktasker")}
+          />
 
-        <Toggle
-          checked={importDataFilter.includeTaskCustomFields}
-          handleChange={() => {
-            onImportDataFilterChange({
-              ...importDataFilter,
-              includeTaskCustomFields:
-                !importDataFilter.includeTaskCustomFields,
-            });
-          }}
-          dataTestId="import-task-custom-fields-toggle"
-        />
-      </div>
+          <Toggle
+            checked={importDataFilter.includeTaskCustomFields}
+            handleChange={() => {
+              onImportDataFilterChange({
+                ...importDataFilter,
+                includeTaskCustomFields:
+                  !importDataFilter.includeTaskCustomFields,
+              });
+            }}
+            dataTestId="import-task-custom-fields-toggle"
+          />
+        </div>
+      )}
 
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
-        <ConfigTitle title={__("Import task comments?", "quicktasker")} />
+      {config.supportTaskCommentsToggle && (
+        <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
+          <ConfigTitle title={__("Import task comments?", "quicktasker")} />
 
-        <Toggle
-          checked={importDataFilter.includeTaskComments}
-          handleChange={() => {
-            onImportDataFilterChange({
-              ...importDataFilter,
-              includeTaskComments: !importDataFilter.includeTaskComments,
-            });
-          }}
-          dataTestId="import-task-comments-toggle"
-        />
-      </div>
+          <Toggle
+            checked={importDataFilter.includeTaskComments}
+            handleChange={() => {
+              onImportDataFilterChange({
+                ...importDataFilter,
+                includeTaskComments: !importDataFilter.includeTaskComments,
+              });
+            }}
+            dataTestId="import-task-comments-toggle"
+          />
+        </div>
+      )}
 
-      {allowSourceSelection && (
+      {config.allowSourceSelection && (
         <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-2 wpqt-w-[200px]">
           <ConfigTitle title={__("Filter by source", "quicktasker")} />
 

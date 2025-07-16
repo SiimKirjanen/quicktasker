@@ -35,6 +35,7 @@ function TaskCardActions({ task, onDoneStatusChange, className = "" }: Props) {
             e.stopPropagation();
             changeDone(false);
           }}
+          data-testid="check-icon"
         />
       ) : (
         <CheckBadgeIcon
@@ -43,6 +44,7 @@ function TaskCardActions({ task, onDoneStatusChange, className = "" }: Props) {
             e.stopPropagation();
             changeDone(true);
           }}
+          data-testid="check-icon"
         />
       )}
     </div>
