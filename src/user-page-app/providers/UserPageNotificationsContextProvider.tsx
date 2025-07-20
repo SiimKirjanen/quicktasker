@@ -63,11 +63,11 @@ const UserPageNotificationsContextProvider = ({
     React.Reducer<State, Action>
   >(reducer, initialState);
   const {
-    state: { pageHash },
+    state: { pageHash, isLoggedIn },
   } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const { getStoredComments } = useLocalStorage();
-  const { isLoggedIn, getSessionTimeLeft } = useSession();
+  const { getSessionTimeLeft } = useSession();
 
   useEffect(() => {
     const interval = setInterval(() => {

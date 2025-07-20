@@ -11,14 +11,12 @@ import {
   WPQTDropdownItem,
 } from "../../../../components/Dropdown/WPQTDropdown";
 import { logoutUserPageRequest } from "../../../api/user-page-api";
-import { SET_USER_LOGGED_IN } from "../../../constants";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSession } from "../../../hooks/useSession";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 
 function ProfileDropdown() {
-  const { loadUserPageStatus, userPageAppDispatch } =
-    useContext(UserPageAppContext);
+  const { loadUserPageStatus } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const { deleteSessionCookie } = useSession();
   const navigate = useNavigate();
@@ -27,8 +25,7 @@ function ProfileDropdown() {
     try {
       await logoutUserPageRequest();
       await deleteSessionCookie();
-      userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: false });
-      loadUserPageStatus();
+      window.location.reload();
     } catch (error) {
       handleError(error);
       loadUserPageStatus();

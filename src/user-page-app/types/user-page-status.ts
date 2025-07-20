@@ -1,7 +1,6 @@
 import { UserTypes } from "../../types/user";
 
 type BaseUserPageStatus = {
-  isLoggedIn: boolean;
   userId: string;
   userName: string;
   isActiveUser: boolean;
