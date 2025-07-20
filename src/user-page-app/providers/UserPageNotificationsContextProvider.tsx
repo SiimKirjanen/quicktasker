@@ -78,7 +78,7 @@ const UserPageNotificationsContextProvider = ({
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -98,7 +98,7 @@ const UserPageNotificationsContextProvider = ({
   };
 
   const sessionExpireTimeCheck = () => {
-    if (!isLoggedIn()) {
+    if (!isLoggedIn) {
       return;
     }
 
@@ -115,7 +115,7 @@ const UserPageNotificationsContextProvider = ({
   };
 
   const checkNewComments = async () => {
-    if (!isLoggedIn()) {
+    if (!isLoggedIn) {
       return;
     }
     try {

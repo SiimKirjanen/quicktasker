@@ -47,7 +47,7 @@ function UserPageContent() {
     return <SetUpPage />;
   }
 
-  if (!isLoggedIn()) {
+  if (!isLoggedIn) {
     return <LoginPage />;
   }
 
