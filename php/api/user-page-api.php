@@ -466,9 +466,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
             'callback' => function( $data ) {
                     try {
                         $requestData = RequestValidation::validateUserPageApiRequest($data);
-                        $commentRepository = new CommentRepository();
-                        
-                        $comments = $commentRepository->getCommentsRelatedToUser($requestData['session']->user_id, $requestData['userType']);
+
+                        $createdAfter = ServiceLocator::get('TimeRepository')->modifyUTCTime(-5, 'day');
+                        $comments = ServiceLocator::get('CommentRepository')->getCommentsRelatedToUser($requestData['session']->user_id, $requestData['userType'], $createdAfter);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $comments))->toArray(), 200);
                     } catch(WPQTException $e) {

@@ -37,7 +37,7 @@ const SESSION_EXPIRE_NOTIFICATION_TRESHOLD = 30; // in minutes
 
 // Intervals
 const SESSION_NOTIFICATION_CHECK_INTERVAL = 10 * 60 * 1000; // 10 minutes in milliseconds
-const CHECK_NEW_COMMENTS_INTERVAL = 60 * 2000; // 2 minute in milliseconds
+const CHECK_NEW_COMMENTS_INTERVAL = 60 * 1000; // 1 minute in milliseconds
 
 export {
   CHANGE_USER_PAGE_NOTIFICATIONS_LOADING,

@@ -99,12 +99,11 @@ const UserPageAppContextProvider = ({
 
   const loadUserPageStatus = async () => {
     try {
-      const userLoggedIn = isLoggedIn();
       const { data } = await getUserPageStatusRequest();
 
       userPageAppDispatch({
         type: SET_USER_PAGE_STATUS,
-        payload: { ...data, isLoggedIn: userLoggedIn },
+        payload: { ...data, isLoggedIn: isLoggedIn },
       });
     } catch (error) {
       handleError(error);
