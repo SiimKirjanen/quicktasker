@@ -25,7 +25,7 @@ const reducer = (state: State, action: Action): State => {
 
       return {
         ...state,
-        isActiveUser,
+        isActiveUser: Boolean(isActiveUser),
         setupCompleted,
         initialLoading: false,
         userId,

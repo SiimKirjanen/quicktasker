@@ -3,18 +3,18 @@ import { UserTypes } from "../../types/user";
 type BaseUserPageStatus = {
   userId: string;
   userName: string;
-  isActiveUser: boolean;
   isQuicktaskerUser: boolean;
   isWordPressUser: boolean;
   userType: UserTypes;
+  setupCompleted: boolean;
 };
 
 type UserPageStatus = BaseUserPageStatus & {
-  setupCompleted: boolean;
+  isActiveUser: boolean;
 };
 
 type ServerUserPageStatus = BaseUserPageStatus & {
-  setupCompleted: boolean;
+  isActiveUser: string;
 };
 
 export type { ServerUserPageStatus, UserPageStatus };

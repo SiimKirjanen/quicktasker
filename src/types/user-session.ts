@@ -11,7 +11,7 @@ type UserSession = BaseUserSession & {
   is_active: boolean;
 };
 type ServerUserSession = BaseUserSession & {
-  is_active: string;
+  is_active: string | boolean;
 };
 
 export type { ServerUserSession, UserSession };

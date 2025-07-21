@@ -11,6 +11,7 @@ import {
 } from "../constants";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { reducer } from "../reducers/user-page-app-reducer";
+import { ServerUserPageStatus } from "../types/user-page-status";
 
 const initialState: State = {
   initialLoading: true,
@@ -45,15 +46,7 @@ type State = {
 type Action =
   | {
       type: typeof SET_USER_PAGE_STATUS;
-      payload: {
-        isActiveUser: boolean;
-        setupCompleted: boolean;
-        userId: string;
-        userName: string;
-        isQuicktaskerUser: boolean;
-        isWordPressUser: boolean;
-        userType: UserTypes;
-      };
+      payload: ServerUserPageStatus;
     }
   | { type: typeof SET_INIT_DATA; payload: { timezone: string } }
   | { type: typeof RESET_USER_PAGE_STATUS }

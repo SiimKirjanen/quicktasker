@@ -6,7 +6,7 @@ const convertUserSessionFromServer = (
   user: ServerUserSession,
 ): UserSession => ({
   ...user,
-  is_active: user.is_active === "1",
+  is_active: user.is_active === "1" || user.is_active === true,
 });
 
 const calculateLoginStatus = (state: State): boolean => {

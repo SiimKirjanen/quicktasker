@@ -3,7 +3,7 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
 import {
@@ -17,16 +17,21 @@ import { UserPageAppContext } from "../../../providers/UserPageAppContextProvide
 
 function ProfileDropdown() {
   const { loadUserPageStatus } = useContext(UserPageAppContext);
+  const [loggingOut, setLoggingOut] = useState(false);
   const { handleError } = useErrorHandler();
   const { deleteSessionCookie } = useSession();
   const navigate = useNavigate();
 
-  const logOut = async () => {
+  const logOut = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
     try {
+      setLoggingOut(true);
       await logoutUserPageRequest();
       await deleteSessionCookie();
       window.location.reload();
     } catch (error) {
+      setLoggingOut(false);
       handleError(error);
       loadUserPageStatus();
     }
@@ -59,6 +64,7 @@ function ProfileDropdown() {
         }
         className="!wpqt-mb-0"
         onClick={logOut}
+        loading={loggingOut}
       />
     </WPQTDropdown>
   );

@@ -63,7 +63,7 @@ const UserPageNotificationsContextProvider = ({
     React.Reducer<State, Action>
   >(reducer, initialState);
   const {
-    state: { pageHash, isLoggedIn },
+    state: { pageHash, isLoggedIn, isQuicktaskerUser },
   } = useContext(UserPageAppContext);
   const { handleError } = useErrorHandler();
   const { getStoredComments } = useLocalStorage();
@@ -81,6 +81,9 @@ const UserPageNotificationsContextProvider = ({
   }, [isLoggedIn]);
 
   useEffect(() => {
+    if (!isQuicktaskerUser) {
+      return;
+    }
     const interval = setInterval(() => {
       sessionExpireTimeCheck();
     }, SESSION_NOTIFICATION_CHECK_INTERVAL);
@@ -88,7 +91,7 @@ const UserPageNotificationsContextProvider = ({
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [isQuicktaskerUser]);
 
   const setLoading = (loading: boolean) => {
     userPageNotificationsDispatch({
