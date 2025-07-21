@@ -1,16 +1,20 @@
 import {
+  RESET_USER_PAGE_STATUS,
   SET_INIT_DATA,
   SET_USER_LOGGED_IN,
   SET_USER_PAGE_STATUS,
 } from "../constants";
-import { Action, State } from "../providers/UserPageAppContextProvider";
+import {
+  Action,
+  initialState,
+  State,
+} from "../providers/UserPageAppContextProvider";
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case SET_USER_PAGE_STATUS: {
       const {
         isActiveUser,
-        isLoggedIn,
         setupCompleted,
         userId,
         userName,
@@ -21,8 +25,7 @@ const reducer = (state: State, action: Action): State => {
 
       return {
         ...state,
-        isActiveUser,
-        isLoggedIn,
+        isActiveUser: Boolean(isActiveUser),
         setupCompleted,
         initialLoading: false,
         userId,
@@ -46,6 +49,11 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         timezone,
+      };
+    }
+    case RESET_USER_PAGE_STATUS: {
+      return {
+        ...initialState,
       };
     }
     default:

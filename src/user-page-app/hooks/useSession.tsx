@@ -1,21 +1,12 @@
-import { useContext, useMemo } from "@wordpress/element";
+import { useContext } from "@wordpress/element";
 import Cookies from "js-cookie";
 import { UserPageAppContext } from "../providers/UserPageAppContextProvider";
 import { UserSession } from "../types/user-session";
 
 function useSession() {
   const {
-    state: { pageHash, isQuicktaskerUser, isWordPressUser, userId },
+    state: { pageHash },
   } = useContext(UserPageAppContext);
-
-  const isLoggedIn = useMemo(() => {
-    if (isQuicktaskerUser) {
-      return !!Cookies.get(`wpqt-session-token-${pageHash}`);
-    } else if (isWordPressUser) {
-      return !!userId;
-    }
-    return false;
-  }, [pageHash, isQuicktaskerUser, isWordPressUser, userId]);
 
   /**
    * Sets the session cookie and stores the session expiration in local storage.
@@ -84,7 +75,6 @@ function useSession() {
   return {
     setSessionCookie,
     getSessionCookieValue,
-    isLoggedIn,
     deleteSessionCookie,
     getSessionTimeLeft,
   };

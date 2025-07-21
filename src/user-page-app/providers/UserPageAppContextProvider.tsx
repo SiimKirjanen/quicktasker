@@ -1,15 +1,17 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { UserTypes } from "../../types/user";
 import { getUserPageCodeParam } from "../../utils/url";
+import { calculateLoginStatus } from "../../utils/user-session";
 import { getUserPageStatusRequest } from "../api/user-page-api";
 import {
+  RESET_USER_PAGE_STATUS,
   SET_INIT_DATA,
   SET_USER_LOGGED_IN,
   SET_USER_PAGE_STATUS,
 } from "../constants";
 import { useErrorHandler } from "../hooks/useErrorHandler";
-import { useSession } from "../hooks/useSession";
 import { reducer } from "../reducers/user-page-app-reducer";
+import { ServerUserPageStatus } from "../types/user-page-status";
 
 const initialState: State = {
   initialLoading: true,
@@ -44,18 +46,10 @@ type State = {
 type Action =
   | {
       type: typeof SET_USER_PAGE_STATUS;
-      payload: {
-        isActiveUser: boolean;
-        isLoggedIn: boolean;
-        setupCompleted: boolean;
-        userId: string;
-        userName: string;
-        isQuicktaskerUser: boolean;
-        isWordPressUser: boolean;
-        userType: UserTypes;
-      };
+      payload: ServerUserPageStatus;
     }
   | { type: typeof SET_INIT_DATA; payload: { timezone: string } }
+  | { type: typeof RESET_USER_PAGE_STATUS }
   | { type: typeof SET_USER_LOGGED_IN; payload: boolean };
 
 type Dispatch = (action: Action) => void;
@@ -81,7 +75,6 @@ const UserPageAppContextProvider = ({
     reducer,
     initialState,
   );
-  const { isLoggedIn } = useSession();
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
@@ -97,13 +90,30 @@ const UserPageAppContextProvider = ({
     loadUserPageStatus();
   }, []);
 
+  useEffect(() => {
+    if (!state.initialLoading) {
+      const isLoggedIn = calculateLoginStatus(state);
+
+      userPageAppDispatch({
+        type: SET_USER_LOGGED_IN,
+        payload: isLoggedIn,
+      });
+    }
+  }, [
+    state.initialLoading,
+    state.userId,
+    state.isWordPressUser,
+    state.isQuicktaskerUser,
+    state.pageHash,
+  ]);
+
   const loadUserPageStatus = async () => {
     try {
       const { data } = await getUserPageStatusRequest();
 
       userPageAppDispatch({
         type: SET_USER_PAGE_STATUS,
-        payload: { ...data, isLoggedIn: isLoggedIn },
+        payload: { ...data },
       });
     } catch (error) {
       handleError(error);

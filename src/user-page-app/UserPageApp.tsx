@@ -15,7 +15,6 @@ import { TaskCommentsPage } from "./components/Pages/TaskCommentsPage/TaskCommen
 import { TaskPage } from "./components/Pages/TaskPage/TaskPage";
 import { UserCommentsPage } from "./components/Pages/UserCommentsPage/UserCommentsPage";
 import { UserTasksPage } from "./components/Pages/UserTasksPage/UserTasksPage";
-import { useSession } from "./hooks/useSession";
 import {
   UserPageAppContext,
   UserPageAppContextProvider,
@@ -24,9 +23,8 @@ import { UserPageNotificationsContextProvider } from "./providers/UserPageNotifi
 
 function UserPageContent() {
   const {
-    state: { initialLoading, isActiveUser, setupCompleted },
+    state: { initialLoading, isActiveUser, setupCompleted, isLoggedIn },
   } = useContext(UserPageAppContext);
-  const { isLoggedIn } = useSession();
 
   if (initialLoading) {
     return <LoadingPage />;

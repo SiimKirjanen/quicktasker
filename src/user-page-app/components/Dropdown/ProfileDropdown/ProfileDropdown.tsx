@@ -3,7 +3,7 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { useContext } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,25 +11,27 @@ import {
   WPQTDropdownItem,
 } from "../../../../components/Dropdown/WPQTDropdown";
 import { logoutUserPageRequest } from "../../../api/user-page-api";
-import { SET_USER_LOGGED_IN } from "../../../constants";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSession } from "../../../hooks/useSession";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 
 function ProfileDropdown() {
-  const { loadUserPageStatus, userPageAppDispatch } =
-    useContext(UserPageAppContext);
+  const { loadUserPageStatus } = useContext(UserPageAppContext);
+  const [loggingOut, setLoggingOut] = useState(false);
   const { handleError } = useErrorHandler();
   const { deleteSessionCookie } = useSession();
   const navigate = useNavigate();
 
-  const logOut = async () => {
+  const logOut = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
     try {
+      setLoggingOut(true);
       await logoutUserPageRequest();
       await deleteSessionCookie();
-      userPageAppDispatch({ type: SET_USER_LOGGED_IN, payload: false });
-      loadUserPageStatus();
+      window.location.reload();
     } catch (error) {
+      setLoggingOut(false);
       handleError(error);
       loadUserPageStatus();
     }
@@ -62,6 +64,7 @@ function ProfileDropdown() {
         }
         className="!wpqt-mb-0"
         onClick={logOut}
+        loading={loggingOut}
       />
     </WPQTDropdown>
   );
