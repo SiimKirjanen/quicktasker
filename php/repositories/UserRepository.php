@@ -356,6 +356,13 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
             $results = $user_query->get_results();
 
             $users = array_map(function($user) {
+                $avatar_url = null;
+                $avatar_data = get_avatar_data($user->ID);
+
+                if ( $avatar_data['found_avatar'] ) {
+                    $avatar_url = $avatar_data['url'];
+                }
+
                 return (object)[
                     'id' => $user->ID,
                     'name' => $user->display_name,
@@ -367,6 +374,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                     'roles' => array_values($user->roles),
                     'allcaps' => $user->allcaps,
                     'user_type' => 'wp-user',
+                    'profile_picture' => $avatar_url
                 ];
             }, $results);
         

@@ -41,6 +41,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $isUserActive = true;
                         $userId = null;
                         $userName = null;
+                        $profilePictureUrl = null;
 
                         if ( $requestData['isQuicktaskerUser'] ) {
                             $userPage = ServiceLocator::get('UserPageRepository')->getPageUserByHash($requestData['userPageHash']);
@@ -56,7 +57,9 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             $userId = $requestData['loggedInWPUserId'];
 
                             if ( $userId ) {
-                                $userName = ServiceLocator::get('UserRepository')->getWPUserById($userId)->name ?? null;
+                                $WPuser = ServiceLocator::get('UserRepository')->getWPUserById($userId);
+                                $userName = $WPuser->name ?? null;
+                                $profilePictureUrl = $WPuser->avatar_url ?? null;
                                 $isUserActive = ServiceLocator::get('PermissionService')->hasRequiredPermissionsForUserPageApp($userId);
                             }   
                         }
@@ -68,7 +71,8 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             'userName' => $userName,
                             'isQuicktaskerUser' => $requestData['isQuicktaskerUser'],
                             'isWordPressUser' => $requestData['isWordPressUser'],
-                            'userType' => $requestData['userType']
+                            'userType' => $requestData['userType'],
+                            'profilePictureUrl' => $profilePictureUrl
                         ];
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $userPageStatus))->toArray(), 200);

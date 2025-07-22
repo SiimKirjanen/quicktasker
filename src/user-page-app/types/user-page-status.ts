@@ -7,6 +7,7 @@ type BaseUserPageStatus = {
   isWordPressUser: boolean;
   userType: UserTypes;
   setupCompleted: boolean;
+  profilePictureUrl: string | null;
 };
 
 type UserPageStatus = BaseUserPageStatus & {

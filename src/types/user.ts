@@ -43,6 +43,7 @@ type WPUser = {
   allcaps: string[];
   roles: string[];
   user_type: UserTypes.WP_USER;
+  profile_picture: string;
 };
 
 enum UserTypes {
