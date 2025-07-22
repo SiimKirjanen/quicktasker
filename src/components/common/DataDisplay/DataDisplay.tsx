@@ -12,8 +12,12 @@ type RowProps = {
 };
 function DisplayRow({ children, label, className = "" }: RowProps) {
   return (
-    <div className={`wpqt-mb-1 ${className}`}>
-      {label && <span className="wpqt-font-semibold">{label}</span>}
+    <div className={`wpqt-mb-1 ${className}`} data-testid="display-row">
+      {label && (
+        <span className="wpqt-font-semibold" data-testid="row-label">
+          {label}
+        </span>
+      )}
       <span className="wpqt-text-base">{children}</span>
     </div>
   );

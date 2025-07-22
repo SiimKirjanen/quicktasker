@@ -27,7 +27,7 @@ function UserDetails({ user }: Props) {
             />
           ) : (
             <UserCircleIcon
-              className={`wpqt-icon-blue wpqt-size-11 wpqt-text-blue-900"`}
+              className={`wpqt-icon-blue wpqt-size-11 wpqt-text-blue-900`}
             />
           )}
         </DisplayRow>
