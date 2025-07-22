@@ -4,7 +4,7 @@ Tags: task manager, task management, project manager, project management, task b
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
-Stable tag: 1.37.2
+Stable tag: 1.37.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,9 @@ QuickTasker PRO version
 
 
 == Changelog ==
+
+= 1.37.3 =
+* Display user profile picture in user page.
 
 = 1.37.2 =
 * User page fixes and improvements.

@@ -69,6 +69,7 @@ describe("user-session utils", () => {
       isQuicktaskerUser: false,
       isWordPressUser: false,
       userType: null,
+      profilePictureUrl: null, // Add this default value
       ...overrides,
     });
 

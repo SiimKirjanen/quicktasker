@@ -16,7 +16,10 @@ import { useSession } from "../../../hooks/useSession";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 
 function ProfileDropdown() {
-  const { loadUserPageStatus } = useContext(UserPageAppContext);
+  const {
+    loadUserPageStatus,
+    state: { profilePictureUrl },
+  } = useContext(UserPageAppContext);
   const [loggingOut, setLoggingOut] = useState(false);
   const { handleError } = useErrorHandler();
   const { deleteSessionCookie } = useSession();
@@ -42,9 +45,16 @@ function ProfileDropdown() {
       anchor="bottom end"
       menuBtn={({ active }) => (
         <div>
-          <UserCircleIcon
-            className={`wpqt-icon-blue wpqt-size-11 ${active ? "wpqt-text-blue-900" : ""} hover:wpqt-text-blue-900`}
-          />
+          {profilePictureUrl ? (
+            <img
+              className="wpqt-size-11 wpqt-rounded-full wpqt-cursor-pointer"
+              src={profilePictureUrl}
+            />
+          ) : (
+            <UserCircleIcon
+              className={`wpqt-icon-blue wpqt-size-11 ${active ? "wpqt-text-blue-900" : ""} hover:wpqt-text-blue-900`}
+            />
+          )}
         </div>
       )}
     >

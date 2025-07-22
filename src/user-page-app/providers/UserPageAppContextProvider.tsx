@@ -26,6 +26,7 @@ const initialState: State = {
   isQuicktaskerUser: false,
   isWordPressUser: false,
   userType: null,
+  profilePictureUrl: null,
 };
 
 type State = {
@@ -41,6 +42,7 @@ type State = {
   isQuicktaskerUser: boolean;
   isWordPressUser: boolean;
   userType: UserTypes | null;
+  profilePictureUrl: string | null;
 };
 
 type Action =

@@ -33,6 +33,7 @@ describe("LoginPage", () => {
       cf: false,
       timezone: "UTC",
       userType: UserTypes.QUICKTASKER,
+      profilePictureUrl: null,
       ...overrides,
     },
     userPageAppDispatch: jest.fn(),

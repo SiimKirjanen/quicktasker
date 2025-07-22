@@ -1,9 +1,10 @@
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { __ } from "@wordpress/i18n";
 import {
   DataDisplay,
   DisplayRow,
 } from "../../../../../../components/common/DataDisplay/DataDisplay";
-import { User, WPUser } from "../../../../../../types/user";
+import { User, UserTypes, WPUser } from "../../../../../../types/user";
 
 type Props = {
   user: User | WPUser | null;
@@ -18,6 +19,18 @@ function UserDetails({ user }: Props) {
   return (
     <div className="wpqt-mb-4">
       <DataDisplay>
+        <DisplayRow className={rowClasses}>
+          {user.user_type === UserTypes.WP_USER ? (
+            <img
+              className="wpqt-size-11 wpqt-rounded-full"
+              src={user.profile_picture}
+            />
+          ) : (
+            <UserCircleIcon
+              className={`wpqt-icon-blue wpqt-size-11 wpqt-text-blue-900"`}
+            />
+          )}
+        </DisplayRow>
         <DisplayRow label={__("Name", "quicktasker")} className={rowClasses}>
           {user.name}
         </DisplayRow>
@@ -29,12 +42,6 @@ function UserDetails({ user }: Props) {
             {user.description}
           </DisplayRow>
         )}
-        {/*    <DisplayRow
-          label={__("Assigned tasks count", "quicktasker")}
-          className={rowClasses}
-        >
-          {user.assigned_tasks_count}
-        </DisplayRow> */}
       </DataDisplay>
     </div>
   );

@@ -21,6 +21,7 @@ const reducer = (state: State, action: Action): State => {
         isQuicktaskerUser,
         isWordPressUser,
         userType,
+        profilePictureUrl,
       } = action.payload;
 
       return {
@@ -33,6 +34,7 @@ const reducer = (state: State, action: Action): State => {
         isQuicktaskerUser,
         isWordPressUser,
         userType,
+        profilePictureUrl,
       };
     }
     case SET_USER_LOGGED_IN: {
