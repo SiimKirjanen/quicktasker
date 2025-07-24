@@ -6,7 +6,11 @@ import {
 } from "@wordpress/element";
 import { Task, TaskFromServer } from "../../types/task";
 import { getAssignedTasksRequest } from "../api/user-page-api";
-import { SET_ASSIGNED_TASKS, SET_ASSIGNED_TASKS_LOADING } from "../constants";
+import {
+  SET_ASSIGNED_TASKS,
+  SET_ASSIGNED_TASKS_LOADING,
+  SET_ASSIGNED_TASKS_SEARCH_TEXT,
+} from "../constants";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { reducer } from "../reducers/user-assigned-tasks-reducer";
 import { UserPageAppContext } from "./UserPageAppContextProvider";
@@ -14,16 +18,19 @@ import { UserPageAppContext } from "./UserPageAppContextProvider";
 const initialState: State = {
   loading: true,
   assignedTasks: [],
+  searchText: "",
 };
 
 type State = {
   loading: boolean;
   assignedTasks: Task[];
+  searchText: string;
 };
 
 type Action =
   | { type: typeof SET_ASSIGNED_TASKS; payload: TaskFromServer[] }
-  | { type: typeof SET_ASSIGNED_TASKS_LOADING; payload: boolean };
+  | { type: typeof SET_ASSIGNED_TASKS_LOADING; payload: boolean }
+  | { type: typeof SET_ASSIGNED_TASKS_SEARCH_TEXT; payload: string };
 
 type Dispatch = (action: Action) => void;
 

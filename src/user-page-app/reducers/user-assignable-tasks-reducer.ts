@@ -4,6 +4,7 @@ import {
   REMOVE_ASSIGNABLE_TASK,
   SET_ASSIGNABLE_TASKS,
   SET_ASSIGNABLE_TASKS_LOADING,
+  SET_ASSIGNABLE_TASKS_SEARCH_TEXT,
 } from "../constants";
 import { Action, State } from "../providers/UserAssignableTasksContextProvider";
 
@@ -33,6 +34,14 @@ const reducer = (state: State, action: Action): State => {
         assignableTasks: state.assignableTasks.filter(
           (task) => task.id !== taskId,
         ),
+      };
+    }
+    case SET_ASSIGNABLE_TASKS_SEARCH_TEXT: {
+      const searchText: string = action.payload;
+
+      return {
+        ...state,
+        searchText,
       };
     }
     default: {

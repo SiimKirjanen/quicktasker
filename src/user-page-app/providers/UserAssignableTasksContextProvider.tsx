@@ -13,6 +13,7 @@ import {
   REMOVE_ASSIGNABLE_TASK,
   SET_ASSIGNABLE_TASKS,
   SET_ASSIGNABLE_TASKS_LOADING,
+  SET_ASSIGNABLE_TASKS_SEARCH_TEXT,
 } from "../constants";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { reducer } from "../reducers/user-assignable-tasks-reducer";
@@ -20,16 +21,19 @@ import { reducer } from "../reducers/user-assignable-tasks-reducer";
 const initialState: State = {
   loading: true,
   assignableTasks: [],
+  searchText: "",
 };
 
 type State = {
   loading: boolean;
   assignableTasks: Task[];
+  searchText: string;
 };
 
 type Action =
   | { type: typeof SET_ASSIGNABLE_TASKS_LOADING; payload: boolean }
   | { type: typeof SET_ASSIGNABLE_TASKS; payload: TaskFromServer[] }
+  | { type: typeof SET_ASSIGNABLE_TASKS_SEARCH_TEXT; payload: string }
   | { type: typeof REMOVE_ASSIGNABLE_TASK; payload: string };
 
 type Dispatch = (action: Action) => void;
