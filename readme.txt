@@ -53,6 +53,7 @@ QuickTasker PRO version
 = 1.37.3 =
 * Display user profile picture in user page.
 * Added user page assigned and assignable tasks filtering.
+* Added board task view search.
 
 = 1.37.2 =
 * User page fixes and improvements.
