@@ -10,16 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { WPQTCard } from "../../../../components/Card/Card";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { useTimezone } from "../../../hooks/useTimezone";
-import { UserAssignedTasksContext } from "../../../providers/UserAssignedTasksContextProvider";
+import { UserAssignableTasksContext } from "../../../providers/UserAssignableTasksContextProvider";
 import { filterTasks } from "../../../utils/task-search";
 
-function UserTasks() {
+function AssignebaleTasks() {
   const {
-    state: { assignedTasks, searchText, loading },
-  } = useContext(UserAssignedTasksContext);
+    state: { loading, assignableTasks, searchText },
+  } = useContext(UserAssignableTasksContext);
   const navigate = useNavigate();
   const { convertToWPTimezone } = useTimezone();
-  const tasks = assignedTasks.filter((task) => filterTasks(task, searchText));
+  const tasks = assignableTasks.filter((task) => filterTasks(task, searchText));
 
   if (loading) {
     return null;
@@ -30,22 +30,21 @@ function UserTasks() {
       <div className="wpqt-text-center wpqt-text-gray-500">
         {searchText
           ? __("No tasks match your search filter", "quicktasker")
-          : __("No tasks assigned to you", "quicktasker")}
+          : __("No tasks assignable to you", "quicktasker")}
       </div>
     );
   }
 
   return (
     <div className="wpqt-user-page-card-flex">
-      {tasks.map((task) => {
-        const isCompleted = task.is_done;
+      {assignableTasks.map((task) => {
         const dueDate = task.due_date
           ? convertToWPTimezone(task.due_date)
           : null;
 
         return (
           <WPQTCard
-            key={task.id}
+            key={task.task_hash}
             className="wpqt-cursor-pointer wpqt-min-w-[340px]"
             title={task.name}
             description={task.description}
@@ -56,6 +55,7 @@ function UserTasks() {
               value={convertToWPTimezone(task.created_at)}
               icon={<CalendarIcon className="wpqt-size-5 wpqt-icon-blue" />}
             />
+
             <WPQTCardDataItem
               label={__("Board", "quicktasker")}
               value={
@@ -73,15 +73,16 @@ function UserTasks() {
                 icon={<ClockIcon className="wpqt-size-5 wpqt-icon-blue" />}
               />
             )}
+
             <WPQTCardDataItem
               label={
-                isCompleted
+                task.is_done
                   ? __("Task completed", "quicktasker")
                   : __("Task not completed", "quicktasker")
               }
               value={task.stage_id}
               icon={
-                isCompleted ? (
+                task.is_done ? (
                   <CheckBadgeIcon className="wpqt-size-5 wpqt-icon-green" />
                 ) : (
                   <CheckBadgeIcon className="wpqt-size-5 wpqt-icon-gray" />
@@ -95,4 +96,4 @@ function UserTasks() {
   );
 }
 
-export { UserTasks };
+export { AssignebaleTasks };
