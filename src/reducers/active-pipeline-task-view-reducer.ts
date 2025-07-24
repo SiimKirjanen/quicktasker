@@ -1,4 +1,8 @@
-import { SET_STAGE_FILTER, SET_USER_FILTER } from "../constants";
+import {
+  SET_STAGE_FILTER,
+  SET_TASK_VIEW_SEARCH_TEXT,
+  SET_USER_FILTER,
+} from "../constants";
 import {
   Action,
   State,
@@ -21,6 +25,12 @@ const activePipelineTaskViewReducer = (state: State, action: Action): State => {
       return {
         ...state,
         stageIdFilter: action.payload,
+      };
+    }
+    case SET_TASK_VIEW_SEARCH_TEXT: {
+      return {
+        ...state,
+        searchText: action.payload,
       };
     }
     default:

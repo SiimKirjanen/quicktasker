@@ -1,5 +1,9 @@
 import { createContext, useReducer } from "@wordpress/element";
-import { SET_STAGE_FILTER, SET_USER_FILTER } from "../constants";
+import {
+  SET_STAGE_FILTER,
+  SET_TASK_VIEW_SEARCH_TEXT,
+  SET_USER_FILTER,
+} from "../constants";
 
 import { activePipelineTaskViewReducer } from "../reducers/active-pipeline-task-view-reducer";
 import { UserFilter } from "../types/user";
@@ -7,6 +11,7 @@ import { UserFilter } from "../types/user";
 type State = {
   stageIdFilter: string;
   userFilter: UserFilter;
+  searchText: string;
 };
 
 const initialState: State = {
@@ -15,11 +20,13 @@ const initialState: State = {
     id: null,
     type: null,
   },
+  searchText: "",
 };
 
 type Action =
   | { type: typeof SET_STAGE_FILTER; payload: string }
-  | { type: typeof SET_USER_FILTER; payload: UserFilter };
+  | { type: typeof SET_USER_FILTER; payload: UserFilter }
+  | { type: typeof SET_TASK_VIEW_SEARCH_TEXT; payload: string };
 
 type Dispatch = (action: Action) => void;
 

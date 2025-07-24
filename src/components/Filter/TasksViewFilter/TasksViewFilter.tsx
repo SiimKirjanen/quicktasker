@@ -1,17 +1,22 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { SET_STAGE_FILTER, SET_USER_FILTER } from "../../../constants";
+import {
+  SET_STAGE_FILTER,
+  SET_TASK_VIEW_SEARCH_TEXT,
+  SET_USER_FILTER,
+} from "../../../constants";
 import { useActivePipeline } from "../../../hooks/useActivePipeline";
 import { useUser } from "../../../hooks/useUser";
 import { ActivePipelineTaskViewContext } from "../../../providers/ActivePipelineTaskViewContextProvider";
 import { UserTypes } from "../../../types/user";
 import { userTypeStrings } from "../../../utils/user";
+import { WPQTInput } from "../../common/Input/Input";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTFilter, WPQTFilterSection } from "../WPQTFilter";
 
 function TasksViewFilter() {
   const {
-    state: { stageIdFilter, userFilter },
+    state: { stageIdFilter, userFilter, searchText },
     taskViewDispatch,
   } = useContext(ActivePipelineTaskViewContext);
   const { stageOptions } = useActivePipeline();
@@ -46,8 +51,29 @@ function TasksViewFilter() {
     });
   };
 
+  const onSearchChange = (newValue: string) => {
+    taskViewDispatch({
+      type: SET_TASK_VIEW_SEARCH_TEXT,
+      payload: newValue,
+    });
+  };
+
   return (
-    <WPQTFilter title={__("Filter tasks", "quicktasker")} searchChildren={null}>
+    <WPQTFilter
+      title={__("Filter tasks", "quicktasker")}
+      searchChildren={
+        <WPQTFilterSection
+          title={__("Search", "quicktasker")}
+          labelIdFor="task-view-search"
+        >
+          <WPQTInput
+            inputId="task-view-search"
+            value={searchText}
+            onChange={onSearchChange}
+          />
+        </WPQTFilterSection>
+      }
+    >
       <WPQTFilterSection title={__("Stage", "quicktasker")}>
         <WPQTSelect
           id="task-view-stage-filter"

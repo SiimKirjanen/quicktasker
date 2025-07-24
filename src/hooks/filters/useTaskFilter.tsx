@@ -5,7 +5,7 @@ import { UserTypes } from "../../types/user";
 
 const useTaskFilter = () => {
   const {
-    state: { stageIdFilter, userFilter },
+    state: { stageIdFilter, userFilter, searchText },
   } = useContext(ActivePipelineTaskViewContext);
 
   const taskViewFilter = (task: Task) => {
@@ -20,7 +20,13 @@ const useTaskFilter = () => {
       (userFilter.type === UserTypes.WP_USER &&
         task.assigned_wp_users?.some((user) => user.id === userFilter.id));
 
-    return matchesStageIdFilter && matchesUserFilter;
+    const matchesSearchText =
+      !searchText ||
+      task.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      (task.description?.toLowerCase().includes(searchText.toLowerCase()) ??
+        false);
+
+    return matchesStageIdFilter && matchesUserFilter && matchesSearchText;
   };
 
   return {
