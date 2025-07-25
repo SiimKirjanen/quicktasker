@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.36.0\n"
+"Project-Id-Version: QuickTasker 1.38.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-07T09:52:25+00:00\n"
+"POT-Creation-Date: 2025-07-25T11:32:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: quicktasker\n"
@@ -41,49 +41,65 @@ msgstr ""
 msgid "Boards"
 msgstr ""
 
+#: php/admin-pages.php:30
+#: php/admin-pages.php:31
+#: build/app.js:1
+msgid "Overview"
+msgstr ""
+
 #: php/admin-pages.php:39
 #: php/admin-pages.php:40
 #: build/app.js:1
 msgid "Settings"
 msgstr ""
 
+#: php/admin-pages.php:48
+#: php/admin-pages.php:49
+msgid "User management"
+msgstr ""
+
 #: php/admin-pages.php:57
 #: php/admin-pages.php:58
-#: build/app.js:1
-msgid "Quicktasker sessions"
+msgid "User tasks page"
 msgstr ""
 
 #: php/admin-pages.php:66
 #: php/admin-pages.php:67
 #: build/app.js:1
-msgid "Archive"
+msgid "Quicktasker sessions"
 msgstr ""
 
 #: php/admin-pages.php:75
 #: php/admin-pages.php:76
 #: build/app.js:1
+msgid "Archive"
+msgstr ""
+
+#: php/admin-pages.php:84
+#: php/admin-pages.php:85
+#: build/app.js:1
 msgid "Logs"
 msgstr ""
 
-#: php/admin-pages.php:86
-#: php/admin-pages.php:87
+#: php/admin-pages.php:93
+#: php/admin-pages.php:94
 #: build/app.js:1
-msgid "Guide"
+msgid "About"
 msgstr ""
 
 #: php/filters.php:69
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: php/filters.php:91
+#: php/filters.php:96
 msgid "Board not found"
 msgstr ""
 
-#: php/filters.php:102
+#: php/filters.php:107
 msgid "Failed to generate PDF"
 msgstr ""
 
-#: php/filters.php:114
+#: php/filters.php:119
 msgid "Failed to generate JSON"
 msgstr ""
 
@@ -100,8 +116,8 @@ msgstr ""
 msgid "QuickTasker Pro cannot be activated because QuickTasker is already active. Please deactivate free version first."
 msgstr ""
 
-#: php/services/export/ExportService.php:56
-#: php/services/export/ExportService.php:68
+#: php/services/export/ExportService.php:58
+#: php/services/export/ExportService.php:70
 #: php/services/export/PDFExportService.php:46
 #: php/services/export/PDFExportService.php:49
 #: php/services/export/PDFExportService.php:50
@@ -444,6 +460,10 @@ msgid "Get the premium version"
 msgstr ""
 
 #: build/app.js:1
+msgid "Upgrade to premium to add more custom fields."
+msgstr ""
+
+#: build/app.js:1
 msgid "Custom Fields"
 msgstr ""
 
@@ -456,28 +476,7 @@ msgid "Type"
 msgstr ""
 
 #: build/app.js:1
-msgid "Cancel"
-msgstr ""
-
-#: build/app.js:1
-msgid "Add new custom field"
-msgstr ""
-
-#: build/app.js:1
 msgid "Add"
-msgstr ""
-
-#: build/app.js:1
-#: build/userApp.js:1
-msgid "Save"
-msgstr ""
-
-#: build/app.js:1
-msgid "This custom field is inherited from %s settings and can't be deleted here"
-msgstr ""
-
-#: build/app.js:1
-msgid "No related custom fields created"
 msgstr ""
 
 #: build/app.js:1
@@ -485,7 +484,11 @@ msgid "Task"
 msgstr ""
 
 #: build/app.js:1
-msgid "User"
+msgid "Quicktasker"
+msgstr ""
+
+#: build/app.js:1
+msgid "WordPress user"
 msgstr ""
 
 #: build/app.js:1
@@ -525,11 +528,16 @@ msgid "No deleted custom fields"
 msgstr ""
 
 #: build/app.js:1
-msgid "Close recovery"
+#: build/userApp.js:1
+msgid "Save"
 msgstr ""
 
 #: build/app.js:1
-msgid "Open recovery"
+msgid "This custom field is inherited from %s settings and can't be deleted here"
+msgstr ""
+
+#: build/app.js:1
+msgid "No related custom fields created"
 msgstr ""
 
 #: build/app.js:1
@@ -577,7 +585,7 @@ msgid "Board custom fields"
 msgstr ""
 
 #: build/app.js:1
-msgid "Task custom fields"
+msgid "Custom fields"
 msgstr ""
 
 #: build/app.js:1
@@ -590,6 +598,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Create"
+msgstr ""
+
+#: build/app.js:1
+msgid "Cancel"
 msgstr ""
 
 #: build/app.js:1
@@ -862,11 +874,7 @@ msgid "Archived tasks management page."
 msgstr ""
 
 #: build/app.js:1
-msgid "Reading material about QuickTasker features and usage."
-msgstr ""
-
-#: build/app.js:1
-msgid "View Guide"
+msgid "Info about the plugin."
 msgstr ""
 
 #: build/app.js:1
@@ -954,10 +962,6 @@ msgid "Get overview of the tasks."
 msgstr ""
 
 #: build/app.js:1
-msgid "Overview"
-msgstr ""
-
-#: build/app.js:1
 msgid "No overview to display"
 msgstr ""
 
@@ -966,6 +970,7 @@ msgid "You need to first create a board to see the overview."
 msgstr ""
 
 #: build/app.js:1
+#: build/userApp.js:1
 msgid "Filter tasks"
 msgstr ""
 
@@ -1038,11 +1043,23 @@ msgid "Import archived tasks?"
 msgstr ""
 
 #: build/app.js:1
+msgid "Import task custom fields?"
+msgstr ""
+
+#: build/app.js:1
+msgid "Import task comments?"
+msgstr ""
+
+#: build/app.js:1
 msgid "Filter by source"
 msgstr ""
 
 #: build/app.js:1
 msgid "archived"
+msgstr ""
+
+#: build/app.js:1
+msgid "Number of task comments"
 msgstr ""
 
 #: build/app.js:1
@@ -1167,6 +1184,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Include board archived tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Include board custom fields"
 msgstr ""
 
 #: build/app.js:1
@@ -1566,6 +1587,18 @@ msgid "Manage settings, preferences, and configurations."
 msgstr ""
 
 #: build/app.js:1
+msgid "Lets you manage assigned tasks on separate page."
+msgstr ""
+
+#: build/app.js:1
+msgid "User app"
+msgstr ""
+
+#: build/app.js:1
+msgid "Open your user page"
+msgstr ""
+
+#: build/app.js:1
 msgid "User created successfully"
 msgstr ""
 
@@ -1626,7 +1659,6 @@ msgid "Delete user"
 msgstr ""
 
 #: build/app.js:1
-#: build/userApp.js:1
 msgid "Assigned tasks count"
 msgstr ""
 
@@ -1820,6 +1852,10 @@ msgid "Allow to delete resources"
 msgstr ""
 
 #: build/app.js:1
+msgid "Allow access to user page app"
+msgstr ""
+
+#: build/app.js:1
 msgid "No non-admin WordPress users found"
 msgstr ""
 
@@ -1840,6 +1876,7 @@ msgid "Failed to fetch user tasks"
 msgstr ""
 
 #: build/app.js:1
+#: build/userApp.js:1
 msgid "Unassign from task"
 msgstr ""
 
@@ -1868,15 +1905,23 @@ msgid "Log out"
 msgstr ""
 
 #: build/userApp.js:1
+msgid "No tasks match your search filter"
+msgstr ""
+
+#: build/userApp.js:1
+msgid "No tasks assignable to you"
+msgstr ""
+
+#: build/userApp.js:1
+msgid "Created"
+msgstr ""
+
+#: build/userApp.js:1
 msgid "Tasks available for self-assignment"
 msgstr ""
 
 #: build/userApp.js:1
 msgid "Assignable tasks"
-msgstr ""
-
-#: build/userApp.js:1
-msgid "Created"
 msgstr ""
 
 #: build/userApp.js:1
@@ -1896,6 +1941,14 @@ msgid "View assignable tasks"
 msgstr ""
 
 #: build/userApp.js:1
+msgid "Forgot the password?"
+msgstr ""
+
+#: build/userApp.js:1
+msgid "Please contact the site admin to reset your password"
+msgstr ""
+
+#: build/userApp.js:1
 msgid "Please log in to continue"
 msgstr ""
 
@@ -1912,11 +1965,15 @@ msgid "Login"
 msgstr ""
 
 #: build/userApp.js:1
-msgid "Forgot the password?"
+msgid "Your session has expired"
 msgstr ""
 
 #: build/userApp.js:1
-msgid "Please contact the site admin to reset your password"
+msgid "Hello"
+msgstr ""
+
+#: build/userApp.js:1
+msgid "Please log in to WordPress"
 msgstr ""
 
 #: build/userApp.js:1
@@ -1988,6 +2045,14 @@ msgid "%s comments"
 msgstr ""
 
 #: build/userApp.js:1
+msgid "Manage task comments"
+msgstr ""
+
+#: build/userApp.js:1
+msgid "Assing to task"
+msgstr ""
+
+#: build/userApp.js:1
 msgid "Free for all"
 msgstr ""
 
@@ -2025,6 +2090,10 @@ msgstr ""
 
 #: build/userApp.js:1
 msgid "User comments"
+msgstr ""
+
+#: build/userApp.js:1
+msgid "No tasks assigned to you"
 msgstr ""
 
 #: build/userApp.js:1

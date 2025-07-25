@@ -1,9 +1,10 @@
 import { __ } from "@wordpress/i18n";
 import { CustomFieldsContextProvider } from "../../../providers/CustomFieldsContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
-import { CustomFieldCreation } from "../CustomFieldCreation/CustomFieldCreation";
+import { CustomFieldCreatorModal } from "../../Modal/CustomFieldCreatorModal/CustomFieldCreatorModal";
+import { CustomFieldRecoveryModal } from "../../Modal/CustomFieldRecoveryModal/CustomFieldRecoveryModal";
 import { CustomFields } from "../CustomFields/CustomFields";
-import { CustomFieldsRecovery } from "../CustomFieldsRecovery/CustomFieldsRecovery";
+import { CustomFieldActins } from "../CustomFieldsActions/CustomFieldActions";
 
 const descriptions: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.QUICKTASKER]: __(
@@ -59,7 +60,7 @@ const titles: { [key in CustomFieldEntityType]: string } = {
     "quicktasker",
   ),
   [CustomFieldEntityType.Pipeline]: __("Board custom fields", "quicktasker"),
-  [CustomFieldEntityType.Task]: __("Task custom fields", "quicktasker"),
+  [CustomFieldEntityType.Task]: __("Custom fields", "quicktasker"),
 };
 
 type Props = {
@@ -73,15 +74,16 @@ function CustomFieldsInModalWrap({ entityId, entityType }: Props) {
   const customFieldsDescription = existingFieldsDescriptions[entityType];
 
   return (
-    <div>
+    <div className="wpqt-relative">
       <CustomFieldsContextProvider entityId={entityId} entityType={entityType}>
+        <CustomFieldActins className="wpqt-absolute wpqt--top-2 wpqt-right-0" />
         <h2 className="wpqt-text-center">{customFieldsTitle}</h2>
         <div className="wpqt-mb-4 wpqt-text-center">
           {customFieldsDescription}
         </div>
         <CustomFields />
-        <CustomFieldCreation description={creationDescription} />
-        <CustomFieldsRecovery />
+        <CustomFieldCreatorModal description={creationDescription} />
+        <CustomFieldRecoveryModal />
       </CustomFieldsContextProvider>
     </div>
   );

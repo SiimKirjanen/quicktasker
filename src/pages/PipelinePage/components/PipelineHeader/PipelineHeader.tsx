@@ -44,7 +44,9 @@ function PipelineHeader() {
     <div className="wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-py-5">
       <div>
         <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
-          <div className="wpqt-text-lg">{activePipeline.name}</div>
+          <div className="wpqt-text-lg wpqt-font-semibold">
+            {activePipeline.name}
+          </div>
           <Cog8ToothIcon
             className="wpqt-text-gray-400 wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
             onClick={openEditPipelineModal}
@@ -63,6 +65,7 @@ function PipelineHeader() {
         ) : (
           <ArrowPathIcon
             className="wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+            data-testid="refresh-icon"
             onClick={() => fetchAndSetPipelineData(activePipeline.id)}
           />
         )}
