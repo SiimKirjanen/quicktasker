@@ -54,8 +54,8 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
 
         add_submenu_page(
             'wp-quick-tasks',
-            esc_html__('User page', 'quicktasker'),
-            esc_html__('User page', 'quicktasker'),
+            esc_html__('User tasks page', 'quicktasker'),
+            esc_html__('User tasks page', 'quicktasker'),
             WP_QUICKTASKER_ACCESS_USER_PAGE_APP,
             'wp-quick-tasks#/user-page-link',
             'wp_quick_taks_generate_app_page'
