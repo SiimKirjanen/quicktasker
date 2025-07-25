@@ -33,6 +33,8 @@ import {
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_RESTORE_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+  SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
+  SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
 } from "../constants";
 import { reducer } from "../reducers/modal-reducer";
 import {
@@ -77,6 +79,8 @@ const initialState: State = {
   taskRestoreModalSettings: {
     taskToRestore: null,
   },
+  customFieldCreatorModalOpen: false,
+  customFieldRecoveryModalOpen: false,
 };
 
 type State = {
@@ -105,6 +109,8 @@ type State = {
   archiveSettingsModalOpen: boolean;
   taskRestoreModalOpen: boolean;
   taskRestoreModalSettings: TaskRestoreModalSettings;
+  customFieldCreatorModalOpen: boolean;
+  customFieldRecoveryModalOpen: boolean;
 };
 
 type Action =
@@ -163,6 +169,8 @@ type Action =
       payload: { taskToRestore: Task };
     }
   | { type: typeof CLOSE_TASK_RESTORE_MODAL }
+  | { type: typeof SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN; payload: boolean }
+  | { type: typeof SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN; payload: boolean }
   | { type: typeof CLOSE_AUTOMATIONS_MODAL };
 
 type ModalDispatch = (action: Action) => void;

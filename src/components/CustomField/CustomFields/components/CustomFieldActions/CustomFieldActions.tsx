@@ -6,7 +6,11 @@ import {
   CustomField,
   CustomFieldEntityType,
 } from "../../../../../types/custom-field";
-import { WPQTButton, WPQTIconButton } from "../../../../common/Button/Button";
+import {
+  ButtonStyleType,
+  WPQTButton,
+  WPQTIconButton,
+} from "../../../../common/Button/Button";
 import { Loading } from "../../../../Loading/Loading";
 
 type CustomFieldActionsProps = {
@@ -50,7 +54,11 @@ function CustomFieldActions({
   return (
     <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2">
       {isAllowedToSave && (
-        <WPQTButton onClick={onSave} btnText={__("Save", "quicktasker")} />
+        <WPQTButton
+          onClick={onSave}
+          btnText={__("Save", "quicktasker")}
+          buttonStyleType={ButtonStyleType.SECONDARY}
+        />
       )}
       {isUserAllowedToDelete && (
         <WPQTIconButton

@@ -1,16 +1,13 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { TbRestore } from "react-icons/tb";
 import { toast } from "react-toastify";
 import { getCustomFieldsRequest } from "../../../api/api";
 import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
 import { CustomField } from "../../../types/custom-field";
-import { WPQTIconButton } from "../../common/Button/Button";
 import { Loading } from "../../Loading/Loading";
 import { DeletedField } from "./components/DeletedField/DeletedField";
 
 function CustomFieldsRecovery() {
-  const [recoverOpen, setRecoveryOpen] = useState(false);
   const [loadingFields, setLoadingFields] = useState(true);
   const [deletedCustomFields, setDeletedCustomFields] = useState<
     CustomField[] | null
@@ -20,10 +17,8 @@ function CustomFieldsRecovery() {
   } = useContext(CustomFieldsContext);
 
   useEffect(() => {
-    if (recoverOpen) {
-      loadDeletedFields();
-    }
-  }, [recoverOpen]);
+    loadDeletedFields();
+  }, []);
 
   const loadDeletedFields = async () => {
     if (!entityId || !entityType) {
@@ -85,19 +80,7 @@ function CustomFieldsRecovery() {
           "quicktasker",
         )}
       </div>
-      {recoverOpen && <div className="wpqt-mb-3">{renderContent()}</div>}
-
-      <div className="wpqt-flex wpqt-justify-end wpqt-gap-3">
-        <WPQTIconButton
-          text={
-            recoverOpen
-              ? __("Close recovery", "quicktasker")
-              : __("Open recovery", "quicktasker")
-          }
-          onClick={() => setRecoveryOpen(!recoverOpen)}
-          icon={<TbRestore className="wpqt-icon-green wpqt-size-5" />}
-        />
-      </div>
+      <div className="wpqt-mb-3">{renderContent()}</div>
     </div>
   );
 }

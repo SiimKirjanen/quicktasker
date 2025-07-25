@@ -1187,6 +1187,10 @@
   inset: 0px;
 }
 
+.wpqt--top-2 {
+  top: -0.5rem;
+}
+
 .wpqt-bottom-0 {
   bottom: 0px;
 }
@@ -1205,6 +1209,10 @@
 
 .wpqt-left-\[50\%\] {
   left: 50%;
+}
+
+.wpqt-right-0 {
+  right: 0px;
 }
 
 .wpqt-right-2 {

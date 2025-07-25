@@ -32,6 +32,8 @@ import {
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_RESTORE_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+  SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
+  SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, initialState, State } from "../providers/ModalContextProvider";
@@ -297,6 +299,22 @@ const reducer = (state: State, action: Action): State => {
           ...state.taskRestoreModalSettings,
           taskToRestore,
         },
+      };
+    }
+    case SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN: {
+      const open: boolean = action.payload;
+
+      return {
+        ...state,
+        customFieldCreatorModalOpen: open,
+      };
+    }
+    case SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN: {
+      const open: boolean = action.payload;
+
+      return {
+        ...state,
+        customFieldRecoveryModalOpen: open,
       };
     }
     case CLOSE_TASK_RESTORE_MODAL: {
