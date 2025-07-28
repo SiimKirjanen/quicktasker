@@ -101,5 +101,6 @@ export {
   CustomFieldsContext,
   CustomFieldsContextProvider,
   type Action,
+  type CustomFieldsContextType,
   type State,
 };

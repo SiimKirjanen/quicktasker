@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "@wordpress/element";
 import { WPQTInput } from "../../../../components/common/Input/Input";
-import { CustomFieldTitle } from "../../../../components/CustomField/CustomFields/components/CustomField/CustomField";
+import { CustomFieldTitle } from "../../../../components/CustomField/CustomFields/components/CustomField/CustomFieldTitle";
 import { Loading } from "../../../../components/Loading/Loading";
 import { CustomField, CustomFieldType } from "../../../../types/custom-field";
 import { debounce } from "../../../../utils/debounce";
