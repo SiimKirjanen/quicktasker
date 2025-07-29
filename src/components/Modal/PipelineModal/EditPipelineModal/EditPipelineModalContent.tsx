@@ -112,7 +112,7 @@ const EditPipelineModalContent = forwardRef(
       <>
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
           <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
-            <div className="wpqt-mb-5 wpqt-grid wpqt-grid-cols-1 wpqt-gap-4 md:wpqt-grid-cols-[auto_1fr]">
+            <div className="wpqt-mb-5 wpqt-grid wpqt-grid-cols-1 wpqt-gap-6 md:wpqt-grid-cols-[1fr_0.7fr]">
               <WPQTModalFieldSet>
                 <WPQTModalField label={__("Name", "quicktasker")}>
                   <WPQTInput
@@ -127,6 +127,7 @@ const EditPipelineModalContent = forwardRef(
                   <WPQTTextarea
                     rowsCount={3}
                     value={pipelineDescription}
+                    className="wpqt-w-full"
                     onChange={(newValue: string) =>
                       setPipelineDescription(newValue)
                     }

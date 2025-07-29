@@ -1020,6 +1020,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_WP_USERS: () => (/* binding */ SET_WP_USERS),
 /* harmony export */   TASK_FOCUS_BORDER_STYLE: () => (/* binding */ TASK_FOCUS_BORDER_STYLE),
 /* harmony export */   TASK_FOCUS_BORDER_WIDTH: () => (/* binding */ TASK_FOCUS_BORDER_WIDTH),
+/* harmony export */   TEXT_ENTER_DEBOUNCE_TIMEOUT: () => (/* binding */ TEXT_ENTER_DEBOUNCE_TIMEOUT),
 /* harmony export */   UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS: () => (/* binding */ UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS),
 /* harmony export */   WP_QUICKTASKER_INVALID_SESSION_TOKEN: () => (/* binding */ WP_QUICKTASKER_INVALID_SESSION_TOKEN)
 /* harmony export */ });
@@ -1176,6 +1177,7 @@ const ADD_UPLOAD = "ADD_UPLOAD";
 const REMOVE_UPLOAD = "REMOVE_UPLOAD";
 //Timers
 const REFETCH_ACTIVE_PIPELINE_INTERVAL = 30000;
+const TEXT_ENTER_DEBOUNCE_TIMEOUT = 700;
 //Misc
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 const HAS_AUTOMATIONS = false;

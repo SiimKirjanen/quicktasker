@@ -26,7 +26,7 @@ function CustomFields() {
   }
 
   return (
-    <div className="wpqt-my-4 wpqt-grid wpqt-grid-cols-[100px_1fr_100px] wpqt-items-center wpqt-gap-3">
+    <div className="wpqt-my-4 wpqt-flex wpqt-flex-col wpqt-gap-3">
       {customFields.map((customField) => (
         <CustomField key={customField.id} data={customField} />
       ))}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "@wordpress/element";
+import { TEXT_ENTER_DEBOUNCE_TIMEOUT } from "../../../../../constants";
 import { CustomField } from "../../../../../types/custom-field";
 import { WPQTInput } from "../../../../common/Input/Input";
 import { CustomFieldTitle } from "./CustomFieldTitle";
@@ -28,7 +29,7 @@ function TextCustomField({
     const timeout = setTimeout(() => {
       onChange(value);
       setDirty(false);
-    }, 500);
+    }, TEXT_ENTER_DEBOUNCE_TIMEOUT);
 
     return () => clearTimeout(timeout);
   }, [value, dirty, onChange]);
@@ -39,9 +40,15 @@ function TextCustomField({
   };
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center">
+    <div className="wpqt-flex wpqt-flex-col wpqt-justify-center">
       <CustomFieldTitle name={data.name} description={data.description} />
-      <WPQTInput value={value} onChange={handleChange} disabled={disabled} />
+      <WPQTInput
+        value={value}
+        onChange={handleChange}
+        disabled={disabled}
+        wrapperClassName="!wpqt-mb-0"
+        data-testid="text-custom-field"
+      />
     </div>
   );
 }

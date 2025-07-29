@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import {
   CustomFieldsContext,
   CustomFieldsContextType,
@@ -9,23 +9,8 @@ import {
 } from "../../../../../types/custom-field";
 import { CheckboxCustomFieldProps } from "./CheckboxCustomField";
 import { CustomField } from "./CustomField";
-import { TextCustomFieldProps } from "./TextCustomField";
+// DO NOT mock TextCustomField here!
 
-// Mock child components
-jest.mock("./TextCustomField", () => ({
-  TextCustomField: ({
-    initialValue,
-    onChange,
-    disabled,
-  }: TextCustomFieldProps) => (
-    <input
-      data-testid="text-custom-field"
-      value={initialValue}
-      disabled={disabled}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  ),
-}));
 jest.mock("./CheckboxCustomField", () => ({
   CheckboxCustomField: ({
     initialValue,
@@ -49,9 +34,11 @@ jest.mock("../CustomFieldActions/CustomFieldActions", () => ({
   ),
 }));
 
-const mockUpdateCustomFieldValue = jest.fn();
-const mockUpdateCustomFieldDefaultValue = jest.fn();
-const mockMarkCustomFieldAsDeleted = jest.fn();
+const mockUpdateCustomFieldValue = jest.fn(
+  () => new Promise((resolve) => setTimeout(resolve, 100)),
+);
+const mockUpdateCustomFieldDefaultValue = jest.fn(() => Promise.resolve());
+const mockMarkCustomFieldAsDeleted = jest.fn(() => Promise.resolve());
 
 jest.mock("../../../../../hooks/actions/useCustomFieldActions", () => ({
   useCustomFieldActions: () => ({
@@ -76,7 +63,7 @@ function getContextValue(
   };
 }
 
-const baseData: CustomField = {
+const baseData = {
   id: "cf1",
   name: "Field Name",
   description: "Field Description",
@@ -87,15 +74,15 @@ const baseData: CustomField = {
   entity_id: "entity1",
   created_at: "2024-06-01T00:00:00Z",
   updated_at: "2024-06-01T00:00:00Z",
-  deleted_at: "", // Use empty string instead of null
+  deleted_at: "",
   is_deleted: "false",
 };
 
-describe("CustomField", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
+describe("CustomField", () => {
   it("renders TextCustomField for text type", () => {
     render(
       <CustomFieldsContext.Provider value={getContextValue()}>
@@ -118,20 +105,23 @@ describe("CustomField", () => {
     expect(screen.getByTestId("custom-field-actions")).toBeInTheDocument();
   });
 
-  it("calls updateCustomFieldValue for text field save", async () => {
+  it("calls updateCustomFieldValue for text field save when allowed", async () => {
     render(
-      <CustomFieldsContext.Provider value={getContextValue()}>
+      <CustomFieldsContext.Provider
+        value={getContextValue(CustomFieldEntityType.Task)}
+      >
         <CustomField data={{ ...baseData, type: CustomFieldType.Text }} />
       </CustomFieldsContext.Provider>,
     );
     const input = screen.getByTestId("text-custom-field");
     fireEvent.change(input, { target: { value: "changed" } });
-    await act(async () => {});
-    expect(mockUpdateCustomFieldValue).toHaveBeenCalledWith(
-      baseData.id,
-      "changed",
-      "entity1",
-      CustomFieldEntityType.Task,
+    await waitFor(() =>
+      expect(mockUpdateCustomFieldValue).toHaveBeenCalledWith(
+        baseData.id,
+        "changed",
+        "entity1",
+        CustomFieldEntityType.Task,
+      ),
     );
   });
 
@@ -145,10 +135,11 @@ describe("CustomField", () => {
     );
     const input = screen.getByTestId("text-custom-field");
     fireEvent.change(input, { target: { value: "changed" } });
-    await act(async () => {});
-    expect(mockUpdateCustomFieldDefaultValue).toHaveBeenCalledWith(
-      baseData.id,
-      "changed",
+    await waitFor(() =>
+      expect(mockUpdateCustomFieldDefaultValue).toHaveBeenCalledWith(
+        baseData.id,
+        "changed",
+      ),
     );
   });
 
@@ -161,31 +152,52 @@ describe("CustomField", () => {
         <CustomField data={{ ...baseData, type: CustomFieldType.Text }} />
       </CustomFieldsContext.Provider>,
     );
-    // Simulate delete by clicking the button
-    await act(async () => {
-      fireEvent.click(screen.getByTestId("custom-field-actions"));
-    });
-    expect(mockMarkCustomFieldAsDeleted).toHaveBeenCalledWith(
-      baseData.id,
-      expect.any(Function),
+    fireEvent.click(screen.getByTestId("custom-field-actions"));
+    await waitFor(() =>
+      expect(mockMarkCustomFieldAsDeleted).toHaveBeenCalledWith(
+        baseData.id,
+        expect.any(Function),
+      ),
     );
   });
 
-  it("disables field when not allowed (Pipeline)", () => {
+  it("enables checkbox when allowed (Task)", () => {
     render(
       <CustomFieldsContext.Provider
-        value={getContextValue(CustomFieldEntityType.Pipeline)}
+        value={getContextValue(CustomFieldEntityType.Task)}
+      >
+        <CustomField
+          data={{ ...baseData, type: CustomFieldType.Checkbox, value: "false" }}
+        />
+      </CustomFieldsContext.Provider>,
+    );
+    expect(screen.getByTestId("checkbox-custom-field")).not.toBeDisabled();
+  });
+
+  it("disables text field during save (actionLoading)", async () => {
+    render(
+      <CustomFieldsContext.Provider
+        value={getContextValue(CustomFieldEntityType.Task)}
       >
         <CustomField data={{ ...baseData, type: CustomFieldType.Text }} />
       </CustomFieldsContext.Provider>,
     );
-    expect(screen.getByTestId("text-custom-field")).toBeDisabled();
+    const input = screen.getByTestId("text-custom-field");
+    fireEvent.change(input, { target: { value: "changed" } });
+    // Should be disabled while async save is pending
+    await waitFor(() =>
+      expect(screen.getByTestId("text-custom-field")).toBeDisabled(),
+    );
+    // After save completes, should be enabled again
+    await waitFor(() =>
+      expect(screen.getByTestId("text-custom-field")).not.toBeDisabled(),
+    );
   });
 
-  it("enables field when allowed (QUICKTASKER)", () => {
+  it("enables text field when allowed (Pipeline)", () => {
     render(
       <CustomFieldsContext.Provider
-        value={getContextValue(CustomFieldEntityType.QUICKTASKER)}
+        value={getContextValue(CustomFieldEntityType.Pipeline)}
       >
         <CustomField data={{ ...baseData, type: CustomFieldType.Text }} />
       </CustomFieldsContext.Provider>,

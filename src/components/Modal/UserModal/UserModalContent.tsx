@@ -102,7 +102,7 @@ const UserModalContent = forwardRef(function UserModalContent(
     <>
       <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
         <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
-          <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 md:wpqt-grid-cols-[auto_1fr]">
+          <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-6 md:wpqt-grid-cols-[1fr_0.7fr]">
             <div>
               <WPQTModalFieldSet>
                 <WPQTModalField label={__("Name", "quicktasker")}>
@@ -110,6 +110,8 @@ const UserModalContent = forwardRef(function UserModalContent(
                     isAutoFocus={true}
                     value={userName}
                     onChange={(newValue: string) => setUserName(newValue)}
+                    wrapperClassName="wpqt-w-full"
+                    className="wpqt-w-full"
                   />
                 </WPQTModalField>
 
@@ -117,6 +119,7 @@ const UserModalContent = forwardRef(function UserModalContent(
                   <WPQTTextarea
                     rowsCount={3}
                     value={userDescription}
+                    className="wpqt-w-full"
                     onChange={(newValue: string) =>
                       setUserDescription(newValue)
                     }

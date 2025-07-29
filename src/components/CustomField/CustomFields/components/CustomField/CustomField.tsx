@@ -31,6 +31,7 @@ function CustomField({ data }: Props) {
     entityType === CustomFieldEntityType.QUICKTASKER ||
     entityType === CustomFieldEntityType.Task;
   const allowCustomFieldDefaultValueUpdate =
+    entityType === CustomFieldEntityType.Users ||
     entityType === CustomFieldEntityType.Pipeline;
 
   const handleSave = async (newValue: string) => {
@@ -57,6 +58,8 @@ function CustomField({ data }: Props) {
 
   let customFieldElement;
   const initialValue = data.value ?? data.default_value ?? "";
+  const allowInputChange =
+    allowCustomFieldValueUpdate || allowCustomFieldDefaultValueUpdate;
 
   switch (data.type) {
     case CustomFieldType.Text: {
@@ -65,7 +68,7 @@ function CustomField({ data }: Props) {
           data={data}
           initialValue={initialValue}
           onChange={handleSave}
-          disabled={actionLoading || !allowCustomFieldValueUpdate}
+          disabled={actionLoading || !allowInputChange}
         />
       );
       break;
@@ -84,8 +87,7 @@ function CustomField({ data }: Props) {
   }
 
   return (
-    <>
-      <div></div>
+    <div className="wpqt-flex wpqt-gap-2 wpqt-py-4 wpqt-items-center wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-gray-200">
       {customFieldElement}
       <CustomFieldActions
         data={data}
@@ -93,7 +95,7 @@ function CustomField({ data }: Props) {
         onDelete={handleDelete}
         actionLoading={actionLoading}
       />
-    </>
+    </div>
   );
 }
 

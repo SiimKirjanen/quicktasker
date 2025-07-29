@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { TEXT_ENTER_DEBOUNCE_TIMEOUT } from "../../../../../constants";
 import { CustomField } from "../../../../../types/custom-field";
 import { TextCustomField } from "./TextCustomField";
 
@@ -25,33 +26,34 @@ describe("TextCustomField", () => {
     render(<TextCustomField {...baseProps} />);
     expect(screen.getByText("Field Name")).toBeInTheDocument();
     expect(screen.getByText("Field Description")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("initial")).toBeInTheDocument();
+    expect(screen.getByTestId("text-custom-field")).toBeInTheDocument();
+    expect(screen.getByTestId("text-custom-field")).toHaveValue("initial");
   });
 
   it("updates input value instantly on change", () => {
     render(<TextCustomField {...baseProps} />);
-    const input = screen.getByDisplayValue("initial");
+    const input = screen.getByTestId("text-custom-field");
     fireEvent.change(input, { target: { value: "changed" } });
-    expect(screen.getByDisplayValue("changed")).toBeInTheDocument();
+    expect(screen.getByTestId("text-custom-field")).toHaveValue("changed");
   });
 
   it("calls onChange after debounce when value changes", () => {
     render(<TextCustomField {...baseProps} />);
-    const input = screen.getByDisplayValue("initial");
+    const input = screen.getByTestId("text-custom-field");
     fireEvent.change(input, { target: { value: "changed" } });
     act(() => {
-      jest.advanceTimersByTime(500);
+      jest.advanceTimersByTime(TEXT_ENTER_DEBOUNCE_TIMEOUT);
     });
     expect(baseProps.onChange).toHaveBeenCalledWith("changed");
   });
 
   it("calls onChange if value is reverted before debounce", () => {
     render(<TextCustomField {...baseProps} />);
-    const input = screen.getByDisplayValue("initial");
+    const input = screen.getByTestId("text-custom-field");
     fireEvent.change(input, { target: { value: "changed" } });
     fireEvent.change(input, { target: { value: "initial" } });
     act(() => {
-      jest.advanceTimersByTime(500);
+      jest.advanceTimersByTime(TEXT_ENTER_DEBOUNCE_TIMEOUT);
     });
     // Should be called with "initial" (the reverted value)
     expect(baseProps.onChange).toHaveBeenCalledWith("initial");
@@ -59,10 +61,10 @@ describe("TextCustomField", () => {
 
   it("resets value and dirty flag when initialValue changes", () => {
     const { rerender } = render(<TextCustomField {...baseProps} />);
-    const input = screen.getByDisplayValue("initial");
+    const input = screen.getByTestId("text-custom-field");
     fireEvent.change(input, { target: { value: "changed" } });
     rerender(<TextCustomField {...baseProps} initialValue="newInitial" />);
-    expect(screen.getByDisplayValue("newInitial")).toBeInTheDocument();
+    expect(screen.getByTestId("text-custom-field")).toHaveValue("newInitial");
     act(() => {
       jest.advanceTimersByTime(500);
     });
@@ -72,7 +74,7 @@ describe("TextCustomField", () => {
 
   it("disables input when disabled prop is true", () => {
     render(<TextCustomField {...baseProps} disabled={true} />);
-    const input = screen.getByDisplayValue("initial");
+    const input = screen.getByTestId("text-custom-field");
     expect(input).toBeDisabled();
   });
 });

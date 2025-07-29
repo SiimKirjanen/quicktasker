@@ -38,11 +38,11 @@ function CustomFieldActions({
   };
 
   if (actionLoading) {
-    return <Loading ovalSize="24" />;
+    return <Loading ovalSize="24" className="wpqt-ml-auto" />;
   }
 
   return (
-    <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2">
+    <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-ml-auto">
       {isUserAllowedToDelete && (
         <WPQTIconButton
           onClick={handleDelete}
