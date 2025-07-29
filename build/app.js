@@ -8966,7 +8966,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/CheckBadgeIcon.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var react_datetime_picker__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! react-datetime-picker */ "./node_modules/react-datetime-picker/dist/esm/index.js");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
 /* harmony import */ var _hooks_useLoadingStates__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../hooks/useLoadingStates */ "./src/hooks/useLoadingStates.ts");
@@ -8986,6 +8985,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx");
 /* harmony import */ var _Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../../Upload/UploadManager/UploadManager */ "./src/components/Upload/UploadManager/UploadManager.tsx");
 /* harmony import */ var _components_FreeForAllToggle_FreeForAllToggle__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./components/FreeForAllToggle/FreeForAllToggle */ "./src/components/Modal/TaskModal/components/FreeForAllToggle/FreeForAllToggle.tsx");
+/* harmony import */ var _components_TaskDueDateInput_TaskDueDateInput__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/TaskDueDateInput/TaskDueDateInput */ "./src/components/Modal/TaskModal/components/TaskDueDateInput/TaskDueDateInput.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9185,12 +9185,10 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               })
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Due date", "quicktasker"),
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_datetime_picker__WEBPACK_IMPORTED_MODULE_25__["default"], {
-                onChange: value => {
-                  setDueDateTime(value);
-                },
-                value: dueDateTime,
-                format: "y-MM-dd HH:mm"
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_TaskDueDateInput_TaskDueDateInput__WEBPACK_IMPORTED_MODULE_25__.TaskDueDateInput, {
+                initialValue: taskToEdit.due_date || "",
+                task: taskToEdit,
+                onEditTaskCompleted: onEditTaskCompleted
               })
             }), taskModalSettings.allowToMarkTaskAsDone && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TaskDoneStatus, {
               taskId: taskToEdit.id,
@@ -9399,11 +9397,11 @@ function FreeForAllToggle({
       success,
       task: updatedTask
     } = yield editTask(task.id, {
-      freeForAll: checked
+      free_for_all: checked
     });
     setLoading(false);
     if (success && updatedTask) {
-      onEditTaskCompleted(Object.assign({}, updatedTask));
+      onEditTaskCompleted(updatedTask);
     } else {
       setValue(!checked);
     }
@@ -9414,6 +9412,114 @@ function FreeForAllToggle({
       checked: value,
       handleChange: handleChange
     }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.Loading, {
+      ovalSize: "20"
+    })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Modal/TaskModal/components/TaskDueDateInput/TaskDueDateInput.tsx":
+/*!*****************************************************************************************!*\
+  !*** ./src/components/Modal/TaskModal/components/TaskDueDateInput/TaskDueDateInput.tsx ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TaskDueDateInput: () => (/* binding */ TaskDueDateInput)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_datetime_picker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-datetime-picker */ "./node_modules/react-datetime-picker/dist/esm/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
+/* harmony import */ var _hooks_useTimezone__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../hooks/useTimezone */ "./src/hooks/useTimezone.ts");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+function TaskDueDateInput({
+  initialValue,
+  task,
+  onEditTaskCompleted
+}) {
+  const [dueDate, setDueDate] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const {
+    editTask
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_4__.useTaskActions)();
+  const {
+    convertUTCDateTimeToWPTimezone
+  } = (0,_hooks_useTimezone__WEBPACK_IMPORTED_MODULE_5__.useTimezone)();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    const taskDueDate = initialValue ? convertUTCDateTimeToWPTimezone(initialValue) : null;
+    setDueDate(taskDueDate);
+  }, [initialValue]);
+  const handleChange = value => __awaiter(this, void 0, void 0, function* () {
+    const oldDueDate = dueDate;
+    const dueDateString = value ? dayjs__WEBPACK_IMPORTED_MODULE_2___default()(value).utc().format(_constants__WEBPACK_IMPORTED_MODULE_3__.DATETIME_FORMAT) : "";
+    setDueDate(value);
+    setLoading(true);
+    const {
+      success,
+      task: updatedTask
+    } = yield editTask(task.id, {
+      due_date: dueDateString
+    });
+    setLoading(false);
+    if (success && updatedTask) {
+      onEditTaskCompleted(updatedTask);
+    } else {
+      setDueDate(oldDueDate);
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-items-center wpqt-gap-2",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_datetime_picker__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      onChange: value => {
+        handleChange(value);
+      },
+      value: dueDate,
+      format: "y-MM-dd HH:mm"
+    }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_6__.Loading, {
       ovalSize: "20"
     })]
   });
@@ -20153,7 +20259,7 @@ const activePipelineReducer = (state, action) => {
         const updatedStages = (_d = state.activePipeline.stages) === null || _d === void 0 ? void 0 : _d.map(stage => {
           var _a;
           return stage.id === editedTask.stage_id ? Object.assign(Object.assign({}, stage), {
-            tasks: (_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.map(task => task.id === editedTask.id ? editedTask : task)
+            tasks: (_a = stage.tasks) === null || _a === void 0 ? void 0 : _a.map(task => task.id === editedTask.id ? Object.assign(Object.assign({}, task), editedTask) : task)
           }) : stage;
         });
         return Object.assign(Object.assign({}, state), {

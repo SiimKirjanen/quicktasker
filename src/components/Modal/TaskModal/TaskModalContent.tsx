@@ -21,7 +21,6 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
-import DateTimePicker from "react-datetime-picker";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CLOSE_TASK_MODAL,
@@ -49,6 +48,7 @@ import { LoadingOval } from "../../Loading/Loading";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 import { UploadManager } from "../../Upload/UploadManager/UploadManager";
 import { FreeForAllToggle } from "./components/FreeForAllToggle/FreeForAllToggle";
+import { TaskDueDateInput } from "./components/TaskDueDateInput/TaskDueDateInput";
 
 type Props = {
   taskModalSaving: boolean;
@@ -220,12 +220,10 @@ const TaskModalContent = forwardRef(
                 </WPQTModalField>
 
                 <WPQTModalField label={__("Due date", "quicktasker")}>
-                  <DateTimePicker
-                    onChange={(value) => {
-                      setDueDateTime(value);
-                    }}
-                    value={dueDateTime}
-                    format="y-MM-dd HH:mm"
+                  <TaskDueDateInput
+                    initialValue={taskToEdit.due_date || ""}
+                    task={taskToEdit}
+                    onEditTaskCompleted={onEditTaskCompleted}
                   />
                 </WPQTModalField>
 

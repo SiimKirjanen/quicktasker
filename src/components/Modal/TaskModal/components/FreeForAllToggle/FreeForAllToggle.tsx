@@ -22,14 +22,12 @@ function FreeForAllToggle({
     setValue(checked);
     setLoading(true);
     const { success, task: updatedTask } = await editTask(task.id, {
-      freeForAll: checked,
+      free_for_all: checked,
     });
     setLoading(false);
 
     if (success && updatedTask) {
-      onEditTaskCompleted({
-        ...updatedTask,
-      });
+      onEditTaskCompleted(updatedTask);
     } else {
       setValue(!checked);
     }

@@ -544,8 +544,23 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('START TRANSACTION');
 
                         $taskData = $data->get_json_params();
+                        $args = [];
 
-                        $task = ServiceLocator::get('TaskService')->editTask( $data['id'], $taskData);
+                        if (isset($taskData['name'])) {
+                            $args['name'] = $taskData['name'];
+                        }
+                        if (isset($taskData['description'])) {
+                            $args['description'] = $taskData['description'];
+                        }
+                        if (isset($taskData['free_for_all'])) {
+                            $args['free_for_all'] = $taskData['free_for_all'];
+                        }
+                        if (isset($taskData['due_date'])) {
+                            $args['due_date'] = $taskData['due_date'];
+                        }
+
+                        $task = ServiceLocator::get('TaskService')->editTask($data['id'], $args);
+          
                         ServiceLocator::get('LogService')->log('Task ' . $task->name . ' edited', [
                             'type' => WP_QT_LOG_TYPE_TASK,
                             'type_id' => $task->id,
@@ -582,12 +597,12 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
-                    'freeForAll' => array(
+                    'free_for_all' => array(
                         'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                     ),
-                    'dueDate' => array(
+                    'due_date' => array(
                         'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),

@@ -36,8 +36,8 @@ type TaskFromServer = BaseTask & {
 type TaskEditData = {
   name?: string;
   description?: string;
-  freeForAll?: boolean;
-  dueDate?: string;
+  free_for_all?: boolean;
+  due_date?: string;
 };
 
 enum TaskExportMethods {
