@@ -8975,15 +8975,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../types/custom-field */ "./src/types/custom-field.ts");
 /* harmony import */ var _types_upload__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../types/upload */ "./src/types/upload.ts");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
-/* harmony import */ var _CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap */ "./src/components/CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap.tsx");
-/* harmony import */ var _Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../Dialog/ConfirmTooltip/ConfirmTooltip */ "./src/components/Dialog/ConfirmTooltip/ConfirmTooltip.tsx");
-/* harmony import */ var _Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../Dropdown/TaskLabelDropdown/TaskLabelDropdown */ "./src/components/Dropdown/TaskLabelDropdown/TaskLabelDropdown.tsx");
-/* harmony import */ var _Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx");
-/* harmony import */ var _Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../../Upload/UploadManager/UploadManager */ "./src/components/Upload/UploadManager/UploadManager.tsx");
-/* harmony import */ var _components_FreeForAllToggle_FreeForAllToggle__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./components/FreeForAllToggle/FreeForAllToggle */ "./src/components/Modal/TaskModal/components/FreeForAllToggle/FreeForAllToggle.tsx");
+/* harmony import */ var _CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap */ "./src/components/CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap.tsx");
+/* harmony import */ var _Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../Dialog/ConfirmTooltip/ConfirmTooltip */ "./src/components/Dialog/ConfirmTooltip/ConfirmTooltip.tsx");
+/* harmony import */ var _Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../Dropdown/TaskLabelDropdown/TaskLabelDropdown */ "./src/components/Dropdown/TaskLabelDropdown/TaskLabelDropdown.tsx");
+/* harmony import */ var _Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx");
+/* harmony import */ var _Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../Upload/UploadManager/UploadManager */ "./src/components/Upload/UploadManager/UploadManager.tsx");
+/* harmony import */ var _components_FreeForAllToggle_FreeForAllToggle__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./components/FreeForAllToggle/FreeForAllToggle */ "./src/components/Modal/TaskModal/components/FreeForAllToggle/FreeForAllToggle.tsx");
+/* harmony import */ var _components_TaskDescriptionInput_TaskDescriptionInput__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./components/TaskDescriptionInput/TaskDescriptionInput */ "./src/components/Modal/TaskModal/components/TaskDescriptionInput/TaskDescriptionInput.tsx");
 /* harmony import */ var _components_TaskDueDateInput_TaskDueDateInput__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./components/TaskDueDateInput/TaskDueDateInput */ "./src/components/Modal/TaskModal/components/TaskDueDateInput/TaskDueDateInput.tsx");
 /* harmony import */ var _components_TaskeNameInput_TaskNameInput__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/TaskeNameInput/TaskNameInput */ "./src/components/Modal/TaskModal/components/TaskeNameInput/TaskNameInput.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -9138,15 +9138,13 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               })
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Description", "quicktasker"),
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_15__.WPQTTextarea, {
-                rowsCount: 3,
-                value: taskDescription,
-                className: "wpqt-w-full",
-                onChange: newValue => setTaskDescription(newValue)
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_TaskDescriptionInput_TaskDescriptionInput__WEBPACK_IMPORTED_MODULE_23__.TaskDescriptionInput, {
+                task: taskToEdit,
+                onEditTaskCompleted: onEditTaskCompleted
               })
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Assigned users", "quicktasker"),
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_19__.UserAssignementDropdown, {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_18__.UserAssignementDropdown, {
                 task: taskToEdit,
                 onUserAdd: user => {
                   modalDispatch({
@@ -9163,7 +9161,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               })
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Labels", "quicktasker"),
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_18__.TaskLabelDropdown, {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_17__.TaskLabelDropdown, {
                 task: Object.assign(Object.assign({}, taskToEdit), {
                   assigned_labels: assignedTaskLabels
                 }),
@@ -9175,7 +9173,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Free for all task", "quicktasker"),
               tooltipId: `free-for-all-${taskToEdit.id}-tooltip`,
               tooltipText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("When enabled, users have the ability to self-assign or unassign this task.", "quicktasker"),
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_FreeForAllToggle_FreeForAllToggle__WEBPACK_IMPORTED_MODULE_23__.FreeForAllToggle, {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_FreeForAllToggle_FreeForAllToggle__WEBPACK_IMPORTED_MODULE_22__.FreeForAllToggle, {
                 task: taskToEdit,
                 initialValue: taskToEdit.free_for_all,
                 onEditTaskCompleted: onEditTaskCompleted
@@ -9192,7 +9190,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               isCompleted: taskToEdit.is_done
             })]
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_16__.CustomFieldsInModalWrap, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_15__.CustomFieldsInModalWrap, {
               entityId: taskToEdit.id,
               entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_12__.CustomFieldEntityType.Task
             })
@@ -9205,13 +9203,13 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("File attachment", "quicktasker"),
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_22__.UploadManager, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_21__.UploadManager, {
             entityId: taskToEdit.id,
             entityType: _types_upload__WEBPACK_IMPORTED_MODULE_13__.UploadEntityType.TASK
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-mt-7 md:wpqt-pr-3",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_21__.TaskModalTabs, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_20__.TaskModalTabs, {
             task: taskToEdit
           })
         })]
@@ -9234,7 +9232,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               }
             });
           })
-        }), !isTaskArchived && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_17__.WPQTConfirmTooltip, {
+        }), !isTaskArchived && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_16__.WPQTConfirmTooltip, {
           confirmMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Are you sure you want to archive this task?", "quicktasker"),
           onConfirm: () => {
             setArchiveLoading(true);
@@ -9256,7 +9254,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             loading: archiveLoading,
             onClick: onClick
           })
-        }), isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_17__.WPQTConfirmTooltip, {
+        }), isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_16__.WPQTConfirmTooltip, {
           onConfirm: () => __awaiter(void 0, void 0, void 0, function* () {
             setIsDeletingTask(true);
             yield deleteTask(taskToEdit);
@@ -9315,7 +9313,7 @@ function TaskDoneStatus({
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
     label: isCompleted ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task completed", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task not completed", "quicktasker"),
-    children: isLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_20__.LoadingOval, {
+    children: isLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_19__.LoadingOval, {
       width: "24",
       height: "24"
     }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_29__["default"], {
@@ -9411,6 +9409,105 @@ function FreeForAllToggle({
     }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.Loading, {
       ovalSize: "20"
     })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Modal/TaskModal/components/TaskDescriptionInput/TaskDescriptionInput.tsx":
+/*!*************************************************************************************************!*\
+  !*** ./src/components/Modal/TaskModal/components/TaskDescriptionInput/TaskDescriptionInput.tsx ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TaskDescriptionInput: () => (/* binding */ TaskDescriptionInput)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
+/* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+function TaskDescriptionInput({
+  task,
+  onEditTaskCompleted
+}) {
+  const [taskDescription, setTaskDescription] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(task.description);
+  const [dirty, setDirty] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const {
+    editTask
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_3__.useTaskActions)();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (!dirty) return;
+    const timeout = setTimeout(() => {
+      setDirty(false);
+      updateValue(taskDescription);
+    }, _constants__WEBPACK_IMPORTED_MODULE_2__.TEXT_ENTER_DEBOUNCE_TIMEOUT);
+    return () => clearTimeout(timeout);
+  }, [taskDescription, dirty]);
+  const updateValue = newValue => __awaiter(this, void 0, void 0, function* () {
+    setLoading(true);
+    const {
+      success,
+      task: updatedTask
+    } = yield editTask(task.id, {
+      description: newValue
+    });
+    setLoading(false);
+    if (success && updatedTask) {
+      onEditTaskCompleted(updatedTask);
+    } else {
+      setTaskDescription(task.description);
+    }
+  });
+  const handleChange = newValue => {
+    setTaskDescription(newValue);
+    setDirty(true);
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__.WPQTTextarea, {
+    rowsCount: 3,
+    value: taskDescription,
+    className: "wpqt-w-full",
+    onChange: handleChange,
+    disabled: loading,
+    loading: loading
   });
 }
 
@@ -12189,8 +12286,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/textarea/textarea.js");
 /* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+
 
 
 
@@ -12199,14 +12298,24 @@ function WPQTTextarea({
   onChange,
   rowsCount = 3,
   colsCount,
-  className = ""
+  className = "",
+  disabled = false,
+  loading = false
 }) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.Textarea, {
-    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-border-1 wpqt-mb-3 wpqt-block wpqt-w-auto wpqt-resize-none wpqt-rounded-lg wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", `focus:wpqt-shadow-none focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`),
-    rows: rowsCount,
-    cols: colsCount,
-    value: value,
-    onChange: e => onChange(e.target.value)
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: `wpqt-relative wpqt-mb-3`,
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Textarea, {
+      className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)("wpqt-border-1 wpqt-mb-3 wpqt-block wpqt-w-auto wpqt-resize-none wpqt-rounded-lg wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6", `focus:wpqt-shadow-none focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`),
+      rows: rowsCount,
+      cols: colsCount,
+      value: value,
+      onChange: e => onChange(e.target.value),
+      disabled: disabled
+    }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_2__.LoadingOval, {
+      width: "24",
+      height: "24",
+      className: "wpqt-absolute wpqt-right-[-32px] wpqt-top-1/2 wpqt-transform-y-center"
+    })]
   });
 }
 

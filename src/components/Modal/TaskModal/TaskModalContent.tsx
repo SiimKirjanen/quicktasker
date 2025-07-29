@@ -38,7 +38,6 @@ import { CustomFieldEntityType } from "../../../types/custom-field";
 import { Label } from "../../../types/label";
 import { UploadEntityType } from "../../../types/upload";
 import { WPQTIconButton } from "../../common/Button/Button";
-import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDropdown";
@@ -47,6 +46,7 @@ import { LoadingOval } from "../../Loading/Loading";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 import { UploadManager } from "../../Upload/UploadManager/UploadManager";
 import { FreeForAllToggle } from "./components/FreeForAllToggle/FreeForAllToggle";
+import { TaskDescriptionInput } from "./components/TaskDescriptionInput/TaskDescriptionInput";
 import { TaskDueDateInput } from "./components/TaskDueDateInput/TaskDueDateInput";
 import { TaskNameInput } from "./components/TaskeNameInput/TaskNameInput";
 
@@ -161,13 +161,9 @@ const TaskModalContent = forwardRef(
                 </WPQTModalField>
 
                 <WPQTModalField label={__("Description", "quicktasker")}>
-                  <WPQTTextarea
-                    rowsCount={3}
-                    value={taskDescription}
-                    className="wpqt-w-full"
-                    onChange={(newValue: string) =>
-                      setTaskDescription(newValue)
-                    }
+                  <TaskDescriptionInput
+                    task={taskToEdit}
+                    onEditTaskCompleted={onEditTaskCompleted}
                   />
                 </WPQTModalField>
 
