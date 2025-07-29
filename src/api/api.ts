@@ -29,7 +29,7 @@ import { DeletePipelineResponse } from "../types/requestResponse/delete-pipeline
 import { PipelineOverviewResponse } from "../types/requestResponse/pipeline-overview-response";
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
-import { Task, TaskFromServer } from "../types/task";
+import { Task, TaskEditData, TaskFromServer } from "../types/task";
 import { Upload, UploadEntityType } from "../types/upload";
 import {
   ServerExtendedUser,
@@ -159,6 +159,18 @@ function editTaskRequest(task: Task): Promise<WPQTResponse<TaskFromServer>> {
       freeForAll: task.free_for_all,
       dueDate: task.due_date,
     },
+    headers: getCommonHeaders(),
+  });
+}
+
+function editTaskRequest2(
+  taskId: string,
+  data: TaskEditData,
+): Promise<WPQTResponse<TaskFromServer>> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}`,
+    method: "PATCH",
+    data,
     headers: getCommonHeaders(),
   });
 }
@@ -1007,6 +1019,7 @@ export {
   editPipelineRequest,
   editStageRequest,
   editTaskRequest,
+  editTaskRequest2,
   editUserRequest,
   getArchivedTasksRequest,
   getComments,

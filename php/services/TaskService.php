@@ -331,7 +331,7 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
          * This function takes an associative array of request parameters and maps
          * them to the corresponding database column names based on a predefined
          * mapping. If a parameter does not have a corresponding mapping, it is
-         * included in the result as-is.
+         * descarded
          *
          * @param array $args Associative array of request parameters.
          * @return array Associative array with database column names as keys.
@@ -348,8 +348,6 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
             foreach ($args as $key => $value) {
                 if (isset($mapping[$key])) {
                     $mappedArgs[$mapping[$key]] = $value;
-                } else {
-                    $mappedArgs[$key] = $value;
                 }
             }
     

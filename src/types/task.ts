@@ -33,10 +33,17 @@ type TaskFromServer = BaseTask & {
   is_done: string;
 };
 
+type TaskEditData = {
+  name?: string;
+  description?: string;
+  freeForAll?: boolean;
+  dueDate?: string;
+};
+
 enum TaskExportMethods {
   PDF = "pdf",
   CSV = "csv",
   JSON = "json",
 }
 
-export { TaskExportMethods, type Task, type TaskFromServer };
+export { TaskExportMethods, type Task, type TaskEditData, type TaskFromServer };

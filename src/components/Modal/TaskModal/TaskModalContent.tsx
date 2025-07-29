@@ -7,7 +7,7 @@ import {
 } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { Task } from "../../../types/task";
+import { Task, TaskFromServer } from "../../../types/task";
 import {
   WPQTModalField,
   WPQTModalFieldSet,
@@ -41,7 +41,6 @@ import { UploadEntityType } from "../../../types/upload";
 import { WPQTIconButton } from "../../common/Button/Button";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { Toggle } from "../../common/Toggle/Toggle";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDropdown";
@@ -49,15 +48,20 @@ import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/
 import { LoadingOval } from "../../Loading/Loading";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 import { UploadManager } from "../../Upload/UploadManager/UploadManager";
+import { FreeForAllToggle } from "./components/FreeForAllToggle/FreeForAllToggle";
 
 type Props = {
   taskModalSaving: boolean;
   editTask: (task: Task) => void;
   deleteTask: (task: Task) => Promise<void>;
+  onEditTaskCompleted: (task: TaskFromServer) => void;
 };
 
 const TaskModalContent = forwardRef(
-  ({ taskModalSaving, editTask, deleteTask }: Props, ref) => {
+  (
+    { taskModalSaving, editTask, deleteTask, onEditTaskCompleted }: Props,
+    ref,
+  ) => {
     const {
       state: { taskToEdit, taskModalSettings },
       modalDispatch,
@@ -204,13 +208,14 @@ const TaskModalContent = forwardRef(
                   label={__("Free for all task", "quicktasker")}
                   tooltipId={`free-for-all-${taskToEdit.id}-tooltip`}
                   tooltipText={__(
-                    "When enabled, all QuickTasker users have the ability to self-assign or unassign this task.",
+                    "When enabled, users have the ability to self-assign or unassign this task.",
                     "quicktasker",
                   )}
                 >
-                  <Toggle
-                    checked={freeForAllTask}
-                    handleChange={setFreeForAllTask}
+                  <FreeForAllToggle
+                    task={taskToEdit}
+                    initialValue={taskToEdit.free_for_all}
+                    onEditTaskCompleted={onEditTaskCompleted}
                   />
                 </WPQTModalField>
 

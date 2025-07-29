@@ -46,6 +46,10 @@ function TaskModal({ editTaskCallback, deleteTaskCallback }: Props) {
     }
   };
 
+  const onEditTaskCompleted = (task: TaskFromServer) => {
+    handleSuccess(PIPELINE_EDIT_TASK, task, DispatchType.ACTIVE_PIPELINE);
+  };
+
   const onDeleteTask = async (task: Task) => {
     deleteTask(task.id, () => {
       if (deleteTaskCallback) {
@@ -62,6 +66,7 @@ function TaskModal({ editTaskCallback, deleteTaskCallback }: Props) {
           editTask={editTask}
           deleteTask={onDeleteTask}
           taskModalSaving={modalSaving}
+          onEditTaskCompleted={onEditTaskCompleted}
         />
       </UploadContextProvider>
     </WPQTModal>

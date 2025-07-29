@@ -107,6 +107,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editPipelineRequest: () => (/* binding */ editPipelineRequest),
 /* harmony export */   editStageRequest: () => (/* binding */ editStageRequest),
 /* harmony export */   editTaskRequest: () => (/* binding */ editTaskRequest),
+/* harmony export */   editTaskRequest2: () => (/* binding */ editTaskRequest2),
 /* harmony export */   editUserRequest: () => (/* binding */ editUserRequest),
 /* harmony export */   getArchivedTasksRequest: () => (/* binding */ getArchivedTasksRequest),
 /* harmony export */   getComments: () => (/* binding */ getComments),
@@ -242,6 +243,14 @@ function editTaskRequest(task) {
       freeForAll: task.free_for_all,
       dueDate: task.due_date
     },
+    headers: getCommonHeaders()
+  });
+}
+function editTaskRequest2(taskId, data) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/tasks/${taskId}`,
+    method: "PATCH",
+    data,
     headers: getCommonHeaders()
   });
 }
@@ -2057,7 +2066,8 @@ function TextCustomField({
       value: value,
       onChange: handleChange,
       disabled: disabled,
-      wrapperClassName: "!wpqt-mb-0"
+      wrapperClassName: "!wpqt-mb-0",
+      "data-testid": "text-custom-field"
     })]
   });
 }
@@ -8903,6 +8913,9 @@ function TaskModal({
       handleError(error);
     }
   });
+  const onEditTaskCompleted = task => {
+    handleSuccess(_constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_EDIT_TASK, task, _hooks_useModal__WEBPACK_IMPORTED_MODULE_5__.DispatchType.ACTIVE_PIPELINE);
+  };
   const onDeleteTask = task => __awaiter(this, void 0, void 0, function* () {
     deleteTask(task.id, () => {
       if (deleteTaskCallback) {
@@ -8919,7 +8932,8 @@ function TaskModal({
         ref: modalContentRef,
         editTask: editTask,
         deleteTask: onDeleteTask,
-        taskModalSaving: modalSaving
+        taskModalSaving: modalSaving,
+        onEditTaskCompleted: onEditTaskCompleted
       })
     })
   });
@@ -8964,14 +8978,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
-/* harmony import */ var _common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../common/Toggle/Toggle */ "./src/components/common/Toggle/Toggle.tsx");
-/* harmony import */ var _CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap */ "./src/components/CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap.tsx");
-/* harmony import */ var _Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../Dialog/ConfirmTooltip/ConfirmTooltip */ "./src/components/Dialog/ConfirmTooltip/ConfirmTooltip.tsx");
-/* harmony import */ var _Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../Dropdown/TaskLabelDropdown/TaskLabelDropdown */ "./src/components/Dropdown/TaskLabelDropdown/TaskLabelDropdown.tsx");
-/* harmony import */ var _Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx");
-/* harmony import */ var _Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../../Upload/UploadManager/UploadManager */ "./src/components/Upload/UploadManager/UploadManager.tsx");
+/* harmony import */ var _CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap */ "./src/components/CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap.tsx");
+/* harmony import */ var _Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../Dialog/ConfirmTooltip/ConfirmTooltip */ "./src/components/Dialog/ConfirmTooltip/ConfirmTooltip.tsx");
+/* harmony import */ var _Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../Dropdown/TaskLabelDropdown/TaskLabelDropdown */ "./src/components/Dropdown/TaskLabelDropdown/TaskLabelDropdown.tsx");
+/* harmony import */ var _Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../Dropdown/UserAssignementDropdown/UserAssignementDropdown */ "./src/components/Dropdown/UserAssignementDropdown/UserAssignementDropdown.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs */ "./src/components/Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs.tsx");
+/* harmony import */ var _Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../../Upload/UploadManager/UploadManager */ "./src/components/Upload/UploadManager/UploadManager.tsx");
+/* harmony import */ var _components_FreeForAllToggle_FreeForAllToggle__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./components/FreeForAllToggle/FreeForAllToggle */ "./src/components/Modal/TaskModal/components/FreeForAllToggle/FreeForAllToggle.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9029,7 +9043,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(({
   taskModalSaving,
   editTask,
-  deleteTask
+  deleteTask,
+  onEditTaskCompleted
 }, ref) => {
   const {
     state: {
@@ -9134,7 +9149,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               })
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Assigned users", "quicktasker"),
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_21__.UserAssignementDropdown, {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_UserAssignementDropdown_UserAssignementDropdown__WEBPACK_IMPORTED_MODULE_20__.UserAssignementDropdown, {
                 task: taskToEdit,
                 onUserAdd: user => {
                   modalDispatch({
@@ -9151,7 +9166,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               })
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Labels", "quicktasker"),
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_20__.TaskLabelDropdown, {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dropdown_TaskLabelDropdown_TaskLabelDropdown__WEBPACK_IMPORTED_MODULE_19__.TaskLabelDropdown, {
                 task: Object.assign(Object.assign({}, taskToEdit), {
                   assigned_labels: assignedTaskLabels
                 }),
@@ -9162,10 +9177,11 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Free for all task", "quicktasker"),
               tooltipId: `free-for-all-${taskToEdit.id}-tooltip`,
-              tooltipText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("When enabled, all QuickTasker users have the ability to self-assign or unassign this task.", "quicktasker"),
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_17__.Toggle, {
-                checked: freeForAllTask,
-                handleChange: setFreeForAllTask
+              tooltipText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("When enabled, users have the ability to self-assign or unassign this task.", "quicktasker"),
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_FreeForAllToggle_FreeForAllToggle__WEBPACK_IMPORTED_MODULE_24__.FreeForAllToggle, {
+                task: taskToEdit,
+                initialValue: taskToEdit.free_for_all,
+                onEditTaskCompleted: onEditTaskCompleted
               })
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
               label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Due date", "quicktasker"),
@@ -9181,7 +9197,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               isCompleted: taskToEdit.is_done
             })]
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_18__.CustomFieldsInModalWrap, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_17__.CustomFieldsInModalWrap, {
               entityId: taskToEdit.id,
               entityType: _types_custom_field__WEBPACK_IMPORTED_MODULE_12__.CustomFieldEntityType.Task
             })
@@ -9194,13 +9210,13 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("File attachment", "quicktasker"),
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_24__.UploadManager, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Upload_UploadManager_UploadManager__WEBPACK_IMPORTED_MODULE_23__.UploadManager, {
             entityId: taskToEdit.id,
             entityType: _types_upload__WEBPACK_IMPORTED_MODULE_13__.UploadEntityType.TASK
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-mt-7 md:wpqt-pr-3",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_23__.TaskModalTabs, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Tab_CommentsAndLogs_TaskModalTabs_TaskModalTabs__WEBPACK_IMPORTED_MODULE_22__.TaskModalTabs, {
             task: taskToEdit
           })
         })]
@@ -9223,7 +9239,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
               }
             });
           })
-        }), !isTaskArchived && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_19__.WPQTConfirmTooltip, {
+        }), !isTaskArchived && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_18__.WPQTConfirmTooltip, {
           confirmMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Are you sure you want to archive this task?", "quicktasker"),
           onConfirm: () => {
             setArchiveLoading(true);
@@ -9245,7 +9261,7 @@ const TaskModalContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forw
             loading: archiveLoading,
             onClick: onClick
           })
-        }), isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_19__.WPQTConfirmTooltip, {
+        }), isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_18__.WPQTConfirmTooltip, {
           onConfirm: () => __awaiter(void 0, void 0, void 0, function* () {
             setIsDeletingTask(true);
             yield deleteTask(taskToEdit);
@@ -9304,13 +9320,102 @@ function TaskDoneStatus({
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_4__.WPQTModalField, {
     label: isCompleted ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task completed", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Task not completed", "quicktasker"),
-    children: isLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_22__.LoadingOval, {
+    children: isLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_21__.LoadingOval, {
       width: "24",
       height: "24"
     }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_29__["default"], {
       onClick: toggleTaskDontStatus,
       className: `wpqt-size-6 ${isCompleted ? "wpqt-icon-green" : "wpqt-text-gray-300"} wpqt-cursor-pointer`
     })
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Modal/TaskModal/components/FreeForAllToggle/FreeForAllToggle.tsx":
+/*!*****************************************************************************************!*\
+  !*** ./src/components/Modal/TaskModal/components/FreeForAllToggle/FreeForAllToggle.tsx ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FreeForAllToggle: () => (/* binding */ FreeForAllToggle)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../hooks/actions/useTaskActions */ "./src/hooks/actions/useTaskActions.ts");
+/* harmony import */ var _common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../common/Toggle/Toggle */ "./src/components/common/Toggle/Toggle.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+function FreeForAllToggle({
+  initialValue,
+  task,
+  onEditTaskCompleted
+}) {
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [value, setValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(initialValue);
+  const {
+    editTask
+  } = (0,_hooks_actions_useTaskActions__WEBPACK_IMPORTED_MODULE_2__.useTaskActions)();
+  const handleChange = checked => __awaiter(this, void 0, void 0, function* () {
+    setValue(checked);
+    setLoading(true);
+    const {
+      success,
+      task: updatedTask
+    } = yield editTask(task.id, {
+      freeForAll: checked
+    });
+    setLoading(false);
+    if (success && updatedTask) {
+      onEditTaskCompleted(Object.assign({}, updatedTask));
+    } else {
+      setValue(!checked);
+    }
+  });
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-flex wpqt-items-center wpqt-gap-2",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_3__.Toggle, {
+      checked: value,
+      handleChange: handleChange
+    }), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_4__.Loading, {
+      ovalSize: "20"
+    })]
   });
 }
 
@@ -13354,7 +13459,24 @@ const useTaskActions = () => {
       };
     }
   });
+  const editTask = (taskId, data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+      const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.editTaskRequest2)(taskId, data);
+      return {
+        success: true,
+        task: response.data
+      };
+    } catch (error) {
+      console.error(error);
+      react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to update task", "quicktasker"));
+      return {
+        success: false,
+        task: null
+      };
+    }
+  });
   return {
+    editTask,
     deleteTask,
     archiveTask,
     restoreArchivedTask,
