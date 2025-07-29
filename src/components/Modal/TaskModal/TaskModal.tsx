@@ -22,7 +22,6 @@ function TaskModal({ editTaskCallback, deleteTaskCallback }: Props) {
   const {
     modalSaving,
     setModalSaving,
-    modalContentRef,
     closeModal,
     handleSuccess,
     handleError,
@@ -62,7 +61,6 @@ function TaskModal({ editTaskCallback, deleteTaskCallback }: Props) {
     <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal} size="xl">
       <UploadContextProvider>
         <TaskModalContent
-          ref={modalContentRef}
           editTask={editTask}
           deleteTask={onDeleteTask}
           taskModalSaving={modalSaving}

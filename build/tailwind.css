@@ -1802,6 +1802,10 @@
   gap: 0.375rem;
 }
 
+.wpqt-gap-10 {
+  gap: 2.5rem;
+}
+
 .wpqt-gap-2 {
   gap: 0.5rem;
 }
@@ -1828,10 +1832,6 @@
 
 .wpqt-gap-\[24px\] {
   gap: 24px;
-}
-
-.wpqt-gap-10 {
-  gap: 2.5rem;
 }
 
 .wpqt-gap-y-1 {
