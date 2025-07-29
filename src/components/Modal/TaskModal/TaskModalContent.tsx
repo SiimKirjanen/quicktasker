@@ -38,7 +38,6 @@ import { CustomFieldEntityType } from "../../../types/custom-field";
 import { Label } from "../../../types/label";
 import { UploadEntityType } from "../../../types/upload";
 import { WPQTIconButton } from "../../common/Button/Button";
-import { WPQTInput } from "../../common/Input/Input";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
@@ -49,6 +48,7 @@ import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModal
 import { UploadManager } from "../../Upload/UploadManager/UploadManager";
 import { FreeForAllToggle } from "./components/FreeForAllToggle/FreeForAllToggle";
 import { TaskDueDateInput } from "./components/TaskDueDateInput/TaskDueDateInput";
+import { TaskNameInput } from "./components/TaskeNameInput/TaskNameInput";
 
 type Props = {
   taskModalSaving: boolean;
@@ -150,16 +150,13 @@ const TaskModalContent = forwardRef(
     return (
       <>
         <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
-          <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
-            <div className="wpqt-mb-2 wpqt-grid wpqt-grid-cols-1 wpqt-gap-6 md:wpqt-grid-cols-[1fr_0.7fr]">
+          <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-6">
+            <div className="wpqt-mb-2 wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 md:wpqt-grid-cols-[1fr_0.7fr]">
               <WPQTModalFieldSet>
                 <WPQTModalField label={__("Name", "quicktasker")}>
-                  <WPQTInput
-                    isAutoFocus={true}
-                    value={taskName}
-                    onChange={(newValue: string) => setTaskName(newValue)}
-                    wrapperClassName="wpqt-w-full"
-                    className="wpqt-w-full"
+                  <TaskNameInput
+                    task={taskToEdit}
+                    onEditTaskCompleted={onEditTaskCompleted}
                   />
                 </WPQTModalField>
 

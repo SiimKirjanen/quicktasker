@@ -1830,6 +1830,10 @@
   gap: 24px;
 }
 
+.wpqt-gap-10 {
+  gap: 2.5rem;
+}
+
 .wpqt-gap-y-1 {
   row-gap: 0.25rem;
 }
@@ -2776,6 +2780,10 @@
 
   .md\:wpqt-pr-3 {
     padding-right: 0.75rem;
+  }
+
+  .md\:wpqt-pr-6 {
+    padding-right: 1.5rem;
   }
 }
 
