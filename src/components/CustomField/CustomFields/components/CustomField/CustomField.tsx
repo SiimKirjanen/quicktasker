@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { DELETE_CUSTOM_FIELD } from "../../../../../constants";
 import { useCustomFieldActions } from "../../../../../hooks/actions/useCustomFieldActions";
 import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
@@ -7,15 +7,15 @@ import {
   CustomFieldEntityType,
   CustomFieldType,
 } from "../../../../../types/custom-field";
-import { WPQTInput } from "../../../../common/Input/Input";
 import { CustomFieldActions } from "../CustomFieldActions/CustomFieldActions";
+import { CheckboxCustomField } from "./CheckboxCustomField";
+import { TextCustomField } from "./TextCustomField";
 
 type Props = {
   data: CustomField;
 };
 
 function CustomField({ data }: Props) {
-  const [value, setValue] = useState("");
   const {
     state: { entityType, entityId },
     customFieldsDispatch,
@@ -26,45 +26,26 @@ function CustomField({ data }: Props) {
     updateCustomFieldDefaultValue,
   } = useCustomFieldActions();
   const [actionLoading, setActionLoading] = useState(false);
+
   const allowCustomFieldValueUpdate =
     entityType === CustomFieldEntityType.QUICKTASKER ||
     entityType === CustomFieldEntityType.Task;
   const allowCustomFieldDefaultValueUpdate =
+    entityType === CustomFieldEntityType.Users ||
     entityType === CustomFieldEntityType.Pipeline;
 
-  useEffect(() => {
-    if (data.value) {
-      setValue(data.value);
-    } else if (data.default_value) {
-      setValue(data.default_value);
-    }
-  }, [data.value, data.default_value]);
-
-  const handleSave = async () => {
+  const handleSave = async (newValue: string) => {
     if (allowCustomFieldValueUpdate) {
-      await handleCustomFieldValueUpdate();
+      setActionLoading(true);
+      await updateCustomFieldValue(data.id, newValue, entityId, entityType);
+      setActionLoading(false);
     } else if (allowCustomFieldDefaultValueUpdate) {
-      await handleCustomFieldDefaultValueUpdate();
+      setActionLoading(true);
+      await updateCustomFieldDefaultValue(data.id, newValue);
+      setActionLoading(false);
     } else {
       console.error("Invalid entity type for saving custom field value");
     }
-  };
-
-  const handleCustomFieldValueUpdate = async () => {
-    if (allowCustomFieldValueUpdate === false) {
-      return;
-    }
-    setActionLoading(true);
-    await updateCustomFieldValue(data.id, value, entityId, entityType);
-    setActionLoading(false);
-  };
-  const handleCustomFieldDefaultValueUpdate = async () => {
-    if (allowCustomFieldDefaultValueUpdate === false) {
-      return;
-    }
-    setActionLoading(true);
-    await updateCustomFieldDefaultValue(data.id, value);
-    setActionLoading(false);
   };
 
   const handleDelete = async () => {
@@ -76,87 +57,46 @@ function CustomField({ data }: Props) {
   };
 
   let customFieldElement;
+  const initialValue = data.value ?? data.default_value ?? "";
+  const allowInputChange =
+    allowCustomFieldValueUpdate || allowCustomFieldDefaultValueUpdate;
 
   switch (data.type) {
     case CustomFieldType.Text: {
       customFieldElement = (
-        <TextCustomField data={data} value={value} onChange={setValue} />
+        <TextCustomField
+          data={data}
+          initialValue={initialValue}
+          onChange={handleSave}
+          disabled={actionLoading || !allowInputChange}
+        />
       );
       break;
     }
     case CustomFieldType.Checkbox: {
       customFieldElement = (
-        <CheckboxCustomField data={data} value={value} onChange={setValue} />
+        <CheckboxCustomField
+          data={data}
+          initialValue={initialValue}
+          onChange={handleSave}
+          disabled={actionLoading || !allowCustomFieldValueUpdate}
+        />
       );
       break;
     }
   }
 
   return (
-    <>
-      <div></div>
+    <div className="wpqt-flex wpqt-gap-2 wpqt-py-4 wpqt-items-center wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-gray-200">
       {customFieldElement}
       <CustomFieldActions
         data={data}
         locationOfCustomFields={entityType}
-        onSave={handleSave}
         onDelete={handleDelete}
         actionLoading={actionLoading}
       />
-    </>
-  );
-}
-
-type TextCustomFieldProps = {
-  value: string;
-  onChange: (value: string) => void;
-  data: CustomField;
-};
-function TextCustomField({ data, value, onChange }: TextCustomFieldProps) {
-  return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center">
-      <CustomFieldTitle name={data.name} description={data.description} />
-      <WPQTInput value={value} onChange={onChange} />
     </div>
   );
 }
 
-type CheckboxCustomFieldProps = {
-  value: string;
-  onChange: (value: string) => void;
-  data: CustomField;
-};
-function CheckboxCustomField({
-  data,
-  value,
-  onChange,
-}: CheckboxCustomFieldProps) {
-  return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center">
-      <CustomFieldTitle name={data.name} description={data.description} />
-      <input
-        type="checkbox"
-        checked={value === "true"}
-        className="!wpqt-block"
-        onChange={(e) => onChange(e.target.checked ? "true" : "false")}
-      />
-    </div>
-  );
-}
-
-type CustomFieldTitleProps = {
-  name: string;
-  description: string | null;
-};
-function CustomFieldTitle({ name, description = "" }: CustomFieldTitleProps) {
-  return (
-    <>
-      <div className="wpqt-mb-1 wpqt-text-base wpqt-font-semibold">{name}</div>
-      {description && (
-        <div className="wpqt-mb-2 wpqt-italic">{description}</div>
-      )}
-    </>
-  );
-}
-
-export { CustomField, CustomFieldTitle };
+export { CustomField };

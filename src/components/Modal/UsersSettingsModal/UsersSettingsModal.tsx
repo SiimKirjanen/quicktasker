@@ -16,7 +16,7 @@ function UsersSettingsModal() {
       closeModal={() =>
         modalDispatch({ type: CHANGE_USER_SETTINGS_MODAL_OPEN, payload: false })
       }
-      size="lg"
+      size="md"
     >
       <div>
         <CustomFieldsInModalWrap

@@ -6,23 +6,17 @@ import {
   CustomField,
   CustomFieldEntityType,
 } from "../../../../../types/custom-field";
-import {
-  ButtonStyleType,
-  WPQTButton,
-  WPQTIconButton,
-} from "../../../../common/Button/Button";
+import { WPQTIconButton } from "../../../../common/Button/Button";
 import { Loading } from "../../../../Loading/Loading";
 
 type CustomFieldActionsProps = {
   data: CustomField;
   locationOfCustomFields: CustomFieldEntityType | null;
-  onSave: () => void;
   onDelete: () => void;
   actionLoading: boolean;
 };
 function CustomFieldActions({
   data,
-  onSave,
   locationOfCustomFields,
   onDelete,
   actionLoading,
@@ -31,10 +25,6 @@ function CustomFieldActions({
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
   const isAllowedToDelete = data.entity_type === locationOfCustomFields;
-  const isAllowedToSave =
-    locationOfCustomFields === CustomFieldEntityType.Task ||
-    locationOfCustomFields === CustomFieldEntityType.Pipeline ||
-    locationOfCustomFields === CustomFieldEntityType.QUICKTASKER;
   const entityTypeDisplay =
     data.entity_type === CustomFieldEntityType.Pipeline
       ? "board"
@@ -48,18 +38,11 @@ function CustomFieldActions({
   };
 
   if (actionLoading) {
-    return <Loading ovalSize="24" />;
+    return <Loading ovalSize="24" className="wpqt-ml-auto" />;
   }
 
   return (
-    <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2">
-      {isAllowedToSave && (
-        <WPQTButton
-          onClick={onSave}
-          btnText={__("Save", "quicktasker")}
-          buttonStyleType={ButtonStyleType.SECONDARY}
-        />
-      )}
+    <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-ml-auto">
       {isUserAllowedToDelete && (
         <WPQTIconButton
           onClick={handleDelete}

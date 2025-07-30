@@ -21,7 +21,7 @@ import { LogFromServer } from "../types/log";
 import { PipelineOverviewFilter } from "../types/overview";
 import {
   FullPipelineDataFromServer,
-  Pipeline,
+  PipelineEditData,
   PipelineFromServer,
 } from "../types/pipeline";
 import { PipelineSettingsFromServer } from "../types/pipeline-settings";
@@ -29,12 +29,12 @@ import { DeletePipelineResponse } from "../types/requestResponse/delete-pipeline
 import { PipelineOverviewResponse } from "../types/requestResponse/pipeline-overview-response";
 import { WPQTResponse } from "../types/response";
 import { Stage, StageChangeDirection, StageFromServer } from "../types/stage";
-import { Task, TaskFromServer } from "../types/task";
+import { Task, TaskEditData, TaskFromServer } from "../types/task";
 import { Upload, UploadEntityType } from "../types/upload";
 import {
   ServerExtendedUser,
   ServerUser,
-  User,
+  UserEditData,
   UserTypes,
   WPUser,
 } from "../types/user";
@@ -75,16 +75,13 @@ function createPipelineRequest(
 }
 
 function editPipelineRequest(
-  pipeline: Pipeline,
+  pipelineId: string,
+  data: PipelineEditData,
 ): Promise<WPQTResponse<PipelineFromServer>> {
   return apiFetch({
-    path: `/wpqt/v1/pipelines/${pipeline.id}`,
+    path: `/wpqt/v1/pipelines/${pipelineId}`,
     method: "PATCH",
-    data: {
-      name: pipeline.name,
-      description: pipeline.description,
-      is_primary: pipeline.is_primary,
-    },
+    data,
     headers: getCommonHeaders(),
   });
 }
@@ -159,6 +156,18 @@ function editTaskRequest(task: Task): Promise<WPQTResponse<TaskFromServer>> {
       freeForAll: task.free_for_all,
       dueDate: task.due_date,
     },
+    headers: getCommonHeaders(),
+  });
+}
+
+function editTaskRequest2(
+  taskId: string,
+  data: TaskEditData,
+): Promise<WPQTResponse<TaskFromServer>> {
+  return apiFetch({
+    path: `/wpqt/v1/tasks/${taskId}`,
+    method: "PATCH",
+    data,
     headers: getCommonHeaders(),
   });
 }
@@ -440,11 +449,14 @@ function createUserRequest(
   });
 }
 
-function editUserRequest(user: User): Promise<WPQTResponse<ServerUser>> {
+function editUserRequest(
+  userId: string,
+  data: UserEditData,
+): Promise<WPQTResponse<ServerUser>> {
   return apiFetch({
-    path: `/wpqt/v1/users/${user.id}`,
+    path: `/wpqt/v1/users/${userId}`,
     method: "PATCH",
-    data: { user },
+    data,
     headers: getCommonHeaders(),
   });
 }
@@ -1007,6 +1019,7 @@ export {
   editPipelineRequest,
   editStageRequest,
   editTaskRequest,
+  editTaskRequest2,
   editUserRequest,
   getArchivedTasksRequest,
   getComments,

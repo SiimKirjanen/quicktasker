@@ -5,13 +5,7 @@ import {
   TrashIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import {
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "@wordpress/element";
+import { useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
   CLOSE_USER_MODAL,
@@ -25,27 +19,19 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
-import { User } from "../../../types/user";
+import { ServerUser } from "../../../types/user";
 import { WPQTIconButton } from "../../common/Button/Button";
-import { WPQTInput } from "../../common/Input/Input";
-import { WPQTTextarea } from "../../common/TextArea/TextArea";
+import { AutoSaveInput } from "../../common/Input/AutoSaveInput/AutoSaveInput";
+import { AutoSaveTextarea } from "../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
-import {
-  WPQTModalField,
-  WPQTModalFieldSet,
-  WPQTModalFooter,
-} from "../WPQTModal";
-type Props = {
-  editUser: (user: User) => void;
-  modalSaving: boolean;
-};
+import { WPQTModalField, WPQTModalFieldSet } from "../WPQTModal";
 
-const UserModalContent = forwardRef(function UserModalContent(
-  { modalSaving, editUser }: Props,
-  ref,
-) {
+type Props = {
+  onEditUserCompleted: (user: ServerUser) => void;
+};
+const UserModalContent = ({ onEditUserCompleted }: Props) => {
   const {
     state: { userToEdit },
     modalDispatch,
@@ -53,11 +39,10 @@ const UserModalContent = forwardRef(function UserModalContent(
   const {
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
-  const [userName, setUserName] = useState("");
-  const [userDescription, setUserDescription] = useState("");
   const [isActiveUser, setIsActiveUser] = useState(false);
   const [hasPassword, setHasPassword] = useState(false);
-  const { changeUserStatus, deleteUser, resetUserPassword } = useUserActions();
+  const { changeUserStatus, deleteUser, resetUserPassword, editUser } =
+    useUserActions();
   const { userDispatch } = useContext(UserContext);
   const {
     loading1: isResetPWLoading,
@@ -70,56 +55,51 @@ const UserModalContent = forwardRef(function UserModalContent(
 
   useEffect(() => {
     if (userToEdit) {
-      setUserName(userToEdit.name);
-      setUserDescription(userToEdit.description);
       setIsActiveUser(userToEdit.is_active);
       setHasPassword(userToEdit.has_password);
     }
   }, [userToEdit]);
-
-  const clearContent = () => {
-    setUserName("");
-    setUserDescription("");
-  };
-
-  const saveUser = () => {
-    if (userToEdit) {
-      editUser({
-        ...userToEdit,
-        name: userName,
-        description: userDescription,
-      });
-    }
-  };
-
-  useImperativeHandle(ref, () => ({
-    clearContent,
-  }));
 
   if (!userToEdit) return null;
 
   return (
     <>
       <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
-        <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-3">
-          <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-3 md:wpqt-grid-cols-[auto_1fr]">
+        <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-6">
+          <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 md:wpqt-grid-cols-[1fr_0.7fr]">
             <div>
               <WPQTModalFieldSet>
                 <WPQTModalField label={__("Name", "quicktasker")}>
-                  <WPQTInput
+                  <AutoSaveInput
                     isAutoFocus={true}
-                    value={userName}
-                    onChange={(newValue: string) => setUserName(newValue)}
+                    value={userToEdit.name}
+                    wrapperClassName="wpqt-w-full"
+                    className="wpqt-w-full"
+                    onChange={async (value) => {
+                      const { success, user: updatedUser } = await editUser(
+                        userToEdit.id,
+                        { name: value },
+                      );
+                      if (success && updatedUser) {
+                        onEditUserCompleted(updatedUser);
+                      }
+                    }}
                   />
                 </WPQTModalField>
 
                 <WPQTModalField label={__("Description", "quicktasker")}>
-                  <WPQTTextarea
-                    rowsCount={3}
-                    value={userDescription}
-                    onChange={(newValue: string) =>
-                      setUserDescription(newValue)
-                    }
+                  <AutoSaveTextarea
+                    value={userToEdit.description}
+                    className="wpqt-w-full"
+                    onChange={async (value) => {
+                      const { success, user: updatedUser } = await editUser(
+                        userToEdit.id,
+                        { description: value },
+                      );
+                      if (success && updatedUser) {
+                        onEditUserCompleted(updatedUser);
+                      }
+                    }}
                   />
                 </WPQTModalField>
               </WPQTModalFieldSet>
@@ -129,16 +109,6 @@ const UserModalContent = forwardRef(function UserModalContent(
               entityType={CustomFieldEntityType.QUICKTASKER}
             />
           </div>
-
-          <WPQTModalFooter
-            onSave={saveUser}
-            saveBtnText={
-              modalSaving
-                ? __("Saving...", "quicktasker")
-                : __("Save", "quicktasker")
-            }
-          />
-
           <div className="wpqt-mt-7">
             <UserModalTabs user={userToEdit} />
           </div>
@@ -254,6 +224,6 @@ const UserModalContent = forwardRef(function UserModalContent(
       </div>
     </>
   );
-});
+};
 
 export { UserModalContent };

@@ -165,10 +165,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $pipelineService = new PipelineService();
                         $logService = new LogService();
-                        $pipeline = $pipelineService->editPipeline($data['id'], array(
-                            "name" => $data['name'],
-                            "description" => $data['description']
-                        ));
+
+                        $pipelineData = $data->get_json_params();
+                        $args = [];
+
+                        if (isset($pipelineData['name'])) {
+                            $args['name'] = $pipelineData['name'];
+                        }
+                        if (isset($pipelineData['description'])) {
+                            $args['description'] = $pipelineData['description'];
+                        }
+
+                        $pipeline = $pipelineService->editPipeline($data['id'], $args);
+
                         $logService->log('Board ' . $pipeline->name . ' edited', [
                             'type' => WP_QT_LOG_TYPE_PIPELINE,
                             'type_id' => $pipeline->id,
@@ -196,7 +205,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
                     'name' => array(
-                        'required' => true,
+                        'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
@@ -544,8 +553,23 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $wpdb->query('START TRANSACTION');
 
                         $taskData = $data->get_json_params();
+                        $args = [];
 
-                        $task = ServiceLocator::get('TaskService')->editTask( $data['id'], $taskData);
+                        if (isset($taskData['name'])) {
+                            $args['name'] = $taskData['name'];
+                        }
+                        if (isset($taskData['description'])) {
+                            $args['description'] = $taskData['description'];
+                        }
+                        if (isset($taskData['free_for_all'])) {
+                            $args['free_for_all'] = $taskData['free_for_all'];
+                        }
+                        if (isset($taskData['due_date'])) {
+                            $args['due_date'] = $taskData['due_date'];
+                        }
+
+                        $task = ServiceLocator::get('TaskService')->editTask($data['id'], $args);
+          
                         ServiceLocator::get('LogService')->log('Task ' . $task->name . ' edited', [
                             'type' => WP_QT_LOG_TYPE_TASK,
                             'type_id' => $task->id,
@@ -582,12 +606,12 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
-                    'freeForAll' => array(
+                    'free_for_all' => array(
                         'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
                     ),
-                    'dueDate' => array(
+                    'due_date' => array(
                         'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
@@ -1450,7 +1474,18 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $userService = new UserService();
                         $logService = new LogService();
 
-                        $user = $userService->editUser($data['id'], $data->get_param('user'));
+                        $userUpdateData = $data->get_json_params();
+                        $args = [];
+
+                        if (isset($userUpdateData['name'])) {
+                            $args['name'] = $userUpdateData['name'];
+                        }
+                        if (isset($userUpdateData['description'])) {
+                            $args['description'] = $userUpdateData['description'];
+                        }
+
+                        $user = $userService->editUser($data['id'], $args);
+
                         $logService->log('User ' . $user->name . ' edited', [
                             'type' => WP_QT_LOG_TYPE_USER,
                             'type_id' => $user->id,
@@ -1476,6 +1511,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                      'name' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'description' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
             ),

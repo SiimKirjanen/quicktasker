@@ -157,7 +157,7 @@ const activePipelineReducer = (state: State, action: Action) => {
           ? {
               ...stage,
               tasks: stage.tasks?.map((task) =>
-                task.id === editedTask.id ? editedTask : task,
+                task.id === editedTask.id ? { ...task, ...editedTask } : task,
               ),
             }
           : stage,

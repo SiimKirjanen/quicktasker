@@ -4,12 +4,14 @@ import {
   archiveTaskRequest,
   cleanArchiveTasksRequest,
   deleteTaskRequest,
+  editTaskRequest2,
   markTaskDoneRequest,
   moveTaskRequest,
   removeTaskFromUserRequest,
   restoreArchivedTaskRequest,
   updateTaskFocusColorRequest,
 } from "../../api/api";
+import { TaskEditData } from "../../types/task";
 import { UserTypes } from "../../types/user";
 import { useErrorHandler } from "../useErrorHandler";
 import { useAutomationActions } from "./useAutomationActions";
@@ -212,7 +214,27 @@ const useTaskActions = () => {
     }
   };
 
+  const editTask = async (taskId: string, data: TaskEditData) => {
+    try {
+      const response = await editTaskRequest2(taskId, data);
+
+      return {
+        success: true,
+        task: response.data,
+      };
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to update task", "quicktasker"));
+
+      return {
+        success: false,
+        task: null,
+      };
+    }
+  };
+
   return {
+    editTask,
     deleteTask,
     archiveTask,
     restoreArchivedTask,
