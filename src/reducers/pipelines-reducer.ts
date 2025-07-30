@@ -78,7 +78,9 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         pipelines: state.pipelines.map((p) =>
-          p.id === pipeline.id ? pipeline : p,
+          p.id === pipeline.id
+            ? { ...p, name: pipeline.name, description: pipeline.description }
+            : p,
         ),
       };
     }

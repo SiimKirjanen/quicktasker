@@ -165,10 +165,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $pipelineService = new PipelineService();
                         $logService = new LogService();
-                        $pipeline = $pipelineService->editPipeline($data['id'], array(
-                            "name" => $data['name'],
-                            "description" => $data['description']
-                        ));
+
+                        $pipelineData = $data->get_json_params();
+                        $args = [];
+
+                        if (isset($pipelineData['name'])) {
+                            $args['name'] = $pipelineData['name'];
+                        }
+                        if (isset($pipelineData['description'])) {
+                            $args['description'] = $pipelineData['description'];
+                        }
+
+                        $pipeline = $pipelineService->editPipeline($data['id'], $args);
+
                         $logService->log('Board ' . $pipeline->name . ' edited', [
                             'type' => WP_QT_LOG_TYPE_PIPELINE,
                             'type_id' => $pipeline->id,
@@ -196,7 +205,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
                     'name' => array(
-                        'required' => true,
+                        'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),

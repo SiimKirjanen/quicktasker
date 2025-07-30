@@ -21,7 +21,7 @@ import { LogFromServer } from "../types/log";
 import { PipelineOverviewFilter } from "../types/overview";
 import {
   FullPipelineDataFromServer,
-  Pipeline,
+  PipelineEditData,
   PipelineFromServer,
 } from "../types/pipeline";
 import { PipelineSettingsFromServer } from "../types/pipeline-settings";
@@ -75,16 +75,13 @@ function createPipelineRequest(
 }
 
 function editPipelineRequest(
-  pipeline: Pipeline,
+  pipelineId: string,
+  data: PipelineEditData,
 ): Promise<WPQTResponse<PipelineFromServer>> {
   return apiFetch({
-    path: `/wpqt/v1/pipelines/${pipeline.id}`,
+    path: `/wpqt/v1/pipelines/${pipelineId}`,
     method: "PATCH",
-    data: {
-      name: pipeline.name,
-      description: pipeline.description,
-      is_primary: pipeline.is_primary,
-    },
+    data,
     headers: getCommonHeaders(),
   });
 }

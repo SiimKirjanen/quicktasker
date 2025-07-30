@@ -5,7 +5,7 @@ import {
   deletePipelineRequest,
   editPipelineRequest,
 } from "../../api/api";
-import { Pipeline, PipelineFromServer } from "../../types/pipeline";
+import { PipelineEditData, PipelineFromServer } from "../../types/pipeline";
 
 function usePipelineActions() {
   const addPipeline = async (
@@ -31,22 +31,22 @@ function usePipelineActions() {
     }
   };
 
-  const editPipeline = async (
-    pipeline: Pipeline,
-    successCallback?: (pipeline: PipelineFromServer) => void,
-    errorCallback?: (error: unknown) => void,
-  ) => {
+  const editPipeline = async (pipelineId: string, data: PipelineEditData) => {
     try {
-      const response = await editPipelineRequest(pipeline);
+      const response = await editPipelineRequest(pipelineId, data);
       toast.success(__("Board updated successfully", "quicktasker"));
-      if (successCallback) {
-        successCallback(response.data);
-      }
+
+      return {
+        success: true,
+        pipeline: response.data,
+      };
     } catch (error) {
       toast.error(__("Failed to update board", "quicktasker"));
-      if (errorCallback) {
-        errorCallback(error);
-      }
+
+      return {
+        success: false,
+        error,
+      };
     }
   };
 

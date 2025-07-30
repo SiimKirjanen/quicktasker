@@ -54,7 +54,6 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
          *
          * @param int $pipelineId The ID of the pipeline to edit.
          * @param array $args The arguments for editing the pipeline.
-         *   - name (string|null) The name of the pipeline.
          * @return Pipeline The edited pipeline.
          * @throws Exception If required fields are missing or if editing the pipeline fails.
          */
@@ -62,20 +61,12 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
             global $wpdb;
 
             $defaults = array(
-                'name' => null
+                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
             );
 
             $args = wp_parse_args($args, $defaults);
 
-            if (empty($args['name'])) {
-                throw new \Exception('Required fields are missing');
-            }
-
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINES, array(
-                'name' => $args['name'],
-                'description' => $args['description'],
-                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-            ), array(
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINES, $args, array(
                 'id' => $pipelineId
             ));
 
