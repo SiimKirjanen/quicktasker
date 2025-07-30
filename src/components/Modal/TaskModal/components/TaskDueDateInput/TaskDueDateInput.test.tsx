@@ -44,6 +44,20 @@ jest.mock("../../../../../hooks/useTimezone", () => ({
   }),
 }));
 
+jest.mock("dayjs", () => {
+  const mockDayjs = (_date?: unknown) => ({
+    utc: () => ({
+      format: () => "2024-07-30T12:00:00Z",
+    }),
+  });
+  mockDayjs.utc = mockDayjs;
+  mockDayjs.default = mockDayjs;
+  return {
+    __esModule: true,
+    default: mockDayjs,
+  };
+});
+
 const baseTask: Task = {
   id: "1",
   name: "Test Task",

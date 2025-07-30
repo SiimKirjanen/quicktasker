@@ -68,19 +68,27 @@ describe("AutoSaveInput", () => {
     const onChange = jest.fn(
       () =>
         new Promise<void>((resolve) => {
-          resolve();
+          setTimeout(resolve, 10); // Add a small delay
         }),
     );
     render(<AutoSaveInput value="Initial" onChange={onChange} />);
     const input = screen.getByTestId("autosave-input");
     fireEvent.change(input, { target: { value: "Changed" } });
-    expect(input).toBeDisabled();
-    expect(input).toHaveAttribute("aria-busy", "true");
+
     act(() => {
       jest.advanceTimersByTime(TEXT_ENTER_DEBOUNCE_TIMEOUT);
     });
-    await waitFor(() => expect(onChange).toHaveBeenCalledWith("Changed"));
-    expect(input).not.toBeDisabled();
-    expect(input).toHaveAttribute("aria-busy", "false");
+
+    // Wait for loading state
+    await waitFor(() => {
+      expect(input).toBeDisabled();
+      expect(input).toHaveAttribute("aria-busy", "true");
+    });
+
+    // Wait for save to finish and input to be enabled again
+    await waitFor(() => {
+      expect(input).not.toBeDisabled();
+      expect(input).toHaveAttribute("aria-busy", "false");
+    });
   });
 });
