@@ -34,7 +34,7 @@ import { Upload, UploadEntityType } from "../types/upload";
 import {
   ServerExtendedUser,
   ServerUser,
-  User,
+  UserEditData,
   UserTypes,
   WPUser,
 } from "../types/user";
@@ -452,11 +452,14 @@ function createUserRequest(
   });
 }
 
-function editUserRequest(user: User): Promise<WPQTResponse<ServerUser>> {
+function editUserRequest(
+  userId: string,
+  data: UserEditData,
+): Promise<WPQTResponse<ServerUser>> {
   return apiFetch({
-    path: `/wpqt/v1/users/${user.id}`,
+    path: `/wpqt/v1/users/${userId}`,
     method: "PATCH",
-    data: { user },
+    data,
     headers: getCommonHeaders(),
   });
 }

@@ -46,6 +46,11 @@ type WPUser = {
   profile_picture: string;
 };
 
+type UserEditData = {
+  name?: string;
+  description?: string;
+};
+
 enum UserTypes {
   QUICKTASKER = ActionTargetType.QUICKTASKER,
   WP_USER = ActionTargetType.WP_USER,
@@ -57,6 +62,7 @@ export type {
   ServerExtendedUser,
   ServerUser,
   User,
+  UserEditData,
   UserFilter,
   WPUser,
 };

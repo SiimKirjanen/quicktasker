@@ -25,6 +25,8 @@ import { CustomFieldEntityType } from "../../../types/custom-field";
 import { Label } from "../../../types/label";
 import { UploadEntityType } from "../../../types/upload";
 import { WPQTIconButton } from "../../common/Button/Button";
+import { AutoSaveInput } from "../../common/Input/AutoSaveInput/AutoSaveInput";
+import { AutoSaveTextarea } from "../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDropdown";
@@ -33,13 +35,9 @@ import { LoadingOval } from "../../Loading/Loading";
 import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
 import { UploadManager } from "../../Upload/UploadManager/UploadManager";
 import { FreeForAllToggle } from "./components/FreeForAllToggle/FreeForAllToggle";
-import { TaskDescriptionInput } from "./components/TaskDescriptionInput/TaskDescriptionInput";
 import { TaskDueDateInput } from "./components/TaskDueDateInput/TaskDueDateInput";
-import { TaskNameInput } from "./components/TaskeNameInput/TaskNameInput";
 
 type Props = {
-  taskModalSaving: boolean;
-  editTask: (task: Task) => void;
   deleteTask: (task: Task) => Promise<void>;
   onEditTaskCompleted: (task: TaskFromServer) => void;
 };
@@ -58,7 +56,7 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
   } = useContext(ActivePipelineContext);
   const [restoringTask] = useState(false);
   const [assignedTaskLabels, setAssignedTaskLabels] = useState<Label[]>([]);
-  const { archiveTask } = useTaskActions();
+  const { archiveTask, editTask } = useTaskActions();
   const {
     loading1: isDeletingTask,
     setLoading1: setIsDeletingTask,
@@ -101,16 +99,35 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
           <div className="wpqt-mb-2 wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 md:wpqt-grid-cols-[1fr_0.7fr]">
             <WPQTModalFieldSet>
               <WPQTModalField label={__("Name", "quicktasker")}>
-                <TaskNameInput
-                  task={taskToEdit}
-                  onEditTaskCompleted={onEditTaskCompleted}
+                <AutoSaveInput
+                  value={taskToEdit.name}
+                  wrapperClassName="wpqt-w-full"
+                  className="wpqt-w-full"
+                  onChange={async (value) => {
+                    const { success, task: updatedTask } = await editTask(
+                      taskToEdit.id,
+                      { name: value },
+                    );
+                    if (success && updatedTask) {
+                      onEditTaskCompleted(updatedTask);
+                    }
+                  }}
                 />
               </WPQTModalField>
 
               <WPQTModalField label={__("Description", "quicktasker")}>
-                <TaskDescriptionInput
-                  task={taskToEdit}
-                  onEditTaskCompleted={onEditTaskCompleted}
+                <AutoSaveTextarea
+                  value={taskToEdit.description}
+                  className="wpqt-w-full"
+                  onChange={async (value) => {
+                    const { success, task: updatedTask } = await editTask(
+                      taskToEdit.id,
+                      { description: value },
+                    );
+                    if (success && updatedTask) {
+                      onEditTaskCompleted(updatedTask);
+                    }
+                  }}
                 />
               </WPQTModalField>
 

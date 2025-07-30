@@ -47,7 +47,7 @@ const reducer = (state: State, action: Action): State => {
       const editedServerUser: ServerUser = action.payload;
       const editedUser: User = convertUserFromServer(editedServerUser);
       const users = state.users.map((user) =>
-        user.id === editedUser.id ? editedUser : user,
+        user.id === editedUser.id ? { ...user, ...editedUser } : user,
       );
 
       return {

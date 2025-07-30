@@ -7,7 +7,7 @@ import {
   editUserRequest,
   resetUserPasswordRequest,
 } from "../../api/api";
-import { ServerUser, User } from "../../types/user";
+import { ServerUser, UserEditData } from "../../types/user";
 
 function useUserActions() {
   const createUser = async (
@@ -25,17 +25,21 @@ function useUserActions() {
     }
   };
 
-  const editUser = async (
-    user: User,
-    callback?: (userData: ServerUser) => void,
-  ) => {
+  const editUser = async (userId: string, data: UserEditData) => {
     try {
-      const response = await editUserRequest(user);
-      if (callback) callback(response.data);
-      toast.success(__("User edited successfully", "quicktasker"));
+      const response = await editUserRequest(userId, data);
+
+      return {
+        success: true,
+        user: response.data,
+      };
     } catch (error) {
       console.error(error);
       toast.error(__("User edit failed. Please try again", "quicktasker"));
+
+      return {
+        success: false,
+      };
     }
   };
 

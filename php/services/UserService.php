@@ -62,24 +62,21 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          *
          * @param int $userId The ID of the user to be updated.
          * @param array $args The updated user data.
-         *   - 'name' (string) The new name of the user.
-         *   - 'description' (string) The new description of the user.
          * @return User The updated user object.
          * @throws Exception If the update operation fails.
          */
         public function editUser($userId, $args) {
             global $wpdb;
 
+            $defaults = array(
+                'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime()
+            );
+            $args = wp_parse_args($args, $defaults);
+
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USERS,
-                array(
-                    'name' => $args['name'],
-                    'description' => $args['description'],
-                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                ),
-                array('id' => $userId),
-                array('%s', '%s', '%s'),
-                array('%d')
+                $args,
+                array('id' => $userId)
             );
 
             if ($result === false) {

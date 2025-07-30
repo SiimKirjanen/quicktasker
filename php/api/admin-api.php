@@ -1465,7 +1465,18 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $userService = new UserService();
                         $logService = new LogService();
 
-                        $user = $userService->editUser($data['id'], $data->get_param('user'));
+                        $userUpdateData = $data->get_json_params();
+                        $args = [];
+
+                        if (isset($userUpdateData['name'])) {
+                            $args['name'] = $userUpdateData['name'];
+                        }
+                        if (isset($userUpdateData['description'])) {
+                            $args['description'] = $userUpdateData['description'];
+                        }
+
+                        $user = $userService->editUser($data['id'], $args);
+
                         $logService->log('User ' . $user->name . ' edited', [
                             'type' => WP_QT_LOG_TYPE_USER,
                             'type_id' => $user->id,
@@ -1491,6 +1502,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'required' => true,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                      'name' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'description' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
                 ),
             ),
