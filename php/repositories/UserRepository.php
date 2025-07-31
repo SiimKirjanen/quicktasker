@@ -364,7 +364,7 @@ if ( ! class_exists( 'WPQT\User\UserRepository' ) ) {
                 }
 
                 return (object)[
-                    'id' => $user->ID,
+                    'id' => (string)$user->ID,
                     'name' => $user->display_name,
                     'email' => $user->user_email,
                     'description' => $user->description,

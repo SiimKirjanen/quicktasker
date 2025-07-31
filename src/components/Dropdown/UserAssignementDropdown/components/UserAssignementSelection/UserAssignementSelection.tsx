@@ -18,13 +18,17 @@ import { User, WPUser } from "../../../../../types/user";
 import { LoadingOval } from "../../../../Loading/Loading";
 import { UserAssignementSection } from "../../../../User/UserAssignementSection/UserAssignementSection";
 
-type Props = {
+type UserAssignementSelectionProps = {
   task: Task;
   onUserAdd: (user: User | WPUser) => void;
   onUserDelete: (user: User | WPUser) => void;
 };
 
-function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
+function UserAssignementSelection({
+  task,
+  onUserAdd,
+  onUserDelete,
+}: UserAssignementSelectionProps) {
   const {
     state: { users, wpUsers },
   } = useContext(UserContext);
@@ -142,4 +146,4 @@ function UserAssignementSelection({ task, onUserAdd, onUserDelete }: Props) {
     </div>
   );
 }
-export { UserAssignementSelection };
+export { UserAssignementSelection, type UserAssignementSelectionProps };
