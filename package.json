@@ -12,6 +12,7 @@
     "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "test:unit": "jest",
     "test:unit:watch": "jest --watch",
+    "test:unit:coverage": "jest --coverage",
     "build:emails": "mjml php/templates/email/mjml/*.mjml -o php/templates/email",
     "prepare": "husky"
   },

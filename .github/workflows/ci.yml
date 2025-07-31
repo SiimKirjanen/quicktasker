@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18" # Specify the Node.js version you want to use
+          node-version: "18"
 
       - name: Install dependencies
         run: npm install
@@ -42,10 +42,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18" # Specify the Node.js version you want to use
+          node-version: "18"
 
       - name: Install dependencies
         run: npm install
 
       - name: Run Unit Tests
         run: npm run test:unit
+
+  run-coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ArtiomTr/jest-coverage-report-action@v2
