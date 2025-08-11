@@ -1,3 +1,4 @@
+import { __ } from "@wordpress/i18n";
 import { Task } from "../../../../types/task";
 import { WPQTTabs } from "../../WPQTTabs";
 import { LogsTabContent } from "./LogsTabContent";
@@ -8,15 +9,19 @@ type Props = {
   task: Task;
 };
 function TaskModalTabs({ task }: Props) {
-  const tabs = ["Private comments", "Public comments", "Logs"];
+  const tabs = [
+    __("Logs", "quicktasker"),
+    __("Private comments", "quicktasker"),
+    __("Public comments", "quicktasker"),
+  ];
 
   return (
     <WPQTTabs
       tabs={tabs}
       tabsContent={[
+        <LogsTabContent taskId={task.id} key={3} />,
         <CommentsTabContent taskId={task.id} key={1} />,
         <PublicCommentsTabContent taskId={task.id} key={2} />,
-        <LogsTabContent taskId={task.id} key={3} />,
       ]}
     />
   );

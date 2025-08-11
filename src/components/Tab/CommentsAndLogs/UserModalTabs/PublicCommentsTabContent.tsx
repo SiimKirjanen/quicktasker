@@ -49,10 +49,6 @@ function PublicCommentsTabContent({ userId }: Props) {
         <TabContentCommentItem item={comment} />
       )}
       noDataMessage={__("No comments available", "quicktasker")}
-      explanation={__(
-        "Comments that can be added and viewed by WordPress users (with required permissions) and current QuickTasker user (in user page).",
-        "quicktasker",
-      )}
       enableAdd={true}
     />
   );
