@@ -17,7 +17,6 @@ function TaskModal({ deleteTaskCallback }: Props) {
     state: { taskModalOpen },
   } = useContext(ModalContext);
   const { deleteTask } = useTaskActions();
-
   const { closeModal, handleSuccess } = useModal(CLOSE_TASK_MODAL);
 
   const onEditTaskCompleted = (task: TaskFromServer) => {

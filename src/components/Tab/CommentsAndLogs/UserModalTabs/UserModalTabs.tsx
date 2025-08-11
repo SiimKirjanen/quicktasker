@@ -10,18 +10,18 @@ type Props = {
 };
 function UserModalTabs({ user }: Props) {
   const tabs = [
+    __("Logs", "quicktasker"),
     __("Private comments", "quicktasker"),
     __("Public comments", "quicktasker"),
-    __("Logs", "quicktasker"),
   ];
 
   return (
     <WPQTTabs
       tabs={tabs}
       tabsContent={[
+        <LogsTabContent userId={user.id} key={3} />,
         <PrivateCommentsTabContent userId={user.id} key={1} />,
         <PublicCommentsTabContent userId={user.id} key={2} />,
-        <LogsTabContent userId={user.id} key={3} />,
       ]}
     />
   );

@@ -27,10 +27,6 @@ function LogsTabContent({ userId }: Props) {
       fetchData={fetchLogs}
       renderItem={(log: Log) => <LogItem log={log} />}
       noDataMessage={__("No logs available", "quicktasker")}
-      explanation={__(
-        "Logs can be seen only by WordPress users (with required permissions)",
-        "quicktasker",
-      )}
     />
   );
 }
