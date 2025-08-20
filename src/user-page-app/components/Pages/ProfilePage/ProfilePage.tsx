@@ -11,7 +11,7 @@ import { PageContentWrap, PageTitle, PageWrap } from "../Page/Page";
 import { ProfileActions } from "./components/ProfileActions/ProfileActions";
 import { UserDetails } from "./components/UserDetails/UserDetails";
 
-function PprofilePage() {
+function ProfilePage() {
   return (
     <UserPageUserContextProvider>
       <ProfilePageContent />
@@ -24,10 +24,6 @@ function ProfilePageContent() {
     state: { loading, user, customFields },
     loadUserData,
   } = useContext(UserPageUserContext);
-
-  if (!user) {
-    return null;
-  }
 
   const mapUserTypeToEntityType = (
     userType: UserTypes,
@@ -47,18 +43,22 @@ function ProfilePageContent() {
       <PageContentWrap>
         <PageTitle>{__("User details", "quicktasker")}</PageTitle>
         <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
-          <UserDetails user={user} />
-          <CustomFieldsWrap
-            entityId={user.id}
-            entityType={mapUserTypeToEntityType(user.user_type)}
-            entity={user}
-            customFields={customFields}
-          />
-          <ProfileActions />
+          {user && (
+            <>
+              <UserDetails user={user} />
+              <CustomFieldsWrap
+                entityId={user.id}
+                entityType={mapUserTypeToEntityType(user.user_type)}
+                entity={user}
+                customFields={customFields}
+              />
+              <ProfileActions />
+            </>
+          )}
         </div>
       </PageContentWrap>
     </PageWrap>
   );
 }
 
-export { PprofilePage };
+export { ProfilePage };
