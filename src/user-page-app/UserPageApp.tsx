@@ -9,7 +9,7 @@ import { HomePage } from "./components/Pages/HomePage/HomePage";
 import { LoadingPage } from "./components/Pages/LoadingPage/LoadingPage";
 import { LoginPage } from "./components/Pages/LoginPage/LoginPage";
 import { NotificationsPage } from "./components/Pages/NotificationsPage/NotificationsPage";
-import { PprofilePage } from "./components/Pages/ProfilePage/ProfilePage";
+import { ProfilePage } from "./components/Pages/ProfilePage/ProfilePage";
 import { SetUpPage } from "./components/Pages/SetUpPage/SetUpPage";
 import { TaskCommentsPage } from "./components/Pages/TaskCommentsPage/TaskCommentsPage";
 import { TaskPage } from "./components/Pages/TaskPage/TaskPage";
@@ -53,7 +53,7 @@ function UserPageContent() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/user/profile" element={<PprofilePage />} />
+        <Route path="/user/profile" element={<ProfilePage />} />
         <Route path="/user-tasks" element={<UserTasksPage />} />
         <Route path="/assignable-tasks" element={<AssignableTasksPage />} />
         <Route path="/tasks/:taskHash" element={<TaskPage />} />
