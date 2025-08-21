@@ -318,7 +318,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				id int(11) NOT NULL AUTO_INCREMENT,
 				pipeline_id int(11) NOT NULL,
 				target_type ENUM('task', 'quicktasker') NOT NULL,
-				target_id int(11) NOT NULL,
+				target_id int(11) DEFAULT NULL,
 				target_action ENUM('created', 'updated', 'deleted') NOT NULL,
 				webhook_url varchar(255) NOT NULL,
 				webhook_confirm tinyint(1) DEFAULT 0,

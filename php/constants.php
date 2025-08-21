@@ -609,6 +609,36 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META' ) ) {
 
 /*
 ==================================================================================================================================================================================================================
+Webhook constants
+==================================================================================================================================================================================================================
+*/
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK', "task");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER', "quicktasker");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPES' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPES', [
+        WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+        WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER
+    ]);
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED', "created");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS', [
+        WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED
+    ]); 
+}
+
+/*
+==================================================================================================================================================================================================================
 Filtering constants
 ==================================================================================================================================================================================================================
 */

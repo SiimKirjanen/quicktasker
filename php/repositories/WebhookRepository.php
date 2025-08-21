@@ -24,5 +24,22 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookRepository' ) ) {
 
             return $wpdb->get_results($query);
         }
+
+        /**
+         * Retrieves a webhook by its ID.
+         *
+         * @param int $id The ID of the webhook.
+         * @return object|null The webhook object if found, or null if not found.
+         */
+        public function getWebhookById($id) {
+            global $wpdb;
+
+            $query = $wpdb->prepare(
+                "SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, created_at FROM " . TABLE_WP_QUICKTASKER_WEBHOOKS . " WHERE id = %d",
+                $id
+            );
+
+            return $wpdb->get_row($query);
+        }
     }
 }

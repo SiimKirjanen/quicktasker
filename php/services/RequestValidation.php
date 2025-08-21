@@ -456,5 +456,29 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         public static function validateArchiveStatusFilter($param) {
             return in_array($param, WP_QUICKTASKER_ARCHIVE_STATUS_FILTER, true);
         }
+
+        /**
+         * Validates the webhook target type parameter.
+         *
+         * This method checks if the provided parameter is a valid webhook target type.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is a valid webhook target type, false otherwise.
+         */
+        public static function validateWebhookTargetType($param) {
+            return in_array($param, WP_QUICKTASKER_WEBHOOK_TARGET_TYPES, true);
+        }
+
+        /**
+         * Validates the webhook target action parameter.
+         *
+         * This method checks if the provided parameter is a valid webhook target action.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool Returns true if the parameter is a valid webhook target action, false otherwise.
+         */
+        public static function validateWebhookTargetAction($param) {
+            return in_array($param, WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS, true);
+        }
     }
 }

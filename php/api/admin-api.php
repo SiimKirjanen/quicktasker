@@ -2785,6 +2785,58 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/webhooks',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    try {                 
+                        $webhook = ServiceLocator::get('WebhookService')->createWebhook(
+                            $data['id'],
+                            array(
+                                'target_type' => $data['target_type'],
+                                'target_action' => $data['target_action'],
+                                'webhook_url' => $data['webhook_url']
+                            )
+                        );
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'webhook' => $webhook,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'target_type' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateWebhookTargetType'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'target_action' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateWebhookTargetAction'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'webhook_url' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
 
         /*
         ==================================================================================================================================================================================================================
