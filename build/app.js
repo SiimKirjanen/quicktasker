@@ -94,6 +94,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createPipelineAutomationRequest: () => (/* binding */ createPipelineAutomationRequest),
 /* harmony export */   createPipelineLabelRequest: () => (/* binding */ createPipelineLabelRequest),
 /* harmony export */   createPipelineRequest: () => (/* binding */ createPipelineRequest),
+/* harmony export */   createPipelineWebhookRequest: () => (/* binding */ createPipelineWebhookRequest),
 /* harmony export */   createTaskRequest: () => (/* binding */ createTaskRequest),
 /* harmony export */   createUserRequest: () => (/* binding */ createUserRequest),
 /* harmony export */   deleteLabelRequest: () => (/* binding */ deleteLabelRequest),
@@ -759,6 +760,18 @@ function getPipelineWebhookssRequest(pipelineId) {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/wpqt/v1/pipelines/${pipelineId}/webhooks`,
     method: "GET",
+    headers: getCommonHeaders()
+  });
+}
+function createPipelineWebhookRequest(pipelineId, targetType, targetAction, webhookUrl) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/wpqt/v1/pipelines/${pipelineId}/webhooks`,
+    method: "POST",
+    data: {
+      target_type: targetType,
+      target_action: targetAction,
+      webhook_url: webhookUrl
+    },
     headers: getCommonHeaders()
   });
 }
@@ -10167,6 +10180,239 @@ function WPQTModalFooter({
 
 /***/ }),
 
+/***/ "./src/components/Modal/WebhookCreatorModal/WebhookCreatorModal.tsx":
+/*!**************************************************************************!*\
+  !*** ./src/components/Modal/WebhookCreatorModal/WebhookCreatorModal.tsx ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WebhookCreatorModal: () => (/* binding */ WebhookCreatorModal)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _components_WebhookCreator_WebhookCreator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/WebhookCreator/WebhookCreator */ "./src/components/Modal/WebhookCreatorModal/components/WebhookCreator/WebhookCreator.tsx");
+
+
+
+
+
+
+
+function WebhookCreatorModal({
+  pipelineId
+}) {
+  const {
+    state: {
+      webhookCreationModalOpen
+    },
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_4__.ModalContext);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_WPQTModal__WEBPACK_IMPORTED_MODULE_5__.WPQTModal, {
+    modalOpen: webhookCreationModalOpen,
+    closeModal: () => {
+      modalDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_WEBHOOK_CREATION_MODAL_OPEN,
+        payload: false
+      });
+    },
+    size: "lg",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_5__.WPQTModalTitle, {
+      className: "wpqt-text-center",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create a new webhook", "quicktasker")
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_WebhookCreator_WebhookCreator__WEBPACK_IMPORTED_MODULE_6__.WebhookCreator, {
+      pipelineId: pipelineId
+    })]
+  });
+}
+
+
+/***/ }),
+
+/***/ "./src/components/Modal/WebhookCreatorModal/components/WebhookCreator/WebhookCreator.tsx":
+/*!***********************************************************************************************!*\
+  !*** ./src/components/Modal/WebhookCreatorModal/components/WebhookCreator/WebhookCreator.tsx ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WebhookCreator: () => (/* binding */ WebhookCreator)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_actions_useWebhookActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../hooks/actions/useWebhookActions */ "./src/hooks/actions/useWebhookActions.ts");
+/* harmony import */ var _hooks_useWebhooks__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../hooks/useWebhooks */ "./src/hooks/useWebhooks.ts");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _types_webhook__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../types/webhook */ "./src/types/webhook.ts");
+/* harmony import */ var _utils_webhooks__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../../utils/webhooks */ "./src/utils/webhooks.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../../common/Label/WPQTLabel */ "./src/components/common/Label/WPQTLabel.tsx");
+/* harmony import */ var _common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../../common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function WebhookCreator({
+  pipelineId
+}) {
+  const [targetType, setTargetType] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetType.TASK);
+  const [targetAction, setTargetAction] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetAction.CREATE);
+  const [webhookUrl, setWebhookUrl] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [isCreating, setIsCreating] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const {
+    createWebhook
+  } = (0,_hooks_actions_useWebhookActions__WEBPACK_IMPORTED_MODULE_5__.useWebhookActions)();
+  const {
+    pipelineWebhooksDispatch
+  } = (0,_hooks_useWebhooks__WEBPACK_IMPORTED_MODULE_6__.useWebhooks)();
+  const {
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__.ModalContext);
+  function handleCreateWebhook() {
+    return __awaiter(this, void 0, void 0, function* () {
+      setIsCreating(true);
+      const {
+        success,
+        webhook
+      } = yield createWebhook(pipelineId, targetType, targetAction, webhookUrl);
+      setIsCreating(false);
+      if (success && webhook) {
+        react_toastify__WEBPACK_IMPORTED_MODULE_3__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Webhook created successfully", "quicktasker"));
+        pipelineWebhooksDispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_4__.ADD_PIPELINE_WEBHOOK,
+          payload: {
+            webhook: (0,_utils_webhooks__WEBPACK_IMPORTED_MODULE_9__.convertWebhookFromServer)(webhook)
+          }
+        });
+        resetState();
+        if (!_constants__WEBPACK_IMPORTED_MODULE_4__.HAS_WEBHOOKS) {
+          modalDispatch({
+            type: _constants__WEBPACK_IMPORTED_MODULE_4__.SET_WEBHOOK_CREATION_MODAL_OPEN,
+            payload: false
+          });
+        }
+      }
+    });
+  }
+  function resetState() {
+    setTargetType(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetType.TASK);
+    setTargetAction(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetAction.CREATE);
+    setWebhookUrl("");
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-gap-4 wpqt-mb-4",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_12__.WPQTLabel, {
+          labelFor: "webhook-target-type",
+          className: "wpqt-block wpqt-mb-3",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select a target type", "quicktasker")
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_13__.WPQTSelect, {
+          id: "webhook-target-type",
+          selectedOptionValue: targetType,
+          options: Object.values(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetType).map(type => ({
+            value: type,
+            label: type
+          })),
+          allSelector: false,
+          onSelectionChange: value => setTargetType(value)
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_12__.WPQTLabel, {
+          labelFor: "webhook-target-action",
+          className: "wpqt-block wpqt-mb-3",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select a target action", "quicktasker")
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_13__.WPQTSelect, {
+          id: "webhook-target-action",
+          selectedOptionValue: targetAction,
+          options: Object.values(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetAction).map(action => ({
+            value: action,
+            label: action
+          })),
+          allSelector: false,
+          onSelectionChange: value => setTargetAction(value)
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "wpqt-flex-1",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_12__.WPQTLabel, {
+          labelFor: "webhook-url",
+          className: "wpqt-block wpqt-mb-3",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enter the webhook URL", "quicktasker")
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_11__.WPQTInput, {
+          inputId: "webhook-url",
+          value: webhookUrl,
+          onChange: value => setWebhookUrl(value),
+          wrapperClassName: "!wpqt-w-full",
+          className: "!wpqt-w-full"
+        })]
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-justify-end",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTButton, {
+        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create Webhook", "quicktasker"),
+        onClick: handleCreateWebhook,
+        loading: isCreating
+      })
+    })]
+  });
+}
+
+
+/***/ }),
+
 /***/ "./src/components/PremiudAd/PremiumAd.tsx":
 /*!************************************************!*\
   !*** ./src/components/PremiudAd/PremiumAd.tsx ***!
@@ -12288,6 +12534,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EDIT_USER_TASK: () => (/* binding */ EDIT_USER_TASK),
 /* harmony export */   FILE_NAME_REGEX: () => (/* binding */ FILE_NAME_REGEX),
 /* harmony export */   HAS_AUTOMATIONS: () => (/* binding */ HAS_AUTOMATIONS),
+/* harmony export */   HAS_WEBHOOKS: () => (/* binding */ HAS_WEBHOOKS),
 /* harmony export */   INIT_APP_STATE: () => (/* binding */ INIT_APP_STATE),
 /* harmony export */   MAX_UPLOAD_FILE_SIZE: () => (/* binding */ MAX_UPLOAD_FILE_SIZE),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
@@ -12387,6 +12634,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_USER_TASKS: () => (/* binding */ SET_USER_TASKS),
 /* harmony export */   SET_USER_TASKS_FILTERED_PIPELINE: () => (/* binding */ SET_USER_TASKS_FILTERED_PIPELINE),
 /* harmony export */   SET_USER_TASKS_SEARCH_VALUE: () => (/* binding */ SET_USER_TASKS_SEARCH_VALUE),
+/* harmony export */   SET_WEBHOOKS_MODAL_OPEN: () => (/* binding */ SET_WEBHOOKS_MODAL_OPEN),
+/* harmony export */   SET_WEBHOOK_CREATION_MODAL_OPEN: () => (/* binding */ SET_WEBHOOK_CREATION_MODAL_OPEN),
 /* harmony export */   SET_WP_USERS: () => (/* binding */ SET_WP_USERS),
 /* harmony export */   TASK_FOCUS_BORDER_STYLE: () => (/* binding */ TASK_FOCUS_BORDER_STYLE),
 /* harmony export */   TASK_FOCUS_BORDER_WIDTH: () => (/* binding */ TASK_FOCUS_BORDER_WIDTH),
@@ -12466,6 +12715,8 @@ const OPEN_TASK_RESTORE_MODAL = "OPEN_TASK_RESTORE_MODAL";
 const CLOSE_TASK_RESTORE_MODAL = "CLOSE_TASK_RESTORE_MODAL";
 const SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN = "SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN";
 const SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN = "SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN";
+const SET_WEBHOOK_CREATION_MODAL_OPEN = "SET_WEBHOOK_CREATION_MODAL_OPEN";
+const SET_WEBHOOKS_MODAL_OPEN = "SET_WEBHOOKS_MODAL_OPEN";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";
@@ -12558,6 +12809,7 @@ const TEXT_ENTER_DEBOUNCE_TIMEOUT = 700;
 //Misc
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 const HAS_AUTOMATIONS = false;
+const HAS_WEBHOOKS = false;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
 //Styles
 const DEFAULT_TASK_FOCUS_COLOR = "#ffffff";
@@ -13917,6 +14169,77 @@ function useUserActions() {
 
 /***/ }),
 
+/***/ "./src/hooks/actions/useWebhookActions.ts":
+/*!************************************************!*\
+  !*** ./src/hooks/actions/useWebhookActions.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useWebhookActions: () => (/* binding */ useWebhookActions)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/api */ "./src/api/api.ts");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+
+
+function useWebhookActions() {
+  function createWebhook(pipelineId, targetType, targetAction, webhookUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+      try {
+        const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.createPipelineWebhookRequest)(pipelineId, targetType, targetAction, webhookUrl);
+        return {
+          success: true,
+          webhook: response.data
+        };
+      } catch (error) {
+        console.error("Error creating webhook:", error);
+        react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)(`Failed to create webhook`, `quicktasker`));
+        return {
+          success: false,
+          webhook: null
+        };
+      }
+    });
+  }
+  return {
+    createWebhook
+  };
+}
+
+
+/***/ }),
+
 /***/ "./src/hooks/filters/useTaskFilter.tsx":
 /*!*********************************************!*\
   !*** ./src/hooks/filters/useTaskFilter.tsx ***!
@@ -14740,6 +15063,39 @@ const useUser = () => {
     combinedUsers
   };
 };
+
+
+/***/ }),
+
+/***/ "./src/hooks/useWebhooks.ts":
+/*!**********************************!*\
+  !*** ./src/hooks/useWebhooks.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useWebhooks: () => (/* binding */ useWebhooks)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _providers_PipelineWebhooksContextProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../providers/PipelineWebhooksContextProvider */ "./src/providers/PipelineWebhooksContextProvider.tsx");
+
+
+function useWebhooks() {
+  const {
+    state: {
+      webhooks,
+      loading
+    },
+    pipelineWebhooksDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useContext)(_providers_PipelineWebhooksContextProvider__WEBPACK_IMPORTED_MODULE_1__.PipelineWebhooksContext);
+  return {
+    webhooks,
+    loading,
+    pipelineWebhooksDispatch
+  };
+}
 
 
 /***/ }),
@@ -17402,10 +17758,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _providers_PipelineWebhooksContextProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../providers/PipelineWebhooksContextProvider */ "./src/providers/PipelineWebhooksContextProvider.tsx");
-/* harmony import */ var _Settings_Settings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Settings/Settings */ "./src/pages/SettingsPage/components/Settings/Settings.tsx");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../../components/Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _components_Modal_WebhookCreatorModal_WebhookCreatorModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../../../components/Modal/WebhookCreatorModal/WebhookCreatorModal */ "./src/components/Modal/WebhookCreatorModal/WebhookCreatorModal.tsx");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../../../constants */ "./src/constants.ts");
+/* harmony import */ var _hooks_useWebhooks__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../../../hooks/useWebhooks */ "./src/hooks/useWebhooks.ts");
+/* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
+/* harmony import */ var _providers_PipelineWebhooksContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../../../providers/PipelineWebhooksContextProvider */ "./src/providers/PipelineWebhooksContextProvider.tsx");
+/* harmony import */ var _Settings_Settings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../Settings/Settings */ "./src/pages/SettingsPage/components/Settings/Settings.tsx");
+
+
+
+
+
+
 
 
 
@@ -17413,13 +17782,69 @@ __webpack_require__.r(__webpack_exports__);
 function PipelineWebhooksSettings({
   pipelineId
 }) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_PipelineWebhooksContextProvider__WEBPACK_IMPORTED_MODULE_2__.PipelineWebhooksContextProvider, {
+  const description = _constants__WEBPACK_IMPORTED_MODULE_5__.HAS_WEBHOOKS ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Send real-time board event data to external services using webhooks.", "quicktasker") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Send real-time board event data to external services using webhooks. To configure more than one webhook, please upgrade to the premium version.", "quicktasker");
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_PipelineWebhooksContextProvider__WEBPACK_IMPORTED_MODULE_8__.PipelineWebhooksContextProvider, {
     pipelineId: pipelineId,
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Settings_Settings__WEBPACK_IMPORTED_MODULE_3__.Settings, {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Board webhooks", "quicktasker"),
-      description: "",
-      children: "ege"
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Settings_Settings__WEBPACK_IMPORTED_MODULE_9__.Settings, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board webhooks", "quicktasker"),
+      description: description,
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(PipelineWebhooksInfo, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Modal_WebhookCreatorModal_WebhookCreatorModal__WEBPACK_IMPORTED_MODULE_4__.WebhookCreatorModal, {
+        pipelineId: pipelineId
+      })]
     })
+  });
+}
+function PipelineWebhooksInfo() {
+  const {
+    webhooks,
+    loading
+  } = (0,_hooks_useWebhooks__WEBPACK_IMPORTED_MODULE_6__.useWebhooks)();
+  const {
+    modalDispatch
+  } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__.ModalContext);
+  const webhooksLenght = (webhooks === null || webhooks === void 0 ? void 0 : webhooks.length) || 0;
+  const canCreateNewWebhook = _constants__WEBPACK_IMPORTED_MODULE_5__.HAS_WEBHOOKS || webhooksLenght < 1;
+  if (loading) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
+      ovalSize: "24",
+      className: "!wpqt-items-start"
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-text-left",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-mb-2",
+      children: webhooksLenght === 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("There are no webhooks configured for this board.", "quicktasker")
+      }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.sprintf)(/* translators: %d: number of webhooks */
+          (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("There are %d webhooks configured for this board.", "quicktasker"), webhooksLenght)
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+            className: "wpqt-cursor-pointer wpqt-text-blue-500 hover:wpqt-underline",
+            onClick: () => {
+              modalDispatch({
+                type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_WEBHOOKS_MODAL_OPEN,
+                payload: true
+              });
+            },
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Manage board webhooks", "quicktasker")
+          })
+        })]
+      })
+    }), canCreateNewWebhook && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        className: "wpqt-cursor-pointer wpqt-text-blue-500 hover:wpqt-underline",
+        onClick: () => {
+          modalDispatch({
+            type: _constants__WEBPACK_IMPORTED_MODULE_5__.SET_WEBHOOK_CREATION_MODAL_OPEN,
+            payload: true
+          });
+        },
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create a new webhook", "quicktasker")
+      })
+    })]
   });
 }
 
@@ -19741,7 +20166,9 @@ const initialState = {
     taskToRestore: null
   },
   customFieldCreatorModalOpen: false,
-  customFieldRecoveryModalOpen: false
+  customFieldRecoveryModalOpen: false,
+  webhookCreationModalOpen: false,
+  webhooksModalOpen: false
 };
 const ModalContext = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createContext)({
   state: initialState,
@@ -21682,6 +22109,20 @@ const reducer = (state, action) => {
       {
         return closeModal();
       }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_WEBHOOK_CREATION_MODAL_OPEN:
+      {
+        const open = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          webhookCreationModalOpen: open
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_WEBHOOKS_MODAL_OPEN:
+      {
+        const open = action.payload;
+        return Object.assign(Object.assign({}, state), {
+          webhooksModalOpen: open
+        });
+      }
     default:
       return state;
   }
@@ -21772,15 +22213,33 @@ __webpack_require__.r(__webpack_exports__);
 const reducer = (state, action) => {
   switch (action.type) {
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_PIPELINE_WEBHOOKS:
-      return Object.assign(Object.assign({}, state), {
-        webhooks: action.payload.webhooks
-      });
+      {
+        return Object.assign(Object.assign({}, state), {
+          webhooks: action.payload.webhooks
+        });
+      }
     case _constants__WEBPACK_IMPORTED_MODULE_0__.SET_PIPELINE_WEBHOOKS_LOADING:
-      return Object.assign(Object.assign({}, state), {
-        loading: action.payload
-      });
+      {
+        return Object.assign(Object.assign({}, state), {
+          loading: action.payload
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.ADD_PIPELINE_WEBHOOK:
+      {
+        return Object.assign(Object.assign({}, state), {
+          webhooks: [...state.webhooks, action.payload.webhook]
+        });
+      }
+    case _constants__WEBPACK_IMPORTED_MODULE_0__.REMOVE_PIPELINE_WEBHOOK:
+      {
+        return Object.assign(Object.assign({}, state), {
+          webhooks: state.webhooks.filter(webhook => webhook.id !== action.payload.webhookId)
+        });
+      }
     default:
-      return state;
+      {
+        return state;
+      }
   }
 };
 
@@ -22535,6 +22994,32 @@ var UserTypes;
   UserTypes["QUICKTASKER"] = "quicktasker";
   UserTypes["WP_USER"] = "wp-user";
 })(UserTypes || (UserTypes = {}));
+
+
+/***/ }),
+
+/***/ "./src/types/webhook.ts":
+/*!******************************!*\
+  !*** ./src/types/webhook.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WebhookTargetAction: () => (/* binding */ WebhookTargetAction),
+/* harmony export */   WebhookTargetType: () => (/* binding */ WebhookTargetType)
+/* harmony export */ });
+var WebhookTargetType;
+(function (WebhookTargetType) {
+  WebhookTargetType["TASK"] = "task";
+  WebhookTargetType["QUICKTASKER"] = "quicktasker";
+})(WebhookTargetType || (WebhookTargetType = {}));
+var WebhookTargetAction;
+(function (WebhookTargetAction) {
+  WebhookTargetAction["CREATE"] = "created";
+  WebhookTargetAction["UPDATE"] = "updated";
+  WebhookTargetAction["DELETE"] = "deleted";
+})(WebhookTargetAction || (WebhookTargetAction = {}));
 
 
 /***/ }),
@@ -23796,13 +24281,13 @@ function generateUUID() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   convertWebhookFromServer: () => (/* binding */ convertWebhookFromServer),
 /* harmony export */   convertWebhooksFromServer: () => (/* binding */ convertWebhooksFromServer)
 /* harmony export */ });
-const convertWebhooksFromServer = webhooks => {
-  return webhooks.map(webhook => Object.assign(Object.assign({}, webhook), {
-    webhook_confirm: webhook.webhook_confirm === "1"
-  }));
-};
+const convertWebhookFromServer = webhook => Object.assign(Object.assign({}, webhook), {
+  webhook_confirm: webhook.webhook_confirm === "1"
+});
+const convertWebhooksFromServer = webhooks => webhooks.map(convertWebhookFromServer);
 
 
 /***/ }),

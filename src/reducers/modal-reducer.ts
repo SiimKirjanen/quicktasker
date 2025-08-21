@@ -34,6 +34,8 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
   SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
+  SET_WEBHOOK_CREATION_MODAL_OPEN,
+  SET_WEBHOOKS_MODAL_OPEN,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, initialState, State } from "../providers/ModalContextProvider";
@@ -319,6 +321,22 @@ const reducer = (state: State, action: Action): State => {
     }
     case CLOSE_TASK_RESTORE_MODAL: {
       return closeModal();
+    }
+    case SET_WEBHOOK_CREATION_MODAL_OPEN: {
+      const open: boolean = action.payload;
+
+      return {
+        ...state,
+        webhookCreationModalOpen: open,
+      };
+    }
+    case SET_WEBHOOKS_MODAL_OPEN: {
+      const open: boolean = action.payload;
+
+      return {
+        ...state,
+        webhooksModalOpen: open,
+      };
     }
     default:
       return state;

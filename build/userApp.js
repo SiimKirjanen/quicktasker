@@ -934,6 +934,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EDIT_USER_TASK: () => (/* binding */ EDIT_USER_TASK),
 /* harmony export */   FILE_NAME_REGEX: () => (/* binding */ FILE_NAME_REGEX),
 /* harmony export */   HAS_AUTOMATIONS: () => (/* binding */ HAS_AUTOMATIONS),
+/* harmony export */   HAS_WEBHOOKS: () => (/* binding */ HAS_WEBHOOKS),
 /* harmony export */   INIT_APP_STATE: () => (/* binding */ INIT_APP_STATE),
 /* harmony export */   MAX_UPLOAD_FILE_SIZE: () => (/* binding */ MAX_UPLOAD_FILE_SIZE),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
@@ -1033,6 +1034,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SET_USER_TASKS: () => (/* binding */ SET_USER_TASKS),
 /* harmony export */   SET_USER_TASKS_FILTERED_PIPELINE: () => (/* binding */ SET_USER_TASKS_FILTERED_PIPELINE),
 /* harmony export */   SET_USER_TASKS_SEARCH_VALUE: () => (/* binding */ SET_USER_TASKS_SEARCH_VALUE),
+/* harmony export */   SET_WEBHOOKS_MODAL_OPEN: () => (/* binding */ SET_WEBHOOKS_MODAL_OPEN),
+/* harmony export */   SET_WEBHOOK_CREATION_MODAL_OPEN: () => (/* binding */ SET_WEBHOOK_CREATION_MODAL_OPEN),
 /* harmony export */   SET_WP_USERS: () => (/* binding */ SET_WP_USERS),
 /* harmony export */   TASK_FOCUS_BORDER_STYLE: () => (/* binding */ TASK_FOCUS_BORDER_STYLE),
 /* harmony export */   TASK_FOCUS_BORDER_WIDTH: () => (/* binding */ TASK_FOCUS_BORDER_WIDTH),
@@ -1112,6 +1115,8 @@ const OPEN_TASK_RESTORE_MODAL = "OPEN_TASK_RESTORE_MODAL";
 const CLOSE_TASK_RESTORE_MODAL = "CLOSE_TASK_RESTORE_MODAL";
 const SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN = "SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN";
 const SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN = "SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN";
+const SET_WEBHOOK_CREATION_MODAL_OPEN = "SET_WEBHOOK_CREATION_MODAL_OPEN";
+const SET_WEBHOOKS_MODAL_OPEN = "SET_WEBHOOKS_MODAL_OPEN";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";
@@ -1204,6 +1209,7 @@ const TEXT_ENTER_DEBOUNCE_TIMEOUT = 700;
 //Misc
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
 const HAS_AUTOMATIONS = false;
+const HAS_WEBHOOKS = false;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
 //Styles
 const DEFAULT_TASK_FOCUS_COLOR = "#ffffff";

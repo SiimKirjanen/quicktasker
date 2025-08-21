@@ -39,7 +39,11 @@ import {
   WPUser,
 } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
-import { WebhookFromServer } from "../types/webhook";
+import {
+  WebhookFromServer,
+  WebhookTargetAction,
+  WebhookTargetType,
+} from "../types/webhook";
 
 function getCommonHeaders() {
   return {
@@ -846,6 +850,24 @@ function getPipelineWebhookssRequest(pipelineId: string): Promise<
   });
 }
 
+function createPipelineWebhookRequest(
+  pipelineId: string,
+  targetType: WebhookTargetType,
+  targetAction: WebhookTargetAction,
+  webhookUrl: string,
+): Promise<WPQTResponse<WebhookFromServer>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/webhooks`,
+    method: "POST",
+    data: {
+      target_type: targetType,
+      target_action: targetAction,
+      webhook_url: webhookUrl,
+    },
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   Label requests
@@ -1025,6 +1047,7 @@ export {
   createPipelineAutomationRequest,
   createPipelineLabelRequest,
   createPipelineRequest,
+  createPipelineWebhookRequest,
   createTaskRequest,
   createUserRequest,
   deleteLabelRequest,

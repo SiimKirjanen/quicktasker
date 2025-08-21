@@ -1532,6 +1532,10 @@
   width: 200px !important;
 }
 
+.\!wpqt-w-full {
+  width: 100% !important;
+}
+
 .wpqt-w-1\/4 {
   width: 25%;
 }

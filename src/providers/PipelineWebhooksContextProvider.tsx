@@ -3,6 +3,8 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { getPipelineWebhookssRequest } from "../api/api";
 import {
+  ADD_PIPELINE_WEBHOOK,
+  REMOVE_PIPELINE_WEBHOOK,
   SET_PIPELINE_WEBHOOKS,
   SET_PIPELINE_WEBHOOKS_LOADING,
 } from "../constants";
@@ -30,6 +32,18 @@ type Action =
   | {
       type: typeof SET_PIPELINE_WEBHOOKS_LOADING;
       payload: boolean;
+    }
+  | {
+      type: typeof ADD_PIPELINE_WEBHOOK;
+      payload: {
+        webhook: Webhook;
+      };
+    }
+  | {
+      type: typeof REMOVE_PIPELINE_WEBHOOK;
+      payload: {
+        webhookId: string;
+      };
     };
 
 type Dispatch = (action: Action) => void;

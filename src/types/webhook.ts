@@ -4,9 +4,9 @@ enum WebhookTargetType {
 }
 
 enum WebhookTargetAction {
-  CREATE = "create",
-  UPDATE = "update",
-  DELETE = "delete",
+  CREATE = "created",
+  UPDATE = "updated",
+  DELETE = "deleted",
 }
 
 type BaseWebhook = {
@@ -26,4 +26,5 @@ type WebhookFromServer = BaseWebhook & {
   webhook_confirm: string;
 };
 
+export { WebhookTargetAction, WebhookTargetType };
 export type { Webhook, WebhookFromServer };

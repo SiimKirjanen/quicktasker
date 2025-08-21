@@ -75,6 +75,7 @@ require( 'php/services/export/PDFExportService.php' );
 require( 'php/services/export/JSONExportService.php' );
 require( 'php/services/import/PipelineImportService.php' );
 require( 'php/services/DBMigrateService.php' );
+require( 'php/services/WebhookService.php' );
 
 WPQT\ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 WPQT\ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
@@ -115,6 +116,7 @@ WPQT\ServiceLocator::register('HeaderRepository', new WPQT\Header\HeaderReposito
 WPQT\ServiceLocator::register('UserPageService', new WPQT\UserPage\UserPageService());
 WPQT\ServiceLocator::register('PermissionService', new WPQT\Permission\PermissionService());
 WPQT\ServiceLocator::register('WebhookRepository', new WPQT\Webhooks\WebhookRepository());
+WPQT\ServiceLocator::register('WebhookService', new WPQT\Webhooks\WebhookService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
