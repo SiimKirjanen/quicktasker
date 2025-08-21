@@ -314,6 +314,20 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 
 			dbDelta( $sql18 );
 
+			$sql19 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_WEBHOOKS . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				pipeline_id int(11) NOT NULL,
+				target_type ENUM('task', 'quicktasker') NOT NULL,
+				target_id int(11) NOT NULL,
+				target_action ENUM('created', 'updated', 'deleted') NOT NULL,
+				webhook_url varchar(255) NOT NULL,
+				webhook_confirm tinyint(1) DEFAULT 0,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id)
+			) $charset_collate;";
+
+			dbDelta( $sql19 );
+
 			update_option( "wp_quicktasker_db_current_version", WP_QUICKTASKER_DB_VERSION );
 		}
 	}
