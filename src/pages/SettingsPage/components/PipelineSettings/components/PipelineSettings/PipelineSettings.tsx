@@ -6,6 +6,7 @@ import { PipelineSettings } from "../../../../../../types/pipeline-settings";
 import { convertPipelineSettingsFromServer } from "../../../../../../utils/pipeline-settings";
 import { PipelineAutomationSetting } from "../Automations/PipelineAutomationSettings/PipelineAutomationSetting";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
+import { PipelineWebhooksSettings } from "../Webhooks/PipelineWebhooksSettings/PipelineWebhooksSettings";
 
 type Props = {
   pipeline: Pipeline;
@@ -48,6 +49,7 @@ function PipelineSettings({ pipeline }: Props) {
         }
       />
       <PipelineAutomationSetting pipelineId={pipeline.id} />
+      <PipelineWebhooksSettings pipelineId={pipeline.id} />
     </div>
   );
 }

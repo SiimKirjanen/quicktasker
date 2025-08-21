@@ -39,6 +39,7 @@ import {
   WPUser,
 } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
+import { WebhookFromServer } from "../types/webhook";
 
 function getCommonHeaders() {
   return {
@@ -829,6 +830,24 @@ function deletePipelineAutomationsRequest(
 
 /*
   ==================================================================================================================================================================================================================
+  Webhooks requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getPipelineWebhookssRequest(pipelineId: string): Promise<
+  WPQTResponse<{
+    webhooks: WebhookFromServer[];
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/webhooks`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+/*
+  ==================================================================================================================================================================================================================
   Label requests
   ==================================================================================================================================================================================================================
 */
@@ -1032,6 +1051,7 @@ export {
   getPipelineLabelsRequest,
   getPipelineOverviewData,
   getPipelineSettingsRequest,
+  getPipelineWebhookssRequest,
   getTaskLogs,
   getUploadsRequest,
   getUserSessionsRequest,
