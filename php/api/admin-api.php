@@ -2749,8 +2749,44 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        /*
+        ==================================================================================================================================================================================================================
+        Webhooks endpoints
+        ==================================================================================================================================================================================================================
+        */
 
-         /*
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/webhooks',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {                 
+                        $pipelineWebhooks = ServiceLocator::get('WebhookRepository')->getPipelineWebhooks($data['id']);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'webhooks' => $pipelineWebhooks,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+
+        /*
         ==================================================================================================================================================================================================================
         Labels endpoints
         ==================================================================================================================================================================================================================

@@ -1,0 +1,28 @@
+<?php
+
+namespace WPQT\Webhooks;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+if ( ! class_exists( 'WPQT\Webhooks\WebhookRepository' ) ) {
+    class WebhookRepository {
+        /**
+         * Retrieves webhooks for a specific pipeline.
+         *
+         * @param int $pipelineId The ID of the pipeline.
+         * @return array|null The list of webhooks for the pipeline, or null if none found.
+         */
+        public function getPipelineWebhooks($pipelineId) {
+            global $wpdb;
+
+            $query = $wpdb->prepare(
+                "SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, created_at FROM " . TABLE_WP_QUICKTASKER_WEBHOOKS . " WHERE pipeline_id = %d",
+                $pipelineId
+            );
+
+            return $wpdb->get_results($query);
+        }
+    }
+}
