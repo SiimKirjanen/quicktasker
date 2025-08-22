@@ -1,4 +1,5 @@
 import { useContext } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { SET_WEBHOOKS_MODAL_OPEN } from "../../../constants";
 import { useWebhooks } from "../../../hooks/useWebhooks";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -23,12 +24,24 @@ function WebhooksModal() {
       }}
       size="lg"
     >
-      <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">
-        {webhooks.map((webhook) => (
-          <Webhook key={webhook.id} webhook={webhook} />
-        ))}
-      </div>
+      <WebhookModalContent webhooks={webhooks} />
     </WPQTModal>
+  );
+}
+
+type WebhooksModalContentProps = {
+  webhooks: Webhook[];
+};
+function WebhookModalContent({ webhooks }: WebhooksModalContentProps) {
+  if (webhooks.length === 0) {
+    return <h2>{__("No webhooks found.", "quicktasker")}</h2>;
+  }
+  return (
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">
+      {webhooks.map((webhook) => (
+        <Webhook key={webhook.id} webhook={webhook} />
+      ))}
+    </div>
   );
 }
 

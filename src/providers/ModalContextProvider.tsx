@@ -208,6 +208,7 @@ export {
   ModalContext,
   ModalContextProvider,
   type Action,
+  type ModalContextType,
   type ModalDispatch,
   type State,
 };

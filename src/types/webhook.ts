@@ -12,7 +12,7 @@ type BaseWebhook = {
   id: string;
   pipeline_id: string;
   target_type: WebhookTargetType;
-  target_id: string;
+  target_id: string | null;
   target_action: WebhookTargetAction;
   webhook_url: string;
   created_at: string;

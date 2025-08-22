@@ -69,10 +69,24 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
         $relatedWebhooks = ServiceLocator::get('WebhookRepository')->findRelatedWebhooks($pipelineId, $args);
 
         foreach ($relatedWebhooks as $webhook) {
+          $webHookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
+          $baseLog = array(
+            'type'        => WP_QT_LOG_TYPE_WEBHOOK,
+            'type_id'     => $webhook->id,
+            'user_id'     => get_current_user_id(),
+            'created_by'  => WP_QT_LOG_CREATED_BY_ADMIN,
+            'pipeline_id' => $pipelineId,
+          );
+
           try {
             $this->processWebhook($webhook, $relatedObject);
+
+            ServiceLocator::get('LogService')->log($webHookName . ' executed', $baseLog);
           } catch (\Exception $e) {
-            // Handle webhook processing errors
+
+            ServiceLocator::get('LogService')->log($webHookName . ' failed', array_merge($baseLog, [
+              'log_status' => WP_QT_LOG_STATUS_ERROR
+            ]));
           }
         }
       }
