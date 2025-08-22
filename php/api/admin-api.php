@@ -2837,6 +2837,34 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        register_rest_route(
+            'wpqt/v1',
+            'webhooks/(?P<id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    try {
+                        ServiceLocator::get('WebhookService')->deleteWebhook($data['id']);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
 
         /*
         ==================================================================================================================================================================================================================

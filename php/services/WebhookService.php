@@ -43,5 +43,26 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
 
         return ServiceLocator::get('WebhookRepository')->getWebhookById($wpdb->insert_id);
       }
+
+        /**
+         * Deletes a webhook by its ID.
+         *
+         * @param int $webhookId The ID of the webhook to delete.
+         * @return bool True on success, false on failure.
+         * @throws \Exception If the webhook could not be deleted.
+         */
+      public function deleteWebhook($webhookId) {
+        global $wpdb;
+
+        $result = $wpdb->delete(TABLE_WP_QUICKTASKER_WEBHOOKS, array(
+            'id' => $webhookId
+        ));
+
+        if ( $result === false ) {
+            throw new \Exception('Failed to delete the webhook');
+        }
+
+        return true;
+      }
     }
 }
