@@ -2800,6 +2800,15 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                                 'webhook_url' => $data['webhook_url']
                             )
                         );
+                        $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
+
+                        ServiceLocator::get('LogService')->log($webhookName . ' created', [
+                            'type' => WP_QT_LOG_TYPE_WEBHOOK,
+                            'type_id' => $webhook->id,
+                            'user_id' => get_current_user_id(),
+                            'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'pipeline_id' => $webhook->pipeline_id,
+                        ]);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'webhook' => $webhook,
@@ -2844,7 +2853,18 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                 'methods' => 'DELETE',
                 'callback' => function( $data ) {
                     try {
+                        $webhook = ServiceLocator::get('WebhookRepository')->getWebhookById($data['id']);
                         ServiceLocator::get('WebhookService')->deleteWebhook($data['id']);
+
+                        $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
+
+                        ServiceLocator::get('LogService')->log($webhookName . ' deleted', [
+                            'type' => WP_QT_LOG_TYPE_WEBHOOK,
+                            'type_id' => $webhook->id,
+                            'user_id' => get_current_user_id(),
+                            'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'pipeline_id' => $webhook->pipeline_id,
+                        ]);
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                         ]))->toArray(), 200);

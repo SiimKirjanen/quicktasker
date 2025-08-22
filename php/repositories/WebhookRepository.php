@@ -41,5 +41,15 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookRepository' ) ) {
 
             return $wpdb->get_row($query);
         }
+
+        /**
+         * Generates a user-friendly name for a webhook.
+         *
+         * @param object $webhook The webhook object.
+         * @return string The generated webhook name.
+         */
+        public function generateWebhookName($webhook) {
+            return 'Webhook (type: ' . $webhook->target_type . ', action: ' . $webhook->target_action . ', URL: ' . $webhook->webhook_url . ')';
+        }
     }
 }

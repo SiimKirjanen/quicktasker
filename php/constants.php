@@ -60,7 +60,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.45.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.46.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -159,6 +159,14 @@ if ( ! defined( 'WP_QT_LOG_TYPE_STAGE' ) ) {
 
 if ( ! defined( 'WP_QT_LOG_TYPE_USER' ) ) {
     define('WP_QT_LOG_TYPE_USER', "user");
+}
+
+if ( ! defined( 'WP_QT_LOG_TYPE_PIPELINE' ) ) {
+    define('WP_QT_LOG_TYPE_PIPELINE', "pipeline");
+}
+
+if ( ! defined( 'WP_QT_LOG_TYPE_WEBHOOK' ) ) {
+    define('WP_QT_LOG_TYPE_WEBHOOK', "webhook");
 }
 
 if ( ! defined( 'WP_QT_LOG_TYPES' ) ) {
