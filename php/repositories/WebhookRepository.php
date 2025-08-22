@@ -43,6 +43,42 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookRepository' ) ) {
         }
 
         /**
+         * Finds webhooks based on criteria.
+         *
+         * @param int|null $pipelineId The ID of the pipeline.
+         * @param array $args The criteria to filter webhooks (e.g., target_type, target_action).
+         * @return array The list of webhooks matching the criteria.
+         */
+        public function findRelatedWebhooks($pipelineId, $args) {
+            global $wpdb;
+
+            $defaults = array(
+                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
+            ); 
+            
+            $args = wp_parse_args($args, $defaults);
+
+            if ( $pipelineId === null ) {
+                $sql  = "SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, created_at
+                         FROM " . TABLE_WP_QUICKTASKER_WEBHOOKS . "
+                         WHERE pipeline_id IS NULL AND target_type = %s AND target_action = %s";
+                $prepArgs = array( $args['target_type'], $args['target_action'] );
+            } else {
+                // Match specific pipeline
+                $sql  = "SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, created_at
+                         FROM " . TABLE_WP_QUICKTASKER_WEBHOOKS . "
+                         WHERE pipeline_id = %d AND target_type = %s AND target_action = %s";
+                $prepArgs = array( (int) $pipelineId, $args['target_type'], $args['target_action'] );
+            }
+
+            $query   = $wpdb->prepare( $sql, $prepArgs );
+            $results = $wpdb->get_results( $query );
+
+            return is_array( $results ) ? $results : array();
+        }
+
+        /**
          * Generates a user-friendly name for a webhook.
          *
          * @param object $webhook The webhook object.

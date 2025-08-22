@@ -23309,7 +23309,6 @@ __webpack_require__.r(__webpack_exports__);
 var WebhookTargetType;
 (function (WebhookTargetType) {
   WebhookTargetType["TASK"] = "task";
-  WebhookTargetType["QUICKTASKER"] = "quicktasker";
 })(WebhookTargetType || (WebhookTargetType = {}));
 var WebhookTargetAction;
 (function (WebhookTargetAction) {

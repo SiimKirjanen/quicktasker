@@ -1,6 +1,5 @@
 enum WebhookTargetType {
   TASK = "task",
-  QUICKTASKER = "quicktasker",
 }
 
 enum WebhookTargetAction {

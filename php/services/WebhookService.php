@@ -64,5 +64,110 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
 
         return true;
       }
+
+      public function handleWebhooks($pipelineId, $relatedObject, $args) {
+        $relatedWebhooks = ServiceLocator::get('WebhookRepository')->findRelatedWebhooks($pipelineId, $args);
+
+        foreach ($relatedWebhooks as $webhook) {
+          try {
+            $this->processWebhook($webhook, $relatedObject);
+          } catch (\Exception $e) {
+            // Handle webhook processing errors
+          }
+        }
+      }
+
+      public function processWebhook($webhook, $relatedObject) {
+        $httpMethod = $this->determineWebhookHttpMethod($webhook);
+        $webhookData = (object)[
+          'id' => $webhook->id,
+          'pipeline_id' => $webhook->pipeline_id,
+          'target_type' => $webhook->target_type,
+          'target_action' => $webhook->target_action,
+          'webhook_url' => $webhook->webhook_url,
+          'created_at' => $webhook->created_at
+        ];
+
+        if ( $this->isTargetTypeTaskWebhook($webhook) ) {
+          $task = (object)[
+            'id' => $relatedObject->id,
+            'name' => $relatedObject->name,
+            'description' => $relatedObject->description,
+            'pipeline_id' => $relatedObject->pipeline_id,
+            'is_archived' => $relatedObject->is_archived,
+            'is_done' => $relatedObject->is_done,
+            'due_date' => $relatedObject->due_date,
+            'free_for_all' => $relatedObject->free_for_all,
+            'created_at' => $relatedObject->created_at,
+            'updated_at' => $relatedObject->updated_at,
+            'task_completed_at' => $relatedObject->task_completed_at,
+            'task_focus_color' => $relatedObject->task_focus_color
+          ];
+          $this->sendWebhookRequest(
+            $webhook->webhook_url,
+            $httpMethod,
+            array(
+              'task' => $task,
+              'webhook' => $webhookData,
+            )
+          );
+          
+        } elseif ( $this->isTargetTypeQuicktaskerWebhook($webhook) ) {
+          $quicktasker = (object)[
+            'id' => $relatedObject->id,
+            'name' => $relatedObject->name,
+            'description' => $relatedObject->description,
+            'created_at' => $relatedObject->created_at,
+            'updated_at' => $relatedObject->updated_at,
+            'is_active' => $relatedObject->is_active
+          ];
+          $this->sendWebhookRequest(
+            $webhook->webhook_url,
+            $httpMethod,
+            array(
+              'quicktasker' => $quicktasker,
+              'webhook' => $webhookData,
+            )
+          );
+        }
+      }
+
+      public function isTargetTypeTaskWebhook($webhook) {
+        return $webhook->target_type === WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK;
+      }
+
+      public function isTargetTypeQuicktaskerWebhook($webhook) {
+        return $webhook->target_type === WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER;
+      }
+
+     public function determineWebhookHttpMethod( $webhook ) {
+        $action = $webhook->target_action;
+
+        switch ( $action ) {
+          case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED:
+            return 'POST';
+          case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED:
+            return 'PUT';
+          case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED:
+            return 'DELETE';
+          default:
+            return 'POST';
+        }
+      }
+
+      public function sendWebhookRequest($url, $method, $body) {
+        $requestArgs = array(
+          'method'    => $method,
+          'body'      => json_encode($body),
+          'headers'   => array(
+            'Content-Type' => 'application/json',
+          ),
+          'timeout'   => 15,
+          'blocking'  => false,
+          'sslverify' => true,
+        );
+
+       wp_remote_request($url, $requestArgs);
+      }
     }
 }
