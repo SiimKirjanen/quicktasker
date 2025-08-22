@@ -10266,12 +10266,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hooks_actions_useWebhookActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../hooks/actions/useWebhookActions */ "./src/hooks/actions/useWebhookActions.ts");
 /* harmony import */ var _hooks_useWebhooks__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../hooks/useWebhooks */ "./src/hooks/useWebhooks.ts");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _types_webhook__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../types/webhook */ "./src/types/webhook.ts");
-/* harmony import */ var _utils_webhooks__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../../utils/webhooks */ "./src/utils/webhooks.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
-/* harmony import */ var _common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../../common/Label/WPQTLabel */ "./src/components/common/Label/WPQTLabel.tsx");
-/* harmony import */ var _common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../../common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
+/* harmony import */ var _schemas_webhook__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../schemas/webhook */ "./src/schemas/webhook.ts");
+/* harmony import */ var _types_webhook__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../../types/webhook */ "./src/types/webhook.ts");
+/* harmony import */ var _utils_webhooks__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../../utils/webhooks */ "./src/utils/webhooks.ts");
+/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
+/* harmony import */ var _common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../../common/Label/WPQTLabel */ "./src/components/common/Label/WPQTLabel.tsx");
+/* harmony import */ var _common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../../../common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -10313,13 +10314,18 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function WebhookCreator({
   pipelineId
 }) {
-  const [targetType, setTargetType] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetType.TASK);
-  const [targetAction, setTargetAction] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetAction.CREATE);
+  const [targetType, setTargetType] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_webhook__WEBPACK_IMPORTED_MODULE_9__.WebhookTargetType.TASK);
+  const [targetAction, setTargetAction] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(_types_webhook__WEBPACK_IMPORTED_MODULE_9__.WebhookTargetAction.CREATE);
   const [webhookUrl, setWebhookUrl] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
   const [isCreating, setIsCreating] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [validationState, setValidationState] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
+    urlValid: true,
+    urlDirty: false
+  });
   const {
     createWebhook
   } = (0,_hooks_actions_useWebhookActions__WEBPACK_IMPORTED_MODULE_5__.useWebhookActions)();
@@ -10331,7 +10337,7 @@ function WebhookCreator({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__.ModalContext);
   function handleCreateWebhook() {
     return __awaiter(this, void 0, void 0, function* () {
-      if (isCreating) {
+      if (isCreating || !validationState.urlValid) {
         return;
       }
       setIsCreating(true);
@@ -10345,7 +10351,7 @@ function WebhookCreator({
         pipelineWebhooksDispatch({
           type: _constants__WEBPACK_IMPORTED_MODULE_4__.ADD_PIPELINE_WEBHOOK,
           payload: {
-            webhook: (0,_utils_webhooks__WEBPACK_IMPORTED_MODULE_9__.convertWebhookFromServer)(webhook)
+            webhook: (0,_utils_webhooks__WEBPACK_IMPORTED_MODULE_10__.convertWebhookFromServer)(webhook)
           }
         });
         resetState();
@@ -10359,22 +10365,31 @@ function WebhookCreator({
     });
   }
   function resetState() {
-    setTargetType(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetType.TASK);
-    setTargetAction(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetAction.CREATE);
+    setTargetType(_types_webhook__WEBPACK_IMPORTED_MODULE_9__.WebhookTargetType.TASK);
+    setTargetAction(_types_webhook__WEBPACK_IMPORTED_MODULE_9__.WebhookTargetAction.CREATE);
     setWebhookUrl("");
+    setValidationState({
+      urlValid: true,
+      urlDirty: false
+    });
   }
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    setValidationState(prev => Object.assign(Object.assign({}, prev), {
+      urlValid: _schemas_webhook__WEBPACK_IMPORTED_MODULE_8__.webhookUrlSchema.safeParse(webhookUrl).success
+    }));
+  }, [webhookUrl]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-gap-4 wpqt-mb-4",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_12__.WPQTLabel, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_13__.WPQTLabel, {
           labelFor: "webhook-target-type",
           className: "wpqt-block wpqt-mb-3",
           children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select a target type", "quicktasker")
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_13__.WPQTSelect, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_14__.WPQTSelect, {
           id: "webhook-target-type",
           selectedOptionValue: targetType,
-          options: Object.values(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetType).map(type => ({
+          options: Object.values(_types_webhook__WEBPACK_IMPORTED_MODULE_9__.WebhookTargetType).map(type => ({
             value: type,
             label: type
           })),
@@ -10382,14 +10397,14 @@ function WebhookCreator({
           onSelectionChange: value => setTargetType(value)
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_12__.WPQTLabel, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_13__.WPQTLabel, {
           labelFor: "webhook-target-action",
           className: "wpqt-block wpqt-mb-3",
           children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select a target action", "quicktasker")
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_13__.WPQTSelect, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_14__.WPQTSelect, {
           id: "webhook-target-action",
           selectedOptionValue: targetAction,
-          options: Object.values(_types_webhook__WEBPACK_IMPORTED_MODULE_8__.WebhookTargetAction).map(action => ({
+          options: Object.values(_types_webhook__WEBPACK_IMPORTED_MODULE_9__.WebhookTargetAction).map(action => ({
             value: action,
             label: action
           })),
@@ -10398,21 +10413,29 @@ function WebhookCreator({
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex-1",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_12__.WPQTLabel, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_13__.WPQTLabel, {
           labelFor: "webhook-url",
           className: "wpqt-block wpqt-mb-3",
           children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enter the webhook URL", "quicktasker")
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_11__.WPQTInput, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_12__.WPQTInput, {
           inputId: "webhook-url",
           value: webhookUrl,
-          onChange: value => setWebhookUrl(value),
-          wrapperClassName: "!wpqt-w-full",
+          onChange: value => {
+            setWebhookUrl(value);
+            setValidationState(prev => Object.assign(Object.assign({}, prev), {
+              urlDirty: true
+            }));
+          },
+          wrapperClassName: "!wpqt-w-full !wpqt-mb-0",
           className: "!wpqt-w-full"
+        }), !validationState.urlValid && validationState.urlDirty && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "wpqt-text-red-600 wpqt-mt-1",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please enter a valid URL", "quicktasker")
         })]
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-end",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTButton, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_11__.WPQTButton, {
         btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create Webhook", "quicktasker"),
         onClick: handleCreateWebhook,
         loading: isCreating
@@ -22924,6 +22947,25 @@ const slackMessageWebhookSchema = zod__WEBPACK_IMPORTED_MODULE_0__.z.string().ur
   message: "Invalid URL"
 }).refine(url => url.startsWith("https://hooks.slack.com/services/"), {
   message: "Invalid Slack webhook URL"
+});
+
+
+/***/ }),
+
+/***/ "./src/schemas/webhook.ts":
+/*!********************************!*\
+  !*** ./src/schemas/webhook.ts ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   webhookUrlSchema: () => (/* binding */ webhookUrlSchema)
+/* harmony export */ });
+/* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zod */ "./node_modules/zod/lib/index.mjs");
+
+const webhookUrlSchema = zod__WEBPACK_IMPORTED_MODULE_0__.z.string().url({
+  message: "Invalid URL"
 });
 
 

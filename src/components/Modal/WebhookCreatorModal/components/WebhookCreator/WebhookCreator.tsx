@@ -1,4 +1,4 @@
-import { useContext, useState } from "@wordpress/element";
+import { useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
@@ -9,6 +9,7 @@ import {
 import { useWebhookActions } from "../../../../../hooks/actions/useWebhookActions";
 import { useWebhooks } from "../../../../../hooks/useWebhooks";
 import { ModalContext } from "../../../../../providers/ModalContextProvider";
+import { webhookUrlSchema } from "../../../../../schemas/webhook";
 import {
   WebhookTargetAction,
   WebhookTargetType,
@@ -28,12 +29,16 @@ function WebhookCreator({ pipelineId }: Props) {
   const [targetAction, setTargetAction] = useState(WebhookTargetAction.CREATE);
   const [webhookUrl, setWebhookUrl] = useState("");
   const [isCreating, setIsCreating] = useState(false);
+  const [validationState, setValidationState] = useState({
+    urlValid: true,
+    urlDirty: false,
+  });
   const { createWebhook } = useWebhookActions();
   const { pipelineWebhooksDispatch } = useWebhooks();
   const { modalDispatch } = useContext(ModalContext);
 
   async function handleCreateWebhook() {
-    if (isCreating) {
+    if (isCreating || !validationState.urlValid) {
       return;
     }
 
@@ -67,7 +72,18 @@ function WebhookCreator({ pipelineId }: Props) {
     setTargetType(WebhookTargetType.TASK);
     setTargetAction(WebhookTargetAction.CREATE);
     setWebhookUrl("");
+    setValidationState({
+      urlValid: true,
+      urlDirty: false,
+    });
   }
+
+  useEffect(() => {
+    setValidationState((prev) => ({
+      ...prev,
+      urlValid: webhookUrlSchema.safeParse(webhookUrl).success,
+    }));
+  }, [webhookUrl]);
 
   return (
     <div>
@@ -119,10 +135,21 @@ function WebhookCreator({ pipelineId }: Props) {
           <WPQTInput
             inputId="webhook-url"
             value={webhookUrl}
-            onChange={(value) => setWebhookUrl(value)}
-            wrapperClassName="!wpqt-w-full"
+            onChange={(value) => {
+              setWebhookUrl(value);
+              setValidationState((prev) => ({
+                ...prev,
+                urlDirty: true,
+              }));
+            }}
+            wrapperClassName="!wpqt-w-full !wpqt-mb-0"
             className="!wpqt-w-full"
           />
+          {!validationState.urlValid && validationState.urlDirty && (
+            <div className="wpqt-text-red-600 wpqt-mt-1">
+              {__("Please enter a valid URL", "quicktasker")}
+            </div>
+          )}
         </div>
       </div>
       <div className="wpqt-flex wpqt-justify-end">
