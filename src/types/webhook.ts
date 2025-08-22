@@ -16,6 +16,7 @@ type BaseWebhook = {
   target_id: string;
   target_action: WebhookTargetAction;
   webhook_url: string;
+  created_at: string;
 };
 
 type Webhook = BaseWebhook & {

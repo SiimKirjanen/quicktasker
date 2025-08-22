@@ -1424,6 +1424,10 @@
   margin-top: auto;
 }
 
+.wpqt-mr-2 {
+  margin-right: 0.5rem;
+}
+
 .\!wpqt-block {
   display: block !important;
 }
@@ -1580,6 +1584,14 @@
   width: 100vw;
 }
 
+.wpqt-w-\[100px\] {
+  width: 100px;
+}
+
+.wpqt-w-\[160px\] {
+  width: 160px;
+}
+
 .wpqt-min-w-56 {
   min-width: 14rem;
 }
@@ -1594,6 +1606,10 @@
 
 .wpqt-min-w-\[60px\] {
   min-width: 60px;
+}
+
+.wpqt-min-w-\[100px\] {
+  min-width: 100px;
 }
 
 .wpqt-max-w-4xl {

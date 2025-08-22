@@ -2,6 +2,7 @@ import { useContext } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
 import { Loading } from "../../../../../../../components/Loading/Loading";
 import { WebhookCreatorModal } from "../../../../../../../components/Modal/WebhookCreatorModal/WebhookCreatorModal";
+import { WebhooksModal } from "../../../../../../../components/Modal/WebhooksModal/WebhooksModal";
 import {
   HAS_WEBHOOKS,
   SET_WEBHOOK_CREATION_MODAL_OPEN,
@@ -35,6 +36,7 @@ function PipelineWebhooksSettings({ pipelineId }: Props) {
       >
         <PipelineWebhooksInfo />
         <WebhookCreatorModal pipelineId={pipelineId} />
+        <WebhooksModal />
       </Settings>
     </PipelineWebhooksContextProvider>
   );

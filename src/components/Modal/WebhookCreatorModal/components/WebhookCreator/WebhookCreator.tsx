@@ -33,6 +33,10 @@ function WebhookCreator({ pipelineId }: Props) {
   const { modalDispatch } = useContext(ModalContext);
 
   async function handleCreateWebhook() {
+    if (isCreating) {
+      return;
+    }
+
     setIsCreating(true);
     const { success, webhook } = await createWebhook(
       pipelineId,

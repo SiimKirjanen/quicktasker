@@ -855,7 +855,11 @@ function createPipelineWebhookRequest(
   targetType: WebhookTargetType,
   targetAction: WebhookTargetAction,
   webhookUrl: string,
-): Promise<WPQTResponse<WebhookFromServer>> {
+): Promise<
+  WPQTResponse<{
+    webhook: WebhookFromServer;
+  }>
+> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}/webhooks`,
     method: "POST",
@@ -864,6 +868,16 @@ function createPipelineWebhookRequest(
       target_action: targetAction,
       webhook_url: webhookUrl,
     },
+    headers: getCommonHeaders(),
+  });
+}
+
+function deletePipelineWebhookRequest(
+  webhookId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/webhooks/${webhookId}`,
+    method: "DELETE",
     headers: getCommonHeaders(),
   });
 }
@@ -1053,6 +1067,7 @@ export {
   deleteLabelRequest,
   deletePipelineAutomationsRequest,
   deletePipelineRequest,
+  deletePipelineWebhookRequest,
   deleteStageRequest,
   deleteTaskRequest,
   deleteUploadRequest,
