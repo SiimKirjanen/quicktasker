@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.38.0\n"
+"Project-Id-Version: QuickTasker 1.40.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-25T11:32:02+00:00\n"
+"POT-Creation-Date: 2025-08-23T10:25:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: quicktasker\n"
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-#: php/services/TaskService.php:464
+#: php/services/TaskService.php:431
 msgid "Cannot restore the task. The selected board needs at least one stage."
 msgstr ""
 
@@ -263,6 +263,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Failed to delete automation"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to update task"
 msgstr ""
 
 #: build/app.js:1
@@ -528,11 +532,6 @@ msgid "No deleted custom fields"
 msgstr ""
 
 #: build/app.js:1
-#: build/userApp.js:1
-msgid "Save"
-msgstr ""
-
-#: build/app.js:1
 msgid "This custom field is inherited from %s settings and can't be deleted here"
 msgstr ""
 
@@ -606,6 +605,11 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Edit label"
+msgstr ""
+
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Save"
 msgstr ""
 
 #: build/app.js:1
@@ -742,6 +746,14 @@ msgid "Failed to add comment"
 msgstr ""
 
 #: build/app.js:1
+msgid "Private comments"
+msgstr ""
+
+#: build/app.js:1
+msgid "Public comments"
+msgstr ""
+
+#: build/app.js:1
 msgid "File uploaded successfully"
 msgstr ""
 
@@ -815,11 +827,7 @@ msgid "Free for all task"
 msgstr ""
 
 #: build/app.js:1
-msgid "When enabled, all QuickTasker users have the ability to self-assign or unassign this task."
-msgstr ""
-
-#: build/app.js:1
-msgid "Saving..."
+msgid "When enabled, users have the ability to self-assign or unassign this task."
 msgstr ""
 
 #: build/app.js:1
@@ -1583,6 +1591,87 @@ msgid "Allow to mark task as done only on board last stage. By default, task can
 msgstr ""
 
 #: build/app.js:1
+msgid "Failed to create webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Webhook deleted successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to delete webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load board webhooks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Select a target type"
+msgstr ""
+
+#: build/app.js:1
+msgid "Select a target action"
+msgstr ""
+
+#: build/app.js:1
+msgid "Enter the webhook URL"
+msgstr ""
+
+#: build/app.js:1
+msgid "Please enter a valid URL"
+msgstr ""
+
+#: build/app.js:1
+msgid "Create Webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Webhook created successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Create a new webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "URL"
+msgstr ""
+
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Created"
+msgstr ""
+
+#: build/app.js:1
+msgid "No webhooks found."
+msgstr ""
+
+#: build/app.js:1
+msgid "Send real-time board event data to external services using webhooks."
+msgstr ""
+
+#: build/app.js:1
+msgid "Send real-time board event data to external services using webhooks. To configure more than one webhook, please upgrade to the premium version."
+msgstr ""
+
+#: build/app.js:1
+msgid "Board webhooks"
+msgstr ""
+
+#: build/app.js:1
+msgid "There are no webhooks configured for this board."
+msgstr ""
+
+#: build/app.js:1
+msgid "There are %d webhooks configured for this board."
+msgstr ""
+
+#: build/app.js:1
+msgid "Manage board webhooks"
+msgstr ""
+
+#: build/app.js:1
 msgid "Manage settings, preferences, and configurations."
 msgstr ""
 
@@ -1604,10 +1693,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "User creation failed. Please try again"
-msgstr ""
-
-#: build/app.js:1
-msgid "User edited successfully"
 msgstr ""
 
 #: build/app.js:1
@@ -1756,10 +1841,6 @@ msgid "No logs available"
 msgstr ""
 
 #: build/app.js:1
-msgid "Logs can be seen only by WordPress users (with required permissions)"
-msgstr ""
-
-#: build/app.js:1
 msgid "Failed to load private comments"
 msgstr ""
 
@@ -1772,23 +1853,7 @@ msgid "No comments available"
 msgstr ""
 
 #: build/app.js:1
-msgid "Comments that can be added and viewed only by WordPress users (with required permissions)."
-msgstr ""
-
-#: build/app.js:1
 msgid "Failed to load comments"
-msgstr ""
-
-#: build/app.js:1
-msgid "Comments that can be added and viewed by WordPress users (with required permissions) and current QuickTasker user (in user page)."
-msgstr ""
-
-#: build/app.js:1
-msgid "Private comments"
-msgstr ""
-
-#: build/app.js:1
-msgid "Public comments"
 msgstr ""
 
 #: build/app.js:1
@@ -1910,10 +1975,6 @@ msgstr ""
 
 #: build/userApp.js:1
 msgid "No tasks assignable to you"
-msgstr ""
-
-#: build/userApp.js:1
-msgid "Created"
 msgstr ""
 
 #: build/userApp.js:1
