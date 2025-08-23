@@ -120,7 +120,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				pipeline_id int(11) DEFAULT NULL,
 				text text NOT NULL,
 				type_id int(11) DEFAULT NULL,
-				type ENUM('task', 'pipeline', 'stage', 'user', 'users') NOT NULL,
+				type ENUM('task', 'pipeline', 'stage', 'user', 'users', 'webhook') NOT NULL,
 				created_by ENUM('system', 'admin', 'quicktasker_user', 'automation', 'import') NOT NULL,
 				user_id int(11) DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',
@@ -313,6 +313,20 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 			) $charset_collate;";
 
 			dbDelta( $sql18 );
+
+			$sql19 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_WEBHOOKS . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				pipeline_id int(11) DEFAULT NULL,
+				target_type ENUM('task', 'quicktasker') NOT NULL,
+				target_id int(11) DEFAULT NULL,
+				target_action ENUM('created', 'updated', 'deleted') NOT NULL,
+				webhook_url varchar(255) NOT NULL,
+				webhook_confirm tinyint(1) DEFAULT 0,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id)
+			) $charset_collate;";
+
+			dbDelta( $sql19 );
 
 			update_option( "wp_quicktasker_db_current_version", WP_QUICKTASKER_DB_VERSION );
 		}

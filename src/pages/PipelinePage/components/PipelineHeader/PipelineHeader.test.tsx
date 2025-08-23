@@ -65,6 +65,8 @@ describe("PipelineHeader", () => {
     taskRestoreModalSettings: { taskToRestore: null },
     customFieldCreatorModalOpen: false,
     customFieldRecoveryModalOpen: false,
+    webhookCreationModalOpen: false,
+    webhooksModalOpen: false,
   };
 
   function renderWithProviders(ctxOverrides = {}, modalOverrides = {}) {

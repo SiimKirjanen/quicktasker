@@ -60,7 +60,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.44.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.46.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -135,6 +135,10 @@ if ( ! defined( 'TABLE_WP_QUICKTASKER_UPLOADS' ) ) {
     define('TABLE_WP_QUICKTASKER_UPLOADS', $wpdb->prefix . "quicktasker_uploads");
 }
 
+if ( ! defined( 'TABLE_WP_QUICKTASKER_WEBHOOKS' ) ) {
+    define('TABLE_WP_QUICKTASKER_WEBHOOKS', $wpdb->prefix . "quicktasker_webhooks");
+}
+
 /*
 ==================================================================================================================================================================================================================
 Log constants
@@ -155,6 +159,14 @@ if ( ! defined( 'WP_QT_LOG_TYPE_STAGE' ) ) {
 
 if ( ! defined( 'WP_QT_LOG_TYPE_USER' ) ) {
     define('WP_QT_LOG_TYPE_USER', "user");
+}
+
+if ( ! defined( 'WP_QT_LOG_TYPE_PIPELINE' ) ) {
+    define('WP_QT_LOG_TYPE_PIPELINE', "pipeline");
+}
+
+if ( ! defined( 'WP_QT_LOG_TYPE_WEBHOOK' ) ) {
+    define('WP_QT_LOG_TYPE_WEBHOOK', "webhook");
 }
 
 if ( ! defined( 'WP_QT_LOG_TYPES' ) ) {
@@ -600,6 +612,46 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES' ) ) {
 if ( ! defined( 'WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META' ) ) {
     define('WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META', [
         WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE
+    ]);
+}
+
+/*
+==================================================================================================================================================================================================================
+Webhook constants
+==================================================================================================================================================================================================================
+*/
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK', "task");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER', "quicktasker");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPES' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPES', [
+        WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+        WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER
+    ]);
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED', "created");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED', "updated");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED', "deleted");
+}
+
+if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS' ) ) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS', [
+        WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
+        WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED,
+        WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED
     ]);
 }
 

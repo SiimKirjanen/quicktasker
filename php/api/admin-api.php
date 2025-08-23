@@ -483,7 +483,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $taskService = new TaskService();
                         $logService = new LogService();
                         $automationService = ServiceLocator::get('AutomationService');
-                        
+                        $webhookService = ServiceLocator::get('WebhookService');
+
                         $newTask = $taskService->createTask( $data['stageId'], array(
                             "name" => $data['name'],
                             "pipelineId" => $data['pipelineId'],
@@ -504,6 +505,14 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
                         );
                         /* End of handling automations */
+
+                        /* Handle webhooks */
+                        $webhookService->handleWebhooks($newTask->pipeline_id, $newTask, array(
+                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
+                        ));
+
+                        /* End of handling webhooks */
 
                         $wpdb->query('COMMIT');
 
@@ -578,6 +587,13 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks($task->pipeline_id, $task, array(
+                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED,
+                        ));
+                        /* End Handle webhooks */
+
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), $task))->toArray(), 200);
@@ -651,6 +667,13 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             ]
                          );
                          /* End of handling automations */
+
+                         /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks($deletedTask->pipeline_id, $deletedTask, array(
+                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED,
+                        ));
+                        /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
 
@@ -2749,8 +2772,144 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        /*
+        ==================================================================================================================================================================================================================
+        Webhooks endpoints
+        ==================================================================================================================================================================================================================
+        */
 
-         /*
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/webhooks',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {                 
+                        $pipelineWebhooks = ServiceLocator::get('WebhookRepository')->getPipelineWebhooks($data['id']);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'webhooks' => $pipelineWebhooks,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/webhooks',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    try {                 
+                        $webhook = ServiceLocator::get('WebhookService')->createWebhook(
+                            $data['id'],
+                            array(
+                                'target_type' => $data['target_type'],
+                                'target_action' => $data['target_action'],
+                                'webhook_url' => $data['webhook_url']
+                            )
+                        );
+                        $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
+
+                        ServiceLocator::get('LogService')->log($webhookName . ' created', [
+                            'type' => WP_QT_LOG_TYPE_WEBHOOK,
+                            'type_id' => $webhook->id,
+                            'user_id' => get_current_user_id(),
+                            'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'pipeline_id' => $webhook->pipeline_id,
+                        ]);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'webhook' => $webhook,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'target_type' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateWebhookTargetType'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'target_action' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateWebhookTargetAction'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'webhook_url' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'webhooks/(?P<id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    try {
+                        $webhook = ServiceLocator::get('WebhookRepository')->getWebhookById($data['id']);
+                        ServiceLocator::get('WebhookService')->deleteWebhook($data['id']);
+
+                        $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
+
+                        ServiceLocator::get('LogService')->log($webhookName . ' deleted', [
+                            'type' => WP_QT_LOG_TYPE_WEBHOOK,
+                            'type_id' => $webhook->id,
+                            'user_id' => get_current_user_id(),
+                            'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'pipeline_id' => $webhook->pipeline_id,
+                        ]);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+        /*
         ==================================================================================================================================================================================================================
         Labels endpoints
         ==================================================================================================================================================================================================================

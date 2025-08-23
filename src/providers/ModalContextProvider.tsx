@@ -35,6 +35,8 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
   SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
+  SET_WEBHOOK_CREATION_MODAL_OPEN,
+  SET_WEBHOOKS_MODAL_OPEN,
 } from "../constants";
 import { reducer } from "../reducers/modal-reducer";
 import {
@@ -81,6 +83,8 @@ const initialState: State = {
   },
   customFieldCreatorModalOpen: false,
   customFieldRecoveryModalOpen: false,
+  webhookCreationModalOpen: false,
+  webhooksModalOpen: false,
 };
 
 type State = {
@@ -111,6 +115,8 @@ type State = {
   taskRestoreModalSettings: TaskRestoreModalSettings;
   customFieldCreatorModalOpen: boolean;
   customFieldRecoveryModalOpen: boolean;
+  webhookCreationModalOpen: boolean;
+  webhooksModalOpen: boolean;
 };
 
 type Action =
@@ -171,7 +177,9 @@ type Action =
   | { type: typeof CLOSE_TASK_RESTORE_MODAL }
   | { type: typeof SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN; payload: boolean }
   | { type: typeof SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN; payload: boolean }
-  | { type: typeof CLOSE_AUTOMATIONS_MODAL };
+  | { type: typeof CLOSE_AUTOMATIONS_MODAL }
+  | { type: typeof SET_WEBHOOK_CREATION_MODAL_OPEN; payload: boolean }
+  | { type: typeof SET_WEBHOOKS_MODAL_OPEN; payload: boolean };
 
 type ModalDispatch = (action: Action) => void;
 
@@ -200,6 +208,7 @@ export {
   ModalContext,
   ModalContextProvider,
   type Action,
+  type ModalContextType,
   type ModalDispatch,
   type State,
 };
