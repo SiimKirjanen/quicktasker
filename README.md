@@ -36,7 +36,7 @@ Make sure the required changes were made in code
 
 - src/providers/AppContextProvider.tsx (is_customFields)
 - src/user-page-app/providers/UserPageAppContextProvider.tsx (cf)
-- src/constants.tsx (HAS_AUTOMATIONS)
+- src/constants.tsx (HAS_AUTOMATIONS, HAS_WEBHOOKS)
 - plugin name change in quicktasker.php to QuickTasker-PRO
 - admin-pages.php menu page title change to QuickTasker-PRO
 

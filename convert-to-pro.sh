@@ -32,6 +32,14 @@ else
   echo "$CONSTANTS_FILE does not exist"
 fi
 
+# Update HAS_WEBHOOKS
+if [ -e "$CONSTANTS_FILE" ]; then
+  sed -i 's/const HAS_WEBHOOKS = false;/const HAS_WEBHOOKS = true;/' "$CONSTANTS_FILE"
+  echo "Updated HAS_WEBHOOKS in $CONSTANTS_FILE"
+else
+  echo "$CONSTANTS_FILE does not exist"
+fi
+
 # Update is_customFields
 if [ -e "$APPCONTEXT_FILE" ]; then
   sed -i 's/is_customFields: false,/is_customFields: true,/' "$APPCONTEXT_FILE"
