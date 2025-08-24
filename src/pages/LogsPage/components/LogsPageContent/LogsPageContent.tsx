@@ -2,13 +2,13 @@ import { useEffect, useState } from "@wordpress/element";
 import { toast } from "react-toastify";
 import { getGlobalLogsRequest } from "../../../../api/api";
 import { LogsFilter } from "../../../../components/Filter/LogsFilter/LogsFilter";
+import { Logs } from "../../../../components/Log/Logs";
 import {
   Log,
   LogCreatedByEnum,
   LogStatusEnum,
   LogTypeEnum,
 } from "../../../../types/log";
-import { Logs } from "../Logs/Logs";
 
 enum LogOrderEnum {
   Asc = "ASC",
@@ -40,7 +40,7 @@ type LogsFilterType = {
 type ServerLogsFilterType = Partial<
   Pick<
     LogsFilterType,
-    "numberOfLogs" | "type" | "createdBy" | "typeId" | "status"
+    "numberOfLogs" | "type" | "createdBy" | "typeId" | "status" | "order"
   >
 >;
 

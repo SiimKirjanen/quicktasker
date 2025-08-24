@@ -81,10 +81,10 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
           try {
             $this->processWebhook($webhook, $relatedObject);
 
-            ServiceLocator::get('LogService')->log($webHookName . ' executed', $baseLog);
+            ServiceLocator::get('LogService')->log('Executed ' . $webHookName, $baseLog);
           } catch (\Exception $e) {
 
-            ServiceLocator::get('LogService')->log($webHookName . ' failed', array_merge($baseLog, [
+            ServiceLocator::get('LogService')->log('Failed to execute' . $webHookName, array_merge($baseLog, [
               'log_status' => WP_QT_LOG_STATUS_ERROR
             ]));
           }

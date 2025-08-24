@@ -12,8 +12,13 @@ type TaskRestoreModalSettings = {
   taskToRestore: Task | null;
 };
 
+type WebhooksLogsModalSettings = {
+  webhookId: string | null;
+};
+
 export type {
   TaskExportModalSettings,
   TaskModalSettings,
   TaskRestoreModalSettings,
+  WebhooksLogsModalSettings,
 };

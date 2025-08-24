@@ -3,7 +3,7 @@ import { WPQTLogCreatedBy } from "./enums";
 type BaseLog = {
   id: string;
   text: string;
-  type: "task" | "stage" | "pipeline" | "user";
+  type: "task" | "stage" | "pipeline" | "user" | "webhook";
   type_id: string;
   created_at: string;
   author_name: string;
@@ -16,6 +16,7 @@ enum LogTypeEnum {
   Pipeline = "pipeline",
   Stage = "stage",
   Task = "task",
+  Webhook = "webhook",
   All = "all",
 }
 
