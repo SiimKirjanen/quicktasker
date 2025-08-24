@@ -13,7 +13,7 @@ enum ButtonStyleType {
   DANGER = "danger",
 }
 type Props = {
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   btnText: string;
   className?: string;
   type?: ButtonType;

@@ -88,6 +88,10 @@ function buildModalState(
     customFieldRecoveryModalOpen: false,
     webhookCreationModalOpen: false,
     webhooksModalOpen: false,
+    webhooksLogsModalOpen: false,
+    webhooksLogsModalSettings: {
+      webhookId: null,
+    },
     ...overrides,
   };
 }

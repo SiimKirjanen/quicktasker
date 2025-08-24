@@ -17,6 +17,7 @@ import {
   CLOSE_TASK_MODAL,
   CLOSE_TASK_RESTORE_MODAL,
   CLOSE_USER_MODAL,
+  CLOSE_WEBHOOKS_LOGS_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_AUTOMATION_CREATOR_MODAL,
   OPEN_AUTOMATIONS_MODAL,
@@ -32,17 +33,20 @@ import {
   OPEN_TASK_COLOR_MODAL,
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_RESTORE_MODAL,
+  OPEN_WEBHOOKS_LOGS_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
   SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
   SET_WEBHOOK_CREATION_MODAL_OPEN,
   SET_WEBHOOKS_MODAL_OPEN,
+  UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS,
 } from "../constants";
 import { reducer } from "../reducers/modal-reducer";
 import {
   TaskExportModalSettings,
   TaskModalSettings,
   TaskRestoreModalSettings,
+  WebhooksLogsModalSettings,
 } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
@@ -85,6 +89,10 @@ const initialState: State = {
   customFieldRecoveryModalOpen: false,
   webhookCreationModalOpen: false,
   webhooksModalOpen: false,
+  webhooksLogsModalOpen: false,
+  webhooksLogsModalSettings: {
+    webhookId: null,
+  },
 };
 
 type State = {
@@ -117,6 +125,8 @@ type State = {
   customFieldRecoveryModalOpen: boolean;
   webhookCreationModalOpen: boolean;
   webhooksModalOpen: boolean;
+  webhooksLogsModalOpen: boolean;
+  webhooksLogsModalSettings: WebhooksLogsModalSettings;
 };
 
 type Action =
@@ -179,6 +189,12 @@ type Action =
   | { type: typeof SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN; payload: boolean }
   | { type: typeof CLOSE_AUTOMATIONS_MODAL }
   | { type: typeof SET_WEBHOOK_CREATION_MODAL_OPEN; payload: boolean }
+  | { type: typeof OPEN_WEBHOOKS_LOGS_MODAL; payload: { webhookId: string } }
+  | { type: typeof CLOSE_WEBHOOKS_LOGS_MODAL }
+  | {
+      type: typeof UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS;
+      payload: Partial<WebhooksLogsModalSettings>;
+    }
   | { type: typeof SET_WEBHOOKS_MODAL_OPEN; payload: boolean };
 
 type ModalDispatch = (action: Action) => void;

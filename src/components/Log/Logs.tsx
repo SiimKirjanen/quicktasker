@@ -1,8 +1,8 @@
 import { __ } from "@wordpress/i18n";
-import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
-import { Loading } from "../../../../components/Loading/Loading";
-import { LogHeader, LogItem } from "../../../../components/Log/LogItem";
-import { Log } from "../../../../types/log";
+import { Log } from "../../types/log";
+import { NoFilterResults } from "../Filter/NoFilterResults/NoFilterResults";
+import { Loading } from "../Loading/Loading";
+import { LogHeader, LogItem } from "./LogItem";
 
 type Props = {
   logs: Log[];

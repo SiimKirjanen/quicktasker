@@ -16,6 +16,7 @@ import {
   CLOSE_TASK_MODAL,
   CLOSE_TASK_RESTORE_MODAL,
   CLOSE_USER_MODAL,
+  CLOSE_WEBHOOKS_LOGS_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_AUTOMATION_CREATOR_MODAL,
   OPEN_AUTOMATIONS_MODAL,
@@ -31,11 +32,13 @@ import {
   OPEN_TASK_COLOR_MODAL,
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_RESTORE_MODAL,
+  OPEN_WEBHOOKS_LOGS_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
   SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
   SET_WEBHOOK_CREATION_MODAL_OPEN,
   SET_WEBHOOKS_MODAL_OPEN,
+  UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
 import { Action, initialState, State } from "../providers/ModalContextProvider";
@@ -336,6 +339,38 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         webhooksModalOpen: open,
+      };
+    }
+    case OPEN_WEBHOOKS_LOGS_MODAL: {
+      const { webhookId }: { webhookId: string } = action.payload;
+
+      return {
+        ...state,
+        webhooksLogsModalOpen: true,
+        webhooksLogsModalSettings: {
+          ...state.webhooksLogsModalSettings,
+          webhookId,
+        },
+      };
+    }
+    case CLOSE_WEBHOOKS_LOGS_MODAL: {
+      return {
+        ...state,
+        webhooksLogsModalOpen: false,
+        webhooksLogsModalSettings: {
+          ...initialState.webhooksLogsModalSettings,
+        },
+      };
+    }
+    case UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS: {
+      const settings = action.payload;
+
+      return {
+        ...state,
+        webhooksLogsModalSettings: {
+          ...state.webhooksLogsModalSettings,
+          ...settings,
+        },
       };
     }
     default:
