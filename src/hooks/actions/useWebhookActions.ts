@@ -3,8 +3,13 @@ import { toast } from "react-toastify";
 import {
   createPipelineWebhookRequest,
   deletePipelineWebhookRequest,
+  editWebhookRequest,
 } from "../../api/api";
-import { WebhookTargetAction, WebhookTargetType } from "../../types/webhook";
+import {
+  Webhook,
+  WebhookTargetAction,
+  WebhookTargetType,
+} from "../../types/webhook";
 
 function useWebhookActions() {
   async function createWebhook(
@@ -12,6 +17,7 @@ function useWebhookActions() {
     targetType: WebhookTargetType,
     targetAction: WebhookTargetAction,
     webhookUrl: string,
+    webhookConfirm: boolean,
   ) {
     try {
       const response = await createPipelineWebhookRequest(
@@ -19,6 +25,7 @@ function useWebhookActions() {
         targetType,
         targetAction,
         webhookUrl,
+        webhookConfirm,
       );
 
       return {
@@ -53,8 +60,27 @@ function useWebhookActions() {
     }
   }
 
+  async function editWebhook(webhookId: string, data: Partial<Webhook>) {
+    try {
+      const response = await editWebhookRequest(webhookId, data);
+
+      return {
+        success: true,
+        webhook: response.data.webhook,
+      };
+    } catch (error) {
+      console.error("Error editing webhook:", error);
+      toast.error(__(`Failed to edit webhook`, `quicktasker`));
+      return {
+        success: false,
+        webhook: null,
+      };
+    }
+  }
+
   return {
     createWebhook,
+    editWebhook,
     deleteWebhook,
   };
 }

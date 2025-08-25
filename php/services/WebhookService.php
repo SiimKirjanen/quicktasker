@@ -24,7 +24,8 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
 
         $defaults = array(
             'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
-            'target_id' => null
+            'target_id' => null,
+            'webhook_confirm' => false
         );
         $args = wp_parse_args($args, $defaults);
 
@@ -34,7 +35,8 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
             'target_id' => $args['target_id'],
             'target_action' => $args['target_action'],
             'webhook_url' => $args['webhook_url'],
-            'created_at' => $args['created_at']
+            'created_at' => $args['created_at'],
+            'webhook_confirm' => $args['webhook_confirm'],
         ));
 
         if ( $result === false ) {
@@ -42,6 +44,28 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
         }
 
         return ServiceLocator::get('WebhookRepository')->getWebhookById($wpdb->insert_id);
+      }
+
+      /**
+       * Edits an existing webhook.
+       *
+       * @param int $webhookId The ID of the webhook to edit.
+       * @param array $args The updated webhook data.
+       * @return object|null The updated webhook object, or null on failure.
+       * @throws \Exception If the webhook could not be edited.
+       */
+      public function editWebhook($webhookId, $args) {
+        global $wpdb;
+
+        $results = $wpdb->update(TABLE_WP_QUICKTASKER_WEBHOOKS, $args, array(
+            'id' => $webhookId
+        ));
+
+        if ($results === false) {
+            throw new \Exception('Failed to edit the webhook');
+        }
+
+        return ServiceLocator::get('WebhookRepository')->getWebhookById($webhookId);
       }
 
         /**
@@ -83,8 +107,10 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
 
             ServiceLocator::get('LogService')->log('Executed ' . $webHookName, $baseLog);
           } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $message = 'Error processing ' . $webHookName . ' Reason: ' . $errorMessage;
 
-            ServiceLocator::get('LogService')->log('Failed to execute' . $webHookName, array_merge($baseLog, [
+            ServiceLocator::get('LogService')->log($message, array_merge($baseLog, [
               'log_status' => WP_QT_LOG_STATUS_ERROR
             ]));
           }
@@ -92,7 +118,6 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
       }
 
       public function processWebhook($webhook, $relatedObject) {
-        $httpMethod = $this->determineWebhookHttpMethod($webhook);
         $webhookData = (object)[
           'id' => $webhook->id,
           'pipeline_id' => $webhook->pipeline_id,
@@ -118,12 +143,11 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
             'task_focus_color' => $relatedObject->task_focus_color
           ];
           $this->sendWebhookRequest(
-            $webhook->webhook_url,
-            $httpMethod,
+            $webhook,
             array(
               'task' => $task,
               'webhook' => $webhookData,
-            )
+            ),
           );
           
         } elseif ( $this->isTargetTypeQuicktaskerWebhook($webhook) ) {
@@ -136,12 +160,11 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
             'is_active' => $relatedObject->is_active
           ];
           $this->sendWebhookRequest(
-            $webhook->webhook_url,
-            $httpMethod,
+            $webhook,
             array(
               'quicktasker' => $quicktasker,
               'webhook' => $webhookData,
-            )
+            ),
           );
         }
       }
@@ -161,7 +184,7 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
           case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED:
             return 'POST';
           case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED:
-            return 'PUT';
+            return 'PATCH';
           case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED:
             return 'DELETE';
           default:
@@ -169,19 +192,38 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
         }
       }
 
-      public function sendWebhookRequest($url, $method, $body) {
+      public function sendWebhookRequest($webhook, $body) {
+        $waitForResponse = $webhook->webhook_confirm === '1';
         $requestArgs = array(
-          'method'    => $method,
+          'method'    => $this->determineWebhookHttpMethod($webhook),
           'body'      => json_encode($body),
           'headers'   => array(
             'Content-Type' => 'application/json',
           ),
           'timeout'   => 15,
-          'blocking'  => false,
+          'blocking'  => $waitForResponse,
           'sslverify' => true,
         );
 
-       wp_remote_request($url, $requestArgs);
-      }
+        $response = wp_remote_request($webhook->webhook_url, $requestArgs);
+
+        if (!$waitForResponse) {
+          return null;
+        }
+
+        if ( is_wp_error( $response ) ) {
+          throw new \Exception(
+            'Request error: ' . $response->get_error_message()
+          );
+        }
+
+      $status = wp_remote_retrieve_response_code( $response );
+
+      if ( $status < 200 || $status >= 300 ) {
+          throw new \Exception(
+            'Request failed with status ' . $status
+          );
+       }
     }
+  }
 }
