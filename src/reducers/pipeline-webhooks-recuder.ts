@@ -1,5 +1,6 @@
 import {
   ADD_PIPELINE_WEBHOOK,
+  EDIT_PIPELINE_WEBHOOK,
   REMOVE_PIPELINE_WEBHOOK,
   SET_PIPELINE_WEBHOOKS,
   SET_PIPELINE_WEBHOOKS_LOADING,
@@ -31,6 +32,16 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         webhooks: state.webhooks.filter(
           (webhook) => webhook.id !== action.payload.webhookId,
+        ),
+      };
+    }
+    case EDIT_PIPELINE_WEBHOOK: {
+      const { webhookId, webhookData } = action.payload;
+
+      return {
+        ...state,
+        webhooks: state.webhooks.map((webhook) =>
+          webhook.id === webhookId ? { ...webhook, ...webhookData } : webhook,
         ),
       };
     }

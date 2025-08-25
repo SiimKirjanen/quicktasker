@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { getPipelineWebhookssRequest } from "../api/api";
 import {
   ADD_PIPELINE_WEBHOOK,
+  EDIT_PIPELINE_WEBHOOK,
   REMOVE_PIPELINE_WEBHOOK,
   SET_PIPELINE_WEBHOOKS,
   SET_PIPELINE_WEBHOOKS_LOADING,
@@ -37,6 +38,13 @@ type Action =
       type: typeof ADD_PIPELINE_WEBHOOK;
       payload: {
         webhook: Webhook;
+      };
+    }
+  | {
+      type: typeof EDIT_PIPELINE_WEBHOOK;
+      payload: {
+        webhookId: string;
+        webhookData: Partial<Webhook>;
       };
     }
   | {

@@ -2814,18 +2814,23 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'POST',
                 'callback' => function( $data ) {
-                    try {                 
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+
                         $webhook = ServiceLocator::get('WebhookService')->createWebhook(
                             $data['id'],
                             array(
                                 'target_type' => $data['target_type'],
                                 'target_action' => $data['target_action'],
-                                'webhook_url' => $data['webhook_url']
+                                'webhook_url' => $data['webhook_url'],
+                                'webhook_confirm' => $data['webhook_confirm'],
                             )
                         );
                         $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
 
-                        ServiceLocator::get('LogService')->log($webhookName . ' created', [
+                        ServiceLocator::get('LogService')->log('Created ' . $webhookName, [
                             'type' => WP_QT_LOG_TYPE_WEBHOOK,
                             'type_id' => $webhook->id,
                             'user_id' => get_current_user_id(),
@@ -2833,11 +2838,14 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'pipeline_id' => $webhook->pipeline_id,
                         ]);
 
+                        $wpdb->query('COMMIT');
+
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'webhook' => $webhook,
                         ]))->toArray(), 200);
                     } catch (Throwable $e) {
-                        
+                        $wpdb->query('ROLLBACK');
+
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
@@ -2865,6 +2873,72 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
                     ),
+                    'webhook_confirm' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'webhooks/(?P<id>\d+)',
+            array(
+                'methods' => 'PATCH',
+                'callback' => function( $data ) {
+                    global $wpdb;
+
+                    try {   
+                        $wpdb->query('START TRANSACTION');
+
+                        $webhookData = $data->get_json_params();
+                        $args = [];
+
+                        if (isset($webhookData['webhook_confirm'])) {
+                            $args['webhook_confirm'] = $webhookData['webhook_confirm'];
+                        }
+                        
+                        $webhook = ServiceLocator::get('WebhookService')->editWebhook(
+                            $data['id'],
+                            $args
+                        );
+                        $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
+
+                        ServiceLocator::get('LogService')->log('Edited ' . $webhookName, [
+                            'type' => WP_QT_LOG_TYPE_WEBHOOK,
+                            'type_id' => $webhook->id,
+                            'user_id' => get_current_user_id(),
+                            'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'pipeline_id' => $webhook->pipeline_id,
+                        ]);
+
+                        $wpdb->query('COMMIT');
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), (object)[
+                            'webhook' => $webhook,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'webhook_confirm' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
                 ),
             ),
         );
@@ -2875,13 +2949,17 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             array(
                 'methods' => 'DELETE',
                 'callback' => function( $data ) {
+                    global $wpdb;
+
                     try {
+                        $wpdb->query('START TRANSACTION');
+
                         $webhook = ServiceLocator::get('WebhookRepository')->getWebhookById($data['id']);
                         ServiceLocator::get('WebhookService')->deleteWebhook($data['id']);
 
                         $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
 
-                        ServiceLocator::get('LogService')->log($webhookName . ' deleted', [
+                        ServiceLocator::get('LogService')->log('Deleted '. $webhookName, [
                             'type' => WP_QT_LOG_TYPE_WEBHOOK,
                             'type_id' => $webhook->id,
                             'user_id' => get_current_user_id(),
@@ -2889,10 +2967,13 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'pipeline_id' => $webhook->pipeline_id,
                         ]);
 
+                        $wpdb->query('COMMIT');
+
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                         ]))->toArray(), 200);
                     } catch (Throwable $e) {
-                        
+                        $wpdb->query('ROLLBACK');
+
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },

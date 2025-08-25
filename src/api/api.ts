@@ -40,6 +40,7 @@ import {
 } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
 import {
+  Webhook,
   WebhookFromServer,
   WebhookTargetAction,
   WebhookTargetType,
@@ -855,6 +856,7 @@ function createPipelineWebhookRequest(
   targetType: WebhookTargetType,
   targetAction: WebhookTargetAction,
   webhookUrl: string,
+  webhookConfirm: boolean,
 ): Promise<
   WPQTResponse<{
     webhook: WebhookFromServer;
@@ -867,6 +869,7 @@ function createPipelineWebhookRequest(
       target_type: targetType,
       target_action: targetAction,
       webhook_url: webhookUrl,
+      webhook_confirm: webhookConfirm,
     },
     headers: getCommonHeaders(),
   });
@@ -878,6 +881,18 @@ function deletePipelineWebhookRequest(
   return apiFetch({
     path: `/wpqt/v1/webhooks/${webhookId}`,
     method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
+function editWebhookRequest(
+  webhookId: string,
+  data: Partial<Webhook>,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/webhooks/${webhookId}`,
+    method: "PATCH",
+    data,
     headers: getCommonHeaders(),
   });
 }
@@ -1078,6 +1093,7 @@ export {
   editTaskRequest,
   editTaskRequest2,
   editUserRequest,
+  editWebhookRequest,
   getArchivedTasksRequest,
   getComments,
   getCustomFieldsRequest,

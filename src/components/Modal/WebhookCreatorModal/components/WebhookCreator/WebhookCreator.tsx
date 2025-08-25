@@ -1,3 +1,4 @@
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
@@ -19,6 +20,8 @@ import { WPQTButton } from "../../../../common/Button/Button";
 import { WPQTInput } from "../../../../common/Input/Input";
 import { WPQTLabel } from "../../../../common/Label/WPQTLabel";
 import { WPQTSelect } from "../../../../common/Select/WPQTSelect";
+import { Toggle } from "../../../../common/Toggle/Toggle";
+import { WPQTTooltip } from "../../../../Tooltip/WPQTTooltip";
 
 type Props = {
   pipelineId: string;
@@ -27,6 +30,7 @@ type Props = {
 function WebhookCreator({ pipelineId }: Props) {
   const [targetType, setTargetType] = useState(WebhookTargetType.TASK);
   const [targetAction, setTargetAction] = useState(WebhookTargetAction.CREATE);
+  const [webhookConfirm, setWebhookConfirm] = useState(false);
   const [webhookUrl, setWebhookUrl] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [validationState, setValidationState] = useState({
@@ -48,6 +52,7 @@ function WebhookCreator({ pipelineId }: Props) {
       targetType,
       targetAction,
       webhookUrl,
+      webhookConfirm,
     );
     setIsCreating(false);
 
@@ -72,6 +77,7 @@ function WebhookCreator({ pipelineId }: Props) {
     setTargetType(WebhookTargetType.TASK);
     setTargetAction(WebhookTargetAction.CREATE);
     setWebhookUrl("");
+    setWebhookConfirm(false);
     setValidationState({
       urlValid: true,
       urlDirty: false,
@@ -127,6 +133,27 @@ function WebhookCreator({ pipelineId }: Props) {
               setTargetAction(value as WebhookTargetAction)
             }
           />
+        </div>
+        <div>
+          <WPQTLabel
+            labelFor="webhook-confirm"
+            className="wpqt-flex wpqt-mb-3 wpqt-gap-1"
+            data-tooltip-id="webhook-confirm-tooltip"
+            data-tooltip-content={__(
+              "If enabled, the webhook will wait for the HTTP response. Much slower performance but better for debugging.",
+              "quicktasker",
+            )}
+            data-tooltip-variant="info"
+          >
+            {__("Confirm webhook execution", "quicktasker")}
+            <QuestionMarkCircleIcon className="wpqt-size-5" />
+          </WPQTLabel>
+          <Toggle
+            checked={webhookConfirm}
+            handleChange={setWebhookConfirm}
+            id="webhook-confirm"
+          />
+          <WPQTTooltip id="webhook-confirm-tooltip" />
         </div>
         <div className="wpqt-flex-1">
           <WPQTLabel labelFor="webhook-url" className="wpqt-block wpqt-mb-3">
