@@ -10,6 +10,7 @@ enum WebhookTargetAction {
   ARCHIVED = "archived",
   RESTORED_ARCHIVED = "restored-archived",
   COMPLETED = "completed",
+  NOT_COMPLETED = "not-completed",
   ASSIGNED = "assigned",
   UNASSIGNED = "unassigned",
   COMMENT_ADDED = "comment-added",

@@ -902,6 +902,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         );
                         /* End of handling automations */
 
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => $taskMarkedAsDone ? WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED : WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED,
+                            )
+                        );
+                        /* End Handle webhooks */
+
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
