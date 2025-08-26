@@ -6,6 +6,18 @@ enum WebhookTargetAction {
   CREATE = "created",
   UPDATE = "updated",
   DELETE = "deleted",
+  STAGE_CHANGED = "stage-changed",
+  ARCHIVED = "archived",
+  RESTORED_ARCHIVED = "restored-archived",
+  COMPLETED = "completed",
+  NOT_COMPLETED = "not-completed",
+  ASSIGNED = "assigned",
+  UNASSIGNED = "unassigned",
+  COMMENT_ADDED = "comment-added",
+  LABEL_ADDED = "label-added",
+  LABEL_REMOVED = "label-removed",
+  FILE_ADDED = "file-added",
+  FILE_REMOVED = "file-removed",
 }
 
 type BaseWebhook = {

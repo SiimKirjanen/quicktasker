@@ -427,6 +427,22 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                                 'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
                                 'pipeline_id' => $moveInfo->task->pipeline_id
                             ]);
+                            /* Handle webhooks */
+                            ServiceLocator::get('WebhookService')->handleWebhooks(
+                                $moveInfo->task->pipeline_id, 
+                                array(
+                                    'relatedObject' => $moveInfo->task,
+                                    'extraData' => array(
+                                        'task_prev_stage_id' => $moveInfo->oldStageId,
+                                        'task_new_stage_id' => $moveInfo->newStageId
+                                    ),
+                                ), 
+                                array(
+                                    'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                    'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED,
+                                )
+                            );
+                            /* End Handle webhooks */
                         }else {
                             $logService->log('Task ' . $moveInfo->task->name . ' order changed in ' . $stage->name . ' stage', [
                                 'type' => WP_QT_LOG_TYPE_STAGE,
@@ -507,10 +523,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         /* End of handling automations */
 
                         /* Handle webhooks */
-                        $webhookService->handleWebhooks($newTask->pipeline_id, $newTask, array(
-                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
-                        ));
+                        $webhookService->handleWebhooks(
+                            $newTask->pipeline_id, 
+                            array(
+                                'relatedObject' => $newTask
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
+                            )
+                        );
 
                         /* End of handling webhooks */
 
@@ -588,10 +610,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         ]);
 
                         /* Handle webhooks */
-                        ServiceLocator::get('WebhookService')->handleWebhooks($task->pipeline_id, $task, array(
-                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED,
-                        ));
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED,
+                            )
+                        );
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
@@ -669,10 +697,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                          /* End of handling automations */
 
                          /* Handle webhooks */
-                        ServiceLocator::get('WebhookService')->handleWebhooks($deletedTask->pipeline_id, $deletedTask, array(
-                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED,
-                        ));
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $deletedTask->pipeline_id, 
+                            array(
+                                'relatedObject' => $deletedTask
+                            ),
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED,
+                            )
+                        );
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
@@ -723,6 +757,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ARCHIVED,
+                            )
+                        );
+                        /* End Handle webhooks */
+
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
@@ -768,6 +815,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
                             'pipeline_id' => $task->pipeline_id
                         ]);
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task
+                            ),
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_RESTORED_ARCHIVED,
+                            )
+                        );
+                        /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
 
@@ -841,6 +901,19 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             ]
                         );
                         /* End of handling automations */
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => $taskMarkedAsDone ? WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED : WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED,
+                            )
+                        );
+                        /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
 
@@ -1372,6 +1445,24 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                          );
                          /* End of handling automations */
 
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'assigned_user_id' => $user->id,
+                                    'assigned_user_name' => $user->name,
+                                    'assigned_user_type' => $data['user_type']
+                                )
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED,
+                            )
+                        );
+                        /* End Handle webhooks */ 
+
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
@@ -1447,6 +1538,24 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             $user
                          );
                          /* End of handling automations */
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'unassigned_user_id' => $user->id,
+                                    'unassigned_user_name' => $user->name,
+                                    'unassigned_user_type' => $data['user_type']
+                                )
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED,
+                            )
+                        );
+                        /* End Handle webhooks */ 
 
                         $wpdb->query('COMMIT');
 
@@ -2041,10 +2150,12 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         ));
                         $automationExecutionResults = [];
                         
-                          /* Handle automations */
-                          if ( $data['type'] == WP_QT_LOG_TYPE_TASK ) {
+                        
+                        if ( $data['type'] == WP_QT_LOG_TYPE_TASK ) {
                             $automationTrigger = $data['isPrivate'] ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED;
                             $task = ServiceLocator::get('TaskRepository')->getTaskById($data['typeId']);
+
+                            /* Handle automations */
                             $automationExecutionResults = ServiceLocator::get('AutomationService')->handleAutomations(
                                 $task->pipeline_id, 
                                 $task->id, 
@@ -2052,9 +2163,29 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                                 $automationTrigger,
                                 $newComemnt
                              );
-                          }  
-                         /* End of handling automations */
-                
+                            /* End of handling automations */
+
+                            /* Handle webhooks */
+                            ServiceLocator::get('WebhookService')->handleWebhooks(
+                                $task->pipeline_id, 
+                                array(
+                                    'relatedObject' => $task,
+                                    'extraData' => array(
+                                        'text' => $newComemnt->text,
+                                        'is_private' => $newComemnt->is_private,
+                                        'author_id' => $newComemnt->author_id,
+                                        'author_type' => $newComemnt->author_type,
+                                    ),
+                                ),
+                                array(
+                                    'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                    'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMMENT_ADDED,
+                                )
+                            );
+                            /* End Handle webhooks */
+                        }  
+                        
+
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
                             'newComment' => $newComemnt,
                             'executedAutomations' => $automationExecutionResults,
@@ -3101,6 +3232,24 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'pipeline_id' => $task->pipeline_id,
                         ]);
 
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'label_id' => $label->id,
+                                    'label_name' => $label->name,
+                                    'label_color' => $label->color
+                                ),
+                            ),
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_ADDED,
+                            )
+                        );
+                        /* End Handle webhooks */
+
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
@@ -3155,6 +3304,24 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
                             'pipeline_id' => $task->pipeline_id,
                         ]);
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'label_id' => $label->id,
+                                    'label_name' => $label->name,
+                                    'label_color' => $label->color
+                                ),
+                            ),
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_REMOVED,
+                            )
+                        );
+                        /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
 
@@ -3368,6 +3535,26 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             ]
                         );
                         /* End of handling automations */
+
+                         /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'file_name' => $upload->file_name,
+                                    'file_type' => $upload->file_type,
+                                    'uploader_id' => $upload->uploader_id,
+                                    'uploader_name' => $upload->uploader_name,
+                                    'uploader_type' => WP_QT_WORDPRESS_USER_TYPE
+                                ),
+                            ),
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_ADDED,
+                            )
+                        );
+                        /* End Handle webhooks */
                         
                         $wpdb->query('COMMIT');
 
@@ -3431,6 +3618,26 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             ]
                         );
                         /* End of handling automations */
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'file_name' => $deletedUpload->file_name,
+                                    'file_type' => $deletedUpload->file_type,
+                                    'uploader_id' => $deletedUpload->uploader_id,
+                                    'uploader_name' => $deletedUpload->uploader_name,
+                                    'uploader_type' => WP_QT_WORDPRESS_USER_TYPE
+                                ),
+                            ),
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_REMOVED,
+                            )
+                        );
+                        /* End Handle webhooks */
                         
                         $wpdb->query('COMMIT');
 

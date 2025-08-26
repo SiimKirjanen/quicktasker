@@ -15,7 +15,10 @@ import {
   WebhookTargetAction,
   WebhookTargetType,
 } from "../../../../../types/webhook";
-import { convertWebhookFromServer } from "../../../../../utils/webhooks";
+import {
+  convertWebhookFromServer,
+  WebhookTargetTypeActions,
+} from "../../../../../utils/webhooks";
 import { WPQTButton } from "../../../../common/Button/Button";
 import { WPQTInput } from "../../../../common/Input/Input";
 import { WPQTLabel } from "../../../../common/Label/WPQTLabel";
@@ -40,6 +43,7 @@ function WebhookCreator({ pipelineId }: Props) {
   const { createWebhook } = useWebhookActions();
   const { pipelineWebhooksDispatch } = useWebhooks();
   const { modalDispatch } = useContext(ModalContext);
+  const allowedActions = WebhookTargetTypeActions[targetType] ?? [];
 
   async function handleCreateWebhook() {
     if (isCreating || !validationState.urlValid) {
@@ -124,7 +128,7 @@ function WebhookCreator({ pipelineId }: Props) {
           <WPQTSelect
             id="webhook-target-action"
             selectedOptionValue={targetAction}
-            options={Object.values(WebhookTargetAction).map((action) => ({
+            options={Object.values(allowedActions).map((action) => ({
               value: action,
               label: action,
             }))}

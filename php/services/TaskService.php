@@ -116,7 +116,7 @@ if ( ! class_exists( 'WPQT\Task\TaskService' ) ) {
          * @param int $taskId The ID of the task to be moved.
          * @param int $newStageId The ID of the new stage to move the task to.
          * @param int $newOrder The new order of the task within the stage.
-         * @return int The number of rows updated in the database.
+         * @return object|null The updated task object, or null on failure.
          * @throws Exception If the task is not found or if the task move fails.
          */
         public function moveTask($taskId, $newStageId, $newOrder) {

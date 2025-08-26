@@ -415,7 +415,26 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
                             WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED,
                             $newComment
-                         );
+                        );
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'text' => $newComment->text,
+                                    'is_private' => $newComment->is_private,
+                                    'author_id' => $newComment->author_id,
+                                    'author_type' => $newComment->author_type,
+                                ),
+                            ),
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMMENT_ADDED,
+                            )
+                        );
+                        /* End Handle webhooks */ 
 
                         $wpdb->query('COMMIT');
 
@@ -542,9 +561,11 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
             'methods' => 'POST, DELETE',
             'callback' => function( $data ) {
                     global $wpdb;
+
                     try {
                         $wpdb->query('START TRANSACTION');
 
+                        $isCreating = $data->get_method() === 'POST';
                         $requestData = RequestValidation::validateUserPageApiRequest($data);
                         $userService = new UserService();
                         $taskRepository = new TaskRepository();
@@ -563,7 +584,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($requestData['session']->user_id, $requestData['userType']);
                         $createdBy = $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN; 
                     
-                        if ($data->get_method() === 'POST') {
+                        if ($isCreating) {
 
                             if( !$permissionService->checkIfUserCanBeAssignedToTask($requestData['session']->user_id, $taskId) ) {
                                 throw new WPQTException('Not allowed to assign', true);
@@ -585,7 +606,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                                 'user_id' => $requestData['session']->user_id,
                                 'pipeline_id' => $task->pipeline_id
                             ]);
-                        } elseif ($data->get_method() === 'DELETE') {
+                        } else {
                             $automationTrigger = WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED;
                             $userService->removeTaskFromUser($requestData['session']->user_id, $taskId, $requestData['userType']);
 
@@ -616,6 +637,31 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             $user
                          );
                          /* End of handling automations */
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => $isCreating
+                                    ? array(
+                                        'assigned_user_id' => $user->id,
+                                        'assigned_user_name' => $user->name,
+                                        'assigned_user_type' => $data->user_type,
+                                    )
+                                    : array(
+                                        'unassigned_user_id' => $user->id,
+                                        'unassigned_user_name' => $user->name,
+                                        'unassigned_user_type' => $data->user_type,
+                                    ),
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => $isCreating ? WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED : WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED,
+                            )
+                        );
+                        /* End Handle webhooks */
+
                          $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
@@ -683,6 +729,23 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $moveInfo->task->pipeline_id, 
+                            array(
+                                'relatedObject' => $moveInfo->task,
+                                'extraData' => array(
+                                    'task_prev_stage_id' => $moveInfo->oldStageId,
+                                    'task_new_stage_id' => $moveInfo->newStageId
+                                ),
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED,
+                            )
+                        );
+                        /* End Handle webhooks */
+
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
@@ -741,6 +804,7 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                         $taskService->changeTaskDoneStatus($task->id, $data['done']);
                         $logMessage = $user->name . ' changed task to ' . ($data['done'] === true ? 'completed' : 'not completed');
                         $createdBy = $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN;
+                        $task = $taskRepository->getTaskByHash($data['task_hash']); //Get new task data
 
                         $logService->log($logMessage, [
                             'type' => WP_QT_LOG_TYPE_USER,
@@ -757,6 +821,19 @@ if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {
                             'user_id' => $requestData['session']->user_id,
                             'pipeline_id' => $task->pipeline_id
                         ]);
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => $data['done'] ? WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED : WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED,
+                            )
+                        );
+                        /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
 
