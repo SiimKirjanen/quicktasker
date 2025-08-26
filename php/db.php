@@ -319,7 +319,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				pipeline_id int(11) DEFAULT NULL,
 				target_type ENUM('task', 'quicktasker') NOT NULL,
 				target_id int(11) DEFAULT NULL,
-				target_action ENUM('created', 'updated', 'deleted', 'stage-changed') NOT NULL,
+				target_action ENUM('created', 'updated', 'deleted', 'stage-changed', 'archived', 'completed', 'assigned', 'unassigned', 'comment-added', 'label-added', 'label-removed', 'restored-archived', 'file-added', 'file-removed') NOT NULL,
 				webhook_url varchar(255) NOT NULL,
 				webhook_confirm tinyint(1) DEFAULT 0,
 				created_at datetime NOT NULL COMMENT 'UTC',

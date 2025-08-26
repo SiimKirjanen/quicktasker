@@ -22,6 +22,13 @@ const WebhookTargetTypeActions: Record<
     WebhookTargetAction.UPDATE,
     WebhookTargetAction.DELETE,
     WebhookTargetAction.STAGE_CHANGED,
+    WebhookTargetAction.ARCHIVED,
+    WebhookTargetAction.RESTORED_ARCHIVED,
+    WebhookTargetAction.COMMENT_ADDED,
+    WebhookTargetAction.FILE_ADDED,
+    WebhookTargetAction.FILE_REMOVED,
+    WebhookTargetAction.LABEL_ADDED,
+    WebhookTargetAction.LABEL_REMOVED,
   ],
 };
 
