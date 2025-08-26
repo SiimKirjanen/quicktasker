@@ -1,4 +1,9 @@
-import { Webhook, WebhookFromServer } from "../types/webhook";
+import {
+  Webhook,
+  WebhookFromServer,
+  WebhookTargetAction,
+  WebhookTargetType,
+} from "../types/webhook";
 
 const convertWebhookFromServer = (webhook: WebhookFromServer): Webhook => ({
   ...webhook,
@@ -8,4 +13,20 @@ const convertWebhookFromServer = (webhook: WebhookFromServer): Webhook => ({
 const convertWebhooksFromServer = (webhooks: WebhookFromServer[]): Webhook[] =>
   webhooks.map(convertWebhookFromServer);
 
-export { convertWebhookFromServer, convertWebhooksFromServer };
+const WebhookTargetTypeActions: Record<
+  WebhookTargetType,
+  WebhookTargetAction[]
+> = {
+  [WebhookTargetType.TASK]: [
+    WebhookTargetAction.CREATE,
+    WebhookTargetAction.UPDATE,
+    WebhookTargetAction.DELETE,
+    WebhookTargetAction.STAGE_CHANGED,
+  ],
+};
+
+export {
+  convertWebhookFromServer,
+  convertWebhooksFromServer,
+  WebhookTargetTypeActions,
+};

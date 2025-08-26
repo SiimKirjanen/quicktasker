@@ -89,8 +89,8 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
         return true;
       }
 
-      public function handleWebhooks($pipelineId, $relatedObject, $args) {
-        $relatedWebhooks = ServiceLocator::get('WebhookRepository')->findRelatedWebhooks($pipelineId, $args);
+      public function handleWebhooks($pipelineId, $data, $webhookData) {
+        $relatedWebhooks = ServiceLocator::get('WebhookRepository')->findRelatedWebhooks($pipelineId, $webhookData);
 
         foreach ($relatedWebhooks as $webhook) {
           $webHookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
@@ -103,7 +103,7 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
           );
 
           try {
-            $this->processWebhook($webhook, $relatedObject);
+            $this->processWebhook($webhook, $data);
 
             ServiceLocator::get('LogService')->log('Executed ' . $webHookName, $baseLog);
           } catch (\Exception $e) {
@@ -117,7 +117,9 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
         }
       }
 
-      public function processWebhook($webhook, $relatedObject) {
+      public function processWebhook($webhook, $data) {
+        $relatedObject = $data['relatedObject'];
+        $extraData = isset($data['extraData']) ? $data['extraData'] : null;
         $webhookData = (object)[
           'id' => $webhook->id,
           'pipeline_id' => $webhook->pipeline_id,
@@ -147,6 +149,7 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
             array(
               'task' => $task,
               'webhook' => $webhookData,
+              'data' => $extraData,
             ),
           );
           
@@ -164,6 +167,7 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
             array(
               'quicktasker' => $quicktasker,
               'webhook' => $webhookData,
+              'data' => $extraData,
             ),
           );
         }
@@ -184,6 +188,7 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
           case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED:
             return 'POST';
           case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED:
+          case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED:  
             return 'PATCH';
           case WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED:
             return 'DELETE';

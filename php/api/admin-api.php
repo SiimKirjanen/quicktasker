@@ -427,6 +427,22 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                                 'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
                                 'pipeline_id' => $moveInfo->task->pipeline_id
                             ]);
+                            /* Handle webhooks */
+                            ServiceLocator::get('WebhookService')->handleWebhooks(
+                                $moveInfo->task->pipeline_id, 
+                                array(
+                                    'relatedObject' => $moveInfo->task,
+                                    'extraData' => array(
+                                        'task_prev_stage_id' => $moveInfo->oldStageId,
+                                        'task_new_stage_id' => $moveInfo->newStageId
+                                    ),
+                                ), 
+                                array(
+                                    'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                    'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED,
+                                )
+                            );
+                            /* End Handle webhooks */
                         }else {
                             $logService->log('Task ' . $moveInfo->task->name . ' order changed in ' . $stage->name . ' stage', [
                                 'type' => WP_QT_LOG_TYPE_STAGE,
@@ -507,10 +523,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         /* End of handling automations */
 
                         /* Handle webhooks */
-                        $webhookService->handleWebhooks($newTask->pipeline_id, $newTask, array(
-                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
-                        ));
+                        $webhookService->handleWebhooks(
+                            $newTask->pipeline_id, 
+                            array(
+                                'relatedObject' => $newTask
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
+                            )
+                        );
 
                         /* End of handling webhooks */
 
@@ -588,10 +610,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         ]);
 
                         /* Handle webhooks */
-                        ServiceLocator::get('WebhookService')->handleWebhooks($task->pipeline_id, $task, array(
-                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED,
-                        ));
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED,
+                            )
+                        );
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
@@ -669,10 +697,16 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                          /* End of handling automations */
 
                          /* Handle webhooks */
-                        ServiceLocator::get('WebhookService')->handleWebhooks($deletedTask->pipeline_id, $deletedTask, array(
-                            'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED,
-                        ));
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $deletedTask->pipeline_id, 
+                            array(
+                                'relatedObject' => $deletedTask
+                            ),
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED,
+                            )
+                        );
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');

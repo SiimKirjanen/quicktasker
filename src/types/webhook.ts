@@ -6,6 +6,7 @@ enum WebhookTargetAction {
   CREATE = "created",
   UPDATE = "updated",
   DELETE = "deleted",
+  STAGE_CHANGED = "stage-changed",
 }
 
 type BaseWebhook = {
