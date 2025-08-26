@@ -1445,6 +1445,24 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                          );
                          /* End of handling automations */
 
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'assigned_user_id' => $user->id,
+                                    'assigned_user_name' => $user->name,
+                                    'assigned_user_type' => $data['user_type']
+                                )
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED,
+                            )
+                        );
+                        /* End Handle webhooks */ 
+
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, array(), (object)[
@@ -1520,6 +1538,24 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             $user
                          );
                          /* End of handling automations */
+
+                        /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $task->pipeline_id, 
+                            array(
+                                'relatedObject' => $task,
+                                'extraData' => array(
+                                    'unassigned_user_id' => $user->id,
+                                    'unassigned_user_name' => $user->name,
+                                    'unassigned_user_type' => $data['user_type']
+                                )
+                            ), 
+                            array(
+                                'target_type' => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED,
+                            )
+                        );
+                        /* End Handle webhooks */ 
 
                         $wpdb->query('COMMIT');
 

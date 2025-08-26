@@ -30,6 +30,8 @@ const WebhookTargetTypeActions: Record<
     WebhookTargetAction.FILE_REMOVED,
     WebhookTargetAction.LABEL_ADDED,
     WebhookTargetAction.LABEL_REMOVED,
+    WebhookTargetAction.ASSIGNED,
+    WebhookTargetAction.UNASSIGNED,
   ],
 };
 
