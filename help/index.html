@@ -21,6 +21,9 @@
 			align-items: center;
 			gap: 12px;
 		}
+		.list-item-space {
+			margin-bottom: 24px;
+		}
 	</style>
 </head>
 
@@ -53,6 +56,7 @@
 			<li><a href="#user-sessions">Quicktasker user sessions</a></li>
 			<li><a href="#logs">Logs</a></li>
 			<li><a href="#settings">Settings</a></li>
+			<li><a href="#webhooks">Webhooks</a></li>
 		</ol>
 		
 		<hr>
@@ -187,8 +191,26 @@
 		</ul>
 
 		<hr>
-	
-	
+
+		<h3 id="webhooks"><strong>I) Webhooks</strong> - <a href="#toc">top</a></h3>
+		<p>Webhooks allow you to notify external services when certain events occur in the plugin. This enables integration with other tools and platforms.</p>
+
+		<ul>
+			<li class="list-item-space"><strong>Webhooks creator</strong> Allows to create new webhooks. <br /><br />
+				<img src="assets/images/webhooks-creator.png" alt="Webhooks creator" class="screenshot" />
+				<figcaption class="text-center">Webhooks creator</figcaption><br />
+				<strong>Target type:</strong> The plugin object that initiates the webhook trigger.<br />
+				<strong>Target action:</strong> The specific event on the object that activates the webhook.<br />
+				<strong>Webhook confirm:</strong> Wait for the webhook response. Great for debugging but can slow down the process significantly.<br />
+				<strong>Webhook URL:</strong> URL to the external service that will receive the webhook notification. <br /><br />
+				<strong>Request methods</strong> When creating a resource the <strong>POST</strong> request will be used. When updating a resource the <strong>PATCH</strong> request will be used. When deleting a resource the <strong>DELETE</strong> request will be used.<br /><br />
+			</li>
+			<li><strong>Webhooks manager</strong> Allows to manage existing webhooks. <br /><br />
+				<img src="assets/images/webhooks-manager.png" alt="Webhooks manager" class="screenshot" />
+				<figcaption class="text-center">Webhooks manager</figcaption> <br />
+			</li>
+		</ul>
+
 		<p><a href="#toc">Go To Table of Contents</a></p>
 		
 		<hr class="space">
