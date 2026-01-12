@@ -190,8 +190,8 @@ const TEXT_ENTER_DEBOUNCE_TIMEOUT = 700;
 
 //Misc
 const WP_QUICKTASKER_INVALID_SESSION_TOKEN = "Invalid session token";
-const HAS_AUTOMATIONS = false;
-const HAS_WEBHOOKS = false;
+const HAS_AUTOMATIONS = true;
+const HAS_WEBHOOKS = true;
 const DATETIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
 
 //Styles
