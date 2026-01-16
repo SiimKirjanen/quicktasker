@@ -60,7 +60,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.47.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.47.1");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {

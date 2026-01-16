@@ -147,7 +147,7 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 				INDEX type_id (type_id),
 				INDEX type (type),
 				INDEX is_private (is_private),
-				INDEX author_id (author_id),
+				INDEX author_id (author_id)
 			) $charset_collate;";
 
 			dbDelta( $sql8 ); 
