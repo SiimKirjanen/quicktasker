@@ -1,4 +1,8 @@
-# wp-quick-tasks
+# QuickTasker - WordPress task management plugin
+Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently.
+
+## Install
+Clone this project to your local WordPress installation plugins directory. Make sure you name the folder as quicktasker. Activate the plugin through the ‘Plugins’ menu in WordPress. You can also download it directly from WordPress plugins directory https://wordpress.org/plugins/quicktasker/
 
 ## Development
 
