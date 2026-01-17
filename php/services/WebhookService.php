@@ -89,31 +89,44 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
         return true;
       }
 
-      public function handleWebhooks($pipelineId, $data, $webhookData) {
-        $relatedWebhooks = ServiceLocator::get('WebhookRepository')->findRelatedWebhooks($pipelineId, $webhookData);
-
-        foreach ($relatedWebhooks as $webhook) {
-          $webHookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
-          $baseLog = array(
-            'type'        => WP_QT_LOG_TYPE_WEBHOOK,
-            'type_id'     => $webhook->id,
-            'user_id'     => get_current_user_id(),
-            'created_by'  => WP_QT_LOG_CREATED_BY_ADMIN,
-            'pipeline_id' => $pipelineId,
-          );
-
-          try {
-            $this->processWebhook($webhook, $data);
-
-            ServiceLocator::get('LogService')->log('Executed ' . $webHookName, $baseLog);
-          } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-            $message = 'Error processing ' . $webHookName . ' Reason: ' . $errorMessage;
-
-            ServiceLocator::get('LogService')->log($message, array_merge($baseLog, [
-              'log_status' => WP_QT_LOG_STATUS_ERROR
-            ]));
+      public function handleWebhooks($pipelineId, $events) {
+        foreach ($events as $event) {
+            if (
+              !isset($event['webhookData']) ||
+              !isset($event['webhookData']['target_type']) ||
+              !isset($event['webhookData']['target_action'])
+          ) {
+              continue;
           }
+
+            $webhookData = $event['webhookData'];
+            $data = $event['data'] ?? null;
+            $relatedWebhooks = ServiceLocator::get('WebhookRepository')->findRelatedWebhooks($pipelineId, $webhookData);
+            $userId = get_current_user_id();
+
+            foreach ($relatedWebhooks as $webhook) {
+              $webHookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
+              $baseLog = array(
+                'type'        => WP_QT_LOG_TYPE_WEBHOOK,
+                'type_id'     => $webhook->id,
+                'user_id'     => $userId,
+                'created_by'  => WP_QT_LOG_CREATED_BY_ADMIN,
+                'pipeline_id' => $pipelineId,
+              );
+
+              try {
+                $this->processWebhook($webhook, $data);
+
+                ServiceLocator::get('LogService')->log('Executed ' . $webHookName, $baseLog);
+              } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
+                $message = 'Error processing ' . $webHookName . ' Reason: ' . $errorMessage;
+
+                ServiceLocator::get('LogService')->log($message, array_merge($baseLog, [
+                  'log_status' => WP_QT_LOG_STATUS_ERROR
+                ]));
+              }
+            }
         }
       }
 
