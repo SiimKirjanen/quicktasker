@@ -154,9 +154,12 @@ if ( ! function_exists( 'quicktasker_handle_woocommerce_new_order' ) ) {
 			);
 
 			if ( $relatedAutomations ) {
+				$executedAutomations = [];
+				$pipelineId = $relatedAutomations[0]->pipeline_id;
+
 				foreach ( $relatedAutomations as $automation ) {
-					ServiceLocator::get('AutomationService')->handleAutomations(
-						$automation->pipeline_id, 
+					$executionResult = ServiceLocator::get('AutomationService')->handleAutomations(
+						$pipelineId, 
 						null, 
 						WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER, 
 						WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED,
@@ -164,7 +167,16 @@ if ( ! function_exists( 'quicktasker_handle_woocommerce_new_order' ) ) {
 							'woocommerceOrder' => $order,
 						]
 					);
+					$executedAutomations = array_merge(
+						$executedAutomations,
+						$executionResult->executedAutomations ?? []
+					);
 				}
+				ServiceLocator::get('WebhookService')->handleWebhooks(
+					$pipelineId,
+					[],
+					$executedAutomations
+				);
 			}
 		} catch (Exception $e) {
 			error_log('QuickTasker WooCommerce woocommerce_new_order action error: ' . $e->getMessage());

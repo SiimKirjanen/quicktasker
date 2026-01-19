@@ -434,6 +434,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     return (object)[
                         'success' => true,
+                        'data' => (object)[
+                            'task' => $createdTask
+                        ],
                         'rerunTriggers' => [
                             (object)[
                                 'boardId' => $automation->pipeline_id,
