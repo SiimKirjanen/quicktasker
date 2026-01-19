@@ -36,6 +36,16 @@ const GuidePage = () => {
             plugin guide.
           </a>
         </p>
+        <p>
+          Source code is available on{" "}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://github.com/SiimKirjanen/quicktasker"
+          >
+            GitHub
+          </a>
+        </p>
       </div>
     </Page>
   );

@@ -170,12 +170,16 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                     $userId = $automation->automation_action_target_id;
                     $userType = $automation->automation_action_target_type;
                     $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, $userType);
+                    $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
 
                     ServiceLocator::get('UserService')->assignTaskToUser($userId, $targetId, $userType);
 
                      return (object)[
                         'success' => true,
-                        'data' => $user,
+                        'data' => (object)[
+                            'user' => $user,
+                            'task' => $task
+                        ],
                     ];
                 }
 
@@ -430,13 +434,15 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
                     return (object)[
                         'success' => true,
+                        'data' => (object)[
+                            'task' => $createdTask
+                        ],
                         'rerunTriggers' => [
                             (object)[
                                 'boardId' => $automation->pipeline_id,
                                 'targetId' => $createdTask->id,
                                 'targetType' => WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
                                 'automationTrigger' => WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
-
                             ]
                         ]
                     ];
@@ -516,6 +522,9 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
 
             return (object)[
                 'success' => true,
+                'data' => (object)[
+                    'task' => $createdTask
+                ],
                 'rerunTriggers' => [
                     (object)[
                         'boardId' => $automation->pipeline_id,
@@ -546,7 +555,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * @param object $automation The automation object containing action details.
          * @return bool Returns true if the automation action is to assign a user, false otherwise.
          */
-        private function isAssignUserAction($automation) {
+        public function isAssignUserAction($automation) {
             return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER &&
                    in_array($automation->automation_action_target_type, [WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER, WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER], true) &&
                    $automation->automation_action_target_id !== null;
@@ -632,7 +641,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * @return bool Returns true if the automation action is equal to 
          *              WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK, otherwise false.
          */
-        private function isTaskCreateAction($automation) {
+        public function isTaskCreateAction($automation) {
             return $automation->automation_action === WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK;
         }
 
@@ -642,7 +651,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
          * @param object $automation The automation object containing the trigger information.
          * @return bool Returns true if the automation trigger is 'task done', false otherwise.
          */
-        private function isTaskDoneTrigger($automation) {
+        public function isTaskDoneTrigger($automation) {
             return $automation->automation_trigger === WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE;
         }
 
