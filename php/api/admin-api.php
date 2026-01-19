@@ -539,7 +539,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                                         'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
                                     )
                                 )
-                            )
+                            ),
+                            $executionResults->executedAutomations
                         );
                         /* End of handling webhooks */
 
@@ -720,7 +721,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                                         'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED,
                                     )
                                 )
-                            )
+                            ),
+                            $executionResults->executedAutomations
                         );
                         /* End Handle webhooks */
 

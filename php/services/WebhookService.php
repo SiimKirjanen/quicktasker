@@ -89,15 +89,18 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
         return true;
       }
 
-      public function handleWebhooks($pipelineId, $events) {
-        foreach ($events as $event) {
+      public function handleWebhooks($pipelineId, $events, $executedAutomations = []) {
+        $eventsFromExecutedAutomations = ServiceLocator::get('WebhookEventService')->constructWebhookEventsFromExecutedAutomations($executedAutomations);
+        $allWebhookEvents = array_merge($events, $eventsFromExecutedAutomations);
+
+        foreach ($allWebhookEvents as $event) {
             if (
-              !isset($event['webhookData']) ||
-              !isset($event['webhookData']['target_type']) ||
-              !isset($event['webhookData']['target_action'])
-          ) {
-              continue;
-          }
+                !isset($event['webhookData']) ||
+                !isset($event['webhookData']['target_type']) ||
+                !isset($event['webhookData']['target_action'])
+            ) {
+                continue;
+            }
 
             $webhookData = $event['webhookData'];
             $data = $event['data'] ?? null;
