@@ -198,7 +198,7 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_action' ) ) {
 
             $bookingRepository = new SeatregBookingRepository();
             $registrationRepository = new SeatregRegistrationRepository();
-        
+			$pipelineId = $relatedAutomations[0]->pipeline_id;
             $seatregBookings = $bookingRepository->getBookingsById($bookingId);
 
             if ( !$seatregBookings ) {
@@ -206,10 +206,11 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_action' ) ) {
             }
 
             $registration = $registrationRepository->getRegistrationByCode($seatregBookings[0]->registration_code);
+			$executedAutomations = [];
 
             foreach ( $relatedAutomations as $automation ) {
-                ServiceLocator::get('AutomationService')->handleAutomations(
-                    $automation->pipeline_id, 
+                $executionResult = ServiceLocator::get('AutomationService')->handleAutomations(
+                    $pipelineId, 
                     null, 
                     WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING, 
                     $triggerType,
@@ -218,7 +219,17 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_action' ) ) {
                         'registration' => $registration
                     ]
                 );
+				$executedAutomations = array_merge(
+					$executedAutomations,
+					$executionResult->executedAutomations ?? []
+				);
             }
+
+			ServiceLocator::get('WebhookService')->handleWebhooks(
+				$pipelineId,
+				[],
+				$executedAutomations
+			);
         } catch(Exception $e) {
             error_log('QuickTasker SeatReg ' . $triggerType . ' action error: ' . $e->getMessage());
         }

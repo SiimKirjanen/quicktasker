@@ -25,7 +25,7 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookEventService' ) ) {
                     continue;
                 }
                 if ($automationService->isTaskCreateAction($automation)) {
-                    $webhookEvents[] = $webhookEventRepository->constructTaskAssignedWebhookEvent($automation);
+                    $webhookEvents[] = $webhookEventRepository->constructTaskCreatedWebhookEvent($automation);
 
                     continue;
                 }
