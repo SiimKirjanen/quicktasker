@@ -55,6 +55,6 @@ if ( ! function_exists( 'wpqt_enqueue_app_assets' ) ) {
 		));
 
 		// Set script translations
-		wp_set_script_translations( 'wpqt-script', 'quicktasker', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'languages/json' );
+		wp_set_script_translations( 'wpqt-script', 'quicktasker');
 	}
 }

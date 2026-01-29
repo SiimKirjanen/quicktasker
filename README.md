@@ -21,7 +21,7 @@ Install WP-CLI
 
 ### Generate .pot translations template file
 
-`wp i18n make-pot . languages/quicktasker.pot`
+`wp i18n make-pot . languages/quicktasker.pot --exclude=node_modules,src --include="*.php,php/**/*.php,build/*.js,build/**/*.js"`
 
 ### Make .po translations
 
