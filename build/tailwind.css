@@ -1496,6 +1496,11 @@
   height: 2.25rem;
 }
 
+.wpqt-size-3 {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
 .wpqt-h-\[200px\] {
   height: 200px;
 }

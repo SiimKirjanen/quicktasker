@@ -9,21 +9,14 @@ import { WPQTLabel } from "../../../../common/Label/WPQTLabel";
 type Props = {
   labelToEdit: Label | null;
   editLabel: (label: Label) => Promise<void>;
-  deleteLabe: (labelId: string) => Promise<void>;
   closeEdit?: () => void;
 };
-function LabelEdit({
-  labelToEdit,
-  editLabel,
-  deleteLabe,
-  closeEdit = () => {},
-}: Props) {
+function LabelEdit({ labelToEdit, editLabel, closeEdit = () => {} }: Props) {
   if (!labelToEdit) {
     return null;
   }
   const [label, setLabel] = useState<Label>({ ...labelToEdit });
   const [loading, setLoading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
   const onLabelNameChange = (name: string) => {
     setLabel({ ...label, name });
@@ -38,11 +31,6 @@ function LabelEdit({
     setLoading(true);
     await editLabel(label);
     setLoading(false);
-  };
-  const onDelete = async () => {
-    setDeleting(true);
-    await deleteLabe(label.id);
-    setDeleting(false);
   };
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-3 wpqt-items-center">
@@ -62,22 +50,18 @@ function LabelEdit({
         disableAlpha={true}
         onChange={setLabelColor}
       />
-      <WPQTButton
-        btnText={__("Save", "quicktasker")}
-        onClick={onEdit}
-        loading={loading}
-      />
-      <WPQTButton
-        btnText={__("Delete", "quicktasker")}
-        onClick={onDelete}
-        loading={deleting}
-        buttonStyleType={ButtonStyleType.DANGER}
-      />
-      <WPQTButton
-        btnText={__("Cancel", "quicktasker")}
-        buttonStyleType={ButtonStyleType.SECONDARY}
-        onClick={closeEdit}
-      />
+      <div className="wpqt-flex wpqt-gap-2">
+        <WPQTButton
+          btnText={__("Cancel", "quicktasker")}
+          buttonStyleType={ButtonStyleType.SECONDARY}
+          onClick={closeEdit}
+        />
+        <WPQTButton
+          btnText={__("Save", "quicktasker")}
+          onClick={onEdit}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }

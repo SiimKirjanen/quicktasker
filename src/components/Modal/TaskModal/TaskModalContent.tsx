@@ -163,8 +163,7 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
 
               <WPQTModalField
                 label={__("Free for all task", "quicktasker")}
-                tooltipId={`free-for-all-${taskToEdit.id}-tooltip`}
-                tooltipText={__(
+                description={__(
                   "When enabled, users have the ability to self-assign or unassign this task.",
                   "quicktasker",
                 )}

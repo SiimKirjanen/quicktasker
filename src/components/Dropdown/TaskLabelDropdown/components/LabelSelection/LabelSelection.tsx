@@ -1,4 +1,4 @@
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
@@ -7,8 +7,14 @@ import {
 } from "../../../../../constants";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
 import { SelectionLabel } from "../../../../../types/label";
-import { ButtonStyleType, WPQTButton } from "../../../../common/Button/Button";
+import {
+  ButtonStyleType,
+  WPQTButton,
+  WPQTIconButton,
+  WPQTOnlyIconBtn,
+} from "../../../../common/Button/Button";
 import { WPQTTag } from "../../../../common/Tag/Tag";
+import { WPQTConfirmTooltip } from "../../../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { Loading } from "../../../../Loading/Loading";
 
 type Props = {
@@ -16,6 +22,7 @@ type Props = {
   title: string;
   labelSelected: (labelId: string) => void;
   labelDeSelection: (labelId: string) => void;
+  deleteLabe: (labelId: string) => Promise<void>;
   loading?: boolean;
 };
 function LabelSelection({
@@ -23,6 +30,7 @@ function LabelSelection({
   title,
   labelSelected,
   labelDeSelection,
+  deleteLabe,
   loading = false,
 }: Props) {
   const { labelDispatch } = useContext(LabelContext);
@@ -46,6 +54,7 @@ function LabelSelection({
             label={label}
             labelSelected={labelSelected}
             labelDeSelection={labelDeSelection}
+            deleteLabe={deleteLabe}
           />
         ))
       )}
@@ -65,14 +74,17 @@ type SelectionLabelProps = {
   label: SelectionLabel;
   labelSelected: (labelId: string) => void;
   labelDeSelection: (labelId: string) => void;
+  deleteLabe: (labelId: string) => Promise<void>;
 };
 function SelectionLabel({
   label,
   labelSelected,
   labelDeSelection,
+  deleteLabe,
 }: SelectionLabelProps) {
   const { labelDispatch } = useContext(LabelContext);
   const [isSelected, setIsSelected] = useState(label.selected);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const onSelectionToggle = async (
     element: React.ChangeEvent<HTMLInputElement>,
@@ -100,15 +112,38 @@ function SelectionLabel({
       >
         {label.name}
       </WPQTTag>
-      <PencilSquareIcon
-        className="wpqt-size-5 wpqt-icon-green wpqt-cursor-pointer"
-        onClick={() => {
-          labelDispatch({
-            type: SET_LABEL_ACTION_STATE_EDITING,
-            payload: label,
-          });
-        }}
-      />
+      <div className="wpqt-flex wpqt-gap-2">
+        <WPQTIconButton
+          icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
+          onClick={() => {
+            labelDispatch({
+              type: SET_LABEL_ACTION_STATE_EDITING,
+              payload: label,
+            });
+          }}
+        />
+        <WPQTConfirmTooltip
+          confirmMessage={__(
+            "Are you sure you want to delete the label from the board?",
+            "quicktasker",
+          )}
+          onConfirm={async () => {
+            setIsDeleting(true);
+            await deleteLabe(label.id);
+            setIsDeleting(false);
+          }}
+          containerClassName="wpqt-flex"
+        >
+          {({ onClick }) => (
+            <WPQTOnlyIconBtn
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+              className="wpqt-p-2"
+              onClick={onClick}
+              loading={isDeleting}
+            />
+          )}
+        </WPQTConfirmTooltip>
+      </div>
     </div>
   );
 }

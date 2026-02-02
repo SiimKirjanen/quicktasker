@@ -166,11 +166,12 @@ const LabelDropdownContent = memo(
         case LabelActionState.SELECTION:
           return (
             <LabelSelection
-              title={__("Task label selection", "quicktasker")}
+              title={__("Label selection", "quicktasker")}
               labels={getSelectionLabels()}
               loading={loadingLabels}
               labelSelected={onLabelSelected}
               labelDeSelection={onLabelDeSelected}
+              deleteLabe={onDeleteLabel}
             />
           );
         case LabelActionState.CREATION:
@@ -185,7 +186,6 @@ const LabelDropdownContent = memo(
             <LabelEdit
               labelToEdit={labelToEdit}
               editLabel={onEditLabel}
-              deleteLabe={onDeleteLabel}
               closeEdit={() => {
                 labelDispatch({ type: SET_LABEL_ACTION_STATE_SELECTION });
               }}

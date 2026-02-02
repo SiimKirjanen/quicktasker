@@ -46,18 +46,20 @@ function LabelCreation({ labelCreated, loading = false }: Props) {
           setLabelColor(color.hex);
         }}
       />
-      <WPQTButton
-        btnText={__("Create", "quicktasker")}
-        onClick={onLabelCreated}
-        loading={loading}
-      />
-      <WPQTButton
-        btnText={__("Cancel", "quicktasker")}
-        buttonStyleType={ButtonStyleType.SECONDARY}
-        onClick={() => {
-          labelDispatch({ type: SET_LABEL_ACTION_STATE_SELECTION });
-        }}
-      />
+      <div className="wpqt-flex wpqt-gap-2">
+        <WPQTButton
+          btnText={__("Cancel", "quicktasker")}
+          buttonStyleType={ButtonStyleType.SECONDARY}
+          onClick={() => {
+            labelDispatch({ type: SET_LABEL_ACTION_STATE_SELECTION });
+          }}
+        />
+        <WPQTButton
+          btnText={__("Create", "quicktasker")}
+          onClick={onLabelCreated}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }
