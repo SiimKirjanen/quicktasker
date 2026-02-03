@@ -77,8 +77,7 @@ function useLabelActions() {
     pipelineId: string,
     taskId: string,
     labelId: string,
-    callback?: (success: boolean, label?: Label) => void,
-  ) => {
+  ): Promise<{ success: boolean; label?: Label }> => {
     try {
       const response = await assignLabelToTaskRequest(
         pipelineId,
@@ -87,15 +86,18 @@ function useLabelActions() {
       );
 
       toast.success(__("Label added to task", "quicktasker"));
-      if (callback) {
-        callback(true, response.data.label);
-      }
+
+      return {
+        success: true,
+        label: response.data.label,
+      };
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to add label to task", "quicktasker"));
-      if (callback) {
-        callback(false);
-      }
+
+      return {
+        success: false,
+      };
     }
   };
 
@@ -103,20 +105,21 @@ function useLabelActions() {
     pipelineId: string,
     taskId: string,
     labelId: string,
-    callback?: (success: boolean) => void,
-  ) => {
+  ): Promise<{ success: boolean }> => {
     try {
       await unassignLabelFromTaskRequest(pipelineId, taskId, labelId);
       toast.success(__("Label removed from task", "quicktasker"));
-      if (callback) {
-        callback(true);
-      }
+
+      return {
+        success: true,
+      };
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to remove label from task", "quicktasker"));
-      if (callback) {
-        callback(false);
-      }
+
+      return {
+        success: false,
+      };
     }
   };
 

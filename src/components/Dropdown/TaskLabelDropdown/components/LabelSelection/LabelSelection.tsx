@@ -6,19 +6,21 @@ import {
   SET_LABEL_ACTION_STATE_EDITING,
 } from "../../../../../constants";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
-import { SelectionLabel } from "../../../../../types/label";
+import { Label, SelectionLabel } from "../../../../../types/label";
 import { ButtonStyleType, WPQTButton } from "../../../../common/Button/Button";
 import { WPQTIconButton } from "../../../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTOnlyIconBtn } from "../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn";
 import { WPQTTag } from "../../../../common/Tag/Tag";
 import { WPQTConfirmTooltip } from "../../../../Dialog/ConfirmTooltip/ConfirmTooltip";
-import { Loading } from "../../../../Loading/Loading";
+import { Loading, LoadingOval } from "../../../../Loading/Loading";
 
 type Props = {
   labels: SelectionLabel[] | null;
   title: string;
-  labelSelected: (labelId: string) => void;
-  labelDeSelection: (labelId: string) => void;
+  labelSelected: (
+    labelId: string,
+  ) => Promise<{ success: boolean; label?: Label }>;
+  labelDeSelection: (labelId: string) => Promise<{ success: boolean }>;
   deleteLabe: (labelId: string) => Promise<void>;
   loading?: boolean;
 };
@@ -69,8 +71,10 @@ function LabelSelection({
 
 type SelectionLabelProps = {
   label: SelectionLabel;
-  labelSelected: (labelId: string) => void;
-  labelDeSelection: (labelId: string) => void;
+  labelSelected: (
+    labelId: string,
+  ) => Promise<{ success: boolean; label?: Label }>;
+  labelDeSelection: (labelId: string) => Promise<{ success: boolean }>;
   deleteLabe: (labelId: string) => Promise<void>;
 };
 function SelectionLabel({
@@ -82,27 +86,35 @@ function SelectionLabel({
   const { labelDispatch } = useContext(LabelContext);
   const [isSelected, setIsSelected] = useState(label.selected);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [checkboxLoading, setCheckboxLoading] = useState(false);
 
   const onSelectionToggle = async (
     element: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const isSelected = element.target.checked;
 
-    setIsSelected(isSelected);
-    if (isSelected) {
-      labelSelected(label.id);
-    } else {
-      labelDeSelection(label.id);
+    setCheckboxLoading(true);
+    const { success } = isSelected
+      ? await labelSelected(label.id)
+      : await labelDeSelection(label.id);
+    setCheckboxLoading(false);
+
+    if (success) {
+      setIsSelected(isSelected);
     }
   };
 
   return (
     <div className="wpqt-flex wpqt-items-center wpqt-justify-between wpqt-gap-2 wpqt-w-full">
-      <input
-        type="checkbox"
-        checked={isSelected}
-        onChange={onSelectionToggle}
-      />
+      {checkboxLoading ? (
+        <LoadingOval width="20" height="20" />
+      ) : (
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={onSelectionToggle}
+        />
+      )}
       <WPQTTag
         inlineStyle={{ backgroundColor: label.color }}
         className="wpqt-py-2"

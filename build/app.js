@@ -3331,46 +3331,56 @@ const LabelDropdownContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
     }));
   };
   const onLabelSelected = labelId => __awaiter(void 0, void 0, void 0, function* () {
-    yield assignLabelToTask(task.pipeline_id, task.id, labelId, (success, label) => {
-      if (success && label) {
-        dispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_LABEL_TO_TASK,
-          payload: {
-            taskId: task.id,
-            label
-          }
-        });
-        archiveDispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_3__.ADD_LABEL_ARCHIVED_TASK,
-          payload: {
-            taskId: task.id,
-            label
-          }
-        });
-        labelSelected(label);
-      }
-    });
+    const {
+      success,
+      label
+    } = yield assignLabelToTask(task.pipeline_id, task.id, labelId);
+    if (success && label) {
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_ADD_LABEL_TO_TASK,
+        payload: {
+          taskId: task.id,
+          label
+        }
+      });
+      archiveDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_3__.ADD_LABEL_ARCHIVED_TASK,
+        payload: {
+          taskId: task.id,
+          label
+        }
+      });
+      labelSelected(label);
+    }
+    return {
+      success,
+      label
+    };
   });
   const onLabelDeSelected = labelId => __awaiter(void 0, void 0, void 0, function* () {
-    yield usassignLabelFromTask(task.pipeline_id, task.id, labelId, success => {
-      if (success) {
-        dispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_REMOVE_LABEL_FROM_TASK,
-          payload: {
-            taskId: task.id,
-            labelId
-          }
-        });
-        archiveDispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_3__.REMOVE_LABEL_ARCHIVED_TASK,
-          payload: {
-            taskId: task.id,
-            labelId
-          }
-        });
-        labelDeselected(labelId);
-      }
-    });
+    const {
+      success
+    } = yield usassignLabelFromTask(task.pipeline_id, task.id, labelId);
+    if (success) {
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_3__.PIPELINE_REMOVE_LABEL_FROM_TASK,
+        payload: {
+          taskId: task.id,
+          labelId
+        }
+      });
+      archiveDispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_3__.REMOVE_LABEL_ARCHIVED_TASK,
+        payload: {
+          taskId: task.id,
+          labelId
+        }
+      });
+      labelDeselected(labelId);
+    }
+    return {
+      success
+    };
   });
   const onLabelCreated = (name, color) => __awaiter(void 0, void 0, void 0, function* () {
     setCreatingLabel(true);
@@ -3598,8 +3608,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
 /* harmony import */ var _providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../providers/LabelsContextProvider */ "./src/providers/LabelsContextProvider.tsx");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _common_Button_WPQTOnlyIconBtn_WPQTOnlyIconBtn__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn */ "./src/components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn.tsx");
-/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
+/* harmony import */ var _common_Button_WPQTOnlyIconBtn_WPQTOnlyIconBtn__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn */ "./src/components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn.tsx");
 /* harmony import */ var _common_Tag_Tag__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../common/Tag/Tag */ "./src/components/common/Tag/Tag.tsx");
 /* harmony import */ var _Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../Dialog/ConfirmTooltip/ConfirmTooltip */ "./src/components/Dialog/ConfirmTooltip/ConfirmTooltip.tsx");
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
@@ -3694,18 +3704,24 @@ function SelectionLabel({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_4__.LabelContext);
   const [isSelected, setIsSelected] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(label.selected);
   const [isDeleting, setIsDeleting] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [checkboxLoading, setCheckboxLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const onSelectionToggle = element => __awaiter(this, void 0, void 0, function* () {
     const isSelected = element.target.checked;
-    setIsSelected(isSelected);
-    if (isSelected) {
-      labelSelected(label.id);
-    } else {
-      labelDeSelection(label.id);
+    setCheckboxLoading(true);
+    const {
+      success
+    } = isSelected ? yield labelSelected(label.id) : yield labelDeSelection(label.id);
+    setCheckboxLoading(false);
+    if (success) {
+      setIsSelected(isSelected);
     }
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-flex wpqt-items-center wpqt-justify-between wpqt-gap-2 wpqt-w-full",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+    children: [checkboxLoading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_10__.LoadingOval, {
+      width: "20",
+      height: "20"
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
       type: "checkbox",
       checked: isSelected,
       onChange: onSelectionToggle
@@ -3717,7 +3733,7 @@ function SelectionLabel({
       children: label.name
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-gap-2",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_7__.WPQTIconButton, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
         icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
           className: "wpqt-icon-green wpqt-size-4"
         }),
@@ -3737,7 +3753,7 @@ function SelectionLabel({
         containerClassName: "wpqt-flex",
         children: ({
           onClick
-        }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTOnlyIconBtn_WPQTOnlyIconBtn__WEBPACK_IMPORTED_MODULE_6__.WPQTOnlyIconBtn, {
+        }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTOnlyIconBtn_WPQTOnlyIconBtn__WEBPACK_IMPORTED_MODULE_7__.WPQTOnlyIconBtn, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
             className: "wpqt-icon-red wpqt-size-4"
           }),
@@ -14095,34 +14111,35 @@ function useLabelActions() {
       }
     }
   });
-  const assignLabelToTask = (pipelineId, taskId, labelId, callback) => __awaiter(this, void 0, void 0, function* () {
+  const assignLabelToTask = (pipelineId, taskId, labelId) => __awaiter(this, void 0, void 0, function* () {
     try {
       const response = yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.assignLabelToTaskRequest)(pipelineId, taskId, labelId);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Label added to task", "quicktasker"));
-      if (callback) {
-        callback(true, response.data.label);
-      }
+      return {
+        success: true,
+        label: response.data.label
+      };
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to add label to task", "quicktasker"));
-      if (callback) {
-        callback(false);
-      }
+      return {
+        success: false
+      };
     }
   });
-  const usassignLabelFromTask = (pipelineId, taskId, labelId, callback) => __awaiter(this, void 0, void 0, function* () {
+  const usassignLabelFromTask = (pipelineId, taskId, labelId) => __awaiter(this, void 0, void 0, function* () {
     try {
       yield (0,_api_api__WEBPACK_IMPORTED_MODULE_2__.unassignLabelFromTaskRequest)(pipelineId, taskId, labelId);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.success((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Label removed from task", "quicktasker"));
-      if (callback) {
-        callback(true);
-      }
+      return {
+        success: true
+      };
     } catch (error) {
       console.error(error);
       react_toastify__WEBPACK_IMPORTED_MODULE_1__.toast.error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Failed to remove label from task", "quicktasker"));
-      if (callback) {
-        callback(false);
-      }
+      return {
+        success: false
+      };
     }
   });
   const deleteLabel = (pipelineId, labelId, callback) => __awaiter(this, void 0, void 0, function* () {
