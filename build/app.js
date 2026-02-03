@@ -3133,7 +3133,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _uiw_react_color__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @uiw/react-color */ "./node_modules/@uiw/react-color-colorful/esm/index.js");
+/* harmony import */ var _uiw_react_color__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @uiw/react-color */ "./node_modules/@uiw/react-color-colorful/esm/index.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -3143,6 +3143,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../common/Label/WPQTLabel */ "./src/components/common/Label/WPQTLabel.tsx");
+/* harmony import */ var _common_Input_InputErrorText_InputErrorText__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../common/Input/InputErrorText/InputErrorText */ "./src/components/common/Input/InputErrorText/InputErrorText.tsx");
+
 
 
 
@@ -3160,18 +3162,26 @@ function LabelCreation({
     labelDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_4__.LabelContext);
   const [labelName, setLabelName] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const [labelColor, setLabelColor] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-  const onLabelCreated = () => {
-    if (!labelName || !labelColor) {
-      return;
-    }
+  const [labelColor, setLabelColor] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)("#FF9800");
+  const [labelErrors, setLabelErrors] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({});
+  const onLabelCreate = () => {
+    const errors = {};
+    if (!labelName.trim()) errors.nameError = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Name is required", "quicktasker");
+    if (!labelColor) errors.colorError = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Color is required", "quicktasker");
+    setLabelErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     labelCreated(labelName, labelColor);
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-gap-3 wpqt-items-center",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-text-lg",
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create new label", "quicktasker")
+    className: "wpqt-flex wpqt-flex-col wpqt-gap-3",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-text-lg",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create new label", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-max-w-sm",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Label will be added to the board", "quicktasker")
+      })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-flex-col",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_7__.WPQTLabel, {
@@ -3180,16 +3190,28 @@ function LabelCreation({
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_6__.WPQTInput, {
         value: labelName,
         onChange: setLabelName,
-        inputId: "new-label-name"
+        inputId: "new-label-name",
+        errorText: labelErrors.nameError,
+        className: "wpqt-w-full"
       })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_uiw_react_color__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      color: labelColor,
-      disableAlpha: true,
-      onChange: color => {
-        setLabelColor(color.hex);
-      }
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "wpqt-flex wpqt-gap-2",
+      className: "wpqt-flex wpqt-flex-col wpqt-mb-2",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_7__.WPQTLabel, {
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Color", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_uiw_react_color__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        color: labelColor,
+        disableAlpha: true,
+        onChange: color => {
+          setLabelColor(color.hex);
+        },
+        style: {
+          width: "100%"
+        }
+      }), labelErrors.nameError && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_InputErrorText_InputErrorText__WEBPACK_IMPORTED_MODULE_8__.InputErrorText, {
+        errorText: labelErrors.colorError
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-gap-2 wpqt-justify-end",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
         btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Cancel", "quicktasker"),
         buttonStyleType: _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.ButtonStyleType.SECONDARY,
@@ -3200,7 +3222,7 @@ function LabelCreation({
         }
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
         btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create", "quicktasker"),
-        onClick: onLabelCreated,
+        onClick: onLabelCreate,
         loading: loading
       })]
     })]
@@ -3432,7 +3454,8 @@ const LabelDropdownContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
     switch (labelActionState) {
       case _types_label__WEBPACK_IMPORTED_MODULE_8__.LabelActionState.SELECTION:
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelSelection_LabelSelection__WEBPACK_IMPORTED_MODULE_11__.LabelSelection, {
-          title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Label selection", "quicktasker"),
+          title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Board labels", "quicktasker"),
+          description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add, edit, or remove board labels. Created labels can be applied or removed from this task.", "quicktasker"),
           labels: getSelectionLabels(),
           loading: loadingLabels,
           labelSelected: onLabelSelected,
@@ -3480,7 +3503,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _uiw_react_color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @uiw/react-color */ "./node_modules/@uiw/react-color-colorful/esm/index.js");
+/* harmony import */ var _uiw_react_color__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @uiw/react-color */ "./node_modules/@uiw/react-color-colorful/esm/index.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -3488,6 +3511,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../common/Label/WPQTLabel */ "./src/components/common/Label/WPQTLabel.tsx");
+/* harmony import */ var _common_Input_InputErrorText_InputErrorText__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../common/Input/InputErrorText/InputErrorText */ "./src/components/common/Input/InputErrorText/InputErrorText.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -3522,6 +3546,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
 function LabelEdit({
   labelToEdit,
   editLabel,
@@ -3532,6 +3557,7 @@ function LabelEdit({
   }
   const [label, setLabel] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(Object.assign({}, labelToEdit));
   const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [labelErrors, setLabelErrors] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({});
   const onLabelNameChange = name => {
     setLabel(Object.assign(Object.assign({}, label), {
       name
@@ -3543,18 +3569,25 @@ function LabelEdit({
     }));
   };
   const onEdit = () => __awaiter(this, void 0, void 0, function* () {
-    if (!label.name || !label.color) {
-      return;
-    }
+    const errors = {};
+    if (!label.name.trim()) errors.nameError = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Name is required", "quicktasker");
+    if (!label.color) errors.colorError = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Color is required", "quicktasker");
+    setLabelErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     setLoading(true);
     yield editLabel(label);
     setLoading(false);
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-gap-3 wpqt-items-center",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-text-lg",
-      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Edit label", "quicktasker")
+    className: "wpqt-flex wpqt-flex-col wpqt-gap-3",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-text-lg",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Edit label", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-max-w-sm",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Make changes to this label", "quicktasker")
+      })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-flex-col",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_5__.WPQTLabel, {
@@ -3563,20 +3596,32 @@ function LabelEdit({
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_Input__WEBPACK_IMPORTED_MODULE_4__.WPQTInput, {
         value: label.name,
         onChange: onLabelNameChange,
-        inputId: "edit-label-name"
+        inputId: "edit-label-name",
+        className: "wpqt-w-full",
+        errorText: labelErrors.nameError
       })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_uiw_react_color__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      color: label.color,
-      disableAlpha: true,
-      onChange: setLabelColor
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "wpqt-flex wpqt-gap-2",
+      className: "wpqt-flex wpqt-flex-col wpqt-mb-2",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_5__.WPQTLabel, {
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Color", "quicktasker")
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_uiw_react_color__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        color: label.color,
+        disableAlpha: true,
+        onChange: setLabelColor,
+        style: {
+          width: "100%"
+        }
+      }), labelErrors.nameError && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Input_InputErrorText_InputErrorText__WEBPACK_IMPORTED_MODULE_6__.InputErrorText, {
+        errorText: labelErrors.colorError
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "wpqt-flex wpqt-gap-2 wpqt-justify-end",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTButton, {
         btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Cancel", "quicktasker"),
         buttonStyleType: _common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.ButtonStyleType.SECONDARY,
         onClick: closeEdit
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTButton, {
-        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Save", "quicktasker"),
+        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Update", "quicktasker"),
         onClick: onEdit,
         loading: loading
       })]
@@ -3655,6 +3700,7 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 function LabelSelection({
   labels,
   title,
+  description,
   labelSelected,
   labelDeSelection,
   deleteLabe,
@@ -3667,10 +3713,15 @@ function LabelSelection({
     return null;
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "wpqt-text-lg",
-      children: title
+    className: "wpqt-flex wpqt-flex-col wpqt-gap-4",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-text-lg",
+        children: title
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "wpqt-max-w-sm",
+        children: description
+      })]
     }), loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_10__.Loading, {
       ovalSize: "24"
     }) : labels.length === 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -3681,15 +3732,18 @@ function LabelSelection({
       labelSelected: labelSelected,
       labelDeSelection: labelDeSelection,
       deleteLabe: deleteLabe
-    }, label.id)), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
-      btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create new label", "quicktasker"),
-      className: "wpqt-mt-3",
-      buttonStyleType: _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.ButtonStyleType.SECONDARY,
-      onClick: () => {
-        labelDispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_LABEL_ACTION_STATE_CREATION
-        });
-      }
+    }, label.id)), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-gap-2 wpqt-justify-end",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTButton, {
+        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create new label", "quicktasker"),
+        className: "wpqt-mt-3",
+        buttonStyleType: _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.ButtonStyleType.PRIMARY,
+        onClick: () => {
+          labelDispatch({
+            type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_LABEL_ACTION_STATE_CREATION
+          });
+        }
+      })
     })]
   });
 }
@@ -3744,7 +3798,7 @@ function SelectionLabel({
           });
         }
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_9__.WPQTConfirmTooltip, {
-        confirmMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Are you sure you want to delete the label from the board?", "quicktasker"),
+        confirmMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Are you sure you want to delete the label from this board?", "quicktasker"),
         onConfirm: () => __awaiter(this, void 0, void 0, function* () {
           setIsDeleting(true);
           yield deleteLabe(label.id);
@@ -12844,10 +12898,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/input/input.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _InputErrorText_InputErrorText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./InputErrorText/InputErrorText */ "./src/components/common/Input/InputErrorText/InputErrorText.tsx");
 var __rest = undefined && undefined.__rest || function (s, e) {
   var t = {};
   for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -12856,6 +12911,7 @@ var __rest = undefined && undefined.__rest || function (s, e) {
   }
   return t;
 };
+
 
 
 
@@ -12876,12 +12932,13 @@ const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
       type = InputType.TEXT,
       loading = false,
       inputId,
-      name
+      name,
+      errorText
     } = _a,
-    restProps = __rest(_a, ["value", "onChange", "isAutoFocus", "className", "wrapperClassName", "disabled", "type", "loading", "inputId", "name"]);
+    restProps = __rest(_a, ["value", "onChange", "isAutoFocus", "className", "wrapperClassName", "disabled", "type", "loading", "inputId", "name", "errorText"]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: `wpqt-inline-block wpqt-relative wpqt-mb-3 ${wrapperClassName}`,
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Input, Object.assign({
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.Input, Object.assign({
       ref: ref,
       autoFocus: isAutoFocus,
       className: `wpqt-block !wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,
@@ -12895,9 +12952,39 @@ const WPQTInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
       width: "24",
       height: "24",
       className: "wpqt-absolute wpqt-right-[-32px] wpqt-top-1/2 wpqt-transform-y-center"
+    }), errorText && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_InputErrorText_InputErrorText__WEBPACK_IMPORTED_MODULE_3__.InputErrorText, {
+      errorText: errorText
     })]
   });
 });
+
+
+/***/ }),
+
+/***/ "./src/components/common/Input/InputErrorText/InputErrorText.tsx":
+/*!***********************************************************************!*\
+  !*** ./src/components/common/Input/InputErrorText/InputErrorText.tsx ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   InputErrorText: () => (/* binding */ InputErrorText)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function InputErrorText({
+  errorText
+}) {
+  if (!errorText) {
+    return null;
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "wpqt-text-qtTextRed wpqt-mt-1",
+    children: errorText
+  });
+}
 
 
 /***/ }),

@@ -168,7 +168,11 @@ const LabelDropdownContent = memo(
         case LabelActionState.SELECTION:
           return (
             <LabelSelection
-              title={__("Label selection", "quicktasker")}
+              title={__("Board labels", "quicktasker")}
+              description={__(
+                "Add, edit, or remove board labels. Created labels can be applied or removed from this task.",
+                "quicktasker",
+              )}
               labels={getSelectionLabels()}
               loading={loadingLabels}
               labelSelected={onLabelSelected}

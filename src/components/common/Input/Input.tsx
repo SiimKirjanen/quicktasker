@@ -1,6 +1,7 @@
 import { Input } from "@headlessui/react";
 import { forwardRef } from "@wordpress/element";
 import { LoadingOval } from "../../Loading/Loading";
+import { InputErrorText } from "./InputErrorText/InputErrorText";
 
 enum InputType {
   TEXT = "text",
@@ -18,6 +19,7 @@ type Props = {
   loading?: boolean;
   inputId?: string;
   name?: string;
+  errorText?: string;
 };
 
 const WPQTInput = forwardRef<HTMLInputElement, Props>(
@@ -33,6 +35,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
       loading = false,
       inputId,
       name,
+      errorText,
       ...restProps
     },
     ref,
@@ -60,6 +63,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
             className="wpqt-absolute wpqt-right-[-32px] wpqt-top-1/2 wpqt-transform-y-center"
           />
         )}
+        {errorText && <InputErrorText errorText={errorText} />}
       </div>
     );
   },

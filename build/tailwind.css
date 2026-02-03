@@ -1632,6 +1632,10 @@
   max-width: 24rem;
 }
 
+.wpqt-max-w-md {
+  max-width: 28rem;
+}
+
 .wpqt-flex-1 {
   flex: 1 1 0%;
 }

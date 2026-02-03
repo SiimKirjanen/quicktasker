@@ -17,6 +17,7 @@ import { Loading, LoadingOval } from "../../../../Loading/Loading";
 type Props = {
   labels: SelectionLabel[] | null;
   title: string;
+  description: string;
   labelSelected: (
     labelId: string,
   ) => Promise<{ success: boolean; label?: Label }>;
@@ -27,6 +28,7 @@ type Props = {
 function LabelSelection({
   labels,
   title,
+  description,
   labelSelected,
   labelDeSelection,
   deleteLabe,
@@ -38,8 +40,11 @@ function LabelSelection({
     return null;
   }
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
-      <div className="wpqt-text-lg">{title}</div>
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">
+      <div>
+        <div className="wpqt-text-lg">{title}</div>
+        <div className="wpqt-max-w-sm">{description}</div>
+      </div>
       {loading ? (
         <Loading ovalSize="24" />
       ) : labels.length === 0 ? (
@@ -57,14 +62,16 @@ function LabelSelection({
           />
         ))
       )}
-      <WPQTButton
-        btnText={__("Create new label", "quicktasker")}
-        className="wpqt-mt-3"
-        buttonStyleType={ButtonStyleType.SECONDARY}
-        onClick={() => {
-          labelDispatch({ type: SET_LABEL_ACTION_STATE_CREATION });
-        }}
-      />
+      <div className="wpqt-flex wpqt-gap-2 wpqt-justify-end">
+        <WPQTButton
+          btnText={__("Create new label", "quicktasker")}
+          className="wpqt-mt-3"
+          buttonStyleType={ButtonStyleType.PRIMARY}
+          onClick={() => {
+            labelDispatch({ type: SET_LABEL_ACTION_STATE_CREATION });
+          }}
+        />
+      </div>
     </div>
   );
 }
@@ -133,7 +140,7 @@ function SelectionLabel({
         />
         <WPQTConfirmTooltip
           confirmMessage={__(
-            "Are you sure you want to delete the label from the board?",
+            "Are you sure you want to delete the label from this board?",
             "quicktasker",
           )}
           onConfirm={async () => {
