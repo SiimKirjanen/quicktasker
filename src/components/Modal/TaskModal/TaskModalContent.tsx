@@ -24,7 +24,7 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
 import { Label } from "../../../types/label";
 import { UploadEntityType } from "../../../types/upload";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { AutoSaveInput } from "../../common/Input/AutoSaveInput/AutoSaveInput";
 import { AutoSaveTextarea } from "../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";

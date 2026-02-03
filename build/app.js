@@ -1115,7 +1115,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/CustomFieldsContextProvider */ "./src/providers/CustomFieldsContextProvider.tsx");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../types/custom-field */ "./src/types/custom-field.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
 /* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
@@ -1272,7 +1272,7 @@ function CustomFieldCreation({
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-flex wpqt-justify-end wpqt-gap-3",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_9__.WPQTIconButton, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_9__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add", "quicktasker"),
         onClick: createCustomField,
         loading: loading,
@@ -1305,7 +1305,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-icons/tb */ "./node_modules/react-icons/tb/index.mjs");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 
 
 
@@ -1321,7 +1321,7 @@ function CustomFieldActins({
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_3__.ModalContext);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: `wpqt-flex wpqt-gap-2 ${className}`,
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
       onClick: () => {
         modalDispatch({
           type: _constants__WEBPACK_IMPORTED_MODULE_2__.SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
@@ -1331,7 +1331,7 @@ function CustomFieldActins({
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tb__WEBPACK_IMPORTED_MODULE_5__.TbRestore, {
         className: "wpqt-icon-blue wpqt-size-4"
       })
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
       onClick: () => {
         modalDispatch({
           type: _constants__WEBPACK_IMPORTED_MODULE_2__.SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
@@ -1573,7 +1573,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hooks_useTimezone__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../hooks/useTimezone */ "./src/hooks/useTimezone.ts");
 /* harmony import */ var _providers_CustomFieldsContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../providers/CustomFieldsContextProvider */ "./src/providers/CustomFieldsContextProvider.tsx");
 /* harmony import */ var _utils_custom_fields__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../utils/custom-fields */ "./src/utils/custom-fields.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTOnlyIconBtn_WPQTOnlyIconBtn__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn */ "./src/components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -1659,7 +1659,7 @@ function DeletedField({
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Deleted:", "quicktasker")
       }), " ", convertToWPTimezone(customField.deleted_at)]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_8__.WPQTOnlyIconBtn, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTOnlyIconBtn_WPQTOnlyIconBtn__WEBPACK_IMPORTED_MODULE_8__.WPQTOnlyIconBtn, {
         onClick: restoreField,
         loading: restoring,
         icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_tb__WEBPACK_IMPORTED_MODULE_9__.TbRestore, {
@@ -1750,7 +1750,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../types/custom-field */ "./src/types/custom-field.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -1814,7 +1814,7 @@ function CustomFieldActions({
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-ml-auto",
-    children: isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, Object.assign({
+    children: isUserAllowedToDelete && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, Object.assign({
       onClick: handleDelete,
       className: `${!isAllowedToDelete ? "!wpqt-cursor-not-allowed" : ""}`,
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_7__["default"], {
@@ -2509,7 +2509,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ActivePipelineContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/ActivePipelineContextProvider */ "./src/providers/ActivePipelineContextProvider.tsx");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _WPQTDropdown__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../WPQTDropdown */ "./src/components/Dropdown/WPQTDropdown.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -2636,7 +2636,7 @@ function PipelineSelectionDropdown() {
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_13__.MenuItem, {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-my-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2",
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
           text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add new board", "quicktasker"),
           onClick: openPipelineModal,
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_16__["default"], {
@@ -3438,7 +3438,6 @@ const LabelDropdownContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LabelEdit_LabelEdit__WEBPACK_IMPORTED_MODULE_10__.LabelEdit, {
           labelToEdit: labelToEdit,
           editLabel: onEditLabel,
-          deleteLabe: onDeleteLabel,
           closeEdit: () => {
             labelDispatch({
               type: _constants__WEBPACK_IMPORTED_MODULE_3__.SET_LABEL_ACTION_STATE_SELECTION
@@ -3516,7 +3515,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 function LabelEdit({
   labelToEdit,
   editLabel,
-  deleteLabe,
   closeEdit = () => {}
 }) {
   if (!labelToEdit) {
@@ -3591,8 +3589,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
-/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/PencilSquareIcon.js");
+/* harmony import */ var _heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @heroicons/react/24/outline */ "./node_modules/@heroicons/react/24/outline/esm/TrashIcon.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -3600,9 +3598,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
 /* harmony import */ var _providers_LabelsContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../providers/LabelsContextProvider */ "./src/providers/LabelsContextProvider.tsx");
 /* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
-/* harmony import */ var _common_Tag_Tag__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../common/Tag/Tag */ "./src/components/common/Tag/Tag.tsx");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../Dialog/ConfirmTooltip/ConfirmTooltip */ "./src/components/Dialog/ConfirmTooltip/ConfirmTooltip.tsx");
+/* harmony import */ var _common_Button_WPQTOnlyIconBtn_WPQTOnlyIconBtn__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn */ "./src/components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
+/* harmony import */ var _common_Tag_Tag__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../common/Tag/Tag */ "./src/components/common/Tag/Tag.tsx");
+/* harmony import */ var _Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../Dialog/ConfirmTooltip/ConfirmTooltip */ "./src/components/Dialog/ConfirmTooltip/ConfirmTooltip.tsx");
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -3640,6 +3640,8 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
 function LabelSelection({
   labels,
   title,
@@ -3659,7 +3661,7 @@ function LabelSelection({
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-text-lg",
       children: title
-    }), loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_7__.Loading, {
+    }), loading ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_10__.Loading, {
       ovalSize: "24"
     }) : labels.length === 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "wpqt-text-gray-500",
@@ -3707,7 +3709,7 @@ function SelectionLabel({
       type: "checkbox",
       checked: isSelected,
       onChange: onSelectionToggle
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Tag_Tag__WEBPACK_IMPORTED_MODULE_6__.WPQTTag, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Tag_Tag__WEBPACK_IMPORTED_MODULE_8__.WPQTTag, {
       inlineStyle: {
         backgroundColor: label.color
       },
@@ -3715,8 +3717,8 @@ function SelectionLabel({
       children: label.name
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "wpqt-flex wpqt-gap-2",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
-        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_7__.WPQTIconButton, {
+        icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
           className: "wpqt-icon-green wpqt-size-4"
         }),
         onClick: () => {
@@ -3725,7 +3727,7 @@ function SelectionLabel({
             payload: label
           });
         }
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_8__.WPQTConfirmTooltip, {
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Dialog_ConfirmTooltip_ConfirmTooltip__WEBPACK_IMPORTED_MODULE_9__.WPQTConfirmTooltip, {
         confirmMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Are you sure you want to delete the label from the board?", "quicktasker"),
         onConfirm: () => __awaiter(this, void 0, void 0, function* () {
           setIsDeleting(true);
@@ -3735,8 +3737,8 @@ function SelectionLabel({
         containerClassName: "wpqt-flex",
         children: ({
           onClick
-        }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTOnlyIconBtn, {
-          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTOnlyIconBtn_WPQTOnlyIconBtn__WEBPACK_IMPORTED_MODULE_6__.WPQTOnlyIconBtn, {
+          icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
             className: "wpqt-icon-red wpqt-size-4"
           }),
           className: "wpqt-p-2",
@@ -4506,7 +4508,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants */ "./src/constants.ts");
 /* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
 /* harmony import */ var _types_enums__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../types/enums */ "./src/types/enums.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_Select_PipelineFilterSelect_PipelineFilterSelect__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../common/Select/PipelineFilterSelect/PipelineFilterSelect */ "./src/components/common/Select/PipelineFilterSelect/PipelineFilterSelect.tsx");
 /* harmony import */ var _common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
@@ -4559,7 +4561,7 @@ function ArchiveFilter() {
         throw new Error(`Invalid selection: ${selection}`);
     }
   };
-  const applySearch = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
+  const applySearch = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_6__.WPQTIconButton, {
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Apply filter", "quicktasker"),
     icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
       className: "wpqt-size-5 wpqt-icon-blue"
@@ -4677,7 +4679,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _pages_LogsPage_components_LogsPageContent_LogsPageContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../pages/LogsPage/components/LogsPageContent/LogsPageContent */ "./src/pages/LogsPage/components/LogsPageContent/LogsPageContent.tsx");
 /* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_Input_Input__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
 /* harmony import */ var _WPQTFilter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../WPQTFilter */ "./src/components/Filter/WPQTFilter.tsx");
@@ -4714,7 +4716,7 @@ const LogsFilter = ({
       }
     })
   });
-  const applySearch = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
+  const applySearch = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Apply filter", "quicktasker"),
     icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
       className: "wpqt-size-5 wpqt-icon-blue"
@@ -5711,7 +5713,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -5766,7 +5768,7 @@ function ArchiveSetting({
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
       className: "wpqt-mt-0",
       children: description
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
       onClick: handleSave,
       icon: icon,
       loading: saving,
@@ -6155,7 +6157,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_icons_pi__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-icons/pi */ "./node_modules/react-icons/pi/index.mjs");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _AutomationActionSelection_AutomationActionSelection__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../AutomationActionSelection/AutomationActionSelection */ "./src/components/Modal/AutomationCreatorModal/components/AutomationCreator/components/AutomationActionSelection/AutomationActionSelection.tsx");
 /* harmony import */ var _AutomationActionTargetSelection_AutomationActionTargetSelection__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../AutomationActionTargetSelection/AutomationActionTargetSelection */ "./src/components/Modal/AutomationCreatorModal/components/AutomationCreator/components/AutomationActionTargetSelection/AutomationActionTargetSelection.tsx");
 /* harmony import */ var _AutomationMeta_AutomationMeta__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../AutomationMeta/AutomationMeta */ "./src/components/Modal/AutomationCreatorModal/components/AutomationCreator/components/AutomationMeta/AutomationMeta.tsx");
@@ -6234,7 +6236,7 @@ function AutomationCreationSteps({
       automationDispatch: automationDispatch
     });
   }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create automation", "quicktasker"),
     icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_pi__WEBPACK_IMPORTED_MODULE_9__.PiFlagCheckeredFill, {
       className: "wpqt-size-6"
@@ -6729,7 +6731,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_PipelineAutomationsContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../providers/PipelineAutomationsContextProvider */ "./src/providers/PipelineAutomationsContextProvider.tsx");
 /* harmony import */ var _Card_Card__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../Card/Card */ "./src/components/Card/Card.tsx");
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_Toggle_Toggle__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../common/Toggle/Toggle */ "./src/components/common/Toggle/Toggle.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -6830,7 +6832,7 @@ function AutomationControls({
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "wpqt-flex wpqt-gap-2",
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_8__.WPQTIconButton, {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_8__.WPQTIconButton, {
           loading: deleteLoading,
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
             className: "wpqt-icon-red wpqt-size-5"
@@ -7305,7 +7307,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_import_csv_parse__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../utils/import/csv-parse */ "./src/utils/import/csv-parse.ts");
 /* harmony import */ var _utils_import_normalize_import__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../utils/import/normalize-import */ "./src/utils/import/normalize-import.ts");
 /* harmony import */ var _utils_import_validate_import__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../utils/import/validate-import */ "./src/utils/import/validate-import.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
 /* harmony import */ var _import_modal_utils__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./import-modal-utils */ "./src/components/Modal/ImportPipelineModal/import-modal-utils.ts");
 /* harmony import */ var _ImportConfig__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./ImportConfig */ "./src/components/Modal/ImportPipelineModal/ImportConfig.tsx");
@@ -7566,7 +7568,7 @@ function ImportPipelineModal() {
           className: "wpqt-my-0",
           children: (0,_import_modal_utils__WEBPACK_IMPORTED_MODULE_15__.getSelectionInfoText)(selectedImportSource)
         })]
-      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_13__.WPQTIconButton, {
+      }), !importData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_13__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select import file", "quicktasker"),
         onClick: handleFileButtonClick,
         icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_icons_md__WEBPACK_IMPORTED_MODULE_19__.MdFileUpload, {
@@ -7602,7 +7604,7 @@ function ImportPipelineModal() {
         onImportDataFilterChange: setImportDataFilter
       }), filteredImportData && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ImportInfo__WEBPACK_IMPORTED_MODULE_17__.ImportInfo, {
         importData: filteredImportData
-      }), canStartImport && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_13__.WPQTIconButton, {
+      }), canStartImport && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_13__.WPQTIconButton, {
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Start import", "quicktasker"),
         onClick: handleImportStart,
         loading: importLoading
@@ -8400,7 +8402,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _providers_PipelinesContextProvider__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../providers/PipelinesContextProvider */ "./src/providers/PipelinesContextProvider.tsx");
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../types/custom-field */ "./src/types/custom-field.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_Input_AutoSaveInput_AutoSaveInput__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../common/Input/AutoSaveInput/AutoSaveInput */ "./src/components/common/Input/AutoSaveInput/AutoSaveInput.tsx");
 /* harmony import */ var _common_Input_AutoSaveTextarea_AutoSaveTextarea__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../common/Input/AutoSaveTextarea/AutoSaveTextarea */ "./src/components/common/Input/AutoSaveTextarea/AutoSaveTextarea.tsx");
 /* harmony import */ var _CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap */ "./src/components/CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap.tsx");
@@ -8561,7 +8563,7 @@ const EditPipelineModalContent = ({
           confirmMessage: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Are you sure you want to delete this board?", "quicktasker"),
           children: ({
             onClick
-          }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_11__.WPQTIconButton, {
+          }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_11__.WPQTIconButton, {
             icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_17__["default"], {
               className: "wpqt-icon-red wpqt-size-5"
             }),
@@ -9048,7 +9050,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_AppContextProvider__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../providers/AppContextProvider */ "./src/providers/AppContextProvider.tsx");
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../types/custom-field */ "./src/types/custom-field.ts");
 /* harmony import */ var _types_upload__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../types/upload */ "./src/types/upload.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_Input_AutoSaveInput_AutoSaveInput__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../common/Input/AutoSaveInput/AutoSaveInput */ "./src/components/common/Input/AutoSaveInput/AutoSaveInput.tsx");
 /* harmony import */ var _common_Input_AutoSaveTextarea_AutoSaveTextarea__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../common/Input/AutoSaveTextarea/AutoSaveTextarea */ "./src/components/common/Input/AutoSaveTextarea/AutoSaveTextarea.tsx");
 /* harmony import */ var _CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap */ "./src/components/CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap.tsx");
@@ -9273,7 +9275,7 @@ const TaskModalContent = ({
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
-        children: [isTaskArchived && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_12__.WPQTIconButton, {
+        children: [isTaskArchived && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_12__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_24__["default"], {
             className: "wpqt-icon-green wpqt-size-5"
           }),
@@ -9304,7 +9306,7 @@ const TaskModalContent = ({
           },
           children: ({
             onClick
-          }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_12__.WPQTIconButton, {
+          }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_12__.WPQTIconButton, {
             icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_25__["default"], {
               className: "wpqt-icon-blue wpqt-size-5"
             }),
@@ -9323,7 +9325,7 @@ const TaskModalContent = ({
           }),
           children: ({
             onClick
-          }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_12__.WPQTIconButton, {
+          }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_12__.WPQTIconButton, {
             icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_26__["default"], {
               className: "wpqt-icon-red wpqt-size-5"
             }),
@@ -9603,7 +9605,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hooks_usePipelines__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../hooks/usePipelines */ "./src/hooks/usePipelines.ts");
 /* harmony import */ var _providers_ArchiveContextProvider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../providers/ArchiveContextProvider */ "./src/providers/ArchiveContextProvider.tsx");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_Label_WPQTLabel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../common/Label/WPQTLabel */ "./src/components/common/Label/WPQTLabel.tsx");
 /* harmony import */ var _common_Select_WPQTSelect__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../common/Select/WPQTSelect */ "./src/components/common/Select/WPQTSelect.tsx");
 /* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
@@ -9744,7 +9746,7 @@ function TaskRestoreModal() {
           }, index))
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "wpqt-flex wpqt-justify-end wpqt-w-full",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_8__.WPQTIconButton, {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_8__.WPQTIconButton, {
             icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_12__["default"], {
               className: "wpqt-icon-green wpqt-size-4"
             }),
@@ -9841,7 +9843,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _providers_UserContextProvider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../providers/UserContextProvider */ "./src/providers/UserContextProvider.tsx");
 /* harmony import */ var _types_custom_field__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../types/custom-field */ "./src/types/custom-field.ts");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_Input_AutoSaveInput_AutoSaveInput__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../common/Input/AutoSaveInput/AutoSaveInput */ "./src/components/common/Input/AutoSaveInput/AutoSaveInput.tsx");
 /* harmony import */ var _common_Input_AutoSaveTextarea_AutoSaveTextarea__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../common/Input/AutoSaveTextarea/AutoSaveTextarea */ "./src/components/common/Input/AutoSaveTextarea/AutoSaveTextarea.tsx");
 /* harmony import */ var _CustomField_CustomFieldsInModalWrap_CustomFieldsInModalWrap__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap */ "./src/components/CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap.tsx");
@@ -9992,7 +9994,7 @@ const UserModalContent = ({
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-col wpqt-gap-2",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_17__["default"], {
             className: "wpqt-icon-blue wpqt-size-4"
           }),
@@ -10003,7 +10005,7 @@ const UserModalContent = ({
               type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_USER_MODAL
             });
           }
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_18__["default"], {
             className: "wpqt-icon-blue wpqt-size-5"
           }),
@@ -10014,7 +10016,7 @@ const UserModalContent = ({
               type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_USER_MODAL
             });
           }
-        }), hasPassword && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+        }), hasPassword && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_19__["default"], {
             className: "wpqt-icon-red wpqt-size-5"
           }),
@@ -10031,7 +10033,7 @@ const UserModalContent = ({
             });
             setIsResetPWLoading(false);
           })
-        }), !isActiveUser && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+        }), !isActiveUser && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_20__["default"], {
             className: "wpqt-icon-green wpqt-size-5"
           }),
@@ -10048,7 +10050,7 @@ const UserModalContent = ({
             });
             setIsActivateLoading(false);
           })
-        }), isActiveUser && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+        }), isActiveUser && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_20__["default"], {
             className: "wpqt-icon-red wpqt-size-5"
           }),
@@ -10083,7 +10085,7 @@ const UserModalContent = ({
           containerClassName: "wpqt-flex",
           children: ({
             onClick
-          }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
+          }) => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_10__.WPQTIconButton, {
             icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_21__["default"], {
               className: "wpqt-icon-red wpqt-size-5"
             }),
@@ -11109,7 +11111,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _hooks_useTimezone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../hooks/useTimezone */ "./src/hooks/useTimezone.ts");
 /* harmony import */ var _common_Alert_Alert__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../common/Alert/Alert */ "./src/components/common/Alert/Alert.tsx");
-/* harmony import */ var _common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
 /* harmony import */ var _Log_LogItem__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Log/LogItem */ "./src/components/Log/LogItem.tsx");
@@ -11223,7 +11225,7 @@ function CommentsAndLogsTabContent({
           value: newEntry,
           onChange: text => setNewEntry(text),
           className: "wpqt-mb-4 wpqt-w-full"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
           text: "Add comment",
           loading: addingEntry,
           onClick: addEntry,
@@ -12458,16 +12460,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ButtonStyleType: () => (/* binding */ ButtonStyleType),
 /* harmony export */   ButtonType: () => (/* binding */ ButtonType),
-/* harmony export */   WPQTButton: () => (/* binding */ WPQTButton),
-/* harmony export */   WPQTIconButton: () => (/* binding */ WPQTIconButton),
-/* harmony export */   WPQTOnlyIconBtn: () => (/* binding */ WPQTOnlyIconBtn)
+/* harmony export */   WPQTButton: () => (/* binding */ WPQTButton)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/button/button.js");
 /* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Tooltip/WPQTTooltip */ "./src/components/Tooltip/WPQTTooltip.tsx");
-
 
 
 
@@ -12496,7 +12494,7 @@ function WPQTButton({
   const secondaryClasses = "wpqt-inline-flex wpqt-cursor-pointer wpqt-bg-gray-100 wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 enabled:hover:wpqt-bg-gray-200";
   const dangerClasses = "wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-whitespace-nowrap wpqt-rounded-lg wpqt-border wpqt-border-transparent wpqt-bg-red-500 wpqt-px-3 wpqt-py-1 wpqt-text-sm/6 wpqt-text-white wpqt-transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:wpqt-outline-none focus:wpqt-ring-4 focus:wpqt-ring-red-800 enabled:hover:wpqt-bg-red-600";
   const buttonClasses = buttonStyleType === ButtonStyleType.PRIMARY ? primaryClasses : buttonStyleType === ButtonStyleType.SECONDARY ? secondaryClasses : dangerClasses;
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Button, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_2__.Button, {
     disabled: disabled || loading,
     className: `${buttonClasses} ${className}`,
     onClick: onClick,
@@ -12509,10 +12507,31 @@ function WPQTButton({
     }) : btnText
   });
 }
+
+
+/***/ }),
+
+/***/ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx":
+/*!************************************************************************!*\
+  !*** ./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WPQTIconButton: () => (/* binding */ WPQTIconButton)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _Tooltip_WPQTTooltip__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../Tooltip/WPQTTooltip */ "./src/components/Tooltip/WPQTTooltip.tsx");
+
+
+
 function WPQTIconButton({
   icon,
   text,
-  onClick = e => {},
+  onClick,
   className,
   tooltipId,
   tooltipText,
@@ -12543,6 +12562,25 @@ function WPQTIconButton({
     })]
   }));
 }
+
+
+/***/ }),
+
+/***/ "./src/components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn.tsx":
+/*!**************************************************************************!*\
+  !*** ./src/components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn.tsx ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WPQTOnlyIconBtn: () => (/* binding */ WPQTOnlyIconBtn)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+
+
 function WPQTOnlyIconBtn({
   icon,
   onClick = () => {},
@@ -17208,7 +17246,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../api/api */ "./src/api/api.ts");
-/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../components/common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _components_Info_Info__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../components/Info/Info */ "./src/components/Info/Info.tsx");
 /* harmony import */ var _components_Modal_StageModal_StageModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../components/Modal/StageModal/StageModal */ "./src/components/Modal/StageModal/StageModal.tsx");
 /* harmony import */ var _components_Modal_TaskColorModal_TaskColorModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../components/Modal/TaskColorModal/TaskColorModal */ "./src/components/Modal/TaskColorModal/TaskColorModal.tsx");
@@ -17334,7 +17372,7 @@ const Pipeline = () => {
       infoDescription: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("No boards found. Start by creating a board to organize and manage your tasks effectively.", "quicktasker"),
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-center",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_5__.WPQTIconButton, {
           text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Create a new board", "quicktasker"),
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_16__["default"], {
             className: "wpqt-size-6 wpqt-icon-green"
@@ -17957,7 +17995,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_icons_tfi__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-icons/tfi */ "./node_modules/react-icons/tfi/index.mjs");
-/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _components_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useSettingActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../hooks/actions/useSettingActions */ "./src/hooks/actions/useSettingActions.ts");
@@ -18032,7 +18070,7 @@ const CustomStyleSetting = () => {
       value: userPageCustomStyles,
       onChange: setUserPageCustomStylesState,
       colsCount: 40
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Save", "quicktasker"),
       loading: isSaving,
       onClick: onSave,
@@ -18733,7 +18771,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../constants */ "./src/constants.ts");
 /* harmony import */ var _hooks_actions_useUserActions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../hooks/actions/useUserActions */ "./src/hooks/actions/useUserActions.ts");
 /* harmony import */ var _hooks_useLoadingStates__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../hooks/useLoadingStates */ "./src/hooks/useLoadingStates.ts");
@@ -18800,7 +18838,7 @@ function UserControls({
   const hasPassword = data.has_password;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "wpqt-mt-5 wpqt-flex wpqt-gap-2",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_8__["default"], {
         className: "wpqt-icon-blue wpqt-size-5"
       }),
@@ -18808,7 +18846,7 @@ function UserControls({
       onClick: () => {
         window.location.hash = `#/users/${data.id}/tasks`;
       }
-    }), !isUserActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+    }), !isUserActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
         className: "wpqt-icon-green wpqt-size-5"
       }),
@@ -18825,7 +18863,7 @@ function UserControls({
         });
         setIsActivateLoading(false);
       })
-    }), isUserActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+    }), isUserActive && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_9__["default"], {
         className: "wpqt-icon-red wpqt-size-5"
       }),
@@ -18842,7 +18880,7 @@ function UserControls({
         });
         setIsActivateLoading(false);
       })
-    }), hasPassword && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+    }), hasPassword && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
         className: "wpqt-icon-red wpqt-size-5"
       }),
@@ -18856,7 +18894,7 @@ function UserControls({
         });
         setIsResetPWLoading(false);
       })
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_3__.WPQTIconButton, {
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
         className: "wpqt-icon-red wpqt-size-5"
       }),
@@ -19524,7 +19562,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
-/* harmony import */ var _components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../components/common/Button/Button */ "./src/components/common/Button/Button.tsx");
+/* harmony import */ var _components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../components/common/Button/WPQTIconButton/WPQTIconButton */ "./src/components/common/Button/WPQTIconButton/WPQTIconButton.tsx");
 /* harmony import */ var _components_common_Input_Input__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../components/common/Input/Input */ "./src/components/common/Input/Input.tsx");
 /* harmony import */ var _components_common_TextArea_TextArea__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../components/common/TextArea/TextArea */ "./src/components/common/TextArea/TextArea.tsx");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../constants */ "./src/constants.ts");
@@ -19616,13 +19654,13 @@ function AddUser() {
         className: "wpqt-w-full"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "wpqt-flex wpqt-justify-end wpqt-gap-3",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
           text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Cancel", "quicktasker"),
           onClick: clearStatus,
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_10__["default"], {
             className: "wpqt-icon-red wpqt-size-5"
           })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
           text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add", "quicktasker"),
           onClick: onCreateUser,
           icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {
@@ -19630,7 +19668,7 @@ function AddUser() {
           })
         })]
       })]
-    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_Button__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_common_Button_WPQTIconButton_WPQTIconButton__WEBPACK_IMPORTED_MODULE_4__.WPQTIconButton, {
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add QuickTasker", "quicktasker"),
       onClick: () => setShowInput(true),
       icon: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_heroicons_react_24_outline__WEBPACK_IMPORTED_MODULE_11__["default"], {

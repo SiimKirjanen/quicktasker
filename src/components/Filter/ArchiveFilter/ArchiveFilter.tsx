@@ -14,7 +14,7 @@ import {
   WPQTArchiveOrder,
   WPQTArvhiveTaskLimit,
 } from "../../../types/enums";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTInput } from "../../common/Input/Input";
 import { PipelineFilterSelect } from "../../common/Select/PipelineFilterSelect/PipelineFilterSelect";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";

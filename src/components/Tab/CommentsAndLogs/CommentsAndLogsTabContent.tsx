@@ -4,7 +4,7 @@ import { __ } from "@wordpress/i18n";
 import { useTimezone } from "../../../hooks/useTimezone";
 import { WPQTComment } from "../../../types/comment";
 import { Alert } from "../../common/Alert/Alert";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { LoadingOval } from "../../Loading/Loading";
 import { LogHeader } from "../../Log/LogItem";

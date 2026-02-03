@@ -6,7 +6,7 @@ import {
   SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
 } from "../../../constants";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 
 type Props = {
   className?: string;

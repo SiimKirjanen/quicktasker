@@ -7,12 +7,9 @@ import {
 } from "../../../../../constants";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
 import { SelectionLabel } from "../../../../../types/label";
-import {
-  ButtonStyleType,
-  WPQTButton,
-  WPQTIconButton,
-  WPQTOnlyIconBtn,
-} from "../../../../common/Button/Button";
+import { ButtonStyleType, WPQTButton } from "../../../../common/Button/Button";
+import { WPQTIconButton } from "../../../../common/Button/WPQTIconButton/WPQTIconButton";
+import { WPQTOnlyIconBtn } from "../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn";
 import { WPQTTag } from "../../../../common/Tag/Tag";
 import { WPQTConfirmTooltip } from "../../../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { Loading } from "../../../../Loading/Loading";

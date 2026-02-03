@@ -9,7 +9,7 @@ import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { usePipelines } from "../../../hooks/usePipelines";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTLabel } from "../../common/Label/WPQTLabel";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTModal, WPQTModalTitle } from "../WPQTModal";

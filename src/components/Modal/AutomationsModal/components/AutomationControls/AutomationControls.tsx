@@ -10,7 +10,7 @@ import { PipelineAutomationsContext } from "../../../../../providers/PipelineAut
 import { Automation } from "../../../../../types/automation";
 import { WPQTCard } from "../../../../Card/Card";
 import { Loading } from "../../../../Loading/Loading";
-import { WPQTIconButton } from "../../../../common/Button/Button";
+import { WPQTIconButton } from "../../../../common/Button/WPQTIconButton/WPQTIconButton";
 import { Toggle } from "../../../../common/Toggle/Toggle";
 
 type Props = {

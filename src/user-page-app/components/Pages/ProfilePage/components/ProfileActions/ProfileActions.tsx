@@ -1,7 +1,7 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
-import { WPQTIconButton } from "../../../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 
 function ProfileActions() {
   const navigate = useNavigate();

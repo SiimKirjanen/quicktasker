@@ -6,7 +6,7 @@ import {
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
-import { WPQTIconButton } from "../../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { Task } from "../../../../../types/task";
 import { User, WPUser } from "../../../../../types/user";
 import { UPDATE_USER_PAGE_TASK_DATA } from "../../../../constants";

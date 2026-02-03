@@ -2,7 +2,7 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useNavigate } from "react-router-dom";
-import { WPQTIconButton } from "../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { getOverviewRequest } from "../../../api/user-page-api";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { UserPageOverview } from "../../../types/user-page-overview";

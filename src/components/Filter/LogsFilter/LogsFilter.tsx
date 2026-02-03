@@ -10,7 +10,7 @@ import {
   LogTypeEnum,
 } from "../../../pages/LogsPage/components/LogsPageContent/LogsPageContent";
 import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTFilter, WPQTFilterSection } from "../WPQTFilter";

@@ -18,7 +18,7 @@ import { ActivePipelineContext } from "../../../providers/ActivePipelineContextP
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { Pipeline } from "../../../types/pipeline";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTDropdown } from "../WPQTDropdown";
 
 function PipelineSelectionDropdown() {
