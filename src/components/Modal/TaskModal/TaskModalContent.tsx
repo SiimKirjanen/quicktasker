@@ -10,6 +10,7 @@ import {
   CheckBadgeIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CLOSE_TASK_MODAL,
@@ -110,6 +111,7 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
                     );
                     if (success && updatedTask) {
                       onEditTaskCompleted(updatedTask);
+                      toast.success(__("Task name updated", "quicktasker"));
                     }
                   }}
                 />
@@ -126,6 +128,9 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
                     );
                     if (success && updatedTask) {
                       onEditTaskCompleted(updatedTask);
+                      toast.success(
+                        __("Task description updated", "quicktasker"),
+                      );
                     }
                   }}
                 />

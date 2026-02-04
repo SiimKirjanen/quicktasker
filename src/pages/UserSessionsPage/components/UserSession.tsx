@@ -6,6 +6,8 @@ import {
   changeUserSessionStatusRequest,
   deleteUserSessionRequest,
 } from "../../../api/api";
+import { WPQTConfirmTooltip } from "../../../components/Dialog/ConfirmTooltip/ConfirmTooltip";
+import { WPQTOnlyIconBtn } from "../../../components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn";
 import {
   CHANGE_USER_SESSION_STATUS,
   DELETE_USER_SESSION,
@@ -68,24 +70,40 @@ function UserSession({ session }: Props) {
       </div>
       <div className="wpqt-flex wpqt-items-center wpqt-gap-4">
         {isActive ? (
-          <PowerIcon
-            className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
+          <WPQTOnlyIconBtn
+            icon={
+              <PowerIcon
+                className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
+                title={__("Turn session off", "quicktasker")}
+              />
+            }
             onClick={() => changeSessionStatus(false)}
-            title={__("Turn session off", "quicktasker")}
           />
         ) : (
-          <PowerIcon
-            className="wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer"
+          <WPQTOnlyIconBtn
+            icon={
+              <PowerIcon
+                className="wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer"
+                title={__("Turn session on", "quicktasker")}
+              />
+            }
             onClick={() => changeSessionStatus(true)}
-            title={__("Turn session on", "quicktasker")}
           />
         )}
         {isUserAllowedToDelete && (
-          <TrashIcon
-            className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
-            title={__("Delete session", "quicktasker")}
-            onClick={deleteSession}
-          />
+          <WPQTConfirmTooltip onConfirm={deleteSession}>
+            {({ onClick }) => (
+              <WPQTOnlyIconBtn
+                icon={
+                  <TrashIcon
+                    className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
+                    title={__("Delete session", "quicktasker")}
+                  />
+                }
+                onClick={onClick}
+              />
+            )}
+          </WPQTConfirmTooltip>
         )}
       </div>
     </>

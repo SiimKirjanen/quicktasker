@@ -1,4 +1,6 @@
 import { useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
+import { toast } from "react-toastify";
 import { useTaskActions } from "../../../../../hooks/actions/useTaskActions";
 import { Task, TaskFromServer } from "../../../../../types/task";
 import { Toggle } from "../../../../common/Toggle/Toggle";
@@ -28,6 +30,7 @@ function FreeForAllToggle({
 
     if (success && updatedTask) {
       onEditTaskCompleted(updatedTask);
+      toast.success(__("Free for all updated", "quicktasker"));
     } else {
       setValue(!checked);
     }

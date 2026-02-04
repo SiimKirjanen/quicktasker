@@ -36,7 +36,7 @@ const CustomStyleSetting = () => {
     <Settings
       title={__("Custom style", "quicktasker")}
       description={__(
-        "Add custom CSS rules for QuickTasker user page.",
+        "Add custom CSS rules for user tasks page.",
         "quicktasker",
       )}
     >
