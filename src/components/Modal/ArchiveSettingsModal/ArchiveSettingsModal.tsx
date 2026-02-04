@@ -34,7 +34,7 @@ function ArchiveSettingsModal() {
         <ArchiveSetting
           title={__("Archive cleanup", "quicktasker")}
           description={__(
-            "Remote tasks from archive that have no parent board.",
+            "Remove tasks from archive that have no parent board.",
             "quicktasker",
           )}
           icon={<LiaBroomSolid className="wpqt-size-6" />}

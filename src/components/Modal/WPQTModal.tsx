@@ -77,11 +77,13 @@ function WPQTModalFieldSet({ children }: { children: React.ReactNode }) {
 
 function WPQTModalField({
   label,
+  description,
   children,
   tooltipId,
   tooltipText,
 }: {
   label: string;
+  description?: string;
   children: React.ReactNode;
   tooltipId?: string;
   tooltipText?: string;
@@ -105,6 +107,11 @@ function WPQTModalField({
       >
         {label}
       </Label>
+      {description && (
+        <p className="wpqt-mb-2 wpqt-mt-0 wpqt-text-xs wpqt-text-gray-500">
+          {description}
+        </p>
+      )}
       {children}
       {showToolTip && <WPQTTooltip id={tooltipId} />}
     </Field>

@@ -82,44 +82,46 @@ const LabelDropdownContent = memo(
     };
 
     const onLabelSelected = async (labelId: string) => {
-      await assignLabelToTask(
+      const { success, label } = await assignLabelToTask(
         task.pipeline_id,
         task.id,
         labelId,
-        (success, label) => {
-          if (success && label) {
-            dispatch({
-              type: PIPELINE_ADD_LABEL_TO_TASK,
-              payload: { taskId: task.id, label },
-            });
-            archiveDispatch({
-              type: ADD_LABEL_ARCHIVED_TASK,
-              payload: { taskId: task.id, label },
-            });
-            labelSelected(label);
-          }
-        },
       );
+
+      if (success && label) {
+        dispatch({
+          type: PIPELINE_ADD_LABEL_TO_TASK,
+          payload: { taskId: task.id, label },
+        });
+        archiveDispatch({
+          type: ADD_LABEL_ARCHIVED_TASK,
+          payload: { taskId: task.id, label },
+        });
+        labelSelected(label);
+      }
+
+      return { success, label };
     };
     const onLabelDeSelected = async (labelId: string) => {
-      await usassignLabelFromTask(
+      const { success } = await usassignLabelFromTask(
         task.pipeline_id,
         task.id,
         labelId,
-        (success) => {
-          if (success) {
-            dispatch({
-              type: PIPELINE_REMOVE_LABEL_FROM_TASK,
-              payload: { taskId: task.id, labelId },
-            });
-            archiveDispatch({
-              type: REMOVE_LABEL_ARCHIVED_TASK,
-              payload: { taskId: task.id, labelId },
-            });
-            labelDeselected(labelId);
-          }
-        },
       );
+
+      if (success) {
+        dispatch({
+          type: PIPELINE_REMOVE_LABEL_FROM_TASK,
+          payload: { taskId: task.id, labelId },
+        });
+        archiveDispatch({
+          type: REMOVE_LABEL_ARCHIVED_TASK,
+          payload: { taskId: task.id, labelId },
+        });
+        labelDeselected(labelId);
+      }
+
+      return { success };
     };
     const onLabelCreated = async (name: string, color: string) => {
       setCreatingLabel(true);
@@ -166,11 +168,16 @@ const LabelDropdownContent = memo(
         case LabelActionState.SELECTION:
           return (
             <LabelSelection
-              title={__("Task label selection", "quicktasker")}
+              title={__("Board labels", "quicktasker")}
+              description={__(
+                "Add, edit, or remove board labels. Created labels can be applied or removed from this task.",
+                "quicktasker",
+              )}
               labels={getSelectionLabels()}
               loading={loadingLabels}
               labelSelected={onLabelSelected}
               labelDeSelection={onLabelDeSelected}
+              deleteLabe={onDeleteLabel}
             />
           );
         case LabelActionState.CREATION:
@@ -185,7 +192,6 @@ const LabelDropdownContent = memo(
             <LabelEdit
               labelToEdit={labelToEdit}
               editLabel={onEditLabel}
-              deleteLabe={onDeleteLabel}
               closeEdit={() => {
                 labelDispatch({ type: SET_LABEL_ACTION_STATE_SELECTION });
               }}

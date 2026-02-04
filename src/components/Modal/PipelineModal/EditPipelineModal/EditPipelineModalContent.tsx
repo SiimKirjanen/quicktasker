@@ -15,7 +15,7 @@ import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
 import { CustomFieldEntityType } from "../../../../types/custom-field";
 import { PipelineFromServer } from "../../../../types/pipeline";
-import { WPQTIconButton } from "../../../common/Button/Button";
+import { WPQTIconButton } from "../../../common/Button/WPQTIconButton/WPQTIconButton";
 import { AutoSaveInput } from "../../../common/Input/AutoSaveInput/AutoSaveInput";
 import { AutoSaveTextarea } from "../../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
 import { CustomFieldsInModalWrap } from "../../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";

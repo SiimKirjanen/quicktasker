@@ -53,7 +53,7 @@ describe("Import Modal Utils", () => {
     test("returns correct info text for Pipedrive source", () => {
       const result = getSelectionInfoText(PipelineImportSource.PIPEDRIVE);
       expect(result).toBe(
-        "Export your Pipedrive deals as CSV format and use it for import. Please not that generated CSV file column headers should be in English.",
+        "Export your Pipedrive deals as CSV format and use it for import. Please note that generated CSV file column headers should be in English.",
       );
     });
 

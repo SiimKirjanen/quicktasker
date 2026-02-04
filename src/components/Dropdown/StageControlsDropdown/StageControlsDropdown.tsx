@@ -43,7 +43,8 @@ function StageControlsDropdown({ stage }: Props) {
   const {
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
-  const [moveLoading, setMoveLoading] = useState(false);
+  const [movingDirection, setMovingDirection] =
+    useState<StageChangeDirection | null>(null);
   const [archiveLoading, setArchiveLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -78,14 +79,14 @@ function StageControlsDropdown({ stage }: Props) {
 
   const moveStage = async (direction: StageChangeDirection) => {
     try {
-      setMoveLoading(true);
+      setMovingDirection(direction);
       await moveStageRequest(stage.id, direction);
       await fetchAndSetPipelineData(activePipeline!.id);
     } catch (error) {
       console.error(error);
-      toast.error(__("Failed to move a stage", "quicktasker"));
+      toast.error(__("Failed to move the stage", "quicktasker"));
     } finally {
-      setMoveLoading(false);
+      setMovingDirection(null);
     }
   };
 
@@ -119,18 +120,24 @@ function StageControlsDropdown({ stage }: Props) {
       {showMoveLeft && (
         <WPQTDropdownItem
           text={__("Move left", "quicktasker")}
-          loading={moveLoading}
+          loading={movingDirection === "left"}
           icon={<ChevronLeftIcon className="wpqt-icon-blue wpqt-size-4" />}
-          onClick={() => moveStage("left")}
+          onClick={(e) => {
+            e.preventDefault();
+            moveStage("left");
+          }}
         />
       )}
 
       {showMoveRight && (
         <WPQTDropdownItem
           text={__("Move right", "quicktasker")}
-          loading={moveLoading}
+          loading={movingDirection === "right"}
           icon={<ChevronRightIcon className="wpqt-icon-blue wpqt-size-4" />}
-          onClick={() => moveStage("right")}
+          onClick={(e) => {
+            e.preventDefault();
+            moveStage("right");
+          }}
         />
       )}
       <WPQTDropdownItem

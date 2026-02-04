@@ -1,7 +1,7 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __, sprintf } from "@wordpress/i18n";
-import { WPQTIconButton } from "../../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { Task } from "../../../../../types/task";
 import { UserPageAppContext } from "../../../../providers/UserPageAppContextProvider";
 import { UserPageTaskContext } from "../../../../providers/UserPageTaskContextProvider";

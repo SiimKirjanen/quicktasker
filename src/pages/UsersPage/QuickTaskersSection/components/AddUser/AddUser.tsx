@@ -2,7 +2,7 @@ import { UserPlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { WPQTIconButton } from "../../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTInput } from "../../../../../components/common/Input/Input";
 import { WPQTTextarea } from "../../../../../components/common/TextArea/TextArea";
 import { ADD_USER } from "../../../../../constants";

@@ -1,4 +1,4 @@
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
@@ -6,23 +6,32 @@ import {
   SET_LABEL_ACTION_STATE_EDITING,
 } from "../../../../../constants";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
-import { SelectionLabel } from "../../../../../types/label";
+import { Label, SelectionLabel } from "../../../../../types/label";
 import { ButtonStyleType, WPQTButton } from "../../../../common/Button/Button";
+import { WPQTIconButton } from "../../../../common/Button/WPQTIconButton/WPQTIconButton";
+import { WPQTOnlyIconBtn } from "../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn";
 import { WPQTTag } from "../../../../common/Tag/Tag";
-import { Loading } from "../../../../Loading/Loading";
+import { WPQTConfirmTooltip } from "../../../../Dialog/ConfirmTooltip/ConfirmTooltip";
+import { Loading, LoadingOval } from "../../../../Loading/Loading";
 
 type Props = {
   labels: SelectionLabel[] | null;
   title: string;
-  labelSelected: (labelId: string) => void;
-  labelDeSelection: (labelId: string) => void;
+  description: string;
+  labelSelected: (
+    labelId: string,
+  ) => Promise<{ success: boolean; label?: Label }>;
+  labelDeSelection: (labelId: string) => Promise<{ success: boolean }>;
+  deleteLabe: (labelId: string) => Promise<void>;
   loading?: boolean;
 };
 function LabelSelection({
   labels,
   title,
+  description,
   labelSelected,
   labelDeSelection,
+  deleteLabe,
   loading = false,
 }: Props) {
   const { labelDispatch } = useContext(LabelContext);
@@ -31,8 +40,11 @@ function LabelSelection({
     return null;
   }
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
-      <div className="wpqt-text-lg">{title}</div>
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">
+      <div>
+        <div className="wpqt-text-lg">{title}</div>
+        <div className="wpqt-max-w-sm">{description}</div>
+      </div>
       {loading ? (
         <Loading ovalSize="24" />
       ) : labels.length === 0 ? (
@@ -46,69 +58,108 @@ function LabelSelection({
             label={label}
             labelSelected={labelSelected}
             labelDeSelection={labelDeSelection}
+            deleteLabe={deleteLabe}
           />
         ))
       )}
-      <WPQTButton
-        btnText={__("Create new label", "quicktasker")}
-        className="wpqt-mt-3"
-        buttonStyleType={ButtonStyleType.SECONDARY}
-        onClick={() => {
-          labelDispatch({ type: SET_LABEL_ACTION_STATE_CREATION });
-        }}
-      />
+      <div className="wpqt-flex wpqt-gap-2 wpqt-justify-end">
+        <WPQTButton
+          btnText={__("Create new label", "quicktasker")}
+          className="wpqt-mt-3"
+          buttonStyleType={ButtonStyleType.PRIMARY}
+          onClick={() => {
+            labelDispatch({ type: SET_LABEL_ACTION_STATE_CREATION });
+          }}
+        />
+      </div>
     </div>
   );
 }
 
 type SelectionLabelProps = {
   label: SelectionLabel;
-  labelSelected: (labelId: string) => void;
-  labelDeSelection: (labelId: string) => void;
+  labelSelected: (
+    labelId: string,
+  ) => Promise<{ success: boolean; label?: Label }>;
+  labelDeSelection: (labelId: string) => Promise<{ success: boolean }>;
+  deleteLabe: (labelId: string) => Promise<void>;
 };
 function SelectionLabel({
   label,
   labelSelected,
   labelDeSelection,
+  deleteLabe,
 }: SelectionLabelProps) {
   const { labelDispatch } = useContext(LabelContext);
   const [isSelected, setIsSelected] = useState(label.selected);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [checkboxLoading, setCheckboxLoading] = useState(false);
 
   const onSelectionToggle = async (
     element: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const isSelected = element.target.checked;
 
-    setIsSelected(isSelected);
-    if (isSelected) {
-      labelSelected(label.id);
-    } else {
-      labelDeSelection(label.id);
+    setCheckboxLoading(true);
+    const { success } = isSelected
+      ? await labelSelected(label.id)
+      : await labelDeSelection(label.id);
+    setCheckboxLoading(false);
+
+    if (success) {
+      setIsSelected(isSelected);
     }
   };
 
   return (
     <div className="wpqt-flex wpqt-items-center wpqt-justify-between wpqt-gap-2 wpqt-w-full">
-      <input
-        type="checkbox"
-        checked={isSelected}
-        onChange={onSelectionToggle}
-      />
+      {checkboxLoading ? (
+        <LoadingOval width="20" height="20" />
+      ) : (
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={onSelectionToggle}
+        />
+      )}
       <WPQTTag
         inlineStyle={{ backgroundColor: label.color }}
         className="wpqt-py-2"
       >
         {label.name}
       </WPQTTag>
-      <PencilSquareIcon
-        className="wpqt-size-5 wpqt-icon-green wpqt-cursor-pointer"
-        onClick={() => {
-          labelDispatch({
-            type: SET_LABEL_ACTION_STATE_EDITING,
-            payload: label,
-          });
-        }}
-      />
+      <div className="wpqt-flex wpqt-gap-2">
+        <WPQTIconButton
+          icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
+          onClick={() => {
+            labelDispatch({
+              type: SET_LABEL_ACTION_STATE_EDITING,
+              payload: label,
+            });
+          }}
+        />
+        <WPQTConfirmTooltip
+          confirmMessage={__(
+            "Are you sure you want to delete the label from this board?",
+            "quicktasker",
+          )}
+          onConfirm={async () => {
+            setIsDeleting(true);
+            await deleteLabe(label.id);
+            setIsDeleting(false);
+          }}
+          containerClassName="wpqt-flex"
+        >
+          {({ onClick }) => (
+            <WPQTOnlyIconBtn
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+              className="wpqt-p-2"
+              onClick={onClick}
+              loading={isDeleting}
+            />
+          )}
+        </WPQTConfirmTooltip>
+      </div>
     </div>
   );
 }

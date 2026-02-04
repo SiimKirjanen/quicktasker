@@ -30,7 +30,7 @@ const getSelectionInfoText = (selectedImportSource: PipelineImportSource) => {
       );
     case PipelineImportSource.PIPEDRIVE:
       return __(
-        "Export your Pipedrive deals as CSV format and use it for import. Please not that generated CSV file column headers should be in English.",
+        "Export your Pipedrive deals as CSV format and use it for import. Please note that generated CSV file column headers should be in English.",
         "quicktasker",
       );
     case PipelineImportSource.QUICKTASKER:

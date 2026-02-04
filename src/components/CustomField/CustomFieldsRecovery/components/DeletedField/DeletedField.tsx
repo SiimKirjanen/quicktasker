@@ -7,7 +7,7 @@ import { useTimezone } from "../../../../../hooks/useTimezone";
 import { CustomFieldsContext } from "../../../../../providers/CustomFieldsContextProvider";
 import { CustomField } from "../../../../../types/custom-field";
 import { CustomFieldEntityTypeString } from "../../../../../utils/custom-fields";
-import { WPQTOnlyIconBtn } from "../../../../common/Button/Button";
+import { WPQTOnlyIconBtn } from "../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn";
 
 type Props = {
   customField: CustomField;

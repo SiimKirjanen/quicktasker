@@ -1,6 +1,6 @@
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTIconButton } from "../../../../common/Button/Button";
+import { WPQTIconButton } from "../../../../common/Button/WPQTIconButton/WPQTIconButton";
 
 type Props = {
   title: string;

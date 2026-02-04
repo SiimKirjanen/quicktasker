@@ -33,7 +33,7 @@ import {
   validateQuicktaskerImport,
   validateTrelloImport,
 } from "../../../utils/import/validate-import";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTModal } from "../WPQTModal";
 import { getSelectionInfoText, getSelectionText } from "./import-modal-utils";
 import { ImportConfig } from "./ImportConfig";

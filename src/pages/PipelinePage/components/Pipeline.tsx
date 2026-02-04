@@ -8,7 +8,7 @@ import { useCallback, useContext, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { moveTaskRequest } from "../../../api/api";
-import { WPQTIconButton } from "../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { Info } from "../../../components/Info/Info";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { TaskColorModal } from "../../../components/Modal/TaskColorModal/TaskColorModal";

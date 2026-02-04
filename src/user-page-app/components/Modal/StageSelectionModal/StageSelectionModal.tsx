@@ -2,7 +2,7 @@ import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTIconButton } from "../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { LoadingOval } from "../../../../components/Loading/Loading";
 import { WPQTModal } from "../../../../components/Modal/WPQTModal";
 import { Stage } from "../../../../types/stage";

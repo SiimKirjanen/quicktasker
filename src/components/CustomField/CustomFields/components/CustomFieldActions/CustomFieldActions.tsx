@@ -6,7 +6,7 @@ import {
   CustomField,
   CustomFieldEntityType,
 } from "../../../../../types/custom-field";
-import { WPQTIconButton } from "../../../../common/Button/Button";
+import { WPQTIconButton } from "../../../../common/Button/WPQTIconButton/WPQTIconButton";
 import { Loading } from "../../../../Loading/Loading";
 
 type CustomFieldActionsProps = {

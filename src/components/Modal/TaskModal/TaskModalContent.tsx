@@ -10,6 +10,7 @@ import {
   CheckBadgeIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CLOSE_TASK_MODAL,
@@ -24,7 +25,7 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
 import { Label } from "../../../types/label";
 import { UploadEntityType } from "../../../types/upload";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { AutoSaveInput } from "../../common/Input/AutoSaveInput/AutoSaveInput";
 import { AutoSaveTextarea } from "../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
@@ -110,6 +111,7 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
                     );
                     if (success && updatedTask) {
                       onEditTaskCompleted(updatedTask);
+                      toast.success(__("Task name updated", "quicktasker"));
                     }
                   }}
                 />
@@ -126,6 +128,9 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
                     );
                     if (success && updatedTask) {
                       onEditTaskCompleted(updatedTask);
+                      toast.success(
+                        __("Task description updated", "quicktasker"),
+                      );
                     }
                   }}
                 />
@@ -163,8 +168,7 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
 
               <WPQTModalField
                 label={__("Free for all task", "quicktasker")}
-                tooltipId={`free-for-all-${taskToEdit.id}-tooltip`}
-                tooltipText={__(
+                description={__(
                   "When enabled, users have the ability to self-assign or unassign this task.",
                   "quicktasker",
                 )}

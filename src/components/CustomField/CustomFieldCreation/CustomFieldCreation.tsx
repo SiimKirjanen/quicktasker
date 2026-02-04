@@ -10,7 +10,7 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { CustomFieldType } from "../../../types/custom-field";
-import { WPQTIconButton } from "../../common/Button/Button";
+import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTInput } from "../../common/Input/Input";
 import { Option, WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";

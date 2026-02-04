@@ -6,7 +6,7 @@ import {
   Action,
   AutomationCreationState,
 } from "../../../../../../../reducers/automation-creation-reducer";
-import { WPQTIconButton } from "../../../../../../common/Button/Button";
+import { WPQTIconButton } from "../../../../../../common/Button/WPQTIconButton/WPQTIconButton";
 import { AutomationActionSelection } from "../AutomationActionSelection/AutomationActionSelection";
 import { AutomationActionTargetSelection } from "../AutomationActionTargetSelection/AutomationActionTargetSelection";
 import { AutomationMeta } from "../AutomationMeta/AutomationMeta";

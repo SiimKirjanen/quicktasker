@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTIconButton } from "../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { DELETE_USER, EDIT_USER } from "../../../../constants";
 import { useUserActions } from "../../../../hooks/actions/useUserActions";
 import { useLoadingStates } from "../../../../hooks/useLoadingStates";

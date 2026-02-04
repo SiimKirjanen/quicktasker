@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { TfiSave } from "react-icons/tfi";
-import { WPQTIconButton } from "../../../../components/common/Button/Button";
+import { WPQTIconButton } from "../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTTextarea } from "../../../../components/common/TextArea/TextArea";
 import { SET_CUSTOM_USER_PAGE_STYLES } from "../../../../constants";
 import { useSettingActions } from "../../../../hooks/actions/useSettingActions";
@@ -36,7 +36,7 @@ const CustomStyleSetting = () => {
     <Settings
       title={__("Custom style", "quicktasker")}
       description={__(
-        "Add custom CSS rules for QuickTasker user page.",
+        "Add custom CSS rules for user tasks page.",
         "quicktasker",
       )}
     >

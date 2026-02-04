@@ -1,6 +1,8 @@
 import { useEffect, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import dayjs from "dayjs";
 import DateTimePicker from "react-datetime-picker";
+import { toast } from "react-toastify";
 import { DATETIME_FORMAT } from "../../../../../constants";
 import { useTaskActions } from "../../../../../hooks/actions/useTaskActions";
 import { useTimezone } from "../../../../../hooks/useTimezone";
@@ -45,6 +47,7 @@ function TaskDueDateInput({
 
     if (success && updatedTask) {
       onEditTaskCompleted(updatedTask);
+      toast.success(__("Due date updated", "quicktasker"));
     } else {
       setDueDate(oldDueDate);
     }
