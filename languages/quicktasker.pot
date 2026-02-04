@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.43.0\n"
+"Project-Id-Version: QuickTasker 1.44.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-29T15:48:32+00:00\n"
+"POT-Creation-Date: 2026-02-04T13:42:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -345,7 +345,7 @@ msgid "Archive cleanup"
 msgstr ""
 
 #: build/app.js:1
-msgid "Remote tasks from archive that have no parent board."
+msgid "Remove tasks from archive that have no parent board."
 msgstr ""
 
 #: build/app.js:1
@@ -543,6 +543,14 @@ msgid "No related custom fields created"
 msgstr ""
 
 #: build/app.js:1
+msgid "Restore deleted custom fields"
+msgstr ""
+
+#: build/app.js:1
+msgid "Add custom field"
+msgstr ""
+
+#: build/app.js:1
 msgid "Add user-specific custom fields. If you want to add custom fields to all users, please go to users settings."
 msgstr ""
 
@@ -599,7 +607,11 @@ msgid "Create new label"
 msgstr ""
 
 #: build/app.js:1
-msgid "Create"
+msgid "Label will be added to the board"
+msgstr ""
+
+#: build/app.js:1
+msgid "Color"
 msgstr ""
 
 #: build/app.js:1
@@ -607,20 +619,35 @@ msgid "Cancel"
 msgstr ""
 
 #: build/app.js:1
+msgid "Create"
+msgstr ""
+
+#: build/app.js:1
+msgid "Name is required"
+msgstr ""
+
+#: build/app.js:1
+msgid "Color is required"
+msgstr ""
+
+#: build/app.js:1
 msgid "Edit label"
 msgstr ""
 
 #: build/app.js:1
-#: build/userApp.js:1
-msgid "Save"
+msgid "Make changes to this label"
 msgstr ""
 
 #: build/app.js:1
-msgid "Delete"
+msgid "Update"
 msgstr ""
 
 #: build/app.js:1
 msgid "There are no labels created for this board"
+msgstr ""
+
+#: build/app.js:1
+msgid "Are you sure you want to delete the label from this board?"
 msgstr ""
 
 #: build/app.js:1
@@ -664,7 +691,11 @@ msgid "Failed to remove label from task"
 msgstr ""
 
 #: build/app.js:1
-msgid "Task label selection"
+msgid "Board labels"
+msgstr ""
+
+#: build/app.js:1
+msgid "Add, edit, or remove board labels. Created labels can be applied or removed from this task."
 msgstr ""
 
 #: build/app.js:1
@@ -819,6 +850,22 @@ msgid "Failed to fetch uploads"
 msgstr ""
 
 #: build/app.js:1
+msgid "Free for all updated"
+msgstr ""
+
+#: build/app.js:1
+msgid "Due date updated"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task name updated"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task description updated"
+msgstr ""
+
+#: build/app.js:1
 #: build/userApp.js:1
 msgid "Assigned users"
 msgstr ""
@@ -871,6 +918,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "View task"
+msgstr ""
+
+#: build/app.js:1
+msgid "Delete"
 msgstr ""
 
 #: build/app.js:1
@@ -1028,7 +1079,7 @@ msgid "Export your Asana project as JSON format and use it for import"
 msgstr ""
 
 #: build/app.js:1
-msgid "Export your Pipedrive deals as CSV format and use it for import. Please not that generated CSV file column headers should be in English."
+msgid "Export your Pipedrive deals as CSV format and use it for import. Please note that generated CSV file column headers should be in English."
 msgstr ""
 
 #: build/app.js:1
@@ -1212,6 +1263,11 @@ msgid "Add Stage"
 msgstr ""
 
 #: build/app.js:1
+#: build/userApp.js:1
+msgid "Save"
+msgstr ""
+
+#: build/app.js:1
 msgid "Add stage"
 msgstr ""
 
@@ -1248,7 +1304,7 @@ msgid "Add first stage"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to move a stage"
+msgid "Failed to move the stage"
 msgstr ""
 
 #: build/app.js:1
@@ -1315,10 +1371,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Edit task"
-msgstr ""
-
-#: build/app.js:1
-msgid "Color"
 msgstr ""
 
 #: build/app.js:1
@@ -1390,7 +1442,7 @@ msgid "Custom style"
 msgstr ""
 
 #: build/app.js:1
-msgid "Add custom CSS rules for QuickTasker user page."
+msgid "Add custom CSS rules for user tasks page."
 msgstr ""
 
 #: build/app.js:1
@@ -1676,6 +1728,10 @@ msgid "No webhooks found."
 msgstr ""
 
 #: build/app.js:1
+msgid "Add new webhook"
+msgstr ""
+
+#: build/app.js:1
 msgid "Send real-time board event data to external services using webhooks."
 msgstr ""
 
@@ -1830,11 +1886,11 @@ msgid "Turn session on"
 msgstr ""
 
 #: build/app.js:1
-msgid "Delete session"
+msgid "Failed to delete session"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to delete session"
+msgid "Delete session"
 msgstr ""
 
 #: build/app.js:1
