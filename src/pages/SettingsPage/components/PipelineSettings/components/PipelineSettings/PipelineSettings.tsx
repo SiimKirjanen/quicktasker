@@ -4,7 +4,6 @@ import { Loading } from "../../../../../../components/Loading/Loading";
 import { Pipeline } from "../../../../../../types/pipeline";
 import { PipelineSettings } from "../../../../../../types/pipeline-settings";
 import { convertPipelineSettingsFromServer } from "../../../../../../utils/pipeline-settings";
-import { PipelineAutomationSetting } from "../Automations/PipelineAutomationSettings/PipelineAutomationSetting";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
 import { PipelineWebhooksSettings } from "../Webhooks/PipelineWebhooksSettings/PipelineWebhooksSettings";
 
@@ -48,7 +47,6 @@ function PipelineSettings({ pipeline }: Props) {
           settings.allow_only_last_stage_task_done
         }
       />
-      <PipelineAutomationSetting pipelineId={pipeline.id} />
       <PipelineWebhooksSettings pipelineId={pipeline.id} />
     </div>
   );

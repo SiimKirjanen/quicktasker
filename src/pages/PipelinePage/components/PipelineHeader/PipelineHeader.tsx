@@ -7,7 +7,6 @@ import {
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { PipelineSelectionDropdown } from "../../../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
-import { TaskExportSelection } from "../../../../components/Icon/TaskExportSelection/TaskExportSelection";
 import { LoadingOval } from "../../../../components/Loading/Loading";
 import {
   OPEN_EDIT_PIPELINE_MODAL,
@@ -16,6 +15,8 @@ import {
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { PipelineView } from "../../../../types/pipeline";
+import { BoardOptionsSelection } from "./components/BoardOptionsSelection/BoardOptionsSelection";
+import { TaskExportSelection } from "./components/TaskExportSelection/TaskExportSelection";
 
 function PipelineHeader() {
   const {
@@ -58,6 +59,7 @@ function PipelineHeader() {
       </div>
 
       <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-3">
+        <BoardOptionsSelection />
         <TaskExportSelection />
         <PipelineModeSelector />
         {loading ? (

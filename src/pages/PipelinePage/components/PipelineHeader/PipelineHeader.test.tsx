@@ -15,12 +15,9 @@ jest.mock(
     PipelineSelectionDropdown: () => <div data-testid="dropdown" />,
   }),
 );
-jest.mock(
-  "../../../../components/Icon/TaskExportSelection/TaskExportSelection",
-  () => ({
-    TaskExportSelection: () => <div data-testid="export-selection" />,
-  }),
-);
+jest.mock("./components/TaskExportSelection/TaskExportSelection", () => ({
+  TaskExportSelection: () => <div data-testid="export-selection" />,
+}));
 jest.mock("../../../../components/Loading/Loading", () => ({
   LoadingOval: () => <div data-testid="loading" />,
 }));

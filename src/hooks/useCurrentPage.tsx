@@ -1,5 +1,6 @@
 import { useEffect, useState } from "@wordpress/element";
 import { ArchivePage } from "../pages/ArchivePage/ArchivePage";
+import { AutomationsPage } from "../pages/AutomationsPage/AutomationsPage";
 import { GuidePage } from "../pages/GuidePage/GuidePage";
 import { LogsPage } from "../pages/LogsPage/LogsPage";
 import { OverviewPage } from "../pages/OverviewPage/OverviewPage";
@@ -39,6 +40,7 @@ const getPageFromUrl = () => {
 
   if (page === "wp-quick-tasks") {
     const userTasksMatch = hash.match(/^#\/users\/(\d+)\/tasks$/);
+
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
       return <UserTasksPage userId={userId} />;
@@ -48,6 +50,12 @@ const getPageFromUrl = () => {
     if (userMatch) {
       const userId = userMatch[1];
       return <UserPage userId={userId} />;
+    }
+
+    const boardAutomationsMatch = hash.match(/^#\/board\/(\d+)\/automations$/);
+    if (boardAutomationsMatch) {
+      const boardId = boardAutomationsMatch[1];
+      return <AutomationsPage pipelineId={boardId} />;
     }
 
     switch (hash) {
