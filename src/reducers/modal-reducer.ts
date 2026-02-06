@@ -5,8 +5,6 @@ import {
   CHANGE_TASK_EXPORT_MODAL_METHOD,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
-  CLOSE_AUTOMATION_CREATOR_MODAL,
-  CLOSE_AUTOMATIONS_MODAL,
   CLOSE_MOVE_TASK_MODAL,
   CLOSE_PIPELINE_IMPORT_MODAL,
   CLOSE_PIPELINE_MODAL,
@@ -18,8 +16,6 @@ import {
   CLOSE_USER_MODAL,
   CLOSE_WEBHOOKS_LOGS_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
-  OPEN_AUTOMATION_CREATOR_MODAL,
-  OPEN_AUTOMATIONS_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
   OPEN_EDIT_TASK_MODAL,
   OPEN_EDIT_USER_MODAL,
@@ -263,24 +259,6 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case CLOSE_PIPELINE_IMPORT_MODAL: {
-      return closeModal();
-    }
-    case OPEN_AUTOMATION_CREATOR_MODAL: {
-      return {
-        ...state,
-        automationCreatorModalOpen: true,
-      };
-    }
-    case CLOSE_AUTOMATION_CREATOR_MODAL: {
-      return closeModal();
-    }
-    case OPEN_AUTOMATIONS_MODAL: {
-      return {
-        ...state,
-        automationsModalOpen: true,
-      };
-    }
-    case CLOSE_AUTOMATIONS_MODAL: {
       return closeModal();
     }
     case ARCHIVE_SETTINGS_MODAL_OPEN: {

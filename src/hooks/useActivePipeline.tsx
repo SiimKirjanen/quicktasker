@@ -7,6 +7,7 @@ function useActivePipeline() {
   const {
     state: { activePipeline },
   } = useContext(ActivePipelineContext);
+  const activePipelineId = activePipeline?.id;
 
   const getActivePipelineStages = (): Stage[] => {
     return activePipeline?.stages || [];
@@ -124,6 +125,7 @@ function useActivePipeline() {
     activePipelineSettings,
     isTaskOnLastStage,
     stageOptions,
+    activePipelineId,
   };
 }
 
