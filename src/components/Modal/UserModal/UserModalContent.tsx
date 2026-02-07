@@ -15,6 +15,7 @@ import {
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { useLoadingStates } from "../../../hooks/useLoadingStates";
+import { useNavigation } from "../../../hooks/useNavigation";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
@@ -52,6 +53,7 @@ const UserModalContent = ({ onEditUserCompleted }: Props) => {
     loading3: isDeleteLoading,
     setLoading3: setIsDeleteLoading,
   } = useLoadingStates();
+  const { navigatePage } = useNavigation();
 
   useEffect(() => {
     if (userToEdit) {
@@ -118,7 +120,7 @@ const UserModalContent = ({ onEditUserCompleted }: Props) => {
             icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
             text={__("User details", "quicktasker")}
             onClick={() => {
-              window.location.hash = `#/users/${userToEdit!.id}`;
+              navigatePage(`#/users/${userToEdit!.id}`);
               modalDispatch({
                 type: CLOSE_USER_MODAL,
               });
@@ -128,7 +130,7 @@ const UserModalContent = ({ onEditUserCompleted }: Props) => {
             icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-5" />}
             text={__("User tasks", "quicktasker")}
             onClick={() => {
-              window.location.hash = `#/users/${userToEdit!.id}/tasks`;
+              navigatePage(`#/users/${userToEdit!.id}/tasks`);
               modalDispatch({
                 type: CLOSE_USER_MODAL,
               });

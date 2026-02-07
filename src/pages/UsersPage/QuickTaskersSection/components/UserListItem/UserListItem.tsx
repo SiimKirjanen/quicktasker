@@ -5,6 +5,7 @@ import { WPQTCard } from "../../../../../components/Card/Card";
 import { WPQTCardDataItem } from "../../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { UserDropdown } from "../../../../../components/Dropdown/UserDropdown/UserDropdown";
 import { OPEN_EDIT_USER_MODAL } from "../../../../../constants";
+import { useNavigation } from "../../../../../hooks/useNavigation";
 import { usePageLinks } from "../../../../../hooks/usePageLinks";
 import { ModalContext } from "../../../../../providers/ModalContextProvider";
 import { User } from "../../../../../types/user";
@@ -15,6 +16,7 @@ type Props = {
 
 function UserListItem({ user }: Props) {
   const { userPage } = usePageLinks();
+  const { navigatePage } = useNavigation();
   const { modalDispatch } = useContext(ModalContext);
 
   const userIsActive = user.is_active;
@@ -49,7 +51,7 @@ function UserListItem({ user }: Props) {
         icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
         onClick={(e) => {
           e.stopPropagation();
-          window.location.hash = `#/users/${user.id}`;
+          navigatePage(`#/users/${user.id}`);
         }}
       />
 

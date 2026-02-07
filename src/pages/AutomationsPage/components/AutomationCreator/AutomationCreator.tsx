@@ -132,13 +132,11 @@ function AutomationCreator({ pipelineId }: props) {
           </div>
         </WPQTCard>
       </div>
-      <div className="wpqt-flex wpqt-justify-center">
-        <AutomationCreationSteps
-          automation={automation}
-          automationDispatch={automationDispatch}
-          createAutomation={onCreateAutomation}
-        />
-      </div>
+      <AutomationCreationSteps
+        automation={automation}
+        automationDispatch={automationDispatch}
+        createAutomation={onCreateAutomation}
+      />
     </div>
   );
 }

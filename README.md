@@ -16,19 +16,9 @@ Run `npm run build`
 
 
 ## Translations
-
-Install WP-CLI
+Translations are loaded from https://translate.wordpress.org/projects/wp-plugins/quicktasker/
 
 ### Generate .pot translations template file
+Install WP-CLI
 
 `wp i18n make-pot . languages/quicktasker.pot --exclude=node_modules,src --include="*.php,php/**/*.php,build/*.js,build/**/*.js"`
-
-### Make .po translations
-
-Use Poedit program to generate language .po and .mo files from .pot
-
-### Generate .json translation files from .po
-
-`wp i18n make-json languages/et.po languages/json --no-purge`
-
-

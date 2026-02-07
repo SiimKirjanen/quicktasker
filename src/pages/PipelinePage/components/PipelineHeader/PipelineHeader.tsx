@@ -96,18 +96,22 @@ function PipelineModeSelector() {
 
   return (
     <div
-      className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-400 wpqt-text-base :hover:wpqt-text-blue-600"
+      className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-400 wpqt-text-base :hover:wpqt-text-blue-600 wpqt-group"
       onClick={toggleView}
     >
       {view === PipelineView.PIPELINE ? (
         <>
-          <RectangleStackIcon className="wpqt-size-5 wpqt-text-blue-400" />
-          {__("Switch to Task view", "quicktasker")}
+          <RectangleStackIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+          <span className="group-hover:wpqt-text-blue-600">
+            {__("Switch to Task view", "quicktasker")}
+          </span>
         </>
       ) : (
         <>
-          <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400" />
-          {__("Switch to Board view", "quicktasker")}
+          <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+          <span className="group-hover:wpqt-text-blue-600">
+            {__("Switch to Board view", "quicktasker")}
+          </span>
         </>
       )}
     </div>

@@ -16,10 +16,10 @@ function BoardOptionsSelection() {
           navigatePage(`#/board/${activePipelineId}/automations`);
         }}
       >
+        <SiProbot className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
         <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
           {__("Automations", "quicktasker")}
         </span>
-        <SiProbot className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
       </div>
 
       <div
@@ -28,10 +28,10 @@ function BoardOptionsSelection() {
           navigatePage(`#/board/${activePipelineId}/webhooks`);
         }}
       >
+        <PiWebhooksLogo className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
         <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
           {__("Webhooks", "quicktasker")}
         </span>
-        <PiWebhooksLogo className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
       </div>
     </div>
   );

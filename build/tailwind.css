@@ -1782,6 +1782,10 @@
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
+.wpqt-flex-row {
+  flex-direction: row;
+}
+
 .wpqt-flex-col {
   flex-direction: column;
 }
@@ -2395,6 +2399,10 @@
 
 .wpqt-no-underline {
   text-decoration-line: none;
+}
+
+.wpqt-opacity-50 {
+  opacity: 0.5;
 }
 
 .wpqt-opacity-60 {

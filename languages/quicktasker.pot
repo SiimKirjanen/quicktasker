@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-04T13:42:28+00:00\n"
+"POT-Creation-Date: 2026-02-07T20:35:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -938,6 +938,199 @@ msgid "Archived tasks management page."
 msgstr ""
 
 #: build/app.js:1
+msgid "Send email notification"
+msgstr ""
+
+#: build/app.js:1
+msgid "Create task"
+msgstr ""
+
+#: build/app.js:1
+msgid "Send Slack message"
+msgstr ""
+
+#: build/app.js:1
+msgid "WooCommerce Order"
+msgstr ""
+
+#: build/app.js:1
+msgid "SeatReg Booking"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task marked as done"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task marked as not done"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task created"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task assigned"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task unassigned"
+msgstr ""
+
+#: build/app.js:1
+msgid "Public comment added"
+msgstr ""
+
+#: build/app.js:1
+msgid "Private comment added"
+msgstr ""
+
+#: build/app.js:1
+msgid "File attached"
+msgstr ""
+
+#: build/app.js:1
+msgid "Attached file deleted"
+msgstr ""
+
+#: build/app.js:1
+msgid "Order added"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking created"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking gets approved state"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking gets pending state"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking gets approved state manually with booking manager"
+msgstr ""
+
+#: build/app.js:1
+msgid "Booking gets pending state manually with booking manager"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load board automations"
+msgstr ""
+
+#: build/app.js:1
+msgid "User not found"
+msgstr ""
+
+#: build/app.js:1
+msgid "Step 3. Select action"
+msgstr ""
+
+#: build/app.js:1
+msgid "Step 4. Select action target"
+msgstr ""
+
+#: build/app.js:1
+msgid "Make sure your website is configured to send out emails"
+msgstr ""
+
+#: build/app.js:1
+msgid "Email will be sent to"
+msgstr ""
+
+#: build/app.js:1
+msgid "Invalid email address"
+msgstr ""
+
+#: build/app.js:1
+msgid "Set email"
+msgstr ""
+
+#: build/app.js:1
+msgid "Make sure your have configured your Slack webhook URL."
+msgstr ""
+
+#: build/app.js:1
+msgid "Read more about Slack webhooks."
+msgstr ""
+
+#: build/app.js:1
+msgid "Slack webhook URL"
+msgstr ""
+
+#: build/app.js:1
+msgid "Invalid Slack webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Set webhook URL"
+msgstr ""
+
+#: build/app.js:1
+msgid "Step 1. Select a target"
+msgstr ""
+
+#: build/app.js:1
+msgid "Step 2. Select a trigger"
+msgstr ""
+
+#: build/app.js:1
+msgid "Create automation"
+msgstr ""
+
+#: build/app.js:1
+msgid "Target"
+msgstr ""
+
+#: build/app.js:1
+msgid "Trigger"
+msgstr ""
+
+#: build/app.js:1
+msgid "Action"
+msgstr ""
+
+#: build/app.js:1
+msgid "Controls"
+msgstr ""
+
+#: build/app.js:1
+msgid "Active"
+msgstr ""
+
+#: build/app.js:1
+msgid "There are no automations created for this board."
+msgstr ""
+
+#: build/app.js:1
+#, js-format
+msgid "There are %d automations created for this board."
+msgstr ""
+
+#: build/app.js:1
+msgid "Created automations"
+msgstr ""
+
+#: build/app.js:1
+msgid "Create a new automation"
+msgstr ""
+
+#: build/app.js:1
+msgid "Follow the steps to create a new automation."
+msgstr ""
+
+#: build/app.js:1
+msgid "Set up automated processes to help manage your board."
+msgstr ""
+
+#: build/app.js:1
+msgid "Board automations"
+msgstr ""
+
+#: build/app.js:1
 msgid "Info about the plugin."
 msgstr ""
 
@@ -1354,10 +1547,6 @@ msgid "Stage can be deleted when there are no tasks on it"
 msgstr ""
 
 #: build/app.js:1
-msgid "Task created"
-msgstr ""
-
-#: build/app.js:1
 msgid "Failed to create task"
 msgstr ""
 
@@ -1418,6 +1607,14 @@ msgid "Import existing"
 msgstr ""
 
 #: build/app.js:1
+msgid "Automations"
+msgstr ""
+
+#: build/app.js:1
+msgid "Webhooks"
+msgstr ""
+
+#: build/app.js:1
 msgid "Switch to Task view"
 msgstr ""
 
@@ -1446,318 +1643,11 @@ msgid "Add custom CSS rules for user tasks page."
 msgstr ""
 
 #: build/app.js:1
-msgid "Send email notification"
-msgstr ""
-
-#: build/app.js:1
-msgid "Create task"
-msgstr ""
-
-#: build/app.js:1
-msgid "Send Slack message"
-msgstr ""
-
-#: build/app.js:1
-msgid "WooCommerce Order"
-msgstr ""
-
-#: build/app.js:1
-msgid "SeatReg Booking"
-msgstr ""
-
-#: build/app.js:1
-msgid "Task marked as done"
-msgstr ""
-
-#: build/app.js:1
-msgid "Task marked as not done"
-msgstr ""
-
-#: build/app.js:1
-msgid "Task assigned"
-msgstr ""
-
-#: build/app.js:1
-msgid "Task unassigned"
-msgstr ""
-
-#: build/app.js:1
-msgid "Public comment added"
-msgstr ""
-
-#: build/app.js:1
-msgid "Private comment added"
-msgstr ""
-
-#: build/app.js:1
-msgid "File attached"
-msgstr ""
-
-#: build/app.js:1
-msgid "Attached file deleted"
-msgstr ""
-
-#: build/app.js:1
-msgid "Order added"
-msgstr ""
-
-#: build/app.js:1
-msgid "Booking created"
-msgstr ""
-
-#: build/app.js:1
-msgid "Booking gets approved state"
-msgstr ""
-
-#: build/app.js:1
-msgid "Booking gets pending state"
-msgstr ""
-
-#: build/app.js:1
-msgid "Booking gets approved state manually with booking manager"
-msgstr ""
-
-#: build/app.js:1
-msgid "Booking gets pending state manually with booking manager"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load board automations"
-msgstr ""
-
-#: build/app.js:1
-msgid "User not found"
-msgstr ""
-
-#: build/app.js:1
-msgid "Step 3. Select action"
-msgstr ""
-
-#: build/app.js:1
-msgid "Step 4. Select action target"
-msgstr ""
-
-#: build/app.js:1
-msgid "Make sure your website is configured to send out emails"
-msgstr ""
-
-#: build/app.js:1
-msgid "Email will be sent to"
-msgstr ""
-
-#: build/app.js:1
-msgid "Invalid email address"
-msgstr ""
-
-#: build/app.js:1
-msgid "Set email"
-msgstr ""
-
-#: build/app.js:1
-msgid "Make sure your have configured your Slack webhook URL."
-msgstr ""
-
-#: build/app.js:1
-msgid "Read more about Slack webhooks."
-msgstr ""
-
-#: build/app.js:1
-msgid "Slack webhook URL"
-msgstr ""
-
-#: build/app.js:1
-msgid "Invalid Slack webhook"
-msgstr ""
-
-#: build/app.js:1
-msgid "Set webhook URL"
-msgstr ""
-
-#: build/app.js:1
-msgid "Step 1. Select a target"
-msgstr ""
-
-#: build/app.js:1
-msgid "Step 2. Select a trigger"
-msgstr ""
-
-#: build/app.js:1
-msgid "Create automation"
-msgstr ""
-
-#: build/app.js:1
-msgid "Free version limit reached. Upgrade to premium to create more automations."
-msgstr ""
-
-#: build/app.js:1
-msgid "Target"
-msgstr ""
-
-#: build/app.js:1
-msgid "Trigger"
-msgstr ""
-
-#: build/app.js:1
-msgid "Action"
-msgstr ""
-
-#: build/app.js:1
-msgid "Create a new automation"
-msgstr ""
-
-#: build/app.js:1
-msgid "Controls"
-msgstr ""
-
-#: build/app.js:1
-msgid "Active"
-msgstr ""
-
-#: build/app.js:1
-msgid "No automations created for this board"
-msgstr ""
-
-#: build/app.js:1
-msgid "Manage board automations"
-msgstr ""
-
-#: build/app.js:1
-msgid "Set up automated processes to help manage your board."
-msgstr ""
-
-#: build/app.js:1
-msgid "Set up automated processes to help manage your board. To create more than one automation, please upgrade to the premium version."
-msgstr ""
-
-#: build/app.js:1
-msgid "Board automations"
-msgstr ""
-
-#: build/app.js:1
-msgid "There are no automations configured for this board."
-msgstr ""
-
-#: build/app.js:1
-#, js-format
-msgid "There are %d automations configured for this board."
-msgstr ""
-
-#: build/app.js:1
 msgid "Restrict Task Completion"
 msgstr ""
 
 #: build/app.js:1
 msgid "Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page."
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to create webhook"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to edit webhook"
-msgstr ""
-
-#: build/app.js:1
-msgid "Webhook deleted successfully"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to delete webhook"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load board webhooks"
-msgstr ""
-
-#: build/app.js:1
-msgid "Select a target type"
-msgstr ""
-
-#: build/app.js:1
-msgid "Select a target action"
-msgstr ""
-
-#: build/app.js:1
-msgid "If enabled, the webhook will wait for the HTTP response. Much slower performance but better for debugging."
-msgstr ""
-
-#: build/app.js:1
-msgid "Confirm webhook execution"
-msgstr ""
-
-#: build/app.js:1
-msgid "Enter the webhook URL"
-msgstr ""
-
-#: build/app.js:1
-msgid "Please enter a valid URL"
-msgstr ""
-
-#: build/app.js:1
-msgid "Create Webhook"
-msgstr ""
-
-#: build/app.js:1
-msgid "Webhook created successfully"
-msgstr ""
-
-#: build/app.js:1
-msgid "Are you sure you want to delete this webhook?"
-msgstr ""
-
-#: build/app.js:1
-msgid "Confirm"
-msgstr ""
-
-#: build/app.js:1
-msgid "URL"
-msgstr ""
-
-#: build/app.js:1
-#: build/userApp.js:1
-msgid "Created"
-msgstr ""
-
-#: build/app.js:1
-msgid "Webhook updated"
-msgstr ""
-
-#: build/app.js:1
-msgid "No webhooks found."
-msgstr ""
-
-#: build/app.js:1
-msgid "Add new webhook"
-msgstr ""
-
-#: build/app.js:1
-msgid "Send real-time board event data to external services using webhooks."
-msgstr ""
-
-#: build/app.js:1
-msgid "Send real-time board event data to external services using webhooks. To configure more than one webhook, please upgrade to the premium version."
-msgstr ""
-
-#: build/app.js:1
-msgid "Board webhooks"
-msgstr ""
-
-#: build/app.js:1
-msgid "There are no webhooks configured for this board."
-msgstr ""
-
-#: build/app.js:1
-#, js-format
-msgid "There are %d webhooks configured for this board."
-msgstr ""
-
-#: build/app.js:1
-msgid "Manage board webhooks"
-msgstr ""
-
-#: build/app.js:1
-msgid "Create a new webhook"
 msgstr ""
 
 #: build/app.js:1
@@ -2040,6 +1930,100 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Tasks assigned to user"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load board webhooks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to create webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to edit webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Webhook deleted successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to delete webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Are you sure you want to delete this webhook?"
+msgstr ""
+
+#: build/app.js:1
+msgid "Wait for response"
+msgstr ""
+
+#: build/app.js:1
+msgid "URL"
+msgstr ""
+
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "Created"
+msgstr ""
+
+#: build/app.js:1
+msgid "Webhook updated"
+msgstr ""
+
+#: build/app.js:1
+msgid "There are no webhooks configured for this board."
+msgstr ""
+
+#: build/app.js:1
+#, js-format
+msgid "There are %d webhooks configured for this board."
+msgstr ""
+
+#: build/app.js:1
+msgid "Select a target type"
+msgstr ""
+
+#: build/app.js:1
+msgid "Select a target action"
+msgstr ""
+
+#: build/app.js:1
+msgid "If enabled, the webhook will wait for the HTTP response. Much slower performance but better for debugging."
+msgstr ""
+
+#: build/app.js:1
+msgid "Enter the webhook URL"
+msgstr ""
+
+#: build/app.js:1
+msgid "Please enter a valid URL"
+msgstr ""
+
+#: build/app.js:1
+msgid "Create Webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Webhook created successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Created webhooks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Create a new webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Send real-time board event data to external services using webhooks."
+msgstr ""
+
+#: build/app.js:1
+msgid "Board webhooks"
 msgstr ""
 
 #: build/userApp.js:1

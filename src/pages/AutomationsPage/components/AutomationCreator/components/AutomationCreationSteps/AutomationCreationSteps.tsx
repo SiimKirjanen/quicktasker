@@ -1,7 +1,7 @@
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { PiFlagCheckeredFill } from "react-icons/pi";
 
+import { SiProbot } from "react-icons/si";
 import { WPQTIconButton } from "../../../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import {
   Action,
@@ -18,6 +18,25 @@ type Props = {
   automationDispatch: React.Dispatch<Action>;
   createAutomation: () => Promise<void>;
 };
+
+function isAutomationReady(automation: AutomationCreationState) {
+  if (!automation.automationTarget) return false;
+  if (!automation.automationTrigger) return false;
+  if (!automation.automationAction) return false;
+  if (
+    automation.automationAction.requireAutomationTarget &&
+    automation.automationAction.requireAutomationTargetType &&
+    (automation.automationActionTargetType === null ||
+      automation.automationActionTargetId === null)
+  ) {
+    return false;
+  }
+  if (automation.automationAction.requireMetaData && !automation.metaData) {
+    return false;
+  }
+  return true;
+}
+
 function AutomationCreationSteps({
   automation,
   automationDispatch,
@@ -30,20 +49,21 @@ function AutomationCreationSteps({
     await createAutomation();
     setCreationLoading(false);
   };
+  let stepComponent = null;
 
   if (automation.automationTarget === null) {
-    return (
+    stepComponent = (
       <AutomationTargetSelection automationDispatch={automationDispatch} />
     );
   } else if (automation.automationTrigger === null) {
-    return (
+    stepComponent = (
       <AutomationTriggerSelection
         automationDispatch={automationDispatch}
         automation={automation}
       />
     );
   } else if (automation.automationAction === null) {
-    return (
+    stepComponent = (
       <AutomationActionSelection
         automationDispatch={automationDispatch}
         automation={automation}
@@ -56,7 +76,7 @@ function AutomationCreationSteps({
     (automation.automationActionTargetType === null ||
       automation.automationActionTargetId === null)
   ) {
-    return (
+    stepComponent = (
       <AutomationActionTargetSelection
         automationDispatch={automationDispatch}
         automation={automation}
@@ -66,7 +86,7 @@ function AutomationCreationSteps({
     automation.automationAction.requireMetaData &&
     !automation.metaData
   ) {
-    return (
+    stepComponent = (
       <AutomationMeta
         automationCreationState={automation}
         automationDispatch={automationDispatch}
@@ -75,12 +95,16 @@ function AutomationCreationSteps({
   }
 
   return (
-    <WPQTIconButton
-      text={__("Create automation", "quicktasker")}
-      icon={<PiFlagCheckeredFill className="wpqt-size-6" />}
-      onClick={handleCreateAutomation}
-      loading={creationLoading}
-    />
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
+      <div className="wpqt-flex wpqt-flex-row wpqt-gap-4">{stepComponent}</div>
+      <WPQTIconButton
+        text={__("Create automation", "quicktasker")}
+        icon={<SiProbot className="wpqt-size-6 wpqt-text-blue-400" />}
+        onClick={handleCreateAutomation}
+        loading={creationLoading}
+        disabled={!isAutomationReady(automation)}
+      />
+    </div>
   );
 }
 

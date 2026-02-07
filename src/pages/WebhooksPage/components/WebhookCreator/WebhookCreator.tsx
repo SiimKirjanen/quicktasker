@@ -15,7 +15,8 @@ import {
   WebhookTargetTypeActions,
 } from "../../../../utils/webhooks";
 
-import { WPQTButton } from "../../../../components/common/Button/Button";
+import { PiWebhooksLogo } from "react-icons/pi";
+import { WPQTIconButton } from "../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTInput } from "../../../../components/common/Input/Input";
 import { InputErrorText } from "../../../../components/common/Input/InputErrorText/InputErrorText";
 import { WPQTLabel } from "../../../../components/common/Label/WPQTLabel";
@@ -86,7 +87,7 @@ function WebhookCreator({ pipelineId }: Props) {
 
   return (
     <>
-      <div className="wpqt-flex wpqt-gap-4 wpqt-mb-4 wpqt-justify-center">
+      <div className="wpqt-flex wpqt-gap-4 wpqt-mb-5 wpqt-justify-center">
         <div>
           <WPQTLabel
             labelFor="webhook-target-type"
@@ -172,10 +173,12 @@ function WebhookCreator({ pipelineId }: Props) {
         </div>
       </div>
       <div className="wpqt-flex wpqt-justify-center">
-        <WPQTButton
-          btnText={__("Create Webhook", "quicktasker")}
+        <WPQTIconButton
+          text={__("Create Webhook", "quicktasker")}
+          icon={<PiWebhooksLogo className="wpqt-size-6 wpqt-text-blue-400" />}
           onClick={handleCreateWebhook}
           loading={isCreating}
+          disabled={!validationState.urlValid}
         />
       </div>
     </>

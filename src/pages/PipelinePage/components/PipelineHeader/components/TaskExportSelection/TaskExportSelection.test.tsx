@@ -7,7 +7,6 @@ import {
 import { TaskExportMethods } from "../../../../../../types/task";
 import { TaskExportSelection } from "./TaskExportSelection";
 
-// Mock the ModalContext
 const mockModalDispatch = jest.fn();
 const mockModalContext = {
   state: {
@@ -22,8 +21,16 @@ const mockModalContext = {
 
 describe("TaskExportSelection Component", () => {
   beforeEach(() => {
-    // Reset mock before each test
     mockModalDispatch.mockClear();
+  });
+
+  it('renders "Export" text above the icons', () => {
+    render(
+      <ModalContext.Provider value={mockModalContext}>
+        <TaskExportSelection />
+      </ModalContext.Provider>,
+    );
+    expect(screen.getByText("Export")).toBeInTheDocument();
   });
 
   it("renders both PDF and JSON icons", () => {
@@ -32,13 +39,8 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
-    // Check if the component renders both icons
-    const pdfIcon = screen.getByTestId("task-export-pdf-icon");
-    const jsonIcon = screen.getByTestId("task-export-pdf-json-icon");
-
-    expect(pdfIcon).toBeInTheDocument();
-    expect(jsonIcon).toBeInTheDocument();
+    expect(screen.getByTestId("task-export-pdf-icon")).toBeInTheDocument();
+    expect(screen.getByTestId("task-export-pdf-json-icon")).toBeInTheDocument();
   });
 
   it("dispatches the correct action when PDF icon is clicked", () => {
@@ -47,16 +49,10 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
-    const pdfIcon = screen.getByTestId("task-export-pdf-icon");
-    fireEvent.click(pdfIcon);
-
-    // Verify that modalDispatch was called with the correct action for PDF
+    fireEvent.click(screen.getByTestId("task-export-pdf-icon"));
     expect(mockModalDispatch).toHaveBeenCalledWith({
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.PDF,
-      },
+      payload: { selectedMethod: TaskExportMethods.PDF },
     });
   });
 
@@ -66,16 +62,10 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
-    const jsonIcon = screen.getByTestId("task-export-pdf-json-icon");
-    fireEvent.click(jsonIcon);
-
-    // Verify that modalDispatch was called with the correct action for JSON
+    fireEvent.click(screen.getByTestId("task-export-pdf-json-icon"));
     expect(mockModalDispatch).toHaveBeenCalledWith({
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.JSON,
-      },
+      payload: { selectedMethod: TaskExportMethods.JSON },
     });
   });
 
@@ -85,8 +75,6 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
-    // Check if the PDF icon has the correct classes
     const pdfIcon = screen.getByTestId("task-export-pdf-icon");
     expect(pdfIcon).toHaveClass("wpqt-pdf-red");
     expect(pdfIcon).toHaveClass("wpqt-size-5");
@@ -99,12 +87,9 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
-    // Check if the JSON icon has the correct classes
     const jsonIcon = screen.getByTestId("task-export-pdf-json-icon");
     expect(jsonIcon).toHaveClass("wpqt-size-5");
     expect(jsonIcon).toHaveClass("wpqt-cursor-pointer");
-    // JSON icon doesn't have wpqt-pdf-red class
     expect(jsonIcon).not.toHaveClass("wpqt-pdf-red");
   });
 
@@ -114,12 +99,12 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
-    // Check the outer wrapper div
     const outerWrapper = container.firstChild;
     expect(outerWrapper).toHaveClass("wpqt-flex");
+    expect(outerWrapper).toHaveClass("wpqt-flex-col");
+    expect(outerWrapper).toHaveClass("wpqt-items-center");
     expect(outerWrapper).toHaveClass("wpqt-mr-5");
-    expect(outerWrapper).toHaveClass("wpqt-gap-2");
+    expect(outerWrapper).toHaveClass("wpqt-gap-1");
   });
 
   it("ensures modalDispatch is called exactly once per PDF icon click", () => {
@@ -128,29 +113,17 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
     const pdfIcon = screen.getByTestId("task-export-pdf-icon");
-
-    // Click multiple times
     fireEvent.click(pdfIcon);
     fireEvent.click(pdfIcon);
-
-    // Verify that modalDispatch was called exactly twice
     expect(mockModalDispatch).toHaveBeenCalledTimes(2);
-
-    // And each call had the correct parameters for PDF
     expect(mockModalDispatch).toHaveBeenNthCalledWith(1, {
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.PDF,
-      },
+      payload: { selectedMethod: TaskExportMethods.PDF },
     });
-
     expect(mockModalDispatch).toHaveBeenNthCalledWith(2, {
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.PDF,
-      },
+      payload: { selectedMethod: TaskExportMethods.PDF },
     });
   });
 
@@ -160,29 +133,17 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
     const jsonIcon = screen.getByTestId("task-export-pdf-json-icon");
-
-    // Click multiple times
     fireEvent.click(jsonIcon);
     fireEvent.click(jsonIcon);
-
-    // Verify that modalDispatch was called exactly twice
     expect(mockModalDispatch).toHaveBeenCalledTimes(2);
-
-    // And each call had the correct parameters for JSON
     expect(mockModalDispatch).toHaveBeenNthCalledWith(1, {
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.JSON,
-      },
+      payload: { selectedMethod: TaskExportMethods.JSON },
     });
-
     expect(mockModalDispatch).toHaveBeenNthCalledWith(2, {
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.JSON,
-      },
+      payload: { selectedMethod: TaskExportMethods.JSON },
     });
   });
 
@@ -192,38 +153,23 @@ describe("TaskExportSelection Component", () => {
         <TaskExportSelection />
       </ModalContext.Provider>,
     );
-
     const pdfIcon = screen.getByTestId("task-export-pdf-icon");
     const jsonIcon = screen.getByTestId("task-export-pdf-json-icon");
-
-    // Click alternating between icons
     fireEvent.click(pdfIcon);
     fireEvent.click(jsonIcon);
     fireEvent.click(pdfIcon);
-
-    // Verify that modalDispatch was called exactly three times
     expect(mockModalDispatch).toHaveBeenCalledTimes(3);
-
-    // Each call should have the correct payload for the corresponding icon
     expect(mockModalDispatch).toHaveBeenNthCalledWith(1, {
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.PDF,
-      },
+      payload: { selectedMethod: TaskExportMethods.PDF },
     });
-
     expect(mockModalDispatch).toHaveBeenNthCalledWith(2, {
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.JSON,
-      },
+      payload: { selectedMethod: TaskExportMethods.JSON },
     });
-
     expect(mockModalDispatch).toHaveBeenNthCalledWith(3, {
       type: OPEN_TASK_EXPORT_MODAL,
-      payload: {
-        selectedMethod: TaskExportMethods.PDF,
-      },
+      payload: { selectedMethod: TaskExportMethods.PDF },
     });
   });
 });
