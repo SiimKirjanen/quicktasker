@@ -5,7 +5,6 @@ import { Pipeline } from "../../../../../../types/pipeline";
 import { PipelineSettings } from "../../../../../../types/pipeline-settings";
 import { convertPipelineSettingsFromServer } from "../../../../../../utils/pipeline-settings";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
-import { PipelineWebhooksSettings } from "../Webhooks/PipelineWebhooksSettings/PipelineWebhooksSettings";
 
 type Props = {
   pipeline: Pipeline;
@@ -47,7 +46,6 @@ function PipelineSettings({ pipeline }: Props) {
           settings.allow_only_last_stage_task_done
         }
       />
-      <PipelineWebhooksSettings pipelineId={pipeline.id} />
     </div>
   );
 }

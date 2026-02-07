@@ -11,6 +11,7 @@ import { UserPage } from "../pages/UserPage/UserPage";
 import { UserSessionsPage } from "../pages/UserSessionsPage/UserSessionsPage";
 import { UsersPage } from "../pages/UsersPage/UsersPage";
 import { UserTasksPage } from "../pages/UserTasksPage/UserTasksPage";
+import { WebhooksPage } from "../pages/WebhooksPage/WebhooksPage";
 
 const useCurrentPage = () => {
   const [currentPage, setCurrentPage] = useState(getPageFromUrl());
@@ -40,7 +41,6 @@ const getPageFromUrl = () => {
 
   if (page === "wp-quick-tasks") {
     const userTasksMatch = hash.match(/^#\/users\/(\d+)\/tasks$/);
-
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
       return <UserTasksPage userId={userId} />;
@@ -56,6 +56,12 @@ const getPageFromUrl = () => {
     if (boardAutomationsMatch) {
       const boardId = boardAutomationsMatch[1];
       return <AutomationsPage pipelineId={boardId} />;
+    }
+
+    const boardWebhooksMatch = hash.match(/^#\/board\/(\d+)\/webhooks$/);
+    if (boardWebhooksMatch) {
+      const boardId = boardWebhooksMatch[1];
+      return <WebhooksPage pipelineId={boardId} />;
     }
 
     switch (hash) {

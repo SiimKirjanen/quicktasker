@@ -46,7 +46,7 @@ function WPQTButton({
   return (
     <Button
       disabled={disabled || loading}
-      className={`${buttonClasses} ${className}`}
+      className={`${buttonClasses} ${className} ${disabled || loading ? "wpqt-opacity-60 wpqt-cursor-not-allowed" : ""}`}
       onClick={onClick}
       type={type}
     >
