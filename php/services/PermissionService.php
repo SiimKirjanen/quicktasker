@@ -105,12 +105,12 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
 
             $isAssignedToTask = false;
 
-            foreach ($assignedUsers as $user) {
-                if ($user->id === $userId) {
-                    $isAssignedToTask = true;
-                    break;
+                foreach ($assignedUsers as $user) {
+                    if ((int)$user->id === (int)$userId) {
+                        $isAssignedToTask = true;
+                        break;
+                    }
                 }
-            }
 
             if ($isAssignedToTask === true || ($task->free_for_all === '1' && count($assignedUsers) === 0) ) {
                 return true;

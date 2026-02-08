@@ -48,10 +48,15 @@ function PipelineHeader() {
           <div className="wpqt-text-lg wpqt-font-semibold">
             {activePipeline.name}
           </div>
-          <Cog8ToothIcon
-            className="wpqt-text-gray-400 wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+          <div
+            className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-group"
             onClick={openEditPipelineModal}
-          />
+          >
+            <Cog8ToothIcon className="wpqt-text-blue-400 wpqt-size-6 group-hover:wpqt-text-blue-600" />
+            <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+              {__("Settings", "quicktasker")}
+            </span>
+          </div>
         </div>
         {activePipeline.description && (
           <div className="wpqt-italic">{activePipeline.description}</div>

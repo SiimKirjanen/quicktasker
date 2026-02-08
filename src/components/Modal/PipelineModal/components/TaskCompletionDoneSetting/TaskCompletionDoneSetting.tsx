@@ -1,9 +1,11 @@
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { Toggle } from "../../../../../../components/common/Toggle/Toggle";
-import { LoadingOval } from "../../../../../../components/Loading/Loading";
-import { useSettingActions } from "../../../../../../hooks/actions/useSettingActions";
-import { Settings } from "../../../Settings/Settings";
+import { PIPELINE_EDIT_SETTINGS } from "../../../../../constants";
+import { useSettingActions } from "../../../../../hooks/actions/useSettingActions";
+import { ActivePipelineContext } from "../../../../../providers/ActivePipelineContextProvider";
+import { Toggle } from "../../../../common/Toggle/Toggle";
+import { LoadingOval } from "../../../../Loading/Loading";
+import { Settings } from "../Setting/Settings";
 
 type Props = {
   allow_only_last_stage_task_done: boolean;
@@ -16,15 +18,27 @@ function TaskCompletionDoneSetting({
   const [checked, setChecked] = useState(allow_only_last_stage_task_done);
   const [loading, setLoading] = useState(false);
   const { saveTaskCompletionDoneSetting } = useSettingActions();
+  const { dispatch } = useContext(ActivePipelineContext);
 
   const onToggle = async (checked: boolean) => {
     setChecked(checked);
     setLoading(true);
-    await saveTaskCompletionDoneSetting(pipelineId, checked, (checked) => {
-      setChecked(checked);
-    });
-
+    const { success } = await saveTaskCompletionDoneSetting(
+      pipelineId,
+      checked,
+    );
     setLoading(false);
+
+    if (success) {
+      dispatch({
+        type: PIPELINE_EDIT_SETTINGS,
+        payload: {
+          allow_only_last_stage_task_done: checked,
+        },
+      });
+    } else {
+      setChecked(!checked);
+    }
   };
 
   return (

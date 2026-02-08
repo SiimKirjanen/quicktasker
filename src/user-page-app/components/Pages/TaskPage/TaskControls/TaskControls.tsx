@@ -31,7 +31,8 @@ function TaskControls({ task }: Props) {
       (user: User) => user.id === userId && user.user_type === userType,
     ) ||
     task?.assigned_wp_users?.some(
-      (wpUser: WPUser) => wpUser.id === userId && wpUser.user_type === userType,
+      (wpUser: WPUser) =>
+        Number(wpUser.id) === Number(userId) && wpUser.user_type === userType,
     );
 
   if (task === null) {

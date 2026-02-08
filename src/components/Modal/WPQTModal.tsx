@@ -100,7 +100,7 @@ function WPQTModalField({
     : {};
 
   return (
-    <Field className="wpqt-mb-3">
+    <Field className="wpqt-mb-4">
       <Label
         className="wpqt-mb-2 wpqt-block wpqt-text-sm/6 wpqt-font-medium"
         {...tooltipAttributes}

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "@wordpress/element";
-import { getPipelineSettingsRequest } from "../../../../../../api/api";
-import { Loading } from "../../../../../../components/Loading/Loading";
-import { Pipeline } from "../../../../../../types/pipeline";
-import { PipelineSettings } from "../../../../../../types/pipeline-settings";
-import { convertPipelineSettingsFromServer } from "../../../../../../utils/pipeline-settings";
+
+import { getPipelineSettingsRequest } from "../../../../../api/api";
+import { Pipeline } from "../../../../../types/pipeline";
+import { PipelineSettings } from "../../../../../types/pipeline-settings";
+import { convertPipelineSettingsFromServer } from "../../../../../utils/pipeline-settings";
+import { Loading } from "../../../../Loading/Loading";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
 
 type Props = {
@@ -31,7 +32,7 @@ function PipelineSettings({ pipeline }: Props) {
   }, []);
 
   if (loading) {
-    return <Loading />;
+    return <Loading ovalSize="36" />;
   }
 
   if (!settings) {

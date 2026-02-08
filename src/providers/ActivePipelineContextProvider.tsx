@@ -16,6 +16,7 @@ import {
   PIPELINE_DELETE_STAGE,
   PIPELINE_EDIT_LABEL,
   PIPELINE_EDIT_PIPELINE,
+  PIPELINE_EDIT_SETTINGS,
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
@@ -34,6 +35,7 @@ import {
 import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
 import { Label } from "../types/label";
 import { Pipeline, PipelineFromServer, PipelineView } from "../types/pipeline";
+import { PipelineSettings } from "../types/pipeline-settings";
 import { Stage } from "../types/stage";
 import { TaskFromServer } from "../types/task";
 import { User, UserTypes, WPUser } from "../types/user";
@@ -107,6 +109,7 @@ type Action =
     }
   | { type: typeof PIPELINE_REMOVE_LABEL; payload: string }
   | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer }
+  | { type: typeof PIPELINE_EDIT_SETTINGS; payload: Partial<PipelineSettings> }
   | {
       type: typeof PIPELINE_SET_TASK_FOCUS_COLOR;
       payload: { taskId: string; color: string };

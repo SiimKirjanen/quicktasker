@@ -6,7 +6,6 @@ import {
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
 } from "../../../constants";
 import { useCustomFieldActions } from "../../../hooks/actions/useCustomFieldActions";
-import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldsContext } from "../../../providers/CustomFieldsContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { CustomFieldType } from "../../../types/custom-field";
@@ -14,7 +13,6 @@ import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButto
 import { WPQTInput } from "../../common/Input/Input";
 import { Option, WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
-import { PremiumAd } from "../../PremiudAd/PremiumAd";
 
 type Props = {
   description: string;
@@ -26,12 +24,9 @@ function CustomFieldCreation({ description }: Props) {
     useState<CustomFieldType>(CustomFieldType.Text);
   const { addCustomField } = useCustomFieldActions();
   const {
-    state: { entityId, entityType, customFields, loading: customFieldsLoading },
+    state: { entityId, entityType, loading: customFieldsLoading },
     customFieldsDispatch,
   } = useContext(CustomFieldsContext);
-  const {
-    state: { is_customFields },
-  } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const { modalDispatch } = useContext(ModalContext);
 
@@ -39,7 +34,6 @@ function CustomFieldCreation({ description }: Props) {
     { value: CustomFieldType.Text, label: "Text" },
     { value: CustomFieldType.Checkbox, label: "Checkbox" },
   ];
-  const isCreationLimited = customFields.length >= 1 && !is_customFields;
 
   const createCustomField = async () => {
     if (!entityId || !entityType) {
@@ -78,32 +72,10 @@ function CustomFieldCreation({ description }: Props) {
     return null;
   }
 
-  if (isCreationLimited) {
-    return (
-      <PremiumAd
-        description={__(
-          "Upgrade to premium to add more custom fields.",
-          "quicktasker",
-        )}
-      />
-    );
-  }
-
   return (
     <div className="wpqt-mb-6 wpqt-flex wpqt-flex-col wpqt-items-center">
       <h2>{__("Custom Fields", "quicktasker")}</h2>
-      <div className="wpqt-mb-4 wpqt-text-center">
-        {description}
-        {!is_customFields && (
-          <span className="wpqt-font-semibold">
-            {" "}
-            {__(
-              "Free version allows only one custom field. To add more, please upgrade to premium.",
-              "quicktasker",
-            )}
-          </span>
-        )}
-      </div>
+      <div className="wpqt-mb-4 wpqt-text-center">{description}</div>
 
       <div className="wpqt-flex wpqt-gap-4">
         <div>
