@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { PIPELINE_TOGGLE_VIEW } from "../../../../constants";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import {
   ModalContext,
@@ -119,13 +120,41 @@ describe("PipelineHeader", () => {
     renderWithProviders();
     // Find the edit icon by class
     const editIcon = Array.from(document.querySelectorAll("svg")).find((el) =>
-      el.classList.contains("wpqt-text-gray-400"),
+      el.classList.contains("wpqt-text-blue-400"),
     );
     expect(editIcon).toBeTruthy();
     fireEvent.click(editIcon!);
     expect(modalDispatch).toHaveBeenCalledWith({
       type: "OPEN_EDIT_PIPELINE_MODAL",
       payload: { pipelineToEdit: activePipeline },
+    });
+  });
+
+  it("toggles view when PipelineModeSelector is clicked", () => {
+    const dispatch = jest.fn();
+    render(
+      <ActivePipelineContext.Provider
+        value={{
+          state: {
+            activePipeline,
+            loading: false,
+            view: PipelineView.PIPELINE,
+          },
+          fetchAndSetPipelineData,
+          dispatch,
+        }}
+      >
+        <ModalContext.Provider
+          value={{ state: defaultModalState, modalDispatch }}
+        >
+          <PipelineHeader />
+        </ModalContext.Provider>
+      </ActivePipelineContext.Provider>,
+    );
+    fireEvent.click(screen.getByText(/Switch to Task view/i));
+    expect(dispatch).toHaveBeenCalledWith({
+      type: PIPELINE_TOGGLE_VIEW,
+      payload: PipelineView.TASK,
     });
   });
 
@@ -157,33 +186,5 @@ describe("PipelineHeader", () => {
       </ActivePipelineContext.Provider>,
     );
     expect(container.firstChild).toBeNull();
-  });
-
-  it("toggles view when PipelineModeSelector is clicked", () => {
-    const dispatch = jest.fn();
-    render(
-      <ActivePipelineContext.Provider
-        value={{
-          state: {
-            activePipeline,
-            loading: false,
-            view: PipelineView.PIPELINE,
-          },
-          fetchAndSetPipelineData,
-          dispatch,
-        }}
-      >
-        <ModalContext.Provider
-          value={{ state: defaultModalState, modalDispatch }}
-        >
-          <PipelineHeader />
-        </ModalContext.Provider>
-      </ActivePipelineContext.Provider>,
-    );
-    fireEvent.click(screen.getByText(/Switch to Task view/i));
-    expect(dispatch).toHaveBeenCalledWith({
-      type: "TOGGLE_VIEW",
-      payload: "TASK-VIEW",
-    });
   });
 });

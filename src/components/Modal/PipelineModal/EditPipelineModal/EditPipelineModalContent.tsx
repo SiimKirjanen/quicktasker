@@ -21,6 +21,7 @@ import { AutoSaveTextarea } from "../../../common/Input/AutoSaveTextarea/AutoSav
 import { CustomFieldsInModalWrap } from "../../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { WPQTModalField, WPQTModalFieldSet } from "../../WPQTModal";
+import { PipelineSettings } from "../components/PipelineSettings/PipelineSettings";
 
 type Props = {
   onPipelineEditSuccess: (pipeline: PipelineFromServer) => void;
@@ -75,7 +76,7 @@ const EditPipelineModalContent = ({ onPipelineEditSuccess }: Props) => {
                 <AutoSaveInput
                   isAutoFocus={true}
                   value={pipelineToEdit.name}
-                  wrapperClassName="wpqt-w-full"
+                  wrapperClassName="wpqt-w-full !wpqt-mb-0"
                   className="wpqt-w-full"
                   onChange={async (value) => {
                     const { success, pipeline: updatedPipeline } =
@@ -101,6 +102,7 @@ const EditPipelineModalContent = ({ onPipelineEditSuccess }: Props) => {
                   }}
                 />
               </WPQTModalField>
+              <PipelineSettings pipeline={pipelineToEdit} />
             </WPQTModalFieldSet>
             <CustomFieldsInModalWrap
               entityId={pipelineToEdit.id}

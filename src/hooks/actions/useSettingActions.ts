@@ -8,32 +8,52 @@ import {
 function useSettingActions() {
   const saveCustomUserPageStyles = async (
     styles: string,
-    callback?: (styles: string) => void,
-  ) => {
+  ): Promise<{ success: boolean; styles?: string }> => {
     try {
       const response = await saveUserPageCustomStylesRequest(styles);
-      if (callback) callback(response.data);
+
       toast.success(
-        __("Custom user page styles saved successfully", "quicktasker"),
+        __("Custom tasks app styles saved successfully", "quicktasker"),
       );
+
+      return {
+        success: true,
+        styles: response.data,
+      };
     } catch (error) {
       console.error(error);
-      toast.error(__("Failed to save custom user page styles", "quicktasker"));
+      toast.error(__("Failed to save custom tasks app styles", "quicktasker"));
+
+      return {
+        success: false,
+      };
     }
   };
 
   const saveTaskCompletionDoneSetting = async (
     pipelineId: string,
     checked: boolean,
-    callback?: (checked: boolean) => void,
-  ) => {
+  ): Promise<{ success: boolean; checked?: boolean }> => {
     try {
       await saveTaskCompletionDoneSettingRequest(pipelineId, checked);
-      if (callback) callback(checked);
+
+      toast.success(
+        __("Task completion restriction saved successfully", "quicktasker"),
+      );
+
+      return {
+        success: true,
+        checked,
+      };
     } catch (error) {
-      if (callback) callback(!checked);
       console.error(error);
-      toast.error(__("Failed to save setting", "quicktasker"));
+      toast.error(
+        __("Failed to save task completion restriction", "quicktasker"),
+      );
+
+      return {
+        success: false,
+      };
     }
   };
 

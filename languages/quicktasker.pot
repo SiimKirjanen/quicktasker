@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-07T20:35:04+00:00\n"
+"POT-Creation-Date: 2026-02-08T11:51:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -49,40 +49,35 @@ msgstr ""
 
 #: php/admin-pages.php:39
 #: php/admin-pages.php:40
-#: build/app.js:1
-msgid "Settings"
+msgid "User management"
 msgstr ""
 
 #: php/admin-pages.php:48
 #: php/admin-pages.php:49
-msgid "User management"
+#: build/app.js:1
+msgid "Tasks app"
 msgstr ""
 
 #: php/admin-pages.php:57
 #: php/admin-pages.php:58
-msgid "User tasks page"
+#: build/app.js:1
+msgid "Quicktasker sessions"
 msgstr ""
 
 #: php/admin-pages.php:66
 #: php/admin-pages.php:67
 #: build/app.js:1
-msgid "Quicktasker sessions"
+msgid "Archive"
 msgstr ""
 
 #: php/admin-pages.php:75
 #: php/admin-pages.php:76
 #: build/app.js:1
-msgid "Archive"
+msgid "Logs"
 msgstr ""
 
 #: php/admin-pages.php:84
 #: php/admin-pages.php:85
-#: build/app.js:1
-msgid "Logs"
-msgstr ""
-
-#: php/admin-pages.php:93
-#: php/admin-pages.php:94
 #: build/app.js:1
 msgid "About"
 msgstr ""
@@ -462,19 +457,7 @@ msgid "Failed to update custom field default value"
 msgstr ""
 
 #: build/app.js:1
-msgid "Get the premium version"
-msgstr ""
-
-#: build/app.js:1
-msgid "Upgrade to premium to add more custom fields."
-msgstr ""
-
-#: build/app.js:1
 msgid "Custom Fields"
-msgstr ""
-
-#: build/app.js:1
-msgid "Free version allows only one custom field. To add more, please upgrade to premium."
 msgstr ""
 
 #: build/app.js:1
@@ -1408,6 +1391,30 @@ msgid "Failed to update board"
 msgstr ""
 
 #: build/app.js:1
+msgid "Custom tasks app styles saved successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to save custom tasks app styles"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task completion restriction saved successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to save task completion restriction"
+msgstr ""
+
+#: build/app.js:1
+msgid "Restrict Task Completion"
+msgstr ""
+
+#: build/app.js:1
+msgid "Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page."
+msgstr ""
+
+#: build/app.js:1
 msgid "Board deleted"
 msgstr ""
 
@@ -1615,6 +1622,10 @@ msgid "Webhooks"
 msgstr ""
 
 #: build/app.js:1
+msgid "Settings"
+msgstr ""
+
+#: build/app.js:1
 msgid "Switch to Task view"
 msgstr ""
 
@@ -1623,47 +1634,19 @@ msgid "Switch to Board view"
 msgstr ""
 
 #: build/app.js:1
-msgid "Custom user page styles saved successfully"
+msgid "Lets you manage assigned tasks on a separate page."
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to save custom user page styles"
+msgid "Open your tasks app"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to save setting"
-msgstr ""
-
-#: build/app.js:1
-msgid "Custom style"
+msgid "Custom styles"
 msgstr ""
 
 #: build/app.js:1
 msgid "Add custom CSS rules for user tasks page."
-msgstr ""
-
-#: build/app.js:1
-msgid "Restrict Task Completion"
-msgstr ""
-
-#: build/app.js:1
-msgid "Allow to mark task as done only on board last stage. By default, task can be marked as done on any stage. Will apply also to QuickTasker page."
-msgstr ""
-
-#: build/app.js:1
-msgid "Manage settings, preferences, and configurations."
-msgstr ""
-
-#: build/app.js:1
-msgid "Lets you manage assigned tasks on separate page."
-msgstr ""
-
-#: build/app.js:1
-msgid "User app"
-msgstr ""
-
-#: build/app.js:1
-msgid "Open your user page"
 msgstr ""
 
 #: build/app.js:1

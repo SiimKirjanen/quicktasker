@@ -31,13 +31,16 @@ function UserAppPage() {
 
   const onSave = async () => {
     setIsSaving(true);
-    await saveCustomUserPageStyles(userPageCustomStyles, (styles) => {
+    const { success, styles } =
+      await saveCustomUserPageStyles(userPageCustomStyles);
+    setIsSaving(false);
+
+    if (success && styles) {
       appDispatch({
         type: SET_CUSTOM_USER_PAGE_STYLES,
         payload: styles,
       });
-    });
-    setIsSaving(false);
+    }
   };
 
   return (

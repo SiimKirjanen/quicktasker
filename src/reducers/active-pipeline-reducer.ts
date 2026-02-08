@@ -7,6 +7,7 @@ import {
   PIPELINE_DELETE_STAGE,
   PIPELINE_EDIT_LABEL,
   PIPELINE_EDIT_PIPELINE,
+  PIPELINE_EDIT_SETTINGS,
   PIPELINE_EDIT_STAGE,
   PIPELINE_EDIT_TASK,
   PIPELINE_MOVE_TASK,
@@ -60,6 +61,23 @@ const activePipelineReducer = (state: State, action: Action) => {
           stages: transformedStages,
           settings: transformedSettings,
           is_primary: pipelineData.is_primary === "1",
+        },
+      };
+    }
+    case PIPELINE_EDIT_SETTINGS: {
+      if (!state.activePipeline || !state.activePipeline.settings) {
+        return state;
+      }
+      const updatedSettings = action.payload;
+
+      return {
+        ...state,
+        activePipeline: {
+          ...state.activePipeline,
+          settings: {
+            ...state.activePipeline.settings,
+            ...updatedSettings,
+          },
         },
       };
     }

@@ -5,7 +5,6 @@ import { GuidePage } from "../pages/GuidePage/GuidePage";
 import { LogsPage } from "../pages/LogsPage/LogsPage";
 import { OverviewPage } from "../pages/OverviewPage/OverviewPage";
 import { PipelinePage } from "../pages/PipelinePage/PipelinePage";
-import { SettingsPage } from "../pages/SettingsPage/SettingsPage";
 import { UserAppPage } from "../pages/UserAppPage/UserAppPage";
 import { UserPage } from "../pages/UserPage/UserPage";
 import { UserSessionsPage } from "../pages/UserSessionsPage/UserSessionsPage";
@@ -75,8 +74,6 @@ const getPageFromUrl = () => {
         return <UserSessionsPage />;
       case "#/logs":
         return <LogsPage />;
-      case "#/settings":
-        return <SettingsPage />;
       case "#/guide":
         return <GuidePage />;
       case "#/user-page-link":
