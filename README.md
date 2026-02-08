@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="img/old-banner-big.png" alt="QuickTasker">
+</p>
+
 # QuickTasker - WordPress task management plugin
 Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently.
 
