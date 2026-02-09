@@ -2,7 +2,7 @@
 namespace WPQT\Session;
 
 use WPQT\WPQTException;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 

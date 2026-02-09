@@ -10,7 +10,7 @@ use WPQT\WPQTException;
 use WPQT\UserPage\UserPageService;
 use WPQT\Session\SessionService;
 use WPQT\User\UserRepository;
-use WPQT\ServiceLocator; 
+use WPQT\Services\ServiceLocator; 
 
 if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
     class RequestValidation {

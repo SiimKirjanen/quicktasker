@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Location\LocationService;
 use WPQT\Export\PDFExportService;
 use WPQT\Export\JSONExportService;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 /**
  * Adds a filter to modify the admin body class.
  *

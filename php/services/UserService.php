@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\WPQTException;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\User\UserService' ) ) {
     class UserService {

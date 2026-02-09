@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Exception;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 use WPQT\Pipeline\PipelineService;
 use WPQT\Stage\StageService;
 use WPQT\Comment\CommentService;

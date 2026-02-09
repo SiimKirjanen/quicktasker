@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 
 require_once( WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'php/libs/tfpdf/tfpdf.php' );
 
