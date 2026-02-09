@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
-use WPQT\ServiceLocator; 
+use WPQT\Services\ServiceLocator; 
 
 if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
     class PermissionService {

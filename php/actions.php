@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 use WPQT\Location\LocationService;
 use WPQT\Asset\AssetRepository;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 
 /**
  * Hook into 'plugins_loaded' action to update the database.

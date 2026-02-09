@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Capability\CapabilityService;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 
 /*
 	======================

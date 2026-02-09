@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
 use WPQT\User\UserRepository;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 
 if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
     class PipelineRepository {

@@ -27,7 +27,7 @@ use WPQT\User\UserRepository;
 use WPQT\CustomField\CustomFieldRepository;
 use WPQT\CustomField\CustomFieldService;
 use WPQT\Settings\SettingsValidationService;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 
 add_action('rest_api_init', 'wpqt_register_user_page_api_routes');
 if ( ! function_exists( 'wpqt_register_user_page_api_routes' ) ) {

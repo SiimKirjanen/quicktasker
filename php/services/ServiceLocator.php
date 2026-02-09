@@ -1,21 +1,19 @@
 <?php
 
-namespace WPQT;
+namespace WPQT\Services;
 
-if ( ! class_exists( 'WPQT\ServiceLocator' ) ) {
-    class ServiceLocator {
-        private static $services = array();
+class ServiceLocator {
+    private static $services = array();
 
-        public static function register($name, $service) {
-            self::$services[$name] = $service;
+    public static function register($name, $service) {
+        self::$services[$name] = $service;
+    }
+
+    public static function get($name) {
+        if (isset(self::$services[$name])) {
+            return self::$services[$name];
         }
 
-        public static function get($name) {
-            if (isset(self::$services[$name])) {
-                return self::$services[$name];
-            }
-
-            throw new \Exception("Service not found: " . $name);
-        }
+        throw new \Exception("Service not found: " . $name);
     }
 }

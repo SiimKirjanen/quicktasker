@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Settings\SettingRepository;
-use WPQT\ServiceLocator; 
+use WPQT\Services\ServiceLocator; 
 
 if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
     class SettingsService {

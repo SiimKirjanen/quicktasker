@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WPQT\Capability\CapabilityService;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 
 if ( ! function_exists( 'is_plugin_active' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/plugin.php' );

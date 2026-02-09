@@ -33,7 +33,7 @@ use WPQT\Settings\SettingsService;
 use WPQT\Settings\SettingsValidationService;
 use WPQT\Capability\CapabilityService;
 use WPQT\Automation\AutomationService;
-use WPQT\ServiceLocator;
+use WPQT\Services\ServiceLocator;
 use WPQT\Export\PDFExportService;
 
 add_action('rest_api_init', 'wpqt_register_api_routes');
