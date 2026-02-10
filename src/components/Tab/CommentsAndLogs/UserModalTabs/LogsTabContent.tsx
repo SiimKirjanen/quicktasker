@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { getLogsRequest } from "../../../../api/api";
 import { WPQTTypes } from "../../../../types/enums";
 import { Log } from "../../../../types/log";
-import { LogItem } from "../../../Log/LogItem";
+import { LogBox } from "../../../LogBox/LogBox";
 import { CommentsAndLogsTabContent } from "../CommentsAndLogsTabContent";
 
 type Props = {
@@ -25,7 +25,7 @@ function LogsTabContent({ userId }: Props) {
     <CommentsAndLogsTabContent<Log>
       typeId={userId}
       fetchData={fetchLogs}
-      renderItem={(log: Log) => <LogItem log={log} />}
+      renderItem={(log: Log) => <LogBox log={log}>{log.text}</LogBox>}
       noDataMessage={__("No logs available", "quicktasker")}
     />
   );

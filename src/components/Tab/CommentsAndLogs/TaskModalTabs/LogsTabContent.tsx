@@ -1,9 +1,10 @@
 import { toast } from "react-toastify";
 
+import { __ } from "@wordpress/i18n";
 import { getLogsRequest } from "../../../../api/api";
 import { WPQTTypes } from "../../../../types/enums";
 import { Log } from "../../../../types/log";
-import { LogItem } from "../../../Log/LogItem";
+import { LogBox } from "../../../LogBox/LogBox";
 import { CommentsAndLogsTabContent } from "../CommentsAndLogsTabContent";
 
 type Props = {
@@ -18,15 +19,15 @@ function LogsTabContent({ taskId }: Props) {
       return response.data;
     } catch (error) {
       console.error(error);
-      toast.error("Failed to get log");
+      toast.error(__("Failed to get logs", "quicktasker"));
     }
   };
   return (
     <CommentsAndLogsTabContent<Log>
       typeId={taskId}
       fetchData={fetchLogs}
-      renderItem={(log: Log) => <LogItem log={log} />}
-      noDataMessage="No logs available"
+      renderItem={(log: Log) => <LogBox log={log}>{log.text}</LogBox>}
+      noDataMessage={__("No logs available", "quicktasker")}
     />
   );
 }

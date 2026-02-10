@@ -7,7 +7,6 @@ import { Alert } from "../../common/Alert/Alert";
 import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTTextarea } from "../../common/TextArea/TextArea";
 import { LoadingOval } from "../../Loading/Loading";
-import { LogHeader } from "../../Log/LogItem";
 
 type Props<T> = {
   typeId: string;
@@ -89,14 +88,15 @@ function CommentsAndLogsTabContent<T>({
       </div>
 
       {enableAdd && (
-        <div className="wpqt-flex wpqt-justify-center">
-          <div className="wpqt-w-2/3 wpqt-flex wpqt-flex-col wpqt-items-center">
-            <WPQTTextarea
-              rowsCount={3}
-              value={newEntry}
-              onChange={(text) => setNewEntry(text)}
-              className="wpqt-mb-4 wpqt-w-full"
-            />
+        <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-mb-6">
+          <WPQTTextarea
+            rowsCount={3}
+            value={newEntry}
+            onChange={(text) => setNewEntry(text)}
+            className="wpqt-w-full !wpqt-mb-0"
+            wrapperClassName="!wpqt-mb-0"
+          />
+          <div className="wpqt-flex wpqt-justify-center">
             <WPQTIconButton
               text="Add comment"
               loading={addingEntry}
@@ -110,10 +110,7 @@ function CommentsAndLogsTabContent<T>({
       )}
 
       {data.length > 0 && (
-        <div className="wpqt-mb-[28px] wpqt-mt-[56px] wpqt-logs-grid">
-          <LogHeader title={__("Author", "quicktasker")} />
-          <LogHeader title={__("Date", "quicktasker")} />
-          <LogHeader title={__("Text", "quicktasker")} />
+        <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-items-start">
           {data.map((item) => renderItem(item))}
         </div>
       )}

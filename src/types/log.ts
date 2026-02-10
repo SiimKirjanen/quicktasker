@@ -1,9 +1,11 @@
 import { WPQTLogCreatedBy } from "./enums";
 
+type WPQTLogType = "task" | "stage" | "pipeline" | "user" | "webhook";
+
 type BaseLog = {
   id: string;
   text: string;
-  type: "task" | "stage" | "pipeline" | "user" | "webhook";
+  type: WPQTLogType;
   type_id: string;
   created_at: string;
   author_name: string;
@@ -39,4 +41,4 @@ type LogFromServer = BaseLog;
 
 export { LogCreatedByEnum, LogStatusEnum, LogTypeEnum };
 
-export type { Log, LogFromServer };
+export type { Log, LogFromServer, WPQTLogType };

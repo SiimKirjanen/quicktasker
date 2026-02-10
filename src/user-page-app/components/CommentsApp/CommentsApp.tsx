@@ -2,12 +2,12 @@ import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect, useRef, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
+import { CommentBox } from "../../../components/CommentBox/CommentBox";
 import { WPQTIconButton } from "../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTTextarea } from "../../../components/common/TextArea/TextArea";
 import { WPQTComment } from "../../../types/comment";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { UserPageNotificationsContext } from "../../providers/UserPageNotificationsContextProvider";
-import { CommentItem } from "./CommentItem/CommentItem";
 
 type Props = {
   comments: WPQTComment[];
@@ -62,15 +62,29 @@ function CommentsApp({ comments, addComments }: Props) {
             {__("No comments found", "quicktasker")}
           </div>
         ) : (
-          <div className="wpqt-grid wpqt-grid-cols-1 md:wpqt-grid-cols-[auto_1fr] wpqt-gap-3 md:wpqt-gap-8 wpqt-items-center wpqt-px-2">
+          <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
             {comments.map((comment) => {
-              return <CommentItem key={comment.id} comment={comment} />;
+              return (
+                <CommentBox
+                  authorName={comment.author_name ?? ""}
+                  authorType={comment.author_type}
+                  commentDate={comment.created_at}
+                  key={comment.id}
+                >
+                  {comment.text}
+                </CommentBox>
+              );
             })}
           </div>
         )}
       </div>
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-w-full md:wpqt-w-2/4 wpqt-mx-auto">
-        <WPQTTextarea value={comment} onChange={setComment} />
+        <WPQTTextarea
+          value={comment}
+          onChange={setComment}
+          className="wpqt-w-full"
+          placeholder={__("Write a comment...", "quicktasker")}
+        />
         <WPQTIconButton
           loading={addCommentLoading}
           text={__("Add comment", "quicktasker")}

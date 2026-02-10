@@ -4,10 +4,8 @@ import { getComments } from "../../../../api/api";
 import { useCommentActions } from "../../../../hooks/actions/useCommentActions";
 import { WPQTComment } from "../../../../types/comment";
 import { WPQTTypes } from "../../../../types/enums";
-import {
-  CommentsAndLogsTabContent,
-  TabContentCommentItem,
-} from "../CommentsAndLogsTabContent";
+import { CommentBox } from "../../../CommentBox/CommentBox";
+import { CommentsAndLogsTabContent } from "../CommentsAndLogsTabContent";
 
 type Props = {
   taskId: string;
@@ -41,7 +39,14 @@ function CommentsTabContent({ taskId }: Props) {
       fetchData={fetchPrivateComments}
       onAdd={onAddComment}
       renderItem={(comment: WPQTComment) => (
-        <TabContentCommentItem item={comment} />
+        <CommentBox
+          authorName={comment.author_name ?? ""}
+          authorType={comment.author_type}
+          commentDate={comment.created_at}
+          key={comment.id}
+        >
+          {comment.text}
+        </CommentBox>
       )}
       noDataMessage="No comments available"
       enableAdd={true}
