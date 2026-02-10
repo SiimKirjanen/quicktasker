@@ -1,11 +1,14 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { getGlobalLogsRequest } from "../../../api/api";
 import { CLOSE_WEBHOOKS_LOGS_MODAL } from "../../../constants";
 import { LogOrderEnum } from "../../../pages/LogsPage/components/LogsPageContent/LogsPageContent";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Log, LogTypeEnum } from "../../../types/log";
 import { WebhooksLogsModalSettings } from "../../../types/modal";
-import { Logs } from "../../Log/Logs";
+import { NoFilterResults } from "../../Filter/NoFilterResults/NoFilterResults";
+import { Loading } from "../../Loading/Loading";
+import { LogBox } from "../../LogBox/LogBox";
 import { WPQTModal } from "../WPQTModal";
 
 function WebhooksLogsModal() {
@@ -64,10 +67,26 @@ function WebhooksLogsModalContent({ settings }: WebhooksLogsModalContentProps) {
   }, [settings.webhookId]);
 
   if (hasError) {
-    return <div>Error fetching logs</div>;
+    return <div>{__("Error fetching logs", "quicktasker")}</div>;
   }
 
-  return <Logs loading={loadingLogs} logs={logs} />;
+  if (loadingLogs) {
+    return <Loading ovalSize="32" />;
+  }
+
+  if (logs.length === 0) {
+    return <NoFilterResults text={__("No logs found", "quicktasker")} />;
+  }
+
+  return (
+    <div>
+      {logs.map((log) => (
+        <LogBox key={log.id} log={log}>
+          {log.text}
+        </LogBox>
+      ))}
+    </div>
+  );
 }
 
 export { WebhooksLogsModal };

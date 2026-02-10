@@ -5565,119 +5565,6 @@ function LogBox({
 
 /***/ }),
 
-/***/ "./src/components/Log/LogItem.tsx":
-/*!****************************************!*\
-  !*** ./src/components/Log/LogItem.tsx ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LogHeader: () => (/* binding */ LogHeader),
-/* harmony export */   LogItem: () => (/* binding */ LogItem)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _hooks_useTimezone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../hooks/useTimezone */ "./src/hooks/useTimezone.ts");
-/* harmony import */ var _utils_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/log */ "./src/utils/log.ts");
-
-
-
-const LogItem = ({
-  log,
-  showStatus = false
-}) => {
-  const {
-    convertToWPTimezone
-  } = (0,_hooks_useTimezone__WEBPACK_IMPORTED_MODULE_1__.useTimezone)();
-  const createdBy = _utils_log__WEBPACK_IMPORTED_MODULE_2__.logCreatedByString[log.created_by];
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-text-center wpqt-mb-1",
-        children: log.author_name
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "wpqt-text-center",
-        children: createdBy
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: convertToWPTimezone(log.created_at)
-    }), showStatus && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: log.log_status
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: log.text
-    })]
-  });
-};
-function LogHeader({
-  title
-}) {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "wpqt-font-semibold wpqt-text-lg wpqt-underline",
-    children: title
-  });
-}
-
-
-/***/ }),
-
-/***/ "./src/components/Log/Logs.tsx":
-/*!*************************************!*\
-  !*** ./src/components/Log/Logs.tsx ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Logs: () => (/* binding */ Logs)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Filter_NoFilterResults_NoFilterResults__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Filter/NoFilterResults/NoFilterResults */ "./src/components/Filter/NoFilterResults/NoFilterResults.tsx");
-/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Loading/Loading */ "./src/components/Loading/Loading.tsx");
-/* harmony import */ var _LogItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./LogItem */ "./src/components/Log/LogItem.tsx");
-
-
-
-
-
-const Logs = ({
-  logs,
-  loading
-}) => {
-  if (loading) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_3__.Loading, {
-      ovalSize: "64",
-      className: "wpqt-mt-12"
-    });
-  }
-  if (logs.length === 0) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Filter_NoFilterResults_NoFilterResults__WEBPACK_IMPORTED_MODULE_2__.NoFilterResults, {
-      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No logs found", "quicktasker")
-    });
-  }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "wpqt-logs-page-grid",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogHeader, {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Author", "quicktasker")
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogHeader, {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Created at", "quicktasker")
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogHeader, {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Status", "quicktasker")
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogHeader, {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Text", "quicktasker")
-    }), logs.map(log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogItem__WEBPACK_IMPORTED_MODULE_4__.LogItem, {
-      log: log,
-      showStatus: true
-    }, log.id))]
-  });
-};
-
-
-/***/ }),
-
 /***/ "./src/components/Modal/ArchiveSettingsModal/ArchiveSettingsModal.tsx":
 /*!****************************************************************************!*\
   !*** ./src/components/Modal/ArchiveSettingsModal/ArchiveSettingsModal.tsx ***!
@@ -9441,8 +9328,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_LogsPage_components_LogsPageContent_LogsPageContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../pages/LogsPage/components/LogsPageContent/LogsPageContent */ "./src/pages/LogsPage/components/LogsPageContent/LogsPageContent.tsx");
 /* harmony import */ var _providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../providers/ModalContextProvider */ "./src/providers/ModalContextProvider.tsx");
 /* harmony import */ var _types_log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../types/log */ "./src/types/log.ts");
-/* harmony import */ var _Log_Logs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Log/Logs */ "./src/components/Log/Logs.tsx");
-/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _WPQTModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../WPQTModal */ "./src/components/Modal/WPQTModal.tsx");
+/* harmony import */ var _LogBox_LogBox__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../LogBox/LogBox */ "./src/components/LogBox/LogBox.tsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _Loading_Loading__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _Filter_NoFilterResults_NoFilterResults__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../Filter/NoFilterResults/NoFilterResults */ "./src/components/Filter/NoFilterResults/NoFilterResults.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -9479,6 +9370,9 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
+
 function WebhooksLogsModal() {
   const {
     state: {
@@ -9487,7 +9381,7 @@ function WebhooksLogsModal() {
     },
     modalDispatch
   } = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useContext)(_providers_ModalContextProvider__WEBPACK_IMPORTED_MODULE_5__.ModalContext);
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_8__.WPQTModal, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_WPQTModal__WEBPACK_IMPORTED_MODULE_7__.WPQTModal, {
     modalOpen: webhooksLogsModalOpen,
     closeModal: () => modalDispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_3__.CLOSE_WEBHOOKS_LOGS_MODAL
@@ -9529,12 +9423,24 @@ function WebhooksLogsModalContent({
   }, [settings.webhookId]);
   if (hasError) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      children: "Error fetching logs"
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("Error fetching logs", "quicktasker")
     });
   }
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Log_Logs__WEBPACK_IMPORTED_MODULE_7__.Logs, {
-    loading: loadingLogs,
-    logs: logs
+  if (loadingLogs) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Loading_Loading__WEBPACK_IMPORTED_MODULE_10__.Loading, {
+      ovalSize: "32"
+    });
+  }
+  if (logs.length === 0) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Filter_NoFilterResults_NoFilterResults__WEBPACK_IMPORTED_MODULE_11__.NoFilterResults, {
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)("No logs found", "quicktasker")
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: logs.map(log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_LogBox_LogBox__WEBPACK_IMPORTED_MODULE_8__.LogBox, {
+      log: log,
+      children: log.text
+    }, log.id))
   });
 }
 
@@ -16002,11 +15908,11 @@ const LogsPage = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LogCreatedByEnum: () => (/* reexport safe */ _types_log__WEBPACK_IMPORTED_MODULE_6__.LogCreatedByEnum),
+/* harmony export */   LogCreatedByEnum: () => (/* reexport safe */ _types_log__WEBPACK_IMPORTED_MODULE_5__.LogCreatedByEnum),
 /* harmony export */   LogNumberEnum: () => (/* binding */ LogNumberEnum),
 /* harmony export */   LogOrderEnum: () => (/* binding */ LogOrderEnum),
 /* harmony export */   LogStatusFilterEnum: () => (/* binding */ LogStatusFilterEnum),
-/* harmony export */   LogTypeEnum: () => (/* reexport safe */ _types_log__WEBPACK_IMPORTED_MODULE_6__.LogTypeEnum),
+/* harmony export */   LogTypeEnum: () => (/* reexport safe */ _types_log__WEBPACK_IMPORTED_MODULE_5__.LogTypeEnum),
 /* harmony export */   LogsPageContent: () => (/* binding */ LogsPageContent)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
@@ -16016,8 +15922,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-toastify */ "./node_modules/react-toastify/dist/react-toastify.esm.mjs");
 /* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../api/api */ "./src/api/api.ts");
 /* harmony import */ var _components_Filter_LogsFilter_LogsFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/Filter/LogsFilter/LogsFilter */ "./src/components/Filter/LogsFilter/LogsFilter.tsx");
-/* harmony import */ var _components_Log_Logs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../components/Log/Logs */ "./src/components/Log/Logs.tsx");
-/* harmony import */ var _types_log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../types/log */ "./src/types/log.ts");
+/* harmony import */ var _types_log__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../types/log */ "./src/types/log.ts");
+/* harmony import */ var _components_LogBox_LogBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../components/LogBox/LogBox */ "./src/components/LogBox/LogBox.tsx");
+/* harmony import */ var _components_Loading_Loading__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../components/Loading/Loading */ "./src/components/Loading/Loading.tsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _components_Filter_NoFilterResults_NoFilterResults__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../components/Filter/NoFilterResults/NoFilterResults */ "./src/components/Filter/NoFilterResults/NoFilterResults.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -16052,6 +15962,9 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 
 
 
+
+
+
 var LogOrderEnum;
 (function (LogOrderEnum) {
   LogOrderEnum["Asc"] = "ASC";
@@ -16074,9 +15987,9 @@ const LogsPageContent = () => {
   const [logs, setLogs] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const [filterSettings, setFilterSettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
     numberOfLogs: LogNumberEnum.Hundred,
-    type: _types_log__WEBPACK_IMPORTED_MODULE_6__.LogTypeEnum.All,
+    type: _types_log__WEBPACK_IMPORTED_MODULE_5__.LogTypeEnum.All,
     typeId: "",
-    createdBy: _types_log__WEBPACK_IMPORTED_MODULE_6__.LogCreatedByEnum.All,
+    createdBy: _types_log__WEBPACK_IMPORTED_MODULE_5__.LogCreatedByEnum.All,
     order: LogOrderEnum.Desc,
     search: "",
     status: LogStatusFilterEnum.All
@@ -16096,13 +16009,13 @@ const LogsPageContent = () => {
       if (filter.numberOfLogs === LogNumberEnum.All) {
         delete filter.numberOfLogs;
       }
-      if (filter.type === _types_log__WEBPACK_IMPORTED_MODULE_6__.LogTypeEnum.All) {
+      if (filter.type === _types_log__WEBPACK_IMPORTED_MODULE_5__.LogTypeEnum.All) {
         delete filter.type;
       }
       if (filter.typeId === "") {
         delete filter.typeId;
       }
-      if (filter.createdBy === _types_log__WEBPACK_IMPORTED_MODULE_6__.LogCreatedByEnum.All) {
+      if (filter.createdBy === _types_log__WEBPACK_IMPORTED_MODULE_5__.LogCreatedByEnum.All) {
         delete filter.createdBy;
       }
       if (filter.status === LogStatusFilterEnum.All) {
@@ -16122,12 +16035,20 @@ const LogsPageContent = () => {
     setShouldFetchLogs(true);
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "wpqt-max-w-[1000px] wpqt-mx-auto",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_LogsFilter_LogsFilter__WEBPACK_IMPORTED_MODULE_4__.LogsFilter, {
       filterSettings: filterSettings,
       setFilterSettings: applyFilter
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Log_Logs__WEBPACK_IMPORTED_MODULE_5__.Logs, {
-      logs: logs,
-      loading: loadingLogs
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3",
+      children: loadingLogs ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Loading_Loading__WEBPACK_IMPORTED_MODULE_7__.Loading, {
+        ovalSize: "32"
+      }) : logs.length === 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Filter_NoFilterResults_NoFilterResults__WEBPACK_IMPORTED_MODULE_9__.NoFilterResults, {
+        text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("No logs found", "quicktasker")
+      }) : logs.map(log => (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_LogBox_LogBox__WEBPACK_IMPORTED_MODULE_6__.LogBox, {
+        log: log,
+        children: log.text
+      }, log.id))
     })]
   });
 };

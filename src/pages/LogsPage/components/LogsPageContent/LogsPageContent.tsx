@@ -2,13 +2,17 @@ import { useEffect, useState } from "@wordpress/element";
 import { toast } from "react-toastify";
 import { getGlobalLogsRequest } from "../../../../api/api";
 import { LogsFilter } from "../../../../components/Filter/LogsFilter/LogsFilter";
-import { Logs } from "../../../../components/Log/Logs";
+import { Loading } from "../../../../components/Loading/Loading";
+import { LogBox } from "../../../../components/LogBox/LogBox";
 import {
   Log,
   LogCreatedByEnum,
   LogStatusEnum,
   LogTypeEnum,
 } from "../../../../types/log";
+
+import { __ } from "@wordpress/i18n";
+import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
 
 enum LogOrderEnum {
   Asc = "ASC",
@@ -100,12 +104,24 @@ const LogsPageContent = () => {
   };
 
   return (
-    <div>
+    <div className="wpqt-max-w-[1000px] wpqt-mx-auto">
       <LogsFilter
         filterSettings={filterSettings}
         setFilterSettings={applyFilter}
       />
-      <Logs logs={logs} loading={loadingLogs} />
+      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
+        {loadingLogs ? (
+          <Loading ovalSize="32" />
+        ) : logs.length === 0 ? (
+          <NoFilterResults text={__("No logs found", "quicktasker")} />
+        ) : (
+          logs.map((log) => (
+            <LogBox log={log} key={log.id}>
+              {log.text}
+            </LogBox>
+          ))
+        )}
+      </div>
     </div>
   );
 };
