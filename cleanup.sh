@@ -21,7 +21,9 @@ FILES_TO_REMOVE=(
     "jest.config.js"
     "jest.setup.ts"
     "custom.d.ts"
+    "phpunit.xml.dist"
     "node_modules"
+    "vendor"
 )
 
 # Prompt the user for confirmation
