@@ -1,10 +1,13 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { mockedWebhooks } from "../../../../utils/webhook-test.utils";
 import { WebhookControls } from "./WebhookControls";
 
 // Mocks
 const deleteWebhookMock = jest.fn();
 const pipelineWebhooksDispatchMock = jest.fn();
 const modalDispatchMock = jest.fn();
+
+const mockWebhook = mockedWebhooks[0];
 
 jest.mock("../../../../hooks/actions/useWebhookActions", () => ({
   useWebhookActions: () => ({
@@ -51,13 +54,13 @@ describe("WebhookControls", () => {
   });
 
   it("renders Logs and Delete buttons", () => {
-    render(<WebhookControls webhookId="abc123" />);
+    render(<WebhookControls webhook={mockWebhook} />);
     expect(screen.getByText("Logs")).toBeInTheDocument();
     expect(screen.getByText("Delete")).toBeInTheDocument();
   });
 
   it("calls modalDispatch with correct payload when Logs is clicked", () => {
-    render(<WebhookControls webhookId="abc123" />);
+    render(<WebhookControls webhook={mockWebhook} />);
     fireEvent.click(screen.getByText("Logs"));
     expect(modalDispatchMock).toHaveBeenCalledWith({
       type: "OPEN_WEBHOOKS_LOGS_MODAL",
@@ -67,7 +70,7 @@ describe("WebhookControls", () => {
 
   it("calls deleteWebhook and pipelineWebhooksDispatch on Delete", async () => {
     deleteWebhookMock.mockResolvedValue({ success: true });
-    render(<WebhookControls webhookId="abc123" />);
+    render(<WebhookControls webhook={mockWebhook} />);
     fireEvent.click(screen.getByText("Delete"));
     await waitFor(() => {
       expect(deleteWebhookMock).toHaveBeenCalledWith("abc123");
@@ -80,7 +83,7 @@ describe("WebhookControls", () => {
 
   it("does not dispatch REMOVE_PIPELINE_WEBHOOK if deleteWebhook fails", async () => {
     deleteWebhookMock.mockResolvedValue({ success: false });
-    render(<WebhookControls webhookId="abc123" />);
+    render(<WebhookControls webhook={mockWebhook} />);
     fireEvent.click(screen.getByText("Delete"));
     await waitFor(() => {
       expect(deleteWebhookMock).toHaveBeenCalledWith("abc123");

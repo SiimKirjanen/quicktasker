@@ -112,10 +112,16 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
               $baseLog = array(
                 'type'        => WP_QT_LOG_TYPE_WEBHOOK,
                 'type_id'     => $webhook->id,
-                'created_by'  => WP_QT_LOG_CREATED_BY_ADMIN,
-                'created_by_id' => $userId,
+                'created_by'  => WP_QT_LOG_CREATED_BY_WEBHOOK,
+                'created_by_id' => $webhook->id,
                 'pipeline_id' => $pipelineId,
               );
+
+              if(!$webhook->active) {
+                ServiceLocator::get('LogService')->log('Skipped ' . $webHookName . ' because it is inactive', $baseLog);
+
+                continue;
+              }
 
               try {
                 $this->processWebhook($webhook, $data);

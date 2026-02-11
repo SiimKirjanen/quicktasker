@@ -9,6 +9,7 @@ enum WPQTLogCreatedBy {
   WPQTUser = "quicktasker_user",
   Automation = "automation",
   Import = "import",
+  Webhook = "webhook",
 }
 
 enum WPQTArchiveDoneFilter {

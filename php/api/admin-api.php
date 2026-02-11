@@ -3134,6 +3134,10 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         if (isset($webhookData['webhook_confirm'])) {
                             $args['webhook_confirm'] = $webhookData['webhook_confirm'];
                         }
+
+                        if (isset($webhookData['active'])) {
+                            $args['active'] = $webhookData['active'];
+                        }
                         
                         $webhook = ServiceLocator::get('WebhookService')->editWebhook(
                             $data['id'],
@@ -3171,6 +3175,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
                     ),
                     'webhook_confirm' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'active' => array(
                         'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
