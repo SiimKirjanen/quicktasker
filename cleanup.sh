@@ -24,6 +24,8 @@ FILES_TO_REMOVE=(
     "phpunit.xml.dist"
     "node_modules"
     "vendor"
+    "composer.lock"
+    "composer.json"
 )
 
 # Prompt the user for confirmation
