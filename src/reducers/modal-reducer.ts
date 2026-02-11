@@ -5,6 +5,7 @@ import {
   CHANGE_TASK_EXPORT_MODAL_METHOD,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_ARCHIVE_TASK_MODAL,
+  CLOSE_AUTOMATION_LOGS_MODAL,
   CLOSE_MOVE_TASK_MODAL,
   CLOSE_PIPELINE_IMPORT_MODAL,
   CLOSE_PIPELINE_MODAL,
@@ -16,6 +17,7 @@ import {
   CLOSE_USER_MODAL,
   CLOSE_WEBHOOKS_LOGS_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
+  OPEN_AUTOMATION_LOGS_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
   OPEN_EDIT_TASK_MODAL,
   OPEN_EDIT_USER_MODAL,
@@ -32,6 +34,7 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
   SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
+  UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS,
   UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS,
 } from "../constants";
 import { isUser, isWPUser } from "../guards/user-guard";
@@ -329,6 +332,38 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         webhooksLogsModalSettings: {
           ...state.webhooksLogsModalSettings,
+          ...settings,
+        },
+      };
+    }
+    case OPEN_AUTOMATION_LOGS_MODAL: {
+      const { automationId }: { automationId: string } = action.payload;
+
+      return {
+        ...state,
+        automationLogsModalOpen: true,
+        automationLogsModalSettings: {
+          ...state.automationLogsModalSettings,
+          automationId,
+        },
+      };
+    }
+    case CLOSE_AUTOMATION_LOGS_MODAL: {
+      return {
+        ...state,
+        automationLogsModalOpen: false,
+        automationLogsModalSettings: {
+          ...initialState.automationLogsModalSettings,
+        },
+      };
+    }
+    case UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS: {
+      const settings = action.payload;
+
+      return {
+        ...state,
+        automationLogsModalSettings: {
+          ...state.automationLogsModalSettings,
           ...settings,
         },
       };

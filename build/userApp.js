@@ -988,6 +988,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CHANGE_USER_STATUS: () => (/* binding */ CHANGE_USER_STATUS),
 /* harmony export */   CHANGE_USER_TASK_DONE_STATUS: () => (/* binding */ CHANGE_USER_TASK_DONE_STATUS),
 /* harmony export */   CLOSE_ARCHIVE_TASK_MODAL: () => (/* binding */ CLOSE_ARCHIVE_TASK_MODAL),
+/* harmony export */   CLOSE_AUTOMATION_LOGS_MODAL: () => (/* binding */ CLOSE_AUTOMATION_LOGS_MODAL),
 /* harmony export */   CLOSE_EDIT_TASK_MODAL: () => (/* binding */ CLOSE_EDIT_TASK_MODAL),
 /* harmony export */   CLOSE_MOVE_TASK_MODAL: () => (/* binding */ CLOSE_MOVE_TASK_MODAL),
 /* harmony export */   CLOSE_NEW_TASK_MODAL: () => (/* binding */ CLOSE_NEW_TASK_MODAL),
@@ -1018,6 +1019,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   INIT_APP_STATE: () => (/* binding */ INIT_APP_STATE),
 /* harmony export */   MAX_UPLOAD_FILE_SIZE: () => (/* binding */ MAX_UPLOAD_FILE_SIZE),
 /* harmony export */   OPEN_ARCHIVE_TASK_MODAL: () => (/* binding */ OPEN_ARCHIVE_TASK_MODAL),
+/* harmony export */   OPEN_AUTOMATION_LOGS_MODAL: () => (/* binding */ OPEN_AUTOMATION_LOGS_MODAL),
 /* harmony export */   OPEN_EDIT_PIPELINE_MODAL: () => (/* binding */ OPEN_EDIT_PIPELINE_MODAL),
 /* harmony export */   OPEN_EDIT_TASK_MODAL: () => (/* binding */ OPEN_EDIT_TASK_MODAL),
 /* harmony export */   OPEN_EDIT_USER_MODAL: () => (/* binding */ OPEN_EDIT_USER_MODAL),
@@ -1118,6 +1120,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   TASK_FOCUS_BORDER_STYLE: () => (/* binding */ TASK_FOCUS_BORDER_STYLE),
 /* harmony export */   TASK_FOCUS_BORDER_WIDTH: () => (/* binding */ TASK_FOCUS_BORDER_WIDTH),
 /* harmony export */   TEXT_ENTER_DEBOUNCE_TIMEOUT: () => (/* binding */ TEXT_ENTER_DEBOUNCE_TIMEOUT),
+/* harmony export */   UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS: () => (/* binding */ UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS),
 /* harmony export */   UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS: () => (/* binding */ UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS),
 /* harmony export */   UPDATE_PIPELINE_WEBHOOK_ACTIVE_STATUS: () => (/* binding */ UPDATE_PIPELINE_WEBHOOK_ACTIVE_STATUS),
 /* harmony export */   UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS: () => (/* binding */ UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS),
@@ -1194,6 +1197,9 @@ const SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN = "SET_CUSTOM_FIELD_RECOVERY_MODAL_OP
 const OPEN_WEBHOOKS_LOGS_MODAL = "OPEN_WEBHOOKS_LOGS_MODAL";
 const CLOSE_WEBHOOKS_LOGS_MODAL = "CLOSE_WEBHOOKS_LOGS_MODAL";
 const UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS = "UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS";
+const OPEN_AUTOMATION_LOGS_MODAL = "OPEN_AUTOMATION_LOGS_MODAL";
+const CLOSE_AUTOMATION_LOGS_MODAL = "CLOSE_AUTOMATION_LOGS_MODAL";
+const UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS = "UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS";
 //Archive reducer constants
 const SET_ARCHIVE_TASKS = "SET_ARCHIVE_TASKS";
 const OPEN_ARCHIVE_TASK_MODAL = "OPEN_ARCHIVE_TASK_MODAL";

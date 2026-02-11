@@ -1,10 +1,6 @@
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTConfirmTooltip } from "../../../../components/Dialog/ConfirmTooltip/ConfirmTooltip";
-import {
-  ButtonStyleType,
-  WPQTButton,
-} from "../../../../components/common/Button/Button";
+import { WPQTControls } from "../../../../components/Card/WPQTControls/WPQTControls";
 import {
   OPEN_WEBHOOKS_LOGS_MODAL,
   REMOVE_PIPELINE_WEBHOOK,
@@ -41,28 +37,18 @@ function WebhookControls({ webhookId }: Props) {
   };
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-w-[100px] wpqt-justify-center wpqt-items-center wpqt-gap-2">
-      <WPQTButton
-        btnText={__("Logs", "quicktasker")}
-        onClick={handleLogsBtnClick}
-      />
-      <WPQTConfirmTooltip
-        confirmMessage={__(
-          "Are you sure you want to delete this webhook?",
-          "quicktasker",
-        )}
-        onConfirm={handleDeleteWebhook}
-      >
-        {({ onClick }) => (
-          <WPQTButton
-            btnText={__("Delete", "quicktasker")}
-            buttonStyleType={ButtonStyleType.DANGER}
-            loading={isDeleting}
-            onClick={onClick}
-          />
-        )}
-      </WPQTConfirmTooltip>
-    </div>
+    <WPQTControls
+      title={__("Controls", "quicktasker")}
+      deleteConfirmMessage={__(
+        "Are you sure you want to delete this webhook?",
+        "quicktasker",
+      )}
+      onDelete={handleDeleteWebhook}
+      openLogs={handleLogsBtnClick}
+      deleteLoading={isDeleting}
+      active={true}
+      onActiveChange={() => {}}
+    />
   );
 }
 

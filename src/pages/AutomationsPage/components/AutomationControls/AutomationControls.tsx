@@ -1,15 +1,13 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTCard } from "../../../../components/Card/Card";
-import { Loading } from "../../../../components/Loading/Loading";
-import { WPQTIconButton } from "../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
-import { Toggle } from "../../../../components/common/Toggle/Toggle";
+import { WPQTControls } from "../../../../components/Card/WPQTControls/WPQTControls";
 import {
+  OPEN_AUTOMATION_LOGS_MODAL,
   REMOVE_PIPELINE_AUTOMATION,
   UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS,
 } from "../../../../constants";
 import { useAutomationActions } from "../../../../hooks/actions/useAutomationActions";
+import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { PipelineAutomationsContext } from "../../../../providers/PipelineAutomationsContextProvider";
 import { Automation } from "../../../../types/automation";
 
@@ -18,16 +16,13 @@ type Props = {
   className?: string;
   titleClassName?: string;
 };
-function AutomationControls({
-  automation,
-  className = "",
-  titleClassName = "",
-}: Props) {
+function AutomationControls({ automation }: Props) {
   const { deleteAutomation, updateAutomationActiveStatus } =
     useAutomationActions();
   const { pipelineAutomationsDispatch } = useContext(
     PipelineAutomationsContext,
   );
+  const { modalDispatch } = useContext(ModalContext);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [activateLoading, setActivateLoading] = useState(false);
 
@@ -65,37 +60,24 @@ function AutomationControls({
   };
 
   return (
-    <WPQTCard
+    <WPQTControls
       title={__("Controls", "quicktasker")}
-      className={`${className} wpqt-ml-6`}
-      titleClassName={titleClassName}
-    >
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-justify-center">
-        <div className="wpqt-flex wpqt-flex-col wpqt-gap-1 wpqt-justify-center wpqt-items-center wpqt-h-[40px]">
-          {activateLoading ? (
-            <Loading ovalSize="32" />
-          ) : (
-            <>
-              <span className="wpqt-font-semibold">
-                {__("Active", "quicktasker")}
-              </span>
-              <Toggle
-                checked={automation.active}
-                handleChange={onActiveChange}
-              />
-            </>
-          )}
-        </div>
-        <div className="wpqt-flex wpqt-gap-2">
-          <WPQTIconButton
-            loading={deleteLoading}
-            icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-            onClick={onDelete}
-            text={__("Delete", "quicktasker")}
-          />
-        </div>
-      </div>
-    </WPQTCard>
+      activateLoading={activateLoading}
+      active={automation.active}
+      deleteLoading={deleteLoading}
+      onDelete={onDelete}
+      onActiveChange={onActiveChange}
+      deleteConfirmMessage={__(
+        "Are you sure you want to delete this automation?",
+        "quicktasker",
+      )}
+      openLogs={() => {
+        modalDispatch({
+          type: OPEN_AUTOMATION_LOGS_MODAL,
+          payload: { automationId: automation.id },
+        });
+      }}
+    />
   );
 }
 

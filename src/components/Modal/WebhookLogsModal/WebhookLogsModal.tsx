@@ -11,7 +11,7 @@ import { Loading } from "../../Loading/Loading";
 import { LogBox } from "../../LogBox/LogBox";
 import { WPQTModal } from "../WPQTModal";
 
-function WebhooksLogsModal() {
+function WebhookLogsModal() {
   const {
     state: { webhooksLogsModalOpen, webhooksLogsModalSettings },
     modalDispatch,
@@ -79,7 +79,7 @@ function WebhooksLogsModalContent({ settings }: WebhooksLogsModalContentProps) {
   }
 
   return (
-    <div>
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-items-start">
       {logs.map((log) => (
         <LogBox key={log.id} log={log}>
           {log.text}
@@ -89,4 +89,4 @@ function WebhooksLogsModalContent({ settings }: WebhooksLogsModalContentProps) {
   );
 }
 
-export { WebhooksLogsModal };
+export { WebhookLogsModal };
