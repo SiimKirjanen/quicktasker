@@ -112,8 +112,8 @@ if ( ! class_exists( 'WPQT\Webhooks\WebhookService' ) ) {
               $baseLog = array(
                 'type'        => WP_QT_LOG_TYPE_WEBHOOK,
                 'type_id'     => $webhook->id,
-                'user_id'     => $userId,
                 'created_by'  => WP_QT_LOG_CREATED_BY_ADMIN,
+                'created_by_id' => $userId,
                 'pipeline_id' => $pipelineId,
               );
 

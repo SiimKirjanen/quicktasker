@@ -117,11 +117,14 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $newPipeline = $pipelineService->createPipeline($data['name'], array(
                             'description' => $data['description'],
                         ));
+                        $userId = get_current_user_id();
+
                         $logService->log('Board ' . $newPipeline->name . ' created', [
                             'type' => WP_QT_LOG_TYPE_PIPELINE,
                             'type_id' => $newPipeline->id,
-                            'user_id' => get_current_user_id(),
+                            'user_id' => $userId,
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => $userId,
                             'pipeline_id' => $newPipeline->id
                         ]);
                     
@@ -177,12 +180,14 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         }
 
                         $pipeline = $pipelineService->editPipeline($data['id'], $args);
+                        $userId = get_current_user_id();
 
                         $logService->log('Board ' . $pipeline->name . ' edited', [
                             'type' => WP_QT_LOG_TYPE_PIPELINE,
                             'type_id' => $pipeline->id,
-                            'user_id' => get_current_user_id(),
+                            'user_id' => $userId,
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => $userId,
                             'pipeline_id' => $pipeline->id
                         ]);
 
@@ -237,6 +242,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $pipeline->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $pipeline->id
                         ]);
 
@@ -281,7 +287,8 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type' => WP_QT_LOG_TYPE_PIPELINE,
                             'type_id' => $data->deletedPipeline->id,
                             'user_id' => get_current_user_id(),
-                            'created_by' => WP_QT_LOG_CREATED_BY_ADMIN
+                            'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                         ]);
                         
                         $wpdb->query('COMMIT');
@@ -425,6 +432,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                                 'type_id' => $data['stageId'],
                                 'user_id' => get_current_user_id(),
                                 'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                                'created_by_id' => get_current_user_id(),
                                 'pipeline_id' => $moveInfo->task->pipeline_id
                             ]);
                             /* Handle webhooks */
@@ -504,6 +512,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService = new LogService();
                         $automationService = ServiceLocator::get('AutomationService');
                         $webhookService = ServiceLocator::get('WebhookService');
+                        $userId = get_current_user_id();
 
                         $newTask = $taskService->createTask( $data['stageId'], array(
                             "name" => $data['name'],
@@ -512,8 +521,9 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $logService->log('Task ' . $newTask->name . ' created', [
                             'type' => WP_QT_LOG_TYPE_TASK,
                             'type_id' => $newTask->id,
-                            'user_id' => get_current_user_id(),
+                            'user_id' => $userId,
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => $userId,
                             'pipeline_id' => $newTask->pipeline_id
                         ]);
 
@@ -614,6 +624,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $task->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
@@ -692,6 +703,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type' => WP_QT_LOG_TYPE_TASK,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $deletedTask->pipeline_id
                         ]);
 
@@ -771,6 +783,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['id'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
@@ -834,6 +847,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $task->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
@@ -911,6 +925,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $task->id,
                             'user_id' => $currentUserId,
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => $currentUserId,
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
@@ -992,6 +1007,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['id'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
@@ -1051,6 +1067,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['pipelineId'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $data['pipelineId']
                         ]);
 
@@ -1109,6 +1126,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $stage->pipeline_id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $stage->pipeline_id
                         ]);
 
@@ -1167,6 +1185,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $stage->pipeline_id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $stage->pipeline_id
                         ]);
 
@@ -1215,6 +1234,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $deletedStage->pipeline_id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $deletedStage->pipeline_id
                         ]);
 
@@ -1261,6 +1281,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                                 'type_id' => $task->id,
                                 'user_id' => get_current_user_id(),
                                 'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                                'created_by_id' => get_current_user_id(),
                                 'pipeline_id' => $task->pipeline_id
                             ]);
                         }
@@ -1374,6 +1395,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $user->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                         ]);
 
                         $wpdb->query('COMMIT');
@@ -1447,20 +1469,23 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $task = $userService->assignTaskToUser($data['id'], $data['task_id'], $data['user_type']);
                         $user = $userRepo->getUserByIdAndType($data['id'], $data['user_type']);
+                        $userId = get_current_user_id();
 
                         $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, [
                             'type' => WP_QT_LOG_TYPE_TASK,
                             'type_id' => $data->get_param('task_id'),
-                            'user_id' => get_current_user_id(),
+                            'user_id' => $userId,
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => $userId,
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
                         $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, [
                             'type' => WP_QT_LOG_TYPE_USER,
                             'type_id' => $user->id,
-                            'user_id' => get_current_user_id(),
+                            'user_id' => $userId,
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => $userId,
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
@@ -1545,20 +1570,23 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
 
                         $task = ServiceLocator::get('UserService')->removeTaskFromUser($data['id'], $data['task_id'], $data['user_type']);
                         $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($data['id'], $data['user_type']);
+                        $userId = get_current_user_id();
 
                         $logService->log('Task ' . $task->name . ' unassigned from ' . $user->name, [
                             'type' => WP_QT_LOG_TYPE_TASK,
                             'type_id' => $data['task_id'],
-                            'user_id' => get_current_user_id(),
+                            'user_id' => $userId,
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => $userId,
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
                         $logService->log('User ' . $user->name . ' unassigned from ' . $task->name . " task", [
                             'type' => WP_QT_LOG_TYPE_USER,
                             'type_id' => $user->id,
-                            'user_id' => get_current_user_id(),
+                            'user_id' => $userId,
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => $userId,
                             'pipeline_id' => $task->pipeline_id
                         ]);
 
@@ -1660,6 +1688,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $user->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => null
                         ]);
 
@@ -1716,6 +1745,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['id'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                         ]);
                         
                         $wpdb->query('COMMIT');
@@ -1761,6 +1791,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['id'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                         ]);
 
                         $wpdb->query('COMMIT');
@@ -1810,6 +1841,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['id'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                         ]);
 
                         $wpdb->query('COMMIT');
@@ -2071,10 +2103,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         $typeId = $data['typeId'] ?? null;
                         $numberOfLogs = $data['numberOfLogs'] ?? null;
                         $createdBy = $data['createdBy'] ?? null;
+                        $createdById = $data['createdById'] ?? null;
                         $logStatus = $data['status'] ?? null;
                         $logSearch = $data['search'] ?? null;
 
-                        $logs = $logRepo->getGlobalLogs($type, $typeId, $createdBy, $numberOfLogs, $data['order'], $logStatus, $logSearch);
+                        $logs = $logRepo->getGlobalLogs($type, $typeId, $createdBy, $numberOfLogs, $data['order'], $logStatus, $logSearch, $createdById);
                         
                         return new WP_REST_Response((new ApiResponse(true, array(), $logs))->toArray(), 200);
                     }catch (Throwable $e) {
@@ -2105,6 +2138,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                         'required' => false,
                         'validate_callback' => array('WPQT\RequestValidation', 'validateLogCreatedBy'),
                         'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'createdById' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateOptionalNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeOptionalAbsint'),
                     ),
                     'order' => array(
                         'required' => true,
@@ -2335,6 +2373,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['entityId'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $data['entity_type'] == WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE ? $data['entityId'] : null,
                         ]);
 
@@ -2403,6 +2442,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $customField->entity_id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $customField->entity_type == WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE ? $customField->entity_id : null,
                         ]);
 
@@ -2450,6 +2490,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $customField->entity_id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $customField->entity_type == WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE ? $customField->entity_id : null,
                         ]);
 
@@ -2512,6 +2553,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $customField->entity_id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $customField->entity_id,
                         ]);
 
@@ -2562,6 +2604,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $customField->entity_id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $customField->entity_type == WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE ? $customField->entity_id : null,
                         ]);
 
@@ -2944,6 +2987,25 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        register_rest_route(
+            'wpqt/v1',
+            'automations/(?P<id>\d+)/logs',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {},
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            )
+        );
+
         /*
         ==================================================================================================================================================================================================================
         Webhooks endpoints
@@ -3007,6 +3069,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $webhook->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $webhook->pipeline_id,
                         ]);
 
@@ -3083,6 +3146,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $webhook->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $webhook->pipeline_id,
                         ]);
 
@@ -3136,6 +3200,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $webhook->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $webhook->pipeline_id,
                         ]);
 
@@ -3214,6 +3279,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['id'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $data['id'],
                         ]);
                         
@@ -3270,6 +3336,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $task->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $task->pipeline_id,
                         ]);
 
@@ -3347,6 +3414,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $task->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $task->pipeline_id,
                         ]);
 
@@ -3421,6 +3489,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $data['id'],
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $data['id'],
                         ]);
                         
@@ -3480,6 +3549,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $deletedLabel->pipeline_id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $deletedLabel->pipeline_id,
                         ]);
                         
@@ -3569,6 +3639,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $task->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $task->pipeline_id,
                         ]);
 
@@ -3656,6 +3727,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                             'type_id' => $task->id,
                             'user_id' => get_current_user_id(),
                             'created_by' => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
                             'pipeline_id' => $task->pipeline_id,
                         ]);
 
@@ -3778,4 +3850,3 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
         );
     }
 }
-
