@@ -4,6 +4,7 @@ import { WebhookControls } from "./WebhookControls";
 
 // Mocks
 const deleteWebhookMock = jest.fn();
+const editWebhookMock = jest.fn();
 const pipelineWebhooksDispatchMock = jest.fn();
 const modalDispatchMock = jest.fn();
 
@@ -12,6 +13,7 @@ const mockWebhook = mockedWebhooks[0];
 jest.mock("../../../../hooks/actions/useWebhookActions", () => ({
   useWebhookActions: () => ({
     deleteWebhook: deleteWebhookMock,
+    editWebhook: editWebhookMock,
   }),
 }));
 
@@ -64,7 +66,7 @@ describe("WebhookControls", () => {
     fireEvent.click(screen.getByText("Logs"));
     expect(modalDispatchMock).toHaveBeenCalledWith({
       type: "OPEN_WEBHOOKS_LOGS_MODAL",
-      payload: { webhookId: "abc123" },
+      payload: { webhookId: "w1" },
     });
   });
 
@@ -73,10 +75,10 @@ describe("WebhookControls", () => {
     render(<WebhookControls webhook={mockWebhook} />);
     fireEvent.click(screen.getByText("Delete"));
     await waitFor(() => {
-      expect(deleteWebhookMock).toHaveBeenCalledWith("abc123");
+      expect(deleteWebhookMock).toHaveBeenCalledWith("w1");
       expect(pipelineWebhooksDispatchMock).toHaveBeenCalledWith({
         type: "REMOVE_PIPELINE_WEBHOOK",
-        payload: { webhookId: "abc123" },
+        payload: { webhookId: "w1" },
       });
     });
   });
@@ -86,8 +88,40 @@ describe("WebhookControls", () => {
     render(<WebhookControls webhook={mockWebhook} />);
     fireEvent.click(screen.getByText("Delete"));
     await waitFor(() => {
-      expect(deleteWebhookMock).toHaveBeenCalledWith("abc123");
+      expect(deleteWebhookMock).toHaveBeenCalledWith("w1");
       expect(pipelineWebhooksDispatchMock).not.toHaveBeenCalled();
+    });
+  });
+
+  it("calls editWebhook and pipelineWebhooksDispatch on activate toggle", async () => {
+    editWebhookMock.mockResolvedValue({ success: true });
+    render(<WebhookControls webhook={mockWebhook} />);
+    // Find the toggle and click it
+    const toggle = screen.getByRole("switch");
+    fireEvent.click(toggle);
+    await waitFor(() => {
+      expect(editWebhookMock).toHaveBeenCalledWith("w1", { active: false });
+      expect(pipelineWebhooksDispatchMock).toHaveBeenCalledWith({
+        type: "EDIT_PIPELINE_WEBHOOK",
+        payload: {
+          webhookId: "w1",
+          webhookData: { active: false },
+        },
+      });
+    });
+  });
+
+  it("does not dispatch EDIT_PIPELINE_WEBHOOK if editWebhook fails", async () => {
+    editWebhookMock.mockResolvedValue({ success: false });
+    render(<WebhookControls webhook={mockWebhook} />);
+    const toggle = screen.getByRole("switch");
+    fireEvent.click(toggle);
+    await waitFor(() => {
+      expect(editWebhookMock).toHaveBeenCalledWith("w1", { active: false });
+      expect(pipelineWebhooksDispatchMock).not.toHaveBeenCalledWith({
+        type: "EDIT_PIPELINE_WEBHOOK",
+        payload: expect.anything(),
+      });
     });
   });
 });
