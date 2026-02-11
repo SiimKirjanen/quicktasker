@@ -1,4 +1,3 @@
-import { AutomationExecutionResult } from "../types/automation";
 import { User, UserTypes, WPUser } from "../types/user";
 
 function isUser(user: User | WPUser): user is User {
@@ -9,15 +8,13 @@ function isWPUser(user: User | WPUser): user is WPUser {
   return user.user_type === UserTypes.WP_USER;
 }
 
-function isUserOrWPUser(
-  result: AutomationExecutionResult,
-): result is User | WPUser {
+function isUserOrWPUser(user: User | WPUser): user is User | WPUser {
   return (
-    result &&
-    typeof result === "object" &&
-    (!result.user_type ||
-      result.user_type === UserTypes.QUICKTASKER ||
-      result.user_type === UserTypes.WP_USER)
+    user &&
+    typeof user === "object" &&
+    (!user.user_type ||
+      user.user_type === UserTypes.QUICKTASKER ||
+      user.user_type === UserTypes.WP_USER)
   );
 }
 

@@ -1,5 +1,3 @@
-import { User, WPUser } from "./user";
-
 enum AutomationTrigger {
   TASK_DONE = "task-done",
   Task_NOT_DONE = "task-not-done",
@@ -69,7 +67,7 @@ type AutomationActionType = {
   requireMetaData?: boolean;
 };
 
-type AutomationExecutionResult = boolean | WPUser | User;
+type AutomationExecutionResult = unknown;
 
 type BaseAutomation = {
   id: string;

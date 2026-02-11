@@ -1528,10 +1528,6 @@
   max-height: 100%;
 }
 
-.\!wpqt-w-\[100px\] {
-  width: 100px !important;
-}
-
 .\!wpqt-w-\[200px\] {
   width: 200px !important;
 }
@@ -1542,10 +1538,6 @@
 
 .wpqt-w-4\/5 {
   width: 80%;
-}
-
-.wpqt-w-\[160px\] {
-  width: 160px;
 }
 
 .wpqt-w-\[200px\] {
@@ -1848,10 +1840,6 @@
 
 .wpqt-gap-\[24px\] {
   gap: 24px;
-}
-
-.wpqt-gap-24 {
-  gap: 6rem;
 }
 
 .wpqt-gap-y-1 {
