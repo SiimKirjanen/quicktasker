@@ -16,7 +16,12 @@ type WebhooksLogsModalSettings = {
   webhookId: string | null;
 };
 
+type AutomationLogsModalSettings = {
+  automationId: string | null;
+};
+
 export type {
+  AutomationLogsModalSettings,
   TaskExportModalSettings,
   TaskModalSettings,
   TaskRestoreModalSettings,

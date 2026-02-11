@@ -19,6 +19,8 @@ import {
   AutomationFromServer,
   ExecutedAutomation,
 } from "../../types/automation";
+import { TaskFromServer } from "../../types/task";
+import { User, WPUser } from "../../types/user";
 
 const actionMessages: { [key in AutomationAction]: string } = {
   [AutomationAction.ARCHIVE_TASK]: __(
@@ -81,6 +83,7 @@ function useAutomationActions() {
     if (executedAutomations.length === 0) {
       return;
     }
+    console.log("Handing");
     handleExecutedAnimationsResults(executedAutomations, triggererId);
     displayAutomationMessages(executedAutomations);
   };
@@ -119,13 +122,22 @@ function useAutomationActions() {
           payload: triggererId,
         });
       }
-      if (automation.automation_action === AutomationAction.ASSIGN_USER) {
-        const executionResult = automation.executionResult;
 
-        if (executionResult && isUserOrWPUser(executionResult)) {
+      if (automation.automation_action === AutomationAction.ASSIGN_USER) {
+        const executionResult = automation.executionResult as {
+          user: User | WPUser;
+          task: TaskFromServer;
+        };
+
+        if (
+          executionResult &&
+          typeof executionResult === "object" &&
+          "user" in executionResult &&
+          isUserOrWPUser(executionResult.user)
+        ) {
           dispatch({
             type: PIPELINE_ADD_USER_TO_TASK,
-            payload: { taskId: triggererId, user: executionResult },
+            payload: { taskId: triggererId, user: executionResult.user },
           });
         }
       }

@@ -14,6 +14,7 @@ const mockedWebhooks: Webhook[] = [
     target_id: null,
     created_at: "2024-01-01T00:00:00Z",
     webhook_confirm: false,
+    active: true,
   },
   {
     id: "w2",
@@ -24,6 +25,7 @@ const mockedWebhooks: Webhook[] = [
     target_id: null,
     created_at: "2024-01-02T00:00:00Z",
     webhook_confirm: false,
+    active: true,
   },
   {
     id: "w3",
@@ -34,6 +36,7 @@ const mockedWebhooks: Webhook[] = [
     target_id: null,
     created_at: "2024-01-03T00:00:00Z",
     webhook_confirm: false,
+    active: false,
   },
 ];
 

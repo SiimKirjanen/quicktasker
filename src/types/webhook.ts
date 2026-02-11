@@ -32,10 +32,12 @@ type BaseWebhook = {
 
 type Webhook = BaseWebhook & {
   webhook_confirm: boolean;
+  active: boolean;
 };
 
 type WebhookFromServer = BaseWebhook & {
   webhook_confirm: string;
+  active: string;
 };
 
 export { WebhookTargetAction, WebhookTargetType };

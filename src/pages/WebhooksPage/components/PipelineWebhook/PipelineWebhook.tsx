@@ -22,16 +22,14 @@ function PipelineWebhook({ webhook }: Props) {
   } = useContext(AppContext);
 
   return (
-    <div className="wpqt-flex wpqt-gap-4 wpqt-mb-4 wpqt-mt-8 wpqt-justify-center">
+    <div className="wpqt-flex wpqt-gap-6 wpqt-mb-4 wpqt-mt-8 wpqt-justify-center">
       <WebhookProperty
         name={__("Target", "quicktasker")}
         value={webhook.target_type}
-        className="!wpqt-w-[100px]"
       />
       <WebhookProperty
         name={__("Action", "quicktasker")}
         value={webhook.target_action}
-        className="!wpqt-w-[100px]"
       />
       <WebhookConfirm
         webhook={webhook}
@@ -41,13 +39,12 @@ function PipelineWebhook({ webhook }: Props) {
       <WebhookProperty
         name={__("URL", "quicktasker")}
         value={webhook.webhook_url}
-        className="wpqt-w-[200px]"
       />
       <WebhookProperty
         name={__("Created", "quicktasker")}
         value={convertToTimezone(webhook.created_at, timezone)}
       />
-      <WebhookControls webhookId={webhook.id} />
+      <WebhookControls webhook={webhook} />
     </div>
   );
 }
@@ -63,7 +60,7 @@ function WebhookProperty({
   className = "",
 }: WebhookPropertyProps) {
   return (
-    <div className={`wpqt-flex wpqt-flex-col wpqt-w-[160px] ${className}`}>
+    <div className={`wpqt-flex wpqt-flex-col ${className}`}>
       <div className="wpqt-mb-3 wpqt-font-semibold">{name}</div>
       <div>{value}</div>
     </div>
@@ -103,7 +100,7 @@ function WebhookConfirm({ webhook, name, value }: WebhookConfirmProps) {
   };
 
   return (
-    <div className={`wpqt-flex wpqt-flex-col wpqt-w-[160px]`}>
+    <div className={`wpqt-flex wpqt-flex-col`}>
       <div className="wpqt-mb-3 wpqt-font-semibold">{name}</div>
       <div className="wpqt-flex wpqt-gap-2">
         <Toggle checked={checked} handleChange={handleWebhookConfirmChange} />

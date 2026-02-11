@@ -20,6 +20,7 @@ if ( ! class_exists( 'WPQT\Log\LogService' ) ) {
          *                   - 'log_status': The status of the log (default is WP_QT_LOG_STATUS_SUCCESS).
          *                   - 'user_id': The ID of the user associated with the log (default is null).
          *                   - 'created_by': The creator of the log entry (default is WP_QT_LOG_CREATED_BY_SYSTEM).
+         *                   - 'created_by_id': The ID of the creator of the log entry (default is null).
          *                   - 'pipeline_id': The ID of the pipeline associated with the log (default is null).
          * @return mixed The log entry retrieved by its ID.
          * @throws \Exception If the log type is not provided or if the log insertion fails.
@@ -33,6 +34,7 @@ if ( ! class_exists( 'WPQT\Log\LogService' ) ) {
                 'user_id' => null,
                 'created_by' => WP_QT_LOG_CREATED_BY_SYSTEM,
                 'pipeline_id' => null,
+                'created_by_id' => null,
             );
             $args = wp_parse_args($args, $defaults);
 
@@ -53,6 +55,7 @@ if ( ! class_exists( 'WPQT\Log\LogService' ) ) {
                 'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'log_status' => $args['log_status'],
                 'pipeline_id' => $args['pipeline_id'],
+                'created_by_id' => $args['created_by_id'],
             ));
 
             if( $result === false ) {

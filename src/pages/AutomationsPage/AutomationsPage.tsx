@@ -2,6 +2,7 @@ import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 
 import { Loading } from "../../components/Loading/Loading";
+import { AutomationLogsModal } from "../../components/Modal/AutomationLogsModal/AutomationLogsModal";
 import { useAutomations } from "../../hooks/useAutomations";
 import { PipelineAutomationsContextProvider } from "../../providers/PipelineAutomationsContextProvider";
 import { Page } from "../Page/Page";
@@ -28,6 +29,7 @@ function AutomationsPageContent({ pipelineId }: Props) {
       <h2>{__("Create a new automation", "quicktasker")}</h2>
       <p>{__("Follow the steps to create a new automation.", "quicktasker")}</p>
       <AutomationCreator pipelineId={pipelineId} />
+      <AutomationLogsModal />
     </div>
   );
 }

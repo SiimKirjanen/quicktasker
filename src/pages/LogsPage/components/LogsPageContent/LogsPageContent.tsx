@@ -40,11 +40,18 @@ type LogsFilterType = {
   order: LogOrderEnum;
   search: string;
   status: string;
+  createdById: string;
 };
 type ServerLogsFilterType = Partial<
   Pick<
     LogsFilterType,
-    "numberOfLogs" | "type" | "createdBy" | "typeId" | "status" | "order"
+    | "numberOfLogs"
+    | "type"
+    | "createdBy"
+    | "createdById"
+    | "typeId"
+    | "status"
+    | "order"
   >
 >;
 
@@ -55,6 +62,7 @@ const LogsPageContent = () => {
     type: LogTypeEnum.All,
     typeId: "",
     createdBy: LogCreatedByEnum.All,
+    createdById: "",
     order: LogOrderEnum.Desc,
     search: "",
     status: LogStatusFilterEnum.All,

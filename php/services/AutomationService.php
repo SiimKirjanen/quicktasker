@@ -91,6 +91,7 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
             $rerunTriggers = [];
 
             $relatedAutomations = ServiceLocator::get('AutomationRepository')->getActiveAutomations($boardId, $targetId, $targetType, $automationTrigger);
+            $userId = get_current_user_id();
 
             if ( !empty($relatedAutomations) ) {
                 foreach ($relatedAutomations as $automation) {
@@ -109,8 +110,8 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                                 'type' => $targetType,
                                 'type_id' => $targetId,
                                 'log_status' => WP_QT_LOG_STATUS_SUCCESS,
-                                'user_id' => null,
                                 'created_by' => WP_QT_LOG_CREATED_BY_AUTOMATION,
+                                'created_by_id' => $automation->id,
                                 'pipeline_id' => $boardId,
                             ]);
                             $executedAutomations[] = $automation; 
@@ -122,8 +123,8 @@ if ( ! class_exists( 'WPQT\Automation\AutomationService' ) ) {
                             'type' => $targetType,
                             'type_id' => $targetId,
                             'log_status' => WP_QT_LOG_STATUS_ERROR,
-                            'user_id' => null,
                             'created_by' => WP_QT_LOG_CREATED_BY_AUTOMATION,
+                            'created_by_id' => $automation->id,
                             'pipeline_id' => $boardId,
                         ]);
                     }

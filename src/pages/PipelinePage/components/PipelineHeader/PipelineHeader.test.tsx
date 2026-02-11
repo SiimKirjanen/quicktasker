@@ -67,6 +67,8 @@ describe("PipelineHeader", () => {
     webhooksModalOpen: false,
     webhooksLogsModalOpen: false,
     webhooksLogsModalSettings: { webhookId: null },
+    automationLogsModalOpen: false,
+    automationLogsModalSettings: { automationId: null },
   };
 
   function renderWithProviders(ctxOverrides = {}, modalOverrides = {}) {

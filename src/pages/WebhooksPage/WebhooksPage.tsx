@@ -1,7 +1,7 @@
 import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { Loading } from "../../components/Loading/Loading";
-import { WebhooksLogsModal } from "../../components/Modal/WebhooksLogsModal/WebhooksLogsModal";
+import { WebhookLogsModal } from "../../components/Modal/WebhookLogsModal/WebhookLogsModal";
 import { useWebhooks } from "../../hooks/useWebhooks";
 import { PipelineWebhooksContextProvider } from "../../providers/PipelineWebhooksContextProvider";
 import { Page } from "../Page/Page";
@@ -27,7 +27,7 @@ function WebhooksPageContent({ pipelineId }: Props) {
       <PipelineWebhooks />
       <h2>{__("Create a new webhook", "quicktasker")}</h2>
       <WebhookCreator pipelineId={pipelineId} />
-      <WebhooksLogsModal />
+      <WebhookLogsModal />
     </div>
   );
 }

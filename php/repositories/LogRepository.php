@@ -53,6 +53,7 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
                     logs.type_id,
                     logs.type,
                     logs.created_by,
+                    logs.created_by_id,
                     logs.user_id,
                     logs.created_at,
                     logs.log_status,
@@ -83,9 +84,10 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
          * @param string $logOrder The order of the logs, either 'ASC' for ascending or 'DESC' for descending.
          * @param string|null $logStatus The status of the log to filter by. If null, no filtering by status is applied.
          * @param string|null $logSearch A search term to filter logs by text. Currently not used in the query.
+         * @param string|null $logCreatedById The ID of the creator to filter by.
          * @return array The retrieved logs from the database.
          */
-        public function getGlobalLogs($logType, $typeId, $logCreatedBy, $numberOfLogs, $logOrder, $logStatus, $logSearch) {
+        public function getGlobalLogs($logType, $typeId, $logCreatedBy, $numberOfLogs, $logOrder, $logStatus, $logSearch, $logCreatedById) {
             global $wpdb;
 
             $table_logs = TABLE_WP_QUICKTASKS_LOGS;
@@ -100,6 +102,7 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
                     logs.type_id,
                     logs.type,
                     logs.created_by,
+                    logs.created_by_id,
                     logs.user_id,
                     logs.created_at,
                     logs.log_status,
@@ -127,6 +130,11 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
             if ($logCreatedBy !== null) {
                 $whereClauses[] = "logs.created_by = %s";
                 $queryParams[] = $logCreatedBy;
+            }
+
+            if ($logCreatedById !== null) {
+                $whereClauses[] = "logs.created_by_id = %d";
+                $queryParams[] = $logCreatedById;
             }
 
             if ($logStatus !== null) {
