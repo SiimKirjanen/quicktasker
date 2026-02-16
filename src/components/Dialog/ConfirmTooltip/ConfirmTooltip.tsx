@@ -36,8 +36,13 @@ function WPQTConfirmTooltip({
   useEffect(() => {
     if (isOpen && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      const tooltipHeight = 100; // Approximate height, adjust as needed
       const spacing = 8; // Gap between trigger and tooltip
+      let tooltipHeight = 100; // Fallback height
+
+      // Try to get actual tooltip height if already rendered
+      if (tooltipRef.current) {
+        tooltipHeight = tooltipRef.current.offsetHeight;
+      }
 
       let top = 0;
       let left = 0;
@@ -61,14 +66,23 @@ function WPQTConfirmTooltip({
           break;
       }
 
-      // Ensure tooltip doesn't go off-screen
-      top = Math.max(0, top);
-      left = Math.max(0, left);
-      left = Math.min(left, window.innerWidth - tooltipWidth - 10);
+      // Adjust if tooltip goes off the viewport
+      // Vertical adjustment
+      if (top < 0) {
+        top = spacing;
+      } else if (top + tooltipHeight > window.innerHeight) {
+        top = window.innerHeight - tooltipHeight - spacing;
+      }
+      // Horizontal adjustment
+      if (left < 0) {
+        left = spacing;
+      } else if (left + tooltipWidth > window.innerWidth) {
+        left = window.innerWidth - tooltipWidth - spacing;
+      }
 
       setTooltipPosition({ top, left });
     }
-  }, [isOpen, position]);
+  }, [isOpen, position, showTooltip]);
 
   const handleOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
