@@ -283,4 +283,59 @@ describe("WPQTConfirmTooltip", () => {
       expect(screen.queryByText("Are you sure?")).not.toBeInTheDocument();
     });
   });
+
+  test("should adjust tooltip position to stay within viewport", async () => {
+    // Mock getBoundingClientRect to place trigger near the bottom-right corner
+    Element.prototype.getBoundingClientRect = jest.fn(() => ({
+      width: 100,
+      height: 50,
+      top: 900,
+      left: 900,
+      right: 1000,
+      bottom: 950,
+      x: 900,
+      y: 900,
+      toJSON() {
+        return this;
+      },
+    }));
+
+    // Mock tooltip height
+    const tooltipHeight = 120;
+    // Mock offsetHeight for tooltipRef
+    Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
+      configurable: true,
+      get() {
+        return tooltipHeight;
+      },
+    });
+
+    render(
+      <WPQTConfirmTooltip onConfirm={mockOnConfirm}>
+        {({ onClick }) => <button onClick={onClick}>Trigger</button>}
+      </WPQTConfirmTooltip>,
+    );
+
+    fireEvent.click(screen.getByText("Trigger"));
+
+    // Wait for tooltip to be visible
+    await waitFor(() => {
+      expect(screen.getByText("Are you sure?")).toBeInTheDocument();
+    });
+
+    // Find the tooltip container (outer div with top/left style)
+    const tooltipInner = screen.getByText("Are you sure?");
+    // Go up two parent nodes to reach the outer div with top/left style
+    const tooltipContainer = tooltipInner.parentElement?.parentElement
+      ?.parentElement as HTMLDivElement | null;
+
+    expect(tooltipContainer).not.toBeNull();
+    const style = tooltipContainer?.getAttribute("style") || "";
+    expect(style).toMatch(/top:/);
+    expect(style).toMatch(/left:/);
+
+    // Clean up offsetHeight mock
+    delete (HTMLElement.prototype as unknown as { offsetHeight?: number })
+      .offsetHeight;
+  });
 });
