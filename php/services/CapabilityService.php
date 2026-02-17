@@ -22,6 +22,7 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE
          * - WP_QUICKTASKER_ACCESS_USER_PAGE_APP
+         * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS
          *
          * @return void
          */
@@ -51,10 +52,14 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
             if ( !$adminRole->has_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP) ) {
                 $adminRole->add_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP);
             }
+
+            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS) ) {
+                $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS);
+            }
         }
 
          /**
-         * Removes specific QuickTasker capabilities from the administrator role.
+         * Removes QuickTasker capabilities from the administrator role.
          *
          * This function checks if the administrator role has the following capabilities:
          * - WP_QUICKTASKER_ADMIN_ROLE
@@ -63,6 +68,7 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS
          * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE
          * - WP_QUICKTASKER_ACCESS_USER_PAGE_APP
+         * - WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS
          *
          * If any of these capabilities are found, they are removed from the administrator role.
          *
@@ -93,6 +99,10 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
 
             if ( $adminRole->has_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP) ) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP);
+            }
+
+            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS) ) {
+                $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS);
             }
         }
 

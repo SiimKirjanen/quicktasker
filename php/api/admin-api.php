@@ -1866,6 +1866,12 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+         /*
+        ==================================================================================================================================================================================================================
+        QuickTasker user type session endpoints
+        ==================================================================================================================================================================================================================
+        */
+
         register_rest_route(
             'wpqt/v1',
             'users/sessions/(?P<id>\d+)/status',
@@ -1883,7 +1889,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForManagingQuickTaskerSessions();
                 },
                 'args' => array(
                     'id' => array(
@@ -1917,7 +1923,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForManagingQuickTaskerSessions();
                 },
                 'args' => array(
                     'id' => array(
@@ -1946,12 +1952,11 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForManagingQuickTaskerSessions();
                 }
             ),
         );
-
-    
+        
         /*
         ==================================================================================================================================================================================================================
         WP users endpoints

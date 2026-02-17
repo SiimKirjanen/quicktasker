@@ -78,6 +78,18 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
             return current_user_can( WP_QUICKTASKER_ACCESS_USER_PAGE_APP );
         }
 
+            /**
+            * Checks if the current user has the required permissions to manage QuickTasker sessions.
+            *
+            * This function verifies if the current user has the capability defined by the
+            * WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS constant.
+            *
+            * @return bool True if the user has the required permissions, false otherwise.
+            */
+        public static function hasRequiredPermissionsForManagingQuickTaskerSessions() {
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS );
+        }
+
         /**
          * Checks if a user is allowed to view a task.
          *
