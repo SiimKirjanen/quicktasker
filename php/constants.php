@@ -357,7 +357,7 @@ if ( ! defined( 'WP_QUICKTASKER_INVALID_SESSION_TOKEN' ) ) {
 }
 
 if ( ! defined( 'WP_QUICKTASKER_SIDE_EFFECT_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "8");
+    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "9");
 }
 
 if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
@@ -396,7 +396,11 @@ if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE' ) ) {
 
 if ( ! defined( 'WP_QUICKTASKER_ACCESS_USER_PAGE_APP' ) ) {
     define("WP_QUICKTASKER_ACCESS_USER_PAGE_APP", "quicktasker_access_user_page_app"); // Allows access to user page app
-} 
+}
+
+if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS' ) ) {
+    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS", "quicktasker_admin_role_manage_quicktasker_sessions"); // Allows access to QuickTasker user sessions page and related private API endpoints
+}
 
 /*
 ==================================================================================================================================================================================================================
