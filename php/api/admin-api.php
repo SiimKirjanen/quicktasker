@@ -138,7 +138,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'name' => array(
@@ -201,7 +201,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -878,7 +878,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIArchiveEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1081,7 +1081,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'pipelineId' => array(
@@ -1141,7 +1141,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1199,7 +1199,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -1296,7 +1296,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'id' => array(
@@ -3839,7 +3839,7 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     }
                 },
                 'permission_callback' => function() {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => array(
                     'source' => array(

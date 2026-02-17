@@ -50,6 +50,7 @@ if ( ! function_exists( 'wpqt_enqueue_app_assets' ) ) {
 			'publicUserPageId' => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
 			'timezone' => $timeRepository->getWPTimezone(),
 			'isUserAllowedToDelete' => PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints() ? "1" : "0",
+			'isUserAllowedToManageSettings' => PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints() ? "1" : "0",
 			'userPageCustomStyles' => SettingRepository::getUserPageCustomStyles(),
 			'taskUploadsURL' => WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL,
 		));

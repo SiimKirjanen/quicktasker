@@ -13,6 +13,7 @@ type State = {
   is_customFields: boolean;
   timezone: string;
   isUserAllowedToDelete: boolean;
+  isUserAllowedToManageSettings: boolean;
   userPageCustomStyles: string;
   taskUploadsURL: string;
 };
@@ -24,6 +25,7 @@ const initialState: State = {
   is_customFields: true,
   timezone: "",
   isUserAllowedToDelete: false,
+  isUserAllowedToManageSettings: false,
   userPageCustomStyles: "",
   taskUploadsURL: "",
 };
@@ -36,6 +38,7 @@ type Action =
         publicUserPageId: string;
         timezone: string;
         isUserAllowedToDelete: boolean;
+        isUserAllowedToManageSettings: boolean;
         userPageCustomStyles: string;
         pluginURL: string;
         taskUploadsURL: string;
@@ -64,6 +67,8 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     const publicUserPageId = window.wpqt.publicUserPageId;
     const timezone = window.wpqt.timezone;
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
+    const isUserAllowedToManageSettings =
+      window.wpqt.isUserAllowedToManageSettings === "1";
     const userPageCustomStyles = window.wpqt.userPageCustomStyles;
     const pluginURL = window.wpqt.pluginURL;
     const taskUploadsURL = window.wpqt.taskUploadsURL;
@@ -75,6 +80,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         publicUserPageId,
         timezone,
         isUserAllowedToDelete,
+        isUserAllowedToManageSettings,
         userPageCustomStyles,
         pluginURL,
         taskUploadsURL,

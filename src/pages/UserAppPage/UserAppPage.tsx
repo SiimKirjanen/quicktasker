@@ -12,7 +12,10 @@ import { Page } from "../Page/Page";
 
 function UserAppPage() {
   const {
-    state: { userPageCustomStyles: initialUserPageCustomStyles },
+    state: {
+      userPageCustomStyles: initialUserPageCustomStyles,
+      isUserAllowedToManageSettings,
+    },
     appDispatch,
   } = useContext(AppContext);
   const { userPage } = usePageLinks();
@@ -57,19 +60,25 @@ function UserAppPage() {
         <a onClick={openUserApp} href="">
           {__("Open your tasks app", "quicktasker")}
         </a>
-        <h2>{__("Custom styles", "quicktasker")}</h2>
-        <p>{__("Add custom CSS rules for user tasks page.", "quicktasker")}</p>
-        <WPQTTextarea
-          value={userPageCustomStyles}
-          onChange={setUserPageCustomStylesState}
-          colsCount={40}
-        />
-        <WPQTIconButton
-          text={__("Save", "quicktasker")}
-          loading={isSaving}
-          onClick={onSave}
-          icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
-        />
+        {isUserAllowedToManageSettings && (
+          <>
+            <h2>{__("Custom styles", "quicktasker")}</h2>
+            <p>
+              {__("Add custom CSS rules for user tasks page.", "quicktasker")}
+            </p>
+            <WPQTTextarea
+              value={userPageCustomStyles}
+              onChange={setUserPageCustomStylesState}
+              colsCount={40}
+            />
+            <WPQTIconButton
+              text={__("Save", "quicktasker")}
+              loading={isSaving}
+              onClick={onSave}
+              icon={<TfiSave className="wpqt-icon-blue wpqt-size-4" />}
+            />
+          </>
+        )}
       </div>
     </Page>
   );

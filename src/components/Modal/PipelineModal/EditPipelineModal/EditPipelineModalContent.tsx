@@ -9,6 +9,7 @@ import {
   PIPELINE_SET_PRIMARY,
 } from "../../../../constants";
 import { usePipelineActions } from "../../../../hooks/actions/usePipelineActions";
+import { useApp } from "../../../../hooks/useApp";
 import { useLoadingStates } from "../../../../hooks/useLoadingStates";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
@@ -40,6 +41,9 @@ const EditPipelineModalContent = ({ onPipelineEditSuccess }: Props) => {
   const { deletePipeline } = usePipelineActions();
   const { loading1: isDeletingBoard, setLoading1: setIsDeletingBoard } =
     useLoadingStates();
+  const {
+    state: { isUserAllowedToDelete },
+  } = useApp();
 
   const onDeletePipeline = () => {
     if (!pipelineToEdit) return;
@@ -124,6 +128,7 @@ const EditPipelineModalContent = ({ onPipelineEditSuccess }: Props) => {
                 loading={isDeletingBoard}
                 text={__("Delete board", "quicktasker")}
                 onClick={onClick}
+                disabled={!isUserAllowedToDelete}
               />
             )}
           </WPQTConfirmTooltip>
