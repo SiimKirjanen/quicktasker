@@ -61,7 +61,7 @@ function WPUserItem({ user }: Props) {
       />
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Access to admin areas", "quicktasker")}
+          {__("Access to plugin admin area", "quicktasker")}
         </div>
         <Toggle
           checked={capabilitySettings.quicktasker_admin_role}
@@ -85,7 +85,7 @@ function WPUserItem({ user }: Props) {
 
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Access to settings page", "quicktasker")}
+          {__("Access to board settings", "quicktasker")}
         </div>
         <Toggle
           checked={capabilitySettings.quicktasker_admin_role_manage_settings}
