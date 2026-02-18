@@ -14,6 +14,7 @@ import {
   OPEN_PIPELINE_IMPORT_MODAL,
   PIPELINE_SET_PRIMARY,
 } from "../../../constants";
+import { useApp } from "../../../hooks/useApp";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
@@ -31,6 +32,9 @@ function PipelineSelectionDropdown() {
     pipelinesDispatch,
   } = useContext(PipelinesContext);
   const { modalDispatch } = useContext(ModalContext);
+  const {
+    state: { isUserAllowedToManageSettings },
+  } = useApp();
 
   const changePipelinePrimary = async (pipeline: Pipeline) => {
     try {
@@ -108,24 +112,30 @@ function PipelineSelectionDropdown() {
           </MenuItem>
         );
       })}
-      <MenuItem key="new-pipeline">
-        <div className="wpqt-my-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2">
-          <WPQTIconButton
-            text={__("Add new board", "quicktasker")}
-            onClick={openPipelineModal}
-            icon={<PlusCircleIcon className="wpqt-size-6 wpqt-icon-green" />}
-            className="wpqt-bg-white hover:!wpqt-bg-gray-100"
-          />
-        </div>
-      </MenuItem>
-      <MenuItem key="export-pipeline">
-        <div
-          className="wpqt-flex wpqt-gap-1 wpqt-justify-center wpqt-cursor-pointer wpqt-blue-text wpqt-blue-text-hover"
-          onClick={openPipelineImportModal}
-        >
-          {__("Import existing", "quicktasker")}
-        </div>
-      </MenuItem>
+      {isUserAllowedToManageSettings && (
+        <>
+          <MenuItem key="new-pipeline">
+            <div className="wpqt-my-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2">
+              <WPQTIconButton
+                text={__("Add new board", "quicktasker")}
+                onClick={openPipelineModal}
+                icon={
+                  <PlusCircleIcon className="wpqt-size-6 wpqt-icon-green" />
+                }
+                className="wpqt-bg-white hover:!wpqt-bg-gray-100"
+              />
+            </div>
+          </MenuItem>
+          <MenuItem key="export-pipeline">
+            <div
+              className="wpqt-flex wpqt-gap-1 wpqt-justify-center wpqt-cursor-pointer wpqt-blue-text wpqt-blue-text-hover"
+              onClick={openPipelineImportModal}
+            >
+              {__("Import existing", "quicktasker")}
+            </div>
+          </MenuItem>
+        </>
+      )}
     </WPQTDropdown>
   );
 }

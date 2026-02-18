@@ -27,7 +27,7 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
          * @return bool True if the user has the required permissions, false otherwise.
          */
         public static function hasRequiredPermissionsForPrivateAPIDeleteEndpoints() {
-            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE );
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE ) && self::hasRequiredPermissionsForPrivateAPI();
         }
 
         /**
@@ -39,7 +39,7 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
          * @return bool True if the user has the required permissions, false otherwise.
          */
         public static function hasRequiredParmissionsForPrivateAPIUsersEndpoints() {
-            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS );
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS ) && self::hasRequiredPermissionsForPrivateAPI();
         }
         
         /**
@@ -51,7 +51,7 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
          * @return bool True if the current user has the required permissions, false otherwise.
          */
         public static function hasRequiredPermissionsForPrivateAPISettingsEndpoints() {
-            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS );
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS ) && self::hasRequiredPermissionsForPrivateAPI();
         }
 
         /**
@@ -63,7 +63,7 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
          * @return bool True if the user has the required permissions, false otherwise.
          */
         public static function hasRequiredPermissionsForPrivateAPIArchiveEndpoints() {
-            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE );
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE ) && self::hasRequiredPermissionsForPrivateAPI();
         }
 
         /**
@@ -87,7 +87,7 @@ if ( ! class_exists( 'WPQT\Permission\PermissionService' ) ) {
             * @return bool True if the user has the required permissions, false otherwise.
             */
         public static function hasRequiredPermissionsForManagingQuickTaskerSessions() {
-            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS );
+            return current_user_can( WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS ) && self::hasRequiredPermissionsForPrivateAPI();
         }
 
         /**

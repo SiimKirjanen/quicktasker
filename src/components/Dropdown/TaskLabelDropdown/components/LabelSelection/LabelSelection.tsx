@@ -1,4 +1,8 @@
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  PencilSquareIcon,
+  TagIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
@@ -7,7 +11,6 @@ import {
 } from "../../../../../constants";
 import { LabelContext } from "../../../../../providers/LabelsContextProvider";
 import { Label, SelectionLabel } from "../../../../../types/label";
-import { ButtonStyleType, WPQTButton } from "../../../../common/Button/Button";
 import { WPQTIconButton } from "../../../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTOnlyIconBtn } from "../../../../common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn";
 import { WPQTTag } from "../../../../common/Tag/Tag";
@@ -63,13 +66,13 @@ function LabelSelection({
         ))
       )}
       <div className="wpqt-flex wpqt-gap-2 wpqt-justify-end">
-        <WPQTButton
-          btnText={__("Create new label", "quicktasker")}
-          className="wpqt-mt-3"
-          buttonStyleType={ButtonStyleType.PRIMARY}
+        <WPQTIconButton
           onClick={() => {
             labelDispatch({ type: SET_LABEL_ACTION_STATE_CREATION });
           }}
+          className="wpqt-mt-3"
+          icon={<TagIcon className="wpqt-text-blue-400 wpqt-size-5" />}
+          text={__("Create new label", "quicktasker")}
         />
       </div>
     </div>

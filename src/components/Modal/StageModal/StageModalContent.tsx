@@ -72,6 +72,8 @@ const StageModalContent = forwardRef(
               isAutoFocus={true}
               value={stageName}
               onChange={(newValue: string) => setStageName(newValue)}
+              className="wpqt-w-full"
+              wrapperClassName="wpqt-w-full"
             />
           </WPQTModalField>
           <WPQTModalField label={__("Description", "quicktasker")}>
@@ -79,6 +81,7 @@ const StageModalContent = forwardRef(
               rowsCount={3}
               value={stageDescription}
               onChange={(newValue: string) => setStageDescription(newValue)}
+              className="!wpqt-w-full"
             />
           </WPQTModalField>
         </WPQTModalFieldSet>

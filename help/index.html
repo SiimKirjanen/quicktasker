@@ -52,7 +52,7 @@
 			<li><a href="#task">Task</a></li>
 			<li><a href="#archive">Archive</a></li>
 			<li><a href="#users">Users</a></li>
-			<li><a href="#user-page">User page app</a></li>
+			<li><a href="#user-page">Tasks page</a></li>
 			<li><a href="#user-sessions">Quicktasker user sessions</a></li>
 			<li><a href="#logs">Logs</a></li>
 			<li><a href="#settings">Settings</a></li>
@@ -62,16 +62,16 @@
 		<hr>
 
 		<h3 id="admin-area"><strong>A) Admin areas</strong> - <a href="#toc">top</a></h3>
-		<p>This plugin provides admin areas accessible to WordPress users who have the required permissions. In the admin areas, users can manage boards, tasks, users, settings etc. Currently there are 6 permissions a WordPress user can have and admins have all of them by default.</p>
+		<p>This plugin provides admin areas accessible to WordPress users who have the required permissions. In the admin areas, users can manage boards, tasks, users etc. Currently there are 7 permissions a WordPress user can have and admins have all of them by default.</p>
 
 		<strong>quicktasker_admin_role</strong>
-		<p>Provides access to admin areas and allows to view, create and modify resources.</p>
+		<p>Provides access to admin areas.</p>
 
 		<strong>quicktasker_admin_role_manage_users</strong>
 		<p>Provides access to manage users.</p>
 
 		<strong>quicktasker_admin_role_manage_settings</strong>
-		<p>Provides access to manage settings.</p>
+		<p>Provides access to manage settings (boards, stages, automations, webhooks).</p>
 
 		<strong>quicktasker_admin_role_manage_archive</strong>
 		<p>Provides access to archive.</p>
@@ -80,7 +80,7 @@
 		<p>Provides access to delete resources.</p>
 
 		<strong>quicktasker_access_user_page_app</strong>
-		<p>Provides access to user page app.</p>
+		<p>Provides access to tasks app.</p>
 
 		<strong>quicktasker_admin_role_manage_quicktasker_sessions</strong>
 		<p>Provides access to Quicktasker sessions page to manage QuickTasker type user sessions.</p>
@@ -98,6 +98,7 @@
 			<li>Change board name and description</li>
 			<li>Delete the board</li>
 			<li>Manage board wide custom fields that will be added to all board tasks</li>
+			<li>Manage board wide settings</li>
 		</ul>
 
 		<p>The board can also be viewed in <strong>task view</strong>, which is more suitable if you need to filter tasks on the board.</p>
@@ -129,7 +130,7 @@
 		<p><strong>Assigning Users:</strong> Tasks can be assigned to users, allowing you to delegate responsibilities and track who is working on what. This helps in managing workloads and ensuring accountability.</p>
 		<p><strong>Marking Tasks as Completed:</strong> Once a task is finished, you can mark it as completed. This helps in tracking progress and ensuring that nothing is overlooked.</p>
 		<p><strong>Custom Fields:</strong> You can add custom fields to tasks to capture additional information specific to your workflow. This flexibility allows you to tailor the task details to your project's unique requirements.</p>
-		<p><strong>Comments and Logs:</strong> Each task supports both private and public comments, enabling team members to communicate and collaborate effectively. Additionally, you can view logs related to the task to track changes and updates over time.</p>
+		<p><strong>Comments and Logs:</strong> Each task supports both <em>private</em> and <em>public</em> comments. <strong>Private comments</strong> are only visible and can be written in the admin areas, making them ideal for internal team discussions or notes. <strong>Public comments</strong> can be seen and written by users in the tasks app, allowing for open communication and collaboration with all users involved in the task. Additionally, you can view logs related to the task to track changes and updates over time.</p>
 		<hr>
 
 		<h3 id="archive"><strong>D) Archive</strong> - <a href="#toc">top</a></h3>
@@ -153,16 +154,16 @@
 		
 		<hr>
 		
-		<h3 id="user-page"><strong>F) User page app</strong> - <a href="#toc">top</a></h3>
+		<h3 id="user-page"><strong>F) Tasks app</strong> - <a href="#toc">top</a></h3>
 		
-		<p>Each QuickTasker and WordPress user has their own mobile-like user page. On this page, users can manage their tasks and collaborate with their team effectively.</p>
+		<p>Each QuickTasker and WordPress user can have access to tasks app. On this app, users can manage their tasks and collaborate with their team effectively.</p>
 		<div class="img-container">
-			<img src="assets/images/user-page.png" alt="Quicktasker user home page" />
-			<figcaption class="text-center">Quicktasker user home page</figcaption> <br /><br />
-			<img src="assets/images/user-page3.png" alt="Quicktasker user assigned tasks" />
-			<figcaption class="text-center">Quicktasker user assigned tasks</figcaption><br /><br />
-			<img src="assets/images/user-page2.png" alt="Quicktasker user task page" />
-			<figcaption class="text-center">Quicktasker user task page</figcaption><br /><br />
+			<img src="assets/images/user-page.png" alt="Tasks app home page" />
+			<figcaption class="text-center">Tasks app home page</figcaption> <br /><br />
+			<img src="assets/images/user-page3.png" alt="Tasks app assigned tasks" />
+			<figcaption class="text-center">Tasks app assigned tasks</figcaption><br /><br />
+			<img src="assets/images/user-page2.png" alt="Tasks app task page" />
+			<figcaption class="text-center">Tasks app assigned task details page</figcaption><br /><br />
 		</div>
 		
 		

@@ -12,6 +12,7 @@ import {
   OPEN_EDIT_PIPELINE_MODAL,
   PIPELINE_TOGGLE_VIEW,
 } from "../../../../constants";
+import { useApp } from "../../../../hooks/useApp";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { PipelineView } from "../../../../types/pipeline";
@@ -24,6 +25,9 @@ function PipelineHeader() {
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
   const { modalDispatch } = useContext(ModalContext);
+  const {
+    state: { isUserAllowedToManageSettings },
+  } = useApp();
 
   const openEditPipelineModal = () => {
     if (!activePipeline) {
@@ -48,15 +52,17 @@ function PipelineHeader() {
           <div className="wpqt-text-lg wpqt-font-semibold">
             {activePipeline.name}
           </div>
-          <div
-            className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-group"
-            onClick={openEditPipelineModal}
-          >
-            <Cog8ToothIcon className="wpqt-text-blue-400 wpqt-size-6 group-hover:wpqt-text-blue-600" />
-            <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-              {__("Settings", "quicktasker")}
-            </span>
-          </div>
+          {isUserAllowedToManageSettings && (
+            <div
+              className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-group"
+              onClick={openEditPipelineModal}
+            >
+              <Cog8ToothIcon className="wpqt-text-blue-400 wpqt-size-6 group-hover:wpqt-text-blue-600" />
+              <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                {__("Settings", "quicktasker")}
+              </span>
+            </div>
+          )}
         </div>
         {activePipeline.description && (
           <div className="wpqt-italic">{activePipeline.description}</div>
@@ -64,7 +70,7 @@ function PipelineHeader() {
       </div>
 
       <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-3">
-        <BoardOptionsSelection />
+        {isUserAllowedToManageSettings && <BoardOptionsSelection />}
         <TaskExportSelection />
         <PipelineModeSelector />
         {loading ? (

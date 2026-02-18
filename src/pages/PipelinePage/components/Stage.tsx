@@ -1,5 +1,6 @@
 import { Droppable } from "@hello-pangea/dnd";
 import { StageControlsDropdown } from "../../../components/Dropdown/StageControlsDropdown/StageControlsDropdown";
+import { useApp } from "../../../hooks/useApp";
 import { Stage } from "../../../types/stage";
 import { Task } from "../../../types/task";
 import { AddTask } from "./AddTask";
@@ -21,6 +22,10 @@ function TaskCount({ tasks }: { tasks: Task[] | undefined }) {
 }
 
 function Stage({ stage, isLastStage }: Props) {
+  const {
+    state: { isUserAllowedToManageSettings },
+  } = useApp();
+
   return (
     <div
       data-stage-id={stage.id}
@@ -30,7 +35,9 @@ function Stage({ stage, isLastStage }: Props) {
         <div className="wpqt-mr-auto wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-text-base wpqt-leading-none">
           {stage.name} <TaskCount tasks={stage.tasks} />
         </div>
-        <StageControlsDropdown stage={stage} />
+        {isUserAllowedToManageSettings && (
+          <StageControlsDropdown stage={stage} />
+        )}
         {stage.description && (
           <div className="wpqt-w-full wpqt-flex-shrink-0 wpqt-flex-grow-0 wpqt-text-sm">
             {stage.description}

@@ -61,7 +61,7 @@ function WPUserItem({ user }: Props) {
       />
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Access to admin areas", "quicktasker")}
+          {__("Access to plugin admin area", "quicktasker")}
         </div>
         <Toggle
           checked={capabilitySettings.quicktasker_admin_role}
@@ -73,7 +73,7 @@ function WPUserItem({ user }: Props) {
 
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Access to users page", "quicktasker")}
+          {__("Access to user management", "quicktasker")}
         </div>
         <Toggle
           checked={capabilitySettings.quicktasker_admin_role_manage_users}
@@ -85,7 +85,10 @@ function WPUserItem({ user }: Props) {
 
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Access to settings page", "quicktasker")}
+          {__(
+            "Access to manage settings (boards, stages, automations, webhooks)",
+            "quicktasker",
+          )}
         </div>
         <Toggle
           checked={capabilitySettings.quicktasker_admin_role_manage_settings}
@@ -121,7 +124,7 @@ function WPUserItem({ user }: Props) {
 
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Allow access to user page app", "quicktasker")}
+          {__("Allow access to user tasks app", "quicktasker")}
         </div>
         <Toggle
           checked={capabilitySettings.quicktasker_access_user_page_app}

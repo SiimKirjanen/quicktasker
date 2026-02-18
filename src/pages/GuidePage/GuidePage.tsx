@@ -46,11 +46,11 @@ const GuidePage = () => {
             GitHub
           </a>
         </p>
-        <div className="wpqt-flex wpqt-justify-center">
+        <div>
           <img
-            src={pluginURL + "img/old-banner-big.png"}
+            src={pluginURL + "img/old-banner-icon.jpg"}
             alt="QuickTasker"
-            className="wpqt-max-w-[1000px] wpqt-w-full wpqt-h-auto"
+            className="wpqt-max-w-[600px] wpqt-w-full"
           />
         </div>
       </div>

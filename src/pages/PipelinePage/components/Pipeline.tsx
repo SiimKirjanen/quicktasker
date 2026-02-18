@@ -19,6 +19,7 @@ import {
   PIPELINE_MOVE_TASK,
   REFETCH_ACTIVE_PIPELINE_INTERVAL,
 } from "../../../constants";
+import { useApp } from "../../../hooks/useApp";
 import useTabVisibility from "../../../hooks/useTabVisibility";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -34,6 +35,9 @@ const Pipeline = () => {
   } = useContext(ActivePipelineContext);
   const { isTabVisible } = useTabVisibility();
   const { modalDispatch } = useContext(ModalContext);
+  const {
+    state: { isUserAllowedToManageSettings },
+  } = useApp();
 
   useEffect(() => {
     const refetchDataInterval = setInterval(() => {
@@ -142,10 +146,12 @@ const Pipeline = () => {
           );
         })}
       </DragDropContext>
-      <AddStage
-        pipelineId={activePipeline.id}
-        stagesLength={activePipeline!.stages?.length}
-      />
+      {isUserAllowedToManageSettings && (
+        <AddStage
+          pipelineId={activePipeline.id}
+          stagesLength={activePipeline!.stages?.length}
+        />
+      )}
       <TaskModal deleteTaskCallback={deleteTaskCallback} />
       <TaskColorModal />
       <StageModal />
