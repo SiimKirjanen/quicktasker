@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { PIPELINE_TOGGLE_VIEW } from "../../../../constants";
+import * as useAppModule from "../../../../hooks/useApp";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import {
   ModalContext,
@@ -21,6 +22,9 @@ jest.mock("./components/TaskExportSelection/TaskExportSelection", () => ({
 }));
 jest.mock("../../../../components/Loading/Loading", () => ({
   LoadingOval: () => <div data-testid="loading" />,
+}));
+jest.mock("./components/BoardOptionsSelection/BoardOptionsSelection", () => ({
+  BoardOptionsSelection: () => <div data-testid="board-options-selection" />,
 }));
 
 describe("PipelineHeader", () => {
@@ -71,7 +75,28 @@ describe("PipelineHeader", () => {
     automationLogsModalSettings: { automationId: null },
   };
 
-  function renderWithProviders(ctxOverrides = {}, modalOverrides = {}) {
+  function renderWithProviders(
+    ctxOverrides = {},
+    modalOverrides = {},
+    appOverrides = {},
+  ) {
+    // Default: user is allowed to manage settings
+    const defaultAppState = {
+      siteURL: "",
+      pluginURL: "",
+      publicUserPageId: "",
+      is_customFields: true,
+      timezone: "",
+      isUserAllowedToDelete: false,
+      isUserAllowedToManageSettings: true,
+      userPageCustomStyles: "",
+      taskUploadsURL: "",
+      ...appOverrides,
+    };
+    jest.spyOn(useAppModule, "useApp").mockReturnValue({
+      state: defaultAppState,
+      appDispatch: jest.fn(),
+    });
     return render(
       <ActivePipelineContext.Provider
         value={{
@@ -104,11 +129,19 @@ describe("PipelineHeader", () => {
     expect(screen.getByText("A pipeline")).toBeInTheDocument();
   });
 
-  it("renders export, mode selector, refresh, and dropdown", () => {
+  it("renders export, board options, mode selector, refresh, and dropdown when allowed", () => {
     renderWithProviders();
     expect(screen.getByTestId("export-selection")).toBeInTheDocument();
     expect(screen.getByTestId("dropdown")).toBeInTheDocument();
     expect(screen.getByTestId("refresh-icon")).toBeInTheDocument();
+    expect(screen.getByTestId("board-options-selection")).toBeInTheDocument();
+  });
+
+  it("does not render board options when user is not allowed to manage settings", () => {
+    renderWithProviders({}, {}, { isUserAllowedToManageSettings: false });
+    expect(
+      screen.queryByTestId("board-options-selection"),
+    ).not.toBeInTheDocument();
   });
 
   it("calls fetchAndSetPipelineData when refresh icon is clicked", () => {
@@ -121,8 +154,10 @@ describe("PipelineHeader", () => {
   it("calls modalDispatch when edit icon is clicked", () => {
     renderWithProviders();
     // Find the edit icon by class
-    const editIcon = Array.from(document.querySelectorAll("svg")).find((el) =>
-      el.classList.contains("wpqt-text-blue-400"),
+    const editIcon = Array.from(document.querySelectorAll("svg")).find(
+      (el) =>
+        el.classList.contains("wpqt-text-blue-400") &&
+        el.parentElement?.textContent?.includes("Settings"),
     );
     expect(editIcon).toBeTruthy();
     fireEvent.click(editIcon!);
