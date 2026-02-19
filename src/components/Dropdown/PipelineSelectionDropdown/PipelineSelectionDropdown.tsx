@@ -15,18 +15,23 @@ import {
   PIPELINE_SET_PRIMARY,
 } from "../../../constants";
 import { useApp } from "../../../hooks/useApp";
-import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTDropdown } from "../WPQTDropdown";
 
-function PipelineSelectionDropdown() {
-  const {
-    state: { activePipeline },
-    fetchAndSetPipelineData,
-  } = useContext(ActivePipelineContext);
+type Props = {
+  activePipeline: Pipeline | null;
+  enableActions?: boolean;
+  onPipelineClick: (pipelineId: string) => void;
+};
+
+function PipelineSelectionDropdown({
+  activePipeline,
+  enableActions = true,
+  onPipelineClick,
+}: Props) {
   const {
     state: { pipelines },
     pipelinesDispatch,
@@ -91,28 +96,30 @@ function PipelineSelectionDropdown() {
                 className={clsx("wpqt-cursor-pointer wpqt-text-center", {
                   "wpqt-font-bold": isCurrentPipeline,
                 })}
-                onClick={() => fetchAndSetPipelineData(existingPipeline.id)}
+                onClick={() => onPipelineClick(existingPipeline.id)}
               >
                 {existingPipeline.name}
               </div>
-              <div className="wpqt-ml-auto">
-                {isPrimary ? (
-                  <StarIcon className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-blue-500" />
-                ) : (
-                  <StarIconOutline
-                    className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-gray-400"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      changePipelinePrimary(existingPipeline);
-                    }}
-                  />
-                )}
-              </div>
+              {enableActions && (
+                <div className="wpqt-ml-auto">
+                  {isPrimary ? (
+                    <StarIcon className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-blue-500" />
+                  ) : (
+                    <StarIconOutline
+                      className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-gray-400"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changePipelinePrimary(existingPipeline);
+                      }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </MenuItem>
         );
       })}
-      {isUserAllowedToManageSettings && (
+      {isUserAllowedToManageSettings && enableActions && (
         <>
           <MenuItem key="new-pipeline">
             <div className="wpqt-my-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2">

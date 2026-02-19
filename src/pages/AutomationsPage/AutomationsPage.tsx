@@ -1,9 +1,12 @@
 import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 
+import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Loading } from "../../components/Loading/Loading";
 import { AutomationLogsModal } from "../../components/Modal/AutomationLogsModal/AutomationLogsModal";
 import { useAutomations } from "../../hooks/useAutomations";
+import { useNavigation } from "../../hooks/useNavigation";
+import { usePipelines } from "../../hooks/usePipelines";
 import { PipelineAutomationsContextProvider } from "../../providers/PipelineAutomationsContextProvider";
 import { Page } from "../Page/Page";
 import { AutomationCreator } from "./components/AutomationCreator/AutomationCreator";
@@ -35,6 +38,11 @@ function AutomationsPageContent({ pipelineId }: Props) {
 }
 
 function AutomationsPage({ pipelineId }: Props) {
+  const { pipelines } = usePipelines();
+  const { navigatePage } = useNavigation();
+  const activePipeline =
+    pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
+
   return (
     <PipelineAutomationsContextProvider pipelineId={pipelineId}>
       <Page>
@@ -43,6 +51,15 @@ function AutomationsPage({ pipelineId }: Props) {
             "Set up automated processes to help manage your board.",
             "quicktasker",
           )}
+          rightSideContent={
+            <PipelineSelectionDropdown
+              activePipeline={activePipeline}
+              enableActions={false}
+              onPipelineClick={(id) => {
+                navigatePage(`#/board/${id}/automations`);
+              }}
+            />
+          }
         >
           {__("Board automations", "quicktasker")}
         </WPQTPageHeader>

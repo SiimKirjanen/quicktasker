@@ -126,6 +126,7 @@ function useActivePipeline() {
     isTaskOnLastStage,
     stageOptions,
     activePipelineId,
+    activePipeline,
   };
 }
 

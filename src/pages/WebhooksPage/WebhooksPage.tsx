@@ -1,7 +1,10 @@
 import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Loading } from "../../components/Loading/Loading";
 import { WebhookLogsModal } from "../../components/Modal/WebhookLogsModal/WebhookLogsModal";
+import { useNavigation } from "../../hooks/useNavigation";
+import { usePipelines } from "../../hooks/usePipelines";
 import { useWebhooks } from "../../hooks/useWebhooks";
 import { PipelineWebhooksContextProvider } from "../../providers/PipelineWebhooksContextProvider";
 import { Page } from "../Page/Page";
@@ -33,6 +36,12 @@ function WebhooksPageContent({ pipelineId }: Props) {
 }
 
 function WebhooksPage({ pipelineId }: Props) {
+  console.log(pipelineId);
+  const { pipelines } = usePipelines();
+  const { navigatePage } = useNavigation();
+  const activePipeline =
+    pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
+
   return (
     <PipelineWebhooksContextProvider pipelineId={pipelineId}>
       <Page>
@@ -41,6 +50,15 @@ function WebhooksPage({ pipelineId }: Props) {
             "Send real-time board event data to external services using webhooks.",
             "quicktasker",
           )}
+          rightSideContent={
+            <PipelineSelectionDropdown
+              activePipeline={activePipeline}
+              enableActions={false}
+              onPipelineClick={(id) => {
+                navigatePage(`#/board/${id}/webhooks`);
+              }}
+            />
+          }
         >
           {__("Board webhooks", "quicktasker")}
         </WPQTPageHeader>
