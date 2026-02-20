@@ -24,7 +24,14 @@ jest.mock("../../../../components/Loading/Loading", () => ({
   LoadingOval: () => <div data-testid="loading" />,
 }));
 jest.mock("./components/BoardOptionsSelection/BoardOptionsSelection", () => ({
-  BoardOptionsSelection: () => <div data-testid="board-options-selection" />,
+  BoardOptionsSelection: () => (
+    <>
+      <div>Settings</div>
+      <div>Automations</div>
+      <div>Webhooks</div>
+      <div data-testid="board-options-selection" />
+    </>
+  ),
 }));
 
 describe("PipelineHeader", () => {
@@ -135,6 +142,9 @@ describe("PipelineHeader", () => {
     expect(screen.getByTestId("dropdown")).toBeInTheDocument();
     expect(screen.getByTestId("refresh-icon")).toBeInTheDocument();
     expect(screen.getByTestId("board-options-selection")).toBeInTheDocument();
+    expect(screen.getByText("Settings")).toBeInTheDocument();
+    expect(screen.getByText("Automations")).toBeInTheDocument();
+    expect(screen.getByText("Webhooks")).toBeInTheDocument();
   });
 
   it("does not render board options when user is not allowed to manage settings", () => {
@@ -149,22 +159,6 @@ describe("PipelineHeader", () => {
     const refreshIcon = screen.getByTestId("refresh-icon");
     fireEvent.click(refreshIcon);
     expect(fetchAndSetPipelineData).toHaveBeenCalledWith("1");
-  });
-
-  it("calls modalDispatch when edit icon is clicked", () => {
-    renderWithProviders();
-    // Find the edit icon by class
-    const editIcon = Array.from(document.querySelectorAll("svg")).find(
-      (el) =>
-        el.classList.contains("wpqt-text-blue-400") &&
-        el.parentElement?.textContent?.includes("Settings"),
-    );
-    expect(editIcon).toBeTruthy();
-    fireEvent.click(editIcon!);
-    expect(modalDispatch).toHaveBeenCalledWith({
-      type: "OPEN_EDIT_PIPELINE_MODAL",
-      payload: { pipelineToEdit: activePipeline },
-    });
   });
 
   it("toggles view when PipelineModeSelector is clicked", () => {

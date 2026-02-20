@@ -102,7 +102,7 @@ const PipelineWebhooksContextProvider = ({
 
   useEffect(() => {
     loadWebhooks();
-  }, []);
+  }, [pipelineId]);
 
   return (
     <PipelineWebhooksContext.Provider

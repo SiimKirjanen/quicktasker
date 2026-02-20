@@ -1,6 +1,5 @@
 import {
   ArrowPathIcon,
-  Cog8ToothIcon,
   RectangleStackIcon,
   ViewColumnsIcon,
 } from "@heroicons/react/24/outline";
@@ -8,13 +7,9 @@ import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { PipelineSelectionDropdown } from "../../../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { LoadingOval } from "../../../../components/Loading/Loading";
-import {
-  OPEN_EDIT_PIPELINE_MODAL,
-  PIPELINE_TOGGLE_VIEW,
-} from "../../../../constants";
+import { PIPELINE_TOGGLE_VIEW } from "../../../../constants";
 import { useApp } from "../../../../hooks/useApp";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
-import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { PipelineView } from "../../../../types/pipeline";
 import { BoardOptionsSelection } from "./components/BoardOptionsSelection/BoardOptionsSelection";
 import { TaskExportSelection } from "./components/TaskExportSelection/TaskExportSelection";
@@ -24,22 +19,9 @@ function PipelineHeader() {
     state: { activePipeline, loading },
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
-  const { modalDispatch } = useContext(ModalContext);
   const {
     state: { isUserAllowedToManageSettings },
   } = useApp();
-
-  const openEditPipelineModal = () => {
-    if (!activePipeline) {
-      return;
-    }
-    modalDispatch({
-      type: OPEN_EDIT_PIPELINE_MODAL,
-      payload: {
-        pipelineToEdit: activePipeline,
-      },
-    });
-  };
 
   if (!activePipeline) {
     return null;
@@ -52,17 +34,6 @@ function PipelineHeader() {
           <div className="wpqt-text-lg wpqt-font-semibold">
             {activePipeline.name}
           </div>
-          {isUserAllowedToManageSettings && (
-            <div
-              className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-group"
-              onClick={openEditPipelineModal}
-            >
-              <Cog8ToothIcon className="wpqt-text-blue-400 wpqt-size-6 group-hover:wpqt-text-blue-600" />
-              <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-                {__("Settings", "quicktasker")}
-              </span>
-            </div>
-          )}
         </div>
         {activePipeline.description && (
           <div className="wpqt-italic">{activePipeline.description}</div>
@@ -83,7 +54,10 @@ function PipelineHeader() {
           />
         )}
 
-        <PipelineSelectionDropdown />
+        <PipelineSelectionDropdown
+          activePipeline={activePipeline}
+          onPipelineClick={(pipelineId) => fetchAndSetPipelineData(pipelineId)}
+        />
       </div>
     </div>
   );

@@ -101,7 +101,7 @@ const PipelineAutomationsContextProvider = ({
 
   useEffect(() => {
     loadAutomations();
-  }, []);
+  }, [pipelineId]);
 
   return (
     <PipelineAutomationsContext.Provider
