@@ -316,6 +316,176 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
             ),
         );
 
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/api-tokens',
+            array(
+                'methods' => 'GET',
+                'callback' => function( $data ) {
+                    try {
+                        $tokenRepo = ServiceLocator::get('ApiTokenRepository');
+                        $tokens = $tokenRepo->getPipelineTokensForFrontend($data['id']);
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), $tokens))->toArray(), 200);
+                  
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/api-tokens',
+            array(
+                'methods' => 'POST',
+                'callback' => function( $data ) {
+                    try {
+                        $apiTokenData = ServiceLocator::get('ApiTokenService')->generateApiToken(array(
+                            'name' => $data['name'],
+                            'description' => $data['description'],
+                            'pipeline_id' => $data['id'],
+                            'get_pipeline' => $data['get_pipeline'],
+                            'patch_pipeline' => $data['patch_pipeline'],
+                            'get_pipeline_stages' => $data['get_pipeline_stages'],
+                            'post_pipeline_stages' => $data['post_pipeline_stages'],
+                            'patch_pipeline_stages' => $data['patch_pipeline_stages'],
+                            'delete_pipeline_stages' => $data['delete_pipeline_stages'],
+                            'get_pipeline_tasks' => $data['get_pipeline_tasks'],
+                            'post_pipeline_tasks' => $data['post_pipeline_tasks'],
+                            'patch_pipeline_tasks' => $data['patch_pipeline_tasks'],
+                            'delete_pipeline_tasks' => $data['delete_pipeline_tasks'],
+                        ));
+
+                        $dbToken = (array) $apiTokenData['db_token'];
+                        $dbToken['token'] = $apiTokenData['token'];
+
+                        return new WP_REST_Response((new ApiResponse(true, array(), $dbToken))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'name' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'description' => array(
+                        'required' => false,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateStringParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeStringParam'),
+                    ),
+                    'get_pipeline' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'patch_pipeline' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'get_pipeline_stages' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'post_pipeline_stages' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'patch_pipeline_stages' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'delete_pipeline_stages' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'get_pipeline_tasks' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'post_pipeline_tasks' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'patch_pipeline_tasks' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                    'delete_pipeline_tasks' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateBooleanParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeBooleanParam'),
+                    ),
+                ),
+            ),
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/api-tokens/(?P<token_id>\d+)',
+            array(
+                'methods' => 'DELETE',
+                'callback' => function( $data ) {
+                    try {
+                        $numberOfDeleted = ServiceLocator::get('ApiTokenService')->deleteApiToken($data['id'], $data['token_id']);
+
+                        if($numberOfDeleted === 0) {
+                            return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 404);
+                        }
+
+                        return new WP_REST_Response((new ApiResponse(true, array()))->toArray(), 200);
+                  
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function() {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => array(
+                    'id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                    'token_id' => array(
+                        'required' => true,
+                        'validate_callback' => array('WPQT\RequestValidation', 'validateNumericParam'),
+                        'sanitize_callback' => array('WPQT\RequestValidation', 'sanitizeAbsint'),
+                    ),
+                ),
+            ),
+        );
+
         /*
         ==================================================================================================================================================================================================================
         Task endpoints
@@ -3861,6 +4031,6 @@ if ( ! function_exists( 'wpqt_register_api_routes' ) ) {
                     ),
                 ),
             ),
-        );
+        );   
     }
 }

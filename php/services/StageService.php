@@ -1,10 +1,12 @@
 <?php
 namespace WPQT\Stage;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
 
 use WPQT\Services\ServiceLocator;
+use WPQT\StageHasTasksException;
 
 if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
     class StageService {
@@ -209,7 +211,7 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
             
             // Check if the stage has tasks
             if( count( ServiceLocator::get("TaskRepository")->getTasksByStageId($stageId) ) > 0 ) {
-                throw new \Exception('Stage has tasks. Please delete/relocate the tasks first.');
+                throw new StageHasTasksException('Stage has tasks. Please delete/relocate the tasks first.');
             }
             $stage = ServiceLocator::get("StageRepository")->getStageById($stageId);
 

@@ -12,6 +12,7 @@ type Props = {
   loading?: boolean;
   wrapperClassName?: string;
   placeholder?: string;
+  id?: string;
 };
 
 function WPQTTextarea({
@@ -24,10 +25,12 @@ function WPQTTextarea({
   loading = false,
   wrapperClassName = "",
   placeholder = "",
+  id = "",
 }: Props) {
   return (
     <div className={`wpqt-relative wpqt-mb-3 ${wrapperClassName}`}>
       <Textarea
+        id={id}
         className={clsx(
           "wpqt-border-1 wpqt-mb-3 wpqt-block wpqt-w-auto wpqt-resize-none wpqt-rounded-lg wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6",
           `focus:wpqt-shadow-none focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`,

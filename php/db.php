@@ -330,6 +330,30 @@ if ( ! function_exists( 'wpqt_set_up_db' ) ) {
 
 			dbDelta( $sql19 );
 
+			$sql20 = "CREATE TABLE " . TABLE_WP_QUICKTASKER_API_TOKENS . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				pipeline_id int(11) NOT NULL,
+				name varchar(255) NOT NULL,
+				description text,
+				token varchar(255) NOT NULL,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				updated_at datetime NOT NULL COMMENT 'UTC',
+				get_pipeline tinyint(1) DEFAULT 0,
+				patch_pipeline tinyint(1) DEFAULT 0,
+				get_pipeline_stages tinyint(1) DEFAULT 0,
+				post_pipeline_stages tinyint(1) DEFAULT 0,
+				patch_pipeline_stages tinyint(1) DEFAULT 0,
+				delete_pipeline_stages tinyint(1) DEFAULT 0,
+				get_pipeline_tasks tinyint(1) DEFAULT 0,
+				post_pipeline_tasks tinyint(1) DEFAULT 0,
+				patch_pipeline_tasks tinyint(1) DEFAULT 0,
+				delete_pipeline_tasks tinyint(1) DEFAULT 0,
+				PRIMARY KEY  (id),
+				UNIQUE KEY token (token)
+			) $charset_collate;";
+
+			dbDelta( $sql20 );
+
 			update_option( "wp_quicktasker_db_current_version", WP_QUICKTASKER_DB_VERSION );
 		}
 	}

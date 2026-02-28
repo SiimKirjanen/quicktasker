@@ -1,4 +1,5 @@
 import { useEffect, useState } from "@wordpress/element";
+import { ApiTokensPage } from "../pages/ApiTokensPage/ApiTokensPage";
 import { ArchivePage } from "../pages/ArchivePage/ArchivePage";
 import { AutomationsPage } from "../pages/AutomationsPage/AutomationsPage";
 import { GuidePage } from "../pages/GuidePage/GuidePage";
@@ -61,6 +62,12 @@ const getPageFromUrl = () => {
     if (boardWebhooksMatch) {
       const boardId = boardWebhooksMatch[1];
       return <WebhooksPage pipelineId={boardId} />;
+    }
+
+    const boardApiTokensMatch = hash.match(/^#\/board\/(\d+)\/api-tokens$/);
+    if (boardApiTokensMatch) {
+      const boardId = boardApiTokensMatch[1];
+      return <ApiTokensPage pipelineId={boardId} />;
     }
 
     switch (hash) {

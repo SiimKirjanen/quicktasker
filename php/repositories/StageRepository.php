@@ -10,7 +10,8 @@ if ( ! class_exists( 'WPQT\Stage\StageRepository' ) ) {
         /**
          * Retrieves all pipeline stages from the database.
          *
-         * @return array The array of stages retrieved from the database.
+         * @param int $pipelineId The ID of the pipeline.
+         * @return array|null Array of stage objects, empty array if no stages found, or null on database error.
          */
         public function getStagesByPipelineId($pipelineId) {
             global $wpdb;

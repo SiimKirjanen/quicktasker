@@ -1766,12 +1766,20 @@
   flex-direction: row;
 }
 
+.\!wpqt-flex-col {
+  flex-direction: column !important;
+}
+
 .wpqt-flex-col {
   flex-direction: column;
 }
 
 .wpqt-flex-wrap {
   flex-wrap: wrap;
+}
+
+.\!wpqt-items-start {
+  align-items: flex-start !important;
 }
 
 .wpqt-items-start {

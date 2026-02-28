@@ -60,7 +60,7 @@ DB constants
 */
 
 if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.50.0");
+    define('WP_QUICKTASKER_DB_VERSION', "1.51.0");
 }
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
@@ -137,6 +137,10 @@ if ( ! defined( 'TABLE_WP_QUICKTASKER_UPLOADS' ) ) {
 
 if ( ! defined( 'TABLE_WP_QUICKTASKER_WEBHOOKS' ) ) {
     define('TABLE_WP_QUICKTASKER_WEBHOOKS', $wpdb->prefix . "quicktasker_webhooks");
+}
+
+if ( ! defined( 'TABLE_WP_QUICKTASKER_API_TOKENS' ) ) {
+    define('TABLE_WP_QUICKTASKER_API_TOKENS', $wpdb->prefix . "quicktasker_api_tokens");
 }
 
 /*
@@ -892,4 +896,62 @@ if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX' ) ) {
 
 if ( ! defined( 'WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE' ) ) {
     define('WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE', 25 * 1024 * 1024);
+}
+
+/*
+==================================================================================================================================================================================================================
+Token API constants
+==================================================================================================================================================================================================================
+*/
+
+if ( ! defined( 'WP_QUICKTASKER_CACHED_API_TOKEN_PLAIN' ) ) {
+    define('WP_QUICKTASKER_CACHED_API_TOKEN_PLAIN', 'wpqt-token-plain');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CACHED_API_TOKEN_HASHED' ) ) {
+    define('WP_QUICKTASKER_CACHED_API_TOKEN_HASHED', 'wpqt-token-hashed');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_CACHED_API_DB_TOKEN' ) ) {
+    define('WP_QUICKTASKER_CACHED_API_DB_TOKEN', 'wpqt-token-db');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_GET_PIPELINE_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_GET_PIPELINE_PERMISSION', 'get_pipeline');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_PATCH_PIPELINE_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_PATCH_PIPELINE_PERMISSION', 'patch_pipeline');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_GET_PIPELINE_STAGES_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_GET_PIPELINE_STAGES_PERMISSION', 'get_pipeline_stages');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_POST_PIPELINE_STAGES_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_POST_PIPELINE_STAGES_PERMISSION', 'post_pipeline_stages');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_PATCH_PIPELINE_STAGES_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_PATCH_PIPELINE_STAGES_PERMISSION', 'patch_pipeline_stages');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION', 'delete_pipeline_stages');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_GET_PIPELINE_TASKS_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_GET_PIPELINE_TASKS_PERMISSION', 'get_pipeline_tasks');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_POST_PIPELINE_TASKS_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_POST_PIPELINE_TASKS_PERMISSION', 'post_pipeline_tasks');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_PATCH_PIPELINE_TASKS_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_PATCH_PIPELINE_TASKS_PERMISSION', 'patch_pipeline_tasks');
+}
+
+if ( ! defined( 'WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION' ) ) {
+    define('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION', 'delete_pipeline_tasks');
 }
