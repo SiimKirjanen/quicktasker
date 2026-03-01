@@ -1,14 +1,18 @@
+import React from "react";
+
 type WPQTPageHeaderProps = {
   children: string;
   description: string;
   icon?: React.ReactNode;
   rightSideContent?: React.ReactNode;
+  readMoreLink?: React.ReactNode;
 };
 function WPQTPageHeader({
   children,
   description,
   icon = null,
   rightSideContent = null,
+  readMoreLink = null,
 }: WPQTPageHeaderProps) {
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-mb-6 wpqt-mt-6 wpqt-gap-3">
@@ -21,7 +25,9 @@ function WPQTPageHeader({
           <div className="wpqt-ml-auto">{rightSideContent}</div>
         )}
       </div>
-      <div>{description}</div>
+      <div>
+        {description} {readMoreLink}
+      </div>
     </div>
   );
 }

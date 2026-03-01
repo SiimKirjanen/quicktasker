@@ -2,7 +2,9 @@ import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Loading } from "../../components/Loading/Loading";
+import { ApiTokenLogsModal } from "../../components/Modal/ApiTokenLogsModal/ApiTokenLogsModal";
 import { useApiTokens } from "../../hooks/useApiTokens";
+import { useApp } from "../../hooks/useApp";
 import { useNavigation } from "../../hooks/useNavigation";
 import { usePipelines } from "../../hooks/usePipelines";
 import { PipelineApiTokensContextProvider } from "../../providers/PipelineApiTokensContextProvider";
@@ -39,6 +41,7 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
         )}
       </p>
       <PipelineApiTokenCreator pipelineId={pipelineId} />
+      <ApiTokenLogsModal />
     </div>
   );
 }
@@ -46,6 +49,9 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
 function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
   const { pipelines } = usePipelines();
   const { navigatePage } = useNavigation();
+  const {
+    state: { pluginURL },
+  } = useApp();
   const activePipeline =
     pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
@@ -54,9 +60,18 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
       <Page>
         <WPQTPageHeader
           description={__(
-            "Manage the API tokens for this board. You can create, view, and revoke tokens that allow external applications to access this board's data.",
+            "Manage the API tokens for this board. You can create, view, and delete tokens that allow external applications to access this board's data.",
             "quicktasker",
           )}
+          readMoreLink={
+            <a
+              href={`${pluginURL}/help/index.html#api-tokens`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {__("Read more", "quicktasker")}
+            </a>
+          }
           rightSideContent={
             <PipelineSelectionDropdown
               activePipeline={activePipeline}

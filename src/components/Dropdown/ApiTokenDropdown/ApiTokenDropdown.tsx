@@ -1,9 +1,14 @@
 import { EllipsisHorizontalIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { REMOVE_PIPELINE_API_TOKEN } from "../../../constants";
+import { TbLogs } from "react-icons/tb";
+import {
+  OPEN_API_TOKEN_LOGS_MODAL,
+  REMOVE_PIPELINE_API_TOKEN,
+} from "../../../constants";
 import { useApiTokenActions } from "../../../hooks/actions/useApiTokenActions";
 import { useApiTokens } from "../../../hooks/useApiTokens";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
   WPQTDropdown,
@@ -18,6 +23,7 @@ function ApiTokenDropdown({ tokenId }: Props) {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const { deleteApiToken } = useApiTokenActions();
   const { activePipelineId, pipelineApiTokensDispatch } = useApiTokens();
+  const { modalDispatch } = useContext(ModalContext);
 
   return (
     <WPQTDropdown
@@ -28,6 +34,16 @@ function ApiTokenDropdown({ tokenId }: Props) {
         />
       )}
     >
+      <WPQTDropdownItem
+        text={__("View logs", "quicktasker")}
+        icon={<TbLogs className="wpqt-icon-blue wpqt-size-5" />}
+        onClick={() =>
+          modalDispatch({
+            type: OPEN_API_TOKEN_LOGS_MODAL,
+            payload: { apiTokenId: tokenId },
+          })
+        }
+      />
       <WPQTConfirmTooltip
         onConfirm={async () => {
           if (!activePipelineId) return;
@@ -54,7 +70,6 @@ function ApiTokenDropdown({ tokenId }: Props) {
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
             loading={deleteLoading}
             onClick={onClick}
-            className="!wpqt-mb-0"
           />
         )}
       </WPQTConfirmTooltip>

@@ -71,9 +71,21 @@ function wpqt_register_token_api_routes() {
 
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $paramsToUpdate = wpqtBuildParamsFromRequest($request, ['name', 'description']);
                 $updatedPipeline = ServiceLocator::get('PipelineService')->editPipeline($cachedDbToken->pipeline_id, $paramsToUpdate);
-                
+
+                ServiceLocator::get('LogService')->log(
+                    "Board {$updatedPipeline->name} edited by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type' => WP_QT_LOG_TYPE_PIPELINE,
+                        'type_id' => $updatedPipeline->id,
+                        'pipeline_id' => $updatedPipeline->id,
+                        'created_by' => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
+            
                 $wpdb->query('COMMIT');
 
                 return $responseService->createTokenApiResponse(true, 200, [
@@ -144,8 +156,20 @@ function wpqt_register_token_api_routes() {
                 
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $stageData = wpqtBuildParamsFromRequest($request, ['name', 'description']);
                 $stage = ServiceLocator::get('StageService')->createStage($cachedDbToken->pipeline_id, $stageData);
+
+                ServiceLocator::get('LogService')->log(
+                    "Board stage {$stage->name} created by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type' => WP_QT_LOG_TYPE_PIPELINE,
+                        'type_id' => $cachedDbToken->pipeline_id,
+                        'pipeline_id' => $cachedDbToken->pipeline_id,
+                        'created_by' => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
             
                 $wpdb->query('COMMIT');
 
@@ -186,6 +210,7 @@ function wpqt_register_token_api_routes() {
 
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $stageData = wpqtBuildParamsFromRequest($request, ['name', 'description']);
                 $stage = ServiceLocator::get('StageRepository')->getStageById($request->get_param('stage_id'));
 
@@ -196,6 +221,17 @@ function wpqt_register_token_api_routes() {
                 }
 
                 $editedStage = ServiceLocator::get('StageService')->editStage($request->get_param('stage_id'), $stageData, $cachedDbToken->pipeline_id);
+
+                ServiceLocator::get('LogService')->log(
+                    "Board stage {$stage->name} edited by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type' => WP_QT_LOG_TYPE_PIPELINE,
+                        'type_id' => $cachedDbToken->pipeline_id,
+                        'pipeline_id' => $cachedDbToken->pipeline_id,
+                        'created_by' => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
             
                 $wpdb->query('COMMIT');
 
@@ -241,6 +277,7 @@ function wpqt_register_token_api_routes() {
 
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $stage = ServiceLocator::get('StageRepository')->getStageById($request->get_param('stage_id'));
 
                 if (!$stage || $stage->pipeline_id !== $cachedDbToken->pipeline_id) {
@@ -250,6 +287,16 @@ function wpqt_register_token_api_routes() {
                 }
                
                 ServiceLocator::get('StageService')->deleteStage($request->get_param('stage_id'));
+                ServiceLocator::get('LogService')->log(
+                    "Board stage {$stage->name} deleted by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type' => WP_QT_LOG_TYPE_PIPELINE,
+                        'type_id' => $cachedDbToken->pipeline_id,
+                        'pipeline_id' => $cachedDbToken->pipeline_id,
+                        'created_by' => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
 
                 $wpdb->query('COMMIT');
 
@@ -316,6 +363,7 @@ function wpqt_register_token_api_routes() {
                 
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $automationService = ServiceLocator::get('AutomationService');
                 $webhookService = ServiceLocator::get('WebhookService');
                 $taskData = array_merge(
@@ -324,6 +372,17 @@ function wpqt_register_token_api_routes() {
                 );
                 
                 $task = ServiceLocator::get('TaskService')->createTask($request->get_param('stage_id'), $taskData);
+
+                 ServiceLocator::get('LogService')->log(
+                    "Task {$task->name} created by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type' => WP_QT_LOG_TYPE_TASK,
+                        'type_id' => $task->id,
+                        'pipeline_id' => $cachedDbToken->pipeline_id,
+                        'created_by' => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
 
                 /* Handle automations */
                 $executionResults = $automationService->handleAutomations(
@@ -361,7 +420,7 @@ function wpqt_register_token_api_routes() {
             } catch (Throwable $e) {
                 $wpdb->query('ROLLBACK');
 
-                return ServiceLocator::get('ErrorHandlerService')->handleTokenApiError($e, "A system error occurred while creating the board tasks");
+                return ServiceLocator::get('ErrorHandlerService')->handleTokenApiError($e, "A system error occurred while creating the task");
             }
         },
         'permission_callback' => function(WP_REST_Request $request) {
@@ -397,6 +456,7 @@ function wpqt_register_token_api_routes() {
             try {
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $paramsToUpdate = wpqtBuildParamsFromRequest($request, ['name', 'description', 'task_focus_color']);
                 $taskId = $request->get_param('task_id');
                 $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
@@ -408,6 +468,16 @@ function wpqt_register_token_api_routes() {
                 }
 
                 $taskUpdated = ServiceLocator::get('TaskService')->editTask($taskId, $paramsToUpdate);
+                ServiceLocator::get('LogService')->log(
+                    "Task {$task->name} updated by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type' => WP_QT_LOG_TYPE_TASK,
+                        'type_id' => $task->id,
+                        'pipeline_id' => $cachedDbToken->pipeline_id,
+                        'created_by' => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
                 
                 return $responseService->createTokenApiResponse(true, 200, [
                     'task' => $taskUpdated
@@ -450,6 +520,7 @@ function wpqt_register_token_api_routes() {
             try {
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $taskId = $request->get_param('task_id');
                 $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
 
@@ -459,6 +530,16 @@ function wpqt_register_token_api_routes() {
                     ]);
                 }
                 ServiceLocator::get('TaskService')->deleteTask($taskId);
+                ServiceLocator::get('LogService')->log(
+                    "Task {$task->name} deleted by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type' => WP_QT_LOG_TYPE_TASK,
+                        'type_id' => $task->id,
+                        'pipeline_id' => $cachedDbToken->pipeline_id,
+                        'created_by' => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
 
                 /* Handle automations */
                 $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(

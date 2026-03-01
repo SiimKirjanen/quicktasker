@@ -5,6 +5,7 @@ import {
   CHANGE_TASK_DONE_STATUS,
   CHANGE_TASK_EXPORT_MODAL_METHOD,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
+  CLOSE_API_TOKEN_LOGS_MODAL,
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_AUTOMATION_LOGS_MODAL,
   CLOSE_MOVE_TASK_MODAL,
@@ -17,6 +18,7 @@ import {
   CLOSE_TASK_RESTORE_MODAL,
   CLOSE_USER_MODAL,
   CLOSE_WEBHOOKS_LOGS_MODAL,
+  OPEN_API_TOKEN_LOGS_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_AUTOMATION_LOGS_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
@@ -35,11 +37,13 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
   SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
+  UPDATE_API_TOKEN_LOGS_MODAL_SETTINGS,
   UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS,
   UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS,
 } from "../constants";
 import { reducer } from "../reducers/modal-reducer";
 import {
+  ApiTokenLogsModalSettings,
   AutomationLogsModalSettings,
   TaskExportModalSettings,
   TaskModalSettings,
@@ -95,6 +99,10 @@ const initialState: State = {
   automationLogsModalSettings: {
     automationId: null,
   },
+  apiTokenLogsModalOpen: false,
+  apiTokenLogsModalSettings: {
+    apiTokenId: null,
+  },
 };
 
 type State = {
@@ -131,6 +139,8 @@ type State = {
   webhooksLogsModalSettings: WebhooksLogsModalSettings;
   automationLogsModalOpen: boolean;
   automationLogsModalSettings: AutomationLogsModalSettings;
+  apiTokenLogsModalOpen: boolean;
+  apiTokenLogsModalSettings: ApiTokenLogsModalSettings;
 };
 
 type Action =
@@ -202,6 +212,15 @@ type Action =
   | {
       type: typeof UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS;
       payload: Partial<AutomationLogsModalSettings>;
+    }
+  | {
+      type: typeof OPEN_API_TOKEN_LOGS_MODAL;
+      payload: { apiTokenId: string };
+    }
+  | { type: typeof CLOSE_API_TOKEN_LOGS_MODAL }
+  | {
+      type: typeof UPDATE_API_TOKEN_LOGS_MODAL_SETTINGS;
+      payload: Partial<ApiTokenLogsModalSettings>;
     };
 
 type ModalDispatch = (action: Action) => void;

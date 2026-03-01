@@ -33,6 +33,7 @@ enum LogCreatedByEnum {
   Automation = "automation",
   Import = "import",
   System = "system",
+  ApiToken = "api_token",
   All = "all",
 }
 

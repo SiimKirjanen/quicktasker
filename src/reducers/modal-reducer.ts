@@ -4,6 +4,7 @@ import {
   CHANGE_TASK_DONE_STATUS,
   CHANGE_TASK_EXPORT_MODAL_METHOD,
   CHANGE_USER_SETTINGS_MODAL_OPEN,
+  CLOSE_API_TOKEN_LOGS_MODAL,
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_AUTOMATION_LOGS_MODAL,
   CLOSE_MOVE_TASK_MODAL,
@@ -16,6 +17,7 @@ import {
   CLOSE_TASK_RESTORE_MODAL,
   CLOSE_USER_MODAL,
   CLOSE_WEBHOOKS_LOGS_MODAL,
+  OPEN_API_TOKEN_LOGS_MODAL,
   OPEN_ARCHIVE_TASK_MODAL,
   OPEN_AUTOMATION_LOGS_MODAL,
   OPEN_EDIT_PIPELINE_MODAL,
@@ -34,6 +36,7 @@ import {
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
   SET_CUSTOM_FIELD_RECOVERY_MODAL_OPEN,
+  UPDATE_API_TOKEN_LOGS_MODAL_SETTINGS,
   UPDATE_AUTOMATION_LOGS_MODAL_SETTINGS,
   UPDATE_WEBHOOKS_LOGS_MODAL_SETTINGS,
 } from "../constants";
@@ -364,6 +367,38 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         automationLogsModalSettings: {
           ...state.automationLogsModalSettings,
+          ...settings,
+        },
+      };
+    }
+    case OPEN_API_TOKEN_LOGS_MODAL: {
+      const { apiTokenId }: { apiTokenId: string } = action.payload;
+
+      return {
+        ...state,
+        apiTokenLogsModalOpen: true,
+        apiTokenLogsModalSettings: {
+          ...state.apiTokenLogsModalSettings,
+          apiTokenId,
+        },
+      };
+    }
+    case CLOSE_API_TOKEN_LOGS_MODAL: {
+      return {
+        ...state,
+        apiTokenLogsModalOpen: false,
+        apiTokenLogsModalSettings: {
+          ...initialState.apiTokenLogsModalSettings,
+        },
+      };
+    }
+    case UPDATE_API_TOKEN_LOGS_MODAL_SETTINGS: {
+      const settings = action.payload;
+
+      return {
+        ...state,
+        apiTokenLogsModalSettings: {
+          ...state.apiTokenLogsModalSettings,
           ...settings,
         },
       };
