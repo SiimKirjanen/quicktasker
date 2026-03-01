@@ -20,7 +20,12 @@ type AutomationLogsModalSettings = {
   automationId: string | null;
 };
 
+type ApiTokenLogsModalSettings = {
+  apiTokenId: string | null;
+};
+
 export type {
+  ApiTokenLogsModalSettings,
   AutomationLogsModalSettings,
   TaskExportModalSettings,
   TaskModalSettings,

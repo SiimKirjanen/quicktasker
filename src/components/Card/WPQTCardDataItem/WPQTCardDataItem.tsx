@@ -1,6 +1,6 @@
 type WPQTCardDataItemProps = {
   label: string;
-  value?: string;
+  value?: string | React.ReactNode;
   valueClassName?: string;
   valueLink?: string;
   icon?: React.ReactNode;

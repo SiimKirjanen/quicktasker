@@ -1,6 +1,10 @@
 <?php
 namespace WPQT;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 use Exception;
 
 if ( ! class_exists( 'WPQT\WPQTException' ) ) {
@@ -16,4 +20,8 @@ if ( ! class_exists( 'WPQT\WPQTException' ) ) {
             return $this->sendToFrontEnd;
         }
     }
+}
+
+if ( ! class_exists( 'WPQT\StageHasTasksException' ) ) {
+    class StageHasTasksException extends Exception {}
 }

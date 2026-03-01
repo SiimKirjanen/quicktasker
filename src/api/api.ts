@@ -1,6 +1,7 @@
 import apiFetch from "@wordpress/api-fetch";
 import { ServerLogsFilterType } from "../pages/LogsPage/components/LogsPageContent/LogsPageContent";
 import { AutomationCreationState } from "../reducers/automation-creation-reducer";
+import { ApiTokenFromServer, NewApiToken } from "../types/api-token";
 import {
   Automation,
   AutomationFromServer,
@@ -105,6 +106,37 @@ function deletePipelineRequest(
 ): Promise<WPQTResponse<DeletePipelineResponse>> {
   return apiFetch({
     path: `/wpqt/v1/pipelines/${pipelineId}`,
+    method: "DELETE",
+    headers: getCommonHeaders(),
+  });
+}
+
+function getPipelineApiTokensRequest(
+  pipelineId: string,
+): Promise<WPQTResponse<ApiTokenFromServer[]>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/api-tokens`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function postPipelineApiTokenRequest(
+  apiToken: NewApiToken,
+): Promise<WPQTResponse<ApiTokenFromServer>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${apiToken.pipeline_id}/api-tokens`,
+    method: "POST",
+    data: apiToken,
+    headers: getCommonHeaders(),
+  });
+}
+
+function deletePipelineApiTokenRequest(
+  pipelineId: string,
+  tokenId: string,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/api-tokens/${tokenId}`,
     method: "DELETE",
     headers: getCommonHeaders(),
   });
@@ -1080,6 +1112,7 @@ export {
   createTaskRequest,
   createUserRequest,
   deleteLabelRequest,
+  deletePipelineApiTokenRequest,
   deletePipelineAutomationsRequest,
   deletePipelineRequest,
   deletePipelineWebhookRequest,
@@ -1100,6 +1133,7 @@ export {
   getExtendedUserRequest,
   getGlobalLogsRequest,
   getLogsRequest,
+  getPipelineApiTokensRequest,
   getPipelineAutomationsRequest,
   getPipelineData,
   getPipelineLabelsRequest,
@@ -1117,6 +1151,7 @@ export {
   markTaskDoneRequest,
   moveStageRequest,
   moveTaskRequest,
+  postPipelineApiTokenRequest,
   removeTaskFromUserRequest,
   resetUserPasswordRequest,
   restoreArchivedTaskRequest,

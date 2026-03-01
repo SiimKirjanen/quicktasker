@@ -1,6 +1,7 @@
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { LuKeySquare } from "react-icons/lu";
 import { PiWebhooksLogo } from "react-icons/pi";
 import { SiProbot } from "react-icons/si";
 import { OPEN_EDIT_PIPELINE_MODAL } from "../../../../../../constants";
@@ -46,6 +47,18 @@ function BoardOptionsSelection() {
         <SiProbot className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
         <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
           {__("Automations", "quicktasker")}
+        </span>
+      </div>
+
+      <div
+        className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
+        onClick={() => {
+          navigatePage(`#/board/${activePipelineId}/api-tokens`);
+        }}
+      >
+        <LuKeySquare className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+        <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+          {__("API tokens", "quicktasker")}
         </span>
       </div>
 

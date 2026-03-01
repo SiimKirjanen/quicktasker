@@ -80,6 +80,8 @@ describe("PipelineHeader", () => {
     webhooksLogsModalSettings: { webhookId: null },
     automationLogsModalOpen: false,
     automationLogsModalSettings: { automationId: null },
+    apiTokenLogsModalOpen: false,
+    apiTokenLogsModalSettings: { apiTokenId: null },
   };
 
   function renderWithProviders(

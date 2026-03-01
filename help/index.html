@@ -57,6 +57,7 @@
 			<li><a href="#logs">Logs</a></li>
 			<li><a href="#settings">Settings</a></li>
 			<li><a href="#webhooks">Webhooks</a></li>
+			<li><a href="#api-tokens">API Tokens</a></li>
 		</ol>
 		
 		<hr>
@@ -214,6 +215,114 @@
 				<figcaption class="text-center">Webhooks manager</figcaption> <br />
 			</li>
 		</ul>
+
+		<h3 id="api-tokens"><strong>J) API Tokens</strong> - <a href="#toc">top</a></h3>
+		<p>The API Tokens page enables you to create and manage API tokens for programmatic access to your board's features. Each token can be configured with specific permissions to control access to different parts of your board, such as retrieving data, creating tasks, or modifying stages.</p>
+
+		<p><strong>Creating API Tokens:</strong> To create a new API token, navigate to the API Tokens page and click the "Create API Token" button. You'll need to provide the following information:</p>
+		<ul>
+			<li><strong>Token Name:</strong> A descriptive name to identify the token (required).</li>
+			<li><strong>Description:</strong> An optional description to provide context about the token's purpose.</li>
+			<li><strong>Permissions:</strong> Select which operations the token is allowed to perform.</li>
+		</ul>
+
+		<p><strong>Token Permissions:</strong> Each token can be granted specific permissions to control what actions it can perform. Available permissions include:</p>
+
+		<ul>
+			<li><strong>Board Permissions:</strong>
+				<ul>
+					<li><strong>GET board:</strong> Retrieve board information</li>
+					<li><strong>PATCH board:</strong> Update board name and description</li>
+				</ul>
+			</li>
+			<li><strong>Stage Permissions:</strong>
+				<ul>
+					<li><strong>GET stages:</strong> Retrieve all stages in the board</li>
+					<li><strong>POST stages:</strong> Create new stages</li>
+					<li><strong>PATCH stages:</strong> Update existing stages</li>
+					<li><strong>DELETE stages:</strong> Delete stages (only if they contain no tasks)</li>
+				</ul>
+			</li>
+			<li><strong>Task Permissions:</strong>
+				<ul>
+					<li><strong>GET tasks:</strong> Retrieve all tasks in the board</li>
+					<li><strong>POST tasks:</strong> Create new tasks</li>
+					<li><strong>PATCH tasks:</strong> Update existing tasks</li>
+					<li><strong>DELETE tasks:</strong> Delete tasks</li>
+				</ul>
+			</li>
+		</ul>
+
+		<p><strong>Using API Tokens:</strong> Once created, the token will be displayed only once. Copy and store it securely, as you won't be able to view it again. To authenticate API requests, include the token in the Authorization header:</p>
+
+		<pre>Authorization: Bearer YOUR_TOKEN_HERE</pre>
+
+		<p><strong>API Endpoints:</strong> The following REST API endpoints are available for token-based access:</p>
+
+		<ul>
+			<li class="list-item-space"><strong>Board Endpoints:</strong>
+				<ul>
+					<li><code>GET /wp-json/wpqt/v1/token/board</code> - Retrieve board information</li>
+					<li><code>PATCH /wp-json/wpqt/v1/token/board</code> - Update board name and/or description</li>
+				</ul>
+			</li>
+			
+			<li class="list-item-space"><strong>Stage Endpoints:</strong>
+				<ul>
+					<li><code>GET /wp-json/wpqt/v1/token/board/stages</code> - Retrieve all stages</li>
+					<li><code>POST /wp-json/wpqt/v1/token/board/stages</code> - Create a new stage (requires: name, optional: description)</li>
+					<li><code>PATCH /wp-json/wpqt/v1/token/board/stages/{stage_id}</code> - Update a stage (optional: name, description)</li>
+					<li><code>DELETE /wp-json/wpqt/v1/token/board/stages/{stage_id}</code> - Delete a stage (fails if stage has tasks)</li>
+				</ul>
+			</li>
+			
+			<li class="list-item-space"><strong>Task Endpoints:</strong>
+				<ul>
+					<li><code>GET /wp-json/wpqt/v1/token/board/tasks</code> - Retrieve all non-archived tasks</li>
+					<li><code>POST /wp-json/wpqt/v1/token/board/tasks</code> - Create a new task (requires: name, stage_id, optional: description, task_focus_color)</li>
+					<li><code>PATCH /wp-json/wpqt/v1/token/board/tasks/{task_id}</code> - Update a task (optional: name, description, task_focus_color)</li>
+					<li><code>DELETE /wp-json/wpqt/v1/token/board/tasks/{task_id}</code> - Delete a task</li>
+				</ul>
+			</li>
+		</ul>
+
+		<p><strong>Token Format:</strong> Each token is automatically prefixed with the board's ID for easy identification (e.g., <code>123-abc123def456...</code>). This helps you quickly identify which board a token belongs to when managing multiple tokens.</p>
+
+		<p><strong>Security Considerations:</strong></p>
+		<ul>
+			<li>Tokens are hashed and stored securely in the database</li>
+			<li>Each token is scoped to a specific board and cannot access other boards</li>
+			<li>Tokens only have the permissions explicitly granted during creation</li>
+			<li>If a token is compromised, delete it immediately from the API Tokens page</li>
+		</ul>
+
+		<p><strong>Response Format:</strong> All API responses follow a consistent format:</p>
+		<pre>{
+  "success": true,
+  "data": {
+    // Response data here
+  }
+}</pre>
+
+		<p>Error responses include an error message:</p>
+		<pre>{
+  "success": false,
+  "data": {
+    "message": "Error description"
+  }
+}</pre>
+
+		<p><strong>HTTP Status Codes:</strong></p>
+		<ul>
+			<li><strong>200 OK:</strong> Request successful, data returned</li>
+			<li><strong>201 Created:</strong> Resource created successfully</li>
+			<li><strong>401 Unauthorized:</strong> Invalid or missing token</li>
+			<li><strong>403 Forbidden:</strong> Token lacks required permissions</li>
+			<li><strong>404 Not Found:</strong> Resource not found or doesn't belong to token's board</li>
+			<li><strong>409 Conflict:</strong> Cannot complete action due to conflict (e.g., deleting stage with tasks)</li>
+		</ul>
+
+		<p><strong>Managing Tokens:</strong> You can view all created tokens on the API Tokens page. Each token displays its name, description, creation date, and assigned permissions. To revoke access, simply delete the token from this page.</p>
 
 		<p><a href="#toc">Go To Table of Contents</a></p>
 		

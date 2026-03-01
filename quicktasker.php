@@ -44,6 +44,7 @@ require( 'php/repositories/UploadRepository.php' );
 require( 'php/repositories/HeaderRepository.php' );
 require( 'php/repositories/WebhookRepository.php' );
 require( 'php/repositories/WebhookEventRepository.php' );
+require( 'php/repositories/APiTokenRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
@@ -80,6 +81,8 @@ require( 'php/services/import/PipelineImportService.php' );
 require( 'php/services/DBMigrateService.php' );
 require( 'php/services/WebhookService.php' );
 require( 'php/services/WebhookEventService.php' );
+require( 'php/services/ApiTokenService.php' );
+require( 'php/services/ResponseService.php' );
 
 ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
@@ -93,6 +96,7 @@ ServiceLocator::register('LogRepository', new WPQT\Log\LogRepository());
 ServiceLocator::register('SettingRepository', new WPQT\Settings\SettingRepository());
 ServiceLocator::register('LabelRepository', new WPQT\Label\LabelRepository());
 ServiceLocator::register('UploadRepository', new WPQT\Upload\UploadRepository());
+ServiceLocator::register('ApiTokenRepository', new WPQT\Token\ApiTokenRepository());
 ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
 ServiceLocator::register('UserService', new WPQT\User\UserService());
 ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());
@@ -123,12 +127,16 @@ ServiceLocator::register('WebhookRepository', new WPQT\Webhooks\WebhookRepositor
 ServiceLocator::register('WebhookEventRepository', new WPQT\Webhooks\WebhookEventRepository());
 ServiceLocator::register('WebhookService', new WPQT\Webhooks\WebhookService());
 ServiceLocator::register('WebhookEventService', new WPQT\Webhooks\WebhookEventService());
+ServiceLocator::register('ApiTokenService', new WPQT\Token\ApiTokenService());
+ServiceLocator::register('ResponseService', new WPQT\Response\ResponseService());
+ServiceLocator::register('PipelineService', new WPQT\Pipeline\PipelineService());
 
 require( 'php/hooks.php' );
 require( 'php/actions.php' );
 require( 'php/filters.php' );
 require( 'php/api/admin-api.php' );
 require( 'php/api/user-page-api.php' );
+require( 'php/api/token-api.php' );
 require( 'php/side-effects.php' );
 require( 'php/db-seeder.php' );
 
