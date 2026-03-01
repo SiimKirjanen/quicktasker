@@ -39,7 +39,7 @@ function AutomationsPageContent({ pipelineId }: Props) {
 
 function AutomationsPage({ pipelineId }: Props) {
   const { pipelines } = usePipelines();
-  const { navigatePage } = useNavigation();
+  const { navigatePageWithoutHistory } = useNavigation();
   const activePipeline =
     pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
@@ -56,7 +56,7 @@ function AutomationsPage({ pipelineId }: Props) {
               activePipeline={activePipeline}
               enableActions={false}
               onPipelineClick={(id) => {
-                navigatePage(`#/board/${id}/automations`);
+                navigatePageWithoutHistory(`#/board/${id}/automations`);
               }}
             />
           }

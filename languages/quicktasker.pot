@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-01T13:55:05+00:00\n"
+"POT-Creation-Date: 2026-03-01T16:33:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -41,41 +41,35 @@ msgstr ""
 
 #: php/admin-pages.php:30
 #: php/admin-pages.php:31
-#: build/app.js:1
-msgid "Overview"
+msgid "User management"
 msgstr ""
 
 #: php/admin-pages.php:39
 #: php/admin-pages.php:40
-msgid "User management"
+#: build/app.js:1
+msgid "Tasks app"
 msgstr ""
 
 #: php/admin-pages.php:48
 #: php/admin-pages.php:49
 #: build/app.js:1
-msgid "Tasks app"
+msgid "Quicktasker sessions"
 msgstr ""
 
 #: php/admin-pages.php:57
 #: php/admin-pages.php:58
 #: build/app.js:1
-msgid "Quicktasker sessions"
+msgid "Archive"
 msgstr ""
 
 #: php/admin-pages.php:66
 #: php/admin-pages.php:67
 #: build/app.js:1
-msgid "Archive"
+msgid "Logs"
 msgstr ""
 
 #: php/admin-pages.php:75
 #: php/admin-pages.php:76
-#: build/app.js:1
-msgid "Logs"
-msgstr ""
-
-#: php/admin-pages.php:84
-#: php/admin-pages.php:85
 #: build/app.js:1
 msgid "About"
 msgstr ""
@@ -1098,6 +1092,10 @@ msgid "View task"
 msgstr ""
 
 #: build/app.js:1
+msgid "Are you sure you want to permanently delete this task?"
+msgstr ""
+
+#: build/app.js:1
 #: build/userApp.js:1
 msgid "Board is deleted!"
 msgstr ""
@@ -1316,7 +1314,7 @@ msgid "The logs page where you can see all logs and filter them."
 msgstr ""
 
 #: build/app.js:1
-msgid "Statistics filtering"
+msgid "Data filtering"
 msgstr ""
 
 #: build/app.js:1
@@ -1348,15 +1346,11 @@ msgid "Not enough data to display task status chart"
 msgstr ""
 
 #: build/app.js:1
-msgid "Get overview of the tasks."
+msgid "Get overview of the board."
 msgstr ""
 
 #: build/app.js:1
-msgid "No overview to display"
-msgstr ""
-
-#: build/app.js:1
-msgid "You need to first create a board to see the overview."
+msgid "Overview"
 msgstr ""
 
 #: build/app.js:1
@@ -1692,11 +1686,15 @@ msgid "No tasks to archive on the stage"
 msgstr ""
 
 #: build/app.js:1
-msgid "Delete stage"
+msgid "Failed to delete a stage"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to delete a stage"
+msgid "Are you sure you want to delete this stage?"
+msgstr ""
+
+#: build/app.js:1
+msgid "Delete stage"
 msgstr ""
 
 #: build/app.js:1

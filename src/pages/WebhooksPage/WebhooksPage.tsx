@@ -38,7 +38,7 @@ function WebhooksPageContent({ pipelineId }: Props) {
 function WebhooksPage({ pipelineId }: Props) {
   console.log(pipelineId);
   const { pipelines } = usePipelines();
-  const { navigatePage } = useNavigation();
+  const { navigatePageWithoutHistory } = useNavigation();
   const activePipeline =
     pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
@@ -55,7 +55,7 @@ function WebhooksPage({ pipelineId }: Props) {
               activePipeline={activePipeline}
               enableActions={false}
               onPipelineClick={(id) => {
-                navigatePage(`#/board/${id}/webhooks`);
+                navigatePageWithoutHistory(`#/board/${id}/webhooks`);
               }}
             />
           }

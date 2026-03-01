@@ -15,6 +15,7 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task } from "../../../types/task";
+import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
@@ -33,6 +34,17 @@ function ArchivedTaskDropdown({ task }: Props) {
   const { deleteTask } = useTaskActions();
   const { modalDispatch } = useContext(ModalContext);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteTask = async () => {
+    setIsDeleting(true);
+    await deleteTask(task.id, () => {
+      archiveDispatch({
+        type: REMOVE_ARCHIVED_TASK,
+        payload: task.id,
+      });
+    });
+    setIsDeleting(false);
+  };
 
   return (
     <WPQTDropdown
@@ -64,24 +76,23 @@ function ArchivedTaskDropdown({ task }: Props) {
       />
 
       {isUserAllowedToDelete && (
-        <WPQTDropdownItem
-          text={__("Delete", "quicktasker")}
-          loading={isDeleting}
-          icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-          onClick={async (e: React.MouseEvent) => {
-            e.stopPropagation();
-
-            setIsDeleting(true);
-            await deleteTask(task.id, () => {
-              archiveDispatch({
-                type: REMOVE_ARCHIVED_TASK,
-                payload: task.id,
-              });
-            });
-            setIsDeleting(false);
-          }}
-          className="!wpqt-mb-0"
-        />
+        <WPQTConfirmTooltip
+          onConfirm={handleDeleteTask}
+          confirmMessage={__(
+            "Are you sure you want to permanently delete this task?",
+            "quicktasker",
+          )}
+        >
+          {({ onClick }) => (
+            <WPQTDropdownItem
+              text={__("Delete", "quicktasker")}
+              loading={isDeleting}
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+              onClick={onClick}
+              className="!wpqt-mb-0"
+            />
+          )}
+        </WPQTConfirmTooltip>
       )}
     </WPQTDropdown>
   );

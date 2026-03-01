@@ -1,46 +1,38 @@
-import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
-import { Info } from "../../components/Info/Info";
-import { WPQTTabs } from "../../components/Tab/WPQTTabs";
-import { PipelinesContext } from "../../providers/PipelinesContextProvider";
+import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
+import { useNavigation } from "../../hooks/useNavigation";
+import { usePipelines } from "../../hooks/usePipelines";
 import { Page } from "../Page/Page";
 import { PipelineOverview } from "./components/PipelineOverview/PipelineOverview";
 
-function OverviewPage() {
-  const {
-    state: { pipelines },
-  } = useContext(PipelinesContext);
-  const pipelineNames = pipelines.map((pipeline) => pipeline.name);
-  const tabContent = pipelines.map((pipeline) => {
-    return <PipelineOverview key={pipeline.id} pipeline={pipeline} />;
-  });
+type Props = {
+  pipelineId: string;
+};
+
+function OverviewPage({ pipelineId }: Props) {
+  const { pipelines } = usePipelines();
+  const { navigatePageWithoutHistory } = useNavigation();
+  const activePipeline =
+    pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
   return (
     <Page>
-      {tabContent ? (
-        <>
-          <WPQTPageHeader
-            description={__("Get overview of the tasks.", "quicktasker")}
-          >
-            {__("Overview", "quicktasker")}
-          </WPQTPageHeader>
-          <WPQTTabs
-            tabs={pipelineNames}
-            tabsContent={tabContent}
-            tabListClassName="wpqt-gap-5"
-            tabClassName="wpqt-flex-none"
+      <WPQTPageHeader
+        description={__("Get overview of the board.", "quicktasker")}
+        rightSideContent={
+          <PipelineSelectionDropdown
+            activePipeline={activePipeline}
+            enableActions={false}
+            onPipelineClick={(id) => {
+              navigatePageWithoutHistory(`#/board/${id}/overview`);
+            }}
           />
-        </>
-      ) : (
-        <Info
-          infoTitle={__("No overview to display", "quicktasker")}
-          infoDescription={__(
-            "You need to first create a board to see the overview.",
-            "quicktasker",
-          )}
-        />
-      )}
+        }
+      >
+        {__("Overview", "quicktasker")}
+      </WPQTPageHeader>
+      {activePipeline && <PipelineOverview pipeline={activePipeline} />}
     </Page>
   );
 }

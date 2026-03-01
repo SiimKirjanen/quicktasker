@@ -170,23 +170,33 @@ function StageControlsDropdown({ stage }: Props) {
       </WPQTConfirmTooltip>
 
       {isUserAllowedToDelete && (
-        <WPQTDropdownItem
-          text={__("Delete stage", "quicktasker")}
-          icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-          loading={deleteLoading}
-          onClick={deleteStage}
-          disabled={stageTasksLenght > 0}
-          className="!wpqt-mb-0"
-          id={`item-dropdown-${stage.id}`}
-          tooltipText={
-            stageTasksLenght > 0
-              ? __(
-                  "Stage can be deleted when there are no tasks on it",
-                  "quicktasker",
-                )
-              : undefined
-          }
-        />
+        <WPQTConfirmTooltip
+          onConfirm={deleteStage}
+          confirmMessage={__(
+            "Are you sure you want to delete this stage?",
+            "quicktasker",
+          )}
+        >
+          {({ onClick }) => (
+            <WPQTDropdownItem
+              text={__("Delete stage", "quicktasker")}
+              icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
+              loading={deleteLoading}
+              onClick={onClick}
+              disabled={stageTasksLenght > 0}
+              className="!wpqt-mb-0"
+              id={`item-dropdown-${stage.id}`}
+              tooltipText={
+                stageTasksLenght > 0
+                  ? __(
+                      "Stage can be deleted when there are no tasks on it",
+                      "quicktasker",
+                    )
+                  : undefined
+              }
+            />
+          )}
+        </WPQTConfirmTooltip>
       )}
     </WPQTDropdown>
   );

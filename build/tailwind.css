@@ -1758,8 +1758,8 @@
   grid-template-columns: 1fr auto 1fr;
 }
 
-.wpqt-grid-cols-\[auto\,auto\] {
-  grid-template-columns: auto auto;
+.wpqt-grid-cols-\[auto\,auto\,auto\] {
+  grid-template-columns: auto auto auto;
 }
 
 .wpqt-flex-row {
