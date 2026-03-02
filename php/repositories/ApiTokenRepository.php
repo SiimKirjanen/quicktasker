@@ -37,10 +37,6 @@ if ( ! class_exists( 'WPQT\Token\ApiTokenRepository' ) ) {
                         post_pipeline_tasks,
                         patch_pipeline_tasks,
                         delete_pipeline_tasks
-                        get_pipeline_tasks,
-                        post_pipeline_tasks,
-                        patch_pipeline_tasks,
-                        delete_pipeline_tasks
                     FROM " . TABLE_WP_QUICKTASKER_API_TOKENS . " WHERE token = %s",
                     $token
                 )            
@@ -76,10 +72,6 @@ if ( ! class_exists( 'WPQT\Token\ApiTokenRepository' ) ) {
                         post_pipeline_stages,
                         patch_pipeline_stages,
                         delete_pipeline_stages,
-                        get_pipeline_tasks,
-                        post_pipeline_tasks,
-                        patch_pipeline_tasks,
-                        delete_pipeline_tasks,
                         get_pipeline_tasks,
                         post_pipeline_tasks,
                         patch_pipeline_tasks,
