@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="img/old-banner-big.png" alt="QuickTasker">
+    <img src="img/old-banner-icon.png" alt="QuickTasker">
 </p>
 
 # QuickTasker - WordPress task management plugin
