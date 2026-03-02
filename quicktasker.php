@@ -7,7 +7,7 @@
 	Author URI: https://github.com/SiimKirjanen
 	Text Domain: quicktasker
 	Domain Path: /languages
-	Version: 1.48.0
+	Version: 1.48.1
 	Requires at least: 5.3
 	Requires PHP: 7.2.28
 	License: GPLv2 or later
@@ -44,7 +44,7 @@ require( 'php/repositories/UploadRepository.php' );
 require( 'php/repositories/HeaderRepository.php' );
 require( 'php/repositories/WebhookRepository.php' );
 require( 'php/repositories/WebhookEventRepository.php' );
-require( 'php/repositories/APiTokenRepository.php' );
+require( 'php/repositories/ApiTokenRepository.php' );
 require( 'php/services/PipelineService.php' );
 require( 'php/services/PermissionService.php' );
 require( 'php/services/StageService.php' );
