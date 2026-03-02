@@ -26,6 +26,7 @@ FILES_TO_REMOVE=(
     "vendor"
     "composer.lock"
     "composer.json"
+    "tests"
 )
 
 # Prompt the user for confirmation
