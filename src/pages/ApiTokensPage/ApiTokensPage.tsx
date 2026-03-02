@@ -48,7 +48,7 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
 
 function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
   const { pipelines } = usePipelines();
-  const { navigatePage } = useNavigation();
+  const { navigatePageWithoutHistory } = useNavigation();
   const {
     state: { pluginURL },
   } = useApp();
@@ -77,7 +77,7 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
               activePipeline={activePipeline}
               enableActions={false}
               onPipelineClick={(id) => {
-                navigatePage(`#/board/${id}/api-tokens`);
+                navigatePageWithoutHistory(`#/board/${id}/api-tokens`);
               }}
             />
           }

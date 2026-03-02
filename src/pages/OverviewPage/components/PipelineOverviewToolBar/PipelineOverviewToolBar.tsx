@@ -15,11 +15,16 @@ function PipelineOverviewToolBar({
   onCreationDateChange,
   onDoneDateChange,
 }: Props) {
-  const formatDate = (value: Value): string => {
+  const formatDate = (value: Value): string | null => {
     if (value instanceof Date) {
       return dayjs(value).format("YYYY-MM-DD");
     }
-    return "";
+    return null;
+  };
+  const parseDate = (dateString: string | null): Date | null => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? null : date;
   };
   const handleCreationDateChange = (value: Value) => {
     const dateString = formatDate(value);
@@ -33,7 +38,7 @@ function PipelineOverviewToolBar({
   return (
     <div>
       <WPQTFilter
-        title={__("Statistics filtering", "quicktasker")}
+        title={__("Data filtering", "quicktasker")}
         titleClassName="wpqt-text-center"
         childrenClassName="wpqt-gap-6 wpqt-justify-center"
         searchChildren={null}
@@ -52,7 +57,7 @@ function PipelineOverviewToolBar({
           </div>
           <DatePicker
             onChange={handleCreationDateChange}
-            value={overviewFilter.taskCreationDate}
+            value={parseDate(overviewFilter.taskCreationDate)}
             format="y-MM-dd"
             id="taskCreationDate"
           />
@@ -71,9 +76,9 @@ function PipelineOverviewToolBar({
           </div>
           <DatePicker
             onChange={handleDoneDateChange}
-            value={overviewFilter.taskDoneDate}
+            value={parseDate(overviewFilter.taskDoneDate)}
             format="y-MM-dd"
-            id="taskCreationDate"
+            id="taskDoneDate"
           />
         </div>
       </WPQTFilter>

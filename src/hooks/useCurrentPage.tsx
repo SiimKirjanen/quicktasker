@@ -70,11 +70,15 @@ const getPageFromUrl = () => {
       return <ApiTokensPage pipelineId={boardId} />;
     }
 
+    const overviewMatch = hash.match(/^#\/board\/(\d+)\/overview$/);
+    if (overviewMatch) {
+      const boardId = overviewMatch[1];
+      return <OverviewPage pipelineId={boardId} />;
+    }
+
     switch (hash) {
       case "#/users":
         return <UsersPage />;
-      case "#/overview":
-        return <OverviewPage />;
       case "#/archive":
         return <ArchivePage />;
       case "#/user-sessions":
