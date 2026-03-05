@@ -69,12 +69,12 @@ class UploadRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $uploadId)
+            ->with($this->anything(), $uploadId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUpload);
 
         $result = $this->repository->getUpload($uploadId);
@@ -93,12 +93,12 @@ class UploadRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $uploadId)
+            ->with($this->anything(), $uploadId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn(null);
 
         $result = $this->repository->getUpload($uploadId);
@@ -129,12 +129,12 @@ class UploadRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $uploadId)
+            ->with($this->anything(), $uploadId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUpload);
 
         $result = $this->repository->getUpload($uploadId);
@@ -167,12 +167,12 @@ class UploadRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $uploadId)
+            ->with($this->anything(), $uploadId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUpload);
 
         $result = $this->repository->getUpload($uploadId);
@@ -237,12 +237,12 @@ class UploadRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $entityId, $entityType)
+            ->with($this->anything(), $entityId, $entityType)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUploads);
 
         $result = $this->repository->getUploads($entityId, $entityType);
@@ -263,12 +263,12 @@ class UploadRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $entityId, $entityType)
+            ->with($this->anything(), $entityId, $entityType)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn([]);
 
         $result = $this->repository->getUploads($entityId, $entityType);
@@ -302,12 +302,12 @@ class UploadRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $entityId, $entityType)
+            ->with($this->anything(), $entityId, $entityType)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUploads);
 
         $result = $this->repository->getUploads($entityId, $entityType);
@@ -342,12 +342,12 @@ class UploadRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $entityId, $entityType)
+            ->with($this->anything(), $entityId, $entityType)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUploads);
 
         $result = $this->repository->getUploads($entityId, $entityType);

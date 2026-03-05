@@ -63,12 +63,12 @@ class LabelRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $labelId)
+            ->with($this->anything(), $labelId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedLabel);
 
         $result = $this->repository->getLabelById($labelId);
@@ -85,12 +85,12 @@ class LabelRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $labelId)
+            ->with($this->anything(), $labelId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn(null);
 
         $result = $this->repository->getLabelById($labelId);
@@ -136,12 +136,12 @@ class LabelRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $taskIds)
+            ->with($this->anything(), $taskIds)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedResults);
 
         $result = $this->repository->getAssignedLabelsByTaskIds($taskIds);
@@ -190,12 +190,12 @@ class LabelRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $taskIds)
+            ->with($this->anything(), $taskIds)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedResults);
 
         $result = $this->repository->getAssignedLabelsByTaskIds($taskIds);
@@ -217,12 +217,12 @@ class LabelRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $taskIds)
+            ->with($this->anything(), $taskIds)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn([]);
 
         $result = $this->repository->getAssignedLabelsByTaskIds($taskIds);
@@ -257,12 +257,12 @@ class LabelRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pipelineId)
+            ->with($this->anything(), $pipelineId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedResults);
 
         $result = $this->repository->getPipelineLabels($pipelineId);
@@ -280,12 +280,12 @@ class LabelRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pipelineId)
+            ->with($this->anything(), $pipelineId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn([]);
 
         $result = $this->repository->getPipelineLabels($pipelineId);

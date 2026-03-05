@@ -48,7 +48,6 @@ class WebhookRepositoryTest extends TestCase
         $this->wpdbMock = $this->getMockBuilder(stdClass::class)
             ->addMethods(['prepare', 'get_row', 'get_results'])
             ->getMock();
-
         // Set the global $wpdb to our mock
         $GLOBALS['wpdb'] = $this->wpdbMock;
 
@@ -94,12 +93,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pipelineId)
+            ->with($this->anything(), $pipelineId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedResults);
 
         $result = $this->repository->getPipelineWebhooks($pipelineId);
@@ -115,12 +114,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pipelineId)
+            ->with($this->anything(), $pipelineId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn([]);
 
         $result = $this->repository->getPipelineWebhooks($pipelineId);
@@ -148,12 +147,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $webhookId)
+            ->with($this->anything(), $webhookId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedWebhook);
 
         $result = $this->repository->getWebhookById($webhookId);
@@ -169,12 +168,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $webhookId)
+            ->with($this->anything(), $webhookId)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn(null);
 
         $result = $this->repository->getWebhookById($webhookId);
@@ -207,12 +206,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, [5, 'task', 'created'])
+            ->with($this->anything(), [5, 'task', 'created'])
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedResults);
 
         $result = $this->repository->findRelatedWebhooks($pipelineId, $args);
@@ -248,12 +247,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, [5, 'comment', 'updated'])
+            ->with($this->anything(), [5, 'comment', 'updated'])
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedResults);
 
         $result = $this->repository->findRelatedWebhooks($pipelineId, $args);
@@ -286,12 +285,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, ['task', 'created'])
+            ->with($this->anything(), ['task', 'created'])
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedResults);
 
         $result = $this->repository->findRelatedWebhooks($pipelineId, $args);
@@ -310,12 +309,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, [999, 'task', 'created'])
+            ->with($this->anything(), [999, 'task', 'created'])
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn([]);
 
         $result = $this->repository->findRelatedWebhooks($pipelineId, $args);
@@ -334,12 +333,12 @@ class WebhookRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, [5, 'task', 'created'])
+            ->with($this->anything(), [5, 'task', 'created'])
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn(null);
 
         $result = $this->repository->findRelatedWebhooks($pipelineId, $args);

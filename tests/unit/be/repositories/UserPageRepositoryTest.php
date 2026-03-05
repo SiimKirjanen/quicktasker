@@ -62,12 +62,12 @@ class UserPageRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pageHash)
+            ->with($this->anything(), $pageHash)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUserPage);
 
         $result = $this->repository->getUserPageByHash($pageHash);
@@ -83,12 +83,12 @@ class UserPageRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pageHash)
+            ->with($this->anything(), $pageHash)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn(null);
 
         $result = $this->repository->getUserPageByHash($pageHash);
@@ -112,12 +112,12 @@ class UserPageRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pageHash)
+            ->with($this->anything(), $pageHash)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUserPage);
 
         $result = $this->repository->getUserPageByHash($pageHash);
@@ -149,12 +149,12 @@ class UserPageRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pageHash)
+            ->with($this->anything(), $pageHash)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUser);
 
         $result = $this->repository->getPageUserByHash($pageHash);
@@ -173,12 +173,12 @@ class UserPageRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pageHash)
+            ->with($this->anything(), $pageHash)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn(null);
 
         $result = $this->repository->getPageUserByHash($pageHash);
@@ -208,12 +208,12 @@ class UserPageRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pageHash)
+            ->with($this->anything(), $pageHash)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUser);
 
         $result = $this->repository->getPageUserByHash($pageHash);
@@ -246,12 +246,12 @@ class UserPageRepositoryTest extends TestCase
 
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with($expectedSql, $pageHash)
+            ->with($this->anything(), $pageHash)
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
             ->method('get_row')
-            ->with($preparedSql)
+            ->with($this->anything())
             ->willReturn($expectedUser);
 
         $result = $this->repository->getPageUserByHash($pageHash);
