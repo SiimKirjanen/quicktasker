@@ -32,7 +32,7 @@ jobs:
         run: npm run lint
 
   run-tests:
-    name: Unit Tests
+    name: JS Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Unit Tests
+      - name: Run JS Unit Tests
         run: npm run test:unit
 
   phpunit-tests:
