@@ -27,6 +27,7 @@ FILES_TO_REMOVE=(
     "composer.lock"
     "composer.json"
     "tests"
+    ".php-cs-fixer.php"
 )
 
 # Prompt the user for confirmation
