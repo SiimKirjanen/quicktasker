@@ -1,28 +1,33 @@
 <?php
+
 namespace WPQT\Upload;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
-    class UploadService{
-        public function setUpUploadsFolders(){
+if (!class_exists('WPQT\Upload\UploadService')) {
+    class UploadService
+    {
+        public function setUpUploadsFolders()
+        {
             $folderCreated = $this->createTasksUploadFolder();
 
-            if( $folderCreated ){
+            if ($folderCreated) {
                 ServiceLocator::get('FileService')->createSilenceIndexFile(WP_QUICKTASKER_UPLOAD_FOLDER_DIR);
                 ServiceLocator::get('FileService')->createSilenceIndexFile(WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR);
             }
         }
 
-        public function createTasksUploadFolder(){
+        public function createTasksUploadFolder()
+        {
             return ServiceLocator::get('FileService')->createDirectory(WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR);
         }
 
-        public function uploadFile($entityId, $entityType, $file) {
+        public function uploadFile($entityId, $entityType, $file)
+        {
             $this->validateUploadFile($file);
             $uploadRecord = $this->insertUploadRecord($entityId, $entityType, $file);
             $uploadPath = $this->saveFileToDisc($file, $uploadRecord);
@@ -30,11 +35,12 @@ if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
             return $uploadRecord;
         }
 
-        public function validateUploadFile($file) {
+        public function validateUploadFile($file)
+        {
             $fileType = mime_content_type($file['tmp_name']);
             $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
 
-            if ($file['error'] !== UPLOAD_ERR_OK) {
+            if (UPLOAD_ERR_OK !== $file['error']) {
                 throw new \Exception('File upload error. Error code: ' . $file['error']);
             }
 
@@ -55,24 +61,25 @@ if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
             }
         }
 
-        public function saveFileToDisc($file, $uploadRecord) {
+        public function saveFileToDisc($file, $uploadRecord)
+        {
             $uploadDir = WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR;
             $uploadUUID = $uploadRecord->upload_uuid;
             $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $uploadUUID;
-        
+
             // Ensure the upload directory exists
             ServiceLocator::get('FileService')->createDirectory($uploadPath);
-        
+
             // Construct the full file path
             $filePath = $uploadPath . DIRECTORY_SEPARATOR . basename($file['name']);
-        
+
             // Move the uploaded file to the target directory
             $fileSaved = move_uploaded_file($file['tmp_name'], $filePath);
-        
-            if ($fileSaved === false) {
+
+            if (false === $fileSaved) {
                 throw new \Exception('Failed to save file to disk.');
             }
-        
+
             return $filePath;
         }
 
@@ -82,48 +89,51 @@ if ( ! class_exists( 'WPQT\Upload\UploadService' ) ) {
          * @param int $entityId The ID of the entity associated with the upload.
          * @param string $entityType The type of the entity associated with the upload.
          * @param array $file An associative array containing file details, including 'name' and 'extension'.
-         * 
+         *
          * @throws \Exception If the insert operation fails.
-         * 
+         *
          * @return array The newly inserted upload record.
          */
-        public function insertUploadRecord($entityId, $entityType, $file) {
+        public function insertUploadRecord($entityId, $entityType, $file)
+        {
             global $wpdb;
 
             $rowsInserted = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_UPLOADS,
-                array(
-                    'entity_id' => $entityId,
+                [
+                    'entity_id'   => $entityId,
                     'entity_type' => $entityType,
-                    'file_name' => $file['name'],
-                    'file_type' => $file['type'],
+                    'file_name'   => $file['name'],
+                    'file_type'   => $file['type'],
                     'upload_uuid' => ServiceLocator::get('UUIDService')->generateUUIDV4(),
-                    'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                    'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                     'uploader_id' => get_current_user_id()
-                )
+                ]
             );
 
-            if( $rowsInserted === false ){
+            if (false === $rowsInserted) {
                 throw new \Exception('Failed to insert upload record.');
             }
 
-            return ServiceLocator::get('UploadRepository')->getUpload( $wpdb->insert_id );
+            return ServiceLocator::get('UploadRepository')->getUpload($wpdb->insert_id);
         }
 
-        private function deleteUploadRecord($uploadId) {
+        private function deleteUploadRecord($uploadId)
+        {
             global $wpdb;
 
             $rowsDeleted = $wpdb->delete(
                 TABLE_WP_QUICKTASKER_UPLOADS,
-                array('id' => $uploadId)
+                ['id' => $uploadId]
             );
 
-            if( $rowsDeleted === false ){
+            if (false === $rowsDeleted) {
                 throw new \Exception('Failed to delete upload record.');
             }
         }
 
-        public function deleteUpload($uploadId) {
+        public function deleteUpload($uploadId)
+        {
             $upload = ServiceLocator::get('UploadRepository')->getUpload($uploadId);
             $uploadDir = WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR . DIRECTORY_SEPARATOR . $upload->upload_uuid;
             $filePath = $uploadDir . DIRECTORY_SEPARATOR . $upload->file_name;

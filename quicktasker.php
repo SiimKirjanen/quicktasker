@@ -1,88 +1,88 @@
 <?php
 
 /*
-	Plugin Name: QuickTasker
-	Description: Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently.
-	Author: Siim Kirjanen
-	Author URI: https://github.com/SiimKirjanen
-	Text Domain: quicktasker
-	Domain Path: /languages
-	Version: 1.48.1
-	Requires at least: 5.3
-	Requires PHP: 7.2.28
-	License: GPLv2 or later
+    Plugin Name: QuickTasker
+    Description: Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently.
+    Author: Siim Kirjanen
+    Author URI: https://github.com/SiimKirjanen
+    Text Domain: quicktasker
+    Domain Path: /languages
+    Version: 1.48.1
+    Requires at least: 5.3
+    Requires PHP: 7.2.28
+    License: GPLv2 or later
 */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use WPQT\Services\ServiceLocator;
 
-require( 'php/constants.php' );
-require( 'php/db.php' );
-require( 'php/response/ApiResponse.php' );
-require( 'php/exeptions/WPQTExeption.php' );
-require( 'php/repositories/PipelineRepository.php' );
-require( 'php/repositories/TaskRepository.php' );
-require( 'php/repositories/StageRepository.php' );
-require( 'php/repositories/LogRepository.php' );
-require( 'php/repositories/CommentRepository.php' );
-require( 'php/repositories/UserRepository.php' );
-require( 'php/repositories/UserPageRepository.php' );
-require( 'php/repositories/PasswordRepository.php' );
-require( 'php/repositories/SessionRepository.php' );
-require( 'php/repositories/CustomFieldRepository.php' );
-require( 'php/repositories/TimeRepository.php' );
-require( 'php/repositories/AssetRepository.php' );
-require( 'php/repositories/SettingRepository.php' );
-require( 'php/repositories/OverViewRepository.php' );
-require( 'php/repositories/AutomationRepository.php' );
-require( 'php/repositories/EmailRepository.php' );
-require( 'php/repositories/LabelRepository.php' );
-require( 'php/repositories/UploadRepository.php' );
-require( 'php/repositories/HeaderRepository.php' );
-require( 'php/repositories/WebhookRepository.php' );
-require( 'php/repositories/WebhookEventRepository.php' );
-require( 'php/repositories/ApiTokenRepository.php' );
-require( 'php/services/PipelineService.php' );
-require( 'php/services/PermissionService.php' );
-require( 'php/services/StageService.php' );
-require( 'php/services/TaskService.php' );
-require( 'php/services/LocationService.php' );
-require( 'php/services/LogService.php' );
-require( 'php/services/UserService.php' );
-require( 'php/services/HashService.php' );
-require( 'php/services/UserPageService.php' );
-require( 'php/services/PasswordService.php' );
-require( 'php/services/SessionService.php' );
-require( 'php/services/NonceService.php' );
-require( 'php/services/CommentService.php' );
-require( 'php/services/CustomFieldService.php' );
-require( 'php/services/CapabilityService.php' );
-require( 'php/services/RequestValidation.php' );
-require( 'php/services/SettingService.php' );
-require( 'php/services/DBSeederService.php' );
-require( 'php/services/SettingsValidationService.php' );
-require( 'php/services/AutomationService.php' );
-require( 'php/services/EmailService.php' );
-require( 'php/services/ErrorHandlerService.php' );
-require( 'php/services/LabelService.php' );
-require( 'php/services/UploadService.php' );
-require( 'php/services/UUIDService.php' );
-require( 'php/services/FileService.php' );
-require( 'php/services/SlackService.php' );
-require( 'php/services/ServiceLocator.php' );
-require( 'php/services/SecretsService.php' );
-require( 'php/services/export/ExportService.php' );
-require( 'php/services/export/PDFExportService.php' );
-require( 'php/services/export/JSONExportService.php' );
-require( 'php/services/import/PipelineImportService.php' );
-require( 'php/services/DBMigrateService.php' );
-require( 'php/services/WebhookService.php' );
-require( 'php/services/WebhookEventService.php' );
-require( 'php/services/ApiTokenService.php' );
-require( 'php/services/ResponseService.php' );
+require('php/constants.php');
+require('php/db.php');
+require('php/response/ApiResponse.php');
+require('php/exeptions/WPQTExeption.php');
+require('php/repositories/PipelineRepository.php');
+require('php/repositories/TaskRepository.php');
+require('php/repositories/StageRepository.php');
+require('php/repositories/LogRepository.php');
+require('php/repositories/CommentRepository.php');
+require('php/repositories/UserRepository.php');
+require('php/repositories/UserPageRepository.php');
+require('php/repositories/PasswordRepository.php');
+require('php/repositories/SessionRepository.php');
+require('php/repositories/CustomFieldRepository.php');
+require('php/repositories/TimeRepository.php');
+require('php/repositories/AssetRepository.php');
+require('php/repositories/SettingRepository.php');
+require('php/repositories/OverViewRepository.php');
+require('php/repositories/AutomationRepository.php');
+require('php/repositories/EmailRepository.php');
+require('php/repositories/LabelRepository.php');
+require('php/repositories/UploadRepository.php');
+require('php/repositories/HeaderRepository.php');
+require('php/repositories/WebhookRepository.php');
+require('php/repositories/WebhookEventRepository.php');
+require('php/repositories/ApiTokenRepository.php');
+require('php/services/PipelineService.php');
+require('php/services/PermissionService.php');
+require('php/services/StageService.php');
+require('php/services/TaskService.php');
+require('php/services/LocationService.php');
+require('php/services/LogService.php');
+require('php/services/UserService.php');
+require('php/services/HashService.php');
+require('php/services/UserPageService.php');
+require('php/services/PasswordService.php');
+require('php/services/SessionService.php');
+require('php/services/NonceService.php');
+require('php/services/CommentService.php');
+require('php/services/CustomFieldService.php');
+require('php/services/CapabilityService.php');
+require('php/services/RequestValidation.php');
+require('php/services/SettingService.php');
+require('php/services/DBSeederService.php');
+require('php/services/SettingsValidationService.php');
+require('php/services/AutomationService.php');
+require('php/services/EmailService.php');
+require('php/services/ErrorHandlerService.php');
+require('php/services/LabelService.php');
+require('php/services/UploadService.php');
+require('php/services/UUIDService.php');
+require('php/services/FileService.php');
+require('php/services/SlackService.php');
+require('php/services/ServiceLocator.php');
+require('php/services/SecretsService.php');
+require('php/services/export/ExportService.php');
+require('php/services/export/PDFExportService.php');
+require('php/services/export/JSONExportService.php');
+require('php/services/import/PipelineImportService.php');
+require('php/services/DBMigrateService.php');
+require('php/services/WebhookService.php');
+require('php/services/WebhookEventService.php');
+require('php/services/ApiTokenService.php');
+require('php/services/ResponseService.php');
 
 ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
@@ -131,20 +131,20 @@ ServiceLocator::register('ApiTokenService', new WPQT\Token\ApiTokenService());
 ServiceLocator::register('ResponseService', new WPQT\Response\ResponseService());
 ServiceLocator::register('PipelineService', new WPQT\Pipeline\PipelineService());
 
-require( 'php/hooks.php' );
-require( 'php/actions.php' );
-require( 'php/filters.php' );
-require( 'php/api/admin-api.php' );
-require( 'php/api/user-page-api.php' );
-require( 'php/api/token-api.php' );
-require( 'php/side-effects.php' );
-require( 'php/db-seeder.php' );
+require('php/hooks.php');
+require('php/actions.php');
+require('php/filters.php');
+require('php/api/admin-api.php');
+require('php/api/user-page-api.php');
+require('php/api/token-api.php');
+require('php/side-effects.php');
+require('php/db-seeder.php');
 
-if( is_admin() ) {
-	require( 'php/admin-pages.php' );
-	require( 'php/enqueue-admin.php' );	
+if (is_admin()) {
+    require('php/admin-pages.php');
+    require('php/enqueue-admin.php');
 }
 
-if( !is_admin() ) {
-	require( 'php/enqueue-user-page-public.php' );
+if (!is_admin()) {
+    require('php/enqueue-user-page-public.php');
 }

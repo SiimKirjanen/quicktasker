@@ -1,14 +1,17 @@
 <?php
+
 namespace WPQT\UUID;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-if ( ! class_exists( 'WPQT\UUID\UUIDService' ) ) {
-    class UUIDService{
-        public function generateUUIDV4() {
-             // Generate 16 bytes (128 bits) of random data
+if (!class_exists('WPQT\UUID\UUIDService')) {
+    class UUIDService
+    {
+        public function generateUUIDV4()
+        {
+            // Generate 16 bytes (128 bits) of random data
             $data = random_bytes(16);
 
             // Set version to 0100

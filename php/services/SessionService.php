@@ -1,15 +1,17 @@
 <?php
+
 namespace WPQT\Session;
 
-use WPQT\WPQTException;
 use WPQT\Services\ServiceLocator;
+use WPQT\WPQTException;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
-    class SessionService {
+if (!class_exists('WPQT\Session\SessionService')) {
+    class SessionService
+    {
         /**
          * Calculates the expiry date for a new token.
          *
@@ -17,13 +19,14 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          *
          * @return string The expiry date in 'Y-m-d H:i:s' format in UTC.
          */
-        public function getNewTokenExpiryDate() {
+        public function getNewTokenExpiryDate()
+        {
             // Get the current UTC time
             $current_time = time();
-            
+
             // Calculate the expiry date
             $expiry_time = $current_time + WP_QUICKTASKER_SESSION_LENGHT;
-            
+
             // Return the expiry date in 'Y-m-d H:i:s' format in UTC
             return gmdate('Y-m-d H:i:s', $expiry_time);
         }
@@ -33,7 +36,8 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          *
          * @return string The generated session token.
          */
-        public function generateSessionToken() {
+        public function generateSessionToken()
+        {
             return bin2hex(random_bytes(32));
         }
 
@@ -45,28 +49,28 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          * @return UserSession The newly created user session.
          * @throws WPQTException If failed to delete existing session or create new session.
          */
-        public function createSession($userId, $userPageHash) {
+        public function createSession($userId, $userPageHash)
+        {
             global $wpdb;
 
             $result = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                array(
-                    'user_id' => $userId,
-                    'page_hash' => $userPageHash,
+                [
+                    'user_id'        => $userId,
+                    'page_hash'      => $userPageHash,
                     'created_at_utc' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                     'expires_at_utc' => $this->getNewTokenExpiryDate(),
-                    'session_token' => $this->generateSessionToken()
-                )
+                    'session_token'  => $this->generateSessionToken()
+                ]
             );
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new WPQTException('Failed to create new session');
             }
-            
+
             return ServiceLocator::get('SessionRepository')->getUserSessionById($wpdb->insert_id);
         }
 
-    
         /**
          * Deletes a session by marking it as inactive in the database.
          *
@@ -77,20 +81,21 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          * @return bool Returns true if the session was successfully marked as inactive.
          * @throws WPQTException If the session could not be marked as inactive.
          */
-        public function markSessionInactive($sessionToken) {
+        public function markSessionInactive($sessionToken)
+        {
             global $wpdb;
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                array(
+                [
                     'is_active' => 0
-                ),
-                array(
+                ],
+                [
                     'session_token' => $sessionToken
-                )
+                ]
             );
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new WPQTException('Failed to mark session as not active', true);
             }
 
@@ -104,17 +109,18 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          * @return bool True on successful deletion.
          * @throws WPQTException If the session deletion fails.
          */
-        public function deleteSession($sessionId) {
+        public function deleteSession($sessionId)
+        {
             global $wpdb;
 
             $result = $wpdb->delete(
                 TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                array(
+                [
                     'id' => $sessionId
-                )
+                ]
             );
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new WPQTException('Failed to delete session', true);
             }
 
@@ -131,20 +137,21 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          * @return bool Returns true on success.
          * @throws WPQTException If the update fails.
          */
-        public function changeSessionStatus($sessionId, $status) {
+        public function changeSessionStatus($sessionId, $status)
+        {
             global $wpdb;
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                array(
+                [
                     'is_active' => $status
-                ),
-                array(
+                ],
+                [
                     'id' => $sessionId
-                )
+                ]
             );
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new WPQTException('Failed to change session status', true);
             }
 
@@ -156,7 +163,8 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          *
          * This function is used to log out the current user from the WordPress session.
          */
-        public function logOutCurrentWPUser() {
+        public function logOutCurrentWPUser()
+        {
             wp_clear_auth_cookie();
         }
 
@@ -167,27 +175,28 @@ if ( ! class_exists( 'WPQT\Session\SessionService' ) ) {
          *
          * @return Session|null The session object if the token is valid and has not expired, null otherwise.
          */
-        public function verifySessionToken($pageHash) {
+        public function verifySessionToken($pageHash)
+        {
             $sessionToken = sanitize_text_field($_COOKIE['wpqt-session-token-' . $pageHash]);
             $session = ServiceLocator::get('SessionRepository')->getUserSession($sessionToken);
 
-            if( $session === null ) {
+            if (null === $session) {
                 throw new WPQTException(esc_html(WP_QUICKTASKER_INVALID_SESSION_TOKEN), true);
             }
 
-            if($pageHash !== $session->page_hash) {
+            if ($pageHash !== $session->page_hash) {
                 throw new WPQTException('Session token does not match the page hash', true);
             }
 
-            if( $session->is_active === '0' ) {
+            if ('0' === $session->is_active) {
                 throw new WPQTException('Session is not active', true);
             }
 
-            if( strtotime($session->expires_at_utc) < time() ) {
+            if (strtotime($session->expires_at_utc) < time()) {
                 throw new WPQTException('Session has expired', true);
             }
 
             return $session;
-        } 
+        }
     }
 }

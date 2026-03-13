@@ -2,13 +2,13 @@
 
 namespace WPQT\Label;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-if ( ! class_exists( 'WPQT\Label\LabelRepository' ) ) {
-    class LabelRepository {
-
+if (!class_exists('WPQT\Label\LabelRepository')) {
+    class LabelRepository
+    {
         /**
          * Retrieves a label by its ID.
          *
@@ -17,14 +17,15 @@ if ( ! class_exists( 'WPQT\Label\LabelRepository' ) ) {
          * @param int $id The ID of the label to retrieve.
          * @return object|null The label object containing id, pipeline_id, created_at, color, and name fields, or null if not found.
          */
-        public function getLabelById($id) {
+        public function getLabelById($id)
+        {
             global $wpdb;
 
-            return $wpdb->get_row( $wpdb->prepare(
-                "SELECT id, pipeline_id, created_at, color, name FROM " . TABLE_WP_QUICKTASKER_LABELS . "
-                WHERE id = %d",
+            return $wpdb->get_row($wpdb->prepare(
+                'SELECT id, pipeline_id, created_at, color, name FROM ' . TABLE_WP_QUICKTASKER_LABELS . '
+                WHERE id = %d',
                 $id
-            ) );
+            ));
         }
 
         /**
@@ -35,10 +36,11 @@ if ( ! class_exists( 'WPQT\Label\LabelRepository' ) ) {
          * @param array $taskIds An array of task IDs for which to retrieve the assigned labels.
          * @return array An array of label objects assigned to the specified task IDs. If no task IDs are provided, an empty array is returned.
          */
-        public function getAssignedLabelsByTaskIds($taskIds) {
+        public function getAssignedLabelsByTaskIds($taskIds)
+        {
             global $wpdb;
 
-            if ( empty($taskIds) ) {
+            if (empty($taskIds)) {
                 return [];
             }
 
@@ -46,9 +48,9 @@ if ( ! class_exists( 'WPQT\Label\LabelRepository' ) ) {
             $placeholders = implode(',', array_fill(0, count($taskIds), '%d'));
 
             $sql = $wpdb->prepare(
-                "SELECT a.id, a.pipeline_id, a.created_at, a.color, a.name, b.entity_id
-                FROM " . TABLE_WP_QUICKTASKER_LABELS . " AS a
-                INNER JOIN " . TABLE_WP_QUICKTASKER_LABEL_RELATIONS . " AS b 
+                'SELECT a.id, a.pipeline_id, a.created_at, a.color, a.name, b.entity_id
+                FROM ' . TABLE_WP_QUICKTASKER_LABELS . ' AS a
+                INNER JOIN ' . TABLE_WP_QUICKTASKER_LABEL_RELATIONS . " AS b 
                 ON a.id = b.label_id
                 WHERE b.entity_id IN ($placeholders) AND b.entity_type = 'task'
                 ORDER BY b.created_at",
@@ -66,13 +68,14 @@ if ( ! class_exists( 'WPQT\Label\LabelRepository' ) ) {
          * @param int $pipelineId The ID of the pipeline for which to retrieve the assigned labels.
          * @return array An array of label objects assigned to the specified pipeline ID.
          */
-        public function getPipelineLabels($pipelineId) {
+        public function getPipelineLabels($pipelineId)
+        {
             global $wpdb;
 
             $sql = $wpdb->prepare(
-                "SELECT id, pipeline_id, created_at, color, name
-                FROM " . TABLE_WP_QUICKTASKER_LABELS . "
-                WHERE pipeline_id = %d",
+                'SELECT id, pipeline_id, created_at, color, name
+                FROM ' . TABLE_WP_QUICKTASKER_LABELS . '
+                WHERE pipeline_id = %d',
                 $pipelineId
             );
 

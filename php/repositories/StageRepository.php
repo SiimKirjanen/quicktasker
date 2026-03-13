@@ -1,29 +1,32 @@
 <?php
+
 namespace WPQT\Stage;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-if ( ! class_exists( 'WPQT\Stage\StageRepository' ) ) {
-    class StageRepository {
+if (!class_exists('WPQT\Stage\StageRepository')) {
+    class StageRepository
+    {
         /**
          * Retrieves all pipeline stages from the database.
          *
          * @param int $pipelineId The ID of the pipeline.
          * @return array|null Array of stage objects, empty array if no stages found, or null on database error.
          */
-        public function getStagesByPipelineId($pipelineId) {
+        public function getStagesByPipelineId($pipelineId)
+        {
             global $wpdb;
 
-            return $wpdb->get_results( $wpdb->prepare(
-                "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . " AS a
-                INNER JOIN " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " AS b
+            return $wpdb->get_results($wpdb->prepare(
+                'SELECT a.*, b.stage_order FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . ' AS a
+                INNER JOIN ' . TABLE_WP_QUICKTASKER_STAGES_LOCATION . ' AS b
                 ON a.id = b.stage_id
                 WHERE a.pipeline_id = %d
-                ORDER BY b.stage_order",
+                ORDER BY b.stage_order',
                 $pipelineId
-            ) );
+            ));
         }
 
         /**
@@ -32,16 +35,17 @@ if ( ! class_exists( 'WPQT\Stage\StageRepository' ) ) {
          * @param int $stageId The ID of the stage to retrieve.
          * @return object|null The stage object if found, null otherwise.
          */
-        public function getStageById($stageId) {
+        public function getStageById($stageId)
+        {
             global $wpdb;
 
-            return $wpdb->get_row( $wpdb->prepare(
-                "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . " AS a
-                INNER JOIN " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " AS b
+            return $wpdb->get_row($wpdb->prepare(
+                'SELECT a.*, b.stage_order FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . ' AS a
+                INNER JOIN ' . TABLE_WP_QUICKTASKER_STAGES_LOCATION . ' AS b
                 ON a.id = b.stage_id
-                WHERE a.id = %d",
+                WHERE a.id = %d',
                 $stageId
-            ) );
+            ));
         }
 
         /**
@@ -50,10 +54,11 @@ if ( ! class_exists( 'WPQT\Stage\StageRepository' ) ) {
          * @param int $pipelineId The ID of the pipeline.
          * @return int The next stage order.
          */
-        public function getNextStageOrder($pipelineId) {
+        public function getNextStageOrder($pipelineId)
+        {
             $lastStageOrder = $this->getLastStageOrder($pipelineId);
 
-            return $lastStageOrder === 0 ? 0 : $lastStageOrder + 1;
+            return 0 === $lastStageOrder ? 0 : $lastStageOrder + 1;
         }
 
         /**
@@ -62,17 +67,18 @@ if ( ! class_exists( 'WPQT\Stage\StageRepository' ) ) {
          * @param int $pipelineId The ID of the pipeline.
          * @return int The highest stage order in the pipeline, or 0 if no stages are found.
          */
-        public function getLastStageOrder($pipelineId) {
+        public function getLastStageOrder($pipelineId)
+        {
             global $wpdb;
 
             $result = $wpdb->get_var(
                 $wpdb->prepare(
-                    "SELECT MAX(stage_order) FROM " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " WHERE pipeline_id = %d",
+                    'SELECT MAX(stage_order) FROM ' . TABLE_WP_QUICKTASKER_STAGES_LOCATION . ' WHERE pipeline_id = %d',
                     $pipelineId
                 )
             );
 
-            return $result === null ? 0 : $result;
+            return null === $result ? 0 : $result;
         }
 
         /**
@@ -82,16 +88,17 @@ if ( ! class_exists( 'WPQT\Stage\StageRepository' ) ) {
 
          * @return object|null The first stage object if found, null otherwise.
          */
-        public function getFirstStage($pipelineId) {
+        public function getFirstStage($pipelineId)
+        {
             global $wpdb;
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT a.*, b.stage_order FROM " . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . " AS a
-                    INNER JOIN " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " AS b
+                    'SELECT a.*, b.stage_order FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . ' AS a
+                    INNER JOIN ' . TABLE_WP_QUICKTASKER_STAGES_LOCATION . ' AS b
                     ON a.id = b.stage_id
                     WHERE a.pipeline_id = %d
-                    ORDER BY b.stage_order ASC",
+                    ORDER BY b.stage_order ASC',
                     $pipelineId
                 )
             );

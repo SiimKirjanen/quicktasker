@@ -4,12 +4,13 @@ namespace WPQT\Secrets;
 
 use Exception;
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit(); 
+if (!defined('ABSPATH')) {
+    exit();
 }
 
-if ( ! class_exists( 'WPQT\Secrets\SecretsService' ) ) {
-    class SecretsService {
+if (!class_exists('WPQT\Secrets\SecretsService')) {
+    class SecretsService
+    {
         private static $encryptionMethod = 'aes-256-cbc';
 
         /**
@@ -19,7 +20,8 @@ if ( ! class_exists( 'WPQT\Secrets\SecretsService' ) ) {
          *
          * @return bool Returns true if the OpenSSL extension is loaded, false otherwise.
          */
-        public static function isOpenSSLEnabled() {
+        public static function isOpenSSLEnabled()
+        {
             return extension_loaded('openssl');
         }
 
@@ -28,7 +30,8 @@ if ( ! class_exists( 'WPQT\Secrets\SecretsService' ) ) {
          *
          * @return string The encryption key defined by the constant AUTH_KEY.
          */
-        public static function getEncryptionKey() {
+        public static function getEncryptionKey()
+        {
             return AUTH_KEY;
         }
 
@@ -43,18 +46,19 @@ if ( ! class_exists( 'WPQT\Secrets\SecretsService' ) ) {
          * @return string The base64 encoded string containing the IV and the encrypted data.
          * @throws Exception If the OpenSSL extension is not enabled.
          */
-        public static function encrypt($data) {
-            if ( !self::isOpenSSLEnabled() ) {
+        public static function encrypt($data)
+        {
+            if (!self::isOpenSSLEnabled()) {
                 throw new Exception('OpenSSL extension is not enabled.');
             }
 
             $key = self::getEncryptionKey();
             $method = self::$encryptionMethod;
-            $ivlen  = openssl_cipher_iv_length($method);
+            $ivlen = openssl_cipher_iv_length($method);
             $iv = openssl_random_pseudo_bytes($ivlen);
             $encrypted = openssl_encrypt($data, $method, $key, 0, $iv);
 
-            return base64_encode( $iv . $encrypted );
+            return base64_encode($iv . $encrypted);
         }
 
         /**
@@ -69,8 +73,9 @@ if ( ! class_exists( 'WPQT\Secrets\SecretsService' ) ) {
          * @return string|false The decrypted data on success, or false on failure.
          * @throws Exception If the OpenSSL extension is not enabled.
          */
-        public static function decrypt($data) {
-            if ( !self::isOpenSSLEnabled() ) {
+        public static function decrypt($data)
+        {
+            if (!self::isOpenSSLEnabled()) {
                 throw new Exception('OpenSSL extension is not enabled.');
             }
 

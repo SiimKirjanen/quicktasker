@@ -2,15 +2,17 @@
 
 namespace WPQT\Webhooks;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
 use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\Webhooks\WebhookEventService' ) ) {
-    class WebhookEventService {
-        public function constructWebhookEventsFromExecutedAutomations($executedAutomations) {
+if (!class_exists('WPQT\Webhooks\WebhookEventService')) {
+    class WebhookEventService
+    {
+        public function constructWebhookEventsFromExecutedAutomations($executedAutomations)
+        {
             if (empty($executedAutomations)) {
                 return [];
             }

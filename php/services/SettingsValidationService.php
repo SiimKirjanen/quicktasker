@@ -2,14 +2,15 @@
 
 namespace WPQT\Settings;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\Settings\SettingsValidationService' ) ) {
-    class SettingsValidationService {
+if (!class_exists('WPQT\Settings\SettingsValidationService')) {
+    class SettingsValidationService
+    {
         /**
          * Checks if the task is allowed to be marked as done.
          *
@@ -20,17 +21,17 @@ if ( ! class_exists( 'WPQT\Settings\SettingsValidationService' ) ) {
          * @param int $taskId The ID of the task to check.
          * @return bool True if the task is allowed to be marked as done, false otherwise.
          */
-        public function isAllowedToMarkTaskDone($taskId) {
-            $task = ServiceLocator::get("TaskRepository")->getTaskById($taskId);
-            $pipelineSettings = ServiceLocator::get("SettingRepository")->getPipelineSettings($task->pipeline_id);
-            $taskStage = ServiceLocator::get("StageRepository")->getStageById($task->stage_id);
+        public function isAllowedToMarkTaskDone($taskId)
+        {
+            $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+            $pipelineSettings = ServiceLocator::get('SettingRepository')->getPipelineSettings($task->pipeline_id);
+            $taskStage = ServiceLocator::get('StageRepository')->getStageById($task->stage_id);
 
-            if ($pipelineSettings->allow_only_last_stage_task_done == '1') {
-                $lastStageOrder = ServiceLocator::get("StageRepository")->getLastStageOrder($task->pipeline_id);
+            if ('1' == $pipelineSettings->allow_only_last_stage_task_done) {
+                $lastStageOrder = ServiceLocator::get('StageRepository')->getLastStageOrder($task->pipeline_id);
 
                 return $taskStage->stage_order == $lastStageOrder;
-        
-            }else {
+            } else {
                 return true;
             }
         }

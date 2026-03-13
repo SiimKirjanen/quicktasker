@@ -1,95 +1,94 @@
 <?php
+
 namespace WPQT;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use WPQT\Nonce\NonceService;
-use WPQT\WPQTException;
-use WPQT\UserPage\UserPageService;
+use WPQT\Services\ServiceLocator;
 use WPQT\Session\SessionService;
 use WPQT\User\UserRepository;
-use WPQT\Services\ServiceLocator; 
+use WPQT\UserPage\UserPageService;
 
-if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
-    class RequestValidation {
-
+if (!class_exists('WPQT\RequestValidation')) {
+    class RequestValidation
+    {
         /**
          * Validates the user page API request and return request data.
-         * 
+         *
          * @param object $data The request data object.
          * @param array $args Optional arguments for validation.
          * @return array Returns an array with validated request data.
          * @throws WPQTException If validation fails.
          */
-        public static function validateUserPageApiRequest($data, $args = array()) {
+        public static function validateUserPageApiRequest($data, $args = [])
+        {
             $userPageHash = ServiceLocator::get('HeaderRepository')->getUserPageHash($data);
             $loggedInWPUserId = get_current_user_id() ?: null;
-            $requestData = array(
-                'userPageHash' => $userPageHash,
-                'loggedInWPUserId' => $loggedInWPUserId,
+            $requestData = [
+                'userPageHash'      => $userPageHash,
+                'loggedInWPUserId'  => $loggedInWPUserId,
                 'isQuicktaskerUser' => $userPageHash ? true : false,
-                'isWordPressUser' => !$userPageHash ? true : false,
-                'userType' => $userPageHash ? WP_QT_QUICKTASKER_USER_TYPE : WP_QT_WORDPRESS_USER_TYPE,
-            );
-            $defaults = array(
-                'nonce' => true,
-                'hash' => true,
-                'session' => true,
+                'isWordPressUser'   => !$userPageHash ? true : false,
+                'userType'          => $userPageHash ? WP_QT_QUICKTASKER_USER_TYPE : WP_QT_WORDPRESS_USER_TYPE,
+            ];
+            $defaults = [
+                'nonce'      => true,
+                'hash'       => true,
+                'session'    => true,
                 'userActive' => true
-            );
+            ];
             $args = wp_parse_args($args, $defaults);
 
-            if ( $args['nonce'] === true ) {
+            if (true === $args['nonce']) {
                 $nonce = $data->get_header('X-WPQT-USER-API-Nonce');
                 NonceService::verifyNonce($nonce, WPQT_USER_API_NONCE);
             }
-            
-            if ( $userPageHash ) {
+
+            if ($userPageHash) {
                 // We are dealing with QuickTasker user type
 
-                if ( $args['hash'] === true ) {
+                if (true === $args['hash']) {
                     $userPageService = new UserPageService();
 
-                    if( !$userPageService->checkIfUserPageHashExists($userPageHash) ) {
+                    if (!$userPageService->checkIfUserPageHashExists($userPageHash)) {
                         throw new WPQTException('User page does not exist', true);
                     }
                 }
 
-                if ( $args['session'] === true ) {
+                if (true === $args['session']) {
                     $sessionService = new SessionService();
                     $session = $sessionService->verifySessionToken($userPageHash);
                     $requestData['session'] = $session;
                 }
 
-                if ( $args['userActive'] === true && isset($requestData['session']) ) {
+                if (true === $args['userActive'] && isset($requestData['session'])) {
                     $userRepo = new UserRepository();
                     $isActive = $userRepo->isUserActive($requestData['session']->user_id);
 
-                    if ( !$isActive ) {
+                    if (!$isActive) {
                         throw new WPQTException('User is not active', true);
                     }
                 }
             } else {
                 // We are dealing with WordPress user type
 
-                if ( $args['session'] === true ) {
-
-                    if( $loggedInWPUserId === 0 ) {
+                if (true === $args['session']) {
+                    if (0 === $loggedInWPUserId) {
                         throw new WPQTException('User is not logged in', true);
                     }
                     $hasPermissions = ServiceLocator::get('PermissionService')->hasRequiredPermissionsForUserPageApp($loggedInWPUserId);
 
-                    if ( !$hasPermissions ) {
+                    if (!$hasPermissions) {
                         throw new WPQTException('User does not have permissions to access the user page app', true);
                     }
 
-                    $requestData['session'] = (object)[
+                    $requestData['session'] = (object) [
                         'user_id' => $loggedInWPUserId
                     ];
                 }
-                
             }
 
             return $requestData;
@@ -98,22 +97,24 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
         /**
          * Validates if a given parameter is numeric.
          *
-         * @param mixed  $param   The parameter to validate.
+         * @param mixed $param The parameter to validate.
          *
          * @return bool Returns true if the parameter is numeric, false otherwise.
          */
-        public static function validateNumericParam($param) {
+        public static function validateNumericParam($param)
+        {
             return is_numeric($param);
         }
 
         /**
          * Sanitizes a parameter to ensure it is an absolute integer.
          *
-         * @param mixed  $param   The parameter to sanitize.
+         * @param mixed $param The parameter to sanitize.
          *
          * @return int The sanitized absolute integer value of the parameter.
          */
-        public static function sanitizeAbsint($param) {
+        public static function sanitizeAbsint($param)
+        {
             return absint($param);
         }
 
@@ -123,42 +124,46 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to check.
          * @return bool Returns true if the parameter is a string, false otherwise.
          */
-        public static function validateStringParam($param) {
+        public static function validateStringParam($param)
+        {
             return is_string($param);
         }
 
         /**
          * Sanitizes a string parameter to ensure it is safe for use.
          *
-         * @param mixed  $param   The parameter to sanitize.
+         * @param mixed $param The parameter to sanitize.
          * @param object $request The request object (not used in this function).
-         * @param string $key     The key associated with the parameter (not used in this function).
+         * @param string $key The key associated with the parameter (not used in this function).
          *
          * @return string The sanitized string value of the parameter.
          */
-        public static function sanitizeStringParam($param) {
+        public static function sanitizeStringParam($param)
+        {
             return sanitize_text_field($param);
         }
 
         /**
          * Validates if a given parameter is boolean.
          *
-         * @param mixed  $param   The parameter to validate.
+         * @param mixed $param The parameter to validate.
          *
          * @return bool Returns true if the parameter is boolean, false otherwise.
          */
-        public static function validateBooleanParam($param) {
-            return is_bool($param) || in_array(strtolower($param), array('true', 'false', '1', '0'), true);
+        public static function validateBooleanParam($param)
+        {
+            return is_bool($param) || in_array(strtolower($param), ['true', 'false', '1', '0'], true);
         }
 
         /**
          * Sanitizes a boolean parameter to ensure it is safe for use.
          *
-         * @param mixed  $param   The parameter to sanitize.
+         * @param mixed $param The parameter to sanitize.
          *
          * @return bool The sanitized boolean value of the parameter.
          */
-        public static function sanitizeBooleanParam($param) {
+        public static function sanitizeBooleanParam($param)
+        {
             return rest_sanitize_boolean($param);
         }
 
@@ -168,8 +173,9 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param string $param The parameter to validate.
          * @return bool Returns true if the parameter is 'task' or 'user', false otherwise.
          */
-        public static function validateUserPageCustomFieldEntityType($param) {
-            return in_array($param, array('task', 'quicktasker', 'wp-user'));
+        public static function validateUserPageCustomFieldEntityType($param)
+        {
+            return in_array($param, ['task', 'quicktasker', 'wp-user']);
         }
 
         /**
@@ -178,7 +184,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param string $param The user type to validate.
          * @return bool True if the user type is valid, false otherwise.
          */
-        public static function validateUserType($param) {
+        public static function validateUserType($param)
+        {
             return in_array($param, WP_QT_USER_TYPES, true);
         }
 
@@ -188,7 +195,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param string $param The date parameter to validate.
          * @return bool Returns true if the parameter matches the date format, false otherwise.
          */
-        public static function validateDateParam($param) {
+        public static function validateDateParam($param)
+        {
             return preg_match('/^\d{4}-\d{2}-\d{2}$/', $param);
         }
 
@@ -200,10 +208,12 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is null or a valid numeric value, false otherwise.
          */
-        public static function validateOptionalNumericParam($param) {
-            if (is_null($param) || $param === 'null') {
+        public static function validateOptionalNumericParam($param)
+        {
+            if (is_null($param) || 'null' === $param) {
                 return true;
             }
+
             return self::validateNumericParam($param);
         }
 
@@ -216,23 +226,26 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to sanitize.
          * @return int|null The sanitized absolute integer or null if the parameter is null.
          */
-        public static function sanitizeOptionalAbsint($param) {
-            if (is_null($param) || $param === 'null') {
+        public static function sanitizeOptionalAbsint($param)
+        {
+            if (is_null($param) || 'null' === $param) {
                 return null;
             }
+
             return self::sanitizeAbsint($param);
         }
 
         /**
          * Validates if a given parameter is a string or null.
          *
-         * @param mixed  $param   The parameter to validate.
+         * @param mixed $param The parameter to validate.
          * @param object $request The request object (not used in the current implementation).
-         * @param string $key     The key associated with the parameter (not used in the current implementation).
+         * @param string $key The key associated with the parameter (not used in the current implementation).
          *
          * @return bool Returns true if the parameter is a string or null, false otherwise.
          */
-        public static function validateOptionalStringParam($param) {
+        public static function validateOptionalStringParam($param)
+        {
             return is_null($param) || self::validateStringParam($param);
         }
 
@@ -245,7 +258,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to sanitize.
          * @return string|null The sanitized string or null if the parameter is null.
          */
-        public static function sanitizeOptionalStringParam($param) {
+        public static function sanitizeOptionalStringParam($param)
+        {
             return is_null($param) ? null : self::sanitizeStringParam($param);
         }
 
@@ -258,7 +272,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is a valid automation target type, false otherwise.
          */
-        public static function validateAutomationTargetType($param) {
+        public static function validateAutomationTargetType($param)
+        {
             return in_array($param, WP_QUICKTASKER_AUTOMATION_TARGET_TYPES);
         }
 
@@ -268,7 +283,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid automation trigger, false otherwise.
          */
-        public static function validateAutomationTrigger($param) {
+        public static function validateAutomationTrigger($param)
+        {
             return in_array($param, WP_QUICKTASKER_AUTOMATION_TRIGGERS);
         }
 
@@ -281,7 +297,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is a valid automation action, false otherwise.
          */
-        public static function validateAutomationAction($param) {
+        public static function validateAutomationAction($param)
+        {
             return in_array($param, WP_QUICKTASKER_AUTOMATION_ACTIONS);
         }
 
@@ -293,7 +310,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid automation action target type, false otherwise.
          */
-        public static function valdiateAutomationActionTargetType($param) {
+        public static function valdiateAutomationActionTargetType($param)
+        {
             return in_array($param, WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES);
         }
 
@@ -305,7 +323,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is null or a valid automation action target type, false otherwise.
          */
-        public static function validateOptionslAutomationActionTargetType($param) {
+        public static function validateOptionslAutomationActionTargetType($param)
+        {
             return is_null($param) || self::valdiateAutomationActionTargetType($param);
         }
 
@@ -317,7 +336,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid automation action target value, false otherwise.
          */
-        public static function validateLogType($param) {
+        public static function validateLogType($param)
+        {
             return in_array($param, WP_QT_LOG_TYPES, true);
         }
 
@@ -329,7 +349,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid log created by value, false otherwise.
          */
-        public static function validateLogCreatedBy($param) {
+        public static function validateLogCreatedBy($param)
+        {
             return in_array($param, WP_QT_LOG_CREATED_BY, true);
         }
 
@@ -341,7 +362,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid log status, false otherwise.
          */
-        public static function validateLogStatus($param) {
+        public static function validateLogStatus($param)
+        {
             return in_array($param, WP_QT_LOG_STATUS, true);
         }
 
@@ -353,8 +375,9 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid log created for value, false otherwise.
          */
-        public static function valdiateQueryOrder($param) {
-            return in_array($param, array('ASC', 'DESC'));
+        public static function valdiateQueryOrder($param)
+        {
+            return in_array($param, ['ASC', 'DESC']);
         }
 
         /**
@@ -365,7 +388,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid comment type, false otherwise.
          */
-        public static function validateCommentType($param) {
+        public static function validateCommentType($param)
+        {
             return in_array($param, WP_QUICKTASKER_COMMENT_TYPES, true);
         }
 
@@ -377,7 +401,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid custom field entity type, false otherwise.
          */
-        public static function validateCustomFieldEntityType($param) {
+        public static function validateCustomFieldEntityType($param)
+        {
             return in_array($param, WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES, true);
         }
 
@@ -389,22 +414,23 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid custom field type, false otherwise.
          */
-        public static function validateCustomFieldType($param) {
+        public static function validateCustomFieldType($param)
+        {
             return in_array($param, WP_QUICKTASKER_CUSTOM_FIELD_TYPES, true);
         }
-
 
         /**
          * Validates if the given parameter is a valid hexadecimal color code.
          *
-         * This function checks if the provided string matches the pattern of a 
-         * hexadecimal color code, which starts with a '#' followed by exactly 
+         * This function checks if the provided string matches the pattern of a
+         * hexadecimal color code, which starts with a '#' followed by exactly
          * six hexadecimal digits (0-9, a-f, A-F).
          *
          * @param string $param The string to be validated as a hexadecimal color code.
          * @return bool Returns true if the string is a valid hexadecimal color code, false otherwise.
          */
-        public static function validateHexColor($param) {
+        public static function validateHexColor($param)
+        {
             return preg_match('/^#[a-f0-9]{6}$/i', $param);
         }
 
@@ -414,7 +440,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool True if the parameter is a valid upload entity type, false otherwise.
          */
-        public static function validateUploadEntityType($param) {
+        public static function validateUploadEntityType($param)
+        {
             return in_array($param, WP_QUICKTASKER_UPLOAD_ENTITY_TYPES);
         }
 
@@ -426,7 +453,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is a valid import source, false otherwise.
          */
-        public static function validateImportSource($param) {
+        public static function validateImportSource($param)
+        {
             return in_array($param, WP_QUICKTASKER_IMPORT_SOURCES);
         }
 
@@ -438,10 +466,12 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is null or a valid hexadecimal color code, false otherwise.
          */
-        public static function validateColorParam($param) {
-            if (is_null($param) || $param === 'null') {
+        public static function validateColorParam($param)
+        {
+            if (is_null($param) || 'null' === $param) {
                 return true; // Allow null values
             }
+
             return self::validateHexColor($param);
         }
 
@@ -453,7 +483,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is a valid archive status filter, false otherwise.
          */
-        public static function validateArchiveStatusFilter($param) {
+        public static function validateArchiveStatusFilter($param)
+        {
             return in_array($param, WP_QUICKTASKER_ARCHIVE_STATUS_FILTER, true);
         }
 
@@ -465,7 +496,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is a valid webhook target type, false otherwise.
          */
-        public static function validateWebhookTargetType($param) {
+        public static function validateWebhookTargetType($param)
+        {
             return in_array($param, WP_QUICKTASKER_WEBHOOK_TARGET_TYPES, true);
         }
 
@@ -477,7 +509,8 @@ if ( ! class_exists( 'WPQT\RequestValidation' ) ) {
          * @param mixed $param The parameter to validate.
          * @return bool Returns true if the parameter is a valid webhook target action, false otherwise.
          */
-        public static function validateWebhookTargetAction($param) {
+        public static function validateWebhookTargetAction($param)
+        {
             return in_array($param, WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS, true);
         }
     }

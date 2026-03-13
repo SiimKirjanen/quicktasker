@@ -2,33 +2,35 @@
 
 namespace WPQT\Import;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
 use Exception;
-use WPQT\Services\ServiceLocator;
-use WPQT\Pipeline\PipelineService;
-use WPQT\Stage\StageService;
 use WPQT\Comment\CommentService;
+use WPQT\Pipeline\PipelineService;
+use WPQT\Services\ServiceLocator;
+use WPQT\Stage\StageService;
 
-if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
-    class PipelineImportService {
+if (!class_exists('WPQT\Import\PipelineImportService')) {
+    class PipelineImportService
+    {
         /**
-             * Validate the WPQTImport structure.
-             *
-             * @param array $importData The decoded import data.
-             * @return void
-             * @throws Exception If validation fails.
+         * Validate the WPQTImport structure.
+         *
+         * @param array $importData The decoded import data.
+         * @return void
+         * @throws Exception If validation fails.
          */
-        public function validateWPQTImport($importData) {
+        public function validateWPQTImport($importData)
+        {
             if (
-                ! isset($importData['pipelineName']) ||
-                ! isset($importData['pipelineDescription']) ||
-                ! isset($importData['stages']) ||
-                ! isset($importData['tasks']) ||
-                ! isset($importData['labels']) ||
-                ! isset($importData['taskComments'])
+                !isset($importData['pipelineName']) ||
+                !isset($importData['pipelineDescription']) ||
+                !isset($importData['stages']) ||
+                !isset($importData['tasks']) ||
+                !isset($importData['labels']) ||
+                !isset($importData['taskComments'])
             ) {
                 throw new Exception('Invalid WPQTImport structure.');
             }
@@ -36,9 +38,9 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             // Validate stages
             foreach ($importData['stages'] as $stage) {
                 if (
-                    ! isset($stage['stageName']) ||
-                    ! isset($stage['stageDescription']) ||
-                    ! isset($stage['stageId'])
+                    !isset($stage['stageName']) ||
+                    !isset($stage['stageDescription']) ||
+                    !isset($stage['stageId'])
                 ) {
                     throw new Exception('Invalid stage structure.');
                 }
@@ -47,14 +49,14 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             // Validate tasks
             foreach ($importData['tasks'] as $task) {
                 if (
-                    ! isset($task['taskId']) ||
-                    ! isset($task['taskName']) ||
-                    ! isset($task['taskDescription']) ||
-                    ! isset($task['stageId']) ||
-                    ! isset($task['assignedLabels']) ||
-                    ! isset($task['archived']) ||
-                    ! array_key_exists('dueDate', $task) ||
-                    ! array_key_exists('taskCompletedAt', $task)
+                    !isset($task['taskId']) ||
+                    !isset($task['taskName']) ||
+                    !isset($task['taskDescription']) ||
+                    !isset($task['stageId']) ||
+                    !isset($task['assignedLabels']) ||
+                    !isset($task['archived']) ||
+                    !array_key_exists('dueDate', $task) ||
+                    !array_key_exists('taskCompletedAt', $task)
                 ) {
                     throw new Exception('Invalid task structure.');
                 }
@@ -62,9 +64,9 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 // Validate assigned labels in tasks
                 foreach ($task['assignedLabels'] as $label) {
                     if (
-                        ! isset($label['labelName']) ||
-                        ! isset($label['labelId']) ||
-                        ! isset($label['color'])
+                        !isset($label['labelName']) ||
+                        !isset($label['labelId']) ||
+                        !isset($label['color'])
                     ) {
                         throw new Exception('Invalid label structure in task.');
                     }
@@ -73,11 +75,11 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 // Validate custom fields
                 foreach ($task['customFields'] as $field) {
                     if (
-                        ! isset($field['name']) ||
-                        ! isset($field['type']) ||
-                        ! isset($field['entity_type']) ||
-                        ! isset($field['entity_id']) ||
-                        ! isset($field['task_id'])
+                        !isset($field['name']) ||
+                        !isset($field['type']) ||
+                        !isset($field['entity_type']) ||
+                        !isset($field['entity_id']) ||
+                        !isset($field['task_id'])
                     ) {
                         throw new Exception('Invalid task custom field structure.');
                     }
@@ -87,9 +89,9 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             // Validate labels
             foreach ($importData['labels'] as $label) {
                 if (
-                    ! isset($label['labelName']) ||
-                    ! isset($label['labelId']) ||
-                    ! isset($label['color'])
+                    !isset($label['labelName']) ||
+                    !isset($label['labelId']) ||
+                    !isset($label['color'])
                 ) {
                     throw new Exception('Invalid label structure.');
                 }
@@ -98,18 +100,19 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             // Validate task public comments
             foreach ($importData['taskComments'] as $comment) {
                 if (
-                    ! isset($comment['commentId']) ||
-                    ! isset($comment['taskId']) ||
-                    ! isset($comment['createdAt']) ||
-                    ! isset($comment['commentText']) ||
-                    ! isset($comment['isPrivate'])
+                    !isset($comment['commentId']) ||
+                    !isset($comment['taskId']) ||
+                    !isset($comment['createdAt']) ||
+                    !isset($comment['commentText']) ||
+                    !isset($comment['isPrivate'])
                 ) {
                     throw new Exception('Invalid comment structure.');
                 }
             }
         }
 
-        public function importPipeline($source, $importData) {
+        public function importPipeline($source, $importData)
+        {
             $pipelineService = new PipelineService();
             $stageService = new StageService();
             $commentService = new CommentService();
@@ -117,7 +120,7 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
             $taskService = ServiceLocator::get('TaskService');
             $logService = ServiceLocator::get('LogService');
             $customFieldService = ServiceLocator::get('CustomFieldService');
-        
+
             $currentUserId = get_current_user_id();
 
             //Step 1. Create a new pipeline
@@ -127,22 +130,24 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                     'description' => $importData['pipelineDescription'],
                 ]
             );
-            $logService->log("Board {$newPipeline->name} created by {$source}", [
-                    'type' => WP_QT_LOG_TYPE_PIPELINE,
-                    'type_id' => $newPipeline->id,
-                    'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+            $logService->log(
+                "Board {$newPipeline->name} created by {$source}",
+                [
+                    'type'        => WP_QT_LOG_TYPE_PIPELINE,
+                    'type_id'     => $newPipeline->id,
+                    'created_by'  => WP_QT_LOG_CREATED_BY_IMPORT,
                     'pipeline_id' => $newPipeline->id,
-                    'user_id' => $currentUserId,
+                    'user_id'     => $currentUserId,
                 ]
             );
 
             // Step 2. Create stages
-            $stageIdMap = []; 
+            $stageIdMap = [];
             foreach ($importData['stages'] as $stage) {
                 $newStage = $stageService->createStage(
                     $newPipeline->id,
                     [
-                        'name' => $stage['stageName'],
+                        'name'        => $stage['stageName'],
                         'description' => $stage['stageDescription'],
                     ]
                 );
@@ -151,11 +156,11 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 $stageIdMap[$stage['stageId']] = $newStage->id;
 
                 $logService->log("Stage {$newStage->name} created by {$source}", [
-                    'type' => WP_QT_LOG_TYPE_PIPELINE,
-                    'type_id' => $newPipeline->id,
-                    'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                    'type'        => WP_QT_LOG_TYPE_PIPELINE,
+                    'type_id'     => $newPipeline->id,
+                    'created_by'  => WP_QT_LOG_CREATED_BY_IMPORT,
                     'pipeline_id' => $newPipeline->id,
-                    'user_id' => $currentUserId,
+                    'user_id'     => $currentUserId,
                 ]);
             }
 
@@ -172,20 +177,20 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 $labelIdMap[$label['labelId']] = $newLabel->id;
 
                 $logService->log("Label {$newLabel->name} created by {$source}", [
-                    'type' => WP_QT_LOG_TYPE_PIPELINE,
-                    'type_id' => $newPipeline->id,
-                    'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                    'type'        => WP_QT_LOG_TYPE_PIPELINE,
+                    'type_id'     => $newPipeline->id,
+                    'created_by'  => WP_QT_LOG_CREATED_BY_IMPORT,
                     'pipeline_id' => $newPipeline->id,
-                    'user_id' => $currentUserId,
+                    'user_id'     => $currentUserId,
                 ]);
             }
 
             // Step 4. Create pipeline level custom fields
             $pipelineLevelCustomFields = [];
             foreach ($importData['tasks'] as $task) {
-                if ( isset($task['customFields']) && is_array($task['customFields']) ) {
-                    foreach ( $task['customFields'] as $field ) {
-                        if ( $field['entity_type'] === WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE && !isset($pipelineLevelCustomFields[$field['id']])) {
+                if (isset($task['customFields']) && is_array($task['customFields'])) {
+                    foreach ($task['customFields'] as $field) {
+                        if (WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE === $field['entity_type'] && !isset($pipelineLevelCustomFields[$field['id']])) {
                             $pipelineLevelCustomFields[$field['id']] = $field;
 
                             $newCustomField = $customFieldService->createCustomField(
@@ -196,7 +201,7 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                                 $newPipeline->id,
                             );
 
-                            if ( $field['value'] ) {
+                            if ($field['value']) {
                                 $customFieldService->updateCustomFieldValue(
                                     $newCustomField->id,
                                     $newPipeline->id,
@@ -204,7 +209,7 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                                     $field['value']
                                 );
                             }
-                        } 
+                        }
                     }
                 }
             }
@@ -218,23 +223,23 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 $newTask = $taskService->createTask(
                     $newStageId,
                     [
-                        'name' => $task['taskName'],
-                        'description' => $task['taskDescription'],
-                        'pipelineId' => $newPipeline->id,
-                        'is_archived' => $task['archived'],
-                        'due_date' => isset($task['dueDate']) ? $task['dueDate'] : null,
+                        'name'              => $task['taskName'],
+                        'description'       => $task['taskDescription'],
+                        'pipelineId'        => $newPipeline->id,
+                        'is_archived'       => $task['archived'],
+                        'due_date'          => isset($task['dueDate']) ? $task['dueDate'] : null,
                         'task_completed_at' => isset($task['taskCompletedAt']) ? $task['taskCompletedAt'] : null,
-                        'is_done' => isset($task['taskCompletedAt']) ? true : false,
-                        'task_focus_color' => isset($task['taskFocusColor']) ? $task['taskFocusColor'] : null,
+                        'is_done'           => isset($task['taskCompletedAt']) ? true : false,
+                        'task_focus_color'  => isset($task['taskFocusColor']) ? $task['taskFocusColor'] : null,
                     ]
                 );
 
                 $logService->log("Task {$newTask->name} created by {$source}", [
-                    'type' => WP_QT_LOG_TYPE_TASK,
-                    'type_id' => $newTask->id,
-                    'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                    'type'        => WP_QT_LOG_TYPE_TASK,
+                    'type_id'     => $newTask->id,
+                    'created_by'  => WP_QT_LOG_CREATED_BY_IMPORT,
                     'pipeline_id' => $newPipeline->id,
-                    'user_id' => $currentUserId,
+                    'user_id'     => $currentUserId,
                 ]);
 
                 // Assign labels to the task
@@ -247,37 +252,36 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                 }
 
                 // Add comments to the task
-                $taskComments = isset($importData['taskComments']) ? array_filter($importData['taskComments'], function($comment) use ($task) {
+                $taskComments = isset($importData['taskComments']) ? array_filter($importData['taskComments'], function ($comment) use ($task) {
                     return $comment['taskId'] === $task['taskId'];
                 }) : [];
 
                 foreach ($taskComments as $comment) {
-                    
                     $commentService->createComment(
                         $newTask->id,
                         WP_QUICKTASKER_COMMENT_TYPE_TASK,
-                        array(
-                            'isPrivate' => (bool) $comment['isPrivate'],
-                            'text' => $comment['commentText'],
-                            'authorId' => $comment['authorId'],
+                        [
+                            'isPrivate'  => (bool) $comment['isPrivate'],
+                            'text'       => $comment['commentText'],
+                            'authorId'   => $comment['authorId'],
                             'authorType' => $comment['authorType'],
-                            'createdAt' => $comment['createdAt'],
-                        )
+                            'createdAt'  => $comment['createdAt'],
+                        ]
                     );
 
                     $logService->log("Comment was added to a task {$newTask->name} by {$source}", [
-                        'type' => WP_QT_LOG_TYPE_TASK,
-                        'type_id' => $newTask->id,
-                        'created_by' => WP_QT_LOG_CREATED_BY_IMPORT,
+                        'type'        => WP_QT_LOG_TYPE_TASK,
+                        'type_id'     => $newTask->id,
+                        'created_by'  => WP_QT_LOG_CREATED_BY_IMPORT,
                         'pipeline_id' => $newPipeline->id,
-                        'user_id' => $comment['authorId'],
+                        'user_id'     => $comment['authorId'],
                     ]);
                 }
 
                 // Add task level custom fields
-                if ( isset($task['customFields']) && is_array($task['customFields']) ) {
-                    foreach ( $task['customFields'] as $field ) {
-                        if ( $field['entity_type'] === WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK ) {
+                if (isset($task['customFields']) && is_array($task['customFields'])) {
+                    foreach ($task['customFields'] as $field) {
+                        if (WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK === $field['entity_type']) {
                             $createdCustomField = $customFieldService->createCustomField(
                                 $field['name'],
                                 $field['description'],
@@ -286,12 +290,12 @@ if ( ! class_exists( 'WPQT\Import\PipelineImportService' ) ) {
                                 $newTask->id
                             );
 
-                            if ( $field['value'] ) {
+                            if ($field['value']) {
                                 $customFieldService->updateCustomFieldValue(
                                     $createdCustomField->id,
                                     $newTask->id,
                                     WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK,
-                                    $field['value'] 
+                                    $field['value']
                                 );
                             }
                         }

@@ -2,12 +2,13 @@
 
 namespace WPQT\Log;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
-    class LogRepository {
+if (!class_exists('WPQT\Log\LogRepository')) {
+    class LogRepository
+    {
         /**
          * Retrieves a log entry by its ID.
          *
@@ -17,12 +18,13 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
          * @param int $logId The ID of the log entry to retrieve.
          * @return object|null The log entry object if found, null otherwise.
          */
-        public function getLogById($logId) {
+        public function getLogById($logId)
+        {
             global $wpdb;
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT * FROM " . TABLE_WP_QUICKTASKS_LOGS . " WHERE id = %d",
+                    'SELECT * FROM ' . TABLE_WP_QUICKTASKS_LOGS . ' WHERE id = %d',
                     $logId
                 )
             );
@@ -39,7 +41,8 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
          * @global wpdb $wpdb WordPress database abstraction object.
          * @return array An array of log objects containing log details and author names.
          */
-        public function getLogs($typeId, $type) {
+        public function getLogs($typeId, $type)
+        {
             global $wpdb;
 
             $table_logs = TABLE_WP_QUICKTASKS_LOGS;
@@ -87,13 +90,14 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
          * @param string|null $logCreatedById The ID of the creator to filter by.
          * @return array The retrieved logs from the database.
          */
-        public function getGlobalLogs($logType, $typeId, $logCreatedBy, $numberOfLogs, $logOrder, $logStatus, $logSearch, $logCreatedById) {
+        public function getGlobalLogs($logType, $typeId, $logCreatedBy, $numberOfLogs, $logOrder, $logStatus, $logSearch, $logCreatedById)
+        {
             global $wpdb;
 
             $table_logs = TABLE_WP_QUICKTASKS_LOGS;
             $table_users = $wpdb->users;
             $table_quicktasker_users = TABLE_WP_QUICKTASKER_USERS;
-            $order = $logOrder === 'ASC' ? 'ASC' : 'DESC';
+            $order = 'ASC' === $logOrder ? 'ASC' : 'DESC';
 
             $sql = "
                 SELECT 
@@ -117,41 +121,41 @@ if ( ! class_exists( 'WPQT\Log\LogRepository' ) ) {
             $whereClauses = [];
             $queryParams = [];
 
-            if ($logType !== null) {
-                $whereClauses[] = "logs.type = %s";
+            if (null !== $logType) {
+                $whereClauses[] = 'logs.type = %s';
                 $queryParams[] = $logType;
             }
 
-            if ($typeId !== null) {
-                $whereClauses[] = "logs.type_id = %d";
+            if (null !== $typeId) {
+                $whereClauses[] = 'logs.type_id = %d';
                 $queryParams[] = $typeId;
             }
 
-            if ($logCreatedBy !== null) {
-                $whereClauses[] = "logs.created_by = %s";
+            if (null !== $logCreatedBy) {
+                $whereClauses[] = 'logs.created_by = %s';
                 $queryParams[] = $logCreatedBy;
             }
 
-            if ($logCreatedById !== null) {
-                $whereClauses[] = "logs.created_by_id = %d";
+            if (null !== $logCreatedById) {
+                $whereClauses[] = 'logs.created_by_id = %d';
                 $queryParams[] = $logCreatedById;
             }
 
-            if ($logStatus !== null) {
-                $whereClauses[] = "logs.log_status = %s";
+            if (null !== $logStatus) {
+                $whereClauses[] = 'logs.log_status = %s';
                 $queryParams[] = $logStatus;
             }
 
-            if ($logSearch !== null) {
-                $whereClauses[] = "logs.text LIKE %s";
+            if (null !== $logSearch) {
+                $whereClauses[] = 'logs.text LIKE %s';
                 $queryParams[] = '%' . $wpdb->esc_like($logSearch) . '%';
             }
-        
+
             if (!empty($whereClauses)) {
                 $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
             }
 
-            $sql .= " ORDER BY logs.created_at " . $order;
+            $sql .= ' ORDER BY logs.created_at ' . $order;
 
             $results = $wpdb->get_results($wpdb->prepare($sql, ...$queryParams));
 

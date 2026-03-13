@@ -2,52 +2,55 @@
 
 namespace WPQT\Customfield;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-use WPQT\WPQTException;
 use WPQT\Services\ServiceLocator;
+use WPQT\WPQTException;
 
-if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
-    class CustomFieldService {
-    /**
-     * Creates a custom field in the database.
-     *
-     * @param string $name The name of the custom field.
-     * @param string $description The description of the custom field.
-     * @param string $type The type of the custom field.
-     * @param string $entityType The type of the entity the custom field is associated with.
-     * @param int|'null' $entityId The ID of the entity the custom field is associated with.
-     * @return int The ID of the newly created custom field.
-     * @throws WPQTException If the custom field could not be added to the database.
-     */
-    public function createCustomField($name, $description, $type, $entityType, $entityId) {
+if (!class_exists('WPQT\Customfield\CustomFieldService')) {
+    class CustomFieldService
+    {
+        /**
+         * Creates a custom field in the database.
+         *
+         * @param string $name The name of the custom field.
+         * @param string $description The description of the custom field.
+         * @param string $type The type of the custom field.
+         * @param string $entityType The type of the entity the custom field is associated with.
+         * @param int|'null' $entityId The ID of the entity the custom field is associated with.
+         * @return int The ID of the newly created custom field.
+         * @throws WPQTException If the custom field could not be added to the database.
+         */
+        public function createCustomField($name, $description, $type, $entityType, $entityId)
+        {
             global $wpdb;
 
             // Convert string "null" to actual NULL
-            if ($entityId === "null") {
-                $entityId = NULL;
+            if ('null' === $entityId) {
+                $entityId = null;
             }
 
             $result = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
-                array(
-                    'name' => $name,
+                [
+                    'name'        => $name,
                     'description' => $description,
-                    'type' => $type,
+                    'type'        => $type,
                     'entity_type' => $entityType,
-                    'entity_id' => $entityId,
-                    'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
-                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-                ),
-                array('%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s')
-            ); 
+                    'entity_id'   => $entityId,
+                    'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                    'updated_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+                ],
+                ['%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s']
+            );
 
-            if ($result === false) {
+            if (false === $result) {
                 // Debugging information
                 $error_message = $wpdb->last_error;
                 $last_query = $wpdb->last_query;
+
                 throw new WPQTException(esc_html('Failed to add a custom field. Error: ' . $error_message . ' Query: ' . $last_query));
             }
 
@@ -66,26 +69,27 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
          * @return bool Returns true if the custom field was successfully marked as deleted.
          * @throws WPQTException If the update operation fails.
          */
-        public function markCustomFieldAsDeleted($customFieldId) {
+        public function markCustomFieldAsDeleted($customFieldId)
+        {
             global $wpdb;
 
             $currentTime = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
-                array(
+                [
                     'is_deleted' => 1,
                     'updated_at' => $currentTime,
                     'deleted_at' => $currentTime,
-                ),
-                array(
+                ],
+                [
                     'id' => $customFieldId
-                ),
-                array('%d', '%s', '%s'),
-                array('%d')
+                ],
+                ['%d', '%s', '%s'],
+                ['%d']
             );
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new WPQTException('Failed to mark the custom field as deleted');
             }
 
@@ -106,46 +110,49 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
          * @return bool True on success, throws WPQTException on failure.
          * @throws WPQTException If the custom field value update or insert fails.
          */
-        public function updateCustomFieldValue($customFieldId, $entityId, $entityType, $value) {
+        public function updateCustomFieldValue($customFieldId, $entityId, $entityType, $value)
+        {
             global $wpdb;
 
             // Check if the custom field value already exists
             $existingValue = $wpdb->get_var($wpdb->prepare(
-                "SELECT id FROM " . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES . " 
-                WHERE custom_field_id = %d AND entity_id = %d AND entity_type = %s",
-                $customFieldId, $entityId, $entityType
+                'SELECT id FROM ' . TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES . ' 
+                WHERE custom_field_id = %d AND entity_id = %d AND entity_type = %s',
+                $customFieldId,
+                $entityId,
+                $entityType
             ));
 
             if ($existingValue) {
                 // Update existing custom field value
                 $result = $wpdb->update(
                     TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES,
-                    array(
-                        'value' => $value,
+                    [
+                        'value'      => $value,
                         'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-                    ),
-                    array(
+                    ],
+                    [
                         'id' => $existingValue
-                    ),
-                    array('%s', '%s'),
-                    array('%d')
+                    ],
+                    ['%s', '%s'],
+                    ['%d']
                 );
             } else {
                 // Insert new custom field value
                 $result = $wpdb->insert(
                     TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES,
-                    array(
+                    [
                         'custom_field_id' => $customFieldId,
-                        'entity_id' => $entityId,
-                        'entity_type' => $entityType,
-                        'value' => $value,
-                        'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
-                        'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-                    )
+                        'entity_id'       => $entityId,
+                        'entity_type'     => $entityType,
+                        'value'           => $value,
+                        'created_at'      => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                        'updated_at'      => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+                    ]
                 );
             }
 
-            if ($result === false) {
+            if (false === $result) {
                 throw new WPQTException('Failed to update the custom field value');
             }
 
@@ -162,23 +169,24 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
          * @return bool True on success, throws WPQTException on failure.
          * @throws WPQTException If the entity type does not support default values or if the update fails.
          */
-        public function updateCustomFieldDefaultValue($customFieldId, $value) {
+        public function updateCustomFieldDefaultValue($customFieldId, $value)
+        {
             global $wpdb;
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
-                array(
+                [
                     'default_value' => $value,
-                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-                ),
-                array(
+                    'updated_at'    => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+                ],
+                [
                     'id' => $customFieldId,
-                ),
-                array('%s', '%s'),
-                array('%d')
+                ],
+                ['%s', '%s'],
+                ['%d']
             );
 
-            if ($result === false) {
+            if (false === $result) {
                 throw new WPQTException('Failed to update the custom field default value');
             }
 
@@ -192,23 +200,24 @@ if ( ! class_exists( 'WPQT\Customfield\CustomFieldService' ) ) {
          * @return array The restored custom field data.
          * @throws WPQTException If the custom field could not be restored.
          */
-        public function restoreCustomField($customFieldId) {
+        public function restoreCustomField($customFieldId)
+        {
             global $wpdb;
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
-                array(
+                [
                     'is_deleted' => 0,
                     'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-                ),
-                array(
+                ],
+                [
                     'id' => $customFieldId
-                ),
-                array('%d', '%s'),
-                array('%d')
+                ],
+                ['%d', '%s'],
+                ['%d']
             );
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new WPQTException('Failed to restore the custom field');
             }
 
