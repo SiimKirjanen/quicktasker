@@ -2,13 +2,13 @@
 
 namespace WPQT\Capability;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
-if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
-    class CapabilityService {
-
+if (!class_exists('WPQT\Capability\CapabilityService')) {
+    class CapabilityService
+    {
         /**
          * Adds QuickTasker admin capabilities to the administrator role.
          *
@@ -26,39 +26,40 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
          *
          * @return void
          */
-        public function addQuickTaskerAdminCapabilityToAdminRole() {
+        public function addQuickTaskerAdminCapabilityToAdminRole()
+        {
             $adminRole = get_role('administrator');
 
-            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE) ) {
+            if (!$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE)) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE);
             }
 
-            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE) ) {
+            if (!$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE)) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE);
             }
 
-            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS) ) {
+            if (!$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS)) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS);
             }
 
-            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS) ) {
+            if (!$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS)) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS);
             }
 
-            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE) ) {
+            if (!$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE)) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE);
             }
 
-            if ( !$adminRole->has_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP) ) {
+            if (!$adminRole->has_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP)) {
                 $adminRole->add_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP);
             }
 
-            if ( !$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS) ) {
+            if (!$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS)) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS);
             }
         }
 
-         /**
+        /**
          * Removes QuickTasker capabilities from the administrator role.
          *
          * This function checks if the administrator role has the following capabilities:
@@ -74,34 +75,35 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
          *
          * @return void
          */
-        public function removeQuickTaskerAdminCapabilityFromAdminRole() {
+        public function removeQuickTaskerAdminCapabilityFromAdminRole()
+        {
             $adminRole = get_role('administrator');
 
-            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE) ) {
+            if ($adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE)) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE);
             }
 
-            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE) ) {
+            if ($adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE)) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE);
             }
 
-            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS) ) {
+            if ($adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS)) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS);
             }
 
-            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS) ) {
+            if ($adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS)) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS);
             }
 
-            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE) ) {
+            if ($adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE)) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE);
             }
 
-            if ( $adminRole->has_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP) ) {
+            if ($adminRole->has_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP)) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ACCESS_USER_PAGE_APP);
             }
 
-            if ( $adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS) ) {
+            if ($adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS)) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS);
             }
         }
@@ -109,14 +111,15 @@ if ( ! class_exists( 'WPQT\Capability\CapabilityService' ) ) {
         /**
          * Updates the capabilities of a WordPress user.
          *
-         * @param int   $userId       The ID of the user whose capabilities are to be updated.
+         * @param int $userId The ID of the user whose capabilities are to be updated.
          * @param array $capabilities An associative array of capabilities to be updated.
          *                            The key is the capability name and the value is a boolean
          *                            indicating whether to add (true) or remove (false) the capability.
          *
          * @return void
          */
-        public function updateWPUserCapabilities($userId, $capabilities) {
+        public function updateWPUserCapabilities($userId, $capabilities)
+        {
             $user = get_user_by('id', $userId);
 
             if ($user) {

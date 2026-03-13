@@ -2,13 +2,13 @@
 
 namespace WPQT\Settings;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-if ( ! class_exists( 'WPQT\Settings\SettingRepository' ) ) {
-    class SettingRepository {
-
+if (!class_exists('WPQT\Settings\SettingRepository')) {
+    class SettingRepository
+    {
         /**
          * Retrieve the custom styles for the user page.
          *
@@ -16,8 +16,9 @@ if ( ! class_exists( 'WPQT\Settings\SettingRepository' ) ) {
          *
          * @return string The custom styles for the user page, or an empty string if not set.
          */
-        static function getUserPageCustomStyles() {
-            return get_option(WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES, "");
+        public static function getUserPageCustomStyles()
+        {
+            return get_option(WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES, '');
         }
 
         /**
@@ -28,12 +29,13 @@ if ( ! class_exists( 'WPQT\Settings\SettingRepository' ) ) {
          * @param int $pipelineId The ID of the pipeline for which settings are to be retrieved.
          * @return object|null Database query results. A single row object, or null if no results.
          */
-        public function getPipelineSettings($pipelineId) {
+        public function getPipelineSettings($pipelineId)
+        {
             global $wpdb;
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT id, pipeline_id, allow_only_last_stage_task_done, created_at, updated_at FROM " . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . " WHERE pipeline_id = %d",
+                    'SELECT id, pipeline_id, allow_only_last_stage_task_done, created_at, updated_at FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
                     $pipelineId
                 )
             );
@@ -45,12 +47,13 @@ if ( ! class_exists( 'WPQT\Settings\SettingRepository' ) ) {
          * @param int $pipelineId The ID of the pipeline to retrieve settings for.
          * @return object|null The pipeline settings object containing the 'allow_only_last_stage_task_done' field, or null if no settings are found.
          */
-        public function getPublicPipelineSettings($pipelineId) {
+        public function getPublicPipelineSettings($pipelineId)
+        {
             global $wpdb;
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT allow_only_last_stage_task_done FROM " . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . " WHERE pipeline_id = %d",
+                    'SELECT allow_only_last_stage_task_done FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
                     $pipelineId
                 )
             );

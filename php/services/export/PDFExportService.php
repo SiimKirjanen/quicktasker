@@ -1,37 +1,41 @@
 <?php
+
 namespace WPQT\Export;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use WPQT\Services\ServiceLocator;
 
-require_once( WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'php/libs/tfpdf/tfpdf.php' );
+require_once(WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'php/libs/tfpdf/tfpdf.php');
 
-if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
-    class PDFExportService extends ExportService {
+if (!class_exists('WPQT\Export\PDFExportService')) {
+    class PDFExportService extends ExportService
+    {
         private $_pdf = null;
 
-        public function __construct($pipelineId, $searchFilter, $includeArchivedTasks, $includePipelineCustomFields) {
+        public function __construct($pipelineId, $searchFilter, $includeArchivedTasks, $includePipelineCustomFields)
+        {
             parent::__construct($pipelineId, $searchFilter, $includeArchivedTasks, $includePipelineCustomFields);
             $this->setUpPdf();
         }
-        
-        private function setUpPdf() {
+
+        private function setUpPdf()
+        {
             $this->_pdf = new \TFPDF();
-            $this->_pdf->SetTitle( $this->_pipeline->name );
+            $this->_pdf->SetTitle($this->_pipeline->name);
             $this->_pdf->SetAuthor('QuickTasker WordPress');
-            $this->_pdf->AddFont('DejaVu','','DejaVuSans.ttf', true);
+            $this->_pdf->AddFont('DejaVu', '', 'DejaVuSans.ttf', true);
             $this->_pdf->AddFont('DejaVu', 'B', 'DejaVuSans-Bold.ttf', true);
             $this->_pdf->AliasNbPages();
             $this->_pdf->AddPage();
-            $this->_pdf->SetFont('DejaVu','',10);
+            $this->_pdf->SetFont('DejaVu', '', 10);
         }
-        
-        public function generateTasksPdfExport() {
-            
-            if ( empty($this->_tasks) ) {
+
+        public function generateTasksPdfExport()
+        {
+            if (empty($this->_tasks)) {
                 $this->_pdf->Cell(0, 10, 'No tasks found matching the criteria.', 0, 1);
             } else {
                 $timeRepository = ServiceLocator::get('TimeRepository');
@@ -66,39 +70,42 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
                     $this->addField(esc_html__('Added labels', 'quicktasker'), $assignedLabels);
                     $this->addField(esc_html__('Archived', 'quicktasker'), $taskArchived);
 
-                    if ( !empty($task->custom_fields) && $this->_includePipelineCustomFields ) {
+                    if (!empty($task->custom_fields) && $this->_includePipelineCustomFields) {
                         $this->_pdf->Ln(5);
-                        
+
                         foreach ($task->custom_fields as $customField) {
                             $fieldName = $customField->name;
                             $fieldValue = esc_html__('Not set', 'quicktasker');
 
-                            if ( !empty($customField->value) ) {
+                            if (!empty($customField->value)) {
                                 $fieldValue = $customField->value;
-                            } elseif ( !empty($customField->default_value) ) {
+                            } elseif (!empty($customField->default_value)) {
                                 $fieldValue = $customField->default_value;
                             }
 
                             $this->addField($fieldName, $fieldValue, false);
                         }
                     }
-                } 
+                }
             }
             $this->_pdf->Output('I', "{$this->_fileName}.pdf");
         }
 
-        private function setHeaderFont($size = 10) {
+        private function setHeaderFont($size = 10)
+        {
             $this->_pdf->SetFont('DejaVu', 'B', $size);
         }
 
-        private function setBodyFont($size = 10) {
+        private function setBodyFont($size = 10)
+        {
             $this->_pdf->SetFont('DejaVu', '', $size);
         }
 
-        private function addField($label, $value, $useMultiCell = false) {
+        private function addField($label, $value, $useMultiCell = false)
+        {
             $this->setHeaderFont();
             $this->_pdf->Cell(40, 6, $label, 0, 1, 'L');
-            
+
             $this->setBodyFont();
             if ($useMultiCell) {
                 $this->_pdf->MultiCell(180, 8, $value, 0, 'L');
@@ -107,17 +114,20 @@ if ( ! class_exists( 'WPQT\Export\PDFExportService' ) ) {
             }
         }
 
-        private function truncateText($text, $maxLength = 50) {
+        private function truncateText($text, $maxLength = 50)
+        {
             if (strlen($text) > $maxLength) {
                 return substr($text, 0, $maxLength - 3) . '...';
             }
+
             return $text;
         }
 
         /**
-         * Helper method to get task status
+         * Helper method to get task status.
          */
-        private function getTaskStatus($task) {
+        private function getTaskStatus($task)
+        {
             if ($task->is_archived) {
                 return 'Archived';
             } elseif ($task->is_done) {

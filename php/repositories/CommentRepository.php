@@ -2,12 +2,13 @@
 
 namespace WPQT\Comment;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
-    class CommentRepository {
+if (!class_exists('WPQT\Comment\CommentRepository')) {
+    class CommentRepository
+    {
         /**
          * Retrieves a comment by its ID.
          *
@@ -17,13 +18,14 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
          * @param int $commentId The ID of the comment to retrieve.
          * @return object|null The comment object if found, null otherwise.
          */
-        public function getCommentById($commentId) {
+        public function getCommentById($commentId)
+        {
             global $wpdb;
 
             $comments_table = TABLE_WP_QUICKTASKER_COMMENTS;
             $users_table = TABLE_WP_QUICKTASKER_USERS;
             $wp_users_table = $wpdb->users;
-        
+
             $query = "
                 SELECT comments.*, 
                     CASE 
@@ -36,9 +38,9 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
                 LEFT JOIN $wp_users_table wp_users ON comments.author_id = wp_users.ID AND comments.author_type = 'wp-user'
                 WHERE comments.id = %d
             ";
-        
+
             $prepared_query = $wpdb->prepare($query, $commentId);
-        
+
             return $wpdb->get_row($prepared_query);
         }
 
@@ -47,17 +49,18 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
          *
          * @param int $typeId The ID of the type to filter comments by.
          * @param string $type The type to filter comments by.
-         * @param boolean $isPrivate The privacy status to filter comments by.
+         * @param bool $isPrivate The privacy status to filter comments by.
          * @param string|null $createdAfter Optional. Only return comments created after this date
          * @return array The list of comments matching the specified criteria.
          */
-        public function getComments($typeId, $type, $isPrivate = false, $createdAfter = null) {
+        public function getComments($typeId, $type, $isPrivate = false, $createdAfter = null)
+        {
             global $wpdb;
-        
+
             $comments_table = TABLE_WP_QUICKTASKER_COMMENTS;
             $users_table = TABLE_WP_QUICKTASKER_USERS;
             $wp_users_table = $wpdb->users;
-        
+
             $query = "
                 SELECT comments.*, 
                     CASE
@@ -72,15 +75,15 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
             ";
             $prepare_args = [$typeId, $type, $isPrivate];
 
-            if ( $createdAfter !== null ) {
-                $query .= " AND comments.created_at > %s";
+            if (null !== $createdAfter) {
+                $query .= ' AND comments.created_at > %s';
                 $prepare_args[] = $createdAfter;
             }
 
-            $query .= " ORDER BY comments.created_at DESC";
+            $query .= ' ORDER BY comments.created_at DESC';
 
             $prepared_query = $wpdb->prepare($query, $prepare_args);
-        
+
             return $wpdb->get_results($prepared_query);
         }
 
@@ -92,14 +95,15 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
          * @param string|null $createdAfter Optional. Only return comments created after this date.
          * @return array An array of comments related to tasks assigned to the user.
          */
-        public function getCommentsRelatedtoTasksAssignedToUser($userId, $userType = WP_QT_QUICKTASKER_USER_TYPE, $createdAfter = null) {
+        public function getCommentsRelatedtoTasksAssignedToUser($userId, $userType = WP_QT_QUICKTASKER_USER_TYPE, $createdAfter = null)
+        {
             global $wpdb;
 
-            $query = "
+            $query = '
                 SELECT comments.*, tasks.name AS subject_name, tasks.task_hash AS subject_hash
-                FROM " . TABLE_WP_QUICKTASKER_COMMENTS . " AS comments
-                JOIN " . TABLE_WP_QUICKTASKER_TASKS . " AS tasks ON comments.type_id = tasks.id
-                JOIN " . TABLE_WP_QUICKTASKER_USER_TASK . " AS task_users ON tasks.id = task_users.task_id
+                FROM ' . TABLE_WP_QUICKTASKER_COMMENTS . ' AS comments
+                JOIN ' . TABLE_WP_QUICKTASKER_TASKS . ' AS tasks ON comments.type_id = tasks.id
+                JOIN ' . TABLE_WP_QUICKTASKER_USER_TASK . " AS task_users ON tasks.id = task_users.task_id
                 WHERE task_users.user_id = %d
                 AND task_users.user_type = %s
                 AND tasks.is_archived = 0
@@ -108,12 +112,12 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
             ";
             $prepare_args = [$userId, $userType];
 
-            if ( $createdAfter !== null ) {
-                $query .= " AND comments.created_at > %s";
+            if (null !== $createdAfter) {
+                $query .= ' AND comments.created_at > %s';
                 $prepare_args[] = $createdAfter;
             }
 
-            $query .= " ORDER BY comments.created_at DESC";
+            $query .= ' ORDER BY comments.created_at DESC';
 
             $prepared_query = $wpdb->prepare($query, $prepare_args);
 
@@ -128,7 +132,8 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
          * @param string|null $createdAfter Optional. Only return comments created after this date.
          * @return array An array of comments related to the user and their assigned tasks.
          */
-        public function getCommentsRelatedToUser($userId, $userType = WP_QT_QUICKTASKER_USER_TYPE, $createdAfter = null) {
+        public function getCommentsRelatedToUser($userId, $userType = WP_QT_QUICKTASKER_USER_TYPE, $createdAfter = null)
+        {
             global $wpdb;
 
             //Fetch public comments related to user
@@ -140,14 +145,15 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
             return array_merge($userComments, $tasksComments);
         }
 
-        public function getCommentsOfTasks($tasks) {
+        public function getCommentsOfTasks($tasks)
+        {
             global $wpdb;
 
-            if ( empty($tasks) ) {
+            if (empty($tasks)) {
                 return [];
             }
 
-            $taskIds = array_map(function($task) {
+            $taskIds = array_map(function ($task) {
                 return $task->id;
             }, $tasks);
 
@@ -159,8 +165,8 @@ if ( ! class_exists( 'WPQT\Comment\CommentRepository' ) ) {
                         WHEN comments.author_type = 'wp-user' THEN wp_users.display_name 
                         ELSE users.name 
                     END AS author_name
-                FROM " . TABLE_WP_QUICKTASKER_COMMENTS . " AS comments
-                LEFT JOIN " . TABLE_WP_QUICKTASKER_USERS . " AS users ON comments.author_id = users.id AND comments.author_type = 'quicktasker'
+                FROM " . TABLE_WP_QUICKTASKER_COMMENTS . ' AS comments
+                LEFT JOIN ' . TABLE_WP_QUICKTASKER_USERS . " AS users ON comments.author_id = users.id AND comments.author_type = 'quicktasker'
                 LEFT JOIN " . $wpdb->users . " AS wp_users ON comments.author_id = wp_users.ID AND comments.author_type = 'wp-user'
                 WHERE comments.type_id IN ($placeholders) 
                 AND comments.type = 'task' 

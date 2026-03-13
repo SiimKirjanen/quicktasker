@@ -1,21 +1,24 @@
 <?php
+
 namespace WPQT\Password;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\Password\PasswordService' ) ) {
-    class PasswordService {
+if (!class_exists('WPQT\Password\PasswordService')) {
+    class PasswordService
+    {
         /**
          * Creates a password hash using the default algorithm.
          *
          * @param string $password The password to be hashed.
          * @return string The hashed password.
          */
-        public function createPasswordHash($password) {
+        public function createPasswordHash($password)
+        {
             return password_hash($password, PASSWORD_DEFAULT);
         }
 
@@ -27,10 +30,11 @@ if ( ! class_exists( 'WPQT\Password\PasswordService' ) ) {
          * @return bool Returns true if the password is verified, otherwise throws an exception.
          * @throws Exception Throws an exception if failed to retrieve the stored password.
          */
-        public function verifyPassword($pageHash, $password) {
+        public function verifyPassword($pageHash, $password)
+        {
             $storedPassword = ServiceLocator::get('PasswordRepository')->getUserPagePasswordByHash($pageHash);
 
-            if( !$storedPassword ) {
+            if (!$storedPassword) {
                 throw new \Exception('Failed to retrieve stored password');
             }
 
@@ -45,22 +49,23 @@ if ( ! class_exists( 'WPQT\Password\PasswordService' ) ) {
          * @return bool Returns true if the password is successfully stored, otherwise throws an exception.
          * @throws Exception Throws an exception if failed to store the password.
          */
-        public function storePassword($userId, $password) {
+        public function storePassword($userId, $password)
+        {
             global $wpdb;
 
             $passwordHash = $this->createPasswordHash($password);
-        
+
             $rowsUpdated = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USERS,
-                array(
+                [
                     'password' => $passwordHash,
-                ),
-                array(
+                ],
+                [
                     'id' => $userId
-                )
+                ]
             );
 
-            if( $rowsUpdated === false ) {
+            if (false === $rowsUpdated) {
                 throw new \Exception('Failed to store password');
             }
 

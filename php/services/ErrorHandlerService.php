@@ -2,20 +2,21 @@
 
 namespace WPQT\Error;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-use WP_REST_Response;
 use Throwable;
+use WP_REST_Response;
 use WPQT\Response\ApiResponse;
-use WPQT\WPQTException;
 use WPQT\Services\ServiceLocator;
+use WPQT\WPQTException;
 
-if ( ! class_exists( 'WPQT\Error\ErrorHandlerService' ) ) {
-    class ErrorHandlerService {
-        
-        public static function handlePrivateApiError(Throwable $e, $message = 'An error occurred while processing the request.') {
+if (!class_exists('WPQT\Error\ErrorHandlerService')) {
+    class ErrorHandlerService
+    {
+        public static function handlePrivateApiError(Throwable $e, $message = 'An error occurred while processing the request.')
+        {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
 
@@ -25,17 +26,19 @@ if ( ! class_exists( 'WPQT\Error\ErrorHandlerService' ) ) {
                 }
             }
 
-            return new WP_REST_Response((new ApiResponse(false, array($message)))->toArray(), 400);
+            return new WP_REST_Response((new ApiResponse(false, [$message]))->toArray(), 400);
         }
 
-        public static function handlePublicApiError(Throwable $e, $message = 'An error occurred while processing the request.') {
+        public static function handlePublicApiError(Throwable $e, $message = 'An error occurred while processing the request.')
+        {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
 
-            return new WP_REST_Response((new ApiResponse(false, array($message)))->toArray(), 400);
+            return new WP_REST_Response((new ApiResponse(false, [$message]))->toArray(), 400);
         }
 
-        public static function handleTokenApiError(Throwable $e, $message = 'An error occurred while processing the request.') {
+        public static function handleTokenApiError(Throwable $e, $message = 'An error occurred while processing the request.')
+        {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
 

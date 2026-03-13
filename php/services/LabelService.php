@@ -1,15 +1,16 @@
 <?php
+
 namespace WPQT\Label;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
-    class LabelService {
-
+if (!class_exists('WPQT\Label\LabelService')) {
+    class LabelService
+    {
         /**
          * Creates a new label in the database.
          *
@@ -19,17 +20,18 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
          * @return array The newly created label data.
          * @throws \Exception If the label creation fails.
          */
-        public function createLabel($pipelineId, $name, $color) {
+        public function createLabel($pipelineId, $name, $color)
+        {
             global $wpdb;
 
-            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_LABELS, array(
+            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_LABELS, [
                 'pipeline_id' => $pipelineId,
-                'name' => $name,
-                'color' => $color,
-                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-            ), array('%d', '%s', '%s', '%s'));
+                'name'        => $name,
+                'color'       => $color,
+                'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ], ['%d', '%s', '%s', '%s']);
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new \Exception('Failed to create a label');
             }
 
@@ -45,17 +47,18 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
          * @throws \Exception If the label assignment fails.
          * @return mixed The label data retrieved by the LabelRepository.
          */
-        public function assignLabel($entityId, $entityType, $labelId) {
+        public function assignLabel($entityId, $entityType, $labelId)
+        {
             global $wpdb;
 
-            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, array(
-                'entity_id' => $entityId,
-                'label_id' => $labelId,
+            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, [
+                'entity_id'   => $entityId,
+                'label_id'    => $labelId,
                 'entity_type' => $entityType,
-                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-            ), array('%d', '%d', '%s', '%s'));
+                'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ], ['%d', '%d', '%s', '%s']);
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new \Exception('Failed to assign label to task');
             }
 
@@ -73,16 +76,17 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
          * @return mixed The label data retrieved by the LabelRepository.
          * @throws \Exception If the label could not be unassigned from the entity.
          */
-        public function unassignLabel($entityId, $entityType, $labelId) {
+        public function unassignLabel($entityId, $entityType, $labelId)
+        {
             global $wpdb;
 
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, array(
-                'entity_id' => $entityId,
-                'label_id' => $labelId,
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_LABEL_RELATIONS, [
+                'entity_id'   => $entityId,
+                'label_id'    => $labelId,
                 'entity_type' => $entityType
-            ), array('%d', '%d', '%s'));
+            ], ['%d', '%d', '%s']);
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new \Exception('Failed to unassign label from task');
             }
 
@@ -98,15 +102,16 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
          * @return mixed The updated label object.
          * @throws \Exception If the label update fails.
          */
-        public function updateLabel($labelId, $name, $color) {
+        public function updateLabel($labelId, $name, $color)
+        {
             global $wpdb;
 
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_LABELS, array(
-                'name' => $name,
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_LABELS, [
+                'name'  => $name,
                 'color' => $color
-            ), array('id' => $labelId), array('%s', '%s'), array('%d'));
+            ], ['id' => $labelId], ['%s', '%s'], ['%d']);
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new \Exception('Failed to update label');
             }
 
@@ -120,13 +125,14 @@ if ( ! class_exists( 'WPQT\Label\LabelService' ) ) {
          * @return mixed The deleted label object.
          * @throws \Exception If the label could not be deleted.
          */
-        public function deleteLabel($labelId) {
+        public function deleteLabel($labelId)
+        {
             global $wpdb;
 
             $deletedLabel = ServiceLocator::get('LabelRepository')->getLabelById($labelId);
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_LABELS, array('id' => $labelId), array('%d'));
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_LABELS, ['id' => $labelId], ['%d']);
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new \Exception('Failed to delete the label');
             }
 

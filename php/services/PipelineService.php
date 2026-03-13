@@ -1,14 +1,16 @@
 <?php
+
 namespace WPQT\Pipeline;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-use WPQT\Services\ServiceLocator; 
+use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
-    class PipelineService {
+if (!class_exists('WPQT\Pipeline\PipelineService')) {
+    class PipelineService
+    {
         /**
          * Creates a new pipeline with the given name.
          *
@@ -20,32 +22,33 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
          * @return object The newly created pipeline object.
          * @throws \Exception If the pipeline or pipeline settings could not be created.
          */
-        public function createPipeline($name, $args = array()) {
+        public function createPipeline($name, $args = [])
+        {
             global $wpdb;
 
-            $defaults = array(
+            $defaults = [
                 'description' => null,
-            );
+            ];
             $args = wp_parse_args($args, $defaults);
 
             $activePipeline = ServiceLocator::get('PipelineRepository')->getActivePipeline();
 
-            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINES, array(
-                'name' => $name,
+            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINES, [
+                'name'        => $name,
                 'description' => $args['description'],
-                'is_primary' => $activePipeline ? false : true,
-                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
-                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-            ));
+                'is_primary'  => $activePipeline ? false : true,
+                'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'updated_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ]);
 
-            if ($result == false) {
+            if (false == $result) {
                 throw new \Exception('Failed to create a board');
-            } 
+            }
 
             $pipelineId = $wpdb->insert_id;
 
             ServiceLocator::get('SettingService')->insertSettingsColumnForPipeline($pipelineId);
-            
+
             return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);
         }
 
@@ -57,24 +60,25 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
          * @return Pipeline The edited pipeline.
          * @throws Exception If required fields are missing or if editing the pipeline fails.
          */
-        public function editPipeline($pipelineId, $args) {
+        public function editPipeline($pipelineId, $args)
+        {
             global $wpdb;
 
-            $defaults = array(
+            $defaults = [
                 'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
-            );
+            ];
 
             $args = wp_parse_args($args, $defaults);
 
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINES, $args, array(
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINES, $args, [
                 'id' => $pipelineId
-            ));
+            ]);
 
-            if ($result === false) {
+            if (false === $result) {
                 throw new \Exception('Failed to edit pipeline');
             }
 
-            return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);       
+            return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);
         }
 
         /**
@@ -87,30 +91,30 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
          * @return mixed The updated pipeline object.
          * @throws \Exception If the update operation fails.
          */
-        public function markPipelineAsPrimary($pipelineId) {
+        public function markPipelineAsPrimary($pipelineId)
+        {
             global $wpdb;
 
             $current_time_utc = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
             $result = $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE " . TABLE_WP_QUICKTASKER_PIPELINES . "
+                    'UPDATE ' . TABLE_WP_QUICKTASKER_PIPELINES . '
                     SET is_primary = CASE
                         WHEN id = %d THEN 1
                         ELSE 0
                     END,
-                    updated_at = %s",
+                    updated_at = %s',
                     $pipelineId,
                     $current_time_utc
                 )
             );
 
-            if ($result === false) {
+            if (false === $result) {
                 throw new \Exception('Failed to mark pipeline as primary');
             }
 
-            return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);   
+            return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);
         }
-
 
         /**
          * Deletes a pipeline and its associated data from the database.
@@ -126,13 +130,14 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
          * @return mixed The deleted pipeline object.
          * @throws \Exception If the pipeline is not found or any of the delete operations fail.
          */
-        public function deletePipeline($pipelineId) {
+        public function deletePipeline($pipelineId)
+        {
             global $wpdb;
 
             $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);
             $pipelineIdToLoadAfterDelete = null;
 
-            if ($pipeline === null) {
+            if (null === $pipeline) {
                 throw new \Exception('Board not found');
             }
 
@@ -140,15 +145,15 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
                 'pipeline_id' => $pipelineId,
                 'is_archived' => 0
             ]);
-            $tasksToDelteIds = array_map(function($task) {
+            $tasksToDelteIds = array_map(function ($task) {
                 return $task->id;
             }, $tasksToDelete);
-            
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINES, array(
-                'id' => $pipelineId
-            ));
 
-            if ($result === false) {
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINES, [
+                'id' => $pipelineId
+            ]);
+
+            if (false === $result) {
                 throw new \Exception('Failed to delete the board');
             }
 
@@ -156,24 +161,24 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineService' ) ) {
             ServiceLocator::get('CommentService')->deleteTasksComments($tasksToDelteIds);
 
             // If the pipeline was the primary pipeline, mark another pipeline as primary
-            if($pipeline->is_primary) {
-                $newActivePipeline = $wpdb->get_row("SELECT * FROM " . TABLE_WP_QUICKTASKER_PIPELINES . " WHERE is_primary = 0 ORDER BY id ASC LIMIT 1");
+            if ($pipeline->is_primary) {
+                $newActivePipeline = $wpdb->get_row('SELECT * FROM ' . TABLE_WP_QUICKTASKER_PIPELINES . ' WHERE is_primary = 0 ORDER BY id ASC LIMIT 1');
 
                 if ($newActivePipeline) {
                     $this->markPipelineAsPrimary($newActivePipeline->id);
                     $pipelineIdToLoadAfterDelete = $newActivePipeline->id;
                 }
-            }else {
+            } else {
                 $currentActivePipeline = ServiceLocator::get('PipelineRepository')->getActivePipeline();
-                
-                if( $currentActivePipeline === null ) {
+
+                if (null === $currentActivePipeline) {
                     throw new \Exception('Failed to get active board');
                 }
                 $pipelineIdToLoadAfterDelete = $currentActivePipeline->id;
             }
 
-            return (object)[
-                'deletedPipeline' => $pipeline,
+            return (object) [
+                'deletedPipeline'  => $pipeline,
                 'pipelineIdToLoad' => $pipelineIdToLoadAfterDelete,
             ];
         }

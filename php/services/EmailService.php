@@ -2,13 +2,13 @@
 
 namespace WPQT\Email;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-if ( ! class_exists( 'WPQT\Email\EmailService' ) ) {
-    class EmailService {
-
+if (!class_exists('WPQT\Email\EmailService')) {
+    class EmailService
+    {
         /**
          * Sends an email using the WordPress wp_mail function.
          *
@@ -17,13 +17,13 @@ if ( ! class_exists( 'WPQT\Email\EmailService' ) ) {
          * @param string $message The message body of the email.
          * @return bool True if the email was sent successfully, false otherwise.
          */
-        public static function sendEmail($to, $subject, $message) {
-            $headers = array('Content-Type: text/html; charset=UTF-8');
+        public static function sendEmail($to, $subject, $message)
+        {
+            $headers = ['Content-Type: text/html; charset=UTF-8'];
 
             return wp_mail($to, $subject, $message, $headers);
         }
 
-       
         /**
          * Renders an email template with the provided data.
          *
@@ -37,9 +37,10 @@ if ( ! class_exists( 'WPQT\Email\EmailService' ) ) {
          * @return string The rendered template content with placeholders replaced by data values.
          * @throws \Exception If the template file does not exist.
          */
-        public static function renderTemplate($template, $data) {
+        public static function renderTemplate($template, $data)
+        {
             $templatePath = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'php/templates/email/' . $template . '.html';
-            
+
             if (!file_exists($templatePath)) {
                 throw new \Exception('Email template not found: ' . $template);
             }
@@ -47,7 +48,7 @@ if ( ! class_exists( 'WPQT\Email\EmailService' ) ) {
             $templateContent = file_get_contents($templatePath);
 
             foreach ($data as $key => $value) {
-                $templateContent = str_replace("{{" . $key . "}}", $value, $templateContent);
+                $templateContent = str_replace('{{' . $key . '}}', $value, $templateContent);
             }
 
             return $templateContent;

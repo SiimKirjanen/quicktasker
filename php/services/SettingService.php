@@ -2,15 +2,15 @@
 
 namespace WPQT\Settings;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-use WPQT\Settings\SettingRepository;
-use WPQT\Services\ServiceLocator; 
+use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
-    class SettingsService {
+if (!class_exists('WPQT\Settings\SettingsService')) {
+    class SettingsService
+    {
         /**
          * Validates the custom styles provided by the user for a page.
          *
@@ -21,10 +21,12 @@ if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
          * @param string $customStyles The custom styles provided by the user.
          * @return bool True if the custom styles are valid, false otherwise.
          */
-        public static function validateUserPageCustomStyles($customStyles) {
-            if ( preg_match( '#</?\w+#', $css ) ) {
+        public static function validateUserPageCustomStyles($customStyles)
+        {
+            if (preg_match('#</?\w+#', $css)) {
                 return false;
             }
+
             return true;
         }
 
@@ -36,10 +38,11 @@ if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
          * the updated custom styles.
          *
          * @param string $customStyles The custom styles to be saved for the user page.
-         * 
+         *
          * @return string The updated custom styles for the user page.
          */
-        public static function saveUserPageCustomStyles($customStyles) {
+        public static function saveUserPageCustomStyles($customStyles)
+        {
             self::validateUserPageCustomStyles($customStyles);
             update_option(WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES, $customStyles);
 
@@ -52,18 +55,19 @@ if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
          * @param int $pipelineId The ID of the pipeline for which the settings column is being inserted.
          * @throws \Exception If the insertion of the settings column fails.
          */
-        public function insertSettingsColumnForPipeline($pipelineId) {
+        public function insertSettingsColumnForPipeline($pipelineId)
+        {
             global $wpdb;
 
-            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, array(
+            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, [
                 'pipeline_id' => $pipelineId,
-                'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
-                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-            ));
+                'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'updated_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ]);
 
-            if ($result == false) {
+            if (false == $result) {
                 throw new \Exception('Failed to create board settings');
-            } 
+            }
         }
 
         /**
@@ -75,17 +79,18 @@ if ( ! class_exists( 'WPQT\Settings\SettingsService' ) ) {
          * @param bool $allowOnlyLastStageTaskDone Whether to allow only the last stage task to be marked as done.
          * @throws \Exception If the update operation fails.
          */
-        public function updatePipelineTaskDoneCompletionRestriction($pipelineId, $allowOnlyLastStageTaskDone) {
+        public function updatePipelineTaskDoneCompletionRestriction($pipelineId, $allowOnlyLastStageTaskDone)
+        {
             global $wpdb;
 
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, array(
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, [
                 'allow_only_last_stage_task_done' => $allowOnlyLastStageTaskDone,
-                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-            ), array(
+                'updated_at'                      => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ], [
                 'pipeline_id' => $pipelineId
-            ));
+            ]);
 
-            if ($result === false) {
+            if (false === $result) {
                 throw new \Exception('Failed to update board settings');
             }
         }

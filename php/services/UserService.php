@@ -2,15 +2,15 @@
 
 namespace WPQT\User;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-use WPQT\WPQTException;
 use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\User\UserService' ) ) {
-    class UserService {
+if (!class_exists('WPQT\User\UserService')) {
+    class UserService
+    {
         /**
          * Creates a new quicktasker user.
          *
@@ -18,18 +18,19 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          * @return User The newly created user.
          * @throws Exception If failed to create a user or user page.
          */
-        public function createUser($args) {
+        public function createUser($args)
+        {
             global $wpdb;
 
             $result = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_USERS,
-                array(
-                    'name' => $args['name'],
+                [
+                    'name'        => $args['name'],
                     'description' => $args['description'],
-                    'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                ),
-                array('%s', '%s', '%s', '%s')
+                    'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                    'updated_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                ],
+                ['%s', '%s', '%s', '%s']
             );
 
             if (!$result) {
@@ -37,24 +38,24 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
             }
 
             $newUserId = $wpdb->insert_id;
-            $pageHash = ServiceLocator::get("HashService")->generateUserPageHash($args['name']);
+            $pageHash = ServiceLocator::get('HashService')->generateUserPageHash($args['name']);
 
             $result2 = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_USER_PAGES,
-                array(
-                    'user_id' => $newUserId,
-                    'page_hash' => $pageHash,
-                    'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                ),
-                array('%d', '%s', '%s', '%s')
+                [
+                    'user_id'    => $newUserId,
+                    'page_hash'  => $pageHash,
+                    'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                ],
+                ['%d', '%s', '%s', '%s']
             );
 
             if (!$result2) {
                 throw new \Exception('Failed to create a user page');
             }
 
-            return ServiceLocator::get("UserRepository")->getUserById($newUserId);
+            return ServiceLocator::get('UserRepository')->getUserById($newUserId);
         }
 
         /**
@@ -65,53 +66,55 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          * @return User The updated user object.
          * @throws Exception If the update operation fails.
          */
-        public function editUser($userId, $args) {
+        public function editUser($userId, $args)
+        {
             global $wpdb;
 
-            $defaults = array(
-                'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime()
-            );
+            $defaults = [
+                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ];
             $args = wp_parse_args($args, $defaults);
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USERS,
                 $args,
-                array('id' => $userId)
+                ['id' => $userId]
             );
 
-            if ($result === false) {
+            if (false === $result) {
                 throw new \Exception('Failed to update a user');
             }
 
-            return ServiceLocator::get("UserRepository")->getUserById($userId);
+            return ServiceLocator::get('UserRepository')->getUserById($userId);
         }
 
         /**
          * Change the status of a user.
          *
          * @param int $userId The ID of the user.
-         * @param boolean $status The new status of the user.
+         * @param bool $status The new status of the user.
          * @return User The updated user object.
          * @throws Exception If failed to disable a user.
          */
-        public function changeUserStatus($userId, $status) {
+        public function changeUserStatus($userId, $status)
+        {
             global $wpdb;
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USERS,
-                array(
-                    'is_active' => $status,
-                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                ),
-                array('id' => $userId),
-                array('%d', '%s'),
+                [
+                    'is_active'  => $status,
+                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                ],
+                ['id' => $userId],
+                ['%d', '%s'],
             );
 
             if (!$result) {
                 throw new \Exception('Failed to disable a user');
             }
 
-            return ServiceLocator::get("UserRepository")->getUserById($userId);
+            return ServiceLocator::get('UserRepository')->getUserById($userId);
         }
 
         /**
@@ -121,24 +124,25 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          * @return bool True if the user was successfully deleted, false otherwise.
          * @throws Exception If the user deletion fails.
          */
-        public function deleteUser($userId) {
+        public function deleteUser($userId)
+        {
             global $wpdb;
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USERS,
-                array(
-                    'deleted' => 1,
-                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                ),
-                array('id' => $userId),
-                array('%d', '%s')
+                [
+                    'deleted'    => 1,
+                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                ],
+                ['id' => $userId],
+                ['%d', '%s']
             );
 
             if (!$result) {
                 throw new \Exception('Failed to delete a user');
             }
 
-            return ServiceLocator::get("UserRepository")->getUserById($userId);
+            return ServiceLocator::get('UserRepository')->getUserById($userId);
         }
 
         /**
@@ -147,12 +151,13 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          * @param int $userId The ID of the user.
          * @return bool Returns true if the user has a password, false otherwise.
          */
-        public function checkIfUserHasPassword($userId) {
+        public function checkIfUserHasPassword($userId)
+        {
             global $wpdb;
 
             $result = $wpdb->get_var(
                 $wpdb->prepare(
-                    "SELECT COUNT(*) FROM " . TABLE_WP_QUICKTASKER_USERS . " WHERE id = %d AND password IS NOT NULL",
+                    'SELECT COUNT(*) FROM ' . TABLE_WP_QUICKTASKER_USERS . ' WHERE id = %d AND password IS NOT NULL',
                     $userId
                 )
             );
@@ -176,10 +181,11 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          * @return mixed The task details retrieved from the task repository.
          * @throws \Exception If the task assignment fails.
          */
-        public function assignTaskToUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
+        public function assignTaskToUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE)
+        {
             global $wpdb;
 
-            $user = ServiceLocator::get("UserRepository")->getUserByIdAndType($userId, $userType);
+            $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, $userType);
 
             if (!$user) {
                 throw new \Exception('Assignable user not found');
@@ -187,21 +193,21 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
 
             $result = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_USER_TASK,
-                array(
-                    'user_id' => $userId,
-                    'task_id' => $taskId,
-                    'user_type' => $userType,
-                    'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                ),
-                array('%d', '%d', '%s', '%s', '%s')
+                [
+                    'user_id'    => $userId,
+                    'task_id'    => $taskId,
+                    'user_type'  => $userType,
+                    'created_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                ],
+                ['%d', '%d', '%s', '%s', '%s']
             );
 
             if (!$result) {
                 throw new \Exception('Failed to assign a task to a user');
             }
 
-            return ServiceLocator::get("TaskRepository")->getTaskById($taskId);
+            return ServiceLocator::get('TaskRepository')->getTaskById($taskId);
         }
 
         /**
@@ -215,39 +221,41 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
          * @return mixed The task details after removal.
          * @throws \Exception If the task could not be removed from the user.
          */
-        public function removeTaskFromUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE) {
+        public function removeTaskFromUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE)
+        {
             global $wpdb;
 
             $result = $wpdb->delete(
                 TABLE_WP_QUICKTASKER_USER_TASK,
-                array(
-                    'user_id' => $userId,
-                    'task_id' => $taskId,
+                [
+                    'user_id'   => $userId,
+                    'task_id'   => $taskId,
                     'user_type' => $userType,
-                ),
-                array('%d', '%d', '%s')
+                ],
+                ['%d', '%d', '%s']
             );
 
             if (!$result) {
                 throw new \Exception('Failed to remove user from a task');
             }
 
-            return ServiceLocator::get("TaskRepository")->getTaskById($taskId);
+            return ServiceLocator::get('TaskRepository')->getTaskById($taskId);
         }
 
         /**
          * Resets the password for a given user.
          *
-         * This method will set the user's password to null and update the 
-         * 'updated_at' timestamp to the current UTC time. It will also delete 
+         * This method will set the user's password to null and update the
+         * 'updated_at' timestamp to the current UTC time. It will also delete
          * all sessions associated with the user.
          *
          * @param int $userId The ID of the user whose password is to be reset.
-         * @throws \Exception If the user does not have a password set or if the 
+         * @throws \Exception If the user does not have a password set or if the
          *                    password reset or session deletion fails.
          * @return mixed The user object after the password reset.
          */
-        public function resetUserPassword($userId) {
+        public function resetUserPassword($userId)
+        {
             global $wpdb;
 
             $hasPassword = $this->checkIfUserHasPassword($userId);
@@ -258,13 +266,13 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
 
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USERS,
-                array(
-                    'password' => null,
-                    'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                ),
-                array('id' => $userId),
-                array('%s', '%s'),
-                array('%d')
+                [
+                    'password'   => null,
+                    'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                ],
+                ['id' => $userId],
+                ['%s', '%s'],
+                ['%d']
             );
 
             if (!$result) {
@@ -273,14 +281,14 @@ if ( ! class_exists( 'WPQT\User\UserService' ) ) {
 
             $result2 = $wpdb->delete(
                 TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                array('user_id' => $userId)
+                ['user_id' => $userId]
             );
 
-            if ($result2 === false) {
+            if (false === $result2) {
                 throw new \Exception('Failed to reset a user sessions');
             }
 
-            return ServiceLocator::get("UserRepository")->getUserById($userId);
+            return ServiceLocator::get('UserRepository')->getUserById($userId);
         }
     }
 }

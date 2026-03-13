@@ -1,10 +1,10 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
-use WPQT\Location\LocationService;
 use WPQT\Asset\AssetRepository;
+use WPQT\Location\LocationService;
 use WPQT\Services\ServiceLocator;
 
 /**
@@ -15,38 +15,41 @@ use WPQT\Services\ServiceLocator;
  *
  * @return void
  */
-add_action( 'plugins_loaded', 'wpqt_update_db' );
-if ( ! function_exists( 'wpqt_update_db' ) ) {
-	function wpqt_update_db() {
-		wpqt_set_up_db();
-	}
+add_action('plugins_loaded', 'wpqt_update_db');
+if (!function_exists('wpqt_update_db')) {
+    function wpqt_update_db()
+    {
+        wpqt_set_up_db();
+    }
 }
 
-add_action( 'plugins_loaded', 'wpqt_db_migrations' );
-if ( ! function_exists( 'wpqt_db_migrations' ) ) {
-	function wpqt_db_migrations() {
-		 $quicktasker_db_migration_trigger = get_option('quicktasker_db_migration_trigger');
+add_action('plugins_loaded', 'wpqt_db_migrations');
+if (!function_exists('wpqt_db_migrations')) {
+    function wpqt_db_migrations()
+    {
+        $quicktasker_db_migration_trigger = get_option('quicktasker_db_migration_trigger');
 
-        if ($quicktasker_db_migration_trigger !== WP_QUICKTASKER_DB_MIGRATION_TRIGGER) {
+        if (WP_QUICKTASKER_DB_MIGRATION_TRIGGER !== $quicktasker_db_migration_trigger) {
             $DBMigrateService = ServiceLocator::get('DBMigrateService');
-			$DBMigrateService->runMigrations();
+            $DBMigrateService->runMigrations();
 
             update_option('quicktasker_db_migration_trigger', WP_QUICKTASKER_DB_MIGRATION_TRIGGER);
         }
-	}
+    }
 }
 
 add_action('template_redirect', 'wpqt_custom_http_status_code');
-if ( ! function_exists( 'wpqt_custom_http_status_code' ) ) {
-	function wpqt_custom_http_status_code() {
-		$locationService = new LocationService();
+if (!function_exists('wpqt_custom_http_status_code')) {
+    function wpqt_custom_http_status_code()
+    {
+        $locationService = new LocationService();
 
-		if ( $locationService->isWPQTPublicUserPage() ) {
-			global $wp_query;
-			$wp_query->is_404 = false;
-			status_header(200);
-		}
-	}
+        if ($locationService->isWPQTPublicUserPage()) {
+            global $wp_query;
+            $wp_query->is_404 = false;
+            status_header(200);
+        }
+    }
 }
 
 /**
@@ -63,47 +66,48 @@ if ( ! function_exists( 'wpqt_custom_http_status_code' ) ) {
  *
  * @return void
  */
-add_action( 'after_setup_theme', 'wpqt_remove_unnecessary_tags_and_more' );
-if ( ! function_exists( 'wpqt_remove_unnecessary_tags_and_more' ) ) {
-	function wpqt_remove_unnecessary_tags_and_more(){
-		$locationService = new LocationService();
+add_action('after_setup_theme', 'wpqt_remove_unnecessary_tags_and_more');
+if (!function_exists('wpqt_remove_unnecessary_tags_and_more')) {
+    function wpqt_remove_unnecessary_tags_and_more()
+    {
+        $locationService = new LocationService();
 
-		if( $locationService->isWPQTPublicUserPage()  ) {
-			// REMOVE WP EMOJI
-			remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
-			remove_action( 'wp_print_styles', 'print_emoji_styles' );
-			remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
-			remove_action( 'admin_print_styles', 'print_emoji_styles' );
-		
-			// remove all tags from header
-			remove_action( 'wp_head', 'rsd_link' );
-			remove_action( 'wp_head', 'wp_generator' );
-			remove_action( 'wp_head', 'feed_links', 2 );
-			remove_action( 'wp_head', 'index_rel_link' );
-			remove_action( 'wp_head', 'wlwmanifest_link' );
-			remove_action( 'wp_head', 'feed_links_extra', 3 );
-			remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
-			remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
-			remove_action( 'wp_head', 'adjacent_posts_rel_link', 10, 0 );
-			remove_action( 'wp_head', 'wp_shortlink_wp_head', 10, 0 );
-			remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
-			remove_action( 'wp_head', 'rest_output_link_wp_head' );
-			remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
-			remove_action( 'template_redirect', 'rest_output_link_header', 11 );
-		
-			// language
-			add_filter( 'multilingualpress.hreflang_type', '__return_false' );
+        if ($locationService->isWPQTPublicUserPage()) {
+            // REMOVE WP EMOJI
+            remove_action('wp_head', 'print_emoji_detection_script', 7);
+            remove_action('wp_print_styles', 'print_emoji_styles');
+            remove_action('admin_print_scripts', 'print_emoji_detection_script');
+            remove_action('admin_print_styles', 'print_emoji_styles');
 
-			// Remove skip link script
-			remove_action( 'wp_footer', 'the_block_template_skip_link' );
+            // remove all tags from header
+            remove_action('wp_head', 'rsd_link');
+            remove_action('wp_head', 'wp_generator');
+            remove_action('wp_head', 'feed_links', 2);
+            remove_action('wp_head', 'index_rel_link');
+            remove_action('wp_head', 'wlwmanifest_link');
+            remove_action('wp_head', 'feed_links_extra', 3);
+            remove_action('wp_head', 'start_post_rel_link', 10, 0);
+            remove_action('wp_head', 'parent_post_rel_link', 10, 0);
+            remove_action('wp_head', 'adjacent_posts_rel_link', 10, 0);
+            remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
+            remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
+            remove_action('wp_head', 'rest_output_link_wp_head');
+            remove_action('wp_head', 'wp_oembed_add_discovery_links');
+            remove_action('template_redirect', 'rest_output_link_header', 11);
 
-			// Remove block library inline CSS
-			add_action( 'wp_enqueue_scripts', function() {
-				wp_dequeue_style( 'wp-block-library' );
-				wp_dequeue_style( 'global-styles' );
-			}, 100 );
-		}
-	}
+            // language
+            add_filter('multilingualpress.hreflang_type', '__return_false');
+
+            // Remove skip link script
+            remove_action('wp_footer', 'the_block_template_skip_link');
+
+            // Remove block library inline CSS
+            add_action('wp_enqueue_scripts', function () {
+                wp_dequeue_style('wp-block-library');
+                wp_dequeue_style('global-styles');
+            }, 100);
+        }
+    }
 }
 
 /**
@@ -117,132 +121,135 @@ if ( ! function_exists( 'wpqt_remove_unnecessary_tags_and_more' ) ) {
  * @return void
  */
 add_action('wp_print_scripts', 'wpqt_include_allowed_scripts', PHP_INT_MAX);
-if ( ! function_exists( 'wpqt_include_allowed_scripts' ) ) {
-	function wpqt_include_allowed_scripts() {
-		$locationService = new LocationService();
+if (!function_exists('wpqt_include_allowed_scripts')) {
+    function wpqt_include_allowed_scripts()
+    {
+        $locationService = new LocationService();
 
-		if( $locationService->isWPQTPublicUserPage() ) {
-			global $wp_scripts;
+        if ($locationService->isWPQTPublicUserPage()) {
+            global $wp_scripts;
 
-			$dependencies = AssetRepository::getWPQTScriptDependencies();
-			$allowedToLoad = array_merge($dependencies, array('wpqt-script'));
-			$wp_scripts->queue = $allowedToLoad;
-		}
-	}
+            $dependencies = AssetRepository::getWPQTScriptDependencies();
+            $allowedToLoad = array_merge($dependencies, ['wpqt-script']);
+            $wp_scripts->queue = $allowedToLoad;
+        }
+    }
 }
 
 add_action('woocommerce_new_order', 'quicktasker_handle_woocommerce_new_order', 10, 1);
-if ( ! function_exists( 'quicktasker_handle_woocommerce_new_order' ) ) {
-	function quicktasker_handle_woocommerce_new_order($order_id) {
-		try {
-			if (!$order_id) {
-				return;
-			}
+if (!function_exists('quicktasker_handle_woocommerce_new_order')) {
+    function quicktasker_handle_woocommerce_new_order($order_id)
+    {
+        try {
+            if (!$order_id) {
+                return;
+            }
 
-			if (!function_exists('wc_get_order')) {
-				return;
-			}
+            if (!function_exists('wc_get_order')) {
+                return;
+            }
 
-			$order = wc_get_order($order_id);
+            $order = wc_get_order($order_id);
 
-			if (!$order) {
-				return;
-			}
+            if (!$order) {
+                return;
+            }
 
-			$relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomationsByTrigger(
-				WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED
-			);
+            $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomationsByTrigger(
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED
+            );
 
-			if ( $relatedAutomations ) {
-				$executedAutomations = [];
-				$pipelineId = $relatedAutomations[0]->pipeline_id;
+            if ($relatedAutomations) {
+                $executedAutomations = [];
+                $pipelineId = $relatedAutomations[0]->pipeline_id;
 
-				foreach ( $relatedAutomations as $automation ) {
-					$executionResult = ServiceLocator::get('AutomationService')->handleAutomations(
-						$pipelineId, 
-						null, 
-						WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER, 
-						WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED,
-						(object)[
-							'woocommerceOrder' => $order,
-						]
-					);
-					$executedAutomations = array_merge(
-						$executedAutomations,
-						$executionResult->executedAutomations ?? []
-					);
-				}
-				ServiceLocator::get('WebhookService')->handleWebhooks(
-					$pipelineId,
-					[],
-					$executedAutomations
-				);
-			}
-		} catch (Exception $e) {
-			error_log('QuickTasker WooCommerce woocommerce_new_order action error: ' . $e->getMessage());
-		}
-	}
+                foreach ($relatedAutomations as $automation) {
+                    $executionResult = ServiceLocator::get('AutomationService')->handleAutomations(
+                        $pipelineId,
+                        null,
+                        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER,
+                        WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED,
+                        (object) [
+                            'woocommerceOrder' => $order,
+                        ]
+                    );
+                    $executedAutomations = array_merge(
+                        $executedAutomations,
+                        $executionResult->executedAutomations ?? []
+                    );
+                }
+                ServiceLocator::get('WebhookService')->handleWebhooks(
+                    $pipelineId,
+                    [],
+                    $executedAutomations
+                );
+            }
+        } catch (Exception $e) {
+            error_log('QuickTasker WooCommerce woocommerce_new_order action error: ' . $e->getMessage());
+        }
+    }
 }
 
 /**
- * Common handler for SeatReg booking actions
- * 
+ * Common handler for SeatReg booking actions.
+ *
  * @param int $bookingId The booking ID
  * @param string $triggerType The automation trigger type constant
  * @return void
  */
-if ( ! function_exists( 'quicktasker_handle_seatreg_booking_action' ) ) {
-    function quicktasker_handle_seatreg_booking_action($bookingId, $triggerType) {
+if (!function_exists('quicktasker_handle_seatreg_booking_action')) {
+    function quicktasker_handle_seatreg_booking_action($bookingId, $triggerType)
+    {
         try {
-            if ( !$bookingId ) {
+            if (!$bookingId) {
                 return;
             }
 
-            if ( !class_exists('SeatregBookingRepository') || !class_exists('SeatregRegistrationRepository') ) {
+            if (!class_exists('SeatregBookingRepository') || !class_exists('SeatregRegistrationRepository')) {
                 return;
             }
-        
+
             $relatedAutomations = ServiceLocator::get('AutomationRepository')->getAutomationsByTrigger($triggerType);
 
-            if ( !$relatedAutomations ) {
+            if (!$relatedAutomations) {
                 return;
             }
 
             $bookingRepository = new SeatregBookingRepository();
             $registrationRepository = new SeatregRegistrationRepository();
-			$pipelineId = $relatedAutomations[0]->pipeline_id;
+            $pipelineId = $relatedAutomations[0]->pipeline_id;
             $seatregBookings = $bookingRepository->getBookingsById($bookingId);
 
-            if ( !$seatregBookings ) {
+            if (!$seatregBookings) {
                 return;
             }
 
             $registration = $registrationRepository->getRegistrationByCode($seatregBookings[0]->registration_code);
-			$executedAutomations = [];
+            $executedAutomations = [];
 
-            foreach ( $relatedAutomations as $automation ) {
+            foreach ($relatedAutomations as $automation) {
                 $executionResult = ServiceLocator::get('AutomationService')->handleAutomations(
-                    $pipelineId, 
-                    null, 
-                    WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING, 
+                    $pipelineId,
+                    null,
+                    WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING,
                     $triggerType,
-                    (object)[
+                    (object) [
                         'seatregBookings' => $seatregBookings,
-                        'registration' => $registration
+                        'registration'    => $registration
                     ]
                 );
-				$executedAutomations = array_merge(
-					$executedAutomations,
-					$executionResult->executedAutomations ?? []
-				);
+                $executedAutomations = array_merge(
+                    $executedAutomations,
+                    $executionResult->executedAutomations ?? []
+                );
             }
 
-			ServiceLocator::get('WebhookService')->handleWebhooks(
-				$pipelineId,
-				[],
-				$executedAutomations
-			);
-        } catch(Exception $e) {
+            ServiceLocator::get('WebhookService')->handleWebhooks(
+                $pipelineId,
+                [],
+                $executedAutomations
+            );
+        } catch (Exception $e) {
             error_log('QuickTasker SeatReg ' . $triggerType . ' action error: ' . $e->getMessage());
         }
     }
@@ -250,8 +257,9 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_action' ) ) {
 
 add_action('seatreg_action_booking_submitted', 'quicktasker_handle_seatreg_booking_submitted', 10, 1);
 add_action('seatreg_action_booking_manually_added', 'quicktasker_handle_seatreg_booking_submitted', 10, 1);
-if ( ! function_exists( 'quicktasker_handle_seatreg_booking_submitted' ) ) {
-    function quicktasker_handle_seatreg_booking_submitted($bookingId) {
+if (!function_exists('quicktasker_handle_seatreg_booking_submitted')) {
+    function quicktasker_handle_seatreg_booking_submitted($bookingId)
+    {
         quicktasker_handle_seatreg_booking_action(
             $bookingId,
             WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED
@@ -260,8 +268,9 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_submitted' ) ) {
 }
 
 add_action('seatreg_action_booking_approved', 'quicktasker_handle_seatreg_booking_approved', 10, 1);
-if ( ! function_exists( 'quicktasker_handle_seatreg_booking_approved' ) ) {
-    function quicktasker_handle_seatreg_booking_approved($bookingId) {
+if (!function_exists('quicktasker_handle_seatreg_booking_approved')) {
+    function quicktasker_handle_seatreg_booking_approved($bookingId)
+    {
         quicktasker_handle_seatreg_booking_action(
             $bookingId,
             WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED
@@ -270,8 +279,9 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_approved' ) ) {
 }
 
 add_action('seatreg_action_booking_pending', 'quicktasker_handle_seatreg_booking_pending', 10, 1);
-if ( ! function_exists( 'quicktasker_handle_seatreg_booking_pending' ) ) {
-    function quicktasker_handle_seatreg_booking_pending($bookingId) {
+if (!function_exists('quicktasker_handle_seatreg_booking_pending')) {
+    function quicktasker_handle_seatreg_booking_pending($bookingId)
+    {
         quicktasker_handle_seatreg_booking_action(
             $bookingId,
             WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING
@@ -280,8 +290,9 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_pending' ) ) {
 }
 
 add_action('seatreg_action_booking_pending_via_manager', 'quicktasker_handle_seatreg_booking_pending_via_manager', 10, 1);
-if ( ! function_exists( 'quicktasker_handle_seatreg_booking_pending_via_manager' ) ) {
-    function quicktasker_handle_seatreg_booking_pending_via_manager($bookingId) {
+if (!function_exists('quicktasker_handle_seatreg_booking_pending_via_manager')) {
+    function quicktasker_handle_seatreg_booking_pending_via_manager($bookingId)
+    {
         quicktasker_handle_seatreg_booking_action(
             $bookingId,
             WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING_VIA_MANAGER
@@ -290,8 +301,9 @@ if ( ! function_exists( 'quicktasker_handle_seatreg_booking_pending_via_manager'
 }
 
 add_action('seatreg_action_booking_approved_via_manager', 'quicktasker_handle_seatreg_booking_approved_via_manager', 10, 1);
-if ( ! function_exists( 'quicktasker_handle_seatreg_booking_approved_via_manager' ) ) {
-    function quicktasker_handle_seatreg_booking_approved_via_manager($bookingId) {
+if (!function_exists('quicktasker_handle_seatreg_booking_approved_via_manager')) {
+    function quicktasker_handle_seatreg_booking_approved_via_manager($bookingId)
+    {
         quicktasker_handle_seatreg_booking_action(
             $bookingId,
             WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED_VIA_MANAGER

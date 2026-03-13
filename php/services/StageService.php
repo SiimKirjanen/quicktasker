@@ -1,15 +1,17 @@
 <?php
+
 namespace WPQT\Stage;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use WPQT\Services\ServiceLocator;
 use WPQT\StageHasTasksException;
 
-if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
-    class StageService {
+if (!class_exists('WPQT\Stage\StageService')) {
+    class StageService
+    {
         /**
          * Creates a stage for a pipeline.
          *
@@ -18,38 +20,39 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
          * @return Stage The created stage.
          * @throws Exception If required fields are missing or if the stage creation fails.
          */
-        public function createStage($pipelineId, $args) {
+        public function createStage($pipelineId, $args)
+        {
             global $wpdb;
 
-            $defaults = array(
-                'name' => null,
+            $defaults = [
+                'name'        => null,
                 'description' => null
-            );
+            ];
 
             $args = wp_parse_args($args, $defaults);
 
-            if ( empty($args['name']) ) {
+            if (empty($args['name'])) {
                 throw new \Exception('Required fields are missing');
             }
 
-            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
+            $result = $wpdb->insert(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, [
                 'pipeline_id' => $pipelineId,
-                'name' => $args['name'],
+                'name'        => $args['name'],
                 'description' => $args['description'],
-                'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime()
-            ));
+                'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'updated_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ]);
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new \Exception('Failed to create a stage');
             }
 
             $stageId = $wpdb->insert_id;
-            $stageOrder = ServiceLocator::get("StageRepository")->getNextStageOrder($pipelineId);
+            $stageOrder = ServiceLocator::get('StageRepository')->getNextStageOrder($pipelineId);
 
             $this->addStageLocation($pipelineId, $stageId, $stageOrder);
 
-            return ServiceLocator::get("StageRepository")->getStageById($stageId);
+            return ServiceLocator::get('StageRepository')->getStageById($stageId);
         }
 
         /**
@@ -60,16 +63,17 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
          * @param int $stageOrder The order of the stage.
          * @return void
          */
-        private function addStageLocation($pipelineId, $stageId, $stageOrder) {
+        private function addStageLocation($pipelineId, $stageId, $stageOrder)
+        {
             global $wpdb;
 
-            $wpdb->insert(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
+            $wpdb->insert(TABLE_WP_QUICKTASKER_STAGES_LOCATION, [
                 'pipeline_id' => $pipelineId,
-                'stage_id' => $stageId,
+                'stage_id'    => $stageId,
                 'stage_order' => $stageOrder,
-                'created_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime(),
-                'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime()
-            ));
+                'created_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'updated_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ]);
         }
 
         /**
@@ -79,24 +83,25 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
          * @param array $args The arguments to update the stage.
          * @return void
          */
-        public function editStage($stageId, $args) {
+        public function editStage($stageId, $args)
+        {
             global $wpdb;
 
             if (!array_key_exists('name', $args) || !array_key_exists('description', $args)) {
                 throw new \Exception('Required fields are missing');
             }
 
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
-                'name' => $args['name'],
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, [
+                'name'        => $args['name'],
                 'description' => $args['description'],
-                'updated_at' => ServiceLocator::get("TimeRepository")->getCurrentUTCTime()
-            ), array('id' => $stageId));
+                'updated_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ], ['id' => $stageId]);
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new \Exception('Failed to update the stage');
             }
 
-            return ServiceLocator::get("StageRepository")->getStageById($stageId);
+            return ServiceLocator::get('StageRepository')->getStageById($stageId);
         }
 
         /**
@@ -104,42 +109,43 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
          *
          * @param int $stageId The ID of the stage to be moved.
          * @param array $args The arguments for moving the stage.
-         *   - direction (string): The direction in which to move the stage ('left' or 'right').
+         *                    - direction (string): The direction in which to move the stage ('left' or 'right').
          *
          * @return Stage|null The updated stage object if successful, null otherwise.
          *
          * @throws Exception If the required fields are missing, the stage is not found,
-         *   or the stage is already at the beginning/end.
+         *                   or the stage is already at the beginning/end.
          */
-        public function moveStage($stageId, $args) {
+        public function moveStage($stageId, $args)
+        {
             global $wpdb;
 
-            if ( !array_key_exists('direction', $args) ) {
+            if (!array_key_exists('direction', $args)) {
                 throw new \Exception('Required fields are missing');
             }
 
-            $stage = ServiceLocator::get("StageRepository")->getStageById($stageId);
-            $stages = ServiceLocator::get("StageRepository")->getStagesByPipelineId($stage->pipeline_id);
+            $stage = ServiceLocator::get('StageRepository')->getStageById($stageId);
+            $stages = ServiceLocator::get('StageRepository')->getStagesByPipelineId($stage->pipeline_id);
             $direction = $args['direction'];
 
-            if ( !$stage ) {
+            if (!$stage) {
                 throw new \Exception('Stage not found');
             }
             $currentOrder = $stage->stage_order;
 
-            if( $direction === 'left' && $currentOrder <= 0 ) {
+            if ('left' === $direction && $currentOrder <= 0) {
                 throw new \Exception('Stage is already at the beginning');
             }
 
-            if( $direction === 'right' && $currentOrder === count($stages) - 1 ) {
+            if ('right' === $direction && $currentOrder === count($stages) - 1) {
                 throw new \Exception('Stage is already at the end');
             }
 
-            $newOrder = $currentOrder + ( $direction === 'left' ? -1 : 1 );
+            $newOrder = $currentOrder + ('left' === $direction ? -1 : 1);
 
             $this->updateStageOrder($stageId, $stage->pipeline_id, $newOrder, $currentOrder);
 
-            return ServiceLocator::get("StageRepository")->getStageById($stageId);
+            return ServiceLocator::get('StageRepository')->getStageById($stageId);
         }
 
         /**
@@ -152,30 +158,30 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
          * @return int The number of rows affected by the update.
          * @throws Exception If the update fails.
          */
-        private function updateStageOrder($stageId, $pipelineId, $newOrder, $currentOrder) {
+        private function updateStageOrder($stageId, $pipelineId, $newOrder, $currentOrder)
+        {
             global $wpdb;
 
-            $currentUtcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
+            $currentUtcTime = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
 
-            if ( $currentOrder < $newOrder) {
+            if ($currentOrder < $newOrder) {
                 $result = $wpdb->query(
                     $wpdb->prepare(
-                        "UPDATE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " SET stage_order = stage_order - 1, updated_at = %s WHERE pipeline_id = %d AND stage_order > %d AND stage_order <= %d",
-                        $currentUtcTime, 
+                        'UPDATE ' . TABLE_WP_QUICKTASKER_STAGES_LOCATION . ' SET stage_order = stage_order - 1, updated_at = %s WHERE pipeline_id = %d AND stage_order > %d AND stage_order <= %d',
+                        $currentUtcTime,
                         $pipelineId,
                         $currentOrder,
                         $newOrder
                     )
                 );
 
-                if($result === false) {
+                if (false === $result) {
                     throw new \Exception('Failed to update stage order');
                 }
-                
             } else {
                 $result = $wpdb->query(
                     $wpdb->prepare(
-                        "UPDATE " . TABLE_WP_QUICKTASKER_STAGES_LOCATION . " SET stage_order = stage_order + 1, updated_at = %s WHERE pipeline_id = %d AND stage_order >= %d AND stage_order < %d",
+                        'UPDATE ' . TABLE_WP_QUICKTASKER_STAGES_LOCATION . ' SET stage_order = stage_order + 1, updated_at = %s WHERE pipeline_id = %d AND stage_order >= %d AND stage_order < %d',
                         $currentUtcTime,
                         $pipelineId,
                         $newOrder,
@@ -183,16 +189,16 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
                     )
                 );
 
-                if($result === false) {
+                if (false === $result) {
                     throw new \Exception('Failed to update stage order');
                 }
             }
 
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_STAGES_LOCATION, [
                 'stage_order' => $newOrder
-            ), array('stage_id' => $stageId, 'pipeline_id' => $pipelineId));
+            ], ['stage_id' => $stageId, 'pipeline_id' => $pipelineId]);
 
-            if( $result === false ) {
+            if (false === $result) {
                 throw new \Exception('Failed to update stage order');
             }
 
@@ -206,24 +212,25 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
          * @return Stage The deleted stage object.
          * @throws \Exception If the stage has tasks or if the deletion fails.
          */
-        public function deleteStage($stageId) {
+        public function deleteStage($stageId)
+        {
             global $wpdb;
-            
+
             // Check if the stage has tasks
-            if( count( ServiceLocator::get("TaskRepository")->getTasksByStageId($stageId) ) > 0 ) {
+            if (count(ServiceLocator::get('TaskRepository')->getTasksByStageId($stageId)) > 0) {
                 throw new StageHasTasksException('Stage has tasks. Please delete/relocate the tasks first.');
             }
-            $stage = ServiceLocator::get("StageRepository")->getStageById($stageId);
+            $stage = ServiceLocator::get('StageRepository')->getStageById($stageId);
 
             // Delete the stage from the pipeline stages table
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array('id' => $stageId));
-            if( $result === false ) {
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, ['id' => $stageId]);
+            if (false === $result) {
                 throw new \Exception('Failed to delete the stage.');
             }
 
             // Delete the stage from the stages location table
-            $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array('stage_id' => $stageId));
-            if( $result2 === false ) {
+            $result2 = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, ['stage_id' => $stageId]);
+            if (false === $result2) {
                 throw new \Exception('Failed to delete the stage.');
             }
 
@@ -240,27 +247,28 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
          * @return bool True if the deletion was successful, false otherwise.
          * @throws \Exception If the deletion fails.
          */
-        public function deleteStagesByPipelineId($pipelineId) {
+        public function deleteStagesByPipelineId($pipelineId)
+        {
             global $wpdb;
-            
+
             // Delete the pipeline stages
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, array(
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, [
                 'pipeline_id' => $pipelineId
-            ));
-            
-            if ($result === false) {
+            ]);
+
+            if (false === $result) {
                 throw new \Exception('Failed to delete board stages');
             }
-            
+
             // Delete the pipeline stages location
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, array(
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_STAGES_LOCATION, [
                 'pipeline_id' => $pipelineId
-            ));
-            
-            if ($result === false) {
+            ]);
+
+            if (false === $result) {
                 throw new \Exception('Failed to delete board stages location');
             }
-            
+
             return true;
         }
 
@@ -275,38 +283,39 @@ if ( ! class_exists( 'WPQT\Stage\StageService' ) ) {
          * @return array The list of tasks that were archived.
          * @throws \Exception If the task or task location archiving fails.
          */
-        public function archiveStageTasks($stageId) {
+        public function archiveStageTasks($stageId)
+        {
             global $wpdb;
 
-            $currentUtcTime = ServiceLocator::get("TimeRepository")->getCurrentUTCTime();
-            $tasksToArvhive = ServiceLocator::get("TaskRepository")->getTasksByStageId($stageId);
+            $currentUtcTime = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
+            $tasksToArvhive = ServiceLocator::get('TaskRepository')->getTasksByStageId($stageId);
 
-            $sql = "
-                UPDATE " . TABLE_WP_QUICKTASKER_TASKS . " AS a
-                INNER JOIN " . TABLE_WP_QUICKTASKER_TASKS_LOCATION . " AS b
+            $sql = '
+                UPDATE ' . TABLE_WP_QUICKTASKER_TASKS . ' AS a
+                INNER JOIN ' . TABLE_WP_QUICKTASKER_TASKS_LOCATION . ' AS b
                 ON a.id = b.task_id
                 SET a.is_archived = 1, a.updated_at = %s
                 WHERE b.stage_id = %d
-            ";
+            ';
 
             $result = $wpdb->query($wpdb->prepare($sql, $currentUtcTime, $stageId));
 
-            if ($result === false) {
+            if (false === $result) {
                 throw new \Exception('Failed to archive tasks');
             }
 
             $result2 = $wpdb->update(
                 TABLE_WP_QUICKTASKER_TASKS_LOCATION,
-                array(
+                [
                     'is_archived' => 1,
-                    'updated_at' => $currentUtcTime
-                ),
-                array('stage_id' => $stageId),
-                array('%d', '%s'), // Format for data: integer and string
-                array('%d')        // Format for where clause: integer
+                    'updated_at'  => $currentUtcTime
+                ],
+                ['stage_id' => $stageId],
+                ['%d', '%s'], // Format for data: integer and string
+                ['%d']        // Format for where clause: integer
             );
 
-            if ($result2 === false) {
+            if (false === $result2) {
                 throw new \Exception('Failed to archive task locations');
             }
 

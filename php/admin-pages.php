@@ -1,19 +1,20 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-add_action( 'admin_menu', 'wp_quick_taks_add_admin_menu');
-if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
-    function wp_quick_taks_add_admin_menu() {
+add_action('admin_menu', 'wp_quick_taks_add_admin_menu');
+if (!function_exists('wp_quick_taks_add_admin_menu')) {
+    function wp_quick_taks_add_admin_menu()
+    {
         add_menu_page(
             'QuickTasker',
             'QuickTasker',
             WP_QUICKTASKER_ADMIN_ROLE,
             'wp-quick-tasks',
             'wp_quick_taks_generate_app_page',
-            plugins_url('img/menu-item.png', dirname(__FILE__) ),
+            plugins_url('img/menu-item.png', dirname(__FILE__)),
         );
 
         add_submenu_page(
@@ -81,8 +82,9 @@ if ( ! function_exists( 'wp_quick_taks_add_admin_menu' ) ) {
     }
 }
 
-if ( ! function_exists( 'wp_quick_taks_generate_app_page' ) ) {
-    function wp_quick_taks_generate_app_page() {
-        include_once( WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/src/index.php' );
+if (!function_exists('wp_quick_taks_generate_app_page')) {
+    function wp_quick_taks_generate_app_page()
+    {
+        include_once(WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/src/index.php');
     }
 }

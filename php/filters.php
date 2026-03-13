@@ -1,13 +1,14 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-use WPQT\Location\LocationService;
-use WPQT\Export\PDFExportService;
 use WPQT\Export\JSONExportService;
+use WPQT\Export\PDFExportService;
+use WPQT\Location\LocationService;
 use WPQT\Services\ServiceLocator;
+
 /**
  * Adds a filter to modify the admin body class.
  *
@@ -18,17 +19,18 @@ use WPQT\Services\ServiceLocator;
  * @param array $classes The array of body classes.
  * @return array The modified array of body classes.
  */
-add_filter( 'admin_body_class', 'wpqt_admin_body_class' );
-if ( ! function_exists( 'wpqt_admin_body_class' ) ) {
-	function wpqt_admin_body_class($classes) {
-		$locationService = new LocationService();
+add_filter('admin_body_class', 'wpqt_admin_body_class');
+if (!function_exists('wpqt_admin_body_class')) {
+    function wpqt_admin_body_class($classes)
+    {
+        $locationService = new LocationService();
 
-		if( $locationService->isWPQTPage() ) {
-			return "$classes wpqt-admin-page"; 
-		}
+        if ($locationService->isWPQTPage()) {
+            return "$classes wpqt-admin-page";
+        }
 
-		return $classes;
-	}
+        return $classes;
+    }
 }
 
 /**
@@ -38,17 +40,18 @@ if ( ! function_exists( 'wpqt_admin_body_class' ) ) {
  * @param string $page_template The current page template.
  * @return string The updated page template.
  */
-add_filter( 'template_include', 'wpqt_public_user_page_template' );
-if ( ! function_exists( 'wpqt_public_user_page_template' ) ) {
-	function wpqt_public_user_page_template( $page_template ){
-		$locationService = new LocationService();
+add_filter('template_include', 'wpqt_public_user_page_template');
+if (!function_exists('wpqt_public_user_page_template')) {
+    function wpqt_public_user_page_template($page_template)
+    {
+        $locationService = new LocationService();
 
-		if ( $locationService->isWPQTPublicUserPage() ) {
-			$page_template = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/src/user-page-app/index.php';
-		}
+        if ($locationService->isWPQTPublicUserPage()) {
+            $page_template = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/src/user-page-app/index.php';
+        }
 
-		return $page_template;
-	}
+        return $page_template;
+    }
 }
 
 /**
@@ -59,66 +62,66 @@ if ( ! function_exists( 'wpqt_public_user_page_template' ) ) {
  * @return void
  */
 add_filter('init', 'quicktasker_custom_pages');
-if ( ! function_exists( 'quicktasker_custom_pages' ) ) {
-	function quicktasker_custom_pages() {
-		$locationService = new LocationService();
+if (!function_exists('quicktasker_custom_pages')) {
+    function quicktasker_custom_pages()
+    {
+        $locationService = new LocationService();
 
-		if ( $locationService->isWPQTTaskExportPage() ) {
+        if ($locationService->isWPQTTaskExportPage()) {
+            if (!WPQT\Permission\PermissionService::hasRequiredPermissionsForPrivateAPI()) {
+                wp_die(__('You do not have sufficient permissions to access this page.', 'quicktasker'), 403);
+            }
 
-			if ( ! WPQT\Permission\PermissionService::hasRequiredPermissionsForPrivateAPI() ) {
-				wp_die( __( 'You do not have sufficient permissions to access this page.', 'quicktasker' ), 403 );
-			}
+            $pipelineId = isset($_GET['pipeline_id']) ? $_GET['pipeline_id'] : null;
+            $taskSearch = isset($_GET['task_search']) ? $_GET['task_search'] : '';
+            $includeArchive = isset($_GET['include_archive']) ? $_GET['include_archive'] : '0';
+            $includePipelineCustomFields = isset($_GET['include_custom_fields']) ? $_GET['include_custom_fields'] : '0';
 
-			$pipelineId = isset($_GET['pipeline_id']) ? $_GET['pipeline_id'] : null;
-			$taskSearch = isset($_GET['task_search']) ? $_GET['task_search'] : '';
-			$includeArchive = isset($_GET['include_archive']) ? $_GET['include_archive'] : '0';
-			$includePipelineCustomFields = isset($_GET['include_custom_fields']) ? $_GET['include_custom_fields'] : '0';
+            if (!WPQT\RequestValidation::validateOptionalNumericParam($pipelineId)) {
+                wp_die('Invalid pipeline ID', 400);
+            }
+            if (!WPQT\RequestValidation::validateStringParam($taskSearch)) {
+                $task_search = '';
+            }
+            if (!WPQT\RequestValidation::validateBooleanParam($includeArchive)) {
+                wp_die('Invalid archive filter param', 400);
+            }
+            if (!WPQT\RequestValidation::validateBooleanParam($includePipelineCustomFields)) {
+                wp_die('Invalid custom field filter param', 400);
+            }
 
-			if (!WPQT\RequestValidation::validateOptionalNumericParam($pipelineId)) {
-				wp_die('Invalid pipeline ID', 400);
-			}
-			if ( !WPQT\RequestValidation::validateStringParam($taskSearch) ) {
-				$task_search = '';
-			}
-			if (!WPQT\RequestValidation::validateBooleanParam($includeArchive)) {
-				wp_die('Invalid archive filter param', 400);
-			}
-			if (!WPQT\RequestValidation::validateBooleanParam($includePipelineCustomFields)) {
-				wp_die('Invalid custom field filter param', 400);
-			}
+            $pipelineId = WPQT\RequestValidation::sanitizeOptionalAbsint($pipelineId);
+            $taskSearch = WPQT\RequestValidation::sanitizeStringParam($taskSearch);
+            $includeArchive = WPQT\RequestValidation::sanitizeBooleanParam($includeArchive);
+            $includePipelineCustomFields = WPQT\RequestValidation::sanitizeBooleanParam($includePipelineCustomFields);
 
-			$pipelineId = WPQT\RequestValidation::sanitizeOptionalAbsint($pipelineId);
-			$taskSearch = WPQT\RequestValidation::sanitizeStringParam($taskSearch);
-			$includeArchive = WPQT\RequestValidation::sanitizeBooleanParam($includeArchive);
-			$includePipelineCustomFields = WPQT\RequestValidation::sanitizeBooleanParam($includePipelineCustomFields);
+            if ($pipelineId && null === ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId)) {
+                wp_die(__('Board not found', 'quicktasker'), 404);
+            }
 
-			if ( $pipelineId && ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId) === null ) {
-				wp_die( __( 'Board not found', 'quicktasker' ), 404 );
-			}
+            if ($locationService->isWPQTTaskPDFExportPage()) {
+                try {
+                    $pdfService = new PDFExportService($pipelineId, $taskSearch, $includeArchive, $includePipelineCustomFields);
+                    $pdfService->generateTasksPdfExport();
 
-			if ( $locationService->isWPQTTaskPDFExportPage() ) {
-				try {
-					$pdfService = new PDFExportService($pipelineId, $taskSearch, $includeArchive, $includePipelineCustomFields);
-					$pdfService->generateTasksPdfExport();
+                    die();
+                } catch (Exception $e) {
+                    error_log('QuickTasker tasks export PDF Generation Error: ' . $e->getMessage() . ' | Stack trace: ' . $e->getTraceAsString());
+                    wp_die(__('Failed to generate PDF', 'quicktasker'), 500);
+                }
+            }
 
-					die();
-				} catch (Exception $e) {
-					error_log('QuickTasker tasks export PDF Generation Error: ' . $e->getMessage() . ' | Stack trace: ' . $e->getTraceAsString());
-					wp_die( __( 'Failed to generate PDF', 'quicktasker' ), 500 );
-				}
-			}
+            if ($locationService->isWPQTTaskJSONExportPage()) {
+                try {
+                    $jsonExportService = new JSONExportService($pipelineId, $taskSearch, $includeArchive, $includePipelineCustomFields);
+                    $jsonExportService->downloadJSON();
 
-			if ( $locationService->isWPQTTaskJSONExportPage() ) {
-				try {
-					$jsonExportService = new JSONExportService($pipelineId, $taskSearch, $includeArchive, $includePipelineCustomFields);
-					$jsonExportService->downloadJSON();
-
-					die();
-				} catch (Exception $e) {
-					error_log('QuickTasker tasks export JSON Generation Error: ' . $e->getMessage() . ' | Stack trace: ' . $e->getTraceAsString());
-					wp_die( __( 'Failed to generate JSON', 'quicktasker' ), 500 );
-				}
-			}
-		}
-	}
+                    die();
+                } catch (Exception $e) {
+                    error_log('QuickTasker tasks export JSON Generation Error: ' . $e->getMessage() . ' | Stack trace: ' . $e->getTraceAsString());
+                    wp_die(__('Failed to generate JSON', 'quicktasker'), 500);
+                }
+            }
+        }
+    }
 }

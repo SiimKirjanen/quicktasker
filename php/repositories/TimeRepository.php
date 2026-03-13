@@ -1,18 +1,21 @@
 <?php
+
 namespace WPQT\Time;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
-if ( ! class_exists( 'WPQT\Time\TimeRepository' ) ) {
-    class TimeRepository {
+if (!class_exists('WPQT\Time\TimeRepository')) {
+    class TimeRepository
+    {
         /**
          * Retrieves the current UTC time in 'Y-m-d H:i:s' format.
          *
          * @return string The current UTC time.
          */
-        public function getCurrentUTCTime() {
+        public function getCurrentUTCTime()
+        {
             // Get the current UTC time in 'Y-m-d H:i:s' format
             return gmdate('Y-m-d H:i:s');
         }
@@ -24,24 +27,25 @@ if ( ! class_exists( 'WPQT\Time\TimeRepository' ) ) {
          * @param string $unit The time unit ('second', 'minute', 'hour', 'day', 'week', 'month', 'year')
          * @return string The modified UTC time in 'Y-m-d H:i:s' format.
          */
-        public function modifyUTCTime($amount, $unit = 'hour') {
+        public function modifyUTCTime($amount, $unit = 'hour')
+        {
             // Validate unit
-            $valid_units = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
+            $valid_units = ['second', 'minute', 'hour', 'day', 'week', 'month', 'year'];
             if (!in_array(strtolower($unit), $valid_units)) {
                 $unit = 'hour'; // Default to hours if invalid unit
             }
-            
+
             // Create DateTime object with current UTC time
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
-            
+
             // Ensure singular form for DateTime::modify
-            if (abs($amount) != 1) {
+            if (1 != abs($amount)) {
                 $unit .= 's';
             }
-            
+
             // Add the specified interval
             $date->modify("$amount $unit");
-            
+
             // Return the adjusted time in the same format as getCurrentUTCTime
             return $date->format('Y-m-d H:i:s');
         }
@@ -55,11 +59,12 @@ if ( ! class_exists( 'WPQT\Time\TimeRepository' ) ) {
          *
          * @return string The timezone string, GMT offset converted to timezone, or 'UTC'.
          */
-        public function getWPTimezone() {
+        public function getWPTimezone()
+        {
             $timezone_string = get_option('timezone_string');
             $gmt_offset = get_option('gmt_offset');
 
-            if ( $timezone_string ) {
+            if ($timezone_string) {
                 return $timezone_string;
             } elseif ($gmt_offset) {
                 return timezone_name_from_abbr('', $gmt_offset * 3600, 0);
@@ -68,13 +73,14 @@ if ( ! class_exists( 'WPQT\Time\TimeRepository' ) ) {
             }
         }
 
-         /**
+        /**
          * Converts a UTC date string to a formatted date string in the WordPress timezone.
          *
          * @param string $utcDateString The UTC date string in 'Y-m-d H:i:s' format.
          * @return string The formatted date string in the WordPress timezone.
          */
-        public function convertUTCToLocal($utcDateString) {
+        public function convertUTCToLocal($utcDateString)
+        {
             // Create a DateTime object from the UTC date string
             $date = new \DateTime($utcDateString, new \DateTimeZone('UTC'));
 
@@ -95,7 +101,8 @@ if ( ! class_exists( 'WPQT\Time\TimeRepository' ) ) {
          *
          * @return string The local time in the specified format.
          */
-        public function getLocalTime() {
+        public function getLocalTime()
+        {
             $date = $this->getCurrentUTCTime();
 
             return $this->convertUTCToLocal($date);

@@ -1,26 +1,29 @@
 <?php
+
 namespace WPQT\Pipeline;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
+use WPQT\Services\ServiceLocator;
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
 use WPQT\User\UserRepository;
-use WPQT\Services\ServiceLocator;
 
-if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
-    class PipelineRepository {
+if (!class_exists('WPQT\Pipeline\PipelineRepository')) {
+    class PipelineRepository
+    {
         /**
          * Retrieves all pipelines from the database.
          *
          * @return array The list of pipelines.
          */
-        public function getPipelines() {
+        public function getPipelines()
+        {
             global $wpdb;
 
             return $wpdb->get_results(
-                "SELECT * FROM ". TABLE_WP_QUICKTASKER_PIPELINES,
+                'SELECT * FROM ' . TABLE_WP_QUICKTASKER_PIPELINES,
             );
         }
 
@@ -30,14 +33,15 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
          * @param int $id The ID of the pipeline.
          * @return object|null The pipeline object if found, null otherwise.
          */
-        public function getPipelineById($id) {
+        public function getPipelineById($id)
+        {
             global $wpdb;
 
-            return $wpdb->get_row( $wpdb->prepare(
-                "SELECT * FROM " . TABLE_WP_QUICKTASKER_PIPELINES . "
-                WHERE id = %d",
+            return $wpdb->get_row($wpdb->prepare(
+                'SELECT * FROM ' . TABLE_WP_QUICKTASKER_PIPELINES . '
+                WHERE id = %d',
                 $id
-            ) );
+            ));
         }
 
         /**
@@ -45,11 +49,12 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
          *
          * @return object|null The active pipeline object if found, null otherwise.
          */
-        public function getActivePipeline() {
+        public function getActivePipeline()
+        {
             global $wpdb;
 
             return $wpdb->get_row(
-                "SELECT * FROM ". TABLE_WP_QUICKTASKER_PIPELINES . " WHERE is_primary = 1"
+                'SELECT * FROM ' . TABLE_WP_QUICKTASKER_PIPELINES . ' WHERE is_primary = 1'
             );
         }
 
@@ -59,7 +64,8 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
          * @param int $pipelineId The ID of the pipeline.
          * @return Pipeline The full pipeline object with stages and tasks.
          */
-        public function getFullPipeline($pipelineId) {
+        public function getFullPipeline($pipelineId)
+        {
             $stageRepository = new StageRepository();
             $taskRepository = new TaskRepository();
             $userRepository = new UserRepository();
@@ -71,13 +77,13 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
             $pipelineStages = $stageRepository->getStagesByPipelineId($pipelineId);
 
             // Fetch all tasks for the stages
-            $stageIds = array_map(function($stage) {
+            $stageIds = array_map(function ($stage) {
                 return $stage->id;
             }, $pipelineStages);
             $tasks = $taskRepository->getTasksByStageIds($stageIds);
 
             // Fetch all assigned users for the tasks
-            $taskIds = array_map(function($task) {
+            $taskIds = array_map(function ($task) {
                 return $task->id;
             }, $tasks);
             $assignedUsers = $userRepository->getAssignedUsersByTaskIds($taskIds);
@@ -111,7 +117,7 @@ if ( ! class_exists( 'WPQT\Pipeline\PipelineRepository' ) ) {
             // Assign tasks and users to stages. Assign labels to tasks.
             foreach ($pipelineStages as $stage) {
                 $stage->tasks = isset($tasksByStage[$stage->id]) ? $tasksByStage[$stage->id] : [];
-                
+
                 foreach ($stage->tasks as $task) {
                     $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
                     $task->assigned_wp_users = isset($wpUsersByTask[$task->id]) ? $wpUsersByTask[$task->id] : [];

@@ -1,7 +1,7 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 global $wpdb;
@@ -13,43 +13,43 @@ Directories, URL
 */
 $up_dir = wp_upload_dir();
 
-if ( ! defined( 'WP_QUICKTASKER_PLUGIN_FOLDER_DIR' ) ) {
-    define('WP_QUICKTASKER_PLUGIN_FOLDER_DIR', plugin_dir_path( dirname( __FILE__ ) ));
+if (!defined('WP_QUICKTASKER_PLUGIN_FOLDER_DIR')) {
+    define('WP_QUICKTASKER_PLUGIN_FOLDER_DIR', plugin_dir_path(dirname(__FILE__)));
 }
 
-if ( ! defined( 'WP_QUICKTASKER_PLUGIN_MAIN_FILE' ) ) {
+if (!defined('WP_QUICKTASKER_PLUGIN_MAIN_FILE')) {
     define('WP_QUICKTASKER_PLUGIN_MAIN_FILE', WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'quicktasker.php');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_PLUGIN_FOLDER_URL' ) ) {
-    define('WP_QUICKTASKER_PLUGIN_FOLDER_URL', plugin_dir_url( dirname( __FILE__ ) ));
+if (!defined('WP_QUICKTASKER_PLUGIN_FOLDER_URL')) {
+    define('WP_QUICKTASKER_PLUGIN_FOLDER_URL', plugin_dir_url(dirname(__FILE__)));
 }
 
-if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FOLDER_DIR' ) ) {
+if (!defined('WP_QUICKTASKER_UPLOAD_FOLDER_DIR')) {
     define('WP_QUICKTASKER_UPLOAD_FOLDER_DIR', $up_dir['basedir'] . '/quicktasker');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR' ) ) {
+if (!defined('WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR')) {
     define('WP_QUICKTASKER_TASK_UPLOAD_FOLDER_DIR', WP_QUICKTASKER_UPLOAD_FOLDER_DIR . '/tasks');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FOLDER_URL' ) ) {
+if (!defined('WP_QUICKTASKER_UPLOAD_FOLDER_URL')) {
     define('WP_QUICKTASKER_UPLOAD_FOLDER_URL', $up_dir['baseurl'] . '/quicktasker');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL' ) ) {
+if (!defined('WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL')) {
     define('WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL', WP_QUICKTASKER_UPLOAD_FOLDER_URL . '/tasks');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_PUBLIC_USER_PAGE_ID' ) ) {
+if (!defined('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID')) {
     define('WP_QUICKTASKER_PUBLIC_USER_PAGE_ID', 'wp-quick-tasks-user');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID' ) ) {
+if (!defined('WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID')) {
     define('WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID', 'pdf-export');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_TASK_JSON_EXPORT_PAGE_ID' ) ) {
+if (!defined('WP_QUICKTASKER_TASK_JSON_EXPORT_PAGE_ID')) {
     define('WP_QUICKTASKER_TASK_JSON_EXPORT_PAGE_ID', 'json-export');
 }
 
@@ -59,88 +59,88 @@ DB constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_DB_VERSION' ) ) {
-    define('WP_QUICKTASKER_DB_VERSION', "1.51.0");
+if (!defined('WP_QUICKTASKER_DB_VERSION')) {
+    define('WP_QUICKTASKER_DB_VERSION', '1.51.0');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_USERS' ) ) {
-    define('TABLE_WP_QUICKTASKER_USERS', $wpdb->prefix . "quicktasker_users");
+if (!defined('TABLE_WP_QUICKTASKER_USERS')) {
+    define('TABLE_WP_QUICKTASKER_USERS', $wpdb->prefix . 'quicktasker_users');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_PIPELINES' ) ) {
-    define('TABLE_WP_QUICKTASKER_PIPELINES', $wpdb->prefix . "quicktasker_pipelines");
+if (!defined('TABLE_WP_QUICKTASKER_PIPELINES')) {
+    define('TABLE_WP_QUICKTASKER_PIPELINES', $wpdb->prefix . 'quicktasker_pipelines');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_PIPELINE_STAGES' ) ) {
-    define('TABLE_WP_QUICKTASKER_PIPELINE_STAGES', $wpdb->prefix . "quicktasker_pipeline_stages");
+if (!defined('TABLE_WP_QUICKTASKER_PIPELINE_STAGES')) {
+    define('TABLE_WP_QUICKTASKER_PIPELINE_STAGES', $wpdb->prefix . 'quicktasker_pipeline_stages');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_TASKS' ) ) {
-    define('TABLE_WP_QUICKTASKER_TASKS', $wpdb->prefix . "quicktasker_tasks");
+if (!defined('TABLE_WP_QUICKTASKER_TASKS')) {
+    define('TABLE_WP_QUICKTASKER_TASKS', $wpdb->prefix . 'quicktasker_tasks');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_TASKS_LOCATION' ) ) {
-    define('TABLE_WP_QUICKTASKER_TASKS_LOCATION', $wpdb->prefix . "quicktasker_tasks_location");
+if (!defined('TABLE_WP_QUICKTASKER_TASKS_LOCATION')) {
+    define('TABLE_WP_QUICKTASKER_TASKS_LOCATION', $wpdb->prefix . 'quicktasker_tasks_location');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_STAGES_LOCATION' ) ) {
-    define('TABLE_WP_QUICKTASKER_STAGES_LOCATION', $wpdb->prefix . "quicktasker_stages_location");
+if (!defined('TABLE_WP_QUICKTASKER_STAGES_LOCATION')) {
+    define('TABLE_WP_QUICKTASKER_STAGES_LOCATION', $wpdb->prefix . 'quicktasker_stages_location');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKS_LOGS' ) ) {
-    define('TABLE_WP_QUICKTASKS_LOGS', $wpdb->prefix . "quicktasker_logs");
+if (!defined('TABLE_WP_QUICKTASKS_LOGS')) {
+    define('TABLE_WP_QUICKTASKS_LOGS', $wpdb->prefix . 'quicktasker_logs');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_COMMENTS' ) ) {
-    define('TABLE_WP_QUICKTASKER_COMMENTS', $wpdb->prefix . "quicktasker_comments");
+if (!defined('TABLE_WP_QUICKTASKER_COMMENTS')) {
+    define('TABLE_WP_QUICKTASKER_COMMENTS', $wpdb->prefix . 'quicktasker_comments');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_USER_PAGES' ) ) {
-    define('TABLE_WP_QUICKTASKER_USER_PAGES', $wpdb->prefix . "quicktasker_user_pages");
+if (!defined('TABLE_WP_QUICKTASKER_USER_PAGES')) {
+    define('TABLE_WP_QUICKTASKER_USER_PAGES', $wpdb->prefix . 'quicktasker_user_pages');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_USER_SESSIONS' ) ) {
-    define('TABLE_WP_QUICKTASKER_USER_SESSIONS', $wpdb->prefix . "quicktasker_user_sessions");
+if (!defined('TABLE_WP_QUICKTASKER_USER_SESSIONS')) {
+    define('TABLE_WP_QUICKTASKER_USER_SESSIONS', $wpdb->prefix . 'quicktasker_user_sessions');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_USER_TASK' ) ) {
-    define('TABLE_WP_QUICKTASKER_USER_TASK', $wpdb->prefix . "quicktasker_user_task");
+if (!defined('TABLE_WP_QUICKTASKER_USER_TASK')) {
+    define('TABLE_WP_QUICKTASKER_USER_TASK', $wpdb->prefix . 'quicktasker_user_task');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_CUSTOM_FIELDS' ) ) {
-    define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS', $wpdb->prefix . "quicktasker_custom_fields");
+if (!defined('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS')) {
+    define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS', $wpdb->prefix . 'quicktasker_custom_fields');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES' ) ) {
-    define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES', $wpdb->prefix . "quicktasker_custom_fields_values");
+if (!defined('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES')) {
+    define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS_VALUES', $wpdb->prefix . 'quicktasker_custom_fields_values');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS' ) ) {
-    define('TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS', $wpdb->prefix . "quicktasker_pipeline_settings");
+if (!defined('TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS')) {
+    define('TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS', $wpdb->prefix . 'quicktasker_pipeline_settings');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_AUTOMATIONS' ) ) {
-    define('TABLE_WP_QUICKTASKER_AUTOMATIONS', $wpdb->prefix . "quicktasker_automations");
+if (!defined('TABLE_WP_QUICKTASKER_AUTOMATIONS')) {
+    define('TABLE_WP_QUICKTASKER_AUTOMATIONS', $wpdb->prefix . 'quicktasker_automations');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_LABELS' ) ) {
-    define('TABLE_WP_QUICKTASKER_LABELS', $wpdb->prefix . "quicktasker_labels");
+if (!defined('TABLE_WP_QUICKTASKER_LABELS')) {
+    define('TABLE_WP_QUICKTASKER_LABELS', $wpdb->prefix . 'quicktasker_labels');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_LABEL_RELATIONS' ) ) {
-    define('TABLE_WP_QUICKTASKER_LABEL_RELATIONS', $wpdb->prefix . "quicktasker_label_relations");
+if (!defined('TABLE_WP_QUICKTASKER_LABEL_RELATIONS')) {
+    define('TABLE_WP_QUICKTASKER_LABEL_RELATIONS', $wpdb->prefix . 'quicktasker_label_relations');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_UPLOADS' ) ) {
-    define('TABLE_WP_QUICKTASKER_UPLOADS', $wpdb->prefix . "quicktasker_uploads");
+if (!defined('TABLE_WP_QUICKTASKER_UPLOADS')) {
+    define('TABLE_WP_QUICKTASKER_UPLOADS', $wpdb->prefix . 'quicktasker_uploads');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_WEBHOOKS' ) ) {
-    define('TABLE_WP_QUICKTASKER_WEBHOOKS', $wpdb->prefix . "quicktasker_webhooks");
+if (!defined('TABLE_WP_QUICKTASKER_WEBHOOKS')) {
+    define('TABLE_WP_QUICKTASKER_WEBHOOKS', $wpdb->prefix . 'quicktasker_webhooks');
 }
 
-if ( ! defined( 'TABLE_WP_QUICKTASKER_API_TOKENS' ) ) {
-    define('TABLE_WP_QUICKTASKER_API_TOKENS', $wpdb->prefix . "quicktasker_api_tokens");
+if (!defined('TABLE_WP_QUICKTASKER_API_TOKENS')) {
+    define('TABLE_WP_QUICKTASKER_API_TOKENS', $wpdb->prefix . 'quicktasker_api_tokens');
 }
 
 /*
@@ -149,75 +149,75 @@ Log constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QT_LOG_TYPE_TASK' ) ) {
-    define('WP_QT_LOG_TYPE_TASK', "task");
+if (!defined('WP_QT_LOG_TYPE_TASK')) {
+    define('WP_QT_LOG_TYPE_TASK', 'task');
 }
 
-if ( ! defined( 'WP_QT_LOG_TYPE_PIPELINE' ) ) {
-    define('WP_QT_LOG_TYPE_PIPELINE', "pipeline");
+if (!defined('WP_QT_LOG_TYPE_PIPELINE')) {
+    define('WP_QT_LOG_TYPE_PIPELINE', 'pipeline');
 }
 
-if ( ! defined( 'WP_QT_LOG_TYPE_STAGE' ) ) {
-    define('WP_QT_LOG_TYPE_STAGE', "stage");
+if (!defined('WP_QT_LOG_TYPE_STAGE')) {
+    define('WP_QT_LOG_TYPE_STAGE', 'stage');
 }
 
-if ( ! defined( 'WP_QT_LOG_TYPE_USER' ) ) {
-    define('WP_QT_LOG_TYPE_USER', "user");
+if (!defined('WP_QT_LOG_TYPE_USER')) {
+    define('WP_QT_LOG_TYPE_USER', 'user');
 }
 
-if ( ! defined( 'WP_QT_LOG_TYPE_PIPELINE' ) ) {
-    define('WP_QT_LOG_TYPE_PIPELINE', "pipeline");
+if (!defined('WP_QT_LOG_TYPE_PIPELINE')) {
+    define('WP_QT_LOG_TYPE_PIPELINE', 'pipeline');
 }
 
-if ( ! defined( 'WP_QT_LOG_TYPE_WEBHOOK' ) ) {
-    define('WP_QT_LOG_TYPE_WEBHOOK', "webhook");
+if (!defined('WP_QT_LOG_TYPE_WEBHOOK')) {
+    define('WP_QT_LOG_TYPE_WEBHOOK', 'webhook');
 }
 
-if ( ! defined( 'WP_QT_LOG_TYPES' ) ) {
+if (!defined('WP_QT_LOG_TYPES')) {
     define('WP_QT_LOG_TYPES', [WP_QT_LOG_TYPE_TASK, WP_QT_LOG_TYPE_PIPELINE, WP_QT_LOG_TYPE_STAGE, WP_QT_LOG_TYPE_USER, WP_QT_LOG_TYPE_WEBHOOK]);
 }
 
-if ( ! defined( 'WP_QT_LOG_CREATED_BY_ADMIN' ) ) {
-    define('WP_QT_LOG_CREATED_BY_ADMIN', "admin");
+if (!defined('WP_QT_LOG_CREATED_BY_ADMIN')) {
+    define('WP_QT_LOG_CREATED_BY_ADMIN', 'admin');
 }
 
-if ( ! defined( 'WP_QT_LOG_CREATED_BY_QUICKTASKER_USER' ) ) {
-    define('WP_QT_LOG_CREATED_BY_QUICKTASKER_USER', "quicktasker_user");
+if (!defined('WP_QT_LOG_CREATED_BY_QUICKTASKER_USER')) {
+    define('WP_QT_LOG_CREATED_BY_QUICKTASKER_USER', 'quicktasker_user');
 }
 
-if ( ! defined( 'WP_QT_LOG_CREATED_BY_AUTOMATION' ) ) {
-    define('WP_QT_LOG_CREATED_BY_AUTOMATION', "automation");
+if (!defined('WP_QT_LOG_CREATED_BY_AUTOMATION')) {
+    define('WP_QT_LOG_CREATED_BY_AUTOMATION', 'automation');
 }
 
-if ( ! defined( 'WP_QT_LOG_CREATED_BY_IMPORT' ) ) {
-    define('WP_QT_LOG_CREATED_BY_IMPORT', "import");
+if (!defined('WP_QT_LOG_CREATED_BY_IMPORT')) {
+    define('WP_QT_LOG_CREATED_BY_IMPORT', 'import');
 }
 
-if ( ! defined( 'WP_QT_LOG_CREATED_BY_SYSTEM' ) ) {
-    define('WP_QT_LOG_CREATED_BY_SYSTEM', "system");
+if (!defined('WP_QT_LOG_CREATED_BY_SYSTEM')) {
+    define('WP_QT_LOG_CREATED_BY_SYSTEM', 'system');
 }
 
-if ( ! defined( 'WP_QT_LOG_CREATED_BY_WEBHOOK' ) ) {
-    define('WP_QT_LOG_CREATED_BY_WEBHOOK', "webhook");
+if (!defined('WP_QT_LOG_CREATED_BY_WEBHOOK')) {
+    define('WP_QT_LOG_CREATED_BY_WEBHOOK', 'webhook');
 }
 
-if ( ! defined( 'WP_QT_LOG_CREATED_BY_API_TOKEN' ) ) {
-    define('WP_QT_LOG_CREATED_BY_API_TOKEN', "api_token");
+if (!defined('WP_QT_LOG_CREATED_BY_API_TOKEN')) {
+    define('WP_QT_LOG_CREATED_BY_API_TOKEN', 'api_token');
 }
 
-if ( ! defined( 'WP_QT_LOG_CREATED_BY' ) ) {
+if (!defined('WP_QT_LOG_CREATED_BY')) {
     define('WP_QT_LOG_CREATED_BY', [WP_QT_LOG_CREATED_BY_ADMIN, WP_QT_LOG_CREATED_BY_QUICKTASKER_USER, WP_QT_LOG_CREATED_BY_AUTOMATION, WP_QT_LOG_CREATED_BY_IMPORT, WP_QT_LOG_CREATED_BY_SYSTEM, WP_QT_LOG_CREATED_BY_WEBHOOK, WP_QT_LOG_CREATED_BY_API_TOKEN]);
 }
 
-if ( ! defined( 'WP_QT_LOG_STATUS_SUCCESS' ) ) {
-    define('WP_QT_LOG_STATUS_SUCCESS', "success");
+if (!defined('WP_QT_LOG_STATUS_SUCCESS')) {
+    define('WP_QT_LOG_STATUS_SUCCESS', 'success');
 }
 
-if ( ! defined( 'WP_QT_LOG_STATUS_ERROR' ) ) {
-    define('WP_QT_LOG_STATUS_ERROR', "error");
+if (!defined('WP_QT_LOG_STATUS_ERROR')) {
+    define('WP_QT_LOG_STATUS_ERROR', 'error');
 }
 
-if ( ! defined( 'WP_QT_LOG_STATUS' ) ) {
+if (!defined('WP_QT_LOG_STATUS')) {
     define('WP_QT_LOG_STATUS', [WP_QT_LOG_STATUS_SUCCESS, WP_QT_LOG_STATUS_ERROR]);
 }
 
@@ -227,19 +227,19 @@ Comment constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_TASK' ) ) {
-    define('WP_QUICKTASKER_COMMENT_TYPE_TASK', "task");
+if (!defined('WP_QUICKTASKER_COMMENT_TYPE_TASK')) {
+    define('WP_QUICKTASKER_COMMENT_TYPE_TASK', 'task');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_QUICKTASKER' ) ) {
-    define('WP_QUICKTASKER_COMMENT_TYPE_QUICKTASKER', "quicktasker");
+if (!defined('WP_QUICKTASKER_COMMENT_TYPE_QUICKTASKER')) {
+    define('WP_QUICKTASKER_COMMENT_TYPE_QUICKTASKER', 'quicktasker');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPE_WP_USER' ) ) {
-    define('WP_QUICKTASKER_COMMENT_TYPE_WP_USER', "wp-user");
+if (!defined('WP_QUICKTASKER_COMMENT_TYPE_WP_USER')) {
+    define('WP_QUICKTASKER_COMMENT_TYPE_WP_USER', 'wp-user');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_COMMENT_TYPES' ) ) {
+if (!defined('WP_QUICKTASKER_COMMENT_TYPES')) {
     define('WP_QUICKTASKER_COMMENT_TYPES', [WP_QUICKTASKER_COMMENT_TYPE_TASK, WP_QUICKTASKER_COMMENT_TYPE_QUICKTASKER, WP_QUICKTASKER_COMMENT_TYPE_WP_USER]);
 }
 
@@ -249,29 +249,29 @@ Custom field constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK', "task");
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK')) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK', 'task');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_QUICKTASKER' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_QUICKTASKER', "quicktasker");
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_QUICKTASKER')) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_QUICKTASKER', 'quicktasker');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_WP_USER' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_WP_USER', "wp-user");
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_WP_USER')) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_WP_USER', 'wp-user');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS', "users");
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS')) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS', 'users');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE', "pipeline");
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE')) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_PIPELINE', 'pipeline');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES' ) ) {
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES')) {
     define('WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES', [
-        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK, 
+        WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_TASK,
         WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_QUICKTASKER,
         WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_WP_USER,
         WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPE_USERS,
@@ -279,21 +279,21 @@ if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_ENTITY_TYPES' ) ) {
     ]);
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT', "text");
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT')) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT', 'text');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_TYPE_SELECT' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_SELECT', "select");
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_SELECT')) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_SELECT', 'select');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_TYPE_CHECKBOX' ) ) {
-    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_CHECKBOX', "checkbox");
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_CHECKBOX')) {
+    define('WP_QUICKTASKER_CUSTOM_FIELD_TYPE_CHECKBOX', 'checkbox');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CUSTOM_FIELD_TYPES' ) ) {
+if (!defined('WP_QUICKTASKER_CUSTOM_FIELD_TYPES')) {
     define('WP_QUICKTASKER_CUSTOM_FIELD_TYPES', [
-        WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT, 
+        WP_QUICKTASKER_CUSTOM_FIELD_TYPE_TEXT,
         WP_QUICKTASKER_CUSTOM_FIELD_TYPE_SELECT,
         WP_QUICKTASKER_CUSTOM_FIELD_TYPE_CHECKBOX
     ]);
@@ -304,15 +304,15 @@ User constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QT_WORDPRESS_USER_TYPE' ) ) {
-    define('WP_QT_WORDPRESS_USER_TYPE', "wp-user");
+if (!defined('WP_QT_WORDPRESS_USER_TYPE')) {
+    define('WP_QT_WORDPRESS_USER_TYPE', 'wp-user');
 }
 
-if ( ! defined( 'WP_QT_QUICKTASKER_USER_TYPE' ) ) {
-    define('WP_QT_QUICKTASKER_USER_TYPE', "quicktasker");
+if (!defined('WP_QT_QUICKTASKER_USER_TYPE')) {
+    define('WP_QT_QUICKTASKER_USER_TYPE', 'quicktasker');
 }
 
-if ( ! defined( 'WP_QT_USER_TYPES' ) ) {
+if (!defined('WP_QT_USER_TYPES')) {
     define('WP_QT_USER_TYPES', [WP_QT_WORDPRESS_USER_TYPE, WP_QT_QUICKTASKER_USER_TYPE]);
 }
 
@@ -322,11 +322,11 @@ Upload constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK' ) ) {
-    define('WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK', "task");
+if (!defined('WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK')) {
+    define('WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK', 'task');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_UPLOAD_ENTITY_TYPES' ) ) {
+if (!defined('WP_QUICKTASKER_UPLOAD_ENTITY_TYPES')) {
     define('WP_QUICKTASKER_UPLOAD_ENTITY_TYPES', [WP_QUICKTASKER_UPLOAD_ENTITY_TYPE_TASK]);
 }
 
@@ -336,7 +336,7 @@ Session constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_SESSION_LENGHT' ) ) {
+if (!defined('WP_QUICKTASKER_SESSION_LENGHT')) {
     define('WP_QUICKTASKER_SESSION_LENGHT', DAY_IN_SECONDS);
 }
 
@@ -346,12 +346,12 @@ Nonce constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WPQT_ADMIN_API_NONCE' ) ) {
-    define('WPQT_ADMIN_API_NONCE', "wpqt_api_nonce");
+if (!defined('WPQT_ADMIN_API_NONCE')) {
+    define('WPQT_ADMIN_API_NONCE', 'wpqt_api_nonce');
 }
 
-if ( ! defined( 'WPQT_USER_API_NONCE' ) ) {
-    define('WPQT_USER_API_NONCE', "wpqt_user_api_nonce");
+if (!defined('WPQT_USER_API_NONCE')) {
+    define('WPQT_USER_API_NONCE', 'wpqt_user_api_nonce');
 }
 
 /*
@@ -360,20 +360,20 @@ Miscellaneous constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_INVALID_SESSION_TOKEN' ) ) {
-    define('WP_QUICKTASKER_INVALID_SESSION_TOKEN', "Invalid session token");
+if (!defined('WP_QUICKTASKER_INVALID_SESSION_TOKEN')) {
+    define('WP_QUICKTASKER_INVALID_SESSION_TOKEN', 'Invalid session token');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_SIDE_EFFECT_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', "9");
+if (!defined('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER')) {
+    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', '9');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_DB_SEEDER_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_DB_SEEDER_TRIGGER', "1");
+if (!defined('WP_QUICKTASKER_DB_SEEDER_TRIGGER')) {
+    define('WP_QUICKTASKER_DB_SEEDER_TRIGGER', '1');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_DB_MIGRATION_TRIGGER' ) ) {
-    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', "11");
+if (!defined('WP_QUICKTASKER_DB_MIGRATION_TRIGGER')) {
+    define('WP_QUICKTASKER_DB_MIGRATION_TRIGGER', '11');
 }
 
 /*
@@ -382,32 +382,32 @@ Capabilities constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE' ) ) {
-    define('WP_QUICKTASKER_ADMIN_ROLE', "quicktasker_admin_role"); // Allows access to QuickTasker admin pages and private API GET requests
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE', 'quicktasker_admin_role'); // Allows access to QuickTasker admin pages and private API GET requests
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE' ) ) {
-    define('WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE', "quicktasker_admin_role_allow_delete"); // Allows private API DELETE requests
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE', 'quicktasker_admin_role_allow_delete'); // Allows private API DELETE requests
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS' ) ) {
-    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS", "quicktasker_admin_role_manage_users"); // Allows access to Users page and related private API endpoints
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS', 'quicktasker_admin_role_manage_users'); // Allows access to Users page and related private API endpoints
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS' ) ) {
-    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS", "quicktasker_admin_role_manage_settings"); // Allows access to Settings page and related private API endpoints
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS', 'quicktasker_admin_role_manage_settings'); // Allows access to Settings page and related private API endpoints
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE' ) ) {
-    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE", "quicktasker_admin_role_manage_archive"); // Allows access to Archive page and related private API endpoints
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE', 'quicktasker_admin_role_manage_archive'); // Allows access to Archive page and related private API endpoints
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ACCESS_USER_PAGE_APP' ) ) {
-    define("WP_QUICKTASKER_ACCESS_USER_PAGE_APP", "quicktasker_access_user_page_app"); // Allows access to user page app
+if (!defined('WP_QUICKTASKER_ACCESS_USER_PAGE_APP')) {
+    define('WP_QUICKTASKER_ACCESS_USER_PAGE_APP', 'quicktasker_access_user_page_app'); // Allows access to user page app
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS' ) ) {
-    define("WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS", "quicktasker_admin_role_manage_quicktasker_sessions"); // Allows access to QuickTasker user sessions page and related private API endpoints
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS', 'quicktasker_admin_role_manage_quicktasker_sessions'); // Allows access to QuickTasker user sessions page and related private API endpoints
 }
 
 /*
@@ -416,8 +416,8 @@ Settings constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES' ) ) {
-    define('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES', "quicktasker_user_page_custom_styles");
+if (!defined('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES')) {
+    define('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES', 'quicktasker_user_page_custom_styles');
 }
 
 /*
@@ -426,8 +426,8 @@ Label constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK' ) ) {
-    define('WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK', "task");
+if (!defined('WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK')) {
+    define('WP_QUICKTASKER_LABEL_RELATION_TYPE_TASK', 'task');
 }
 
 /*
@@ -437,94 +437,94 @@ Automation constants
 */
 
 // Types
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK', "task");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK')) {
+    define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK', 'task');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER', "woocommerce-order");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER')) {
+    define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER', 'woocommerce-order');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING', "seatreg-booking");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING')) {
+    define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING', 'seatreg-booking');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TARGET_TYPES' ) ) {
+if (!defined('WP_QUICKTASKER_AUTOMATION_TARGET_TYPES')) {
     define('WP_QUICKTASKER_AUTOMATION_TARGET_TYPES', [
-        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK, 
-        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER, 
+        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_WOOCEMMERCE_ORDER,
         WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_SEATREG_BOOKING
     ]);
 }
 
 // Triggers
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE', "task-done");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE', 'task-done');
 }
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED', "task-created");
-}
-
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE', "task-not-done");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED', 'task-created');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED', "task-deleted");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE', 'task-not-done');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED', "task-assigned");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED', 'task-deleted');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED', "task-unassigned");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED', 'task-assigned');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED', "task-public-comment-added");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED', 'task-unassigned');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED', "task-private-comment-added");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED', 'task-public-comment-added');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED', "task-attachment-added");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED', 'task-private-comment-added');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED', "task-attachment-deleted");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED', 'task-attachment-added');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED', "woocommerce-order-added");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED', 'task-attachment-deleted');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED', "seatreg-booking-created");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED', 'woocommerce-order-added');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED', "seatreg-booking-approved");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED', 'seatreg-booking-created');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING', "seatreg-booking-pending");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED', 'seatreg-booking-approved');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING_VIA_MANAGER' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING_VIA_MANAGER', "seatreg-booking-pending-via-manager");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING', 'seatreg-booking-pending');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED_VIA_MANAGER' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED_VIA_MANAGER', "seatreg-booking-approved-via-manager");
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING_VIA_MANAGER')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING_VIA_MANAGER', 'seatreg-booking-pending-via-manager');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGERS' ) ) {
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED_VIA_MANAGER')) {
+    define('WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED_VIA_MANAGER', 'seatreg-booking-approved-via-manager');
+}
+
+if (!defined('WP_QUICKTASKER_AUTOMATION_TRIGGERS')) {
     define('WP_QUICKTASKER_AUTOMATION_TRIGGERS', [
-        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE, 
-        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED, 
+        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE,
+        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
         WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE,
         WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED,
         WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED,
@@ -543,58 +543,58 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_TRIGGERS' ) ) {
 }
 
 // Actions
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK', "archive-task");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK', 'archive-task');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER', "assign-user");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER', 'assign-user');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY', "new-entity-email");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY', 'new-entity-email');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_DELETED_ENTITY_EMAIL' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_DELETED_ENTITY_EMAIL', "deleted-entity-email");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_DELETED_ENTITY_EMAIL')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_DELETED_ENTITY_EMAIL', 'deleted-entity-email');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ASSIGNED_EMAIL' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ASSIGNED_EMAIL', "task-assigned-email");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ASSIGNED_EMAIL')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ASSIGNED_EMAIL', 'task-assigned-email');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TASK_UNASSIGNED_EMAIL' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_UNASSIGNED_EMAIL', "task-unassigned-email");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_UNASSIGNED_EMAIL')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_UNASSIGNED_EMAIL', 'task-unassigned-email');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PUBLIC_COMMENT_ADDED_EMAIL' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PUBLIC_COMMENT_ADDED_EMAIL', "task-public-comment-added-email");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PUBLIC_COMMENT_ADDED_EMAIL')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PUBLIC_COMMENT_ADDED_EMAIL', 'task-public-comment-added-email');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PRIVATE_COMMENT_ADDED_EMAIL' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PRIVATE_COMMENT_ADDED_EMAIL', "task-private-comment-added-email");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PRIVATE_COMMENT_ADDED_EMAIL')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PRIVATE_COMMENT_ADDED_EMAIL', 'task-private-comment-added-email');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_ADDED_EMAIL' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_ADDED_EMAIL', "task-attachment-added-email");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_ADDED_EMAIL')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_ADDED_EMAIL', 'task-attachment-added-email');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_DELETED_EMAIL' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_DELETED_EMAIL', "task-attachment-deleted-email");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_DELETED_EMAIL')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_DELETED_EMAIL', 'task-attachment-deleted-email');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK', "create-task");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK', 'create-task');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE', "send-slack-message");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE', 'send-slack-message');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTIONS' ) ) {
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTIONS')) {
     define('WP_QUICKTASKER_AUTOMATION_ACTIONS', [
-        WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK, 
-        WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER, 
+        WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK,
+        WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER,
         WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY,
         WP_QUICKTASKER_AUTOMATION_ACTION_DELETED_ENTITY_EMAIL,
         WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ASSIGNED_EMAIL,
@@ -609,23 +609,23 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTIONS' ) ) {
 }
 
 // Action target types
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER', "quicktasker");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER', 'quicktasker');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER' ) ) {
-    define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER', "wp-user");
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER')) {
+    define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER', 'wp-user');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES' ) ) {
+if (!defined('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES')) {
     define('WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPES', [
-        WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER, 
+        WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER,
         WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER
     ]);
 }
 
 // Sensitive automation meta
-if ( ! defined( 'WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META' ) ) {
+if (!defined('WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META')) {
     define('WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META', [
         WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE
     ]);
@@ -636,83 +636,82 @@ if ( ! defined( 'WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META' ) ) {
 Webhook constants
 ==================================================================================================================================================================================================================
 */
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK', "task");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK', 'task');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER', "quicktasker");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER', 'quicktasker');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_TYPES' ) ) {
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_TYPES')) {
     define('WP_QUICKTASKER_WEBHOOK_TARGET_TYPES', [
         WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
         WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_QUICKTASKER
     ]);
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED', "created");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED', 'created');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED', "updated");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED', 'updated');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED', "deleted");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_DELETED', 'deleted');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED', "stage-changed");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED', 'stage-changed');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ARCHIVED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ARCHIVED', "archived");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ARCHIVED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ARCHIVED', 'archived');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_RESTORED_ARCHIVED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_RESTORED_ARCHIVED', "restored-archived");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_RESTORED_ARCHIVED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_RESTORED_ARCHIVED', 'restored-archived');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED', "completed");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED', 'completed');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED', "not-completed");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED', 'not-completed');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED', "assigned");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED', 'assigned');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED', "unassigned");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED', 'unassigned');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMMENT_ADDED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMMENT_ADDED', "comment-added");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMMENT_ADDED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMMENT_ADDED', 'comment-added');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_ADDED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_ADDED', "label-added");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_ADDED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_ADDED', 'label-added');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_REMOVED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_REMOVED', "label-removed");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_REMOVED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_LABEL_REMOVED', 'label-removed');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_ADDED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_ADDED', "file-added");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_ADDED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_ADDED', 'file-added');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_REMOVED' ) ) {
-    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_REMOVED', "file-removed");
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_REMOVED')) {
+    define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_FILE_REMOVED', 'file-removed');
 }
 
-
-if ( ! defined( 'WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS' ) ) {
+if (!defined('WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS')) {
     define('WP_QUICKTASKER_WEBHOOK_TARGET_ACTIONS', [
         WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
         WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UPDATED,
@@ -738,27 +737,27 @@ Filtering constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_FULL' ) ) {
-    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_FULL', "user-full");
+if (!defined('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_FULL')) {
+    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_FULL', 'user-full');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE' ) ) {
-    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE', "user-admin-fe");
+if (!defined('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE')) {
+    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE', 'user-admin-fe');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL' ) ) {
-    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL', "user-minimal");
+if (!defined('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL')) {
+    define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_MINIMAL', 'user-minimal');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_COMPLETED' ) ) {
-    define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_COMPLETED', "1");
+if (!defined('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_COMPLETED')) {
+    define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_COMPLETED', '1');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_NOT_COMPLETED' ) ) {
-    define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_NOT_COMPLETED', "0");
+if (!defined('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_NOT_COMPLETED')) {
+    define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_NOT_COMPLETED', '0');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ARCHIVE_STATUS_FILTER' ) ) {
+if (!defined('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER')) {
     define('WP_QUICKTASKER_ARCHIVE_STATUS_FILTER', [
         WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_COMPLETED,
         WP_QUICKTASKER_ARCHIVE_STATUS_FILTER_NOT_COMPLETED
@@ -771,36 +770,36 @@ Email templates
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE' ) ) {
-    define('WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE', "new-task-created");
+if (!defined('WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE')) {
+    define('WP_QUICKTASKER_NEW_TASK_EMAIL_TEMPLATE', 'new-task-created');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_DELETED_TASK_EMAIL_TEMPLATE' ) ) {
-    define('WP_QUICKTASKER_DELETED_TASK_EMAIL_TEMPLATE', "task-deleted");
+if (!defined('WP_QUICKTASKER_DELETED_TASK_EMAIL_TEMPLATE')) {
+    define('WP_QUICKTASKER_DELETED_TASK_EMAIL_TEMPLATE', 'task-deleted');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ASSIGNED_TASK_EMAIL_TEMPLATE' ) ) {
-    define('WP_QUICKTASKER_ASSIGNED_TASK_EMAIL_TEMPLATE', "task-assigned");
+if (!defined('WP_QUICKTASKER_ASSIGNED_TASK_EMAIL_TEMPLATE')) {
+    define('WP_QUICKTASKER_ASSIGNED_TASK_EMAIL_TEMPLATE', 'task-assigned');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_UNASSIGNED_TASK_EMAIL_TEMPLATE' ) ) {
-    define('WP_QUICKTASKER_UNASSIGNED_TASK_EMAIL_TEMPLATE', "task-unassigned");
+if (!defined('WP_QUICKTASKER_UNASSIGNED_TASK_EMAIL_TEMPLATE')) {
+    define('WP_QUICKTASKER_UNASSIGNED_TASK_EMAIL_TEMPLATE', 'task-unassigned');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_TASK_NEW_PUBLIC_COMMENT_EMAIL_TEMPLATE' ) ) {
-    define('WP_QUICKTASKER_TASK_NEW_PUBLIC_COMMENT_EMAIL_TEMPLATE', "task-new-public-comment");
+if (!defined('WP_QUICKTASKER_TASK_NEW_PUBLIC_COMMENT_EMAIL_TEMPLATE')) {
+    define('WP_QUICKTASKER_TASK_NEW_PUBLIC_COMMENT_EMAIL_TEMPLATE', 'task-new-public-comment');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE' ) ) {
-    define('WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE', "task-new-private-comment");
+if (!defined('WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE')) {
+    define('WP_QUICKTASKER_TASK_NEW_PRIVATE_COMMENT_EMAIL_TEMPLATE', 'task-new-private-comment');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_TASK_NEW_ATTACHMENT_EMAIL_TEMPLATE' ) ) {
-    define('WP_QUICKTASKER_TASK_NEW_ATTACHMENT_EMAIL_TEMPLATE', "task-attachment-added");
+if (!defined('WP_QUICKTASKER_TASK_NEW_ATTACHMENT_EMAIL_TEMPLATE')) {
+    define('WP_QUICKTASKER_TASK_NEW_ATTACHMENT_EMAIL_TEMPLATE', 'task-attachment-added');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE' ) ) {
-    define('WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE', "task-attachment-deleted");
+if (!defined('WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE')) {
+    define('WP_QUICKTASKER_TASK_ATTACHMENT_DELETED_EMAIL_TEMPLATE', 'task-attachment-deleted');
 }
 
 /*
@@ -809,23 +808,23 @@ Import constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCE_TRELLO' ) ) {
-    define('WP_QUICKTASKER_IMPORT_SOURCE_TRELLO', "TRELLO-IMPORT");
+if (!defined('WP_QUICKTASKER_IMPORT_SOURCE_TRELLO')) {
+    define('WP_QUICKTASKER_IMPORT_SOURCE_TRELLO', 'TRELLO-IMPORT');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCE_ASANA' ) ) {
-    define('WP_QUICKTASKER_IMPORT_SOURCE_ASANA', "ASANA-IMPORT");
+if (!defined('WP_QUICKTASKER_IMPORT_SOURCE_ASANA')) {
+    define('WP_QUICKTASKER_IMPORT_SOURCE_ASANA', 'ASANA-IMPORT');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCE_PIPEDRIVE' ) ) {
-    define('WP_QUICKTASKER_IMPORT_SOURCE_PIPEDRIVE', "PIPEDRIVE-IMPORT");
+if (!defined('WP_QUICKTASKER_IMPORT_SOURCE_PIPEDRIVE')) {
+    define('WP_QUICKTASKER_IMPORT_SOURCE_PIPEDRIVE', 'PIPEDRIVE-IMPORT');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCE_QUICKTASKER' ) ) {
-    define('WP_QUICKTASKER_IMPORT_SOURCE_QUICKTASKER', "QUICKTASKER-IMPORT");
+if (!defined('WP_QUICKTASKER_IMPORT_SOURCE_QUICKTASKER')) {
+    define('WP_QUICKTASKER_IMPORT_SOURCE_QUICKTASKER', 'QUICKTASKER-IMPORT');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_IMPORT_SOURCES' ) ) {
+if (!defined('WP_QUICKTASKER_IMPORT_SOURCES')) {
     define('WP_QUICKTASKER_IMPORT_SOURCES', [
         WP_QUICKTASKER_IMPORT_SOURCE_TRELLO,
         WP_QUICKTASKER_IMPORT_SOURCE_ASANA,
@@ -840,14 +839,14 @@ Validation constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES' ) ) {
+if (!defined('WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES')) {
     define('WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES', [
         'application/pdf',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        "text/csv",
+        'text/csv',
         'text/plain',
         'image/jpeg',
         'image/png',
@@ -867,38 +866,38 @@ if ( ! defined( 'WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES' ) ) {
     ]);
 }
 
-if ( ! defined( 'WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS' ) ) {
+if (!defined('WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS')) {
     define('WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS', [
-        "pdf",
-        "doc",
-        "docx",
-        "xls",
-        "xlsx",
-        "txt",
-        "csv",
-        "jpg",
-        "jpeg",
-        "png",
-        "gif",
-        "bmp",
-        "svg",
-        "mp3",
-        "wav",
-        "ogg",
-        "mp4",
-        "webm",
-        "zip",
-        "rar",
-        "tar",
-        "gz"
+        'pdf',
+        'doc',
+        'docx',
+        'xls',
+        'xlsx',
+        'txt',
+        'csv',
+        'jpg',
+        'jpeg',
+        'png',
+        'gif',
+        'bmp',
+        'svg',
+        'mp3',
+        'wav',
+        'ogg',
+        'mp4',
+        'webm',
+        'zip',
+        'rar',
+        'tar',
+        'gz'
     ]);
 }
 
-if ( ! defined( 'WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX' ) ) {
+if (!defined('WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX')) {
     define('WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX', '/^[a-zA-Z0-9_\-\.]+$/');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE' ) ) {
+if (!defined('WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE')) {
     define('WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE', 25 * 1024 * 1024);
 }
 
@@ -908,54 +907,54 @@ Token API constants
 ==================================================================================================================================================================================================================
 */
 
-if ( ! defined( 'WP_QUICKTASKER_CACHED_API_TOKEN_PLAIN' ) ) {
+if (!defined('WP_QUICKTASKER_CACHED_API_TOKEN_PLAIN')) {
     define('WP_QUICKTASKER_CACHED_API_TOKEN_PLAIN', 'wpqt-token-plain');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CACHED_API_TOKEN_HASHED' ) ) {
+if (!defined('WP_QUICKTASKER_CACHED_API_TOKEN_HASHED')) {
     define('WP_QUICKTASKER_CACHED_API_TOKEN_HASHED', 'wpqt-token-hashed');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_CACHED_API_DB_TOKEN' ) ) {
+if (!defined('WP_QUICKTASKER_CACHED_API_DB_TOKEN')) {
     define('WP_QUICKTASKER_CACHED_API_DB_TOKEN', 'wpqt-token-db');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_GET_PIPELINE_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_GET_PIPELINE_PERMISSION')) {
     define('WP_QUICKTASKER_API_GET_PIPELINE_PERMISSION', 'get_pipeline');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_PATCH_PIPELINE_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_PATCH_PIPELINE_PERMISSION')) {
     define('WP_QUICKTASKER_API_PATCH_PIPELINE_PERMISSION', 'patch_pipeline');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_GET_PIPELINE_STAGES_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_GET_PIPELINE_STAGES_PERMISSION')) {
     define('WP_QUICKTASKER_API_GET_PIPELINE_STAGES_PERMISSION', 'get_pipeline_stages');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_POST_PIPELINE_STAGES_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_POST_PIPELINE_STAGES_PERMISSION')) {
     define('WP_QUICKTASKER_API_POST_PIPELINE_STAGES_PERMISSION', 'post_pipeline_stages');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_PATCH_PIPELINE_STAGES_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_PATCH_PIPELINE_STAGES_PERMISSION')) {
     define('WP_QUICKTASKER_API_PATCH_PIPELINE_STAGES_PERMISSION', 'patch_pipeline_stages');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION')) {
     define('WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION', 'delete_pipeline_stages');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_GET_PIPELINE_TASKS_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_GET_PIPELINE_TASKS_PERMISSION')) {
     define('WP_QUICKTASKER_API_GET_PIPELINE_TASKS_PERMISSION', 'get_pipeline_tasks');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_POST_PIPELINE_TASKS_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_POST_PIPELINE_TASKS_PERMISSION')) {
     define('WP_QUICKTASKER_API_POST_PIPELINE_TASKS_PERMISSION', 'post_pipeline_tasks');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_PATCH_PIPELINE_TASKS_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_PATCH_PIPELINE_TASKS_PERMISSION')) {
     define('WP_QUICKTASKER_API_PATCH_PIPELINE_TASKS_PERMISSION', 'patch_pipeline_tasks');
 }
 
-if ( ! defined( 'WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION' ) ) {
+if (!defined('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION')) {
     define('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION', 'delete_pipeline_tasks');
 }
