@@ -447,7 +447,11 @@ function wpqt_register_token_api_routes()
     register_rest_route('wpqt/v1', '/token/board/tasks/(?P<task_id>\d+)', [
         'methods'  => 'PATCH',
         'callback' => function (WP_REST_Request $request) {
+            global $wpdb;
+
             try {
+                $wpdb->query('START TRANSACTION');
+
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
                 $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
@@ -462,6 +466,7 @@ function wpqt_register_token_api_routes()
                 }
 
                 $taskUpdated = ServiceLocator::get('TaskService')->editTask($taskId, $paramsToUpdate);
+
                 ServiceLocator::get('LogService')->log(
                     "Task {$task->name} updated by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
                     [
@@ -472,11 +477,15 @@ function wpqt_register_token_api_routes()
                         'created_by_id' => $cachedDbToken->id,
                     ]
                 );
+                
+                $wpdb->query('COMMIT');
 
                 return $responseService->createTokenApiResponse(true, 200, [
                     'task' => $taskUpdated
                 ]);
             } catch (Throwable $e) {
+                $wpdb->query('ROLLBACK');
+
                 return ServiceLocator::get('ErrorHandlerService')->handleTokenApiError($e, 'A system error occurred while updating the task');
             }
         },
@@ -503,6 +512,116 @@ function wpqt_register_token_api_routes()
                 'required'          => false,
                 'validate_callback' => ['WPQT\RequestValidation', 'validateColorParam'],
                 'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+            ],
+        ],
+    ]);
+
+    register_rest_route('wpqt/v1', '/token/board/tasks/(?P<task_id>\d+)/order', [
+        'methods'  => 'PATCH',
+        'callback' => function (WP_REST_Request $request) {
+            global $wpdb;
+
+            try {
+                $wpdb->query('START TRANSACTION');
+
+                $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
+                $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
+                $taskId = $request->get_param('task_id');
+                $taskOrder = $request->get_param('task_order');
+                $stageId = $request->get_param('stage_id');
+                $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+
+                if (!$task || $task->pipeline_id !== $cachedDbToken->pipeline_id) {
+                    return $responseService->createTokenApiResponse(false, 404, [
+                        'message' => 'Task not found for the provided token'
+                    ]);
+                }
+
+                if($stageId) {
+                    $stage = ServiceLocator::get('StageRepository')->getStageById($stageId);
+
+                    if (!$stage || $stage->pipeline_id !== $cachedDbToken->pipeline_id) {
+                        return $responseService->createTokenApiResponse(false, 404, [
+                            'message' => 'Stage not found for the provided token'
+                        ]);
+                    }
+                }
+
+                $targetStageId = $stageId ?? $task->stage_id;
+                $maxTaskOrder = ServiceLocator::get('TaskService')->getNextTaskOrder($targetStageId);
+
+                if ($taskOrder > $maxTaskOrder) {
+                    return $responseService->createTokenApiResponse(false, 400, [
+                        'message' => 'Invalid task_order. Maximum allowed value is ' . $maxTaskOrder
+                    ]);
+                }
+
+                $moveResult = ServiceLocator::get('TaskService')->moveTask($taskId, $targetStageId, $taskOrder);
+
+                if (true === $moveResult->stageChanged) {
+                    /* Handle webhooks */
+                        ServiceLocator::get('WebhookService')->handleWebhooks(
+                            $moveResult->task->pipeline_id,
+                            [
+                                [
+                                    'data' => [
+                                        'relatedObject' => $moveResult->task,
+                                        'extraData'     => [
+                                            'task_prev_stage_id' => $moveResult->oldStageId,
+                                            'task_new_stage_id'  => $moveResult->newStageId
+                                        ],
+                                    ],
+                                    'webhookData' => [
+                                        'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                        'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED,
+                                    ]
+                                ]
+                            ]
+                        );
+                    /* End Handle webhooks */
+                }
+
+                ServiceLocator::get('LogService')->log(
+                    "Task {$task->name} order updated by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type'          => WP_QT_LOG_TYPE_TASK,
+                        'type_id'       => $task->id,
+                        'pipeline_id'   => $cachedDbToken->pipeline_id,
+                        'created_by'    => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
+                
+                $wpdb->query('COMMIT');
+
+                return $responseService->createTokenApiResponse(true, 200, [
+                    'task' => $moveResult->task
+                ]);
+            } catch (Throwable $e) {
+                $wpdb->query('ROLLBACK');
+
+                return ServiceLocator::get('ErrorHandlerService')->handleTokenApiError($e, 'A system error occurred while updating the task order');
+            }
+        },
+        'permission_callback' => function (WP_REST_Request $request) {
+            return ServiceLocator::get('ApiTokenService')->validateAndSetRequestTokenCache($request, [WP_QUICKTASKER_API_PATCH_PIPELINE_TASKS_PERMISSION]);
+        },
+        'args' => [
+            'task_id' => [
+                'required'          => true,
+                'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+            ],
+            'task_order' => [
+                'required'          => true,
+                'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+            ],
+            'stage_id' => [
+                'required'          => false,
+                'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
             ],
         ],
     ]);
