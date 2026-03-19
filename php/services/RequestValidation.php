@@ -201,6 +201,17 @@ if (!class_exists('WPQT\RequestValidation')) {
         }
 
         /**
+         * Validates if the given parameter is a datetime in the format YYYY-MM-DD HH:MM:SS or YYYY-MM-DDTHH:MM:SS.
+         *
+         * @param string $param The datetime parameter to validate.
+         * @return bool Returns true if the parameter matches the datetime format, false otherwise.
+         */
+        public static function validateDateTimeParam($param)
+        {
+            return (bool) preg_match('/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}$/', $param);
+        }
+
+        /**
          * Validates an optional numeric parameter.
          *
          * This method checks if the given parameter is either null or a valid numeric value.

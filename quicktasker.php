@@ -130,6 +130,7 @@ ServiceLocator::register('WebhookEventService', new WPQT\Webhooks\WebhookEventSe
 ServiceLocator::register('ApiTokenService', new WPQT\Token\ApiTokenService());
 ServiceLocator::register('ResponseService', new WPQT\Response\ResponseService());
 ServiceLocator::register('PipelineService', new WPQT\Pipeline\PipelineService());
+ServiceLocator::register('SettingsValidationService', new WPQT\Settings\SettingsValidationService());
 
 require('php/hooks.php');
 require('php/actions.php');

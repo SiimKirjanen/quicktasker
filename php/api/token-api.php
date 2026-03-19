@@ -28,6 +28,18 @@ function wpqtBuildParamsFromRequest(WP_REST_Request $request, array $paramNames)
     return $params;
 }
 
+/**
+ * Validates if an entity exists and belongs to the specified pipeline
+ * 
+ * @param object|null $entity The entity to validate (stage, task, etc.)
+ * @param int $pipelineId The expected pipeline ID
+ * @return bool True if entity is unauthorized (doesn't exist or belongs to different pipeline)
+ */
+function wpqtIsEntityUnauthorizedForPipeline($entity, $pipelineId)
+{
+    return !$entity || $entity->pipeline_id !== $pipelineId;
+}
+
 add_action('rest_api_init', 'wpqt_register_token_api_routes');
 function wpqt_register_token_api_routes()
 {
@@ -212,7 +224,7 @@ function wpqt_register_token_api_routes()
                 $stageData = wpqtBuildParamsFromRequest($request, ['name', 'description']);
                 $stage = ServiceLocator::get('StageRepository')->getStageById($request->get_param('stage_id'));
 
-                if (!$stage || $stage->pipeline_id != $cachedDbToken->pipeline_id) {
+                if (wpqtIsEntityUnauthorizedForPipeline($stage, $cachedDbToken->pipeline_id)) {
                     return $responseService->createTokenApiResponse(false, 404, [
                         'message' => 'Stage not found for the provided token'
                     ]);
@@ -277,7 +289,7 @@ function wpqt_register_token_api_routes()
                 $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $stage = ServiceLocator::get('StageRepository')->getStageById($request->get_param('stage_id'));
 
-                if (!$stage || $stage->pipeline_id !== $cachedDbToken->pipeline_id) {
+                if (wpqtIsEntityUnauthorizedForPipeline($stage, $cachedDbToken->pipeline_id)) {
                     return $responseService->createTokenApiResponse(false, 404, [
                         'message' => 'Stage not found for the provided token'
                     ]);
@@ -455,11 +467,11 @@ function wpqt_register_token_api_routes()
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
                 $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
-                $paramsToUpdate = wpqtBuildParamsFromRequest($request, ['name', 'description', 'task_focus_color']);
+                $paramsToUpdate = wpqtBuildParamsFromRequest($request, ['name', 'description', 'task_focus_color', 'due_date']);
                 $taskId = $request->get_param('task_id');
                 $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
 
-                if (!$task || $task->pipeline_id !== $cachedDbToken->pipeline_id) {
+                if (wpqtIsEntityUnauthorizedForPipeline($task, $cachedDbToken->pipeline_id)) {
                     return $responseService->createTokenApiResponse(false, 404, [
                         'message' => 'Task not found for the provided token'
                     ]);
@@ -513,6 +525,11 @@ function wpqt_register_token_api_routes()
                 'validate_callback' => ['WPQT\RequestValidation', 'validateColorParam'],
                 'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
             ],
+            'due_date' => [
+                'required'          => false,
+                'validate_callback' => ['WPQT\RequestValidation', 'validateDateTimeParam'],
+                'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+            ],
         ],
     ]);
 
@@ -532,7 +549,7 @@ function wpqt_register_token_api_routes()
                 $stageId = $request->get_param('stage_id');
                 $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
 
-                if (!$task || $task->pipeline_id !== $cachedDbToken->pipeline_id) {
+                if (wpqtIsEntityUnauthorizedForPipeline($task, $cachedDbToken->pipeline_id)) {
                     return $responseService->createTokenApiResponse(false, 404, [
                         'message' => 'Task not found for the provided token'
                     ]);
@@ -541,7 +558,7 @@ function wpqt_register_token_api_routes()
                 if($stageId) {
                     $stage = ServiceLocator::get('StageRepository')->getStageById($stageId);
 
-                    if (!$stage || $stage->pipeline_id !== $cachedDbToken->pipeline_id) {
+                    if (wpqtIsEntityUnauthorizedForPipeline($stage, $cachedDbToken->pipeline_id)) {
                         return $responseService->createTokenApiResponse(false, 404, [
                             'message' => 'Stage not found for the provided token'
                         ]);
@@ -626,6 +643,104 @@ function wpqt_register_token_api_routes()
         ],
     ]);
 
+    register_rest_route('wpqt/v1', '/token/board/tasks/(?P<task_id>\d+)/done', [
+        'methods' => 'PATCH',
+        'callback' => function (WP_REST_Request $request) {
+            global $wpdb;
+
+            try {
+                $wpdb->query('START TRANSACTION');
+
+                $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
+                $taskMarkedDoneParam = $request->get_param('is_done');
+                $taskId = $request->get_param('task_id');
+                $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
+
+                if (wpqtIsEntityUnauthorizedForPipeline($task, $cachedDbToken->pipeline_id)) {
+                    return ServiceLocator::get('ResponseService')->createTokenApiResponse(false, 404, [
+                        'message' => 'Task not found for the provided token'
+                    ]);
+                }
+
+                if(!ServiceLocator::get('SettingsValidationService')->isAllowedToMarkTaskDone($task->id)) {
+                    return ServiceLocator::get('ResponseService')->createTokenApiResponse(false, 403, [
+                        'message' => 'Tasks can only be marked as done in the last stage according to board settings'
+                    ]);
+                }
+
+                $changedTask = ServiceLocator::get('TaskService')->changeTaskDoneStatus($task->id, $taskMarkedDoneParam);
+
+                ServiceLocator::get('LogService')->log(
+                    "Task {$task->name} marked as " . ($taskMarkedDoneParam ? 'done' : 'not done') . " by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type'          => WP_QT_LOG_TYPE_TASK,
+                        'type_id'       => $task->id,
+                        'pipeline_id'   => $cachedDbToken->pipeline_id,
+                        'created_by'    => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
+
+                /* Handle automations */
+                    $trigger = $taskMarkedDoneParam ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE;
+                    $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                        $task->pipeline_id,
+                        $task->id,
+                        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                        $trigger,
+                        (object) [
+                           'apiToken' => $cachedDbToken,
+                        ]
+                    );
+                /* End of handling automations */
+
+                /* Handle webhooks */
+                    ServiceLocator::get('WebhookService')->handleWebhooks(
+                        $task->pipeline_id,
+                        [
+                            [
+                                'data' => [
+                                    'relatedObject' => $task,
+                                ],
+                                'webhookData' => [
+                                    'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                    'target_action' => $taskMarkedDoneParam ? WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED : WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED,
+                                ]
+                            ]
+                        ]
+                    );
+                /* End Handle webhooks */
+
+                $wpdb->query('COMMIT');
+
+                return ServiceLocator::get('ResponseService')->createTokenApiResponse(true, 200, [
+                    'task' => $changedTask
+                ]);
+
+            } catch (Throwable $e) {
+                $wpdb->query('ROLLBACK');
+
+                return ServiceLocator::get('ErrorHandlerService')->handleTokenApiError($e, 'A system error occurred while updating the task status');
+            }
+        },
+        'permission_callback' => function (WP_REST_Request $request) {
+            return ServiceLocator::get('ApiTokenService')->validateAndSetRequestTokenCache($request, [WP_QUICKTASKER_API_PATCH_PIPELINE_TASKS_PERMISSION]);
+        },
+        'args' => [
+            'task_id' => [
+                'required'          => true,
+                'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+            ],
+            'is_done' => [
+                'required'          => true,
+                'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
+                'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+            ]
+        ],
+    ]);
+
     register_rest_route('wpqt/v1', '/token/board/tasks/(?P<task_id>\d+)', [
         'methods'  => 'DELETE',
         'callback' => function (WP_REST_Request $request) {
@@ -636,7 +751,7 @@ function wpqt_register_token_api_routes()
                 $taskId = $request->get_param('task_id');
                 $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
 
-                if (!$task || $task->pipeline_id !== $cachedDbToken->pipeline_id) {
+                if (wpqtIsEntityUnauthorizedForPipeline($task, $cachedDbToken->pipeline_id)) {
                     return $responseService->createTokenApiResponse(false, 404, [
                         'message' => 'Task not found for the provided token'
                     ]);
