@@ -47,7 +47,7 @@ if (!function_exists('wpqt_public_user_page_template')) {
         $locationService = new LocationService();
 
         if ($locationService->isWPQTPublicUserPage()) {
-            $page_template = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/src/user-page-app/index.php';
+            $page_template = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/php/templates/user-page-app-root.php';
         }
 
         return $page_template;

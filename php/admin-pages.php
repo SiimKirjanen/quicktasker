@@ -85,6 +85,6 @@ if (!function_exists('wp_quick_taks_add_admin_menu')) {
 if (!function_exists('wp_quick_taks_generate_app_page')) {
     function wp_quick_taks_generate_app_page()
     {
-        include_once(WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/php/app-root.php');
+        include_once(WP_QUICKTASKER_PLUGIN_FOLDER_DIR . '/php/templates/admin-app-root.php');
     }
 }
