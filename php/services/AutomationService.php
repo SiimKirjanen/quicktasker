@@ -150,9 +150,18 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
                 if ($this->isSlackMessageAction($automation)) {
                     $task = ServiceLocator::get('TaskRepository')->getTaskById($targetId);
                     $webhookUrl = $automation->metadata;
-                    $userId = $data->doneByUserId;
-                    $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, WP_QT_WORDPRESS_USER_TYPE);
-                    $message = "Task *{$task->name}* marked as done by *{$user->name}*";
+                    $userId = $data->doneByUserId ?? null;
+                    $apiToken = $data->doneByApiToken ?? null;
+                    $marketDoneBy = 'Unknown';
+
+                    if (null !== $userId) {
+                        $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($userId, WP_QT_WORDPRESS_USER_TYPE);
+                        $marketDoneBy = $user->name;
+                    } elseif (null !== $apiToken) {
+                        $marketDoneBy = ServiceLocator::get('ApiTokenRepository')->getApiTokenName($apiToken);
+                    }
+
+                    $message = "Task *{$task->name}* marked as done by *{$marketDoneBy}*";
                     ServiceLocator::get('SlackService')->sendMessage($webhookUrl, $message, [], true);
 
                     return true;

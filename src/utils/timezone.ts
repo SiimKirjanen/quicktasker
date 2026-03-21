@@ -49,3 +49,57 @@ export const convertUTCDatetimeToWPTimezone = (
     return new Date(utcDateTime);
   }
 };
+
+/**
+ * Retrieves the user's browser timezone using the Intl API.
+ *
+ * @returns The IANA timezone string representing the user's browser timezone.
+ */
+export const getUserBrowserTimezone = (): string => {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
+/**
+ * Gets the timezone abbreviation for a given timezone.
+ *
+ * @param timezone - The IANA timezone string (e.g., "America/New_York", "Europe/London").
+ * @returns The timezone abbreviation (e.g., "EST", "GMT", "PST").
+ */
+export const getTimezoneAbbreviation = (timezone: string): string => {
+  try {
+    const date = new Date();
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: timezone,
+      timeZoneName: "short",
+    });
+
+    const parts = formatter.formatToParts(date);
+    const timeZonePart = parts.find((part) => part.type === "timeZoneName");
+
+    return timeZonePart ? timeZonePart.value : "";
+  } catch (error) {
+    console.error("Error getting timezone abbreviation: ", error);
+    return "";
+  }
+};
+
+/**
+ * Converts a UTC datetime string to a specified timezone and formats it.
+ *
+ * @param utcDateTime - The date-time string in UTC format.
+ * @param timezone - The IANA timezone string to convert to.
+ * @param format - Optional dayjs format string. Defaults to "MMMM D, YYYY HH:mm".
+ * @returns The formatted date-time string in the specified timezone.
+ */
+export const convertUTCToTimezoneFormatted = (
+  utcDateTime: string,
+  timezone: string,
+  format: string = "MMMM D, YYYY HH:mm",
+): string => {
+  try {
+    return dayjs.utc(utcDateTime).tz(timezone).format(format);
+  } catch (error) {
+    console.error("Error converting and formatting datetime: ", error);
+    return utcDateTime + " (UTC)";
+  }
+};

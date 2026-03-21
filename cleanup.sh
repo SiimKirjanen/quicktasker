@@ -28,6 +28,7 @@ FILES_TO_REMOVE=(
     "composer.json"
     "tests"
     ".php-cs-fixer.php"
+    "src"
 )
 
 # Prompt the user for confirmation

@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
   CLOSE_TASK_COLOR_MODAL,
-  DEFAULT_TASK_FOCUS_COLOR,
+  DEFAULT_TASK_FOCUS_CHANGE_COLOR,
   PIPELINE_SET_TASK_FOCUS_COLOR,
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
@@ -20,7 +20,7 @@ function TaskColorModal() {
   const { dispatch } = useContext(ActivePipelineContext);
   const { updateTaskFocusColor } = useTaskActions();
   const [focusColor, setFocusBgColor] = useState<string>(
-    DEFAULT_TASK_FOCUS_COLOR,
+    DEFAULT_TASK_FOCUS_CHANGE_COLOR,
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -50,7 +50,7 @@ function TaskColorModal() {
     });
   };
   const resetColor = () => {
-    setFocusBgColor(DEFAULT_TASK_FOCUS_COLOR);
+    setFocusBgColor(DEFAULT_TASK_FOCUS_CHANGE_COLOR);
   };
 
   useEffect(() => {
@@ -72,16 +72,18 @@ function TaskColorModal() {
             setFocusBgColor(color.hex);
           }}
         />
-        <WPQTButton
-          btnText={__("Apply changes", "quicktasker")}
-          onClick={applyTaskFocusColor}
-          loading={loading}
-        />
-        <WPQTButton
-          buttonStyleType={ButtonStyleType.DANGER}
-          btnText={__("Reset color", "quicktasker")}
-          onClick={resetColor}
-        />
+        <div className="wpqt-flex wpqt-justify-end wpqt-gap-2">
+          <WPQTButton
+            buttonStyleType={ButtonStyleType.DANGER}
+            btnText={__("Reset color", "quicktasker")}
+            onClick={resetColor}
+          />
+          <WPQTButton
+            btnText={__("Apply changes", "quicktasker")}
+            onClick={applyTaskFocusColor}
+            loading={loading}
+          />
+        </div>
       </div>
     </WPQTModal>
   );

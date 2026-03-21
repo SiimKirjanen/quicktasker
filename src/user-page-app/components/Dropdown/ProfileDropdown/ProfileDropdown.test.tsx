@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import * as urlUtils from "../../../../utils/url";
 import { logoutUserPageRequest } from "../../../api/user-page-api";
 import { useSession } from "../../../hooks/useSession";
 import {
@@ -30,16 +31,10 @@ jest.mock("../../../hooks/useErrorHandler", () => ({
   }),
 }));
 
-// Mock window.location.reload
-const mockReload = jest.fn();
-Object.defineProperty(window, "location", {
-  value: { reload: mockReload },
-  writable: true,
-});
-
 describe("ProfileDropdown", () => {
   const mockLoadUserPageStatus = jest.fn();
   const mockDeleteSessionCookie = jest.fn().mockResolvedValue({});
+  let reloadPageSpy: jest.SpyInstance;
 
   // Create a complete mock state that satisfies the State interface
   const createMockState = (overrides: Partial<State> = {}): State => ({
@@ -78,9 +73,18 @@ describe("ProfileDropdown", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Mock reloadPage helper function
+    reloadPageSpy = jest
+      .spyOn(urlUtils, "reloadPage")
+      .mockImplementation(() => {});
     (useSession as jest.Mock).mockReturnValue({
       deleteSessionCookie: mockDeleteSessionCookie,
     });
+  });
+
+  afterEach(() => {
+    // Restore original implementation
+    reloadPageSpy.mockRestore();
   });
 
   test("renders user icon when no profile picture URL is provided", () => {
@@ -129,7 +133,7 @@ describe("ProfileDropdown", () => {
     await waitFor(() => {
       expect(logoutUserPageRequest).toHaveBeenCalled();
       expect(mockDeleteSessionCookie).toHaveBeenCalled();
-      expect(mockReload).toHaveBeenCalled();
+      expect(reloadPageSpy).toHaveBeenCalled();
     });
   });
 
@@ -149,7 +153,7 @@ describe("ProfileDropdown", () => {
     // Verify error handling
     await waitFor(() => {
       expect(mockLoadUserPageStatus).toHaveBeenCalled();
-      expect(mockReload).not.toHaveBeenCalled();
+      expect(reloadPageSpy).not.toHaveBeenCalled();
     });
   });
 });

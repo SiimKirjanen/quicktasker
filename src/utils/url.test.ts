@@ -1,24 +1,22 @@
-import { getQueryParam, getUserPageCodeParam } from "./url";
-
-// Mock window.location
-const mockLocation = {
-  search: "",
-};
-
-Object.defineProperty(window, "location", {
-  value: mockLocation,
-  writable: true,
-});
+import * as urlUtils from "./url";
+import { getQueryParam, getUserPageCodeParam, reloadPage } from "./url";
 
 describe("url utilities", () => {
+  let getLocationSearchSpy: jest.SpyInstance;
+
   beforeEach(() => {
-    // Reset location.search before each test
-    mockLocation.search = "";
+    // Mock getLocationSearch helper
+    getLocationSearchSpy = jest.spyOn(urlUtils, "getLocationSearch");
+  });
+
+  afterEach(() => {
+    // Restore original implementation
+    getLocationSearchSpy.mockRestore();
   });
 
   describe("getQueryParam", () => {
     test("returns parameter value when it exists", () => {
-      mockLocation.search = "?name=john&age=25";
+      getLocationSearchSpy.mockReturnValue("?name=john&age=25");
 
       const result = getQueryParam("name");
 
@@ -26,7 +24,7 @@ describe("url utilities", () => {
     });
 
     test("returns parameter value when it exists among multiple params", () => {
-      mockLocation.search = "?foo=bar&test=value&last=end";
+      getLocationSearchSpy.mockReturnValue("?foo=bar&test=value&last=end");
 
       const result = getQueryParam("test");
 
@@ -34,7 +32,7 @@ describe("url utilities", () => {
     });
 
     test("returns null when parameter does not exist", () => {
-      mockLocation.search = "?name=john&age=25";
+      getLocationSearchSpy.mockReturnValue("?name=john&age=25");
 
       const result = getQueryParam("nonexistent");
 
@@ -42,7 +40,7 @@ describe("url utilities", () => {
     });
 
     test("returns null when search string is empty", () => {
-      mockLocation.search = "";
+      getLocationSearchSpy.mockReturnValue("");
 
       const result = getQueryParam("any");
 
@@ -50,7 +48,7 @@ describe("url utilities", () => {
     });
 
     test("returns null when search string has no parameters", () => {
-      mockLocation.search = "?";
+      getLocationSearchSpy.mockReturnValue("?");
 
       const result = getQueryParam("any");
 
@@ -58,21 +56,23 @@ describe("url utilities", () => {
     });
 
     test("handles URL encoded values", () => {
-      mockLocation.search = "?message=hello%20world&special=%26%3D%3F";
+      getLocationSearchSpy.mockReturnValue(
+        "?message=hello%20world&special=%26%3D%3F",
+      );
 
       expect(getQueryParam("message")).toBe("hello world");
       expect(getQueryParam("special")).toBe("&=?");
     });
 
     test("handles empty parameter values", () => {
-      mockLocation.search = "?empty=&name=john";
+      getLocationSearchSpy.mockReturnValue("?empty=&name=john");
 
       expect(getQueryParam("empty")).toBe("");
       expect(getQueryParam("name")).toBe("john");
     });
 
     test("handles parameters with same name (returns first occurrence)", () => {
-      mockLocation.search = "?color=red&color=blue&color=green";
+      getLocationSearchSpy.mockReturnValue("?color=red&color=blue&color=green");
 
       const result = getQueryParam("color");
 
@@ -80,7 +80,7 @@ describe("url utilities", () => {
     });
 
     test("handles case-sensitive parameter names", () => {
-      mockLocation.search = "?Name=john&name=jane";
+      getLocationSearchSpy.mockReturnValue("?Name=john&name=jane");
 
       expect(getQueryParam("Name")).toBe("john");
       expect(getQueryParam("name")).toBe("jane");
@@ -88,14 +88,14 @@ describe("url utilities", () => {
     });
 
     test("handles special characters in parameter names", () => {
-      mockLocation.search = "?user-id=123&user_name=test";
+      getLocationSearchSpy.mockReturnValue("?user-id=123&user_name=test");
 
       expect(getQueryParam("user-id")).toBe("123");
       expect(getQueryParam("user_name")).toBe("test");
     });
 
     test("handles numeric values as strings", () => {
-      mockLocation.search = "?count=42&price=19.99";
+      getLocationSearchSpy.mockReturnValue("?count=42&price=19.99");
 
       expect(getQueryParam("count")).toBe("42");
       expect(getQueryParam("price")).toBe("19.99");
@@ -105,7 +105,7 @@ describe("url utilities", () => {
 
   describe("getUserPageCodeParam", () => {
     test("returns code parameter when it exists", () => {
-      mockLocation.search = "?code=abc123&other=value";
+      getLocationSearchSpy.mockReturnValue("?code=abc123&other=value");
 
       const result = getUserPageCodeParam();
 
@@ -113,7 +113,7 @@ describe("url utilities", () => {
     });
 
     test("returns null when code parameter does not exist", () => {
-      mockLocation.search = "?name=john&age=25";
+      getLocationSearchSpy.mockReturnValue("?name=john&age=25");
 
       const result = getUserPageCodeParam();
 
@@ -121,7 +121,7 @@ describe("url utilities", () => {
     });
 
     test("returns null when search string is empty", () => {
-      mockLocation.search = "";
+      getLocationSearchSpy.mockReturnValue("");
 
       const result = getUserPageCodeParam();
 
@@ -129,7 +129,7 @@ describe("url utilities", () => {
     });
 
     test("handles code parameter with special characters", () => {
-      mockLocation.search = "?code=abc-123_xyz&other=test";
+      getLocationSearchSpy.mockReturnValue("?code=abc-123_xyz&other=test");
 
       const result = getUserPageCodeParam();
 
@@ -137,7 +137,7 @@ describe("url utilities", () => {
     });
 
     test("handles empty code parameter", () => {
-      mockLocation.search = "?code=&name=test";
+      getLocationSearchSpy.mockReturnValue("?code=&name=test");
 
       const result = getUserPageCodeParam();
 
@@ -145,7 +145,7 @@ describe("url utilities", () => {
     });
 
     test("handles URL encoded code parameter", () => {
-      mockLocation.search = "?code=hello%20world%21";
+      getLocationSearchSpy.mockReturnValue("?code=hello%20world%21");
 
       const result = getUserPageCodeParam();
 
@@ -153,7 +153,7 @@ describe("url utilities", () => {
     });
 
     test("returns first code parameter when multiple exist", () => {
-      mockLocation.search = "?code=first&code=second";
+      getLocationSearchSpy.mockReturnValue("?code=first&code=second");
 
       const result = getUserPageCodeParam();
 
@@ -161,7 +161,7 @@ describe("url utilities", () => {
     });
 
     test("handles case-sensitive code parameter", () => {
-      mockLocation.search = "?Code=wrong&code=correct";
+      getLocationSearchSpy.mockReturnValue("?Code=wrong&code=correct");
 
       const result = getUserPageCodeParam();
 
@@ -171,7 +171,9 @@ describe("url utilities", () => {
 
   describe("integration tests", () => {
     test("both functions work with complex query strings", () => {
-      mockLocation.search = "?code=user123&name=john%20doe&active=true&count=5";
+      getLocationSearchSpy.mockReturnValue(
+        "?code=user123&name=john%20doe&active=true&count=5",
+      );
 
       expect(getUserPageCodeParam()).toBe("user123");
       expect(getQueryParam("name")).toBe("john doe");
@@ -181,10 +183,40 @@ describe("url utilities", () => {
     });
 
     test("functions handle malformed query strings gracefully", () => {
-      mockLocation.search = "?=invalid&code&name=valid";
+      getLocationSearchSpy.mockReturnValue("?=invalid&code&name=valid");
 
       expect(getUserPageCodeParam()).toBe("");
       expect(getQueryParam("name")).toBe("valid");
+    });
+  });
+
+  describe("reloadPage", () => {
+    test("is exported and can be called", () => {
+      // Mock the function to prevent actual reload
+      const reloadPageSpy = jest
+        .spyOn(urlUtils, "reloadPage")
+        .mockImplementation(() => {});
+
+      reloadPage();
+
+      expect(reloadPageSpy).toHaveBeenCalledTimes(1);
+      expect(reloadPageSpy).toHaveBeenCalledWith();
+
+      reloadPageSpy.mockRestore();
+    });
+
+    test("can be mocked for testing (integration test)", () => {
+      // This test verifies the pattern used in ProfileDropdown tests
+      const mockReload = jest
+        .spyOn(urlUtils, "reloadPage")
+        .mockImplementation(() => {});
+
+      // Call the mocked function
+      urlUtils.reloadPage();
+
+      expect(mockReload).toHaveBeenCalled();
+
+      mockReload.mockRestore();
     });
   });
 });

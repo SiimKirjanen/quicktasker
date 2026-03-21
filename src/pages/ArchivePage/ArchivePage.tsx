@@ -21,15 +21,20 @@ function ArchivePage() {
           <WPQTPageHeader
             description={__("Archived tasks management page.", "quicktasker")}
             icon={
-              <Cog8ToothIcon
-                className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+              <span
+                className="wpqt-inline-flex wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-400 wpqt-group"
                 onClick={() => {
                   modalDispatch({
                     type: ARCHIVE_SETTINGS_MODAL_OPEN,
                     payload: true,
                   });
                 }}
-              />
+              >
+                <Cog8ToothIcon className="wpqt-size-6 group-hover:wpqt-text-blue-600" />
+                <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                  {__("Settings", "quicktasker")}
+                </span>
+              </span>
             }
           >
             {__("Archive", "quicktasker")}

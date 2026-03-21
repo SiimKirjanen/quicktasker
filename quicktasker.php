@@ -7,7 +7,7 @@
     Author URI: https://github.com/SiimKirjanen
     Text Domain: quicktasker
     Domain Path: /languages
-    Version: 1.48.1
+    Version: 1.49.0
     Requires at least: 5.3
     Requires PHP: 7.2.28
     License: GPLv2 or later
@@ -130,6 +130,7 @@ ServiceLocator::register('WebhookEventService', new WPQT\Webhooks\WebhookEventSe
 ServiceLocator::register('ApiTokenService', new WPQT\Token\ApiTokenService());
 ServiceLocator::register('ResponseService', new WPQT\Response\ResponseService());
 ServiceLocator::register('PipelineService', new WPQT\Pipeline\PipelineService());
+ServiceLocator::register('SettingsValidationService', new WPQT\Settings\SettingsValidationService());
 
 require('php/hooks.php');
 require('php/actions.php');
