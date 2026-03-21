@@ -23,6 +23,6 @@ describe("WPQTTag Component", () => {
     );
 
     const tag = screen.getByText("Styled Content");
-    expect(tag).toHaveStyle("background-color: red");
+    expect(tag).toHaveStyle("background-color: rgb(255, 0, 0)");
   });
 });

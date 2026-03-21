@@ -10,6 +10,7 @@ import {
   WPQTDropdown,
   WPQTDropdownItem,
 } from "../../../../components/Dropdown/WPQTDropdown";
+import { reloadPage } from "../../../../utils/url";
 import { logoutUserPageRequest } from "../../../api/user-page-api";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSession } from "../../../hooks/useSession";
@@ -32,7 +33,7 @@ function ProfileDropdown() {
       setLoggingOut(true);
       await logoutUserPageRequest();
       await deleteSessionCookie();
-      window.location.reload();
+      reloadPage();
     } catch (error) {
       setLoggingOut(false);
       handleError(error);

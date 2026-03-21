@@ -29,8 +29,8 @@ function wpqtBuildParamsFromRequest(WP_REST_Request $request, array $paramNames)
 }
 
 /**
- * Validates if an entity exists and belongs to the specified pipeline
- * 
+ * Validates if an entity exists and belongs to the specified pipeline.
+ *
  * @param object|null $entity The entity to validate (stage, task, etc.)
  * @param int $pipelineId The expected pipeline ID
  * @return bool True if entity is unauthorized (doesn't exist or belongs to different pipeline)
@@ -489,7 +489,7 @@ function wpqt_register_token_api_routes()
                         'created_by_id' => $cachedDbToken->id,
                     ]
                 );
-                
+
                 $wpdb->query('COMMIT');
 
                 return $responseService->createTokenApiResponse(true, 200, [
@@ -555,7 +555,7 @@ function wpqt_register_token_api_routes()
                     ]);
                 }
 
-                if($stageId) {
+                if ($stageId) {
                     $stage = ServiceLocator::get('StageRepository')->getStageById($stageId);
 
                     if (wpqtIsEntityUnauthorizedForPipeline($stage, $cachedDbToken->pipeline_id)) {
@@ -578,24 +578,24 @@ function wpqt_register_token_api_routes()
 
                 if (true === $moveResult->stageChanged) {
                     /* Handle webhooks */
-                        ServiceLocator::get('WebhookService')->handleWebhooks(
-                            $moveResult->task->pipeline_id,
+                    ServiceLocator::get('WebhookService')->handleWebhooks(
+                        $moveResult->task->pipeline_id,
+                        [
                             [
-                                [
-                                    'data' => [
-                                        'relatedObject' => $moveResult->task,
-                                        'extraData'     => [
-                                            'task_prev_stage_id' => $moveResult->oldStageId,
-                                            'task_new_stage_id'  => $moveResult->newStageId
-                                        ],
+                                'data' => [
+                                    'relatedObject' => $moveResult->task,
+                                    'extraData'     => [
+                                        'task_prev_stage_id' => $moveResult->oldStageId,
+                                        'task_new_stage_id'  => $moveResult->newStageId
                                     ],
-                                    'webhookData' => [
-                                        'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                                        'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED,
-                                    ]
+                                ],
+                                'webhookData' => [
+                                    'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                    'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_STAGE_CHANGED,
                                 ]
                             ]
-                        );
+                        ]
+                    );
                     /* End Handle webhooks */
                 }
 
@@ -609,7 +609,7 @@ function wpqt_register_token_api_routes()
                         'created_by_id' => $cachedDbToken->id,
                     ]
                 );
-                
+
                 $wpdb->query('COMMIT');
 
                 return $responseService->createTokenApiResponse(true, 200, [
@@ -644,7 +644,7 @@ function wpqt_register_token_api_routes()
     ]);
 
     register_rest_route('wpqt/v1', '/token/board/tasks/(?P<task_id>\d+)/done', [
-        'methods' => 'PATCH',
+        'methods'  => 'PATCH',
         'callback' => function (WP_REST_Request $request) {
             global $wpdb;
 
@@ -663,7 +663,7 @@ function wpqt_register_token_api_routes()
                     ]);
                 }
 
-                if(!ServiceLocator::get('SettingsValidationService')->isAllowedToMarkTaskDone($task->id)) {
+                if (!ServiceLocator::get('SettingsValidationService')->isAllowedToMarkTaskDone($task->id)) {
                     return ServiceLocator::get('ResponseService')->createTokenApiResponse(false, 403, [
                         'message' => 'Tasks can only be marked as done in the last stage according to board settings'
                     ]);
@@ -683,33 +683,33 @@ function wpqt_register_token_api_routes()
                 );
 
                 /* Handle automations */
-                    $trigger = $taskMarkedDoneParam ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE;
-                    $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
-                        $task->pipeline_id,
-                        $task->id,
-                        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
-                        $trigger,
-                        (object) [
-                           'apiToken' => $cachedDbToken,
-                        ]
-                    );
+                $trigger = $taskMarkedDoneParam ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE;
+                $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                    $task->pipeline_id,
+                    $task->id,
+                    WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                    $trigger,
+                    (object) [
+                       'apiToken' => $cachedDbToken,
+                    ]
+                );
                 /* End of handling automations */
 
                 /* Handle webhooks */
-                    ServiceLocator::get('WebhookService')->handleWebhooks(
-                        $task->pipeline_id,
+                ServiceLocator::get('WebhookService')->handleWebhooks(
+                    $task->pipeline_id,
+                    [
                         [
-                            [
-                                'data' => [
-                                    'relatedObject' => $task,
-                                ],
-                                'webhookData' => [
-                                    'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                                    'target_action' => $taskMarkedDoneParam ? WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED : WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED,
-                                ]
+                            'data' => [
+                                'relatedObject' => $task,
+                            ],
+                            'webhookData' => [
+                                'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                'target_action' => $taskMarkedDoneParam ? WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMPLETED : WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_NOT_COMPLETED,
                             ]
                         ]
-                    );
+                    ]
+                );
                 /* End Handle webhooks */
 
                 $wpdb->query('COMMIT');
@@ -717,7 +717,6 @@ function wpqt_register_token_api_routes()
                 return ServiceLocator::get('ResponseService')->createTokenApiResponse(true, 200, [
                     'task' => $changedTask
                 ]);
-
             } catch (Throwable $e) {
                 $wpdb->query('ROLLBACK');
 
