@@ -1,4 +1,5 @@
 import { ClockIcon } from "@heroicons/react/24/outline";
+import { useMemo } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useTimezone } from "../../../hooks/useTimezone";
 import { Task } from "../../../types/task";
@@ -8,11 +9,18 @@ type Props = {
   task: Task;
 };
 function DueDateInfo({ task }: Props) {
-  const { convertToWPTimezone } = useTimezone();
+  const { browserTimezoneAbbreviation, convertToBrowserTimezone } =
+    useTimezone();
 
-  if (!task.due_date) {
+  if (!task?.due_date) {
     return null;
   }
+  const dueDate = task.due_date;
+
+  const formattedDate = useMemo(
+    () => convertToBrowserTimezone(dueDate),
+    [dueDate, convertToBrowserTimezone],
+  );
 
   function getDueDateClockColorClass(dueDate: string): string {
     const difference = getDateDifference(getCurrentUTCDateTime(), dueDate);
@@ -39,12 +47,12 @@ function DueDateInfo({ task }: Props) {
   return (
     <div className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center">
       <ClockIcon
-        className={`wpqt-size-5 ${getDueDateClockColorClass(task.due_date)}`}
+        className={`wpqt-size-5 ${getDueDateClockColorClass(dueDate)}`}
       />
       <span className="wpqt-font-semibold">
         {__("Due date", "quicktasker")}:
       </span>
-      {convertToWPTimezone(task.due_date)}
+      {formattedDate} ({browserTimezoneAbbreviation})
     </div>
   );
 }

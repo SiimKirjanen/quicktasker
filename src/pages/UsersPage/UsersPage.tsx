@@ -2,6 +2,7 @@ import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { UsersSettingsModal } from "../../components/Modal/UsersSettingsModal/UsersSettingsModal";
 import { WPQTTabs } from "../../components/Tab/WPQTTabs";
 import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
@@ -18,10 +19,10 @@ function UsersPage() {
   const { updateUsers } = useContext(UserContext);
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
-  const tabNames = ["QuickTaskers", "WordPress users"];
+  const tabNames = ["WordPress users", "QuickTaskers"];
   const tabContent = [
-    <QuickTaskersSection key={0} />,
-    <RegularWPUsersSection key={1} />,
+    <RegularWPUsersSection key={0} />,
+    <QuickTaskersSection key={1} />,
   ];
 
   useEffect(() => {
@@ -40,15 +41,20 @@ function UsersPage() {
           "quicktasker",
         )}
         icon={
-          <Cog8ToothIcon
-            className="wpqt-icon-gray wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+          <span
+            className="wpqt-inline-flex wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-400 wpqt-group"
             onClick={() => {
               modalDispatch({
                 type: CHANGE_USER_SETTINGS_MODAL_OPEN,
                 payload: true,
               });
             }}
-          />
+          >
+            <Cog8ToothIcon className="wpqt-size-6 group-hover:wpqt-text-blue-600" />
+            <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+              {__("Settings", "quicktasker")}
+            </span>
+          </span>
         }
       >
         {__("Users", "quicktasker")}
@@ -60,6 +66,7 @@ function UsersPage() {
         tabListClassName="wpqt-gap-5"
         tabClassName="wpqt-flex-none"
       />
+      <UsersSettingsModal />
     </Page>
   );
 }

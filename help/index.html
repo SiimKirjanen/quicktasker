@@ -280,7 +280,8 @@
 				<ul>
 					<li><code>GET /wp-json/wpqt/v1/token/board/tasks</code> - Retrieve all non-archived tasks</li>
 					<li><code>POST /wp-json/wpqt/v1/token/board/tasks</code> - Create a new task (requires: name, stage_id, optional: description, task_focus_color)</li>
-					<li><code>PATCH /wp-json/wpqt/v1/token/board/tasks/{task_id}</code> - Update a task (optional: name, description, task_focus_color)</li>
+					<li><code>PATCH /wp-json/wpqt/v1/token/board/tasks/{task_id}</code> - Update a task (optional: name, description, task_focus_color, due_date)</li>
+					<li><code>PATCH /wp-json/wpqt/v1/token/board/tasks/{task_id}/order</code> - Update task order/position (requires: task_order, optional: stage_id to move task to different stage)</li>
 					<li><code>DELETE /wp-json/wpqt/v1/token/board/tasks/{task_id}</code> - Delete a task</li>
 				</ul>
 			</li>

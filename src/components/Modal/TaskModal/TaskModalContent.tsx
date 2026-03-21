@@ -20,6 +20,7 @@ import {
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
 import { useLoadingStates } from "../../../hooks/useLoadingStates";
+import { useTimezone } from "../../../hooks/useTimezone";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
@@ -64,6 +65,7 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
     loading2: archiveLoading,
     setLoading2: setArchiveLoading,
   } = useLoadingStates();
+  const { browserTimezoneAbbreviation } = useTimezone();
 
   const isTaskArchived = taskToEdit?.is_archived;
 
@@ -180,7 +182,12 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
                 />
               </WPQTModalField>
 
-              <WPQTModalField label={__("Due date", "quicktasker")}>
+              <WPQTModalField
+                label={
+                  __("Due date", "quicktasker") +
+                  ` (${browserTimezoneAbbreviation})`
+                }
+              >
                 <TaskDueDateInput
                   initialValue={taskToEdit.due_date || ""}
                   task={taskToEdit}

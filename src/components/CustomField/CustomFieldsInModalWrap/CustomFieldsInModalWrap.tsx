@@ -16,7 +16,7 @@ const descriptions: { [key in CustomFieldEntityType]: string } = {
     "quicktasker",
   ),
   [CustomFieldEntityType.Users]: __(
-    "Add custom fields to all users. If you want to add custom fields to a specific user only, please go to that user settings.",
+    "Add custom fields to all quicktaskers. If you want to add custom fields to a specific quicktasker only, please go to that quicktasker settings.",
     "quicktasker",
   ),
   [CustomFieldEntityType.Pipeline]: __(
@@ -39,7 +39,7 @@ const existingFieldsDescriptions: { [key in CustomFieldEntityType]: string } = {
     "quicktasker",
   ),
   [CustomFieldEntityType.Users]: __(
-    "Global user custom field are applied to all users.",
+    "Global quicktasker custom fields are applied to all quicktaskers.",
     "quicktasker",
   ),
   [CustomFieldEntityType.Pipeline]: __(
@@ -56,7 +56,7 @@ const titles: { [key in CustomFieldEntityType]: string } = {
   [CustomFieldEntityType.QUICKTASKER]: __("User custom fields", "quicktasker"),
   [CustomFieldEntityType.WP_USER]: __("User custom fields", "quicktasker"),
   [CustomFieldEntityType.Users]: __(
-    "Global users custom fields",
+    "Global quicktasker custom fields",
     "quicktasker",
   ),
   [CustomFieldEntityType.Pipeline]: __("Board custom fields", "quicktasker"),
