@@ -54,12 +54,12 @@ if (!class_exists('WPQT\Slack\SlackService')) {
             }
 
             if (is_wp_error($response)) {
-                throw new \Exception('Slack notification error: ' . $response->get_error_message());
+                throw new \Exception('Slack notification error: ' . esc_html($response->get_error_message()));
             }
 
             $code = wp_remote_retrieve_response_code($response);
             if (200 !== $code) {
-                throw new \Exception('Slack API error: Received response code ' . $code);
+                throw new \Exception('Slack API error: Received response code ' . esc_html($code));
             }
 
             $body = wp_remote_retrieve_body($response);

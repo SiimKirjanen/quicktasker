@@ -17,6 +17,6 @@ class ServiceLocator
             return self::$services[$name];
         }
 
-        throw new \Exception('Service not found: ' . $name);
+        throw new \Exception('Service not found: ' . esc_html($name));
     }
 }

@@ -41,19 +41,19 @@ if (!class_exists('WPQT\Upload\UploadService')) {
             $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
 
             if (UPLOAD_ERR_OK !== $file['error']) {
-                throw new \Exception('File upload error. Error code: ' . $file['error']);
+                throw new \Exception('File upload error. Error code: ' . esc_html($file['error']));
             }
 
             if (!in_array($fileType, WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES)) {
-                throw new \Exception('Not supported file type ' . $fileType);
+                throw new \Exception('Not supported file type ' . esc_html($fileType));
             }
 
             if (!in_array(strtolower($fileExtension), WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS)) {
-                throw new \Exception('Not supported file extension ' . $fileExtension);
+                throw new \Exception('Not supported file extension ' . esc_html($fileExtension));
             }
 
             if ($file['size'] > WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE) {
-                throw new \Exception(sprintf('File size exceeds the maximum limit of %d MB', WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE / (1024 * 1024)));
+                throw new \Exception(sprintf('File size exceeds the maximum limit of %d MB', esc_html(WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE / (1024 * 1024))));
             }
 
             if (!preg_match(WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX, $file['name'])) {

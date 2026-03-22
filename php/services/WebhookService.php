@@ -258,7 +258,7 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
 
             if (is_wp_error($response)) {
                 throw new \Exception(
-                    'Request error: ' . $response->get_error_message()
+                    'Request error: ' . esc_html($response->get_error_message())
                 );
             }
 
@@ -266,7 +266,7 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
 
             if ($status < 200 || $status >= 300) {
                 throw new \Exception(
-                    'Request failed with status ' . $status
+                    'Request failed with status ' . esc_html($status)
                 );
             }
         }

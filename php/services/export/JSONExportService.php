@@ -81,6 +81,7 @@ if (!class_exists('WPQT\Export\JSONExportService')) {
             header('Connection: close');
 
             // Output the JSON data
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON data already encoded, escaping would corrupt output
             echo $jsonData;
             exit;
         }
