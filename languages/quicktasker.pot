@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.47.0\n"
+"Project-Id-Version: QuickTasker 1.49.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-01T16:33:01+00:00\n"
+"POT-Creation-Date: 2026-03-22T12:42:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -34,160 +34,147 @@ msgstr ""
 msgid "https://github.com/SiimKirjanen"
 msgstr ""
 
-#: php/admin-pages.php:21
 #: php/admin-pages.php:22
+#: php/admin-pages.php:23
 msgid "Boards"
 msgstr ""
 
-#: php/admin-pages.php:30
 #: php/admin-pages.php:31
+#: php/admin-pages.php:32
 msgid "User management"
 msgstr ""
 
-#: php/admin-pages.php:39
 #: php/admin-pages.php:40
+#: php/admin-pages.php:41
 #: build/app.js:1
 msgid "Tasks app"
 msgstr ""
 
-#: php/admin-pages.php:48
 #: php/admin-pages.php:49
+#: php/admin-pages.php:50
 #: build/app.js:1
 msgid "Quicktasker sessions"
 msgstr ""
 
-#: php/admin-pages.php:57
 #: php/admin-pages.php:58
+#: php/admin-pages.php:59
 #: build/app.js:1
 msgid "Archive"
 msgstr ""
 
-#: php/admin-pages.php:66
 #: php/admin-pages.php:67
+#: php/admin-pages.php:68
 #: build/app.js:1
 msgid "Logs"
 msgstr ""
 
-#: php/admin-pages.php:75
 #: php/admin-pages.php:76
+#: php/admin-pages.php:77
 #: build/app.js:1
 msgid "About"
 msgstr ""
 
-#: php/filters.php:69
+#: php/filters.php:72
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: php/filters.php:96
+#: php/filters.php:99
 msgid "Board not found"
 msgstr ""
 
-#: php/filters.php:107
+#: php/filters.php:110
 msgid "Failed to generate PDF"
 msgstr ""
 
-#: php/filters.php:119
+#: php/filters.php:122
 msgid "Failed to generate JSON"
 msgstr ""
 
-#: php/hooks.php:19
-msgid "QuickTasker cannot be activated because QuickTasker Pro is already active. Please deactivate Pro version first."
-msgstr ""
-
-#: php/hooks.php:20
-#: php/hooks.php:26
-msgid "Plugin Activation Error"
-msgstr ""
-
-#: php/hooks.php:25
-msgid "QuickTasker Pro cannot be activated because QuickTasker is already active. Please deactivate free version first."
-msgstr ""
-
-#: php/services/export/ExportService.php:58
-#: php/services/export/ExportService.php:70
-#: php/services/export/PDFExportService.php:46
-#: php/services/export/PDFExportService.php:49
+#: php/services/export/ExportService.php:63
+#: php/services/export/ExportService.php:76
 #: php/services/export/PDFExportService.php:50
-#: php/services/export/PDFExportService.php:51
-#: php/services/export/PDFExportService.php:52
+#: php/services/export/PDFExportService.php:53
+#: php/services/export/PDFExportService.php:54
+#: php/services/export/PDFExportService.php:55
+#: php/services/export/PDFExportService.php:56
 msgid "None"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:47
-#: php/services/export/PDFExportService.php:48
+#: php/services/export/PDFExportService.php:51
+#: php/services/export/PDFExportService.php:52
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "No"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:48
+#: php/services/export/PDFExportService.php:52
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "Yes"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:57
+#: php/services/export/PDFExportService.php:61
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "Name"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:58
+#: php/services/export/PDFExportService.php:62
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "Description"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:59
+#: php/services/export/PDFExportService.php:63
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "Created at"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:60
+#: php/services/export/PDFExportService.php:64
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "Board"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:61
+#: php/services/export/PDFExportService.php:65
 #: build/app.js:1
 msgid "Stage"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:62
+#: php/services/export/PDFExportService.php:66
 #: build/app.js:1
 msgid "Completed"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:63
+#: php/services/export/PDFExportService.php:67
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "Due date"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:64
+#: php/services/export/PDFExportService.php:68
 #: build/app.js:1
 msgid "Assigned WordPress users"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:65
+#: php/services/export/PDFExportService.php:69
 msgid "Assigned QuickTaskers"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:66
+#: php/services/export/PDFExportService.php:70
 msgid "Added labels"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:67
+#: php/services/export/PDFExportService.php:71
 msgid "Archived"
 msgstr ""
 
-#: php/services/export/PDFExportService.php:74
+#: php/services/export/PDFExportService.php:78
 msgid "Not set"
 msgstr ""
 
-#: php/services/TaskService.php:431
+#: php/services/TaskService.php:446
 msgid "Cannot restore the task. The selected board needs at least one stage."
 msgstr ""
 
@@ -767,7 +754,7 @@ msgid "Add user-specific custom fields. If you want to add custom fields to all 
 msgstr ""
 
 #: build/app.js:1
-msgid "Add custom fields to all users. If you want to add custom fields to a specific user only, please go to that user settings."
+msgid "Add custom fields to all quicktaskers. If you want to add custom fields to a specific quicktasker only, please go to that quicktasker settings."
 msgstr ""
 
 #: build/app.js:1
@@ -783,7 +770,7 @@ msgid "Custom fields applied to this user, including both user-specific and glob
 msgstr ""
 
 #: build/app.js:1
-msgid "Global user custom field are applied to all users."
+msgid "Global quicktasker custom fields are applied to all quicktaskers."
 msgstr ""
 
 #: build/app.js:1
@@ -799,7 +786,7 @@ msgid "User custom fields"
 msgstr ""
 
 #: build/app.js:1
-msgid "Global users custom fields"
+msgid "Global quicktasker custom fields"
 msgstr ""
 
 #: build/app.js:1
@@ -1106,6 +1093,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Archived tasks management page."
+msgstr ""
+
+#: build/app.js:1
+msgid "Settings"
 msgstr ""
 
 #: build/app.js:1
@@ -1636,11 +1627,11 @@ msgid "Task focus color"
 msgstr ""
 
 #: build/app.js:1
-msgid "Apply changes"
+msgid "Reset color"
 msgstr ""
 
 #: build/app.js:1
-msgid "Reset color"
+msgid "Apply changes"
 msgstr ""
 
 #: build/app.js:1
@@ -1739,10 +1730,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Import an existing board"
-msgstr ""
-
-#: build/app.js:1
-msgid "Settings"
 msgstr ""
 
 #: build/app.js:1
