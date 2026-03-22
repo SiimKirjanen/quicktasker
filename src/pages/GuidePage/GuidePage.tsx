@@ -60,6 +60,10 @@ const GuidePage = () => {
             alt="Donate with PayPal button"
           />
         </form>
+        <p>
+          Bitcoin address:{" "}
+          <code>bc1q2vam0ree3zw4j3f92vkfjd9vvxlwpxxsrpmkhu</code>
+        </p>
         <div>
           <img
             src={pluginURL + "img/old-banner-icon.jpg"}
