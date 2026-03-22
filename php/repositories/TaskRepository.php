@@ -52,7 +52,7 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
             if (!empty($query_args)) {
                 return $wpdb->get_results($wpdb->prepare($sql, $query_args));
             } else {
-                return $wpdb->get_results($sql);
+                return $wpdb->get_results($wpdb->prepare($sql));
             }
         }
 

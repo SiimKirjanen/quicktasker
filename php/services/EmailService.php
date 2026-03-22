@@ -42,7 +42,7 @@ if (!class_exists('WPQT\Email\EmailService')) {
             $templatePath = WP_QUICKTASKER_PLUGIN_FOLDER_DIR . 'php/templates/email/' . $template . '.html';
 
             if (!file_exists($templatePath)) {
-                throw new \Exception('Email template not found: ' . $template);
+                throw new \Exception('Email template not found: ' . esc_html($template));
             }
 
             $templateContent = file_get_contents($templatePath);

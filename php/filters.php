@@ -69,7 +69,7 @@ if (!function_exists('quicktasker_custom_pages')) {
 
         if ($locationService->isWPQTTaskExportPage()) {
             if (!WPQT\Permission\PermissionService::hasRequiredPermissionsForPrivateAPI()) {
-                wp_die(__('You do not have sufficient permissions to access this page.', 'quicktasker'), 403);
+                wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'quicktasker'), 403);
             }
 
             $pipelineId = isset($_GET['pipeline_id']) ? $_GET['pipeline_id'] : null;
@@ -96,7 +96,7 @@ if (!function_exists('quicktasker_custom_pages')) {
             $includePipelineCustomFields = WPQT\RequestValidation::sanitizeBooleanParam($includePipelineCustomFields);
 
             if ($pipelineId && null === ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId)) {
-                wp_die(__('Board not found', 'quicktasker'), 404);
+                wp_die(esc_html__('Board not found', 'quicktasker'), 404);
             }
 
             if ($locationService->isWPQTTaskPDFExportPage()) {
@@ -107,7 +107,7 @@ if (!function_exists('quicktasker_custom_pages')) {
                     die();
                 } catch (Exception $e) {
                     error_log('QuickTasker tasks export PDF Generation Error: ' . $e->getMessage() . ' | Stack trace: ' . $e->getTraceAsString());
-                    wp_die(__('Failed to generate PDF', 'quicktasker'), 500);
+                    wp_die(esc_html__('Failed to generate PDF', 'quicktasker'), 500);
                 }
             }
 
@@ -119,7 +119,7 @@ if (!function_exists('quicktasker_custom_pages')) {
                     die();
                 } catch (Exception $e) {
                     error_log('QuickTasker tasks export JSON Generation Error: ' . $e->getMessage() . ' | Stack trace: ' . $e->getTraceAsString());
-                    wp_die(__('Failed to generate JSON', 'quicktasker'), 500);
+                    wp_die(esc_html__('Failed to generate JSON', 'quicktasker'), 500);
                 }
             }
         }

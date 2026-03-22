@@ -13,22 +13,6 @@ if (!function_exists('is_plugin_active')) {
 
 $plugin_main_file = dirname(plugin_dir_path(__FILE__)) . '/quicktasker.php';
 
-register_activation_hook($plugin_main_file, function () use ($plugin_main_file) {
-    if (is_plugin_active('quicktasker-pro/quicktasker.php') && false !== strpos($plugin_main_file, 'quicktasker/quicktasker.php')) {
-        wp_die(
-            __('QuickTasker cannot be activated because QuickTasker Pro is already active. Please deactivate Pro version first.', 'quicktasker'),
-            __('Plugin Activation Error', 'quicktasker'),
-            ['back_link' => true]
-        );
-    } elseif (is_plugin_active('quicktasker/quicktasker.php') && false !== strpos($plugin_main_file, 'quicktasker-pro/quicktasker.php')) {
-        wp_die(
-            __('QuickTasker Pro cannot be activated because QuickTasker is already active. Please deactivate free version first.', 'quicktasker'),
-            __('Plugin Activation Error', 'quicktasker'),
-            ['back_link' => true]
-        );
-    }
-});
-
 register_activation_hook(WP_QUICKTASKER_PLUGIN_MAIN_FILE, 'wpqt_plugin_activate');
 if (!function_exists('wpqt_plugin_activate')) {
     function wpqt_plugin_activate()
