@@ -25,7 +25,10 @@ import {
   PipelineEditData,
   PipelineFromServer,
 } from "../types/pipeline";
-import { PipelineSettingsFromServer } from "../types/pipeline-settings";
+import {
+  PipelineSettings,
+  PipelineSettingsFromServer,
+} from "../types/pipeline-settings";
 import { DeletePipelineResponse } from "../types/requestResponse/delete-pipeline-response";
 import { PipelineOverviewResponse } from "../types/requestResponse/pipeline-overview-response";
 import { WPQTResponse } from "../types/response";
@@ -750,6 +753,18 @@ function getPipelineSettingsRequest(pipelineId: string): Promise<
   });
 }
 
+function savePipelineSettingsRequest(
+  pipelineId: string,
+  pipelineSettings: Partial<PipelineSettings>,
+): Promise<WPQTResponse> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/settings`,
+    method: "PATCH",
+    data: pipelineSettings,
+    headers: getCommonHeaders(),
+  });
+}
+
 function saveTaskCompletionDoneSettingRequest(
   pipelineId: string,
   checked: boolean,
@@ -1156,6 +1171,7 @@ export {
   resetUserPasswordRequest,
   restoreArchivedTaskRequest,
   restoreCustomFieldRequest,
+  savePipelineSettingsRequest,
   saveTaskCompletionDoneSettingRequest,
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,

@@ -35,7 +35,7 @@ if (!class_exists('WPQT\Settings\SettingRepository')) {
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    'SELECT id, pipeline_id, allow_only_last_stage_task_done, created_at, updated_at FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
+                    'SELECT id, pipeline_id, allow_only_last_stage_task_done, pipeline_refresh_interval, created_at, updated_at FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
                     $pipelineId
                 )
             );

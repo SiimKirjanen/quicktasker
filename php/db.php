@@ -242,6 +242,7 @@ if (!function_exists('wpqt_set_up_db')) {
 				allow_only_last_stage_task_done tinyint(1) DEFAULT 0,
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
+				pipeline_refresh_interval smallint unsigned DEFAULT 30 COMMENT 'in seconds',
 				PRIMARY KEY  (id),
 				UNIQUE KEY pipeline_id (pipeline_id)
 			) $charset_collate;";

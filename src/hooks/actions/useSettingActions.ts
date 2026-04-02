@@ -1,9 +1,11 @@
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
+  savePipelineSettingsRequest,
   saveTaskCompletionDoneSettingRequest,
   saveUserPageCustomStylesRequest,
 } from "../../api/api";
+import { PipelineSettings } from "../../types/pipeline-settings";
 
 function useSettingActions() {
   const saveCustomUserPageStyles = async (
@@ -57,9 +59,34 @@ function useSettingActions() {
     }
   };
 
+  const savePipelineSettings = async (
+    pipelineId: string,
+    pipelineSettings: Partial<PipelineSettings>,
+  ): Promise<{ success: boolean }> => {
+    try {
+      await savePipelineSettingsRequest(pipelineId, pipelineSettings);
+
+      toast.success(
+        __("Pipeline settings updated successfully", "quicktasker"),
+      );
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to update pipeline settings", "quicktasker"));
+
+      return {
+        success: false,
+      };
+    }
+  };
+
   return {
     saveCustomUserPageStyles,
     saveTaskCompletionDoneSetting,
+    savePipelineSettings,
   };
 }
 

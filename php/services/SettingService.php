@@ -94,5 +94,29 @@ if (!class_exists('WPQT\Settings\SettingsService')) {
                 throw new \Exception('Failed to update board settings');
             }
         }
+
+        public function updatePipelineSettings($pipelineId, $settings)
+        {
+            global $wpdb;
+
+            $allowedSettings = ['allow_only_last_stage_task_done', 'pipeline_refresh_interval'];
+            $updateData = [
+                'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ];
+
+            foreach ($allowedSettings as $key) {
+                if (array_key_exists($key, $settings)) {
+                    $updateData[$key] = $settings[$key];
+                }
+            }
+
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS, $updateData, [
+                'pipeline_id' => $pipelineId
+            ]);
+
+            if (false === $result) {
+                throw new \Exception('Failed to update board settings');
+            }
+        }
     }
 }

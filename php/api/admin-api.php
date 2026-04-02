@@ -2845,6 +2845,49 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
+            'pipelines/(?P<id>\d+)/settings',
+            [
+                'methods'  => 'PATCH',
+                'callback' => function ($data) {
+                    try {
+                        $settingService = ServiceLocator::get('SettingService');
+                        $settings = [];
+
+                        if (isset($data['pipeline_refresh_interval']) && 0 !== $data['pipeline_refresh_interval']) {
+                            $settings['pipeline_refresh_interval'] = $data['pipeline_refresh_interval'];
+                        }
+
+                        if (0 === count($settings)) {
+                            return new WP_REST_Response((new ApiResponse(false, [esc_html_e('No valid settings provided', 'quicktasker')]))->toArray(), 200);
+                        }
+
+                        $settingService->updatePipelineSettings($data['id'], $settings);
+
+                        return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                },
+                'args' => [
+                    'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'pipeline_refresh_interval' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                ],
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
             'pipelines/(?P<id>\d+)/settings/task-completion-done-restriction',
             [
                 'methods'  => 'PATCH',
