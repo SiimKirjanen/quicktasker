@@ -2,7 +2,6 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
   savePipelineSettingsRequest,
-  saveTaskCompletionDoneSettingRequest,
   saveUserPageCustomStylesRequest,
 } from "../../api/api";
 import { PipelineSettings } from "../../types/pipeline-settings";
@@ -25,33 +24,6 @@ function useSettingActions() {
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to save custom tasks app styles", "quicktasker"));
-
-      return {
-        success: false,
-      };
-    }
-  };
-
-  const saveTaskCompletionDoneSetting = async (
-    pipelineId: string,
-    checked: boolean,
-  ): Promise<{ success: boolean; checked?: boolean }> => {
-    try {
-      await saveTaskCompletionDoneSettingRequest(pipelineId, checked);
-
-      toast.success(
-        __("Task completion restriction saved successfully", "quicktasker"),
-      );
-
-      return {
-        success: true,
-        checked,
-      };
-    } catch (error) {
-      console.error(error);
-      toast.error(
-        __("Failed to save task completion restriction", "quicktasker"),
-      );
 
       return {
         success: false,
@@ -85,7 +57,6 @@ function useSettingActions() {
 
   return {
     saveCustomUserPageStyles,
-    saveTaskCompletionDoneSetting,
     savePipelineSettings,
   };
 }

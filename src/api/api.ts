@@ -765,18 +765,6 @@ function savePipelineSettingsRequest(
   });
 }
 
-function saveTaskCompletionDoneSettingRequest(
-  pipelineId: string,
-  checked: boolean,
-): Promise<WPQTResponse> {
-  return apiFetch({
-    path: `/wpqt/v1/pipelines/${pipelineId}/settings/task-completion-done-restriction`,
-    method: "PATCH",
-    data: { allow_task_completion_only_on_last_stage: checked },
-    headers: getCommonHeaders(),
-  });
-}
-
 /*
   ==================================================================================================================================================================================================================
   Archive settings requests
@@ -1172,7 +1160,6 @@ export {
   restoreArchivedTaskRequest,
   restoreCustomFieldRequest,
   savePipelineSettingsRequest,
-  saveTaskCompletionDoneSettingRequest,
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
   unassignLabelFromTaskRequest,
