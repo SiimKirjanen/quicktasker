@@ -5,6 +5,7 @@ import { Pipeline } from "../../../../../types/pipeline";
 import { PipelineSettings } from "../../../../../types/pipeline-settings";
 import { convertPipelineSettingsFromServer } from "../../../../../utils/pipeline-settings";
 import { Loading } from "../../../../Loading/Loading";
+import { PipelineRefreshIntervalSetting } from "../PipelineRefreshIntervalSetting/PipelineRefreshIntervalSetting";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
 
 type Props = {
@@ -46,6 +47,10 @@ function PipelineSettings({ pipeline }: Props) {
         allow_only_last_stage_task_done={
           settings.allow_only_last_stage_task_done
         }
+      />
+      <PipelineRefreshIntervalSetting
+        pipelineId={pipeline.id}
+        pipelineRefreshInterval={settings.pipeline_refresh_interval}
       />
     </div>
   );

@@ -40,11 +40,14 @@ const Pipeline = () => {
   } = useApp();
 
   useEffect(() => {
+    const refreshInterval =
+      activePipeline?.settings?.pipeline_refresh_interval ||
+      REFETCH_ACTIVE_PIPELINE_INTERVAL;
     const refetchDataInterval = setInterval(() => {
       if (activePipeline && isTabVisible) {
         fetchAndSetPipelineData(activePipeline.id);
       }
-    }, REFETCH_ACTIVE_PIPELINE_INTERVAL);
+    }, refreshInterval * 1000);
 
     return () => clearInterval(refetchDataInterval);
   }, [activePipeline, isTabVisible]);

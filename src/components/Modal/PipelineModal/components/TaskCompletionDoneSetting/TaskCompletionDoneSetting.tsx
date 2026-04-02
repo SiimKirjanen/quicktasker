@@ -17,16 +17,15 @@ function TaskCompletionDoneSetting({
 }: Props) {
   const [checked, setChecked] = useState(allow_only_last_stage_task_done);
   const [loading, setLoading] = useState(false);
-  const { saveTaskCompletionDoneSetting } = useSettingActions();
+  const { savePipelineSettings } = useSettingActions();
   const { dispatch } = useContext(ActivePipelineContext);
 
   const onToggle = async (checked: boolean) => {
     setChecked(checked);
     setLoading(true);
-    const { success } = await saveTaskCompletionDoneSetting(
-      pipelineId,
-      checked,
-    );
+    const { success } = await savePipelineSettings(pipelineId, {
+      allow_only_last_stage_task_done: checked,
+    });
     setLoading(false);
 
     if (success) {

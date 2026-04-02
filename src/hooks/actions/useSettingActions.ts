@@ -1,9 +1,10 @@
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
-  saveTaskCompletionDoneSettingRequest,
+  savePipelineSettingsRequest,
   saveUserPageCustomStylesRequest,
 } from "../../api/api";
+import { PipelineSettings } from "../../types/pipeline-settings";
 
 function useSettingActions() {
   const saveCustomUserPageStyles = async (
@@ -30,26 +31,21 @@ function useSettingActions() {
     }
   };
 
-  const saveTaskCompletionDoneSetting = async (
+  const savePipelineSettings = async (
     pipelineId: string,
-    checked: boolean,
-  ): Promise<{ success: boolean; checked?: boolean }> => {
+    pipelineSettings: Partial<PipelineSettings>,
+  ): Promise<{ success: boolean }> => {
     try {
-      await saveTaskCompletionDoneSettingRequest(pipelineId, checked);
+      await savePipelineSettingsRequest(pipelineId, pipelineSettings);
 
-      toast.success(
-        __("Task completion restriction saved successfully", "quicktasker"),
-      );
+      toast.success(__("Board settings updated successfully", "quicktasker"));
 
       return {
         success: true,
-        checked,
       };
     } catch (error) {
       console.error(error);
-      toast.error(
-        __("Failed to save task completion restriction", "quicktasker"),
-      );
+      toast.error(__("Failed to update board settings", "quicktasker"));
 
       return {
         success: false,
@@ -59,7 +55,7 @@ function useSettingActions() {
 
   return {
     saveCustomUserPageStyles,
-    saveTaskCompletionDoneSetting,
+    savePipelineSettings,
   };
 }
 

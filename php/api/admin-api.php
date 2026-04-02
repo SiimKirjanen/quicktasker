@@ -2845,13 +2845,26 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'pipelines/(?P<id>\d+)/settings/task-completion-done-restriction',
+            'pipelines/(?P<id>\d+)/settings',
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
                     try {
-                        $settingsService = new SettingsService();
-                        $settingsService->updatePipelineTaskDoneCompletionRestriction($data['id'], $data['allow_task_completion_only_on_last_stage']);
+                        $settingService = ServiceLocator::get('SettingService');
+                        $settings = [];
+
+                        if (isset($data['pipeline_refresh_interval']) && 0 !== $data['pipeline_refresh_interval']) {
+                            $settings['pipeline_refresh_interval'] = $data['pipeline_refresh_interval'];
+                        }
+                        if (isset($data['allow_only_last_stage_task_done'])) {
+                            $settings['allow_only_last_stage_task_done'] = $data['allow_only_last_stage_task_done'];
+                        }
+
+                        if (0 === count($settings)) {
+                            return new WP_REST_Response((new ApiResponse(false, [esc_html_e('No valid settings provided', 'quicktasker')]))->toArray(), 200);
+                        }
+
+                        $settingService->updatePipelineSettings($data['id'], $settings);
 
                         return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -2867,8 +2880,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
-                    'allow_task_completion_only_on_last_stage' => [
-                        'required'          => true,
+                    'pipeline_refresh_interval' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'allow_only_last_stage_task_done' => [
+                        'required'          => false,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
                     ],
