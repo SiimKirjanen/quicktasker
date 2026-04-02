@@ -38,16 +38,14 @@ function useSettingActions() {
     try {
       await savePipelineSettingsRequest(pipelineId, pipelineSettings);
 
-      toast.success(
-        __("Pipeline settings updated successfully", "quicktasker"),
-      );
+      toast.success(__("Board settings updated successfully", "quicktasker"));
 
       return {
         success: true,
       };
     } catch (error) {
       console.error(error);
-      toast.error(__("Failed to update pipeline settings", "quicktasker"));
+      toast.error(__("Failed to update board settings", "quicktasker"));
 
       return {
         success: false,
