@@ -321,5 +321,29 @@ if (!class_exists('WPQT\Stage\StageService')) {
 
             return $tasksToArvhive;
         }
+
+        /**
+         * Validates that a stage and its pipeline exist.
+         *
+         * @param int $stageId The stage ID to validate.
+         * @throws \WPQT\StageMissingException If stage doesn't exist.
+         * @throws \WPQT\PipelineMissingException If pipeline doesn't exist.
+         * @return void
+         */
+        public function validateStageAndPipeline($stageId): void
+        {
+            $stageRepo = ServiceLocator::get('StageRepository');
+            $pipelineRepo = ServiceLocator::get('PipelineRepository');
+
+            $stage = $stageRepo->getStageById($stageId);
+            $pipelineExists = $stage ? $pipelineRepo->checkIfPipelineExists($stage->pipeline_id) : false;
+
+            if ($pipelineExists && !$stage) {
+                throw new \WPQT\StageMissingException('No stage found with id ' . $stageId);
+            }
+            if (false === $pipelineExists) {
+                throw new \WPQT\PipelineMissingException('No pipeline found with id ' . $stage->pipeline_id);
+            }
+        }
     }
 }

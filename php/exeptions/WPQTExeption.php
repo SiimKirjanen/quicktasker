@@ -37,3 +37,9 @@ if (!class_exists('WPQT\PipelineMissingException')) {
     {
     }
 }
+
+if (!class_exists('WPQT\StageMissingException')) {
+    class StageMissingException extends Exception
+    {
+    }
+}

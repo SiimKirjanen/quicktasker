@@ -17,7 +17,10 @@ import {
 import {
   OPEN_STAGE_EDIT_MODAL,
   PIPELINE_DELETE_STAGE,
+  SET_PIPELINE_MISSING,
 } from "../../../constants";
+import { useDeletedResourceDetection } from "../../../hooks/useDeletedResourceDetection";
+import { useMissingContent } from "../../../hooks/useMissingContent";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -47,6 +50,8 @@ function StageControlsDropdown({ stage }: Props) {
     useState<StageChangeDirection | null>(null);
   const [archiveLoading, setArchiveLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
+  const { dispatch: missingContentDispatch } = useMissingContent();
 
   const stagesLength = activePipeline?.stages?.length ?? 0;
   const stageTasksLenght = stage.tasks?.length ?? 0;
@@ -106,6 +111,9 @@ function StageControlsDropdown({ stage }: Props) {
           stage.name,
         ),
       );
+      if (detectDeletedPipelineResponse(error)) {
+        missingContentDispatch({ type: SET_PIPELINE_MISSING, payload: true });
+      }
     } finally {
       setArchiveLoading(false);
     }
