@@ -11,7 +11,6 @@ use WPQT\Customfield\CustomFieldRepository;
 use WPQT\Customfield\CustomFieldService;
 use WPQT\Log\LogRepository;
 use WPQT\Log\LogService;
-use WPQT\Overview\OverViewRepository;
 use WPQT\Permission\PermissionService;
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
@@ -2955,13 +2954,20 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                     try {
-                        $overviewRepo = new OverviewRepository();
+                        $overviewRepo = ServiceLocator::get('OverViewRepository');
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
+                            throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
+                        }
 
                         $taskStartDate = $data['taskStartDate'] ?? null;
                         $taskDoneDate = $data['taskDoneDate'] ?? null;
                         $overview = $overviewRepo->getPipelineOverview($data['id'], $taskStartDate, $taskDoneDate);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $overview))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }

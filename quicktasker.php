@@ -97,6 +97,7 @@ ServiceLocator::register('SettingRepository', new WPQT\Settings\SettingRepositor
 ServiceLocator::register('LabelRepository', new WPQT\Label\LabelRepository());
 ServiceLocator::register('UploadRepository', new WPQT\Upload\UploadRepository());
 ServiceLocator::register('ApiTokenRepository', new WPQT\Token\ApiTokenRepository());
+ServiceLocator::register('OverViewRepository', new WPQT\Overview\OverViewRepository());
 ServiceLocator::register('TaskService', new WPQT\Task\TaskService());
 ServiceLocator::register('UserService', new WPQT\User\UserService());
 ServiceLocator::register('AutomationService', new WPQT\Automation\AutomationService());

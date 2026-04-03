@@ -1,8 +1,10 @@
 import { useEffect, useState } from "@wordpress/element";
 import { getPipelineOverviewData } from "../../../../../api/api";
 import { Loading } from "../../../../../components/Loading/Loading";
+import { SET_PIPELINE_MISSING } from "../../../../../constants";
+import { useDeletedResourceDetection } from "../../../../../hooks/useDeletedResourceDetection";
+import { useMissingContent } from "../../../../../hooks/useMissingContent";
 import { PipelineOverviewFilter } from "../../../../../types/overview";
-import { Pipeline } from "../../../../../types/pipeline";
 import { PipelineOverviewResponse } from "../../../../../types/requestResponse/pipeline-overview-response";
 import { ArhivedTaskChart } from "../../ArchivedTaskChart/ArchivedTaskChart";
 import { StageDistributionChart } from "../../StageDistributionChart/StageDistributionChart";
@@ -20,32 +22,38 @@ const defaultChartoptions = {
 };
 
 type Props = {
-  pipeline: Pipeline;
+  pipelineId: string;
   overviewFilter: PipelineOverviewFilter;
 };
-function PipelineOverviewContent({ pipeline, overviewFilter }: Props) {
+function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
   const [pipelineOverviewData, setPipelineOverviewData] =
     useState<PipelineOverviewResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
+  const { dispatch } = useMissingContent();
 
   useEffect(() => {
     const fetchPipelineOverview = async () => {
       try {
         setLoading(true);
         const response = await getPipelineOverviewData(
-          pipeline.id,
+          pipelineId,
           overviewFilter,
         );
         setPipelineOverviewData(response.data);
       } catch (error) {
         console.error(error);
+
+        if (detectDeletedPipelineResponse(error)) {
+          dispatch({ type: SET_PIPELINE_MISSING, payload: true });
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchPipelineOverview();
-  }, [pipeline.id, overviewFilter]);
+  }, [pipelineId, overviewFilter]);
 
   if (loading || !pipelineOverviewData) {
     return <Loading ovalSize="48" />;

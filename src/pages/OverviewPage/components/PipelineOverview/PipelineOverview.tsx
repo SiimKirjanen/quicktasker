@@ -1,18 +1,33 @@
 import { useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
+import { Info } from "../../../../components/Info/Info";
+import { useMissingContent } from "../../../../hooks/useMissingContent";
 import { PipelineOverviewFilter } from "../../../../types/overview";
-import { Pipeline } from "../../../../types/pipeline";
 import { PipelineOverviewToolBar } from "../PipelineOverviewToolBar/PipelineOverviewToolBar";
 import { PipelineOverviewContent } from "./components/PipelineOverviewContent";
 
 type Props = {
-  pipeline: Pipeline;
+  pipelineId: string;
 };
-function PipelineOverview({ pipeline }: Props) {
+function PipelineOverview({ pipelineId }: Props) {
   const [overviewFilter, setOverviewFilter] = useState<PipelineOverviewFilter>({
     taskCreationDate: null,
     taskDoneDate: null,
     taskAssignees: [],
   });
+  const { pipelineMissing } = useMissingContent();
+
+  if (pipelineMissing) {
+    return (
+      <Info
+        infoDescription={__(
+          "The board related to this overview seems to be missing. It may have been deleted.",
+          "quicktasker",
+        )}
+      />
+    );
+  }
+
   return (
     <div>
       <PipelineOverviewToolBar
@@ -31,7 +46,7 @@ function PipelineOverview({ pipeline }: Props) {
         }}
       />
       <PipelineOverviewContent
-        pipeline={pipeline}
+        pipelineId={pipelineId}
         overviewFilter={overviewFilter}
       />
     </div>
