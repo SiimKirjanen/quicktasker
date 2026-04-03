@@ -321,10 +321,18 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                     try {
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
                         $tokenRepo = ServiceLocator::get('ApiTokenRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
+                            throw new PipelineMissingException('No pipeline found with id ' . $data['id']);
+                        }
+
                         $tokens = $tokenRepo->getPipelineTokensForFrontend($data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $tokens))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
@@ -2995,11 +3003,18 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'callback' => function ($data) {
                     try {
                         $automationRepo = ServiceLocator::get('AutomationRepository');
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
+                            throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
+                        }
                         $pipelineAutomations = $automationRepo->getPipelineAutomations($data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'automations' => $pipelineAutomations,
                         ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
@@ -3185,11 +3200,20 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                     try {
-                        $pipelineWebhooks = ServiceLocator::get('WebhookRepository')->getPipelineWebhooks($data['id']);
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
+                        $webhookRepo = ServiceLocator::get('WebhookRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
+                            throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
+                        }
+
+                        $pipelineWebhooks = $webhookRepo->getPipelineWebhooks($data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'webhooks' => $pipelineWebhooks,
                         ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }

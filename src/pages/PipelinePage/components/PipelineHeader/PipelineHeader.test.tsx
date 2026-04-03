@@ -113,7 +113,6 @@ describe("PipelineHeader", () => {
             activePipeline,
             loading: false,
             view: PipelineView.PIPELINE,
-            activePipelineDeleted: false,
           },
           fetchAndSetPipelineData,
           dispatch: jest.fn(),
@@ -173,7 +172,6 @@ describe("PipelineHeader", () => {
             activePipeline,
             loading: false,
             view: PipelineView.PIPELINE,
-            activePipelineDeleted: false,
           },
           fetchAndSetPipelineData,
           dispatch,
@@ -199,7 +197,6 @@ describe("PipelineHeader", () => {
         activePipeline,
         loading: true,
         view: PipelineView.PIPELINE,
-        activePipelineDeleted: false,
       },
     });
     expect(screen.getByTestId("loading")).toBeInTheDocument();
@@ -213,7 +210,6 @@ describe("PipelineHeader", () => {
             activePipeline: null,
             loading: false,
             view: PipelineView.PIPELINE,
-            activePipelineDeleted: false,
           },
           fetchAndSetPipelineData,
           dispatch: jest.fn(),

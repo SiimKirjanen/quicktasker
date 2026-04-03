@@ -2,9 +2,11 @@ import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
+import { Info } from "../../components/Info/Info";
 import { Loading } from "../../components/Loading/Loading";
 import { AutomationLogsModal } from "../../components/Modal/AutomationLogsModal/AutomationLogsModal";
 import { useAutomations } from "../../hooks/useAutomations";
+import { useMissingContent } from "../../hooks/useMissingContent";
 import { useNavigation } from "../../hooks/useNavigation";
 import { usePipelines } from "../../hooks/usePipelines";
 import { PipelineAutomationsContextProvider } from "../../providers/PipelineAutomationsContextProvider";
@@ -19,9 +21,21 @@ type Props = {
 
 function AutomationsPageContent({ pipelineId }: Props) {
   const { loading } = useAutomations();
+  const { pipelineMissing } = useMissingContent();
 
   if (loading) {
     return <Loading ovalSize="24" />;
+  }
+
+  if (pipelineMissing) {
+    return (
+      <Info
+        infoDescription={__(
+          "The board related to these automations seems to be missing. It may have been deleted.",
+          "quicktasker",
+        )}
+      />
+    );
   }
 
   return (
@@ -40,29 +54,32 @@ function AutomationsPageContent({ pipelineId }: Props) {
 function AutomationsPage({ pipelineId }: Props) {
   const { pipelines } = usePipelines();
   const { navigatePageWithoutHistory } = useNavigation();
+  const { pipelineMissing } = useMissingContent();
   const activePipeline =
     pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
   return (
     <PipelineAutomationsContextProvider pipelineId={pipelineId}>
       <Page>
-        <WPQTPageHeader
-          description={__(
-            "Set up automated processes to help manage your board.",
-            "quicktasker",
-          )}
-          rightSideContent={
-            <PipelineSelectionDropdown
-              activePipeline={activePipeline}
-              enableActions={false}
-              onPipelineClick={(id) => {
-                navigatePageWithoutHistory(`#/board/${id}/automations`);
-              }}
-            />
-          }
-        >
-          {__("Board automations", "quicktasker")}
-        </WPQTPageHeader>
+        {!pipelineMissing && (
+          <WPQTPageHeader
+            description={__(
+              "Set up automated processes to help manage your board.",
+              "quicktasker",
+            )}
+            rightSideContent={
+              <PipelineSelectionDropdown
+                activePipeline={activePipeline}
+                enableActions={false}
+                onPipelineClick={(id) => {
+                  navigatePageWithoutHistory(`#/board/${id}/automations`);
+                }}
+              />
+            }
+          >
+            {__("Board automations", "quicktasker")}
+          </WPQTPageHeader>
+        )}
         <AutomationsPageContent pipelineId={pipelineId} />
       </Page>
     </PipelineAutomationsContextProvider>

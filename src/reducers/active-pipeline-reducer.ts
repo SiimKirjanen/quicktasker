@@ -17,7 +17,6 @@ import {
   PIPELINE_REMOVE_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
   PIPELINE_REORDER_TASK,
-  PIPELINE_SET_ACTIVE_PIPELINE_DELETED_STATUS,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
   PIPELINE_SET_TASK_FOCUS_COLOR,
@@ -571,18 +570,6 @@ const activePipelineReducer = (state: State, action: Action) => {
           ...state.activePipeline,
           stages: updatedStages,
         },
-      };
-    }
-    case PIPELINE_SET_ACTIVE_PIPELINE_DELETED_STATUS: {
-      const isDeleted = action.payload;
-
-      if (!state.activePipeline) {
-        return state;
-      }
-
-      return {
-        ...state,
-        activePipelineDeleted: isDeleted,
       };
     }
     default:

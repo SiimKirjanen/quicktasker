@@ -7,8 +7,11 @@ import {
   REMOVE_PIPELINE_AUTOMATION,
   SET_PIPELINE_AUTOMATIONS,
   SET_PIPELINE_AUTOMATIONS_LOADING,
+  SET_PIPELINE_MISSING,
   UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS,
 } from "../constants";
+import { useDeletedResourceDetection } from "../hooks/useDeletedResourceDetection";
+import { useMissingContent } from "../hooks/useMissingContent";
 import { reducer } from "../reducers/pipeline-automations-reducer";
 import { Automation } from "../types/automation";
 import { convertAutomationsFromServer } from "../utils/automations";
@@ -74,6 +77,8 @@ const PipelineAutomationsContextProvider = ({
     reducer,
     initialState,
   );
+  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
+  const { dispatch: missingContentDispatch } = useMissingContent();
 
   const loadAutomations = async () => {
     try {
@@ -90,7 +95,12 @@ const PipelineAutomationsContextProvider = ({
       });
     } catch (error) {
       console.error(error);
-      toast.error(__("Failed to load board automations", "quicktasker"));
+
+      if (detectDeletedPipelineResponse(error)) {
+        missingContentDispatch({ type: SET_PIPELINE_MISSING, payload: true });
+      } else {
+        toast.error(__("Failed to load board automations", "quicktasker"));
+      }
     } finally {
       pipelineAutomationsDispatch({
         type: SET_PIPELINE_AUTOMATIONS_LOADING,

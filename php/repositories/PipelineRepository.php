@@ -60,9 +60,28 @@ if (!class_exists('WPQT\Pipeline\PipelineRepository')) {
         }
 
         /**
+         * Checks if a pipeline with the given ID exists in the database.
+         *
+         * @param int $pipelineId The ID of the pipeline to check.
+         * @return bool True if the pipeline exists, false otherwise.
+         */
+        public function checkIfPipelineExists($pipelineId)
+        {
+            global $wpdb;
+
+            $result = $wpdb->get_var($wpdb->prepare(
+                'SELECT COUNT(*) FROM ' . TABLE_WP_QUICKTASKER_PIPELINES . ' WHERE id = %d',
+                $pipelineId
+            ));
+
+            return $result > 0;
+        }
+
+        /**
          * Retrieves the full pipeline with stages and tasks by pipeline ID.
          *
          * @param int $pipelineId The ID of the pipeline.
+         * @throws PipelineMissingException If the pipeline with the given ID does not exist.
          * @return Pipeline The full pipeline object with stages and tasks.
          */
         public function getFullPipeline($pipelineId)

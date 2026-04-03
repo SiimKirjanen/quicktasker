@@ -1,8 +1,10 @@
 import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
+import { Info } from "../../components/Info/Info";
 import { Loading } from "../../components/Loading/Loading";
 import { WebhookLogsModal } from "../../components/Modal/WebhookLogsModal/WebhookLogsModal";
+import { useMissingContent } from "../../hooks/useMissingContent";
 import { useNavigation } from "../../hooks/useNavigation";
 import { usePipelines } from "../../hooks/usePipelines";
 import { useWebhooks } from "../../hooks/useWebhooks";
@@ -18,9 +20,21 @@ type Props = {
 
 function WebhooksPageContent({ pipelineId }: Props) {
   const { loading } = useWebhooks();
+  const { pipelineMissing } = useMissingContent();
 
   if (loading) {
     return <Loading ovalSize="24" />;
+  }
+
+  if (pipelineMissing) {
+    return (
+      <Info
+        infoDescription={__(
+          "The board related to these webhooks seems to be missing. It may have been deleted.",
+          "quicktasker",
+        )}
+      />
+    );
   }
 
   return (
@@ -36,32 +50,34 @@ function WebhooksPageContent({ pipelineId }: Props) {
 }
 
 function WebhooksPage({ pipelineId }: Props) {
-  console.log(pipelineId);
   const { pipelines } = usePipelines();
   const { navigatePageWithoutHistory } = useNavigation();
+  const { pipelineMissing } = useMissingContent();
   const activePipeline =
     pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
   return (
     <PipelineWebhooksContextProvider pipelineId={pipelineId}>
       <Page>
-        <WPQTPageHeader
-          description={__(
-            "Send real-time board event data to external services using webhooks.",
-            "quicktasker",
-          )}
-          rightSideContent={
-            <PipelineSelectionDropdown
-              activePipeline={activePipeline}
-              enableActions={false}
-              onPipelineClick={(id) => {
-                navigatePageWithoutHistory(`#/board/${id}/webhooks`);
-              }}
-            />
-          }
-        >
-          {__("Board webhooks", "quicktasker")}
-        </WPQTPageHeader>
+        {!pipelineMissing && (
+          <WPQTPageHeader
+            description={__(
+              "Send real-time board event data to external services using webhooks.",
+              "quicktasker",
+            )}
+            rightSideContent={
+              <PipelineSelectionDropdown
+                activePipeline={activePipeline}
+                enableActions={false}
+                onPipelineClick={(id) => {
+                  navigatePageWithoutHistory(`#/board/${id}/webhooks`);
+                }}
+              />
+            }
+          >
+            {__("Board webhooks", "quicktasker")}
+          </WPQTPageHeader>
+        )}
         <WebhooksPageContent pipelineId={pipelineId} />
       </Page>
     </PipelineWebhooksContextProvider>

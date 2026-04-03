@@ -9,6 +9,7 @@ import { PipelineSelectionDropdown } from "../../../../components/Dropdown/Pipel
 import { LoadingOval } from "../../../../components/Loading/Loading";
 import { PIPELINE_TOGGLE_VIEW } from "../../../../constants";
 import { useApp } from "../../../../hooks/useApp";
+import { useMissingContent } from "../../../../hooks/useMissingContent";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { PipelineView } from "../../../../types/pipeline";
 import { BoardOptionsSelection } from "./components/BoardOptionsSelection/BoardOptionsSelection";
@@ -16,14 +17,15 @@ import { TaskExportSelection } from "./components/TaskExportSelection/TaskExport
 
 function PipelineHeader() {
   const {
-    state: { activePipeline, loading, activePipelineDeleted },
+    state: { activePipeline, loading },
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
   const {
     state: { isUserAllowedToManageSettings },
   } = useApp();
+  const { pipelineMissing } = useMissingContent();
 
-  if (!activePipeline || activePipelineDeleted) {
+  if (!activePipeline || pipelineMissing) {
     return null;
   }
 

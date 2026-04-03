@@ -83,7 +83,6 @@ function renderWithProviders(props: UserAssignementSelectionProps) {
           loading: false,
           view: PipelineView.PIPELINE,
           activePipeline: null,
-          activePipelineDeleted: false,
         },
         dispatch: mockDispatch,
         fetchAndSetPipelineData: jest.fn(),
