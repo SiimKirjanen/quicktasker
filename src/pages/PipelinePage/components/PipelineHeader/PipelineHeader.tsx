@@ -16,14 +16,14 @@ import { TaskExportSelection } from "./components/TaskExportSelection/TaskExport
 
 function PipelineHeader() {
   const {
-    state: { activePipeline, loading },
+    state: { activePipeline, loading, activePipelineDeleted },
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
   const {
     state: { isUserAllowedToManageSettings },
   } = useApp();
 
-  if (!activePipeline) {
+  if (!activePipeline || activePipelineDeleted) {
     return null;
   }
 

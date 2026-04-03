@@ -958,3 +958,13 @@ if (!defined('WP_QUICKTASKER_API_PATCH_PIPELINE_TASKS_PERMISSION')) {
 if (!defined('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION')) {
     define('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION', 'delete_pipeline_tasks');
 }
+
+/*
+==================================================================================================================================================================================================================
+Exception constants
+==================================================================================================================================================================================================================
+*/
+
+if (!defined('WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND')) {
+    define('WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND', 'PIPELINE_NOT_FOUND');
+}

@@ -5,6 +5,7 @@ namespace WPQT\Pipeline;
 if (!defined('ABSPATH')) {
     exit;
 }
+use WPQT\PipelineMissingException;
 use WPQT\Services\ServiceLocator;
 use WPQT\Stage\StageRepository;
 use WPQT\Task\TaskRepository;
@@ -72,6 +73,10 @@ if (!class_exists('WPQT\Pipeline\PipelineRepository')) {
 
             // Fetch the pipeline
             $pipeline = $this->getPipelineById($pipelineId);
+
+            if (!$pipeline) {
+                throw new PipelineMissingException("Pipeline with ID $pipelineId not found.");
+            }
 
             // Fetch all stages for the pipeline
             $pipelineStages = $stageRepository->getStagesByPipelineId($pipelineId);

@@ -29,7 +29,7 @@ import { Stage } from "./Stage";
 
 const Pipeline = () => {
   const {
-    state: { activePipeline },
+    state: { activePipeline, activePipelineDeleted },
     dispatch,
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
@@ -44,13 +44,13 @@ const Pipeline = () => {
       activePipeline?.settings?.pipeline_refresh_interval ||
       REFETCH_ACTIVE_PIPELINE_INTERVAL;
     const refetchDataInterval = setInterval(() => {
-      if (activePipeline && isTabVisible) {
+      if (activePipeline && isTabVisible && !activePipelineDeleted) {
         fetchAndSetPipelineData(activePipeline.id);
       }
     }, refreshInterval * 1000);
 
     return () => clearInterval(refetchDataInterval);
-  }, [activePipeline, isTabVisible]);
+  }, [activePipeline, isTabVisible, activePipelineDeleted]);
 
   const dispatchMove = (
     source: DraggableLocation,
@@ -105,6 +105,17 @@ const Pipeline = () => {
       fetchAndSetPipelineData(activePipeline.id);
     }
   };
+
+  if (activePipelineDeleted) {
+    return (
+      <Info
+        infoDescription={__(
+          "This board no longer exists. Please refresh the page to view your available boards.",
+          "quicktasker",
+        )}
+      />
+    );
+  }
 
   if (!activePipeline) {
     return (

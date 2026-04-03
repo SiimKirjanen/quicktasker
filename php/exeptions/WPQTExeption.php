@@ -31,3 +31,9 @@ if (!class_exists('WPQT\StageHasTasksException')) {
     {
     }
 }
+
+if (!class_exists('WPQT\PipelineMissingException')) {
+    class PipelineMissingException extends Exception
+    {
+    }
+}

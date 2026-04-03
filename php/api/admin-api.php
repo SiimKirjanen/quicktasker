@@ -15,6 +15,7 @@ use WPQT\Overview\OverViewRepository;
 use WPQT\Permission\PermissionService;
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
+use WPQT\PipelineMissingException;
 use WPQT\Response\ApiResponse;
 use WPQT\Services\ServiceLocator;
 use WPQT\Session\SessionRepository;
@@ -58,6 +59,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'pipeline'  => $pipeline,
                             'pipelines' => $pipelines,
                         ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, 'Failed to get pipeline');
                     }

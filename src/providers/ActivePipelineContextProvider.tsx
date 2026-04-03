@@ -26,12 +26,14 @@ import {
   PIPELINE_REMOVE_TASK,
   PIPELINE_REMOVE_USER_FROM_TASK,
   PIPELINE_REORDER_TASK,
+  PIPELINE_SET_ACTIVE_PIPELINE_DELETED_STATUS,
   PIPELINE_SET_LOADING,
   PIPELINE_SET_PIPELINE,
   PIPELINE_SET_TASK_FOCUS_COLOR,
   PIPELINE_TOGGLE_VIEW,
   SET_FULL_PAGE_LOADING,
 } from "../constants";
+import { useDeletedResourceDetection } from "../hooks/useDeletedResourceDetection";
 import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
 import { Label } from "../types/label";
 import { Pipeline, PipelineFromServer, PipelineView } from "../types/pipeline";
@@ -45,12 +47,14 @@ const initialState = {
   loading: false,
   view: PipelineView.PIPELINE,
   activePipeline: null,
+  activePipelineDeleted: false,
 };
 
 type State = {
   loading: boolean;
   view: PipelineView;
   activePipeline: Pipeline | null;
+  activePipelineDeleted: boolean;
 };
 
 type Action =
@@ -113,6 +117,10 @@ type Action =
   | {
       type: typeof PIPELINE_SET_TASK_FOCUS_COLOR;
       payload: { taskId: string; color: string };
+    }
+  | {
+      type: typeof PIPELINE_SET_ACTIVE_PIPELINE_DELETED_STATUS;
+      payload: boolean;
     };
 
 type Dispatch = (action: Action) => void;
@@ -136,6 +144,7 @@ const ActivePipelineContextProvider = ({
 }) => {
   const [state, dispatch] = useReducer(activePipelineReducer, initialState);
   const { loadingDispatch } = useContext(LoadingContext);
+  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
 
   useEffect(() => {
     const initialActivePipelineId = window.wpqt.initialActivePipelineId;
@@ -170,9 +179,20 @@ const ActivePipelineContextProvider = ({
       dispatch({ type: PIPELINE_SET_PIPELINE, payload: pipeline });
     } catch (e) {
       console.error(e);
-      toast.error(
-        __("Unable to load the board. Please try again later.", "quicktasker"),
-      );
+
+      if (detectDeletedPipelineResponse(e)) {
+        dispatch({
+          type: PIPELINE_SET_ACTIVE_PIPELINE_DELETED_STATUS,
+          payload: true,
+        });
+      } else {
+        toast.error(
+          __(
+            "Unable to load the board. Please try again. If the problem persists, reload the page.",
+            "quicktasker",
+          ),
+        );
+      }
     } finally {
       setLoadingState(false, fullPageLoading);
     }
