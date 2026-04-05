@@ -165,7 +165,7 @@ const useTaskActions = () => {
   ) => {
     try {
       await moveTaskRequest(taskId, stageId, order, pipelineId);
-      toast.success(__("Task moved", "quicktasaker"));
+      toast.success(__("Task moved", "quicktasker"));
       if (callback) callback(true);
     } catch (error) {
       console.error(error);

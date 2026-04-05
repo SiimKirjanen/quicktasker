@@ -965,7 +965,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'pipelines/(?P<pipeline_id>\d+)/tasks/(?P<id>\d+)/archive',
+            'pipelines/(?P<pipelineId>\d+)/tasks/(?P<id>\d+)/archive',
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
@@ -977,7 +977,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $taskService = ServiceLocator::get('TaskService');
                         $logService = ServiceLocator::get('LogService');
 
-                        $taskService->validateTaskAndPipeline($data['id'], $data['pipeline_id']);
+                        $taskService->validateTaskAndPipeline($data['id'], $data['pipelineId']);
 
                         $task = $taskService->archiveTask($data['id']);
                         $logService->log('Task ' . $task->name . ' archived', [
@@ -1027,7 +1027,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
                 },
                 'args' => [
-                    'pipeline_id' => [
+                    'pipelineId' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
