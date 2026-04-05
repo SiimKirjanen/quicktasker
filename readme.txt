@@ -51,6 +51,7 @@ QuickTasker is a plugin that offers the following and more to organize your proj
 
 = 1.50.0 =
 * Added setting to customize board auto-refresh interval.
+* Added notifications to alert users when attempting to interact with boards or stages that have been deleted.
 
 = 1.49.1 =
 * Plugin Check (PCP) fixes.

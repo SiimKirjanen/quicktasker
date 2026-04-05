@@ -20,6 +20,7 @@ import {
   REFETCH_ACTIVE_PIPELINE_INTERVAL,
 } from "../../../constants";
 import { useApp } from "../../../hooks/useApp";
+import { useMissingContent } from "../../../hooks/useMissingContent";
 import useTabVisibility from "../../../hooks/useTabVisibility";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -35,6 +36,7 @@ const Pipeline = () => {
   } = useContext(ActivePipelineContext);
   const { isTabVisible } = useTabVisibility();
   const { modalDispatch } = useContext(ModalContext);
+  const { pipelineMissing } = useMissingContent();
   const {
     state: { isUserAllowedToManageSettings },
   } = useApp();
@@ -44,13 +46,13 @@ const Pipeline = () => {
       activePipeline?.settings?.pipeline_refresh_interval ||
       REFETCH_ACTIVE_PIPELINE_INTERVAL;
     const refetchDataInterval = setInterval(() => {
-      if (activePipeline && isTabVisible) {
+      if (activePipeline && isTabVisible && !pipelineMissing) {
         fetchAndSetPipelineData(activePipeline.id);
       }
     }, refreshInterval * 1000);
 
     return () => clearInterval(refetchDataInterval);
-  }, [activePipeline, isTabVisible]);
+  }, [activePipeline, isTabVisible, pipelineMissing]);
 
   const dispatchMove = (
     source: DraggableLocation,
@@ -105,6 +107,17 @@ const Pipeline = () => {
       fetchAndSetPipelineData(activePipeline.id);
     }
   };
+
+  if (pipelineMissing) {
+    return (
+      <Info
+        infoDescription={__(
+          "This board no longer exists. Please refresh the page to view your available boards.",
+          "quicktasker",
+        )}
+      />
+    );
+  }
 
   if (!activePipeline) {
     return (

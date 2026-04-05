@@ -11,10 +11,10 @@ use WPQT\Customfield\CustomFieldRepository;
 use WPQT\Customfield\CustomFieldService;
 use WPQT\Log\LogRepository;
 use WPQT\Log\LogService;
-use WPQT\Overview\OverViewRepository;
 use WPQT\Permission\PermissionService;
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
+use WPQT\PipelineMissingException;
 use WPQT\Response\ApiResponse;
 use WPQT\Services\ServiceLocator;
 use WPQT\Session\SessionRepository;
@@ -23,7 +23,7 @@ use WPQT\Settings\SettingRepository;
 use WPQT\Settings\SettingsService;
 use WPQT\Settings\SettingsValidationService;
 use WPQT\Stage\StageRepository;
-use WPQT\Stage\StageService;
+use WPQT\StageMissingException;
 use WPQT\Task\TaskService;
 use WPQT\User\UserRepository;
 use WPQT\User\UserService;
@@ -31,6 +31,7 @@ use WPQT\UserPage\UserPageService;
 use WPQT\WPQTException;
 
 add_action('rest_api_init', 'wpqt_register_api_routes');
+
 if (!function_exists('wpqt_register_api_routes')) {
     function wpqt_register_api_routes()
     {
@@ -58,6 +59,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'pipeline'  => $pipeline,
                             'pipelines' => $pipelines,
                         ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, 'Failed to get pipeline');
                     }
@@ -318,10 +321,18 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                     try {
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
                         $tokenRepo = ServiceLocator::get('ApiTokenRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
+                            throw new PipelineMissingException('No pipeline found with id ' . $data['id']);
+                        }
+
                         $tokens = $tokenRepo->getPipelineTokensForFrontend($data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $tokens))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
@@ -669,11 +680,16 @@ if (!function_exists('wpqt_register_api_routes')) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        $taskService = new TaskService();
-                        $logService = new LogService();
+                        $taskService = ServiceLocator::get('TaskService');
+                        $logService = ServiceLocator::get('LogService');
                         $automationService = ServiceLocator::get('AutomationService');
                         $webhookService = ServiceLocator::get('WebhookService');
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
                         $userId = get_current_user_id();
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['pipelineId'])) {
+                            throw new PipelineMissingException('No pipeline found with id ' . $data['pipelineId']);
+                        }
 
                         $newTask = $taskService->createTask($data['stageId'], [
                             'name'       => $data['name'],
@@ -722,6 +738,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'executedAutomations' => $executionResults->executedAutomations,
                             'failedAutomations'   => $executionResults->failedAutomations
                         ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 
@@ -1206,7 +1226,7 @@ if (!function_exists('wpqt_register_api_routes')) {
         */
         register_rest_route(
             'wpqt/v1',
-            'stages',
+            'pipelines/(?P<pipelineId>\d+)/stages',
             [
                 'methods'  => 'POST',
                 'callback' => function ($data) {
@@ -1215,8 +1235,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        $stageService = new StageService();
-                        $logService = new LogService();
+                        $stageService = ServiceLocator::get('StageService');
+                        $logService = ServiceLocator::get('LogService');
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['pipelineId'])) {
+                            throw new PipelineMissingException('No pipeline found with id ' . $data['pipelineId']);
+                        }
 
                         $newStage = $stageService->createStage($data['pipelineId'], [
                             'name'        => $data['name'],
@@ -1235,6 +1260,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true, [], $newStage))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 
@@ -1266,7 +1295,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'stages/(?P<id>\d+)',
+            'pipelines/(?P<pipelineId>\d+)/stages/(?P<id>\d+)',
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
@@ -1275,25 +1304,35 @@ if (!function_exists('wpqt_register_api_routes')) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        $stageService = new StageService();
-                        $logService = new LogService();
+                        $stageService = ServiceLocator::get('StageService');
+                        $logService = ServiceLocator::get('LogService');
 
-                        $stage = $stageService->editStage($data['id'], [
+                        $stageService->validateStageAndPipeline($data['id'], $data['pipelineId']);
+
+                        $updatedStage = $stageService->editStage($data['id'], [
                             'name'        => $data['name'],
                             'description' => $data['description'] ?? ''
                         ]);
-                        $logService->log('Stage ' . $stage->name . ' edited', [
+                        $logService->log('Stage ' . $updatedStage->name . ' edited', [
                             'type'          => WP_QT_LOG_TYPE_PIPELINE,
-                            'type_id'       => $stage->pipeline_id,
+                            'type_id'       => $updatedStage->pipeline_id,
                             'user_id'       => get_current_user_id(),
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
                             'created_by_id' => get_current_user_id(),
-                            'pipeline_id'   => $stage->pipeline_id
+                            'pipeline_id'   => $updatedStage->pipeline_id
                         ]);
 
                         $wpdb->query('COMMIT');
 
-                        return new WP_REST_Response((new ApiResponse(true, [], $stage))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, [], $updatedStage))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
+                    } catch (StageMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_STAGE_NOT_FOUND);
                     } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 
@@ -1304,6 +1343,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => [
+                    'pipelineId' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
                     'id' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
@@ -1325,7 +1369,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'stages/(?P<id>\d+)/move',
+            'pipelines/(?P<pipelineId>\d+)/stages/(?P<id>\d+)/move',
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
@@ -1334,24 +1378,34 @@ if (!function_exists('wpqt_register_api_routes')) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        $stageService = new StageService();
-                        $logService = new LogService();
+                        $stageService = ServiceLocator::get('StageService');
+                        $logService = ServiceLocator::get('LogService');
 
-                        $stage = $stageService->moveStage($data['id'], [
+                        $stageService->validateStageAndPipeline($data['id'], $data['pipelineId']);
+
+                        $updatedStage = $stageService->moveStage($data['id'], [
                             'direction' => $data['direction'],
                         ]);
-                        $logService->log('Stage ' . $stage->name . ' moved', [
+                        $logService->log('Stage ' . $updatedStage->name . ' moved', [
                             'type'          => WP_QT_LOG_TYPE_PIPELINE,
-                            'type_id'       => $stage->pipeline_id,
+                            'type_id'       => $updatedStage->pipeline_id,
                             'user_id'       => get_current_user_id(),
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
                             'created_by_id' => get_current_user_id(),
-                            'pipeline_id'   => $stage->pipeline_id
+                            'pipeline_id'   => $updatedStage->pipeline_id
                         ]);
 
                         $wpdb->query('COMMIT');
 
-                        return new WP_REST_Response((new ApiResponse(true, [], $stage))->toArray(), 200);
+                        return new WP_REST_Response((new ApiResponse(true, [], $updatedStage))->toArray(), 200);
+                    } catch (StageMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_STAGE_NOT_FOUND);
+                    } catch (PipelineMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 
@@ -1362,6 +1416,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => [
+                    'pipelineId' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
                     'id' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
@@ -1378,7 +1437,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'stages/(?P<id>\d+)',
+            'pipelines/(?P<pipelineId>\d+)/stages/(?P<id>\d+)',
             [
                 'methods'  => 'DELETE',
                 'callback' => function ($data) {
@@ -1387,7 +1446,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        $stageService = new StageService();
+                        $stageService = ServiceLocator::get('StageService');
+
+                        $stageService->validateStageAndPipeline($data['id'], $data['pipelineId']);
+
                         $deletedStage = $stageService->deleteStage($data['id']);
                         ServiceLocator::get('LogService')->log('Stage ' . $deletedStage->name . ' deleted', [
                             'type'          => WP_QT_LOG_TYPE_PIPELINE,
@@ -1401,6 +1463,14 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
+                    } catch (StageMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_STAGE_NOT_FOUND);
+                    } catch (PipelineMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 
@@ -1411,6 +1481,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => [
+                    'pipelineId' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
                     'id' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
@@ -1422,7 +1497,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'stages/(?P<id>\d+)/archive-tasks',
+            'pipelines/(?P<pipelineId>\d+)/stages/(?P<id>\d+)/archive-tasks',
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
@@ -1431,8 +1506,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
-                        $stageService = new StageService();
-                        $logService = new LogService();
+                        $stageService = ServiceLocator::get('StageService');
+                        $logService = ServiceLocator::get('LogService');
+
+                        $stageService->validateStageAndPipeline($data['id'], $data['pipelineId']);
+
                         $archivedTasks = $stageService->archiveStageTasks($data['id']);
 
                         foreach ($archivedTasks as $task) {
@@ -1449,6 +1527,14 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $wpdb->query('COMMIT');
 
                         return new WP_REST_Response((new ApiResponse(true))->toArray(), 200);
+                    } catch (StageMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_STAGE_NOT_FOUND);
+                    } catch (PipelineMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 
@@ -1460,6 +1546,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                 },
                 'args' => [
                     'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'pipelineId' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
@@ -2944,13 +3035,20 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                     try {
-                        $overviewRepo = new OverviewRepository();
+                        $overviewRepo = ServiceLocator::get('OverViewRepository');
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
+                            throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
+                        }
 
                         $taskStartDate = $data['taskStartDate'] ?? null;
                         $taskDoneDate = $data['taskDoneDate'] ?? null;
                         $overview = $overviewRepo->getPipelineOverview($data['id'], $taskStartDate, $taskDoneDate);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $overview))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
@@ -2992,11 +3090,18 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'callback' => function ($data) {
                     try {
                         $automationRepo = ServiceLocator::get('AutomationRepository');
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
+                            throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
+                        }
                         $pipelineAutomations = $automationRepo->getPipelineAutomations($data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'automations' => $pipelineAutomations,
                         ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
@@ -3182,11 +3287,20 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                     try {
-                        $pipelineWebhooks = ServiceLocator::get('WebhookRepository')->getPipelineWebhooks($data['id']);
+                        $pipelineRepo = ServiceLocator::get('PipelineRepository');
+                        $webhookRepo = ServiceLocator::get('WebhookRepository');
+
+                        if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
+                            throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
+                        }
+
+                        $pipelineWebhooks = $webhookRepo->getPipelineWebhooks($data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'webhooks' => $pipelineWebhooks,
                         ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }

@@ -9,6 +9,7 @@ import {
   SET_PIPELINE_AUTOMATIONS_LOADING,
   UPDATE_PIPELINE_AUTOMATION_ACTIVE_STATUS,
 } from "../constants";
+import { useMissingResourceDetection } from "../hooks/useMissingResourceDetection";
 import { reducer } from "../reducers/pipeline-automations-reducer";
 import { Automation } from "../types/automation";
 import { convertAutomationsFromServer } from "../utils/automations";
@@ -74,6 +75,7 @@ const PipelineAutomationsContextProvider = ({
     reducer,
     initialState,
   );
+  const { detectMissingResources } = useMissingResourceDetection();
 
   const loadAutomations = async () => {
     try {
@@ -91,6 +93,8 @@ const PipelineAutomationsContextProvider = ({
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to load board automations", "quicktasker"));
+
+      detectMissingResources(error);
     } finally {
       pipelineAutomationsDispatch({
         type: SET_PIPELINE_AUTOMATIONS_LOADING,

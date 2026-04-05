@@ -1,8 +1,8 @@
 import { useEffect, useState } from "@wordpress/element";
 import { getPipelineOverviewData } from "../../../../../api/api";
 import { Loading } from "../../../../../components/Loading/Loading";
+import { useMissingResourceDetection } from "../../../../../hooks/useMissingResourceDetection";
 import { PipelineOverviewFilter } from "../../../../../types/overview";
-import { Pipeline } from "../../../../../types/pipeline";
 import { PipelineOverviewResponse } from "../../../../../types/requestResponse/pipeline-overview-response";
 import { ArhivedTaskChart } from "../../ArchivedTaskChart/ArchivedTaskChart";
 import { StageDistributionChart } from "../../StageDistributionChart/StageDistributionChart";
@@ -20,32 +20,35 @@ const defaultChartoptions = {
 };
 
 type Props = {
-  pipeline: Pipeline;
+  pipelineId: string;
   overviewFilter: PipelineOverviewFilter;
 };
-function PipelineOverviewContent({ pipeline, overviewFilter }: Props) {
+function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
   const [pipelineOverviewData, setPipelineOverviewData] =
     useState<PipelineOverviewResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const { detectMissingResources } = useMissingResourceDetection();
 
   useEffect(() => {
     const fetchPipelineOverview = async () => {
       try {
         setLoading(true);
         const response = await getPipelineOverviewData(
-          pipeline.id,
+          pipelineId,
           overviewFilter,
         );
         setPipelineOverviewData(response.data);
       } catch (error) {
         console.error(error);
+
+        detectMissingResources(error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPipelineOverview();
-  }, [pipeline.id, overviewFilter]);
+  }, [pipelineId, overviewFilter]);
 
   if (loading || !pipelineOverviewData) {
     return <Loading ovalSize="48" />;

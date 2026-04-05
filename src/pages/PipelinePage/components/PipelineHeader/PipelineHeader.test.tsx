@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { PIPELINE_TOGGLE_VIEW } from "../../../../constants";
 import * as useAppModule from "../../../../hooks/useApp";
+import * as useMissingContentModule from "../../../../hooks/useMissingContent";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import {
   ModalContext,
@@ -88,6 +89,7 @@ describe("PipelineHeader", () => {
     ctxOverrides = {},
     modalOverrides = {},
     appOverrides = {},
+    missingContentOverrides = {},
   ) {
     // Default: user is allowed to manage settings
     const defaultAppState = {
@@ -106,6 +108,15 @@ describe("PipelineHeader", () => {
       state: defaultAppState,
       appDispatch: jest.fn(),
     });
+
+    const defaultMissingContentState = {
+      pipelineMissing: false,
+      dispatch: jest.fn(),
+      ...missingContentOverrides,
+    };
+    jest
+      .spyOn(useMissingContentModule, "useMissingContent")
+      .mockReturnValue(defaultMissingContentState);
     return render(
       <ActivePipelineContext.Provider
         value={{
@@ -193,7 +204,11 @@ describe("PipelineHeader", () => {
 
   it("shows loading indicator when loading", () => {
     renderWithProviders({
-      state: { activePipeline, loading: true, view: PipelineView.PIPELINE },
+      state: {
+        activePipeline,
+        loading: true,
+        view: PipelineView.PIPELINE,
+      },
     });
     expect(screen.getByTestId("loading")).toBeInTheDocument();
   });
@@ -217,6 +232,16 @@ describe("PipelineHeader", () => {
           <PipelineHeader />
         </ModalContext.Provider>
       </ActivePipelineContext.Provider>,
+    );
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("returns null if pipelineMissing is true", () => {
+    const { container } = renderWithProviders(
+      {},
+      {},
+      {},
+      { pipelineMissing: true },
     );
     expect(container.firstChild).toBeNull();
   });

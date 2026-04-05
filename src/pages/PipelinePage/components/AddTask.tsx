@@ -7,6 +7,7 @@ import { WPQTInput } from "../../../components/common/Input/Input";
 import { LoadingOval } from "../../../components/Loading/Loading";
 import { PIPELINE_ADD_TASK } from "../../../constants";
 import { useAutomationActions } from "../../../hooks/actions/useAutomationActions";
+import { useMissingResourceDetection } from "../../../hooks/useMissingResourceDetection";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 type Props = {
@@ -24,6 +25,7 @@ function AddTask({ stageId }: Props) {
     dispatch,
   } = useContext(ActivePipelineContext);
   const { handleExecutedAutomations } = useAutomationActions();
+  const { detectMissingResources } = useMissingResourceDetection();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -90,6 +92,8 @@ function AddTask({ stageId }: Props) {
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to create task", "quicktasker"));
+
+      detectMissingResources(error);
     } finally {
       setLoading(false);
     }

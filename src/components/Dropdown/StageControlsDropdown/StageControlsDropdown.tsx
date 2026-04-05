@@ -18,6 +18,7 @@ import {
   OPEN_STAGE_EDIT_MODAL,
   PIPELINE_DELETE_STAGE,
 } from "../../../constants";
+import { useMissingResourceDetection } from "../../../hooks/useMissingResourceDetection";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -47,6 +48,7 @@ function StageControlsDropdown({ stage }: Props) {
     useState<StageChangeDirection | null>(null);
   const [archiveLoading, setArchiveLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const { detectMissingResources } = useMissingResourceDetection();
 
   const stagesLength = activePipeline?.stages?.length ?? 0;
   const stageTasksLenght = stage.tasks?.length ?? 0;
@@ -57,12 +59,13 @@ function StageControlsDropdown({ stage }: Props) {
   const deleteStage = async () => {
     try {
       setDeleteLoading(true);
-      await deleteStageRequest(stage.id);
+      await deleteStageRequest(stage.id, stage.pipeline_id);
 
       dispatch({ type: PIPELINE_DELETE_STAGE, payload: stage.id });
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to delete a stage", "quicktasker"));
+      detectMissingResources(error);
     } finally {
       setDeleteLoading(false);
     }
@@ -80,11 +83,12 @@ function StageControlsDropdown({ stage }: Props) {
   const moveStage = async (direction: StageChangeDirection) => {
     try {
       setMovingDirection(direction);
-      await moveStageRequest(stage.id, direction);
+      await moveStageRequest(stage.id, direction, stage.pipeline_id);
       await fetchAndSetPipelineData(activePipeline!.id);
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to move the stage", "quicktasker"));
+      detectMissingResources(error);
     } finally {
       setMovingDirection(null);
     }
@@ -93,7 +97,7 @@ function StageControlsDropdown({ stage }: Props) {
   const archiveAllStageTasks = async () => {
     try {
       setArchiveLoading(true);
-      await archiveStageTasksRequest(stage.id);
+      await archiveStageTasksRequest(stage.id, stage.pipeline_id);
       await fetchAndSetPipelineData(activePipeline!.id);
       toast.success(
         sprintf(__("Archived all %s tasks", "quicktasker"), stage.name),
@@ -106,6 +110,7 @@ function StageControlsDropdown({ stage }: Props) {
           stage.name,
         ),
       );
+      detectMissingResources(error);
     } finally {
       setArchiveLoading(false);
     }
