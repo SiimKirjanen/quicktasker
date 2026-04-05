@@ -92,6 +92,7 @@ const Pipeline = () => {
           draggableId,
           destination.droppableId,
           destination.index,
+          activePipeline!.id,
         );
       } catch (error) {
         console.error(error);

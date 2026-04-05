@@ -155,9 +155,10 @@ function moveTaskRequest(
   taskId: string,
   stageId: string,
   order: number,
+  pipelineId: string,
 ): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/tasks/${taskId}/move`,
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/move`,
     method: "PATCH",
     data: { stageId, order },
     headers: getCommonHeaders(),
@@ -225,9 +226,12 @@ function deleteTaskRequest(taskId: string): Promise<
   });
 }
 
-function archiveTaskRequest(taskId: string): Promise<WPQTResponse> {
+function archiveTaskRequest(
+  taskId: string,
+  pipelineId: string,
+): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/tasks/${taskId}/archive`,
+    path: `/wpqt/v1/pipelines/${pipelineId}/tasks/${taskId}/archive`,
     method: "PATCH",
     headers: getCommonHeaders(),
   });

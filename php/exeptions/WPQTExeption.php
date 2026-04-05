@@ -43,3 +43,9 @@ if (!class_exists('WPQT\StageMissingException')) {
     {
     }
 }
+
+if (!class_exists('WPQT\TaskMissingException')) {
+    class TaskMissingException extends Exception
+    {
+    }
+}

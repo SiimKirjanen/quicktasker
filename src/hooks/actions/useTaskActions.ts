@@ -14,11 +14,13 @@ import {
 import { TaskEditData } from "../../types/task";
 import { UserTypes } from "../../types/user";
 import { useErrorHandler } from "../useErrorHandler";
+import { useMissingResourceDetection } from "../useMissingResourceDetection";
 import { useAutomationActions } from "./useAutomationActions";
 
 const useTaskActions = () => {
   const { handleExecutedAutomations } = useAutomationActions();
   const { displayErrorMessages, getMessagesFromResponse } = useErrorHandler();
+  const { detectMissingResources } = useMissingResourceDetection();
 
   const deleteTask = async (
     taskId: string,
@@ -47,15 +49,18 @@ const useTaskActions = () => {
       }
       console.error(error);
       toast.error(__("Failed to delete a task", "quicktasker"));
+
+      detectMissingResources(error);
     }
   };
 
   const archiveTask = async (
     taskId: string,
+    pipelineId: string,
     callback?: (args: { success: boolean; taskId: string }) => void,
   ) => {
     try {
-      await archiveTaskRequest(taskId);
+      await archiveTaskRequest(taskId, pipelineId);
       if (callback) {
         callback({
           success: true,
@@ -73,6 +78,8 @@ const useTaskActions = () => {
       }
       console.error(error);
       toast.error(__("Failed to archive a task", "quicktasker"));
+
+      detectMissingResources(error);
     }
   };
 
@@ -101,6 +108,8 @@ const useTaskActions = () => {
         });
       }
       toast.error(__("Failed to restore a task", "quicktasker"));
+
+      detectMissingResources(error);
     }
   };
 
@@ -121,6 +130,8 @@ const useTaskActions = () => {
     } catch (error) {
       console.error(error);
       toast.error(__("Task unassignment failed. Try again", "quicktasker"));
+
+      detectMissingResources(error);
     }
   };
 
@@ -141,6 +152,7 @@ const useTaskActions = () => {
       console.error(error);
       toast.error(__("Failed to change task status", "quicktasker"));
       displayErrorMessages(error);
+      detectMissingResources(error);
     }
   };
 
@@ -148,16 +160,18 @@ const useTaskActions = () => {
     taskId: string,
     stageId: string,
     order: number,
+    pipelineId: string,
     callback?: (isCompleted: boolean) => void,
   ) => {
     try {
-      await moveTaskRequest(taskId, stageId, order);
+      await moveTaskRequest(taskId, stageId, order, pipelineId);
       toast.success(__("Task moved", "quicktasaker"));
       if (callback) callback(true);
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to move a task", "quicktasker"));
       if (callback) callback(false);
+      detectMissingResources(error);
     }
   };
 
@@ -178,6 +192,8 @@ const useTaskActions = () => {
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to change task focus color", "quicktasker"));
+
+      detectMissingResources(error);
 
       return {
         success: false,

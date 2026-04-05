@@ -339,7 +339,7 @@ if (!class_exists('WPQT\Stage\StageService')) {
             $stage = $stageRepo->getStageById($stageId);
             $pipelineExists = $pipelineRepo->checkIfPipelineExists($pipelineId);
 
-            if ($stage && $stage->pipeline_id !== $pipelineId) {
+            if ($stage && ((int) $stage->pipeline_id !== (int) $pipelineId)) {
                 throw new \Exception('Stage with id ' . $stageId . ' does not belong to pipeline with id ' . $pipelineId);
             }
 

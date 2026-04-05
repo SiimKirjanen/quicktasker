@@ -2,6 +2,7 @@ import {
   RESET_MISSING_CONTENT,
   SET_PIPELINE_MISSING,
   SET_STAGE_MISSING,
+  SET_TASK_MISSING,
 } from "../constants";
 import {
   Action,
@@ -26,6 +27,14 @@ const reducer = (state: State, action: Action): State => {
     }
     case RESET_MISSING_CONTENT: {
       return { ...initialState };
+    }
+    case SET_TASK_MISSING: {
+      const taskMissing: boolean = action.payload;
+
+      return {
+        ...state,
+        taskMissing: taskMissing,
+      };
     }
     default: {
       return state;
