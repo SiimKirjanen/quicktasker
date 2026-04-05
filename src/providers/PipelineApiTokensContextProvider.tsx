@@ -10,8 +10,8 @@ import {
   SET_PIPELINE_API_TOKENS_LOADING,
   SET_PIPELINE_MISSING,
 } from "../constants";
-import { useDeletedResourceDetection } from "../hooks/useDeletedResourceDetection";
 import { useMissingContent } from "../hooks/useMissingContent";
+import { useMissingResourceDetection } from "../hooks/useMissingResourceDetection";
 import { reducer } from "../reducers/pipeline-api-tokens-reducer";
 import { ApiToken } from "../types/api-token";
 import { convertApiTokensFromServer } from "../utils/api-token";
@@ -74,7 +74,7 @@ const PipelineApiTokensContextProvider = ({
   pipelineId: string;
 }) => {
   const [state, pipelineApiTokensDispatch] = useReducer(reducer, initialState);
-  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
+  const { detectMissingResources } = useMissingResourceDetection();
   const { dispatch } = useMissingContent();
 
   async function fetchPipelineApiTokens() {
@@ -90,10 +90,11 @@ const PipelineApiTokensContextProvider = ({
         payload: { apiTokens: convertApiTokensFromServer(response.data) },
       });
     } catch (error) {
-      if (detectDeletedPipelineResponse(error)) {
+      console.error(error);
+      toast.error(__("Failed to fetch board API tokens.", "quicktasker"));
+
+      if (detectMissingResources(error).detected) {
         dispatch({ type: SET_PIPELINE_MISSING, payload: true });
-      } else {
-        toast.error(__("Failed to fetch board API tokens.", "quicktasker"));
       }
     } finally {
       pipelineApiTokensDispatch({

@@ -7,8 +7,8 @@ import { WPQTInput } from "../../../components/common/Input/Input";
 import { LoadingOval } from "../../../components/Loading/Loading";
 import { PIPELINE_ADD_TASK, SET_PIPELINE_MISSING } from "../../../constants";
 import { useAutomationActions } from "../../../hooks/actions/useAutomationActions";
-import { useDeletedResourceDetection } from "../../../hooks/useDeletedResourceDetection";
 import { useMissingContent } from "../../../hooks/useMissingContent";
+import { useMissingResourceDetection } from "../../../hooks/useMissingResourceDetection";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 
 type Props = {
@@ -26,7 +26,7 @@ function AddTask({ stageId }: Props) {
     dispatch,
   } = useContext(ActivePipelineContext);
   const { handleExecutedAutomations } = useAutomationActions();
-  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
+  const { detectMissingResources } = useMissingResourceDetection();
   const { dispatch: missingContentDispatch } = useMissingContent();
 
   useEffect(() => {
@@ -93,11 +93,10 @@ function AddTask({ stageId }: Props) {
       );
     } catch (error) {
       console.error(error);
+      toast.error(__("Failed to create task", "quicktasker"));
 
-      if (detectDeletedPipelineResponse(error)) {
+      if (detectMissingResources(error).detected) {
         missingContentDispatch({ type: SET_PIPELINE_MISSING, payload: true });
-      } else {
-        toast.error(__("Failed to create task", "quicktasker"));
       }
     } finally {
       setLoading(false);

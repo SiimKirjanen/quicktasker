@@ -3,11 +3,11 @@ import { toast } from "react-toastify";
 import { createNewStageRequest, editStageRequest } from "../../api/api";
 import { SET_PIPELINE_MISSING } from "../../constants";
 import { Stage, StageFromServer } from "../../types/stage";
-import { useDeletedResourceDetection } from "../useDeletedResourceDetection";
 import { useMissingContent } from "../useMissingContent";
+import { useMissingResourceDetection } from "../useMissingResourceDetection";
 
 function useStageActions() {
-  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
+  const { detectMissingResources } = useMissingResourceDetection();
   const { dispatch } = useMissingContent();
 
   const addStage = async (
@@ -29,7 +29,8 @@ function useStageActions() {
       }
     } catch (error) {
       toast.error(__("Failed to create stage", "quicktasker"));
-      if (detectDeletedPipelineResponse(error)) {
+
+      if (detectMissingResources(error).detected) {
         dispatch({ type: SET_PIPELINE_MISSING, payload: true });
       } else if (errorCallback) {
         errorCallback(error);
@@ -50,7 +51,8 @@ function useStageActions() {
       }
     } catch (error) {
       toast.error(__("Failed to update stage", "quicktasker"));
-      if (detectDeletedPipelineResponse(error)) {
+
+      if (detectMissingResources(error).detected) {
         dispatch({ type: SET_PIPELINE_MISSING, payload: true });
       } else if (errorCallback) {
         errorCallback(error);

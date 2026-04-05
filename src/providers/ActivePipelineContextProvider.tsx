@@ -33,8 +33,8 @@ import {
   SET_FULL_PAGE_LOADING,
   SET_PIPELINE_MISSING,
 } from "../constants";
-import { useDeletedResourceDetection } from "../hooks/useDeletedResourceDetection";
 import { useMissingContent } from "../hooks/useMissingContent";
+import { useMissingResourceDetection } from "../hooks/useMissingResourceDetection";
 import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
 import { Label } from "../types/label";
 import { Pipeline, PipelineFromServer, PipelineView } from "../types/pipeline";
@@ -139,7 +139,7 @@ const ActivePipelineContextProvider = ({
 }) => {
   const [state, dispatch] = useReducer(activePipelineReducer, initialState);
   const { loadingDispatch } = useContext(LoadingContext);
-  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
+  const { detectMissingResources } = useMissingResourceDetection();
   const { dispatch: missingContentDispatch } = useMissingContent();
 
   useEffect(() => {
@@ -176,7 +176,7 @@ const ActivePipelineContextProvider = ({
     } catch (e) {
       console.error(e);
 
-      if (detectDeletedPipelineResponse(e)) {
+      if (detectMissingResources(e).detected) {
         missingContentDispatch({ type: SET_PIPELINE_MISSING, payload: true });
       } else {
         toast.error(

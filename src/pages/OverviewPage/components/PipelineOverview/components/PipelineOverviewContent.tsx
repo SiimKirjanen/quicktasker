@@ -2,8 +2,8 @@ import { useEffect, useState } from "@wordpress/element";
 import { getPipelineOverviewData } from "../../../../../api/api";
 import { Loading } from "../../../../../components/Loading/Loading";
 import { SET_PIPELINE_MISSING } from "../../../../../constants";
-import { useDeletedResourceDetection } from "../../../../../hooks/useDeletedResourceDetection";
 import { useMissingContent } from "../../../../../hooks/useMissingContent";
+import { useMissingResourceDetection } from "../../../../../hooks/useMissingResourceDetection";
 import { PipelineOverviewFilter } from "../../../../../types/overview";
 import { PipelineOverviewResponse } from "../../../../../types/requestResponse/pipeline-overview-response";
 import { ArhivedTaskChart } from "../../ArchivedTaskChart/ArchivedTaskChart";
@@ -29,7 +29,7 @@ function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
   const [pipelineOverviewData, setPipelineOverviewData] =
     useState<PipelineOverviewResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const { detectDeletedPipelineResponse } = useDeletedResourceDetection();
+  const { detectMissingResources } = useMissingResourceDetection();
   const { dispatch } = useMissingContent();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
       } catch (error) {
         console.error(error);
 
-        if (detectDeletedPipelineResponse(error)) {
+        if (detectMissingResources(error).detected) {
           dispatch({ type: SET_PIPELINE_MISSING, payload: true });
         }
       } finally {
