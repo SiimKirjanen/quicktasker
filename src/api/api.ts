@@ -407,9 +407,9 @@ function createNewStageRequest(
   description: string,
 ): Promise<WPQTResponse<StageFromServer>> {
   return apiFetch({
-    path: `/wpqt/v1/stages`,
+    path: `/wpqt/v1/pipelines/${pipelineId}/stages`,
     method: "POST",
-    data: { pipelineId, name, description },
+    data: { name, description },
     headers: getCommonHeaders(),
   });
 }
@@ -418,7 +418,7 @@ function editStageRequest(
   stage: Stage,
 ): Promise<WPQTResponse<StageFromServer>> {
   return apiFetch({
-    path: `/wpqt/v1/stages/${stage.id}`,
+    path: `/wpqt/v1/pipelines/${stage.pipeline_id}/stages/${stage.id}`,
     method: "PATCH",
     data: { name: stage.name, description: stage.description },
     headers: getCommonHeaders(),
@@ -428,27 +428,34 @@ function editStageRequest(
 function moveStageRequest(
   stageId: string,
   direction: StageChangeDirection,
+  pipelineId: string,
 ): Promise<WPQTResponse<StageFromServer>> {
   return apiFetch({
-    path: `/wpqt/v1/stages/${stageId}/move`,
+    path: `/wpqt/v1/pipelines/${pipelineId}/stages/${stageId}/move`,
     method: "PATCH",
     data: { direction },
     headers: getCommonHeaders(),
   });
 }
 
-function deleteStageRequest(stageId: string): Promise<WPQTResponse> {
+function deleteStageRequest(
+  stageId: string,
+  pipelineId: string,
+): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/stages/${stageId}`,
+    path: `/wpqt/v1/pipelines/${pipelineId}/stages/${stageId}`,
     method: "DELETE",
     data: { stageId },
     headers: getCommonHeaders(),
   });
 }
 
-function archiveStageTasksRequest(stageId: string): Promise<WPQTResponse> {
+function archiveStageTasksRequest(
+  stageId: string,
+  pipelineId: string,
+): Promise<WPQTResponse> {
   return apiFetch({
-    path: `/wpqt/v1/stages/${stageId}/archive-tasks`,
+    path: `/wpqt/v1/pipelines/${pipelineId}/stages/${stageId}/archive-tasks`,
     method: "PATCH",
     headers: getCommonHeaders(),
   });

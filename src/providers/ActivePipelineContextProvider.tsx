@@ -31,9 +31,7 @@ import {
   PIPELINE_SET_TASK_FOCUS_COLOR,
   PIPELINE_TOGGLE_VIEW,
   SET_FULL_PAGE_LOADING,
-  SET_PIPELINE_MISSING,
 } from "../constants";
-import { useMissingContent } from "../hooks/useMissingContent";
 import { useMissingResourceDetection } from "../hooks/useMissingResourceDetection";
 import { activePipelineReducer } from "../reducers/active-pipeline-reducer";
 import { Label } from "../types/label";
@@ -140,7 +138,6 @@ const ActivePipelineContextProvider = ({
   const [state, dispatch] = useReducer(activePipelineReducer, initialState);
   const { loadingDispatch } = useContext(LoadingContext);
   const { detectMissingResources } = useMissingResourceDetection();
-  const { dispatch: missingContentDispatch } = useMissingContent();
 
   useEffect(() => {
     const initialActivePipelineId = window.wpqt.initialActivePipelineId;
@@ -175,17 +172,14 @@ const ActivePipelineContextProvider = ({
       dispatch({ type: PIPELINE_SET_PIPELINE, payload: pipeline });
     } catch (e) {
       console.error(e);
+      toast.error(
+        __(
+          "Unable to load the board. Please try again. If the problem persists, reload the page.",
+          "quicktasker",
+        ),
+      );
 
-      if (detectMissingResources(e).detected) {
-        missingContentDispatch({ type: SET_PIPELINE_MISSING, payload: true });
-      } else {
-        toast.error(
-          __(
-            "Unable to load the board. Please try again. If the problem persists, reload the page.",
-            "quicktasker",
-          ),
-        );
-      }
+      detectMissingResources(e);
     } finally {
       setLoadingState(false, fullPageLoading);
     }

@@ -1,18 +1,25 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
-import { RESET_MISSING_CONTENT, SET_PIPELINE_MISSING } from "../constants";
+import {
+  RESET_MISSING_CONTENT,
+  SET_PIPELINE_MISSING,
+  SET_STAGE_MISSING,
+} from "../constants";
 import { reducer } from "../reducers/missing-content-reducer";
 
 const initialState = {
   pipelineMissing: false,
+  stageMissing: false,
 };
 
 type State = {
   pipelineMissing: boolean;
+  stageMissing: boolean;
 };
 
 type Action =
   | { type: typeof SET_PIPELINE_MISSING; payload: boolean }
-  | { type: typeof RESET_MISSING_CONTENT };
+  | { type: typeof RESET_MISSING_CONTENT }
+  | { type: typeof SET_STAGE_MISSING; payload: boolean };
 
 type ContextValue = {
   state: State;

@@ -6,11 +6,9 @@ import {
   ADD_PIPELINE_WEBHOOK,
   EDIT_PIPELINE_WEBHOOK,
   REMOVE_PIPELINE_WEBHOOK,
-  SET_PIPELINE_MISSING,
   SET_PIPELINE_WEBHOOKS,
   SET_PIPELINE_WEBHOOKS_LOADING,
 } from "../constants";
-import { useMissingContent } from "../hooks/useMissingContent";
 import { useMissingResourceDetection } from "../hooks/useMissingResourceDetection";
 import { reducer } from "../reducers/pipeline-webhooks-recuder";
 import { Webhook } from "../types/webhook";
@@ -78,7 +76,6 @@ const PipelineWebhooksContextProvider = ({
 }) => {
   const [state, pipelineWebhooksDispatch] = useReducer(reducer, initialState);
   const { detectMissingResources } = useMissingResourceDetection();
-  const { dispatch } = useMissingContent();
 
   const loadWebhooks = async () => {
     try {
@@ -98,9 +95,7 @@ const PipelineWebhooksContextProvider = ({
       console.error(error);
       toast.error(__("Failed to load board webhooks", "quicktasker"));
 
-      if (detectMissingResources(error).detected) {
-        dispatch({ type: SET_PIPELINE_MISSING, payload: true });
-      }
+      detectMissingResources(error);
     } finally {
       pipelineWebhooksDispatch({
         type: SET_PIPELINE_WEBHOOKS_LOADING,

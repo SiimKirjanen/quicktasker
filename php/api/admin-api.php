@@ -1226,7 +1226,7 @@ if (!function_exists('wpqt_register_api_routes')) {
         */
         register_rest_route(
             'wpqt/v1',
-            'stages',
+            'pipelines/(?P<pipelineId>\d+)/stages',
             [
                 'methods'  => 'POST',
                 'callback' => function ($data) {
@@ -1295,7 +1295,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'stages/(?P<id>\d+)',
+            'pipelines/(?P<pipelineId>\d+)/stages/(?P<id>\d+)',
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
@@ -1307,7 +1307,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $stageService = ServiceLocator::get('StageService');
                         $logService = ServiceLocator::get('LogService');
 
-                        $stageService->validateStageAndPipeline($data['id']);
+                        $stageService->validateStageAndPipeline($data['id'], $data['pipelineId']);
 
                         $updatedStage = $stageService->editStage($data['id'], [
                             'name'        => $data['name'],
@@ -1343,6 +1343,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => [
+                    'pipelineId' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
                     'id' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
@@ -1364,7 +1369,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'stages/(?P<id>\d+)/move',
+            'pipelines/(?P<pipelineId>\d+)/stages/(?P<id>\d+)/move',
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
@@ -1376,7 +1381,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $stageService = ServiceLocator::get('StageService');
                         $logService = ServiceLocator::get('LogService');
 
-                        $stageService->validateStageAndPipeline($data['id']);
+                        $stageService->validateStageAndPipeline($data['id'], $data['pipelineId']);
 
                         $updatedStage = $stageService->moveStage($data['id'], [
                             'direction' => $data['direction'],
@@ -1411,6 +1416,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
                 },
                 'args' => [
+                    'pipelineId' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
                     'id' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
@@ -1427,7 +1437,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'stages/(?P<id>\d+)',
+            'pipelines/(?P<pipelineId>\d+)/stages/(?P<id>\d+)',
             [
                 'methods'  => 'DELETE',
                 'callback' => function ($data) {
@@ -1438,7 +1448,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $stageService = ServiceLocator::get('StageService');
 
-                        $stageService->validateStageAndPipeline($data['id']);
+                        $stageService->validateStageAndPipeline($data['id'], $data['pipelineId']);
 
                         $deletedStage = $stageService->deleteStage($data['id']);
                         ServiceLocator::get('LogService')->log('Stage ' . $deletedStage->name . ' deleted', [
@@ -1471,6 +1481,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
                 },
                 'args' => [
+                    'pipelineId' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
                     'id' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
@@ -1482,7 +1497,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'stages/(?P<id>\d+)/archive-tasks',
+            'pipelines/(?P<pipelineId>\d+)/stages/(?P<id>\d+)/archive-tasks',
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
@@ -1494,7 +1509,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $stageService = ServiceLocator::get('StageService');
                         $logService = ServiceLocator::get('LogService');
 
-                        $stageService->validateStageAndPipeline($data['id']);
+                        $stageService->validateStageAndPipeline($data['id'], $data['pipelineId']);
 
                         $archivedTasks = $stageService->archiveStageTasks($data['id']);
 
@@ -1531,6 +1546,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                 },
                 'args' => [
                     'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'pipelineId' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],

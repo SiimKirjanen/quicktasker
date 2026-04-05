@@ -8,9 +8,7 @@ import {
   SET_ACTIVE_PIPELINE_ID,
   SET_PIPELINE_API_TOKENS,
   SET_PIPELINE_API_TOKENS_LOADING,
-  SET_PIPELINE_MISSING,
 } from "../constants";
-import { useMissingContent } from "../hooks/useMissingContent";
 import { useMissingResourceDetection } from "../hooks/useMissingResourceDetection";
 import { reducer } from "../reducers/pipeline-api-tokens-reducer";
 import { ApiToken } from "../types/api-token";
@@ -75,7 +73,6 @@ const PipelineApiTokensContextProvider = ({
 }) => {
   const [state, pipelineApiTokensDispatch] = useReducer(reducer, initialState);
   const { detectMissingResources } = useMissingResourceDetection();
-  const { dispatch } = useMissingContent();
 
   async function fetchPipelineApiTokens() {
     pipelineApiTokensDispatch({
@@ -93,9 +90,7 @@ const PipelineApiTokensContextProvider = ({
       console.error(error);
       toast.error(__("Failed to fetch board API tokens.", "quicktasker"));
 
-      if (detectMissingResources(error).detected) {
-        dispatch({ type: SET_PIPELINE_MISSING, payload: true });
-      }
+      detectMissingResources(error);
     } finally {
       pipelineApiTokensDispatch({
         type: SET_PIPELINE_API_TOKENS_LOADING,

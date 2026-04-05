@@ -1,14 +1,11 @@
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { createNewStageRequest, editStageRequest } from "../../api/api";
-import { SET_PIPELINE_MISSING } from "../../constants";
 import { Stage, StageFromServer } from "../../types/stage";
-import { useMissingContent } from "../useMissingContent";
 import { useMissingResourceDetection } from "../useMissingResourceDetection";
 
 function useStageActions() {
   const { detectMissingResources } = useMissingResourceDetection();
-  const { dispatch } = useMissingContent();
 
   const addStage = async (
     targetPipelineId: string,
@@ -30,9 +27,9 @@ function useStageActions() {
     } catch (error) {
       toast.error(__("Failed to create stage", "quicktasker"));
 
-      if (detectMissingResources(error).detected) {
-        dispatch({ type: SET_PIPELINE_MISSING, payload: true });
-      } else if (errorCallback) {
+      detectMissingResources(error);
+
+      if (errorCallback) {
         errorCallback(error);
       }
     }
@@ -50,11 +47,12 @@ function useStageActions() {
         successCallback(response.data);
       }
     } catch (error) {
+      console.error(error);
       toast.error(__("Failed to update stage", "quicktasker"));
 
-      if (detectMissingResources(error).detected) {
-        dispatch({ type: SET_PIPELINE_MISSING, payload: true });
-      } else if (errorCallback) {
+      detectMissingResources(error);
+
+      if (errorCallback) {
         errorCallback(error);
       }
     }

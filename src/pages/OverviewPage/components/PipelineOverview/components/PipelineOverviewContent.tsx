@@ -1,8 +1,6 @@
 import { useEffect, useState } from "@wordpress/element";
 import { getPipelineOverviewData } from "../../../../../api/api";
 import { Loading } from "../../../../../components/Loading/Loading";
-import { SET_PIPELINE_MISSING } from "../../../../../constants";
-import { useMissingContent } from "../../../../../hooks/useMissingContent";
 import { useMissingResourceDetection } from "../../../../../hooks/useMissingResourceDetection";
 import { PipelineOverviewFilter } from "../../../../../types/overview";
 import { PipelineOverviewResponse } from "../../../../../types/requestResponse/pipeline-overview-response";
@@ -30,7 +28,6 @@ function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
     useState<PipelineOverviewResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const { detectMissingResources } = useMissingResourceDetection();
-  const { dispatch } = useMissingContent();
 
   useEffect(() => {
     const fetchPipelineOverview = async () => {
@@ -44,9 +41,7 @@ function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
       } catch (error) {
         console.error(error);
 
-        if (detectMissingResources(error).detected) {
-          dispatch({ type: SET_PIPELINE_MISSING, payload: true });
-        }
+        detectMissingResources(error);
       } finally {
         setLoading(false);
       }
