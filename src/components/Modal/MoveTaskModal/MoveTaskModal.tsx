@@ -53,24 +53,30 @@ function MoveTaskModal() {
     }
 
     setLoading(true);
-    await moveTask(taskToEdit.id, stageId, order, (isCompleted) => {
-      if (isCompleted) {
-        dispatch({
-          type: PIPELINE_MOVE_TASK,
-          payload: {
-            source: {
-              droppableId: taskStage.id,
-              index: taskOrderInStage,
+    await moveTask(
+      taskToEdit.id,
+      stageId,
+      order,
+      taskToEdit.pipeline_id,
+      (isCompleted) => {
+        if (isCompleted) {
+          dispatch({
+            type: PIPELINE_MOVE_TASK,
+            payload: {
+              source: {
+                droppableId: taskStage.id,
+                index: taskOrderInStage,
+              },
+              destination: {
+                droppableId: stageId,
+                index: order,
+              },
             },
-            destination: {
-              droppableId: stageId,
-              index: order,
-            },
-          },
-        });
-        closeModal();
-      }
-    });
+          });
+          closeModal();
+        }
+      },
+    );
     setLoading(false);
   };
 

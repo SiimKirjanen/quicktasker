@@ -6,7 +6,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use WPQT\PipelineMissingException;
 use WPQT\Services\ServiceLocator;
+use WPQT\TaskMissingException;
 use WPQT\WPQTException;
 
 if (!class_exists('WPQT\Task\TaskService')) {
@@ -600,6 +602,36 @@ if (!class_exists('WPQT\Task\TaskService')) {
             }
 
             return ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+        }
+
+        /**
+         * Validates if a task belongs to a pipeline and if the pipeline exists.
+         *
+         * @param int $taskId The ID of the task to validate.
+         * @param int $pipelineId The ID of the pipeline to validate against.
+         * @return bool True if the task belongs to the pipeline, false otherwise.
+         * @throws TaskMissingException If the task does not exist.
+         * @throws PipelineMissingException If the pipeline does not exist.
+         * @throws Exception If the task does not belong to the pipeline.
+         */
+        public function validateTaskAndPipeline($taskId, $pipelineId)
+        {
+            $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+            $pipelineExists = ServiceLocator::get('PipelineRepository')->checkIfPipelineExists($pipelineId);
+
+            if ($pipelineExists && !$task) {
+                throw new TaskMissingException("Task with id {$taskId} not found");
+            }
+
+            if (!$pipelineExists) {
+                throw new PipelineMissingException('No pipeline found with id ' . $pipelineId);
+            }
+
+            if ((int) $task->pipeline_id !== (int) $pipelineId) {
+                throw new \Exception('Task with id ' . $taskId . ' does not belong to pipeline with id ' . $pipelineId);
+            }
+
+            return true;
         }
     }
 }

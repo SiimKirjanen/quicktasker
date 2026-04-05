@@ -78,7 +78,7 @@ function TaskControlsDropdown({ task }: Props) {
         )}
         onConfirm={async () => {
           setArchiveLoading(true);
-          archiveTask(task.id, ({ success }) => {
+          archiveTask(task.id, task.pipeline_id, ({ success }) => {
             if (success) {
               activePipelineDispatch({
                 type: PIPELINE_REMOVE_TASK,

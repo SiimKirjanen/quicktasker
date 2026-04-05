@@ -249,7 +249,7 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
               )}
               onConfirm={() => {
                 setArchiveLoading(true);
-                archiveTask(taskToEdit.id, () => {
+                archiveTask(taskToEdit.id, taskToEdit.pipeline_id, () => {
                   modalDispatch({ type: CLOSE_TASK_MODAL });
                   fetchAndSetPipelineData(activePipeline!.id);
                   setArchiveLoading(false);

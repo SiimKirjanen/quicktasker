@@ -37,8 +37,11 @@ function TaskRestoreModal() {
   useEffect(() => {
     const targetPipelineId =
       taskRestoreModalSettings?.taskToRestore?.pipeline_id || "";
+    const targetPipelineExists = pipelineOptions.some(
+      (option) => option.value === targetPipelineId,
+    );
 
-    if (targetPipelineId) {
+    if (targetPipelineId && targetPipelineExists) {
       setSelectedPipelineId(targetPipelineId);
     } else {
       if (pipelineOptions.length > 0) {
@@ -53,7 +56,6 @@ function TaskRestoreModal() {
     if (!taskToRestore || !selectedPipelineId || restoringTast) {
       return;
     }
-
     setRestoringTask(true);
     await restoreArchivedTask(
       taskToRestore.id,
