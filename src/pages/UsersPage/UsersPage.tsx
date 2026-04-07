@@ -22,7 +22,7 @@ function UsersPage() {
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
 
-  const tabNames = [
+  const tabDefinitions = [
     {
       name: __("WordPress users", "quicktasker"),
       icon: <WordPressIcon />,
@@ -73,7 +73,7 @@ function UsersPage() {
       </WPQTPageHeader>
 
       <WPQTTabs
-        tabs={tabNames}
+        tabs={tabDefinitions}
         tabsContent={tabContent}
         tabListClassName="wpqt-gap-5"
         tabClassName="wpqt-flex-none"

@@ -4,7 +4,7 @@ import { User, WPUser } from "../../../types/user";
 
 type UserAssignementSectionProps = {
   sectionTitle: string;
-  selectionTitleIcon?: React.ReactNode;
+  sectionTitleIcon?: React.ReactNode;
   onItemSelect?: (user: User | WPUser) => void;
   users: User[] | WPUser[];
   ActionIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -14,7 +14,7 @@ type UserAssignementSectionProps = {
 };
 function UserAssignementSection({
   sectionTitle,
-  selectionTitleIcon,
+  sectionTitleIcon,
   onItemSelect = () => {},
   users = [],
   ActionIcon = PlusIcon,
@@ -25,8 +25,8 @@ function UserAssignementSection({
   return (
     <div className={`wpqt-mb-2 ${className}`}>
       <div className="wpqt-mb-2 wpqt-text-lg wpqt-flex wpqt-items-center wpqt-gap-1">
-        {selectionTitleIcon && (
-          <span className="wpqt-mr-2">{selectionTitleIcon}</span>
+        {sectionTitleIcon && (
+          <span className="wpqt-mr-2">{sectionTitleIcon}</span>
         )}
         <span>{sectionTitle}</span>
       </div>

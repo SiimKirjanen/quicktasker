@@ -1496,11 +1496,6 @@
   height: 2.25rem;
 }
 
-.wpqt-size-\[24px\] {
-  width: 24px;
-  height: 24px;
-}
-
 .wpqt-h-\[200px\] {
   height: 200px;
 }
@@ -1519,10 +1514,6 @@
 
 .wpqt-h-full {
   height: 100%;
-}
-
-.wpqt-h-px {
-  height: 1px;
 }
 
 .wpqt-h-screen {
@@ -2057,11 +2048,6 @@
 .wpqt-bg-gray-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
-}
-
-.wpqt-bg-gray-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
 }
 
 .wpqt-bg-green-100 {

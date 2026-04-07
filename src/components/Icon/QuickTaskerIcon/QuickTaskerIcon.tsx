@@ -2,14 +2,11 @@ import icon from "../../../../img/icon-80x80.png";
 
 type Props = {
   className?: string;
+  size?: number;
 };
-function QuickTaskerIcon({ className = "" }: Props) {
+function QuickTaskerIcon({ className = "", size = 24 }: Props) {
   return (
-    <img
-      src={icon}
-      alt="QuickTasker Icon"
-      className={`wpqt-size-[24px] ${className}`}
-    />
+    <img src={icon} width={size} height={size} className={`${className}`} />
   );
 }
 

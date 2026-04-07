@@ -27,7 +27,8 @@ function WPQTTabs({
             key={tab.name}
             className={`wpqt-flex wpqt-gap-1 wpqt-items-center ${tabClassName}`}
           >
-            {tab.icon && <span>{tab.icon}</span>} <span>{tab.name}</span>
+            {tab.icon && <span>{tab.icon}</span>}
+            <span>{tab.name}</span>
           </WPQTTab>
         ))}
       </TabList>
