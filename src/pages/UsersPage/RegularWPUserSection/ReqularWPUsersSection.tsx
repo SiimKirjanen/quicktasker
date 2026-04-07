@@ -33,7 +33,10 @@ function RegularWPUsersSection() {
   if (users.length === 0) {
     return (
       <NoFilterResults
-        text={__("No non-admin WordPress users found", "quicktasker")}
+        text={__(
+          "No WordPress users without administrator privileges found",
+          "quicktasker",
+        )}
       />
     );
   }
@@ -41,7 +44,7 @@ function RegularWPUsersSection() {
   return (
     <div>
       <div className="wpqt-mb-2">
-        {__("Displaying non-admin WordPress users.", "quicktasker")}
+        {__("WordPress users without administrator privileges.", "quicktasker")}
       </div>
       <div className="wpqt-card-grid">
         {users.map((user) => {

@@ -10,9 +10,9 @@ type Props = {
 };
 function UserModalTabs({ user }: Props) {
   const tabs = [
-    __("Logs", "quicktasker"),
-    __("Private comments", "quicktasker"),
-    __("Public comments", "quicktasker"),
+    { name: __("Logs", "quicktasker") },
+    { name: __("Private comments", "quicktasker") },
+    { name: __("Public comments", "quicktasker") },
   ];
 
   return (

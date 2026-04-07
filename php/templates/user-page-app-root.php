@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User page</title>
+    <title><?php esc_html_e('Tasks app', 'quicktasker'); ?></title>
     <?php wp_head(); ?>
 </head>
 <body class="wpqt-font-inter wpqt-m-0">

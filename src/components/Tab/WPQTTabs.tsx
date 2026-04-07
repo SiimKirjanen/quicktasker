@@ -1,7 +1,12 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
+type TabType = {
+  name: string;
+  icon?: React.ReactNode;
+};
+
 type Props = {
-  tabs: string[];
+  tabs: TabType[];
   tabsContent: React.ReactNode[];
   tabListClassName?: string;
   tabClassName?: string;
@@ -18,8 +23,12 @@ function WPQTTabs({
         className={`wpqt-mb-6 wpqt-flex wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-b-gray-300 ${tabListClassName}`}
       >
         {tabs.map((tab) => (
-          <WPQTTab key={tab} className={tabClassName}>
-            {tab}
+          <WPQTTab
+            key={tab.name}
+            className={`wpqt-flex wpqt-gap-1 wpqt-items-center ${tabClassName}`}
+          >
+            {tab.icon && <span>{tab.icon}</span>}
+            <span>{tab.name}</span>
           </WPQTTab>
         ))}
       </TabList>

@@ -4,23 +4,32 @@ import { User, WPUser } from "../../../types/user";
 
 type UserAssignementSectionProps = {
   sectionTitle: string;
+  sectionTitleIcon?: React.ReactNode;
   onItemSelect?: (user: User | WPUser) => void;
   users: User[] | WPUser[];
   ActionIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   actionIconClasses?: string;
   noUsersText: string;
+  className?: string;
 };
 function UserAssignementSection({
   sectionTitle,
+  sectionTitleIcon,
   onItemSelect = () => {},
   users = [],
   ActionIcon = PlusIcon,
   actionIconClasses,
   noUsersText,
+  className = "",
 }: UserAssignementSectionProps) {
   return (
-    <div className="wpqt-mb-2">
-      <div className="wpqt-mb-2 wpqt-text-lg">{sectionTitle}</div>
+    <div className={`wpqt-mb-2 ${className}`}>
+      <div className="wpqt-mb-2 wpqt-text-lg wpqt-flex wpqt-items-center wpqt-gap-1">
+        {sectionTitleIcon && (
+          <span className="wpqt-mr-2">{sectionTitleIcon}</span>
+        )}
+        <span>{sectionTitle}</span>
+      </div>
       {users.map((user: User | WPUser, index) => {
         return (
           <div
