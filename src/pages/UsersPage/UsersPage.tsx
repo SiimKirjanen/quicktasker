@@ -2,6 +2,8 @@ import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { QuickTaskerIcon } from "../../components/Icon/QuickTaskerIcon/QuickTaskerIcon";
+import { WordPressIcon } from "../../components/Icon/WordPressIcon/WordPressIcon";
 import { UsersSettingsModal } from "../../components/Modal/UsersSettingsModal/UsersSettingsModal";
 import { WPQTTabs } from "../../components/Tab/WPQTTabs";
 import {
@@ -19,7 +21,17 @@ function UsersPage() {
   const { updateUsers } = useContext(UserContext);
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
-  const tabNames = ["WordPress users", "QuickTaskers"];
+
+  const tabNames = [
+    {
+      name: __("WordPress users", "quicktasker"),
+      icon: <WordPressIcon />,
+    },
+    {
+      name: __("QuickTaskers", "quicktasker"),
+      icon: <QuickTaskerIcon />,
+    },
+  ];
   const tabContent = [
     <RegularWPUsersSection key={0} />,
     <QuickTaskersSection key={1} />,
@@ -57,7 +69,7 @@ function UsersPage() {
           </span>
         }
       >
-        {__("Users", "quicktasker")}
+        {__("User management", "quicktasker")}
       </WPQTPageHeader>
 
       <WPQTTabs

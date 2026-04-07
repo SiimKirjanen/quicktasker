@@ -15,6 +15,8 @@ import { ActivePipelineContext } from "../../../../../providers/ActivePipelineCo
 import { UserContext } from "../../../../../providers/UserContextProvider";
 import { Task } from "../../../../../types/task";
 import { User, WPUser } from "../../../../../types/user";
+import { QuickTaskerIcon } from "../../../../Icon/QuickTaskerIcon/QuickTaskerIcon";
+import { WordPressIcon } from "../../../../Icon/WordPressIcon/WordPressIcon";
 import { LoadingOval } from "../../../../Loading/Loading";
 import { UserAssignementSection } from "../../../../User/UserAssignementSection/UserAssignementSection";
 
@@ -107,6 +109,7 @@ function UserAssignementSelection({
     <div className="wpqt-flex wpqt-w-[320px] wpqt-flex-col">
       <UserAssignementSection
         sectionTitle={__("Assigned quicktaskers", "quicktasker")}
+        selectionTitleIcon={<QuickTaskerIcon />}
         users={task.assigned_users}
         onItemSelect={removeUser}
         ActionIcon={MinusIcon}
@@ -115,14 +118,17 @@ function UserAssignementSelection({
       />
       <UserAssignementSection
         sectionTitle={__("Assigned WordPress users", "quicktasker")}
+        selectionTitleIcon={<WordPressIcon size={20} />}
         users={task.assigned_wp_users}
         onItemSelect={removeUser}
         ActionIcon={MinusIcon}
         actionIconClasses="wpqt-icon-red"
         noUsersText={__("No WordPress users assigned", "quicktasker")}
       />
+      <div className="wpqt-my-4 wpqt-h-px wpqt-bg-gray-400" />
       <UserAssignementSection
         sectionTitle={__("Assign a quicktasker", "quicktasker")}
+        selectionTitleIcon={<QuickTaskerIcon />}
         users={availableToAssignUsers}
         onItemSelect={assignUser}
         actionIconClasses="wpqt-icon-green"
@@ -130,6 +136,7 @@ function UserAssignementSelection({
       />
       <UserAssignementSection
         sectionTitle={__("Assign a WordPress user", "quicktasker")}
+        selectionTitleIcon={<WordPressIcon size={20} />}
         users={availableToAssignWPUsers}
         onItemSelect={assignUser}
         actionIconClasses="wpqt-icon-green"
