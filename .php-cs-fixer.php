@@ -35,12 +35,19 @@ return $config
         'blank_line_before_statement' => [
             'statements' => ['return', 'try', 'throw']
         ],
-        'braces' => [
-            'allow_single_line_closure' => true,
-            'position_after_functions_and_oop_constructs' => 'next',
-            'position_after_control_structures' => 'same',
-            'position_after_anonymous_constructs' => 'same',
+        'braces_position' => [
+            'allow_single_line_anonymous_functions' => true,
+            'functions_opening_brace' => 'next_line_unless_newline_at_signature_end',
+            'classes_opening_brace' => 'next_line_unless_newline_at_signature_end',
+            'control_structures_opening_brace' => 'same_line',
+            'anonymous_functions_opening_brace' => 'same_line',
         ],
+        'control_structure_braces' => true,
+        'control_structure_continuation_position' => ['position' => 'same_line'],
+        'declare_parentheses' => true,
+        'no_multiple_statements_per_line' => true,
+        'single_space_around_construct' => true,
+        'statement_indentation' => true,
         'cast_spaces' => ['space' => 'single'],
         'class_attributes_separation' => [
             'elements' => [
@@ -49,7 +56,7 @@ return $config
         ],
         'concat_space' => ['spacing' => 'one'], // WordPress uses spaces around concatenation
         'declare_equal_normalize' => ['space' => 'none'],
-        'function_typehint_space' => true,
+        'type_declaration_spaces' => true,
         'indentation_type' => true,
         'linebreak_after_opening_tag' => true,
         'lowercase_cast' => true,
@@ -60,7 +67,7 @@ return $config
             'on_multiline' => 'ensure_fully_multiline',
         ],
         'native_function_casing' => true,
-        'native_function_type_declaration_casing' => true,
+        'native_type_declaration_casing' => true,
         'no_blank_lines_after_class_opening' => true,
         'no_blank_lines_after_phpdoc' => true,
         'no_empty_comment' => true,
@@ -79,8 +86,7 @@ return $config
         'no_short_bool_cast' => true,
         'no_singleline_whitespace_before_semicolons' => true,
         'no_spaces_around_offset' => true,
-        'no_trailing_comma_in_list_call' => true,
-        'no_trailing_comma_in_singleline_array' => true,
+        'no_trailing_comma_in_singleline' => true,
         'no_unneeded_control_parentheses' => true,
         'no_unused_imports' => true,
         'no_whitespace_before_comma_in_array' => true,
