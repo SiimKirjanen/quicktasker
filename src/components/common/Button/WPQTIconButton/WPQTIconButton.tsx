@@ -10,6 +10,7 @@ type WPQTIconButtonProps = {
   tooltipText?: string;
   loading?: boolean;
   disabled?: boolean;
+  "data-testid"?: string;
 };
 function WPQTIconButton({
   icon,
@@ -20,6 +21,7 @@ function WPQTIconButton({
   tooltipText,
   loading = false,
   disabled = false,
+  "data-testid": dataTestId,
 }: WPQTIconButtonProps) {
   const showTooltip = tooltipText && tooltipId;
   const tooltipAttributes: React.HTMLAttributes<HTMLDivElement> = showTooltip
@@ -34,6 +36,7 @@ function WPQTIconButton({
   return (
     <div
       {...tooltipAttributes}
+      data-testid={dataTestId}
       className={`wpqt-main-border wpqt-relative wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${disabled ? "wpqt-opacity-50" : ""} ${className}`}
       onClick={disabled || loading ? undefined : onClick}
       aria-disabled={disabled}

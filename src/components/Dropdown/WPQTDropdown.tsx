@@ -21,6 +21,7 @@ type Props = {
   menuBtn: (props: { active: boolean }) => React.ReactNode;
   menuBtnClasses?: string;
   anchor?: AnchorProps;
+  "data-testid"?: string;
 };
 
 function WPQTDropdown({
@@ -28,6 +29,7 @@ function WPQTDropdown({
   menuBtn,
   menuBtnClasses = "",
   anchor = "bottom end",
+  "data-testid": dataTestId,
 }: Props) {
   return (
     <Menu>
@@ -35,6 +37,7 @@ function WPQTDropdown({
         as="div"
         className={`wpqt-cursor-pointer ${menuBtnClasses}`}
         onClick={(event) => event.stopPropagation()}
+        data-testid={dataTestId}
       >
         {({ active }) => <>{menuBtn({ active })}</>}
       </MenuButton>

@@ -1,9 +1,35 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 /**
  * Board-related utilities for e2e testing
  * Helpers for working with boards, stages, and tasks
  */
+
+/**
+ * Create a new board through the UI
+ * @param page - Playwright page object
+ * @param name - Board name
+ * @param description - Board description (optional)
+ */
+export async function createBoard(page: Page, name: string, description = ''): Promise<void> {
+  // Open board dropdown
+  await page.getByTestId('pipeline-selection-dropdown').click();
+  
+  // Click "Add new board"
+  await page.getByText('Add new board').click();
+  
+  // Fill in board details
+  await page.getByRole('textbox', { name: 'Name' }).fill(name);
+  if (description) {
+    await page.getByRole('textbox', { name: 'Description' }).fill(description);
+  }
+  
+  // Submit form
+  await page.getByRole('button', { name: 'Add board' }).click();
+  
+  // Wait for board to be created
+  await expect(page.getByText(name).first()).toBeVisible();
+}
 
 /**
  * Get all task titles within a specific stage
