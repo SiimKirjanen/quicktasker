@@ -72,6 +72,7 @@ function PipelineSelectionDropdown({
 
   return (
     <WPQTDropdown
+      data-testid="pipeline-selection-dropdown"
       menuBtnClasses="wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1 wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-3"
       menuBtn={({ active }) => (
         <>
@@ -124,6 +125,7 @@ function PipelineSelectionDropdown({
           <MenuItem key="new-pipeline">
             <div className="wpqt-my-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2">
               <WPQTIconButton
+                data-testid="add-new-board-button"
                 text={__("Add new board", "quicktasker")}
                 onClick={openPipelineModal}
                 icon={

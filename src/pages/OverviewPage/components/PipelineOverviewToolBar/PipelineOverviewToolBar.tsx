@@ -1,9 +1,10 @@
 import { __ } from "@wordpress/i18n";
 import dayjs from "dayjs";
 import DatePicker from "react-datetime-picker";
-import { Value } from "react-datetime-picker/dist/cjs/shared/types";
 import { WPQTFilter } from "../../../../components/Filter/WPQTFilter";
 import { PipelineOverviewFilter } from "../../../../types/overview";
+
+type DateValue = Date | null;
 
 type Props = {
   overviewFilter: PipelineOverviewFilter;
@@ -15,7 +16,7 @@ function PipelineOverviewToolBar({
   onCreationDateChange,
   onDoneDateChange,
 }: Props) {
-  const formatDate = (value: Value): string | null => {
+  const formatDate = (value: DateValue): string | null => {
     if (value instanceof Date) {
       return dayjs(value).format("YYYY-MM-DD");
     }
@@ -26,11 +27,11 @@ function PipelineOverviewToolBar({
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? null : date;
   };
-  const handleCreationDateChange = (value: Value) => {
+  const handleCreationDateChange = (value: DateValue) => {
     const dateString = formatDate(value);
     onCreationDateChange(dateString);
   };
-  const handleDoneDateChange = (value: Value) => {
+  const handleDoneDateChange = (value: DateValue) => {
     const dateString = formatDate(value);
     onDoneDateChange(dateString);
   };

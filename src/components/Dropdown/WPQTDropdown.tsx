@@ -1,13 +1,27 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { AnchorProps } from "@headlessui/react/dist/internal/floating";
 import { LoadingOval } from "../Loading/Loading";
 import { WPQTTooltip } from "../Tooltip/WPQTTooltip";
+
+type AnchorProps =
+  | "top"
+  | "top start"
+  | "top end"
+  | "bottom"
+  | "bottom start"
+  | "bottom end"
+  | "left"
+  | "left start"
+  | "left end"
+  | "right"
+  | "right start"
+  | "right end";
 
 type Props = {
   children: React.ReactNode;
   menuBtn: (props: { active: boolean }) => React.ReactNode;
   menuBtnClasses?: string;
   anchor?: AnchorProps;
+  "data-testid"?: string;
 };
 
 function WPQTDropdown({
@@ -15,6 +29,7 @@ function WPQTDropdown({
   menuBtn,
   menuBtnClasses = "",
   anchor = "bottom end",
+  "data-testid": dataTestId,
 }: Props) {
   return (
     <Menu>
@@ -22,6 +37,7 @@ function WPQTDropdown({
         as="div"
         className={`wpqt-cursor-pointer ${menuBtnClasses}`}
         onClick={(event) => event.stopPropagation()}
+        data-testid={dataTestId}
       >
         {({ active }) => <>{menuBtn({ active })}</>}
       </MenuButton>

@@ -4,8 +4,9 @@
     "module": "ESNext",
     "target": "ES2015",
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmitOnError": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"]
   }
 }
