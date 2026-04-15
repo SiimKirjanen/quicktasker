@@ -49,7 +49,11 @@ function TaskCompletionDoneSetting({
       )}
     >
       <div className="wpqt-flex wpqt-gap-2 wpqt-items-center">
-        <Toggle checked={checked} handleChange={onToggle} />
+        <Toggle
+          checked={checked}
+          handleChange={onToggle}
+          dataTestId="task-completion-restriction-toggle"
+        />
         {loading && <LoadingOval width="20" height="20" />}
       </div>
     </Settings>

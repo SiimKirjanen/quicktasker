@@ -46,3 +46,26 @@ export async function getTasksInStage(page: Page, stageName: string): Promise<st
   
   return taskTitles;
 }
+
+/**
+ * Create a new stage through the UI
+ * @param page - Playwright page object
+ * @param name - Stage name
+ * @param description - Stage description (optional)
+ */
+export async function createStage(page: Page, name: string, description = ''): Promise<void> {
+  // Click whichever "Add stage" button is visible (first stage or subsequent)
+  await page.getByText(/^Add (first )?stage$/).click();
+  
+  // Fill in stage details
+  await page.getByRole('textbox', { name: 'Name' }).fill(name);
+  if (description) {
+    await page.getByRole('textbox', { name: 'Description' }).fill(description);
+  }
+  
+  // Submit form
+  await page.getByRole('button', { name: 'Add stage' }).click();
+  
+  // Wait for modal to close (stage created)
+  await expect(page.getByRole('textbox', { name: 'Name' })).not.toBeVisible();
+}

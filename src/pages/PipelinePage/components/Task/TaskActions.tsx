@@ -43,6 +43,7 @@ function TaskActions({ task, allowToMarkTaskAsDone }: TaskActionsProps) {
             e.stopPropagation();
             changeDone(false);
           }}
+          data-testid="task-done-icon-completed"
         />
       ) : (
         <CheckBadgeIcon
@@ -51,6 +52,7 @@ function TaskActions({ task, allowToMarkTaskAsDone }: TaskActionsProps) {
             e.stopPropagation();
             changeDone(true);
           }}
+          data-testid="task-done-icon-uncompleted"
         />
       )}
     </div>
