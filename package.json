@@ -17,10 +17,12 @@
     "test:e2e:headed": "npm run wp-env:start && playwright test --headed",
     "test:e2e:ui": "npm run wp-env:start && playwright test --ui",
     "test:e2e:debug": "npm run wp-env:start && playwright test --debug",
-    "build:emails": "mjml php/templates/email/mjml/*.mjml -o php/templates/email",
+    "test:e2e:codegen": "npm run wp-env:start && playwright codegen http://localhost:8889",
+    "test:e2e:codegen:auth": "npm run wp-env:start && playwright codegen http://localhost:8889 --load-storage=playwright/.auth/user.json",
     "wp-env:start": "wp-env start",
     "wp-env:stop": "wp-env stop",
     "wp-env:reset": "wp-env reset",
+    "build:emails": "mjml php/templates/email/mjml/*.mjml -o php/templates/email",
     "prepare": "husky"
   },
   "author": "",
