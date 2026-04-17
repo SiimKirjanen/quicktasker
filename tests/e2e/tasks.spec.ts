@@ -155,13 +155,104 @@ test.describe('Task Management', () => {
     await taskCard.getByTestId('dropdown-icon').click();
     
     // Click "Archive task"
-    await page.getByText('Archive task').click();
+    await page.getByText('Archive task', { exact: true }).click();
     
     // Confirm archiving (the confirmation tooltip appears)
     await expect(page.getByText('Are you sure you want to archive this task?')).toBeVisible();
     await page.getByRole('button', { name: 'Yes' }).click();
     
     // Verify the task is no longer visible
+    await expect(page.getByText(taskName)).not.toBeVisible();
+  });
+
+  test('should open task modal and edit name and description', async ({ page }) => {
+    const taskName = generateUniqueName('EditableTask');
+    const newName = `${taskName} edited`;
+    const newDescription = 'Large pizza and a soda. edited';
+
+    // Add a task
+    await page.getByText('Add task').click();
+    await page.getByPlaceholder('Task name').fill(taskName);
+    await page.getByPlaceholder('Task name').press('Enter');
+
+    // Verify task was created
+    await expect(page.getByText(taskName)).toBeVisible();
+
+    const taskCard = getTaskCard(page, taskName);
+
+    // Open the task modal by clicking the task card itself
+    await taskCard.click();
+
+    // Edit name and description in the modal
+    await page.getByRole('textbox', { name: 'Name' }).fill(newName);
+    await page.getByRole('textbox', { name: 'Description' }).fill(newDescription);
+
+    // Wait for update
+    await page.waitForTimeout(1000);
+
+    await page.getByTestId('wpqt-modal-close-button').click();
+
+    // Verify updated task appears on the board
+    await expect(page.getByText(newName)).toBeVisible();
+    await expect(page.getByText(newDescription)).toBeVisible();
+  });
+
+  test('should archive a task via task modal', async ({ page }) => {
+    const taskName = generateUniqueName('ModalArchiveTask');
+
+    // Add a task
+    await page.getByText('Add task').click();
+    await page.getByPlaceholder('Task name').fill(taskName);
+    await page.getByPlaceholder('Task name').press('Enter');
+
+    // Verify task was created
+    await expect(page.getByText(taskName)).toBeVisible();
+
+    const taskCard = getTaskCard(page, taskName);
+
+    // Open the task modal by clicking the task card itself
+    await taskCard.click();
+
+    // Click the Archive task element (it's rendered as a div)
+    await page.getByText('Archive task', { exact: true }).click();
+
+    // Confirm archiving
+    await expect(page.getByText('Are you sure you want to archive this task?')).toBeVisible();
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    // Wait for the operation to complete
+    await page.waitForTimeout(500);
+
+    // Verify the task is no longer visible on the board
+    await expect(page.getByText(taskName)).not.toBeVisible();
+  });
+
+  test('should delete a task via task modal', async ({ page }) => {
+    const taskName = generateUniqueName('ModalDeleteTask');
+
+    // Add a task
+    await page.getByText('Add task').click();
+    await page.getByPlaceholder('Task name').fill(taskName);
+    await page.getByPlaceholder('Task name').press('Enter');
+
+    // Verify task was created
+    await expect(page.getByText(taskName)).toBeVisible();
+
+    const taskCard = getTaskCard(page, taskName);
+
+    // Open the task modal by clicking the task card itself
+    await taskCard.click();
+
+    // Click the Delete task element inside the modal (rendered as a div/button)
+    await page.getByText('Delete task', { exact: true }).click();
+
+    // Confirm deletion (confirm tooltip/button)
+    await page.getByRole('button', { name: 'Yes' }).click();
+
+    // Wait for the operation to complete
+    await page.waitForTimeout(500);
+
+    // Verify the task is no longer visible on the board
     await expect(page.getByText(taskName)).not.toBeVisible();
   });
 });
