@@ -6,6 +6,24 @@ import { Page, expect } from '@playwright/test';
  */
 
 /**
+ * Generate a unique name with timestamp to avoid substring conflicts
+ * @param prefix - Base name prefix (e.g., 'Board', 'Stage', 'Task')
+ * @returns Unique name with timestamp
+ */
+export function generateUniqueName(prefix: string): string {
+  return `${prefix}_${Date.now()}`;
+}
+
+/**
+ * Generate a unique description with timestamp to avoid conflicts
+ * @param text - Description text
+ * @returns Unique description with timestamp
+ */
+export function generateUniqueDescription(text: string): string {
+  return `${text}_${Date.now()}`;
+}
+
+/**
  * Create a new board through the UI
  * @param page - Playwright page object
  * @param name - Board name
@@ -68,4 +86,14 @@ export async function createStage(page: Page, name: string, description = ''): P
   
   // Wait for modal to close (stage created)
   await expect(page.getByRole('textbox', { name: 'Name' })).not.toBeVisible();
+}
+
+/**
+ * Get a stage container element by stage name
+ * @param page - Playwright page object
+ * @param stageName - Name of the stage to find
+ * @returns Locator for the stage container
+ */
+export function getStageContainer(page: Page, stageName: string) {
+  return page.locator('div[data-stage-id]').filter({ hasText: stageName });
 }

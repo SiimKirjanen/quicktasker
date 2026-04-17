@@ -134,4 +134,177 @@ test.describe('Board Operations', () => {
     // Verify last stage task still HAS the check icon
     await expect(completedTaskCard.getByTestId('task-done-icon-uncompleted')).toBeVisible();
   });
+
+  test.skip('should set board as primary and persist after page refresh', async ({ page }) => {
+    const boardName = `Primary Board ${Date.now()}`;
+    const boardDescription = 'Testing primary board functionality';
+    await createBoard(page, boardName, boardDescription);
+    
+    // Open the pipeline selection dropdown
+    await page.getByTestId('pipeline-selection-dropdown').click();
+    
+    // Find the newly created board and click the star icon to set it as primary
+    const boardMenuItem = page.locator('.wpqt-mb-3').filter({ hasText: boardName });
+    await boardMenuItem.getByTestId('set-primary-pipeline-icon').click();
+    
+    // Wait for the toast notification and API call to complete
+    await expect(page.getByText('Primary board has been set successfully.')).toBeVisible();
+    await page.waitForTimeout(500);
+    
+    // Refresh the page
+    await page.reload();
+    
+    // Wait for the page to load
+    await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible();
+    
+    // Verify the board name and description are still visible
+    await expect(page.getByText(boardName).first()).toBeVisible();
+    await expect(page.getByText(boardDescription)).toBeVisible();
+    
+    // Open the dropdown again to verify the board is still primary
+    await page.getByTestId('pipeline-selection-dropdown').click();
+    
+    // Verify the board has the primary icon (filled star)
+    const primaryBoardItem = page.locator('.wpqt-mb-3').filter({ hasText: boardName });
+    await expect(primaryBoardItem.getByTestId('primary-pipeline-icon')).toBeVisible();
+  });
+});
+
+test.describe('Board Task View', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToBoardsPage(page);
+  });
+
+  test('should switch to task view, search tasks, and filter by stage', async ({ page }) => {
+    // Create a new board
+    const boardName = `Task View Test ${Date.now()}`;
+    await createBoard(page, boardName, 'Testing task view functionality');
+
+    // Create two stages
+    await createStage(page, 'To Do', 'Tasks to do');
+    await createStage(page, 'In Progress', 'Tasks in progress');
+
+    // Create tasks in first stage (To Do)
+    await page.getByText('Add task').first().click();
+    await page.getByPlaceholder('Task name').first().fill('Task Alpha');
+    await page.getByPlaceholder('Task name').first().press('Enter');
+    await expect(page.getByText('Task Alpha')).toBeVisible();
+
+    await page.getByText('Add task').first().click();
+    await page.getByPlaceholder('Task name').first().fill('Task Beta');
+    await page.getByPlaceholder('Task name').first().press('Enter');
+    await expect(page.getByText('Task Beta')).toBeVisible();
+
+    // Create task in second stage (In Progress)
+    await page.getByText('Add task').nth(1).click();
+    await page.getByPlaceholder('Task name').fill('Task Gamma');
+    await page.getByPlaceholder('Task name').press('Enter');
+    await expect(page.getByText('Task Gamma')).toBeVisible();
+
+    // Switch to Task view
+    await page.getByText('Switch to Task view').click();
+
+    // Verify all tasks are visible in task view
+    await expect(page.getByText('Task Alpha')).toBeVisible();
+    await expect(page.getByText('Task Beta')).toBeVisible();
+    await expect(page.getByText('Task Gamma')).toBeVisible();
+
+    // Test search functionality
+    await page.getByRole('textbox', { name: 'Search' }).fill('Alpha');
+
+    // Only Task Alpha should be visible
+    await expect(page.getByText('Task Alpha')).toBeVisible();
+    await expect(page.getByText('Task Beta')).not.toBeVisible();
+    await expect(page.getByText('Task Gamma')).not.toBeVisible();
+
+    // Clear search
+    await page.getByRole('textbox', { name: 'Search' }).clear();
+
+    // All tasks should be visible again
+    await expect(page.getByText('Task Alpha')).toBeVisible();
+    await expect(page.getByText('Task Beta')).toBeVisible();
+    await expect(page.getByText('Task Gamma')).toBeVisible();
+
+    // Test search with different term
+    await page.getByRole('textbox', { name: 'Search' }).fill('Beta');
+    await expect(page.getByText('Task Beta')).toBeVisible();
+    await expect(page.getByText('Task Alpha')).not.toBeVisible();
+    await expect(page.getByText('Task Gamma')).not.toBeVisible();
+
+    // Clear search for stage filter test
+    await page.getByRole('textbox', { name: 'Search' }).clear();
+
+    // Test stage filter - filter by "To Do" stage
+    const stageFilter = page.locator('#task-view-stage-filter');
+    await stageFilter.selectOption({ label: 'To Do' });
+
+    // Only tasks from "To Do" stage should be visible
+    await expect(page.getByText('Task Alpha')).toBeVisible();
+    await expect(page.getByText('Task Beta')).toBeVisible();
+    await expect(page.getByText('Task Gamma')).not.toBeVisible();
+
+    // Filter by "In Progress" stage
+    await stageFilter.selectOption({ label: 'In Progress' });
+
+    // Only tasks from "In Progress" stage should be visible
+    await expect(page.getByText('Task Gamma')).toBeVisible();
+    await expect(page.getByText('Task Alpha')).not.toBeVisible();
+    await expect(page.getByText('Task Beta')).not.toBeVisible();
+
+    // Reset filter to show all stages
+    await stageFilter.selectOption({ label: 'All stages' });
+
+    // All tasks should be visible again
+    await expect(page.getByText('Task Alpha')).toBeVisible();
+    await expect(page.getByText('Task Beta')).toBeVisible();
+    await expect(page.getByText('Task Gamma')).toBeVisible();
+
+    // Test combining search and stage filter
+    await page.getByRole('textbox', { name: 'Search' }).fill('Task');
+    await stageFilter.selectOption({ label: 'To Do' });
+
+    // Only tasks from "To Do" stage matching "Task" should be visible
+    await expect(page.getByText('Task Alpha')).toBeVisible();
+    await expect(page.getByText('Task Beta')).toBeVisible();
+    await expect(page.getByText('Task Gamma')).not.toBeVisible();
+  });
+
+  test('should switch back to board view from task view', async ({ page }) => {
+    const boardName = `View Switch Test ${Date.now()}`;
+    await createBoard(page, boardName, 'Testing view switching');
+
+    // Switch to Task view
+    await page.getByText('Switch to Task view').click();
+    await expect(page.getByText('Switch to Board view')).toBeVisible();
+
+    // Switch back to Board view
+    await page.getByText('Switch to Board view').click();
+    await expect(page.getByText('Switch to Task view')).toBeVisible();
+  });
+
+  test('should handle empty search results in task view', async ({ page }) => {
+    const boardName = `Empty Search Test ${Date.now()}`;
+    await createBoard(page, boardName, 'Testing empty search');
+
+    // Create a stage and task
+    await createStage(page, 'To Do', 'Tasks to do');
+    await page.getByText('Add task').first().click();
+    await page.getByPlaceholder('Task name').first().fill('Sample Task');
+    await page.getByPlaceholder('Task name').first().press('Enter');
+    await expect(page.getByText('Sample Task')).toBeVisible();
+
+    // Switch to Task view
+    await page.getByText('Switch to Task view').click();
+
+    // Search for non-existent task
+    await page.getByRole('textbox', { name: 'Search' }).fill('NonExistentTask');
+
+    // Verify "No tasks" message appears
+    await expect(page.getByText('No tasks')).toBeVisible();
+    await expect(page.getByText('Sample Task')).not.toBeVisible();
+
+    // Clear search to show task again
+    await page.getByRole('textbox', { name: 'Search' }).clear();
+    await expect(page.getByText('Sample Task')).toBeVisible();
+  });
 });

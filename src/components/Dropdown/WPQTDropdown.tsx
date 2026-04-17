@@ -61,6 +61,7 @@ function WPQTDropdownIcon({ isActive, IconComponent }: WPQTDropdownIconProps) {
   return (
     <IconComponent
       className={`wpqt-size-6 wpqt-text-gray-400 hover:wpqt-text-qtBlueHover ${isActive ? "wpqt-text-qtBlueHover" : ""}`}
+      data-testid="dropdown-icon"
     />
   );
 }
