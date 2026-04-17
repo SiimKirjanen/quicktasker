@@ -29,6 +29,7 @@ function TaskLabelDropdown({
         <div className="wpqt-group wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1.5">
           <TagIcon
             className={`wpqt-mr-1 wpqt-size-5 ${hasAssignedLabels ? "wpqt-text-blue-400" : "wpqt-text-gray-300"} group-hover:wpqt-text-blue-600`}
+            data-testid="task-label-icon"
           />
           {hasAssignedLabels && (
             <div className="wpqt-flex wpqt-gap-1 wpqt-flex-wrap">

@@ -97,3 +97,36 @@ export async function createStage(page: Page, name: string, description = ''): P
 export function getStageContainer(page: Page, stageName: string) {
   return page.locator('div[data-stage-id]').filter({ hasText: stageName });
 }
+
+/**
+ * Get a task card element by task name
+ * @param page - Playwright page object
+ * @param taskName - Name of the task to find
+ * @returns Locator for the task card (draggable element)
+ */
+export function getTaskCard(page: Page, taskName: string) {
+  return page.locator('[data-rfd-draggable-id]').filter({ hasText: taskName });
+}
+
+/**
+ * Create a new label from within a task's label dropdown
+ * @param page - Playwright page object
+ * @param taskCard - Locator for the task card
+ * @param labelName - Name of the label to create
+ */
+export async function createLabel(page: Page, taskCard: any, labelName: string): Promise<void> {
+  // Open the label dropdown
+  await taskCard.getByTestId('task-label-icon').click();
+  
+  // Click "Create new label"
+  await page.getByText('Create new label').click();
+  
+  // Fill in label name
+  await page.locator('#new-label-name').fill(labelName);
+  
+  // Click Create button
+  await page.getByRole('button', { name: 'Create' }).click();
+  
+  // Wait for label to be created and return to selection view
+  await page.waitForTimeout(500);
+}
