@@ -1,5 +1,4 @@
 import { ClockIcon } from "@heroicons/react/24/outline";
-import { useMemo } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { useTimezone } from "../../../hooks/useTimezone";
 import { Task } from "../../../types/task";
@@ -12,15 +11,12 @@ function DueDateInfo({ task }: Props) {
   const { browserTimezoneAbbreviation, convertToBrowserTimezone } =
     useTimezone();
 
-  if (!task?.due_date) {
+  if (!task || task.due_date === null || task.due_date === "") {
     return null;
   }
   const dueDate = task.due_date;
 
-  const formattedDate = useMemo(
-    () => convertToBrowserTimezone(dueDate),
-    [dueDate, convertToBrowserTimezone],
-  );
+  const formattedDate = convertToBrowserTimezone(dueDate);
 
   function getDueDateClockColorClass(dueDate: string): string {
     const difference = getDateDifference(getCurrentUTCDateTime(), dueDate);
