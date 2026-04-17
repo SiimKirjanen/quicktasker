@@ -11,5 +11,5 @@ export * from './navigation';
 // Re-export all board utilities
 export * from './board-helpers';
 
-// Re-export board-related utilities
-export * from './board-helpers';
+// Re-export all user management utilities
+export * from './user-helpers';

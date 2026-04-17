@@ -18,3 +18,14 @@ export async function navigateToBoardsPage(page: Page) {
   await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
   await page.waitForLoadState('networkidle');
 }
+
+/**
+ * Navigate to User management page
+ */
+export async function navigateToUserManagement(page: Page) {
+  await navigateToAdminPage(page, '');
+  const quickTaskerLink = page.getByRole('link', { name: 'QuickTasker', exact: true });
+  await quickTaskerLink.hover();
+  await page.getByRole('link', { name: 'User management' }).click();
+  await page.waitForLoadState('networkidle');
+}

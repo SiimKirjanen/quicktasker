@@ -32,6 +32,7 @@ function UserAssignementDropdown({
         <div className="wpqt-group wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-1">
           <UserCircleIcon
             className={`wpqt-mr-1 wpqt-size-5 ${hasAssignedUsers ? "wpqt-text-blue-400" : "wpqt-text-gray-300"} group-hover:wpqt-text-blue-600`}
+            data-testid="user-assignment-icon"
           />
           {hasAssignedUsers && (
             <div>
