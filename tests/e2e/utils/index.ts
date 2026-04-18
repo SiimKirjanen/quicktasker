@@ -13,3 +13,6 @@ export * from './board-helpers';
 
 // Re-export all user management utilities
 export * from './user-helpers';
+
+// Re-export interaction helpers
+export * from './interaction';

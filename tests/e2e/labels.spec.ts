@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createLabel, selectFirstLabel } from './utils';
+import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createLabel, selectFirstLabel, clickBodyOutside } from './utils';
 
 test.describe('Task Labels', () => {
   test.beforeEach(async ({ page }) => {
@@ -12,7 +12,7 @@ test.describe('Task Labels', () => {
   test('should create a new label and assign it to a task', async ({ page }) => {
     const taskName = generateUniqueName('LabelTask');
     const labelName = generateUniqueName('TestLabel');
-    
+
     // Add a task
     await page.getByText('Add task').click();
     await page.getByPlaceholder('Task name').fill(taskName);
@@ -26,7 +26,7 @@ test.describe('Task Labels', () => {
     await taskCard.getByTestId('task-label-icon').click();
     
     // Verify label dropdown opened
-    await expect(page.getByText('Board labels').first()).toBeVisible();
+    await expect(page.getByText('Add, edit, or remove board labels. Created labels can be applied or removed from this task.')).toBeVisible();
     await expect(page.getByText('There are no labels created for this board')).toBeVisible();
     
     // Click "Create new label" button
@@ -42,13 +42,17 @@ test.describe('Task Labels', () => {
     // Click Create button
     await page.getByRole('button', { name: 'Create' }).click();
     
-    // Wait for label to be created and return to selection view
+    // Wait for label to be created
     await page.waitForTimeout(500);
-    await expect(page.getByText('Board labels').first()).toBeVisible();
+    await expect(page.getByText('Add, edit, or remove board labels. Created labels can be applied or removed from this task.')).toBeVisible();
     
     // Verify the label appears in the list
     await expect(page.getByText(labelName)).toBeVisible();
     
+    // Click outside the dropdown to close it
+    await clickBodyOutside(page);
+    await expect(page.getByText('Add, edit, or remove board labels. Created labels can be applied or removed from this task.')).not.toBeVisible();
+
     // Assign the label to the task
     await selectFirstLabel(page, taskCard);
     
