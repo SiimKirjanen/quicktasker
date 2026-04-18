@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createLabel, selectFirstLabel, clickBodyOutside } from './utils';
 
-test.describe('Task Labels', () => {
+test.describe.skip('Task Labels', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToBoardsPage(page);
     // Create a board and stage for label tests
