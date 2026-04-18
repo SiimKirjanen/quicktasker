@@ -1,0 +1,101 @@
+{
+    "pipelineName": "Demo board export",
+    "pipelineDescription": "This is a demo food store board export.",
+    "stages": [
+        {
+            "stageName": "Order Received",
+            "stageDescription": "",
+            "stageId": "1"
+        },
+        {
+            "stageName": "Preparing Order",
+            "stageDescription": "",
+            "stageId": "2"
+        },
+        {
+            "stageName": "Out for Delivery",
+            "stageDescription": "",
+            "stageId": "3"
+        },
+        {
+            "stageName": "Delivered",
+            "stageDescription": "",
+            "stageId": "4"
+        }
+    ],
+    "tasks": [
+        {
+            "taskId": "1",
+            "taskName": "Order #1001",
+            "taskDescription": "Large pizza and a soda.",
+            "stageId": "1",
+            "archived": false,
+            "dueDate": null,
+            "taskCompletedAt": null,
+            "assignedLabels": [
+                {
+                    "labelName": "Important",
+                    "labelId": "1",
+                    "color": "#FF9800"
+                }
+            ],
+            "taskFocusColor": "#22D21E",
+            "customFields": []
+        },
+        {
+            "taskId": "2",
+            "taskName": "Order #1002",
+            "taskDescription": "Burger and fries.",
+            "stageId": "1",
+            "archived": false,
+            "dueDate": "2026-04-22 08:40:59",
+            "taskCompletedAt": null,
+            "assignedLabels": [],
+            "taskFocusColor": null,
+            "customFields": []
+        },
+        {
+            "taskId": "3",
+            "taskName": "Order #1003",
+            "taskDescription": "Tacos and nachos.",
+            "stageId": "2",
+            "archived": false,
+            "dueDate": null,
+            "taskCompletedAt": null,
+            "assignedLabels": [],
+            "taskFocusColor": null,
+            "customFields": []
+        },
+        {
+            "taskId": "4",
+            "taskName": "Order #1004",
+            "taskDescription": "Steak dinner with mashed potatoes.",
+            "stageId": "3",
+            "archived": false,
+            "dueDate": "2026-04-18 10:40:59",
+            "taskCompletedAt": null,
+            "assignedLabels": [
+                {
+                    "labelName": "VIP Customer",
+                    "labelId": "2",
+                    "color": "#FFD700"
+                }
+            ],
+            "taskFocusColor": null,
+            "customFields": []
+        }
+    ],
+    "labels": [
+        {
+            "labelName": "Important",
+            "labelId": "1",
+            "color": "#FF9800"
+        },
+        {
+            "labelName": "VIP Customer",
+            "labelId": "2",
+            "color": "#FFD700"
+        }
+    ],
+    "taskComments": []
+}

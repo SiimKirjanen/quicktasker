@@ -48,15 +48,19 @@ test.describe('Board Operations', () => {
   });
 
   test('should allow switching between boards', async ({ page }) => {
+    const firstBoardName = `First Board ${Date.now()}`;
     const secondBoardName = `Second Board ${Date.now()}`;
+
+    // Create two local boards and switch between them (do not rely on Demo board)
+    await createBoard(page, firstBoardName, 'First test board');
     await createBoard(page, secondBoardName, 'Another test board');
-    
+
     await expect(page.getByText(secondBoardName).first()).toBeVisible();
-    
+
     await page.getByTestId('pipeline-selection-dropdown').click();
-    await page.getByText('Demo board').click();
-    
-    await expect(page.getByText('Demo board').first()).toBeVisible();
+    await page.getByText(firstBoardName).click();
+
+    await expect(page.getByText(firstBoardName).first()).toBeVisible();
   });
 
   test('should update board name and description', async ({ page }) => {
