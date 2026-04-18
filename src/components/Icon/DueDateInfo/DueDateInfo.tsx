@@ -41,7 +41,10 @@ function DueDateInfo({ task }: Props) {
   }
 
   return (
-    <div className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center">
+    <div
+      className="wpqt-mb-2 wpqt-flex wpqt-gap-2 wpqt-items-center"
+      data-testid="due-date-info"
+    >
       <ClockIcon
         className={`wpqt-size-5 ${getDueDateClockColorClass(dueDate)}`}
       />

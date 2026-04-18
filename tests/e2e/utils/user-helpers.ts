@@ -1,5 +1,6 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { navigateToUserManagement } from './navigation';
+import { getTaskCard } from './board-helpers';
 
 /**
  * User management utilities for e2e testing
@@ -35,4 +36,39 @@ export async function createQuickTasker(page: Page, name: string, description = 
   
   // Wait for QuickTasker to be created
   await page.waitForTimeout(500);
+}
+
+export async function openUserAssignmentDropdown(page: Page, taskName: string): Promise<void> {
+  const taskCard = getTaskCard(page, taskName);
+  await taskCard.getByTestId('user-assignment-icon').click();
+  await expect(page.getByText('Assigned quicktaskers')).toBeVisible();
+  await expect(page.getByText('Assigned WordPress users')).toBeVisible();
+}
+
+export async function closeUserAssignmentDropdown(page: Page, taskName: string): Promise<void> {
+  const taskCard = getTaskCard(page, taskName);
+  await taskCard.getByTestId('user-assignment-icon').click();
+  await expect(page.getByText('Assigned quicktaskers')).not.toBeVisible();
+  await expect(page.getByText('Assigned WordPress users')).not.toBeVisible();
+}
+
+/**
+ * Assign a WordPress user to a task via the task's user-assignment dropdown.
+ * @param page - Playwright page
+ * @param taskName - Name of the task
+ * @param username - Exact username to assign
+ * @param closeDropdown - Whether to close the dropdown after assignment (default: true)
+ */
+export async function assignWordPressUserToTask(page: Page, taskName: string, username: string, closeDropdown: boolean = true): Promise<void> {  
+  await openUserAssignmentDropdown(page, taskName);
+
+  const wpAssignSection = page.locator('div').filter({ hasText: 'Assign a WordPress user' }).first();
+  await wpAssignSection.getByText(username, { exact: true }).click();
+
+  const assignedSection = page.locator('div').filter({ hasText: 'Assigned WordPress users' }).first();
+  await expect(assignedSection.getByText(username, { exact: true })).toBeVisible();
+
+  if (closeDropdown) {
+    await closeUserAssignmentDropdown(page, taskName);
+  }
 }

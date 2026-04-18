@@ -130,3 +130,30 @@ export async function createLabel(page: Page, taskCard: any, labelName: string):
   // Wait for label to be created and return to selection view
   await page.waitForTimeout(500);
 }
+
+/**
+ * Select the first label checkbox in the label dropdown for a task.
+ * Opens the label dropdown, checks the first checkbox, and then closes the dropdown.
+ */
+export async function selectFirstLabel(page: Page, taskCard: any): Promise<void> {
+  await taskCard.getByTestId('task-label-icon').click();
+  const checkbox = page.locator('input[type="checkbox"]').first();
+  await checkbox.check();
+  await page.waitForTimeout(300);
+  await page.getByText('Board labels').first().click();
+  await page.keyboard.press('Escape');
+}
+
+/**
+ * Create a task inside a given stage.
+ * @param page - Playwright page
+ * @param stageName - Visible stage name to add the task into
+ * @param taskName - Name of the task to create
+ */
+export async function createTask(page: Page, stageName: string, taskName: string): Promise<void> {
+  const stageContainer = getStageContainer(page, stageName);
+  await stageContainer.getByText('Add task').click();
+  await page.getByPlaceholder('Task name').fill(taskName);
+  await page.getByPlaceholder('Task name').press('Enter');
+  await expect(stageContainer.getByText(taskName)).toBeVisible();
+}

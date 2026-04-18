@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createQuickTasker, navigateToUserManagement } from './utils';
+import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createQuickTasker, navigateToUserManagement, assignWordPressUserToTask, closeUserAssignmentDropdown, openUserAssignmentDropdown } from './utils';
 import { ADMIN_USERNAME } from './constants';
 
 test.describe('WordPress User Assignment', () => {
@@ -22,35 +22,16 @@ test.describe('WordPress User Assignment', () => {
     await expect(page.getByText(taskName)).toBeVisible();
     
     const taskCard = getTaskCard(page, taskName);
-    
-    // Open user assignment dropdown
-    await taskCard.getByTestId('user-assignment-icon').click();
-    
-    // Verify user assignment dropdown opened
-    await expect(page.getByText('Assigned WordPress users')).toBeVisible();
-    await expect(page.getByText('No WordPress users assigned')).toBeVisible();
-    
-    // Verify WordPress user assignment section exists
-    await expect(page.getByText('Assign a WordPress user')).toBeVisible();
-    
-    // Find and click the admin WordPress user to assign
-    const wpAssignSection = page.locator('div').filter({ hasText: 'Assign a WordPress user' }).first();
-    
-    // Click the admin user (exact match to avoid matching 'administrator')
-    await wpAssignSection.getByText(ADMIN_USERNAME, { exact: true }).click();
-    
-    // Wait for assignment
-    await page.waitForTimeout(500);
-    
-    // Verify the WordPress user is now in the assigned section
-    await expect(page.getByText('No WordPress users assigned')).not.toBeVisible();
-    
+        
+    // Assign the admin WordPress user using helper
+    await assignWordPressUserToTask(page, taskName, ADMIN_USERNAME, false);
+        
     // Verify admin is in the assigned section
     const assignedSection = page.locator('div').filter({ hasText: 'Assigned WordPress users' }).first();
     await expect(assignedSection.getByText(ADMIN_USERNAME, { exact: true })).toBeVisible();
     
     // Close the dropdown by clicking the icon again
-    await taskCard.getByTestId('user-assignment-icon').click();
+    await closeUserAssignmentDropdown(page, taskName);
     
     // Verify the assigned user appears on the task card
     await expect(taskCard.getByText(ADMIN_USERNAME, { exact: true })).toBeVisible();
@@ -65,17 +46,9 @@ test.describe('WordPress User Assignment', () => {
     await page.getByPlaceholder('Task name').press('Enter');
     
     await expect(page.getByText(taskName)).toBeVisible();
-    
-    const taskCard = getTaskCard(page, taskName);
-    
-    // Open user assignment dropdown and assign a WordPress user
-    await taskCard.getByTestId('user-assignment-icon').click();
-    
-    const assignSection = page.locator('div').filter({ hasText: 'Assign a WordPress user' }).first();
-    
-    // Assign the admin user (exact match to avoid matching 'administrator')
-    await assignSection.getByText(ADMIN_USERNAME, { exact: true }).click();
-    await page.waitForTimeout(500);
+            
+    // Assign the admin user using helper
+    await assignWordPressUserToTask(page, taskName, ADMIN_USERNAME, false);
     
     // Verify user is in assigned section
     await expect(page.getByText('No WordPress users assigned')).not.toBeVisible();
@@ -109,7 +82,7 @@ test.describe('QuickTasker User Assignment', () => {
     await expect(page.getByText(taskName)).toBeVisible();
     const taskCard = getTaskCard(page, taskName);
     // Open user assignment dropdown
-    await taskCard.getByTestId('user-assignment-icon').click();
+    await openUserAssignmentDropdown(page, taskName);
     // Verify user assignment dropdown opened
     await expect(page.getByText('Assigned quicktaskers')).toBeVisible();
     await expect(page.getByText('No quicktaskers assigned')).toBeVisible();
@@ -126,8 +99,8 @@ test.describe('QuickTasker User Assignment', () => {
     // Verify QuickTasker user is in the assigned section
     const assignedSection = page.locator('div').filter({ hasText: 'Assigned quicktaskers' }).first();
     await expect(assignedSection.getByText(qtUserName, { exact: true })).toBeVisible();
-    // Close the dropdown by clicking the icon again
-    await taskCard.getByTestId('user-assignment-icon').click();
+
+    await closeUserAssignmentDropdown(page, taskName);
     // Verify the assigned user appears on the task card
     await expect(taskCard.getByText(qtUserName, { exact: true })).toBeVisible();
   });
@@ -145,9 +118,8 @@ test.describe('QuickTasker User Assignment', () => {
     await page.getByPlaceholder('Task name').press('Enter');
     // Verify task was created
     await expect(page.getByText(taskName)).toBeVisible();
-    const taskCard = getTaskCard(page, taskName);
-    // Open user assignment dropdown and assign a QuickTasker user
-    await taskCard.getByTestId('user-assignment-icon').click();
+    
+    await openUserAssignmentDropdown(page, taskName);
     // Verify user assignment dropdown opened
     await expect(page.getByText('Assigned quicktaskers')).toBeVisible();
     await expect(page.getByText('No quicktaskers assigned')).toBeVisible();

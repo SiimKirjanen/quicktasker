@@ -255,4 +255,31 @@ test.describe('Task Management', () => {
     // Verify the task is no longer visible on the board
     await expect(page.getByText(taskName)).not.toBeVisible();
   });
+
+  test('should set a due date via task modal', async ({ page }) => {
+    const taskName = generateUniqueName('DueDateTask');
+
+    // Add a task
+    await page.getByText('Add task').click();
+    await page.getByPlaceholder('Task name').fill(taskName);
+    await page.getByPlaceholder('Task name').press('Enter');
+
+    // Verify task was created
+    await expect(page.getByText(taskName)).toBeVisible();
+
+    const taskCard = getTaskCard(page, taskName);
+
+    // Open the task modal by clicking the task card itself
+    await taskCard.click();
+
+    // Robust steps to set due date using the visible calendar day (works across months)
+    await page.locator('.react-datetime-picker__calendar-button').first().click();
+    await page.locator('.react-calendar__tile--now').click();
+
+    await page.waitForTimeout(500);
+
+    await page.getByTestId('wpqt-modal-close-button').click();
+
+    await expect(page.getByTestId('due-date-info')).toBeVisible();
+  });
 });

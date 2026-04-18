@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createLabel } from './utils';
+import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createLabel, selectFirstLabel } from './utils';
 
 test.describe('Task Labels', () => {
   test.beforeEach(async ({ page }) => {
@@ -52,16 +52,8 @@ test.describe('Task Labels', () => {
     // Verify the label appears in the list
     await expect(page.getByText(labelName)).toBeVisible();
     
-    // Assign the label to the task by checking the checkbox
-    const labelCheckbox = page.locator(`input[type="checkbox"]`).first();
-    await labelCheckbox.check();
-    
-    // Wait for assignment
-    await page.waitForTimeout(500);
-    
-    // Click in the dropdown to refocus it, then close with Escape
-    await page.getByText('Board labels').first().click();
-    await page.keyboard.press('Escape');
+    // Assign the label to the task
+    await selectFirstLabel(page, taskCard);
     
     // Verify the label tag appears on the task card
     await expect(taskCard.getByText(labelName)).toBeVisible();
