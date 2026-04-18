@@ -8,5 +8,8 @@ export * from './auth';
 // Re-export all navigation utilities
 export * from './navigation';
 
-// Re-export board-related utilities
+// Re-export all board utilities
 export * from './board-helpers';
+
+// Re-export all user management utilities
+export * from './user-helpers';

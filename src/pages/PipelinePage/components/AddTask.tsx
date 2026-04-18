@@ -117,6 +117,7 @@ function AddTask({ stageId }: Props) {
             onChange={(value) => setTaskName(value)}
             wrapperClassName="!wpqt-mb-0"
             className="!wpqt-mb-0"
+            placeholder={__("Task name", "quicktasker")}
           />
           {loading ? (
             <LoadingOval width="24" height="24" />

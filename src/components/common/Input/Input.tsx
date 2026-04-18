@@ -20,6 +20,7 @@ type Props = {
   inputId?: string;
   name?: string;
   errorText?: string;
+  placeholder?: string;
 };
 
 const WPQTInput = forwardRef<HTMLInputElement, Props>(
@@ -36,6 +37,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
       inputId,
       name,
       errorText,
+      placeholder,
       ...restProps
     },
     ref,
@@ -54,6 +56,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
           type={type}
           id={inputId}
           name={name}
+          placeholder={placeholder}
           {...restProps}
         />
         {loading && (

@@ -6,7 +6,13 @@ type Props = {
 };
 function QuickTaskerIcon({ className = "", size = 24 }: Props) {
   return (
-    <img src={icon} width={size} height={size} className={`${className}`} />
+    <img
+      src={icon}
+      width={size}
+      height={size}
+      className={`${className}`}
+      data-testid="quicktasker-icon"
+    />
   );
 }
 

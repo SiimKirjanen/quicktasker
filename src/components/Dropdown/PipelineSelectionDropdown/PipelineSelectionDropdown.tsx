@@ -104,7 +104,10 @@ function PipelineSelectionDropdown({
               {enableActions && (
                 <div className="wpqt-ml-auto">
                   {isPrimary ? (
-                    <StarIcon className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-blue-500" />
+                    <StarIcon
+                      className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-blue-500"
+                      data-testid="primary-pipeline-icon"
+                    />
                   ) : (
                     <StarIconOutline
                       className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-gray-400"
@@ -112,6 +115,7 @@ function PipelineSelectionDropdown({
                         e.stopPropagation();
                         changePipelinePrimary(existingPipeline);
                       }}
+                      data-testid="set-primary-pipeline-icon"
                     />
                   )}
                 </div>
