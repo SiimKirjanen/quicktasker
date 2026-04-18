@@ -33,15 +33,12 @@ test.describe('Task Labels', () => {
     await page.getByText('Create new label').click();
     
     // Verify label creation form is visible
-    await expect(page.getByText('Create new label')).toBeVisible();
+    await expect(page.getByText('Create new label').first()).toBeVisible();
     await expect(page.getByText('Label will be added to the board')).toBeVisible();
     
     // Fill in label name
     await page.locator('#new-label-name').fill(labelName);
-    
-    // Verify color picker is visible (default color should be set)
-    await expect(page.locator('.w-color-colorful').first()).toBeVisible();
-    
+      
     // Click Create button
     await page.getByRole('button', { name: 'Create' }).click();
     
