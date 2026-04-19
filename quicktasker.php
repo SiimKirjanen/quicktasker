@@ -7,7 +7,7 @@
     Author URI: https://github.com/SiimKirjanen
     Text Domain: quicktasker
     Domain Path: /languages
-    Version: 1.50.0
+    Version: 1.50.1
     Requires at least: 5.3
     Requires PHP: 7.2.28
     License: GPLv2 or later

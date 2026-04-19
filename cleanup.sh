@@ -29,6 +29,7 @@ FILES_TO_REMOVE=(
     "tests"
     ".php-cs-fixer.php"
     "src"
+    "playwright.config.ts"
 )
 
 # Prompt the user for confirmation
