@@ -22,7 +22,7 @@ function getImportSourceConfig(
       return {
         ...baseConfig,
         supportsArchiveTaskToggle: true,
-        supportTaskCommentsToggle: true,
+        supportTaskCommentsToggle: false,
       };
 
     case PipelineImportSource.ASANA:
