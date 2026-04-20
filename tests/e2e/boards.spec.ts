@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage } from './utils';
+import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription } from './utils';
+import { waitForModalToClose } from './utils/modal-helpers';
 
 test.describe('Board Management', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,24 +8,26 @@ test.describe('Board Management', () => {
   });
 
   test('should create a new board', async ({ page }) => {
-    const boardName = `e2e_test_board ${Date.now()}`;
+    const boardName = generateUniqueName('BM-CR-Board');
+    const boardDescription = generateUniqueDescription('Board for e2e tests');
     
     await page.getByTestId('pipeline-selection-dropdown').click();
     
     await page.getByText('Add new board').click();
     
     await page.getByRole('textbox', { name: 'Name' }).fill(boardName);
-    await page.getByRole('textbox', { name: 'Description' }).fill('Board for e2e tests');
-    
+    await page.getByRole('textbox', { name: 'Description' }).fill(boardDescription);
     await page.getByRole('button', { name: 'Add board' }).click();
-    
+    await waitForModalToClose(page, 'add-pipeline-modal');
+
     await expect(page.getByText(boardName).first()).toBeVisible();
-    await expect(page.getByText('Board for e2e tests')).toBeVisible();
+    await expect(page.getByText(boardDescription)).toBeVisible();
   });
 
   test('should delete a board', async ({ page }) => {
-    const boardName = `Board to Delete ${Date.now()}`;
-    await createBoard(page, boardName, 'This board will be deleted');
+    const boardName = generateUniqueName('BM-DEL-Board');
+    const boardDescription = generateUniqueDescription('This board will be deleted');
+    await createBoard(page, boardName, boardDescription);
     
     await expect(page.getByText(boardName).first()).toBeVisible();
     
@@ -32,6 +35,7 @@ test.describe('Board Management', () => {
     await page.getByText('Delete board').click();
     
     await page.getByRole('button', { name: 'Yes' }).click();
+    await waitForModalToClose(page, 'edit-pipeline-modal');
     
     await expect(page.getByTestId('pipeline-selection-dropdown').getByText(boardName)).not.toBeVisible();
   });
@@ -43,13 +47,9 @@ test.describe('Board Operations', () => {
     await createBoard(page, `Test Board ${Date.now()}`, 'Board for testing operations');
   });
 
-  test('should display the newly created board', async ({ page }) => {
-    await expect(page.getByText('Board for testing operations')).toBeVisible();
-  });
-
   test('should allow switching between boards', async ({ page }) => {
-    const firstBoardName = `First Board ${Date.now()}`;
-    const secondBoardName = `Second Board ${Date.now()}`;
+    const firstBoardName = generateUniqueName('BO-SW-First');
+    const secondBoardName = generateUniqueName('BO-SW-Second');
 
     // Create two local boards and switch between them (do not rely on Demo board)
     await createBoard(page, firstBoardName, 'First test board');

@@ -20,7 +20,6 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
-import { ServerUser } from "../../../types/user";
 import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { AutoSaveInput } from "../../common/Input/AutoSaveInput/AutoSaveInput";
 import { AutoSaveTextarea } from "../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
@@ -29,10 +28,7 @@ import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
 import { WPQTModalField, WPQTModalFieldSet } from "../WPQTModal";
 
-type Props = {
-  onEditUserCompleted: (user: ServerUser) => void;
-};
-const UserModalContent = ({ onEditUserCompleted }: Props) => {
+const UserModalContent = () => {
   const {
     state: { userToEdit },
     modalDispatch,
@@ -83,7 +79,7 @@ const UserModalContent = ({ onEditUserCompleted }: Props) => {
                         { name: value },
                       );
                       if (success && updatedUser) {
-                        onEditUserCompleted(updatedUser);
+                        userDispatch({ type: EDIT_USER, payload: updatedUser });
                       }
                     }}
                   />
@@ -99,7 +95,7 @@ const UserModalContent = ({ onEditUserCompleted }: Props) => {
                         { description: value },
                       );
                       if (success && updatedUser) {
-                        onEditUserCompleted(updatedUser);
+                        userDispatch({ type: EDIT_USER, payload: updatedUser });
                       }
                     }}
                   />

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getStageContainer } from './utils';
+import { waitForModalToClose } from './utils/modal-helpers';
 
 test.describe('Stage Management', () => {
   test.beforeEach(async ({ page }) => {
@@ -110,6 +111,7 @@ test.describe('Stage Management', () => {
     
     // Save the changes
     await page.getByRole('button', { name: 'Save' }).click();
+    await waitForModalToClose(page, 'stage-modal');
     
     // Verify the updated name and description are visible
     await expect(page.getByText(updatedStageName)).toBeVisible();

@@ -98,7 +98,11 @@ function MoveTaskModal() {
   }, [taskToEdit]);
 
   return (
-    <WPQTModal modalOpen={moveTaskModalOpen} closeModal={closeModal}>
+    <WPQTModal
+      modalOpen={moveTaskModalOpen}
+      closeModal={closeModal}
+      testId="move-task-modal"
+    >
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
         <h2>{__("Change task location on board", "quicktasker")}</h2>
 

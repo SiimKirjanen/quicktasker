@@ -37,7 +37,12 @@ function StageSelectionModal({ task, stages, open, onClose }: Props) {
   };
 
   return (
-    <WPQTModal modalOpen={open} closeModal={onClose} size="sm">
+    <WPQTModal
+      modalOpen={open}
+      closeModal={onClose}
+      size="sm"
+      testId="stage-selection-modal"
+    >
       <h3 className="wpqt-text-center">
         {__("Task stage selection", "quicktasker")}
       </h3>

@@ -1,7 +1,6 @@
 import { useContext } from "@wordpress/element";
-import { CLOSE_TASK_MODAL, PIPELINE_EDIT_TASK } from "../../../constants";
+import { CLOSE_TASK_MODAL } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
-import { DispatchType, useModal } from "../../../hooks/useModal";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UploadContextProvider } from "../../../providers/UploadContextProvider";
 import { Task, TaskFromServer } from "../../../types/task";
@@ -15,13 +14,10 @@ type Props = {
 function TaskModal({ deleteTaskCallback }: Props) {
   const {
     state: { taskModalOpen },
+    modalDispatch,
   } = useContext(ModalContext);
   const { deleteTask } = useTaskActions();
-  const { closeModal, handleSuccess } = useModal(CLOSE_TASK_MODAL);
-
-  const onEditTaskCompleted = (task: TaskFromServer) => {
-    handleSuccess(PIPELINE_EDIT_TASK, task, DispatchType.ACTIVE_PIPELINE);
-  };
+  const closeModal = () => modalDispatch({ type: CLOSE_TASK_MODAL });
 
   const onDeleteTask = async (task: Task) => {
     deleteTask(task.id, () => {
@@ -32,12 +28,14 @@ function TaskModal({ deleteTaskCallback }: Props) {
   };
 
   return (
-    <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal} size="xl">
+    <WPQTModal
+      modalOpen={taskModalOpen}
+      closeModal={closeModal}
+      size="xl"
+      testId="task-modal"
+    >
       <UploadContextProvider>
-        <TaskModalContent
-          deleteTask={onDeleteTask}
-          onEditTaskCompleted={onEditTaskCompleted}
-        />
+        <TaskModalContent deleteTask={onDeleteTask} />
       </UploadContextProvider>
     </WPQTModal>
   );

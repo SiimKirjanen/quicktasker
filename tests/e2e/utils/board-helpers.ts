@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { waitForModalToClose } from './modal-helpers';
 
 /**
  * Board-related utilities for e2e testing
@@ -7,7 +8,7 @@ import { Page, expect } from '@playwright/test';
 
 /**
  * Generate a unique name with timestamp to avoid substring conflicts
- * @param prefix - Base name prefix (e.g., 'Board', 'Stage', 'Task')
+ * @param prefix - Base name prefix (e.g., 'BM-CR-Board' where BM=describe group, CR=test action)
  * @returns Unique name with timestamp
  */
 export function generateUniqueName(prefix: string): string {
@@ -16,7 +17,7 @@ export function generateUniqueName(prefix: string): string {
 
 /**
  * Generate a unique description with timestamp to avoid conflicts
- * @param text - Description text
+ * @param text - Description text (e.g., 'BM-CR-Board for e2e tests')
  * @returns Unique description with timestamp
  */
 export function generateUniqueDescription(text: string): string {
@@ -44,6 +45,9 @@ export async function createBoard(page: Page, name: string, description = ''): P
   
   // Submit form
   await page.getByRole('button', { name: 'Add board' }).click();
+
+  // Wait for modal to close
+  await waitForModalToClose(page, 'add-pipeline-modal');
   
   // Wait for board to be created
   await expect(page.getByText(name).first()).toBeVisible();
@@ -85,7 +89,7 @@ export async function createStage(page: Page, name: string, description = ''): P
   await page.getByRole('button', { name: 'Add stage' }).click();
   
   // Wait for modal to close (stage created)
-  await expect(page.getByRole('textbox', { name: 'Name' })).not.toBeVisible();
+  await expect(page.getByTestId('stage-modal')).not.toBeVisible();
 }
 
 /**

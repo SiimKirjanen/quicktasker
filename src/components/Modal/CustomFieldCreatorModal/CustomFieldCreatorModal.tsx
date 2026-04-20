@@ -22,6 +22,7 @@ function CustomFieldCreatorModal({ description }: Props) {
         });
       }}
       size="lg"
+      testId="custom-field-creator-modal"
     >
       <CustomFieldCreation description={description} />
     </WPQTModal>

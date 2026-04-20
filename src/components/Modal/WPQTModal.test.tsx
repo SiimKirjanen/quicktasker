@@ -121,14 +121,14 @@ jest.mock("@headlessui/react", () => {
 describe("WPQTModal", () => {
   it("renders children when open and hides when closed", () => {
     const { rerender } = render(
-      <WPQTModal modalOpen closeModal={jest.fn()}>
+      <WPQTModal modalOpen closeModal={jest.fn()} testId="test-modal">
         <div>Modal content</div>
       </WPQTModal>,
     );
     expect(screen.getByText("Modal content")).toBeInTheDocument();
 
     rerender(
-      <WPQTModal modalOpen={false} closeModal={jest.fn()}>
+      <WPQTModal modalOpen={false} closeModal={jest.fn()} testId="test-modal">
         <div>Modal content</div>
       </WPQTModal>,
     );
@@ -138,7 +138,7 @@ describe("WPQTModal", () => {
   it("calls closeModal when clicking the close button", () => {
     const closeModal = jest.fn();
     render(
-      <WPQTModal modalOpen closeModal={closeModal}>
+      <WPQTModal modalOpen closeModal={closeModal} testId="test-modal">
         <div>Modal content</div>
       </WPQTModal>,
     );
@@ -149,7 +149,7 @@ describe("WPQTModal", () => {
   it("calls closeModal on Escape key", () => {
     const closeModal = jest.fn();
     render(
-      <WPQTModal modalOpen closeModal={closeModal}>
+      <WPQTModal modalOpen closeModal={closeModal} testId="test-modal">
         <div>Modal content</div>
       </WPQTModal>,
     );
@@ -159,7 +159,7 @@ describe("WPQTModal", () => {
 
   it("applies size classes on the panel", () => {
     const { rerender } = render(
-      <WPQTModal modalOpen size="sm" closeModal={jest.fn()}>
+      <WPQTModal modalOpen size="sm" closeModal={jest.fn()} testId="test-modal">
         <div>Sized content</div>
       </WPQTModal>,
     );
@@ -172,7 +172,7 @@ describe("WPQTModal", () => {
     expect(getPanel()).toHaveClass("wpqt-max-w-sm");
 
     rerender(
-      <WPQTModal modalOpen size="xl" closeModal={jest.fn()}>
+      <WPQTModal modalOpen size="xl" closeModal={jest.fn()} testId="test-modal">
         <div>Sized content</div>
       </WPQTModal>,
     );

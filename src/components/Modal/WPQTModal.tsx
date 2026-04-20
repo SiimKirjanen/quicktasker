@@ -16,8 +16,15 @@ type Props = {
   modalOpen: boolean;
   closeModal: () => void;
   size?: "sm" | "md" | "lg" | "xl";
+  testId: string;
 };
-function WPQTModal({ modalOpen, closeModal, children, size = "sm" }: Props) {
+function WPQTModal({
+  modalOpen,
+  closeModal,
+  children,
+  size = "sm",
+  testId,
+}: Props) {
   const sizeClasses = {
     sm: "wpqt-max-w-sm",
     md: "wpqt-max-w-lg",
@@ -37,6 +44,7 @@ function WPQTModal({ modalOpen, closeModal, children, size = "sm" }: Props) {
         <div className="wpqt-mt-[8vh] wpqt-flex wpqt-justify-center">
           <DialogPanel
             transition
+            data-testid={testId}
             className={`data-[closed]:wpqt-transform-[wpqt-scale(95%)] wpqt-relative wpqt-mt-[20px] wpqt-w-4/5 ${sizeClasses[size]} wpqt-rounded-xl wpqt-bg-white wpqt-p-8 wpqt-backdrop-blur-2xl wpqt-duration-300 wpqt-ease-out data-[closed]:wpqt-opacity-0`}
           >
             <div
