@@ -12,8 +12,10 @@ import { EditPipelineModalContent } from "./EditPipelineModalContent";
 function EditPipelineModal() {
   const {
     state: { pipelineModalOpen },
+    modalDispatch,
   } = useContext(ModalContext);
-  const { closeModal, handleSuccess } = useModal(CLOSE_PIPELINE_MODAL);
+  const { handleSuccess } = useModal();
+  const closeModal = () => modalDispatch({ type: CLOSE_PIPELINE_MODAL });
 
   const onPipelineEditSuccess = (pipeline: PipelineFromServer) => {
     handleSuccess(

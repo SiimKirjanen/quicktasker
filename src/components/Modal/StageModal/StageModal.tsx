@@ -14,16 +14,17 @@ import { StageModalContent } from "./StageModalContent";
 function StageModal() {
   const {
     state: { stageModalOpen, targetPipelineId },
+    modalDispatch,
   } = useContext(ModalContext);
   const {
     modalSaving,
     setModalSaving,
     modalContentRef,
-    closeModal,
     handleSuccess,
     handleError,
-  } = useModal(CLOSE_STAGE_MODAL);
+  } = useModal();
   const { editStage, addStage } = useStageActions();
+  const closeModal = () => modalDispatch({ type: CLOSE_STAGE_MODAL });
 
   const onAddStage = async (stageName: string, stageDescription: string) => {
     try {

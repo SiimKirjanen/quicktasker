@@ -16,6 +16,7 @@ import {
   CLOSE_TASK_MODAL,
   OPEN_TASK_RESTORE_MODAL,
   PIPELINE_CHANGE_TASK_DONE_STATUS,
+  PIPELINE_EDIT_TASK,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
@@ -41,10 +42,9 @@ import { TaskDueDateInput } from "./components/TaskDueDateInput/TaskDueDateInput
 
 type Props = {
   deleteTask: (task: Task) => Promise<void>;
-  onEditTaskCompleted: (task: TaskFromServer) => void;
 };
 
-const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
+const TaskModalContent = ({ deleteTask }: Props) => {
   const {
     state: { taskToEdit, taskModalSettings },
     modalDispatch,
@@ -55,7 +55,12 @@ const TaskModalContent = ({ deleteTask, onEditTaskCompleted }: Props) => {
   const {
     state: { activePipeline },
     fetchAndSetPipelineData,
+    dispatch: activePipelineDispatch,
   } = useContext(ActivePipelineContext);
+
+  const onEditTaskCompleted = (task: TaskFromServer) => {
+    activePipelineDispatch({ type: PIPELINE_EDIT_TASK, payload: task });
+  };
   const [restoringTask] = useState(false);
   const [assignedTaskLabels, setAssignedTaskLabels] = useState<Label[]>([]);
   const { archiveTask, editTask } = useTaskActions();

@@ -14,17 +14,18 @@ import { ActivePipelineContext } from "../../../../providers/ActivePipelineConte
 function AddPipelineModal() {
   const {
     state: { newPipelineModalOpen },
+    modalDispatch,
   } = useContext(ModalContext);
   const { fetchAndSetPipelineData } = useContext(ActivePipelineContext);
   const {
     modalSaving,
     setModalSaving,
     modalContentRef,
-    closeModal,
     handleSuccess,
     handleError,
-  } = useModal(CLOSE_PIPELINE_MODAL);
+  } = useModal();
   const { addPipeline } = usePipelineActions();
+  const closeModal = () => modalDispatch({ type: CLOSE_PIPELINE_MODAL });
 
   const onAddPipeline = async (
     pipelineName: string,

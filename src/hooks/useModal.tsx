@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext, useRef, useState } from "@wordpress/element";
 import { ActivePipelineContext } from "../providers/ActivePipelineContextProvider";
-import { ModalContext } from "../providers/ModalContextProvider";
 import { PipelinesContext } from "../providers/PipelinesContextProvider";
 import { UserContext } from "../providers/UserContextProvider";
 
@@ -11,39 +10,18 @@ enum DispatchType {
   PIPELINES = "PIPELINES",
   USER = "USER",
 }
-
-type ModalCloseActionType =
-  | "CLOSE_TASK_MODAL"
-  | "CLOSE_USER_MODAL"
-  | "CLOSE_STAGE_MODAL"
-  | "CLOSE_PIPELINE_EDIT_MODAL";
-
 interface ModalContentRef {
   clearContent: () => void;
 }
 
-export const useModal = (closeActionType: ModalCloseActionType) => {
+export const useModal = () => {
   const [modalSaving, setModalSaving] = useState(false);
   const modalContentRef = useRef<ModalContentRef | null>(null);
-  const { modalDispatch } = useContext(ModalContext);
   const { dispatch: activePipelineDispatch } = useContext(
     ActivePipelineContext,
   );
   const { pipelinesDispatch } = useContext(PipelinesContext);
   const { userDispatch } = useContext(UserContext);
-
-  const closeModal = () => {
-    modalDispatch({
-      type: closeActionType,
-    });
-    clearModalContent();
-  };
-
-  const clearModalContent = () => {
-    if (modalContentRef.current) {
-      modalContentRef.current.clearContent();
-    }
-  };
 
   const handleSuccess = (
     type: string,
@@ -87,7 +65,6 @@ export const useModal = (closeActionType: ModalCloseActionType) => {
     modalSaving,
     setModalSaving,
     modalContentRef,
-    closeModal,
     handleSuccess,
     handleError,
   };

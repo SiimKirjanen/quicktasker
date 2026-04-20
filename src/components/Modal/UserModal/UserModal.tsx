@@ -1,24 +1,19 @@
 import { useContext } from "@wordpress/element";
-import { CLOSE_USER_MODAL, EDIT_USER } from "../../../constants";
-import { DispatchType, useModal } from "../../../hooks/useModal";
+import { CLOSE_USER_MODAL } from "../../../constants";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { ServerUser } from "../../../types/user";
 import { WPQTModal } from "../WPQTModal";
 import { UserModalContent } from "./UserModalContent";
 
 function UserModal() {
   const {
     state: { userModalOpen },
+    modalDispatch,
   } = useContext(ModalContext);
-  const { closeModal, handleSuccess } = useModal(CLOSE_USER_MODAL);
-
-  const onEditUserCompleted = (user: ServerUser) => {
-    handleSuccess(EDIT_USER, user, DispatchType.USER);
-  };
+  const closeModal = () => modalDispatch({ type: CLOSE_USER_MODAL });
 
   return (
     <WPQTModal modalOpen={userModalOpen} closeModal={closeModal} size="xl">
-      <UserModalContent onEditUserCompleted={onEditUserCompleted} />
+      <UserModalContent />
     </WPQTModal>
   );
 }
