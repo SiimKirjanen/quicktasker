@@ -4,6 +4,7 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
   CLOSE_PIPELINE_MODAL,
+  PIPELINE_EDIT_PIPELINE,
   PIPELINE_REMOVE_ACTIVE_PIPELINE,
   PIPELINE_REMOVE_PIPELINE,
   PIPELINE_SET_PRIMARY,
@@ -15,7 +16,6 @@ import { ActivePipelineContext } from "../../../../providers/ActivePipelineConte
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
 import { CustomFieldEntityType } from "../../../../types/custom-field";
-import { PipelineFromServer } from "../../../../types/pipeline";
 import { WPQTIconButton } from "../../../common/Button/WPQTIconButton/WPQTIconButton";
 import { AutoSaveInput } from "../../../common/Input/AutoSaveInput/AutoSaveInput";
 import { AutoSaveTextarea } from "../../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
@@ -24,11 +24,7 @@ import { WPQTConfirmTooltip } from "../../../Dialog/ConfirmTooltip/ConfirmToolti
 import { WPQTModalField, WPQTModalFieldSet } from "../../WPQTModal";
 import { PipelineSettings } from "../components/PipelineSettings/PipelineSettings";
 
-type Props = {
-  onPipelineEditSuccess: (pipeline: PipelineFromServer) => void;
-};
-
-const EditPipelineModalContent = ({ onPipelineEditSuccess }: Props) => {
+const EditPipelineModalContent = () => {
   const {
     state: { pipelineToEdit },
     modalDispatch,
@@ -86,7 +82,14 @@ const EditPipelineModalContent = ({ onPipelineEditSuccess }: Props) => {
                     const { success, pipeline: updatedPipeline } =
                       await editPipeline(pipelineToEdit.id, { name: value });
                     if (success && updatedPipeline) {
-                      onPipelineEditSuccess(updatedPipeline);
+                      dispatch({
+                        type: PIPELINE_EDIT_PIPELINE,
+                        payload: updatedPipeline,
+                      });
+                      pipelinesDispatch({
+                        type: PIPELINE_EDIT_PIPELINE,
+                        payload: updatedPipeline,
+                      });
                     }
                   }}
                 />
@@ -101,7 +104,14 @@ const EditPipelineModalContent = ({ onPipelineEditSuccess }: Props) => {
                         description: value,
                       });
                     if (success && updatedPipeline) {
-                      onPipelineEditSuccess(updatedPipeline);
+                      dispatch({
+                        type: PIPELINE_EDIT_PIPELINE,
+                        payload: updatedPipeline,
+                      });
+                      pipelinesDispatch({
+                        type: PIPELINE_EDIT_PIPELINE,
+                        payload: updatedPipeline,
+                      });
                     }
                   }}
                 />

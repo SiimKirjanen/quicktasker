@@ -73,7 +73,7 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case PIPELINE_EDIT_PIPELINE: {
-      const pipeline: Pipeline = action.payload;
+      const pipeline: PipelineFromServer = action.payload;
 
       return {
         ...state,

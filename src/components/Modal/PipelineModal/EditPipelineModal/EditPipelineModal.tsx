@@ -1,11 +1,6 @@
 import { useContext } from "@wordpress/element";
-import {
-  CLOSE_PIPELINE_MODAL,
-  PIPELINE_EDIT_PIPELINE,
-} from "../../../../constants";
-import { DispatchType, useModal } from "../../../../hooks/useModal";
+import { CLOSE_PIPELINE_MODAL } from "../../../../constants";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
-import { PipelineFromServer } from "../../../../types/pipeline";
 import { WPQTModal } from "../../WPQTModal";
 import { EditPipelineModalContent } from "./EditPipelineModalContent";
 
@@ -14,21 +9,11 @@ function EditPipelineModal() {
     state: { pipelineModalOpen },
     modalDispatch,
   } = useContext(ModalContext);
-  const { handleSuccess } = useModal();
   const closeModal = () => modalDispatch({ type: CLOSE_PIPELINE_MODAL });
-
-  const onPipelineEditSuccess = (pipeline: PipelineFromServer) => {
-    handleSuccess(
-      PIPELINE_EDIT_PIPELINE,
-      pipeline,
-      DispatchType.ACTIVE_PIPELINE,
-    );
-    handleSuccess(PIPELINE_EDIT_PIPELINE, pipeline, DispatchType.PIPELINES);
-  };
 
   return (
     <WPQTModal modalOpen={pipelineModalOpen} closeModal={closeModal} size="xl">
-      <EditPipelineModalContent onPipelineEditSuccess={onPipelineEditSuccess} />
+      <EditPipelineModalContent />
     </WPQTModal>
   );
 }

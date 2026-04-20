@@ -20,7 +20,7 @@ type State = {
 type Action =
   | { type: typeof PIPELINES_SET; payload: PipelineFromServer[] }
   | { type: typeof PIPELINE_ADD_PIPELINE; payload: PipelineFromServer }
-  | { type: typeof PIPELINE_EDIT_PIPELINE; payload: Pipeline }
+  | { type: typeof PIPELINE_EDIT_PIPELINE; payload: PipelineFromServer }
   | { type: typeof PIPELINE_REMOVE_PIPELINE; payload: string }
   | { type: typeof PIPELINE_SET_PRIMARY; payload: string };
 
