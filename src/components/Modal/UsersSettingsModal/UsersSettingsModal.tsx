@@ -17,6 +17,7 @@ function UsersSettingsModal() {
         modalDispatch({ type: CHANGE_USER_SETTINGS_MODAL_OPEN, payload: false })
       }
       size="md"
+      testId="users-settings-modal"
     >
       <div>
         <CustomFieldsInModalWrap

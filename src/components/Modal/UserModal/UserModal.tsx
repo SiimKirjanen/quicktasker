@@ -12,7 +12,12 @@ function UserModal() {
   const closeModal = () => modalDispatch({ type: CLOSE_USER_MODAL });
 
   return (
-    <WPQTModal modalOpen={userModalOpen} closeModal={closeModal} size="xl">
+    <WPQTModal
+      modalOpen={userModalOpen}
+      closeModal={closeModal}
+      size="xl"
+      testId="user-modal"
+    >
       <UserModalContent />
     </WPQTModal>
   );

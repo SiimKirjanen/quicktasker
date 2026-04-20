@@ -22,6 +22,7 @@ function AutomationLogsModal() {
       modalOpen={automationLogsModalOpen}
       closeModal={() => modalDispatch({ type: CLOSE_AUTOMATION_LOGS_MODAL })}
       size="lg"
+      testId="automation-logs-modal"
     >
       {automationLogsModalOpen && (
         <AutomationLogsModalContent settings={automationLogsModalSettings} />

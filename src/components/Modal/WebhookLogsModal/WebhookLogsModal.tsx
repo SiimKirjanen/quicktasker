@@ -22,6 +22,7 @@ function WebhookLogsModal() {
       modalOpen={webhooksLogsModalOpen}
       closeModal={() => modalDispatch({ type: CLOSE_WEBHOOKS_LOGS_MODAL })}
       size="lg"
+      testId="webhook-logs-modal"
     >
       {webhooksLogsModalOpen && (
         <WebhooksLogsModalContent settings={webhooksLogsModalSettings} />

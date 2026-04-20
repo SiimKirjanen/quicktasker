@@ -28,6 +28,7 @@ function ArchiveSettingsModal() {
           payload: false,
         });
       }}
+      testId="archive-settings-modal"
       size="md"
     >
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-3">

@@ -60,7 +60,12 @@ function TaskColorModal() {
   }, [taskToEdit]);
 
   return (
-    <WPQTModal modalOpen={taskColorModalOpen} closeModal={closeModal} size="sm">
+    <WPQTModal
+      modalOpen={taskColorModalOpen}
+      closeModal={closeModal}
+      size="sm"
+      testId="task-color-modal"
+    >
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-4 wpqt-items-center">
         <div className="wpqt-text-lg">
           {__("Task focus color", "quicktasker")}

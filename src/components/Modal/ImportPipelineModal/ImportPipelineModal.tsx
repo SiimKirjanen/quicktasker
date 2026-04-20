@@ -270,6 +270,7 @@ function ImportPipelineModal() {
         modalDispatch({ type: CLOSE_PIPELINE_IMPORT_MODAL });
         resetState();
       }}
+      testId="import-pipeline-modal"
     >
       <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
         <div className="wpqt-text-lg">{__("Import board", "quicktasker")}</div>

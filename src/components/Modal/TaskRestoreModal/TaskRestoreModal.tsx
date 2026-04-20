@@ -85,6 +85,7 @@ function TaskRestoreModal() {
         modalDispatch({ type: CLOSE_TASK_RESTORE_MODAL });
         setErrorMessages([]);
       }}
+      testId="task-restore-modal"
     >
       <div>
         <div className="wpqt-flex wpqt-flex-col wpqt-items-start">

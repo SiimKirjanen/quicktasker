@@ -18,6 +18,7 @@ function CustomFieldRecoveryModal() {
           payload: false,
         });
       }}
+      testId="custom-field-recovery-modal"
       size="lg"
     >
       <CustomFieldsRecovery />

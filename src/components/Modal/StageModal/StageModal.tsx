@@ -12,7 +12,11 @@ function StageModal() {
   const closeModal = () => modalDispatch({ type: CLOSE_STAGE_MODAL });
 
   return (
-    <WPQTModal modalOpen={stageModalOpen} closeModal={closeModal}>
+    <WPQTModal
+      modalOpen={stageModalOpen}
+      closeModal={closeModal}
+      testId="stage-modal"
+    >
       <StageModalContent />
     </WPQTModal>
   );

@@ -12,7 +12,12 @@ function EditPipelineModal() {
   const closeModal = () => modalDispatch({ type: CLOSE_PIPELINE_MODAL });
 
   return (
-    <WPQTModal modalOpen={pipelineModalOpen} closeModal={closeModal} size="xl">
+    <WPQTModal
+      modalOpen={pipelineModalOpen}
+      closeModal={closeModal}
+      size="xl"
+      testId="edit-pipeline-modal"
+    >
       <EditPipelineModalContent />
     </WPQTModal>
   );

@@ -22,6 +22,7 @@ function ApiTokenLogsModal() {
       modalOpen={apiTokenLogsModalOpen}
       closeModal={() => modalDispatch({ type: CLOSE_API_TOKEN_LOGS_MODAL })}
       size="lg"
+      testId="api-token-logs-modal"
     >
       {apiTokenLogsModalOpen && (
         <ApiTokenLogsModalContent settings={apiTokenLogsModalSettings} />

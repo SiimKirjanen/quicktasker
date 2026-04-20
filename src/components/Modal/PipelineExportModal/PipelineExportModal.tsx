@@ -37,6 +37,7 @@ function PipelineExportModal({ pipelineId }: Props) {
         });
       }}
       size="md"
+      testId="pipeline-export-modal"
     >
       <form
         className="wpqt-flex wpqt-flex-col wpqt-gap-3 wpqt-items-center"

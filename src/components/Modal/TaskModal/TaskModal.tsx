@@ -28,7 +28,12 @@ function TaskModal({ deleteTaskCallback }: Props) {
   };
 
   return (
-    <WPQTModal modalOpen={taskModalOpen} closeModal={closeModal} size="xl">
+    <WPQTModal
+      modalOpen={taskModalOpen}
+      closeModal={closeModal}
+      size="xl"
+      testId="task-modal"
+    >
       <UploadContextProvider>
         <TaskModalContent deleteTask={onDeleteTask} />
       </UploadContextProvider>

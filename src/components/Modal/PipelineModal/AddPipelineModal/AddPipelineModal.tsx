@@ -16,6 +16,7 @@ function AddPipelineModal() {
       modalOpen={newPipelineModalOpen}
       closeModal={closeModal}
       size="sm"
+      testId="add-pipeline-modal"
     >
       <PipelineModalContent />
     </WPQTModal>
