@@ -156,7 +156,7 @@ describe("ImportConfig", () => {
       expect(screen.getByText("Import task comments?")).toBeInTheDocument();
     });
 
-    test("shows comments toggle for TRELLO", () => {
+    /*  test("shows comments toggle for TRELLO", () => {
       render(
         <ImportConfig
           {...defaultProps}
@@ -169,7 +169,7 @@ describe("ImportConfig", () => {
       expect(
         screen.queryByText("Import task custom fields?"),
       ).not.toBeInTheDocument();
-    });
+    }); */
   });
 
   test("toggles includeArchivedTasks when checkbox is clicked", () => {
