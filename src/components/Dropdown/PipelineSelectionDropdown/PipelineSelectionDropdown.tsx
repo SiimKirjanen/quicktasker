@@ -127,7 +127,7 @@ function PipelineSelectionDropdown({
       {isUserAllowedToManageSettings && enableActions && (
         <>
           <MenuItem key="new-pipeline">
-            <div className="wpqt-my-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2">
+            <div className="wpqt-my-4 wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2">
               <WPQTIconButton
                 data-testid="add-new-board-button"
                 text={__("Add new board", "quicktasker")}
