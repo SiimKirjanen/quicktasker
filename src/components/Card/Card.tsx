@@ -33,6 +33,7 @@ function WPQTCard({
       )}
       style={style}
       onClick={onClick}
+      data-testid="wpqt-card"
     >
       <div className="wpqt-mb-3">
         <div className={`wpqt-text-lg ${titleClassName}`}>{title}</div>

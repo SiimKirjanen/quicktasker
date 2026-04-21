@@ -25,7 +25,7 @@ describe("getImportSourceConfig", () => {
     expect(result).toEqual({
       ...baseConfig,
       supportsArchiveTaskToggle: true,
-      supportTaskCommentsToggle: true,
+      supportTaskCommentsToggle: false,
     });
   });
 

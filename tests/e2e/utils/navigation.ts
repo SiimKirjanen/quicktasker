@@ -29,3 +29,14 @@ export async function navigateToUserManagement(page: Page) {
   await page.getByRole('link', { name: 'User management' }).click();
   await page.waitForLoadState('networkidle');
 }
+
+/**
+ * Navigate to Archive page
+ */
+export async function navigateToArchivePage(page: Page) {
+  await navigateToAdminPage(page, '');
+  const quickTaskerLink = page.getByRole('link', { name: 'QuickTasker', exact: true });
+  await quickTaskerLink.hover();
+  await page.getByRole('link', { name: 'Archive' }).click();
+  await page.waitForLoadState('networkidle');
+}

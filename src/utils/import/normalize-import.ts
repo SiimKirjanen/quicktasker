@@ -4,7 +4,6 @@ import {
   AsanaImportLabel,
   AsanaImportSection,
   PipedriveDealImport,
-  TrelloActionType,
   TrelloImport,
   WPQTImport,
   WPQTLabelImport,
@@ -30,9 +29,9 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
       id: importData.id,
     },
   ];
-  const commentActions = importData.actions.filter(
+  /* const commentActions = importData.actions.filter(
     (action) => action.type === TrelloActionType.Comment_CARD,
-  );
+  ); */
 
   const pipelineData = {
     pipelineName: importData.name,
@@ -76,17 +75,7 @@ function normalizeTrelloImport(importData: TrelloImport): WPQTImport {
       color: label.color,
     })),
     sourcePipelines,
-    taskComments: commentActions.map((action) => {
-      return {
-        commentId: action.id,
-        taskId: action.data.card?.id ?? "",
-        createdAt: action.date,
-        commentText: action.data.text ?? "",
-        authorId: action.idMemberCreator,
-        isAuthorAdmin: false,
-        isPrivate: true,
-      };
-    }),
+    taskComments: [],
   };
 
   return pipelineData;

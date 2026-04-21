@@ -30,6 +30,7 @@ FILES_TO_REMOVE=(
     ".php-cs-fixer.php"
     "src"
     "playwright.config.ts"
+    ".wp-env.json"
 )
 
 # Prompt the user for confirmation
