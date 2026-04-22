@@ -95,7 +95,10 @@ function AutomationCreationSteps({
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
+    <div
+      data-testid="automation-creation-steps"
+      className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4"
+    >
       <div className="wpqt-flex wpqt-flex-row wpqt-gap-4">{stepComponent}</div>
       <WPQTIconButton
         text={__("Create automation", "quicktasker")}

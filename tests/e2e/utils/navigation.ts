@@ -1,4 +1,5 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
+import { TIMEOUTS } from './timeouts';
 
 /**
  * WordPress navigation utilities for e2e testing
@@ -16,7 +17,7 @@ export async function navigateToAdminPage(page: Page, path: string) {
  */
 export async function navigateToBoardsPage(page: Page) {
   await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
-  await page.waitForLoadState('networkidle');
+  await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
 }
 
 /**
@@ -27,7 +28,7 @@ export async function navigateToUserManagement(page: Page) {
   const quickTaskerLink = page.getByRole('link', { name: 'QuickTasker', exact: true });
   await quickTaskerLink.hover();
   await page.getByRole('link', { name: 'User management' }).click();
-  await page.waitForLoadState('networkidle');
+  await expect(page.getByRole('heading', { name: 'User management' })).toBeVisible({timeout: TIMEOUTS.NAVIGATION});
 }
 
 /**
@@ -38,5 +39,5 @@ export async function navigateToArchivePage(page: Page) {
   const quickTaskerLink = page.getByRole('link', { name: 'QuickTasker', exact: true });
   await quickTaskerLink.hover();
   await page.getByRole('link', { name: 'Archive' }).click();
-  await page.waitForLoadState('networkidle');
+  await expect(page.getByRole('heading', { name: 'Archive' })).toBeVisible({timeout: TIMEOUTS.NAVIGATION});
 }

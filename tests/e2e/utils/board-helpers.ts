@@ -113,6 +113,15 @@ export function getTaskCard(page: Page, taskName: string) {
 }
 
 /**
+ * Select an existing board from the pipeline selection dropdown.
+ */
+export async function selectBoard(page: Page, boardName: string): Promise<void> {
+  await page.getByTestId('pipeline-selection-dropdown').click();
+  await page.getByText(boardName, { exact: true }).click();
+  await expect(page.getByText(boardName).first()).toBeVisible();
+}
+
+/**
  * Create a new label from within a task's label dropdown
  * @param page - Playwright page object
  * @param taskCard - Locator for the task card
