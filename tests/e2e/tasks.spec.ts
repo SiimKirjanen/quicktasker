@@ -1,6 +1,8 @@
+import path from 'path';
 import { test, expect } from '@playwright/test';
 import { navigateToBoardsPage } from './utils/navigation';
-import { createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, getStageContainer } from './utils/board-helpers';
+import { createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, getStageContainer, createTask } from './utils/board-helpers';
+import { uploadFileInTaskModal } from './utils/upload-helpers';
 
 test.describe('Task Management', () => {
   test.beforeEach(async ({ page }) => {
@@ -282,5 +284,47 @@ test.describe('Task Management', () => {
     await page.getByTestId('wpqt-modal-close-button').click();
 
     await expect(page.getByTestId('due-date-info')).toBeVisible();
+  });
+
+  test('should upload and delete a file attachment', async ({ page }) => {
+    const stageName = generateUniqueName('AttachmentStage');
+    const taskName = generateUniqueName('AttachmentTask');
+    const fixturePath = path.join(__dirname, 'fixtures', 'test-attachment.txt');
+
+    await createStage(page, stageName, '');
+    await createTask(page, stageName, taskName);
+
+    const taskCard = getTaskCard(page, taskName);
+    await taskCard.click();
+
+    await uploadFileInTaskModal(page, fixturePath);
+
+    await expect(page.getByText('test-attachment.txt')).toBeVisible();
+
+    await page.getByTestId('delete-upload-icon').click();
+
+    await expect(page.getByText('test-attachment.txt')).not.toBeVisible();
+  });
+
+  test('should show file info when clicking the info button on an upload', async ({ page }) => {
+    const stageName = generateUniqueName('AttachmentStage');
+    const taskName = generateUniqueName('AttachmentTask');
+    const fixturePath = path.join(__dirname, 'fixtures', 'test-attachment.txt');
+
+    await createStage(page, stageName, '');
+    await createTask(page, stageName, taskName);
+
+    const taskCard = getTaskCard(page, taskName);
+    await taskCard.click();
+
+    await uploadFileInTaskModal(page, fixturePath);
+
+    await expect(page.getByText('test-attachment.txt')).toBeVisible();
+
+    await page.getByTestId('upload-info-button').click();
+
+    await expect(page.getByText('File name', { exact: true })).toBeVisible();
+    await expect(page.getByText('File link')).toBeVisible();
+    await expect(page.getByText('Created at')).toBeVisible();
   });
 });
