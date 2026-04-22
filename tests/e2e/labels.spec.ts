@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createLabel, selectFirstLabel, clickBodyOutside } from './utils';
+import { navigateToBoardsPage } from './utils/navigation';
+import { createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createLabel, selectFirstLabel } from './utils/board-helpers';
+import { clickBodyOutside } from './utils/interaction';
 
 test.describe.skip('Task Labels', () => {
   test.beforeEach(async ({ page }) => {

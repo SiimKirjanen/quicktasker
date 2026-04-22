@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, createTask } from './utils';
+import { navigateToBoardsPage } from './utils/navigation';
+import { createBoard, createStage, generateUniqueName, generateUniqueDescription, createTask } from './utils/board-helpers';
 
 test.describe('Export Management (lightweight)', () => {
   test.beforeEach(async ({ page }) => {

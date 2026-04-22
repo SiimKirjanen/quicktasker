@@ -1,6 +1,7 @@
 import path from 'path';
 import { test, expect } from '@playwright/test';
-import { generateUniqueName, navigateToBoardsPage, getTaskCard, getStageContainer, navigateToArchivePage } from './utils';
+import { navigateToBoardsPage, navigateToArchivePage } from './utils/navigation';
+import { generateUniqueName, getTaskCard, getStageContainer } from './utils/board-helpers';
 import { waitForModalToClose } from './utils/modal-helpers';
 import { getArchiveTaskCard } from './utils/archive-helpers';
 

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription } from './utils';
+import { navigateToBoardsPage } from './utils/navigation';
+import { createBoard, createStage, generateUniqueName, generateUniqueDescription } from './utils/board-helpers';
 import { waitForModalToClose } from './utils/modal-helpers';
 
 test.describe('Board Management', () => {
