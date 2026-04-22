@@ -24,7 +24,7 @@ function PipelineAutomation({ automation }: Props) {
   const hasMeta = automation.metadata !== null;
 
   return (
-    <div className="wpqt-flex">
+    <div data-testid="pipeline-automation" className="wpqt-flex">
       <div className="wpqt-flex-1 wpqt-flex wpqt-p-4 wpqt-items-center wpqt-justify-center wpqt-gap-3">
         <WPQTCard
           title={__("Target", "quicktasker")}
