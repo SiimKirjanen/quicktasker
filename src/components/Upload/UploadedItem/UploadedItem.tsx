@@ -55,6 +55,7 @@ function UploadedItem({ upload }: Props) {
       <UploadInfoDropdown upload={upload} />
       {isUserAllowedToDelete && (
         <TrashIcon
+          data-testid="delete-upload-icon"
           className="wpqt-icon-red wpqt-size-5 :hover:wpqt-text-red-800 wpqt-cursor-pointer"
           onClick={handleDeleteClick}
         />

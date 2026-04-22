@@ -18,6 +18,7 @@ function UploadInfoDropdown({ upload, menuBtnClasses = "" }: Props) {
 
   return (
     <WPQTDropdown
+      data-testid="upload-info-button"
       menuBtnClasses={`wpqt-inline-flex ${menuBtnClasses}`}
       anchor="top"
       menuBtn={() => (
