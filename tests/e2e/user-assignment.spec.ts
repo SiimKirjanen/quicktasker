@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createQuickTasker, navigateToUserManagement, assignWordPressUserToTask, closeUserAssignmentDropdown, openUserAssignmentDropdown } from './utils';
+import { navigateToBoardsPage, navigateToUserManagement } from './utils/navigation';
+import { createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard } from './utils/board-helpers';
+import { createQuickTasker, assignWordPressUserToTask, closeUserAssignmentDropdown, openUserAssignmentDropdown } from './utils/user-helpers';
 import { ADMIN_USERNAME } from './constants';
 
 test.describe('WordPress User Assignment', () => {

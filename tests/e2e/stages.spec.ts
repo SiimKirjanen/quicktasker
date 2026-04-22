@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, createBoard, createStage, generateUniqueName, generateUniqueDescription, getStageContainer } from './utils';
+import { navigateToBoardsPage } from './utils/navigation';
+import { createBoard, createStage, generateUniqueName, generateUniqueDescription, getStageContainer } from './utils/board-helpers';
 import { waitForModalToClose } from './utils/modal-helpers';
 
 test.describe('Stage Management', () => {

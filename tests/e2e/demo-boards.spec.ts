@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { navigateToBoardsPage, getTasksInStage } from './utils';
+import { navigateToBoardsPage } from './utils/navigation';
+import { getTasksInStage } from './utils/board-helpers';
 
 test.describe('QuickTasker Demo Boards', () => {
   test.beforeEach(async ({ page }) => {
