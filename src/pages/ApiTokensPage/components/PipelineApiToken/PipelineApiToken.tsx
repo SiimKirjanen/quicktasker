@@ -18,6 +18,7 @@ function PipelineApiToken({ apiToken }: Props) {
     <WPQTCard
       title={apiToken.name}
       dropdown={<ApiTokenDropdown tokenId={apiToken.id} />}
+      dataTestId="pipeline-api-token"
     >
       {apiToken.description && (
         <WPQTCardDataItem
