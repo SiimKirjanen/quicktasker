@@ -22,7 +22,10 @@ function PipelineWebhook({ webhook }: Props) {
   } = useContext(AppContext);
 
   return (
-    <div className="wpqt-flex wpqt-gap-6 wpqt-mb-4 wpqt-mt-8 wpqt-justify-center">
+    <div
+      data-testid="pipeline-webhook"
+      className="wpqt-flex wpqt-gap-6 wpqt-mb-4 wpqt-mt-8 wpqt-justify-center"
+    >
       <WebhookProperty
         name={__("Target", "quicktasker")}
         value={webhook.target_type}
