@@ -1,0 +1,166 @@
+import { test, expect } from '@playwright/test';
+import { navigateToBoardsPage } from './utils/navigation';
+import {
+  setupBoardForApiTokens,
+  createApiToken,
+  deleteFirstApiToken,
+  openFirstApiTokenLogs,
+} from './utils/api-token-helpers';
+
+test.describe('Board API Tokens', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToBoardsPage(page);
+  });
+
+  // --- Page structure ---
+
+  test('should display the API tokens page with create form', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Page');
+
+    await expect(page.getByRole('heading', { name: 'Board API tokens' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Created API tokens' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Create a new API token' })).toBeVisible();
+    await expect(page.getByText('There are no API tokens created for this board.')).toBeVisible();
+    await expect(page.locator('#api-token-name')).toBeVisible();
+    await expect(page.locator('#api-token-description')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Create API Token' })).toBeVisible();
+  });
+
+  test('should show permission toggles in the create form', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Permissions');
+
+    await expect(page.getByText('Board permissions')).toBeVisible();
+    await expect(page.getByText('Board stage permissions')).toBeVisible();
+    await expect(page.getByText('Board task permissions')).toBeVisible();
+
+    // GET board is enabled by default
+    await expect(page.getByRole('switch', { name: 'GET board' })).toBeChecked();
+
+    // All others are disabled by default
+    const uncheckedPermissions = [
+      'PATCH board',
+      'GET stages', 'POST stages', 'PATCH stages', 'DELETE stages',
+      'GET tasks', 'POST tasks', 'PATCH tasks', 'DELETE tasks',
+    ];
+    for (const label of uncheckedPermissions) {
+      await expect(page.getByRole('switch', { name: label })).not.toBeChecked();
+    }
+  });
+
+  // --- Create token ---
+
+  test('should create a token with name only', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Create-Name');
+
+    await createApiToken(page, { name: 'My Token' });
+
+    await expect(page.getByTestId('pipeline-api-token').first()).toBeVisible();
+    await expect(page.getByText('My Token')).toBeVisible();
+  });
+
+  test('should show token value once after creation with copy warning', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Create-Token');
+
+    await createApiToken(page, { name: 'Secret Token' });
+
+    await expect(page.getByText("Make sure to copy the token now. You won't be able to see it again.")).toBeVisible();
+    await expect(page.getByText('Token:', { exact: true })).toBeVisible();
+  });
+
+  test('should reset form after successful creation', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Create-Reset');
+
+    await createApiToken(page, { name: 'Reset Test Token' });
+
+    await expect(page.locator('#api-token-name')).toHaveValue('');
+    await expect(page.locator('#api-token-description')).toHaveValue('');
+    await expect(page.getByRole('switch', { name: 'GET board' })).toBeChecked();
+    await expect(page.getByRole('switch', { name: 'GET tasks' })).not.toBeChecked();
+  });
+
+  test('should create a token with a description', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Create-Desc');
+
+    await createApiToken(page, { name: 'Token With Desc', description: 'Used for testing' });
+
+    await expect(page.getByText('Used for testing')).toBeVisible();
+  });
+
+  test('should create a token with additional permissions enabled', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Create-Perms');
+
+    await createApiToken(page, {
+      name: 'Full Access Token',
+      extraPermissions: ['get_pipeline_tasks', 'post_pipeline_tasks'],
+    });
+
+    const tokenCard = page.getByTestId('pipeline-api-token').first();
+    await expect(tokenCard.getByText('GET tasks')).toBeVisible();
+    await expect(tokenCard.getByText('POST tasks')).toBeVisible();
+  });
+
+  test('should create multiple tokens for the same board', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Create-Multiple');
+
+    await createApiToken(page, { name: 'Token Alpha' });
+    await createApiToken(page, { name: 'Token Beta' });
+
+    await expect(page.getByText('Token Alpha')).toBeVisible();
+    await expect(page.getByText('Token Beta')).toBeVisible();
+    await expect(page.getByTestId('pipeline-api-token')).toHaveCount(2);
+  });
+
+  // --- Delete token ---
+
+  test('should delete a token', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Delete');
+
+    await createApiToken(page, { name: 'Token To Delete' });
+    await expect(page.getByText('Token To Delete')).toBeVisible();
+
+    await deleteFirstApiToken(page);
+
+    await expect(page.getByText('Token To Delete')).not.toBeVisible();
+    await expect(page.getByText('There are no API tokens created for this board.')).toBeVisible();
+  });
+
+  test('should show confirmation dialog before deleting', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Delete-Confirm');
+
+    await createApiToken(page, { name: 'Confirm Delete Token' });
+
+    const tokenCard = page.getByTestId('pipeline-api-token').first();
+    await tokenCard.getByTestId('dropdown-icon').click();
+    await page.getByText('Delete token', { exact: true }).click();
+
+    await expect(page.getByText('Are you sure you want to delete this API token?')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Delete' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'No' })).toBeVisible();
+  });
+
+  // --- Logs modal ---
+
+  test('should open the logs modal for a token', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Logs');
+
+    await createApiToken(page, { name: 'Logged Token' });
+    await openFirstApiTokenLogs(page);
+
+    await expect(page.getByTestId('api-token-logs-modal')).toBeVisible();
+  });
+
+  // --- Board switching ---
+
+  test('should show correct tokens when switching boards', async ({ page }) => {
+    // Create first board with a token
+    await setupBoardForApiTokens(page, 'AT-Switch-A');
+    await createApiToken(page, { name: 'Board A Token' });
+
+    // Navigate back and create second board (no tokens)
+    await navigateToBoardsPage(page);
+    await setupBoardForApiTokens(page, 'AT-Switch-B');
+
+    await expect(page.getByText('There are no API tokens created for this board.')).toBeVisible();
+    await expect(page.getByText('Board A Token')).not.toBeVisible();
+  });
+});

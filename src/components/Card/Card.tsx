@@ -10,6 +10,7 @@ type WPQTCardProps = {
   dropdown?: React.ReactNode;
   childrenClassName?: string;
   style?: React.CSSProperties;
+  dataTestId?: string;
 };
 
 function WPQTCard({
@@ -21,6 +22,7 @@ function WPQTCard({
   dropdown,
   titleClassName = "",
   style = {},
+  dataTestId,
 }: WPQTCardProps) {
   const hasDropdown = dropdown !== undefined;
 
@@ -33,7 +35,7 @@ function WPQTCard({
       )}
       style={style}
       onClick={onClick}
-      data-testid="wpqt-card"
+      data-testid={dataTestId ?? "wpqt-card"}
     >
       <div className="wpqt-mb-3">
         <div className={`wpqt-text-lg ${titleClassName}`}>{title}</div>
