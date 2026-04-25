@@ -33,9 +33,10 @@ type Props = {
   labelSelected: (label: Label) => void;
   labelDeselected: (labelId: string) => void;
   labelDeleted: (labelId: string) => void;
+  close: () => void;
 };
 const LabelDropdownContent = memo(
-  ({ task, labelSelected, labelDeselected, labelDeleted }: Props) => {
+  ({ task, labelSelected, labelDeselected, labelDeleted, close }: Props) => {
     const {
       state: { labels, labelActionState, labelToEdit },
       labelDispatch,
@@ -70,6 +71,14 @@ const LabelDropdownContent = memo(
         labelDispatch({ type: RESET_LABEL_CONTEXT });
       };
     }, []);
+
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") close();
+      };
+      document.addEventListener("keydown", handleKeyDown);
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [close]);
 
     const getSelectionLabels = (): SelectionLabel[] => {
       const taskAssignedLabels = task.assigned_labels || [];

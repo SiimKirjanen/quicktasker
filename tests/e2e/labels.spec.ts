@@ -3,7 +3,7 @@ import { navigateToBoardsPage } from './utils/navigation';
 import { createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, createLabel, selectFirstLabel } from './utils/board-helpers';
 import { clickBodyOutside } from './utils/interaction';
 
-test.describe.skip('Task Labels', () => {
+test.describe('Task Labels', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToBoardsPage(page);
     // Create a board and stage for label tests

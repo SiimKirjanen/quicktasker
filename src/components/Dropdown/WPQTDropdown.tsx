@@ -17,7 +17,7 @@ type AnchorProps =
   | "right end";
 
 type Props = {
-  children: React.ReactNode;
+  children: React.ReactNode | ((close: () => void) => React.ReactNode);
   menuBtn: (props: { active: boolean }) => React.ReactNode;
   menuBtnClasses?: string;
   anchor?: AnchorProps;
@@ -33,21 +33,25 @@ function WPQTDropdown({
 }: Props) {
   return (
     <Menu>
-      <MenuButton
-        as="div"
-        className={`wpqt-cursor-pointer ${menuBtnClasses}`}
-        onClick={(event) => event.stopPropagation()}
-        data-testid={dataTestId}
-      >
-        {({ active }) => <>{menuBtn({ active })}</>}
-      </MenuButton>
-      <MenuItems
-        anchor={anchor}
-        transition
-        className="wpqt-z-20 wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
-      >
-        {children}
-      </MenuItems>
+      {({ close }) => (
+        <>
+          <MenuButton
+            as="div"
+            className={`wpqt-cursor-pointer ${menuBtnClasses}`}
+            onClick={(event) => event.stopPropagation()}
+            data-testid={dataTestId}
+          >
+            {({ active }) => <>{menuBtn({ active })}</>}
+          </MenuButton>
+          <MenuItems
+            anchor={anchor}
+            transition
+            className="wpqt-z-20 wpqt-origin-top wpqt-rounded-xl wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-4 wpqt-transition wpqt-duration-200 wpqt-ease-out data-[closed]:wpqt-scale-95 data-[closed]:wpqt-opacity-0"
+          >
+            {typeof children === "function" ? children(close) : children}
+          </MenuItems>
+        </>
+      )}
     </Menu>
   );
 }
