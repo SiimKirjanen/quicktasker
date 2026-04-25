@@ -19,7 +19,6 @@ import {
 import { PipelineImportSource, WPQTImport } from "../types/imports";
 import { Label } from "../types/label";
 import { LogFromServer } from "../types/log";
-import { PipelineOverviewFilter } from "../types/overview";
 import {
   FullPipelineDataFromServer,
   PipelineEditData,
@@ -802,16 +801,9 @@ function cleanArchiveTasksRequest(): Promise<
 
 function getPipelineOverviewData(
   pipelineId: string,
-  overviewFilter: PipelineOverviewFilter,
 ): Promise<WPQTResponse<PipelineOverviewResponse>> {
-  const queryParams = new URLSearchParams({
-    taskStartDate: overviewFilter.taskCreationDate || "",
-    taskDoneDate: overviewFilter.taskDoneDate || "",
-    taskAssignees: overviewFilter.taskAssignees.join(","),
-  });
-
   return apiFetch({
-    path: `/wpqt/v1/pipelines/${pipelineId}/overview?${queryParams.toString()}`,
+    path: `/wpqt/v1/pipelines/${pipelineId}/overview`,
     method: "GET",
     headers: getCommonHeaders(),
   });

@@ -51,18 +51,16 @@ class OverViewRepositoryTest extends TestCase
     /**
      * The getPipelineOverview method uses ServiceLocator::get('StageRepository')
      * which makes it difficult to unit test without dependency injection.
-     * 
+     *
      * The method returns an object with the following structure:
      * - stages: array of stage objects with id, name, tasksCount
      * - archivedTasksCount: int
      * - notArchivedTasksCount: int
      * - doneTasksCount: int
      * - notDoneTasksCount: int
-     * 
-     * The method applies date filters when provided:
-     * - taskStartDate filters by created_at >= date
-     * - taskDoneDate filters by task_completed_at <= date (with '23:59:59' appended)
-     * 
+     * - overdueTasksCount: int
+     * - totalTasksCount: int
+     *
      * These tests document the expected behavior and implementation details.
      */
 
@@ -75,6 +73,8 @@ class OverViewRepositoryTest extends TestCase
             'notArchivedTasksCount' => 0,
             'doneTasksCount' => 0,
             'notDoneTasksCount' => 0,
+            'overdueTasksCount' => 0,
+            'totalTasksCount' => 0,
         ];
 
         $this->assertIsObject($expectedStructure);
@@ -83,6 +83,8 @@ class OverViewRepositoryTest extends TestCase
         $this->assertObjectHasProperty('notArchivedTasksCount', $expectedStructure);
         $this->assertObjectHasProperty('doneTasksCount', $expectedStructure);
         $this->assertObjectHasProperty('notDoneTasksCount', $expectedStructure);
+        $this->assertObjectHasProperty('overdueTasksCount', $expectedStructure);
+        $this->assertObjectHasProperty('totalTasksCount', $expectedStructure);
         $this->assertIsArray($expectedStructure->stages);
     }
 
@@ -105,9 +107,9 @@ class OverViewRepositoryTest extends TestCase
     {
         // Documents that the method uses ServiceLocator for StageRepository
         $pipelineId = 1;
-        
+
         try {
-            $result = $this->repository->getPipelineOverview($pipelineId, null, null);
+            $result = $this->repository->getPipelineOverview($pipelineId);
             $this->fail('Expected ServiceLocator exception was not thrown');
         } catch (\Exception $e) {
             $this->assertStringContainsString('Service not found: StageRepository', $e->getMessage());
@@ -119,40 +121,6 @@ class OverViewRepositoryTest extends TestCase
         // The method requires a pipeline ID as first parameter
         $this->expectException(\ArgumentCountError::class);
         $this->repository->getPipelineOverview();
-    }
-
-    public function test_getPipelineOverview_accepts_null_date_parameters()
-    {
-        // Verifies method signature accepts null for date parameters
-        $pipelineId = 1;
-        
-        try {
-            // This will fail at ServiceLocator but verifies the parameters are accepted
-            $result = $this->repository->getPipelineOverview($pipelineId, null, null);
-        } catch (\Exception $e) {
-            // Expected due to ServiceLocator
-            $this->assertStringContainsString('Service not found', $e->getMessage());
-        }
-        
-        $this->assertTrue(true); // Parameters were accepted
-    }
-
-    public function test_getPipelineOverview_accepts_date_strings()
-    {
-        // Verifies method signature accepts date strings
-        $pipelineId = 1;
-        $startDate = '2024-01-01';
-        $doneDate = '2024-12-31';
-        
-        try {
-            // This will fail at ServiceLocator but verifies the parameters are accepted
-            $result = $this->repository->getPipelineOverview($pipelineId, $startDate, $doneDate);
-        } catch (\Exception $e) {
-            // Expected due to ServiceLocator
-            $this->assertStringContainsString('Service not found', $e->getMessage());
-        }
-        
-        $this->assertTrue(true); // Parameters were accepted
     }
 
     public function test_getPipelineOverview_method_exists()
@@ -169,20 +137,18 @@ class OverViewRepositoryTest extends TestCase
         $this->assertTrue($reflection->isPublic(), 'getPipelineOverview should be public');
     }
 
-    public function test_getPipelineOverview_has_three_parameters()
+    public function test_getPipelineOverview_has_one_parameter()
     {
         $reflection = new \ReflectionMethod(OverViewRepository::class, 'getPipelineOverview');
-        $this->assertEquals(3, $reflection->getNumberOfParameters(), 'getPipelineOverview should have 3 parameters');
+        $this->assertEquals(1, $reflection->getNumberOfParameters(), 'getPipelineOverview should have 1 parameter');
     }
 
     public function test_getPipelineOverview_parameter_names()
     {
         $reflection = new \ReflectionMethod(OverViewRepository::class, 'getPipelineOverview');
         $parameters = $reflection->getParameters();
-        
+
         $this->assertEquals('pipelineId', $parameters[0]->getName());
-        $this->assertEquals('taskStartDate', $parameters[1]->getName());
-        $this->assertEquals('taskDoneDate', $parameters[2]->getName());
     }
 
     /**
@@ -192,9 +158,8 @@ class OverViewRepositoryTest extends TestCase
      * 1. Sets up a real database with test data
      * 2. Registers StageRepository in ServiceLocator
      * 3. Tests the full query execution and result aggregation
-     * 4. Verifies date filtering works correctly
-     * 5. Verifies the '23:59:59' appending to taskDoneDate
-     * 6. Tests with various combinations of date parameters
+     * 4. Verifies overdue task detection (due_date < NOW(), is_done=0, is_archived=0)
+     * 5. Verifies total, archived, done, and stage task counts
      * 
      * Unit testing this method requires refactoring to:
      * - Accept StageRepository as constructor parameter

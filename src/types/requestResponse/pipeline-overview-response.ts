@@ -8,6 +8,8 @@ type PipelineOverviewResponse = {
   notArchivedTasksCount: string;
   doneTasksCount: string;
   notDoneTasksCount: string;
+  overdueTasksCount: string;
+  totalTasksCount: string;
 };
 
 export type { PipelineOverviewResponse };

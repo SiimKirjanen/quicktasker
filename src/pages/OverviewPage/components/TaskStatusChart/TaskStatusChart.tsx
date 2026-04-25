@@ -1,7 +1,12 @@
+import { useMemo, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { Chart, ChartWrapperOptions } from "react-google-charts";
 import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipeline-overview-response";
 import { hasEnoughDataCheck } from "../../../../utils/statistics";
+import {
+  ChartTypeSelector,
+  OverviewChartType,
+} from "../ChartTypeSelector/ChartTypeSelector";
 import { NotEnoughData } from "../NotEnoughData/NotEnoughData";
 
 type Props = {
@@ -9,13 +14,31 @@ type Props = {
   options: ChartWrapperOptions["options"];
   width: string;
 };
+
 function TaskStatusChart({ pipelineOverviewData, options, width }: Props) {
-  const taskDonePieChartData = [
-    ["Task status", "Task Count"],
-    ["Done", parseInt(pipelineOverviewData?.doneTasksCount ?? "0") || 0],
-    ["Not Done", parseInt(pipelineOverviewData?.notDoneTasksCount ?? "0") || 0],
-  ];
-  const hasEnoughData: boolean = hasEnoughDataCheck(taskDonePieChartData);
+  const [chartType, setChartType] = useState<OverviewChartType>("PieChart");
+
+  const chartData = useMemo(
+    () => [
+      ["Task status", "Task Count"],
+      ["Done", parseInt(pipelineOverviewData?.doneTasksCount ?? "0") || 0],
+      [
+        "Not Done",
+        parseInt(pipelineOverviewData?.notDoneTasksCount ?? "0") || 0,
+      ],
+    ],
+    [pipelineOverviewData],
+  );
+
+  const chartOptions = useMemo(
+    () =>
+      chartType === "PieChart"
+        ? { ...options }
+        : { legend: { position: "none" }, chartArea: { top: 16 } },
+    [chartType, options],
+  );
+
+  const hasEnoughData: boolean = hasEnoughDataCheck(chartData);
 
   if (!hasEnoughData) {
     return (
@@ -26,13 +49,19 @@ function TaskStatusChart({ pipelineOverviewData, options, width }: Props) {
   }
 
   return (
-    <Chart
-      chartType="PieChart"
-      data={taskDonePieChartData}
-      options={{ ...options, title: "Task status" }}
-      width={width}
-      height={"400px"}
-    />
+    <div>
+      <p className="wpqt-text-center wpqt-font-semibold wpqt-mb-3 wpqt-text-lg">
+        {__("Task status", "quicktasker")}
+      </p>
+      <ChartTypeSelector value={chartType} onChange={setChartType} />
+      <Chart
+        chartType={chartType}
+        data={chartData}
+        options={chartOptions}
+        width={width}
+        height={"400px"}
+      />
+    </div>
   );
 }
 

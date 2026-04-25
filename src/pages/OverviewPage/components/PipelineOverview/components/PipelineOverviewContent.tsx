@@ -1,11 +1,12 @@
 import { useEffect, useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 import { getPipelineOverviewData } from "../../../../../api/api";
 import { Loading } from "../../../../../components/Loading/Loading";
 import { useMissingResourceDetection } from "../../../../../hooks/useMissingResourceDetection";
-import { PipelineOverviewFilter } from "../../../../../types/overview";
 import { PipelineOverviewResponse } from "../../../../../types/requestResponse/pipeline-overview-response";
 import { ArhivedTaskChart } from "../../ArchivedTaskChart/ArchivedTaskChart";
 import { StageDistributionChart } from "../../StageDistributionChart/StageDistributionChart";
+import { StatCard } from "../../StatCard/StatCard";
 import { TaskStatusChart } from "../../TaskStatusChart/TaskStatusChart";
 
 const defaultChartoptions = {
@@ -17,13 +18,13 @@ const defaultChartoptions = {
       fontSize: 14,
     },
   },
+  chartArea: { top: 16 },
 };
 
 type Props = {
   pipelineId: string;
-  overviewFilter: PipelineOverviewFilter;
 };
-function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
+function PipelineOverviewContent({ pipelineId }: Props) {
   const [pipelineOverviewData, setPipelineOverviewData] =
     useState<PipelineOverviewResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,14 +34,10 @@ function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
     const fetchPipelineOverview = async () => {
       try {
         setLoading(true);
-        const response = await getPipelineOverviewData(
-          pipelineId,
-          overviewFilter,
-        );
+        const response = await getPipelineOverviewData(pipelineId);
         setPipelineOverviewData(response.data);
       } catch (error) {
         console.error(error);
-
         detectMissingResources(error);
       } finally {
         setLoading(false);
@@ -48,29 +45,53 @@ function PipelineOverviewContent({ pipelineId, overviewFilter }: Props) {
     };
 
     fetchPipelineOverview();
-  }, [pipelineId, overviewFilter]);
+  }, [pipelineId]);
 
   if (loading || !pipelineOverviewData) {
     return <Loading ovalSize="48" />;
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center xl:wpqt-justify-start">
-      <StageDistributionChart
-        pipelineOverviewData={pipelineOverviewData}
-        options={defaultChartoptions}
-        width="500px"
-      />
-      <TaskStatusChart
-        pipelineOverviewData={pipelineOverviewData}
-        options={defaultChartoptions}
-        width="500px"
-      />
-      <ArhivedTaskChart
-        pipelineOverviewData={pipelineOverviewData}
-        options={defaultChartoptions}
-        width="500px"
-      />
+    <div>
+      <div className="wpqt-flex wpqt-flex-wrap wpqt-gap-4 wpqt-mb-8 wpqt-justify-center">
+        <StatCard
+          label={__("Total tasks", "quicktasker")}
+          value={Number(pipelineOverviewData.totalTasksCount)}
+          colorClass="wpqt-bg-blue-500"
+        />
+        <StatCard
+          label={__("Completed tasks", "quicktasker")}
+          value={Number(pipelineOverviewData.doneTasksCount)}
+          colorClass="wpqt-bg-green-500"
+        />
+        <StatCard
+          label={__("Incomplete tasks", "quicktasker")}
+          value={Number(pipelineOverviewData.notDoneTasksCount)}
+          colorClass="wpqt-bg-yellow-500"
+        />
+        <StatCard
+          label={__("Overdue tasks", "quicktasker")}
+          value={Number(pipelineOverviewData.overdueTasksCount)}
+          colorClass="wpqt-bg-red-500"
+        />
+      </div>
+      <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center xl:wpqt-justify-start">
+        <StageDistributionChart
+          pipelineOverviewData={pipelineOverviewData}
+          options={defaultChartoptions}
+          width="500px"
+        />
+        <TaskStatusChart
+          pipelineOverviewData={pipelineOverviewData}
+          options={defaultChartoptions}
+          width="500px"
+        />
+        <ArhivedTaskChart
+          pipelineOverviewData={pipelineOverviewData}
+          options={defaultChartoptions}
+          width="500px"
+        />
+      </div>
     </div>
   );
 }
