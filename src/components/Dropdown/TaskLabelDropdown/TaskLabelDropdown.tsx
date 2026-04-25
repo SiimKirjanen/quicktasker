@@ -46,14 +46,17 @@ function TaskLabelDropdown({
         </div>
       )}
     >
-      {task && (
-        <LabelDropdownContent
-          task={task}
-          labelSelected={labelSelected}
-          labelDeselected={labelDeselected}
-          labelDeleted={labelDeleted}
-        />
-      )}
+      {(close) =>
+        task && (
+          <LabelDropdownContent
+            task={task}
+            labelSelected={labelSelected}
+            labelDeselected={labelDeselected}
+            labelDeleted={labelDeleted}
+            close={close}
+          />
+        )
+      }
     </WPQTDropdown>
   );
 }
