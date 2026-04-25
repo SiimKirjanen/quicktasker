@@ -11,7 +11,7 @@ use WPQT\Services\ServiceLocator;
 if (!class_exists('WPQT\Overview\OverViewRepository')) {
     class OverViewRepository
     {
-        public function getPipelineOverview($pipelineId, $taskStartDate, $taskDoneDate)
+        public function getPipelineOverview($pipelineId)
         {
             global $wpdb;
 
@@ -21,6 +21,8 @@ if (!class_exists('WPQT\Overview\OverViewRepository')) {
                 'notArchivedTasksCount' => 0,
                 'doneTasksCount'        => 0,
                 'notDoneTasksCount'     => 0,
+                'overdueTasksCount'     => 0,
+                'totalTasksCount'       => 0,
             ];
 
             $pipelineStages = ServiceLocator::get('StageRepository')->getStagesByPipelineId($pipelineId);
@@ -29,20 +31,8 @@ if (!class_exists('WPQT\Overview\OverViewRepository')) {
                 $query = 'SELECT COUNT(*) FROM ' . TABLE_WP_QUICKTASKER_TASKS_LOCATION . ' tl
                         INNER JOIN ' . TABLE_WP_QUICKTASKER_TASKS . ' t ON tl.task_id = t.id
                         WHERE tl.stage_id = %d AND t.is_archived = 0';
-                $params = [$stage->id];
 
-                if ($taskStartDate) {
-                    $query .= ' AND t.created_at >= %s';
-                    $params[] = $taskStartDate;
-                }
-
-                if ($taskDoneDate) {
-                    $taskDoneDateEnd = $taskDoneDate . ' 23:59:59';
-                    $query .= ' AND t.task_completed_at <= %s';
-                    $params[] = $taskDoneDateEnd;
-                }
-
-                $tasksCount = $wpdb->get_var($wpdb->prepare($query, ...$params));
+                $tasksCount = $wpdb->get_var($wpdb->prepare($query, $stage->id));
 
                 $results->stages[] = (object) [
                     'id'         => $stage->id,
@@ -52,23 +42,13 @@ if (!class_exists('WPQT\Overview\OverViewRepository')) {
             }
 
             $baseQuery = 'SELECT COUNT(*) FROM ' . TABLE_WP_QUICKTASKER_TASKS . ' WHERE pipeline_id = %d';
-            $params = [$pipelineId];
 
-            if ($taskStartDate) {
-                $baseQuery .= ' AND created_at >= %s';
-                $params[] = $taskStartDate;
-            }
-
-            if ($taskDoneDate) {
-                $taskDoneDateEnd = $taskDoneDate . ' 23:59:59';
-                $baseQuery .= ' AND task_completed_at <= %s';
-                $params[] = $taskDoneDateEnd;
-            }
-
-            $results->archivedTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_archived = 1', ...$params));
-            $results->notArchivedTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_archived = 0', ...$params));
-            $results->doneTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_done = 1', ...$params));
-            $results->notDoneTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_done = 0', ...$params));
+            $results->archivedTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_archived = 1', $pipelineId));
+            $results->notArchivedTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_archived = 0', $pipelineId));
+            $results->doneTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_done = 1 AND is_archived = 0', $pipelineId));
+            $results->notDoneTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_done = 0 AND is_archived = 0', $pipelineId));
+            $results->overdueTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_done = 0 AND is_archived = 0 AND due_date IS NOT NULL AND due_date < NOW()', $pipelineId));
+            $results->totalTasksCount = $wpdb->get_var($wpdb->prepare($baseQuery . ' AND is_archived = 0', $pipelineId));
 
             return $results;
         }

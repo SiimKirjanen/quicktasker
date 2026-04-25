@@ -3076,9 +3076,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
                         }
 
-                        $taskStartDate = $data['taskStartDate'] ?? null;
-                        $taskDoneDate = $data['taskDoneDate'] ?? null;
-                        $overview = $overviewRepo->getPipelineOverview($data['id'], $taskStartDate, $taskDoneDate);
+                        $overview = $overviewRepo->getPipelineOverview($data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $overview))->toArray(), 200);
                     } catch (PipelineMissingException $e) {
@@ -3095,16 +3093,6 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
-                    ],
-                    'taskStartDate' => [
-                        'required'          => false,
-                        'validate_callback' => ['WPQT\RequestValidation', 'validateDateParam'],
-                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
-                    ],
-                    'taskDoneDate' => [
-                        'required'          => false,
-                        'validate_callback' => ['WPQT\RequestValidation', 'validateDateParam'],
-                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
                     ],
                 ],
             ],

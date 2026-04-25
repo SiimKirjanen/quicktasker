@@ -41,3 +41,13 @@ export async function navigateToArchivePage(page: Page) {
   await page.getByRole('link', { name: 'Archive' }).click();
   await expect(page.getByRole('heading', { name: 'Archive' })).toBeVisible({timeout: TIMEOUTS.NAVIGATION});
 }
+
+/**
+ * Navigate to the Overview page of the currently active board
+ */
+export async function navigateToOverviewPage(page: Page): Promise<void> {
+  await page.getByText('Overview').click();
+  await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible({
+    timeout: TIMEOUTS.NAVIGATION,
+  });
+}
