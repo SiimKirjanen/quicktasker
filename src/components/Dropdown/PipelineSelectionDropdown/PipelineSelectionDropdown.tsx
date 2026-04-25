@@ -94,15 +94,18 @@ function PipelineSelectionDropdown({
           <MenuItem key={existingPipeline.id}>
             <div className="wpqt-mb-3 wpqt-flex wpqt-gap-2">
               <div
-                className={clsx("wpqt-cursor-pointer wpqt-text-center", {
-                  "wpqt-font-bold": isCurrentPipeline,
-                })}
+                className={clsx(
+                  "wpqt-flex-1 wpqt-cursor-pointer hover:wpqt-underline",
+                  {
+                    "wpqt-font-bold": isCurrentPipeline,
+                  },
+                )}
                 onClick={() => onPipelineClick(existingPipeline.id)}
               >
                 {existingPipeline.name}
               </div>
               {enableActions && (
-                <div className="wpqt-ml-auto">
+                <div>
                   {isPrimary ? (
                     <StarIcon
                       className="wpqt-size-4 wpqt-cursor-pointer wpqt-text-blue-500"
