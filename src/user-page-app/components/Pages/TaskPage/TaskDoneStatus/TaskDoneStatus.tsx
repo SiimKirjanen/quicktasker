@@ -27,7 +27,8 @@ function TaskDoneStatus({ task }: Props) {
       (user) => user.id === userId && user.user_type === userType,
     ) ||
     task?.assigned_wp_users.some(
-      (user) => user.id === userId && user.user_type === userType,
+      (user) =>
+        Number(user.id) === Number(userId) && user.user_type === userType,
     );
   const isDone = task.is_done;
   const doneMessage = isDone

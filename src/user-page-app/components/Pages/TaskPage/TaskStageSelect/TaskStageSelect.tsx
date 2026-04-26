@@ -23,7 +23,8 @@ function TaskStageSelect({ task }: Props) {
       (user) => user.id === userId && user.user_type === userType,
     ) ||
     task?.assigned_wp_users.some(
-      (user) => user.id === userId && user.user_type === userType,
+      (user) =>
+        Number(user.id) === Number(userId) && user.user_type === userType,
     );
   const currentTaskStage = taskStages.find(
     (stage) => stage.id === task?.stage_id,
