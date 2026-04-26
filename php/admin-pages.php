@@ -31,7 +31,7 @@ if (!function_exists('wp_quick_taks_add_admin_menu')) {
             esc_html__('User management', 'quicktasker'),
             esc_html__('User management', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS,
-            'wp-quick-tasks#/users',
+            'wp-quick-tasks#/user-management',
             'wp_quick_taks_generate_app_page'
         );
 
