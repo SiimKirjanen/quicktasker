@@ -23,6 +23,7 @@
     "wp-env:start": "wp-env start",
     "wp-env:stop": "wp-env stop",
     "wp-env:reset": "wp-env reset",
+    "wp-env:cli": "wp-env run cli",
     "build:emails": "mjml php/templates/email/mjml/*.mjml -o php/templates/email",
     "prepare": "husky"
   },

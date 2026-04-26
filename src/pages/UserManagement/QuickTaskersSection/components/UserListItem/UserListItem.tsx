@@ -51,7 +51,7 @@ function UserListItem({ user }: Props) {
         icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
         onClick={(e) => {
           e.stopPropagation();
-          navigatePage(`#/users/${user.id}`);
+          navigatePage(`#/user-management/${user.id}`);
         }}
       />
 

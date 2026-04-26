@@ -86,7 +86,7 @@ function UserDropdown({ user }: Props) {
         icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={(e) => {
           e.stopPropagation();
-          window.location.hash = `#/users/${user.id}`;
+          window.location.hash = `#/user-management/${user.id}`;
         }}
       />
 
@@ -95,7 +95,7 @@ function UserDropdown({ user }: Props) {
         icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-4" />}
         onClick={(e) => {
           e.stopPropagation();
-          window.location.hash = `#/users/${user.id}/tasks`;
+          window.location.hash = `#/user-management/${user.id}/tasks`;
         }}
       />
 

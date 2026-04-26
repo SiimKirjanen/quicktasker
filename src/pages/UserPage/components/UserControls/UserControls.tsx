@@ -45,7 +45,7 @@ function UserControls({
         icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-5" />}
         text={__("User tasks", "quicktasker")}
         onClick={() => {
-          window.location.hash = `#/users/${data.id}/tasks`;
+          window.location.hash = `#/user-management/${data.id}/tasks`;
         }}
       />
       {!isUserActive && (
@@ -110,7 +110,7 @@ function UserControls({
               type: DELETE_USER,
               payload: userId,
             });
-            window.location.hash = `#/users`;
+            window.location.hash = `#/user-management`;
           });
           setIsDeleteLoading(false);
         }}

@@ -116,7 +116,7 @@ const UserModalContent = () => {
             icon={<UserIcon className="wpqt-icon-blue wpqt-size-4" />}
             text={__("User details", "quicktasker")}
             onClick={() => {
-              navigatePage(`#/users/${userToEdit!.id}`);
+              navigatePage(`#/user-management/${userToEdit!.id}`);
               modalDispatch({
                 type: CLOSE_USER_MODAL,
               });
@@ -126,7 +126,7 @@ const UserModalContent = () => {
             icon={<RectangleStackIcon className="wpqt-icon-blue wpqt-size-5" />}
             text={__("User tasks", "quicktasker")}
             onClick={() => {
-              navigatePage(`#/users/${userToEdit!.id}/tasks`);
+              navigatePage(`#/user-management/${userToEdit!.id}/tasks`);
               modalDispatch({
                 type: CLOSE_USER_MODAL,
               });
