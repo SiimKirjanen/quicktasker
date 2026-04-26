@@ -7,9 +7,9 @@ import { LogsPage } from "../pages/LogsPage/LogsPage";
 import { OverviewPage } from "../pages/OverviewPage/OverviewPage";
 import { PipelinePage } from "../pages/PipelinePage/PipelinePage";
 import { UserAppPage } from "../pages/UserAppPage/UserAppPage";
+import { UserManagement } from "../pages/UserManagement/UserManagement";
 import { UserPage } from "../pages/UserPage/UserPage";
 import { UserSessionsPage } from "../pages/UserSessionsPage/UserSessionsPage";
-import { UsersPage } from "../pages/UsersPage/UsersPage";
 import { UserTasksPage } from "../pages/UserTasksPage/UserTasksPage";
 import { WebhooksPage } from "../pages/WebhooksPage/WebhooksPage";
 
@@ -40,13 +40,13 @@ const getPageFromUrl = () => {
   const { page, hash } = getUrlParams();
 
   if (page === "wp-quick-tasks") {
-    const userTasksMatch = hash.match(/^#\/users\/(\d+)\/tasks$/);
+    const userTasksMatch = hash.match(/^#\/user-management\/(\d+)\/tasks$/);
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
       return <UserTasksPage userId={userId} />;
     }
 
-    const userMatch = hash.match(/^#\/users\/(\d+)$/);
+    const userMatch = hash.match(/^#\/user-management\/(\d+)$/);
     if (userMatch) {
       const userId = userMatch[1];
       return <UserPage userId={userId} />;
@@ -77,8 +77,8 @@ const getPageFromUrl = () => {
     }
 
     switch (hash) {
-      case "#/users":
-        return <UsersPage />;
+      case "#/user-management":
+        return <UserManagement />;
       case "#/archive":
         return <ArchivePage />;
       case "#/user-sessions":
@@ -108,7 +108,7 @@ const setSubMenuItemActive = () => {
   submenuItems.forEach((item) => item.classList.remove("wpqt-current"));
 
   const hashMap: { [key: string]: string } = {
-    "#/users": "#/users",
+    "#/user-management": "#/user-management",
     "#/overview": "#/overview",
     "#/archive": "#/archive",
     "#/user-sessions": "#/user-sessions",
@@ -123,8 +123,8 @@ const setSubMenuItemActive = () => {
 
   if (hashMap[hash] !== undefined) {
     targetHash = hashMap[hash];
-  } else if (/^#\/users(\/\d+)?(\/tasks)?$/.test(hash)) {
-    targetHash = "#/users";
+  } else if (/^#\/user-management(\/\d+)?(\/tasks)?$/.test(hash)) {
+    targetHash = "#/user-management";
   }
 
   submenuItems.forEach((item) => {

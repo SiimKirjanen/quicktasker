@@ -17,7 +17,7 @@ import { Page } from "../Page/Page";
 import { QuickTaskersSection } from "./QuickTaskersSection/QuickTaskersSection";
 import { RegularWPUsersSection } from "./RegularWPUserSection/ReqularWPUsersSection";
 
-function UsersPage() {
+function UserManagement() {
   const { updateUsers } = useContext(UserContext);
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
@@ -83,4 +83,4 @@ function UsersPage() {
   );
 }
 
-export { UsersPage };
+export { UserManagement };
