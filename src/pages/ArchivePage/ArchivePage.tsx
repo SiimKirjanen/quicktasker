@@ -22,6 +22,7 @@ function ArchivePage() {
             description={__("Archived tasks management page.", "quicktasker")}
             icon={
               <span
+                data-testid="archive-settings-button"
                 className="wpqt-inline-flex wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-400 wpqt-group"
                 onClick={() => {
                   modalDispatch({
