@@ -25,6 +25,13 @@ export function createWPUser(login: string, email: string, role = 'editor'): voi
   );
 }
 
+export function addWPUserCap(login: string, cap: string): void {
+  execSync(
+    `npm run wp-env:cli -- wp user add-cap ${login} ${cap}`,
+    { cwd: PROJECT_ROOT, stdio: 'pipe' },
+  );
+}
+
 
 /**
  * Navigate to the WordPress users tab in User Management (the default tab).
