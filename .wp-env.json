@@ -2,7 +2,8 @@
   "$schema": "https://schemas.wp.org/trunk/wp-env.json",
   "core": null,
   "plugins": [
-    "."
+    ".",
+    "./tests/e2e/test-plugins/qt-webhook-receiver"
   ],
   "port": 8889,
   "testsEnvironment": false,
