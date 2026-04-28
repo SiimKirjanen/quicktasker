@@ -547,21 +547,18 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
         ]);
 
         register_rest_route('wpqt/v1', 'user-page/tasks/(?P<task_hash>[a-zA-Z0-9]+)/users', [
-            'methods'  => 'POST, DELETE',
+            'methods'  => 'POST',
             'callback' => function ($data) {
                 global $wpdb;
 
                 try {
                     $wpdb->query('START TRANSACTION');
 
-                    $isCreating = 'POST' === $data->get_method();
                     $requestData = RequestValidation::validateUserPageApiRequest($data);
                     $userService = new UserService();
                     $taskRepository = new TaskRepository();
                     $permissionService = new PermissionService();
-                    $userPageRepository = new UserPageRepository();
                     $logService = new LogService();
-                    $automationTrigger = WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED;
 
                     $task = $taskRepository->getTaskByHash($data['task_hash']);
 
@@ -573,86 +570,56 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($requestData['session']->user_id, $requestData['userType']);
                     $createdBy = $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN;
 
-                    if ($isCreating) {
-                        if (!$permissionService->checkIfUserCanBeAssignedToTask($requestData['session']->user_id, $taskId)) {
-                            throw new WPQTException('Not allowed to assign', true);
-                        }
-
-                        $userService->assignTaskToUser($requestData['session']->user_id, $taskId, $requestData['userType']);
-
-                        $logService->log('Assigned itself to ' . $task->name . ' task', [
-                            'type'       => WP_QT_LOG_TYPE_USER,
-                            'type_id'    => $requestData['session']->user_id,
-                            'created_by' => $createdBy,
-                            'user_id'    => $requestData['session']->user_id
-                        ]);
-
-                        $logService->log($user->name . ' assigned itself to the task ' . $task->name, [
-                            'type'        => WP_QT_LOG_TYPE_TASK,
-                            'type_id'     => $taskId,
-                            'created_by'  => $createdBy,
-                            'user_id'     => $requestData['session']->user_id,
-                            'pipeline_id' => $task->pipeline_id
-                        ]);
-                    } else {
-                        $automationTrigger = WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED;
-                        $userService->removeTaskFromUser($requestData['session']->user_id, $taskId, $requestData['userType']);
-
-                        $logService->log('Unassigned itself from ' . $task->name . ' task', [
-                            'type'        => WP_QT_LOG_TYPE_USER,
-                            'type_id'     => $requestData['session']->user_id,
-                            'created_by'  => $createdBy,
-                            'user_id'     => $requestData['session']->user_id,
-                            'pipeline_id' => $task->pipeline_id
-                        ]);
-                        $logService->log($user->name . ' unassigned itself from the task', [
-                            'type'        => WP_QT_LOG_TYPE_TASK,
-                            'type_id'     => $taskId,
-                            'created_by'  => $createdBy,
-                            'user_id'     => $requestData['session']->user_id,
-                            'pipeline_id' => $task->pipeline_id
-                        ]);
+                    if (!$permissionService->checkIfUserCanBeAssignedToTask($requestData['session']->user_id, $taskId)) {
+                        throw new WPQTException('Not allowed to assign', true);
                     }
+
+                    $userService->assignTaskToUser($requestData['session']->user_id, $taskId, $requestData['userType']);
+
+                    $logService->log('Assigned itself to ' . $task->name . ' task', [
+                        'type'       => WP_QT_LOG_TYPE_USER,
+                        'type_id'    => $requestData['session']->user_id,
+                        'created_by' => $createdBy,
+                        'user_id'    => $requestData['session']->user_id
+                    ]);
+
+                    $logService->log($user->name . ' assigned itself to the task ' . $task->name, [
+                        'type'        => WP_QT_LOG_TYPE_TASK,
+                        'type_id'     => $taskId,
+                        'created_by'  => $createdBy,
+                        'user_id'     => $requestData['session']->user_id,
+                        'pipeline_id' => $task->pipeline_id
+                    ]);
 
                     $task = $taskRepository->getTaskByHash($data['task_hash'], true);
 
-                    /* Handle automations */
                     $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
                         $task->pipeline_id,
                         $taskId,
                         WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
-                        $automationTrigger,
+                        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED,
                         $user
                     );
-                    /* End of handling automations */
 
-                    /* Handle webhooks */
                     ServiceLocator::get('WebhookService')->handleWebhooks(
                         $task->pipeline_id,
                         [
                             [
                                 'data' => [
                                     'relatedObject' => $task,
-                                    'extraData'     => $isCreating
-                                        ? [
-                                            'assigned_user_id'   => $user->id,
-                                            'assigned_user_name' => $user->name,
-                                            'assigned_user_type' => $data->user_type,
-                                        ]
-                                        : [
-                                            'unassigned_user_id'   => $user->id,
-                                            'unassigned_user_name' => $user->name,
-                                            'unassigned_user_type' => $data->user_type,
-                                        ],
+                                    'extraData'     => [
+                                        'assigned_user_id'   => $user->id,
+                                        'assigned_user_name' => $user->name,
+                                        'assigned_user_type' => $data->user_type,
+                                    ],
                                 ],
                                 'webhookData' => [
                                     'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                                    'target_action' => $isCreating ? WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED : WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED,
+                                    'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_ASSIGNED,
                                 ]
                             ]
                         ]
                     );
-                    /* End Handle webhooks */
 
                     $wpdb->query('COMMIT');
 
@@ -672,11 +639,107 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
             },
             'permission_callback' => '__return_true',
             'args'                => [
-            'task_hash' => [
-                'required'          => true,
-                'validate_callback' => ['WPQT\RequestValidation', 'validateStringParam'],
-                'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+                'task_hash' => [
+                    'required'          => true,
+                    'validate_callback' => ['WPQT\RequestValidation', 'validateStringParam'],
+                    'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+                ],
             ],
+        ]);
+
+        register_rest_route('wpqt/v1', 'user-page/tasks/(?P<task_hash>[a-zA-Z0-9]+)/users', [
+            'methods'  => 'DELETE',
+            'callback' => function ($data) {
+                global $wpdb;
+
+                try {
+                    $wpdb->query('START TRANSACTION');
+
+                    $requestData = RequestValidation::validateUserPageApiRequest($data);
+                    $userService = new UserService();
+                    $taskRepository = new TaskRepository();
+                    $logService = new LogService();
+
+                    $task = $taskRepository->getTaskByHash($data['task_hash']);
+
+                    if (null === $task) {
+                        throw new WPQTException('Task not found', true);
+                    }
+
+                    $taskId = $task->id;
+                    $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($requestData['session']->user_id, $requestData['userType']);
+                    $createdBy = $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN;
+
+                    $userService->removeTaskFromUser($requestData['session']->user_id, $taskId, $requestData['userType']);
+
+                    $logService->log('Unassigned itself from ' . $task->name . ' task', [
+                        'type'        => WP_QT_LOG_TYPE_USER,
+                        'type_id'     => $requestData['session']->user_id,
+                        'created_by'  => $createdBy,
+                        'user_id'     => $requestData['session']->user_id,
+                        'pipeline_id' => $task->pipeline_id
+                    ]);
+                    $logService->log($user->name . ' unassigned itself from the task', [
+                        'type'        => WP_QT_LOG_TYPE_TASK,
+                        'type_id'     => $taskId,
+                        'created_by'  => $createdBy,
+                        'user_id'     => $requestData['session']->user_id,
+                        'pipeline_id' => $task->pipeline_id
+                    ]);
+
+                    $task = $taskRepository->getTaskByHash($data['task_hash'], true);
+
+                    $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                        $task->pipeline_id,
+                        $taskId,
+                        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED,
+                        $user
+                    );
+
+                    ServiceLocator::get('WebhookService')->handleWebhooks(
+                        $task->pipeline_id,
+                        [
+                            [
+                                'data' => [
+                                    'relatedObject' => $task,
+                                    'extraData'     => [
+                                        'unassigned_user_id'   => $user->id,
+                                        'unassigned_user_name' => $user->name,
+                                        'unassigned_user_type' => $data->user_type,
+                                    ],
+                                ],
+                                'webhookData' => [
+                                    'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                    'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED,
+                                ]
+                            ]
+                        ]
+                    );
+
+                    $wpdb->query('COMMIT');
+
+                    return new WP_REST_Response((new ApiResponse(true, [], (object) [
+                        'task'                => $task,
+                        'executedAutomations' => $executionResults->executedAutomations
+                    ]))->toArray(), 200);
+                } catch (WPQTException $e) {
+                    $wpdb->query('ROLLBACK');
+
+                    return new WP_REST_Response((new ApiResponse(false, [$e->getMessage()]))->toArray(), 400);
+                } catch (Throwable $e) {
+                    $wpdb->query('ROLLBACK');
+
+                    return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
+                }
+            },
+            'permission_callback' => '__return_true',
+            'args'                => [
+                'task_hash' => [
+                    'required'          => true,
+                    'validate_callback' => ['WPQT\RequestValidation', 'validateStringParam'],
+                    'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+                ],
             ],
         ]);
 
