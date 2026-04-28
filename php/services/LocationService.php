@@ -16,7 +16,7 @@ if (!class_exists('WPQT\Location\LocationService')) {
          */
         public function isWPQTPage()
         {
-            if (isset($_GET['page']) && 'wp-quick-tasks' === $_GET['page']) {
+            if (isset($_GET['page']) && 'wp-quicktasker' === $_GET['page']) {
                 return true;
             }
 

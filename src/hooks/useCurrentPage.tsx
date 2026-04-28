@@ -39,7 +39,7 @@ const useCurrentPage = () => {
 const getPageFromUrl = () => {
   const { page, hash } = getUrlParams();
 
-  if (page === "wp-quick-tasks") {
+  if (page === "wp-quicktasker") {
     const userTasksMatch = hash.match(/^#\/user-management\/(\d+)\/tasks$/);
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
@@ -81,13 +81,13 @@ const getPageFromUrl = () => {
         return <UserManagement />;
       case "#/archive":
         return <ArchivePage />;
-      case "#/user-sessions":
+      case "#/quicktasker-sessions":
         return <UserSessionsPage />;
       case "#/logs":
         return <LogsPage />;
-      case "#/guide":
+      case "#/about":
         return <GuidePage />;
-      case "#/user-page-link":
+      case "#/tasks-app-settings":
         return <UserAppPage />;
       default:
         return <PipelinePage />;
@@ -98,12 +98,12 @@ const getPageFromUrl = () => {
 const setSubMenuItemActive = () => {
   const { page, hash } = getUrlParams();
 
-  if (page !== "wp-quick-tasks") {
+  if (page !== "wp-quicktasker") {
     return;
   }
 
   const submenuItems = document.querySelectorAll(
-    "#toplevel_page_wp-quick-tasks .wp-submenu li",
+    "#toplevel_page_wp-quicktasker .wp-submenu li",
   );
   submenuItems.forEach((item) => item.classList.remove("wpqt-current"));
 
@@ -111,11 +111,11 @@ const setSubMenuItemActive = () => {
     "#/user-management": "#/user-management",
     "#/overview": "#/overview",
     "#/archive": "#/archive",
-    "#/user-sessions": "#/user-sessions",
-    "#/user-page-link": "#/user-page-link",
+    "#/quicktasker-sessions": "#/quicktasker-sessions",
+    "#/tasks-app-settings": "#/tasks-app-settings",
     "#/logs": "#/logs",
     "#/settings": "#/settings",
-    "#/guide": "#/guide",
+    "#/about": "#/about",
     default: "",
   };
 
@@ -133,7 +133,7 @@ const setSubMenuItemActive = () => {
     if (
       link &&
       link.getAttribute("href") &&
-      link.getAttribute("href") === `admin.php?page=wp-quick-tasks${targetHash}`
+      link.getAttribute("href") === `admin.php?page=wp-quicktasker${targetHash}`
     ) {
       item.classList.add("wpqt-current");
     }

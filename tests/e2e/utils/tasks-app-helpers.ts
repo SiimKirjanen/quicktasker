@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test';
 import { TIMEOUTS } from './timeouts';
 
-export const TASKS_APP_BASE_URL = '/wpqt?page=wp-quick-tasks-user&page_id=wpqt';
+export const TASKS_APP_BASE_URL = '/wpqt?page=wp-quicktasker-user&page_id=wpqt';
 
 export async function navigateToTasksApp(page: Page): Promise<void> {
   await page.goto(TASKS_APP_BASE_URL);

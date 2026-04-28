@@ -41,7 +41,7 @@ test.describe('WP User Capabilities – No Capabilities', () => {
 
   test('accessing boards page directly shows insufficient permissions error', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByText('Sorry, you are not allowed to access this page.')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -69,7 +69,7 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
 
   test('can access the boards page', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -79,7 +79,7 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
   test('User management submenu is not visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
     // Navigate to boards page so the QuickTasker menu is expanded in the sidebar
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -91,7 +91,7 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
 
   test('Archive submenu is not visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -103,7 +103,7 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
 
   test('Tasks app submenu is not visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -115,7 +115,7 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
 
   test('Add new board button is not visible in pipeline dropdown', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -125,7 +125,7 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
 
   test('Board settings options are not visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -135,7 +135,7 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
 
   test('Add stage button is not visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -156,7 +156,7 @@ test.describe('WP User Capabilities – Manage Users', () => {
 
   test('User management submenu is visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -194,7 +194,7 @@ test.describe('WP User Capabilities – Manage Archive', () => {
 
   test('Archive submenu is visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -232,7 +232,7 @@ test.describe('WP User Capabilities – Tasks App', () => {
 
   test('Tasks app submenu is visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -255,7 +255,7 @@ test.describe('WP User Capabilities – Manage Settings', () => {
 
   test('Add new board button is visible in pipeline dropdown', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -266,7 +266,7 @@ test.describe('WP User Capabilities – Manage Settings', () => {
 
   test('Board settings options are visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -276,7 +276,7 @@ test.describe('WP User Capabilities – Manage Settings', () => {
 
   test('Add stage button is visible', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -286,7 +286,7 @@ test.describe('WP User Capabilities – Manage Settings', () => {
 
   test('Delete stage option is not visible in stage controls dropdown', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
@@ -310,7 +310,7 @@ test.describe('WP User Capabilities – Allow Delete', () => {
 
   test('Delete stage option is visible in stage controls dropdown', async ({ browser }) => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
-    await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });

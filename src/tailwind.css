@@ -100,13 +100,13 @@
 
 .wpqt-admin-page
   #adminmenu
-  #toplevel_page_wp-quick-tasks
+  #toplevel_page_wp-quicktasker
   .wp-submenu
   li.current
   a,
 .wpqt-admin-page
   #adminmenu
-  #toplevel_page_wp-quick-tasks
+  #toplevel_page_wp-quicktasker
   .wp-submenu
   li.current {
   font-weight: normal;
@@ -114,7 +114,7 @@
 }
 .wpqt-admin-page
   #adminmenu
-  #toplevel_page_wp-quick-tasks
+  #toplevel_page_wp-quicktasker
   .wp-submenu
   li.wpqt-current
   a {
