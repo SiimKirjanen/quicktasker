@@ -42,7 +42,7 @@ class LocationServiceTest extends TestCase
 
     public function test_isWPQTPage_returns_true_when_page_is_wp_quick_tasks()
     {
-        $_GET['page'] = 'wp-quick-tasks';
+        $_GET['page'] = 'wp-quicktasker';
 
         $result = $this->service->isWPQTPage();
 
@@ -96,7 +96,7 @@ class LocationServiceTest extends TestCase
 
     public function test_isWPQTPublicUserPage_returns_false_when_page_is_different()
     {
-        $_GET['page'] = 'wp-quick-tasks';
+        $_GET['page'] = 'wp-quicktasker';
 
         $result = $this->service->isWPQTPublicUserPage();
 
@@ -195,7 +195,7 @@ class LocationServiceTest extends TestCase
 
     public function test_multiple_checks_can_coexist()
     {
-        $_GET['page'] = 'wp-quick-tasks';
+        $_GET['page'] = 'wp-quicktasker';
         $_GET['wpqt-page'] = WP_QUICKTASKER_TASK_PDF_EXPORT_PAGE_ID;
 
         $this->assertTrue($this->service->isWPQTPage());
@@ -206,7 +206,7 @@ class LocationServiceTest extends TestCase
 
     public function test_all_methods_return_boolean()
     {
-        $_GET['page'] = 'wp-quick-tasks';
+        $_GET['page'] = 'wp-quicktasker';
 
         $this->assertIsBool($this->service->isWPQTPage());
         $this->assertIsBool($this->service->isWPQTPublicUserPage());

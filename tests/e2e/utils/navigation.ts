@@ -16,7 +16,7 @@ export async function navigateToAdminPage(page: Page, path: string) {
  * Navigate to QuickTasker boards page
  */
 export async function navigateToBoardsPage(page: Page) {
-  await page.goto('/wp-admin/admin.php?page=wp-quick-tasks');
+  await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
   await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
 }
 

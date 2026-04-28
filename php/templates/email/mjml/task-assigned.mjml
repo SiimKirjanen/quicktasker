@@ -1,4 +1,4 @@
-<!-- filepath: /s:/XAMP_8_2/htdocs/wp-quick-tasks/wp-content/plugins/quicktasker/php/templates/email/mjml/new-task-created.mjml -->
+<!-- filepath: /s:/XAMP_8_2/htdocs/wp-quicktasker/wp-content/plugins/quicktasker/php/templates/email/mjml/new-task-created.mjml -->
 <mjml>
   <mj-head>
     <mj-title>Task Assigned</mj-title>

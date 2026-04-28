@@ -12,71 +12,71 @@ if (!function_exists('wp_quick_taks_add_admin_menu')) {
             'QuickTasker',
             'QuickTasker',
             WP_QUICKTASKER_ADMIN_ROLE,
-            'wp-quick-tasks',
+            'wp-quicktasker',
             'wp_quick_taks_generate_app_page',
             plugins_url('img/menu-item.png', dirname(__FILE__)),
         );
 
         add_submenu_page(
-            'wp-quick-tasks',
+            'wp-quicktasker',
             esc_html__('Boards', 'quicktasker'),
             esc_html__('Boards', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE,
-            'wp-quick-tasks',
+            'wp-quicktasker',
             'wp_quick_taks_generate_app_page'
         );
 
         add_submenu_page(
-            'wp-quick-tasks',
+            'wp-quicktasker',
             esc_html__('User management', 'quicktasker'),
             esc_html__('User management', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS,
-            'wp-quick-tasks#/user-management',
+            'wp-quicktasker#/user-management',
             'wp_quick_taks_generate_app_page'
         );
 
         add_submenu_page(
-            'wp-quick-tasks',
+            'wp-quicktasker',
             esc_html__('Tasks app', 'quicktasker'),
             esc_html__('Tasks app', 'quicktasker'),
             WP_QUICKTASKER_ACCESS_USER_PAGE_APP,
-            'wp-quick-tasks#/user-page-link',
+            'wp-quicktasker#/tasks-app-settings',
             'wp_quick_taks_generate_app_page'
         );
 
         add_submenu_page(
-            'wp-quick-tasks',
+            'wp-quicktasker',
             esc_html__('Quicktasker sessions', 'quicktasker'),
             esc_html__('Quicktasker sessions', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS,
-            'wp-quick-tasks#/user-sessions',
+            'wp-quicktasker#/quicktasker-sessions',
             'wp_quick_taks_generate_app_page'
         );
 
         add_submenu_page(
-            'wp-quick-tasks',
+            'wp-quicktasker',
             esc_html__('Archive', 'quicktasker'),
             esc_html__('Archive', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE,
-            'wp-quick-tasks#/archive',
+            'wp-quicktasker#/archive',
             'wp_quick_taks_generate_app_page'
         );
 
         add_submenu_page(
-            'wp-quick-tasks',
+            'wp-quicktasker',
             esc_html__('Logs', 'quicktasker'),
             esc_html__('Logs', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE,
-            'wp-quick-tasks#/logs',
+            'wp-quicktasker#/logs',
             'wp_quick_taks_generate_app_page'
         );
 
         add_submenu_page(
-            'wp-quick-tasks',
+            'wp-quicktasker',
             esc_html__('About', 'quicktasker'),
             esc_html__('About', 'quicktasker'),
             WP_QUICKTASKER_ADMIN_ROLE,
-            'wp-quick-tasks#/guide',
+            'wp-quicktasker#/about',
             'wp_quick_taks_generate_app_page'
         );
     }
