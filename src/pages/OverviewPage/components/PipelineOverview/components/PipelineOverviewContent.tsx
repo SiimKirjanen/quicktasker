@@ -75,7 +75,7 @@ function PipelineOverviewContent({ pipelineId }: Props) {
           colorClass="wpqt-bg-red-500"
         />
       </div>
-      <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center xl:wpqt-justify-start">
+      <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center">
         <StageDistributionChart
           pipelineOverviewData={pipelineOverviewData}
           options={defaultChartoptions}
