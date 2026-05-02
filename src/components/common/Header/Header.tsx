@@ -25,7 +25,7 @@ function WPQTPageHeader({
           <div className="wpqt-ml-auto">{rightSideContent}</div>
         )}
       </div>
-      <div>
+      <div className="wpqt-whitespace-pre-line">
         {description} {readMoreLink}
       </div>
     </div>

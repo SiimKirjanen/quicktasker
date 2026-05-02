@@ -18,7 +18,7 @@ function WPQTFilter({
   titleClassName = "",
 }: Props) {
   return (
-    <div className="wpqt-mb-8">
+    <div className="wpqt-mb-2">
       <div
         className={`wpqt-mb-3 wpqt-text-lg wpqt-text-center wpqt-font-semibold ${titleClassName}`}
       >

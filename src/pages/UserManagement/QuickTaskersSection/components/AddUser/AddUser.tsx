@@ -13,6 +13,7 @@ function AddUser() {
   const [showInput, setShowInput] = useState(false);
   const [userName, setUserName] = useState("");
   const [userDescription, setUserDescription] = useState("");
+  const [loading, setLoading] = useState(false);
   const { userDispatch } = useContext(UserContext);
   const { createUser } = useUserActions();
 
@@ -21,10 +22,12 @@ function AddUser() {
       toast.error("User name is required");
       return;
     }
+    setLoading(true);
     await createUser(userName, userDescription, (userData) => {
       userDispatch({ type: ADD_USER, payload: userData });
       clearStatus();
     });
+    setLoading(false);
   };
 
   const clearStatus = () => {
@@ -34,9 +37,9 @@ function AddUser() {
   };
 
   return (
-    <div className="wpqt-mb-6">
+    <div>
       {showInput ? (
-        <div className="wpqt-w-1/4">
+        <div className="wpqt-w-72">
           <label className="wpqt-mb-2 wpqt-block wpqt-font-semibold">
             {__("User name", "quicktasker")}
           </label>
@@ -58,11 +61,13 @@ function AddUser() {
               text={__("Cancel", "quicktasker")}
               onClick={clearStatus}
               icon={<XMarkIcon className="wpqt-icon-red wpqt-size-5" />}
+              disabled={loading}
             />
             <WPQTIconButton
               text={__("Add", "quicktasker")}
               onClick={onCreateUser}
               icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
+              loading={loading}
             />
           </div>
         </div>

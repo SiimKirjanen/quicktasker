@@ -86,7 +86,7 @@ function WPUserItem({ user }: Props) {
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
           {__(
-            "Access to manage settings (boards, stages, automations, webhooks)",
+            "Access to manage settings (boards, stages, automations, webhooks, api tokens)",
             "quicktasker",
           )}
         </div>
