@@ -37,7 +37,7 @@ function UserListItem({ user }: Props) {
     >
       <WPQTCardDataItem
         className="hover:wpqt-underline wpqt-self-start"
-        label={__("Open user page", "quicktasker")}
+        label={__("Open tasks app", "quicktasker")}
         icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
         onClick={(e) => {
           e.stopPropagation();
