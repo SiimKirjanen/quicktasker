@@ -1,4 +1,5 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
+import { TIMEOUTS } from './timeouts';
 
 /**
  * WordPress authentication utilities for e2e testing
@@ -14,16 +15,26 @@ export const WP_ADMIN_USER = {
  */
 export async function loginToWordPress(page: Page, username = WP_ADMIN_USER.username, password = WP_ADMIN_USER.password) {
   await page.goto('/wp-login.php');
-  await page.fill('#user_login', username);
-  await page.fill('#user_pass', password);
+
+  const usernameField = page.getByLabel('Username or Email Address');
+  const passwordField = page.getByLabel('Password', { exact: true });
+
+  await expect(usernameField).toBeEditable();
+  await usernameField.fill(username);
+  await expect(usernameField).toHaveValue(username);
+
+  // Wait for WP's login script to render the show-password toggle. Until this
+  // button exists the password input is still being re-initialized, and any
+  // keystrokes typed in the meantime get dropped.
+  await expect(page.locator('button.wp-hide-pw')).toBeVisible();
+
+  await expect(passwordField).toBeEditable();
+  await passwordField.fill(password);
+  await expect(passwordField).toHaveValue(password);
+
   await page.click('#wp-submit');
-  
-  // Wait for successful login - admin bar should be visible
-  await page.waitForURL(/wp-admin/, { timeout: 10000 });
-  await page.waitForSelector('#wpadminbar', { timeout: 10000 });
-  
-  // Additional wait for page to stabilize
-  await page.waitForLoadState('networkidle');
+
+  await expect(page.locator('#wpadminbar')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
 }
 
 /**

@@ -1,35 +1,68 @@
-import { execSync } from 'child_process';
-import * as path from 'path';
-import { Locator, Page, expect } from '@playwright/test';
+import { APIRequestContext, Locator, Page, expect } from '@playwright/test';
 import { navigateToUserManagement } from './navigation';
 import { getTaskCard } from './board-helpers';
 import { TIMEOUTS } from './timeouts';
 
-/**
- * User management utilities for e2e testing
- * Helpers for working with QuickTasker users and WordPress users
- */
-
-const PROJECT_ROOT = path.resolve(__dirname, '../../..');
-
-/**
- * Create a WordPress user in the wp-env test environment via WP-CLI.
- * @param login - WordPress username (login)
- * @param email - User email address
- * @param role  - WordPress role (default: 'editor')
- */
-export function createWPUser(login: string, email: string, role = 'editor'): void {
-  execSync(
-    `npm run wp-env:cli -- wp user create ${login} ${email} --role=${role} --user_pass=password123`,
-    { cwd: PROJECT_ROOT, stdio: 'pipe' },
-  );
+export function uniqueLogin(prefix: string): string {
+  return `${prefix}${Date.now()}${Math.random().toString(36).slice(2, 5)}`;
 }
 
-export function addWPUserCap(login: string, cap: string): void {
-  execSync(
-    `npm run wp-env:cli -- wp user add-cap ${login} ${cap}`,
-    { cwd: PROJECT_ROOT, stdio: 'pipe' },
-  );
+const ALL_CAPS = [
+  'quicktasker_admin_role',
+  'quicktasker_admin_role_allow_delete',
+  'quicktasker_admin_role_manage_users',
+  'quicktasker_admin_role_manage_settings',
+  'quicktasker_admin_role_manage_archive',
+  'quicktasker_access_user_page_app',
+] as const;
+
+async function getAdminNonce(request: APIRequestContext): Promise<string> {
+  const response = await request.get('/wp-admin/');
+  const html = await response.text();
+  const match = html.match(/"nonce":"([^"]+)"/);
+  if (!match) throw new Error('Could not find WP REST nonce in admin page response');
+  return match[1];
+}
+
+/**
+ * Create a WordPress user via the WP REST API.
+ * Returns the new user's ID.
+ */
+export async function createWPUser(
+  request: APIRequestContext,
+  login: string,
+  email: string,
+  role = 'editor',
+): Promise<number> {
+  const nonce = await getAdminNonce(request);
+  const response = await request.post('/wp-json/wp/v2/users', {
+    headers: { 'X-WP-Nonce': nonce },
+    data: { username: login, email, password: 'password123', roles: [role] },
+  });
+  if (!response.ok()) throw new Error(`Failed to create WP user: ${await response.text()}`);
+  const user = await response.json();
+  return user.id;
+}
+
+/**
+ * Grant QuickTasker capabilities to a WordPress user via the plugin REST API.
+ * Caps not listed in `caps` are set to false.
+ */
+export async function grantWPUserCaps(
+  request: APIRequestContext,
+  userId: number,
+  caps: string[],
+): Promise<void> {
+  const nonce = await getAdminNonce(request);
+  const capabilities: Record<string, boolean> = {};
+  for (const cap of ALL_CAPS) {
+    capabilities[cap] = caps.includes(cap);
+  }
+  const response = await request.patch(`/wp-json/wpqt/v1/wp-users/${userId}/capabilities`, {
+    headers: { 'X-WP-Nonce': nonce },
+    data: capabilities,
+  });
+  if (!response.ok()) throw new Error(`Failed to grant WP user caps: ${await response.text()}`);
 }
 
 
