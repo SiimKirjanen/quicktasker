@@ -34,8 +34,7 @@ test.describe('User Management – Page Structure', () => {
   test('QuickTaskers tab shows Add button and filter', async ({ page }) => {
     await navigateToQuickTaskersTab(page);
     await expect(page.getByText('Add QuickTasker')).toBeVisible();
-    await expect(page.getByText('User filtering')).toBeVisible();
-    await expect(page.getByRole('textbox', { name: 'Search' })).toBeVisible();
+    await expect(page.getByPlaceholder('Search by name')).toBeVisible();
   });
 });
 
@@ -126,11 +125,11 @@ test.describe('User Management – User Card', () => {
     await createQuickTaskerUser(page, userName, description);
   });
 
-  test('shows username, description, Open user page, View user details and status', async ({ page }) => {
+  test('shows username, description, Open tasks app, View user details and status', async ({ page }) => {
     const card = getQuickTaskerCard(page, userName);
     await expect(card.getByText(userName)).toBeVisible();
     await expect(card.getByText(description)).toBeVisible();
-    await expect(card.getByText('Open user page')).toBeVisible();
+    await expect(card.getByText('Open tasks app')).toBeVisible();
     await expect(card.getByText('View user details')).toBeVisible();
     await expect(card.getByText('Active')).toBeVisible();
   });
@@ -146,10 +145,10 @@ test.describe('User Management – User Card', () => {
     expect(page.url()).toContain('#/user-management/');
   });
 
-  test('Open user page opens the public tasks app in a new tab', async ({ page }) => {
+  test('Open tasks app opens the public tasks app in a new tab', async ({ page }) => {
     const [newPage] = await Promise.all([
       page.context().waitForEvent('page'),
-      getQuickTaskerCard(page, userName).getByText('Open user page').click(),
+      getQuickTaskerCard(page, userName).getByText('Open tasks app').click(),
     ]);
     await newPage.waitForLoadState('domcontentloaded');
     expect(newPage.url()).toContain('code=');
@@ -222,6 +221,8 @@ test.describe('User Management – User Dropdown', () => {
     await expect(getQuickTaskerCard(page, userName).getByText('Disabled')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
     await openDropdown(page, userName);
     await page.getByRole('menuitem', { name: 'Delete user' }).click();
+    await expect(page.getByText('Are you sure you want to delete this user?')).toBeVisible();
+    await page.getByRole('button', { name: 'Delete' }).click();
     await expect(getQuickTaskerCard(page, userName)).not.toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
   });
 });

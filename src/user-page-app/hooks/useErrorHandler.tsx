@@ -1,7 +1,10 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { WP_QUICKTASKER_INVALID_SESSION_TOKEN } from "../../constants";
+import {
+  WP_QUICKTASKER_INVALID_SESSION_TOKEN,
+  WP_QUICKTASKER_USER_NOT_ACTIVE,
+} from "../../constants";
 import { UserPageAppContext } from "../providers/UserPageAppContextProvider";
 import { useSession } from "./useSession";
 
@@ -21,6 +24,10 @@ function useErrorHandler() {
       const hasInvalidTokenError = errorMessage.includes(
         WP_QUICKTASKER_INVALID_SESSION_TOKEN,
       );
+      const hasUserNotActiveError = errorMessage.includes(
+        WP_QUICKTASKER_USER_NOT_ACTIVE,
+      );
+
       if (hasInvalidTokenError) {
         toast.info(
           __(
@@ -29,6 +36,8 @@ function useErrorHandler() {
           ),
         );
         await deleteSessionCookie();
+        loadUserPageStatus();
+      } else if (hasUserNotActiveError) {
         loadUserPageStatus();
       } else {
         toast.error(errorMessage);

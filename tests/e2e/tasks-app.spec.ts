@@ -6,7 +6,13 @@ import {
   createTask,
   generateUniqueName,
 } from './utils/board-helpers';
-import { assignWordPressUserToTask } from './utils/user-helpers';
+import {
+  assignWordPressUserToTask,
+  createQuickTaskerUser,
+  disableQuickTaskerUser,
+  navigateToQuickTaskersTab,
+  navigateToUserDetailPage,
+} from './utils/user-helpers';
 import { ADMIN_USERNAME } from './constants';
 import { TIMEOUTS } from './utils/timeouts';
 import {
@@ -18,6 +24,9 @@ import {
   navigateToNotifications,
   getTasksAppTaskCard,
   addTasksAppComment,
+  getQuickTaskerUserPageUrl,
+  openAnonymousPage,
+  completeQuickTaskerSetup,
 } from './utils/tasks-app-helpers';
 
 // ── Shared setup helpers ──────────────────────────────────────────────────────
@@ -319,5 +328,59 @@ test.describe('Tasks App – Notifications', () => {
   test('shows new comment count', async ({ page }) => {
     await navigateToNotifications(page);
     await expect(page.getByText(/You have \d+ new comment/)).toBeVisible();
+  });
+});
+
+test.describe('Tasks App – QuickTasker User First Login Flow', () => {
+  let userName: string;
+  let userPageUrl: string;
+  const password = 'qt-pass-123';
+
+  test.beforeEach(async ({ page }) => {
+    userName = generateUniqueName('TA-FL-User');
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, userName);
+    await navigateToUserDetailPage(page, userName);
+    userPageUrl = await getQuickTaskerUserPageUrl(page);
+  });
+
+  test('first visit walks through setup, login, and reaches homepage', async ({ browser }) => {
+    const { context, page } = await openAnonymousPage(browser);
+    await page.goto(userPageUrl);
+    await expect(page.getByText(`Hello ${userName}`)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByText('Please complete the setup')).toBeVisible();
+    await page.locator('input[type="password"]').nth(0).fill(password);
+    await page.locator('input[type="password"]').nth(1).fill(password);
+    await page.getByRole('button', { name: 'Setup' }).click();
+    await expect(page.getByText('Please log in to continue')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await page.getByTestId('password-input').fill(password);
+    await page.getByRole('button', { name: 'Login' }).click();
+    await expect(page.getByText(/Assigned tasks:/)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await context.close();
+  });
+
+  test('returning visit after setup goes straight to login page', async ({ browser }) => {
+    const { context, page } = await openAnonymousPage(browser);
+    await completeQuickTaskerSetup(page, userPageUrl, password);
+    await page.goto(userPageUrl);
+    await expect(page.getByText('Please log in to continue')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByText('Please complete the setup')).not.toBeVisible();
+    await context.close();
+  });
+
+  test('disabled user sees not-active notification instead of setup or login', async ({ page, browser }) => {
+    await navigateToQuickTaskersTab(page);
+    await disableQuickTaskerUser(page, userName);
+
+    const { context, page: anonPage } = await openAnonymousPage(browser);
+    await anonPage.goto(userPageUrl);
+    await expect(
+      anonPage.getByRole('heading', { name: 'User is not active' }),
+    ).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(
+      anonPage.getByText('Your user is not active. Please contact site administrator.'),
+    ).toBeVisible();
+    await expect(anonPage.getByText('Please complete the setup')).not.toBeVisible();
+    await context.close();
   });
 });

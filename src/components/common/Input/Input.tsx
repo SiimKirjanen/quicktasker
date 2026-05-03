@@ -22,6 +22,7 @@ type Props = {
   errorText?: string;
   placeholder?: string;
   leftIcon?: React.ReactNode;
+  autoComplete?: string;
 };
 
 const WPQTInput = forwardRef<HTMLInputElement, Props>(
@@ -40,6 +41,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
       errorText,
       placeholder,
       leftIcon,
+      autoComplete,
       ...restProps
     },
     ref,
@@ -59,6 +61,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
           id={inputId}
           name={name}
           placeholder={placeholder}
+          autoComplete={autoComplete}
           {...restProps}
         />
         {leftIcon && (

@@ -75,6 +75,7 @@ function SetUpPage() {
               value={password}
               onChange={setPassword}
               type={InputType.PASSWORD}
+              autoComplete="new-password"
               className="wpqt-w-full"
               wrapperClassName="wpqt-w-full"
             />
@@ -87,6 +88,7 @@ function SetUpPage() {
               value={passwordRepeat}
               onChange={setPasswordRepeat}
               type={InputType.PASSWORD}
+              autoComplete="new-password"
               className="wpqt-w-full"
               wrapperClassName="wpqt-w-full"
             />

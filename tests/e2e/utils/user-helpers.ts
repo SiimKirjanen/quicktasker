@@ -162,6 +162,17 @@ export async function navigateToUserTasksPage(page: Page, userName: string): Pro
 }
 
 /**
+ * Disable a QuickTasker user via the card dropdown. Must already be on the QuickTaskers tab.
+ */
+export async function disableQuickTaskerUser(page: Page, userName: string): Promise<void> {
+  await getQuickTaskerCard(page, userName).getByTestId('dropdown-icon').click();
+  await page.getByRole('menuitem', { name: 'Disable user' }).click();
+  await expect(getQuickTaskerCard(page, userName).getByText('Disabled')).toBeVisible({
+    timeout: TIMEOUTS.NAVIGATION,
+  });
+}
+
+/**
  * Assign a QuickTasker user to a task via the task's user-assignment dropdown.
  * Must already be on a board page with the task visible.
  */

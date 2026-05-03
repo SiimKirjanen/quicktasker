@@ -18,10 +18,7 @@ async function openBoardSettings(page: Page): Promise<void> {
 }
 
 async function openUsersSettings(page: Page): Promise<void> {
-  await page
-    .getByRole('heading', { name: 'User management Settings' })
-    .getByText('Settings')
-    .click();
+  await page.locator('#wpqt-app').getByText('Settings', { exact: true }).click();
   await expect(page.getByTestId('users-settings-modal')).toBeVisible();
 }
 

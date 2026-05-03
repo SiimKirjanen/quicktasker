@@ -51,6 +51,16 @@ export const convertUTCDatetimeToWPTimezone = (
 };
 
 /**
+ * Checks whether a UTC date-time string is in the past.
+ *
+ * @param utcDateTime - The date-time string in UTC format.
+ * @returns True if the given date-time is before the current time.
+ */
+export const isUTCDateInPast = (utcDateTime: string): boolean => {
+  return dayjs.utc(utcDateTime).isBefore(dayjs.utc());
+};
+
+/**
  * Retrieves the user's browser timezone using the Intl API.
  *
  * @returns The IANA timezone string representing the user's browser timezone.
