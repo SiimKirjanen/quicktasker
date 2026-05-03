@@ -41,10 +41,7 @@ function UserSessionsPageContent() {
   return (
     <>
       <WPQTPageHeader
-        description={__(
-          "Track and manage QuickTasker user sessions",
-          "quicktasker",
-        )}
+        description={__("Track QuickTasker user sessions", "quicktasker")}
       >
         {__("Quicktasker sessions", "quicktasker")}
       </WPQTPageHeader>

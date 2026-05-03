@@ -140,21 +140,7 @@ class SessionServiceTest extends TestCase {
         $this->assertEquals('sessionToken', $params[0]->getName());
     }
 
-    public function test_changeSessionStatus_method_exists() {
-        $this->assertTrue(method_exists(\WPQT\Session\SessionService::class, 'changeSessionStatus'));
-        
-        $reflection = new ReflectionMethod(\WPQT\Session\SessionService::class, 'changeSessionStatus');
-        $this->assertTrue($reflection->isPublic());
-        $this->assertFalse($reflection->isStatic());
-        $this->assertEquals(2, $reflection->getNumberOfParameters());
-        
-        // Check parameter names
-        $params = $reflection->getParameters();
-        $this->assertEquals('sessionId', $params[0]->getName());
-        $this->assertEquals('status', $params[1]->getName());
-    }
-
-    public function test_logOutCurrentWPUser_method_exists() {
+public function test_logOutCurrentWPUser_method_exists() {
         $this->assertTrue(method_exists(\WPQT\Session\SessionService::class, 'logOutCurrentWPUser'));
         
         $reflection = new ReflectionMethod(\WPQT\Session\SessionService::class, 'logOutCurrentWPUser');
@@ -254,31 +240,7 @@ class SessionServiceTest extends TestCase {
         $this->markTestIncomplete('Requires WordPress environment with $wpdb');
     }
 
-    /**
-     * Integration test for changeSessionStatus
-     * 
-     * This test requires WordPress environment with $wpdb.
-     * 
-     * Test scenarios:
-     * 1. Should update session in TABLE_WP_QUICKTASKER_USER_SESSIONS
-     * 2. Should set is_active = $status (can be 0 or 1, true or false)
-     * 3. Should update WHERE id = $sessionId
-     * 4. Should throw WPQTException 'Failed to change session status' with shouldSendToFrontEnd=true if update fails
-     * 5. Should return true on success
-     * 6. Should accept boolean values for $status parameter
-     * 7. $wpdb->update() returns false on error, 0 if no rows updated, >0 if rows updated
-     * 8. Only checks if $result === false (strict comparison)
-     * 
-     * Dependencies:
-     * - global $wpdb with update()
-     * - TABLE_WP_QUICKTASKER_USER_SESSIONS constant
-     * - WPQTException
-     */
-    public function test_changeSessionStatus_integration() {
-        $this->markTestIncomplete('Requires WordPress environment with $wpdb');
-    }
-
-    /**
+/**
      * Integration test for logOutCurrentWPUser
      * 
      * This test requires WordPress environment with wp_clear_auth_cookie() function.

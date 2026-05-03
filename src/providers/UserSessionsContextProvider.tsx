@@ -8,7 +8,6 @@ import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { getUserSessionsRequest } from "../api/api";
 import {
-  CHANGE_USER_SESSION_STATUS,
   SET_FULL_PAGE_LOADING,
   SET_USER_SESSIONS,
   SET_USER_SESSIONS_SEARCH_VALUE,
@@ -31,11 +30,7 @@ type State = {
 
 type Action =
   | { type: typeof SET_USER_SESSIONS_SEARCH_VALUE; payload: string }
-  | { type: typeof SET_USER_SESSIONS; payload: ServerUserSession[] }
-  | {
-      type: typeof CHANGE_USER_SESSION_STATUS;
-      payload: { sessionId: string; status: boolean };
-    };
+  | { type: typeof SET_USER_SESSIONS; payload: ServerUserSession[] };
 
 type Dispatch = (action: Action) => void;
 

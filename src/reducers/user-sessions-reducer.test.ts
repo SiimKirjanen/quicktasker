@@ -1,10 +1,9 @@
 import {
-  CHANGE_USER_SESSION_STATUS,
   SET_USER_SESSIONS,
   SET_USER_SESSIONS_SEARCH_VALUE,
 } from "../constants";
 import { Action, State } from "../providers/UserSessionsContextProvider";
-import { ServerUserSession, UserSession } from "../types/user-session";
+import { ServerUserSession } from "../types/user-session";
 import { reducer } from "./user-sessions-reducer";
 
 const baseState: State = {
@@ -21,9 +20,6 @@ const makeServerSession = (
     is_active: "1",
     ...overrides,
   }) as unknown as ServerUserSession;
-
-const makeSession = (overrides: Partial<UserSession> = {}): UserSession =>
-  ({ id: "s1", is_active: true, ...overrides }) as unknown as UserSession;
 
 describe("user-sessions reducer", () => {
   it("SET_USER_SESSIONS_SEARCH_VALUE", () => {
@@ -44,22 +40,6 @@ describe("user-sessions reducer", () => {
     });
     expect(next.userSessions[0].is_active).toBe(true);
     expect(next.userSessions[1].is_active).toBe(false);
-  });
-
-  it("CHANGE_USER_SESSION_STATUS toggles only matching session", () => {
-    const state: State = {
-      ...baseState,
-      userSessions: [
-        makeSession({ id: "a", is_active: true }),
-        makeSession({ id: "b", is_active: true }),
-      ],
-    };
-    const next = reducer(state, {
-      type: CHANGE_USER_SESSION_STATUS,
-      payload: { sessionId: "a", status: false },
-    });
-    expect(next.userSessions.find((s) => s.id === "a")?.is_active).toBe(false);
-    expect(next.userSessions.find((s) => s.id === "b")?.is_active).toBe(true);
   });
 
   it("returns state for unknown action", () => {

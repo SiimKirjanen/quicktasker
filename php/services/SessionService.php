@@ -103,37 +103,6 @@ if (!class_exists('WPQT\Session\SessionService')) {
         }
 
         /**
-         * Changes the status of a user session.
-         *
-         * This function updates the 'is_active' status of a user session in the database.
-         *
-         * @param int $sessionId The ID of the session to update.
-         * @param bool $status The new status of the session (true for active, false for inactive).
-         * @return bool Returns true on success.
-         * @throws WPQTException If the update fails.
-         */
-        public function changeSessionStatus($sessionId, $status)
-        {
-            global $wpdb;
-
-            $result = $wpdb->update(
-                TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                [
-                    'is_active' => $status
-                ],
-                [
-                    'id' => $sessionId
-                ]
-            );
-
-            if (false === $result) {
-                throw new WPQTException('Failed to change session status', true);
-            }
-
-            return true;
-        }
-
-        /**
          * Logs out the current WordPress user by clearing the authentication cookie.
          *
          * This function is used to log out the current user from the WordPress session.
