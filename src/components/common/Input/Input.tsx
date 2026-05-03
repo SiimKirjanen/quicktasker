@@ -21,6 +21,7 @@ type Props = {
   name?: string;
   errorText?: string;
   placeholder?: string;
+  leftIcon?: React.ReactNode;
 };
 
 const WPQTInput = forwardRef<HTMLInputElement, Props>(
@@ -38,6 +39,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
       name,
       errorText,
       placeholder,
+      leftIcon,
       ...restProps
     },
     ref,
@@ -49,7 +51,7 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
         <Input
           ref={ref}
           autoFocus={isAutoFocus}
-          className={`wpqt-block wpqt-box-border !wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`}
+          className={`wpqt-block wpqt-box-border !wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-1.5 wpqt-text-sm/6 focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${leftIcon ? "!wpqt-pl-7" : ""} ${className}`}
           value={value}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
@@ -59,6 +61,11 @@ const WPQTInput = forwardRef<HTMLInputElement, Props>(
           placeholder={placeholder}
           {...restProps}
         />
+        {leftIcon && (
+          <span className="wpqt-absolute wpqt-left-2 wpqt-top-0 wpqt-bottom-0 wpqt-pointer-events-none wpqt-text-gray-400 wpqt-flex wpqt-items-center">
+            {leftIcon}
+          </span>
+        )}
         {loading && (
           <LoadingOval
             width="24"

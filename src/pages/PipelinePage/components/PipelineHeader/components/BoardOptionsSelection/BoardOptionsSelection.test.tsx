@@ -9,6 +9,12 @@ const navigatePageMock = jest.fn();
 jest.mock("../../../../../../hooks/useNavigation", () => ({
   useNavigation: () => ({ navigatePage: navigatePageMock }),
 }));
+jest.mock("../../../../../../hooks/useApp", () => ({
+  useApp: () => ({
+    state: { isUserAllowedToManageSettings: true },
+    appDispatch: jest.fn(),
+  }),
+}));
 
 // Mock i18n
 jest.mock("@wordpress/i18n", () => ({

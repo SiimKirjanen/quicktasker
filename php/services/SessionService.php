@@ -103,31 +103,6 @@ if (!class_exists('WPQT\Session\SessionService')) {
         }
 
         /**
-         * Deletes a session from the database.
-         *
-         * @param int $sessionId The ID of the session to delete.
-         * @return bool True on successful deletion.
-         * @throws WPQTException If the session deletion fails.
-         */
-        public function deleteSession($sessionId)
-        {
-            global $wpdb;
-
-            $result = $wpdb->delete(
-                TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                [
-                    'id' => $sessionId
-                ]
-            );
-
-            if (false === $result) {
-                throw new WPQTException('Failed to delete session', true);
-            }
-
-            return true;
-        }
-
-        /**
          * Changes the status of a user session.
          *
          * This function updates the 'is_active' status of a user session in the database.

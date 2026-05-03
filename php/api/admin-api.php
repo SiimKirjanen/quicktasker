@@ -2189,34 +2189,6 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'users/sessions/(?P<id>\d+)',
-            [
-                'methods'  => 'DELETE',
-                'callback' => function ($data) {
-                    try {
-                        $sessionService = new SessionService();
-                        $sessionService->deleteSession($data['id']);
-
-                        return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
-                    } catch (Throwable $e) {
-                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
-                    }
-                },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForManagingQuickTaskerSessions();
-                },
-                'args' => [
-                    'id' => [
-                        'required'          => true,
-                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
-                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
-                    ]
-                ],
-            ],
-        );
-
-        register_rest_route(
-            'wpqt/v1',
             'users/sessions',
             [
                 'methods'  => 'GET',

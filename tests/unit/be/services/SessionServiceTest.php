@@ -140,19 +140,6 @@ class SessionServiceTest extends TestCase {
         $this->assertEquals('sessionToken', $params[0]->getName());
     }
 
-    public function test_deleteSession_method_exists() {
-        $this->assertTrue(method_exists(\WPQT\Session\SessionService::class, 'deleteSession'));
-        
-        $reflection = new ReflectionMethod(\WPQT\Session\SessionService::class, 'deleteSession');
-        $this->assertTrue($reflection->isPublic());
-        $this->assertFalse($reflection->isStatic());
-        $this->assertEquals(1, $reflection->getNumberOfParameters());
-        
-        // Check parameter name
-        $params = $reflection->getParameters();
-        $this->assertEquals('sessionId', $params[0]->getName());
-    }
-
     public function test_changeSessionStatus_method_exists() {
         $this->assertTrue(method_exists(\WPQT\Session\SessionService::class, 'changeSessionStatus'));
         
@@ -264,28 +251,6 @@ class SessionServiceTest extends TestCase {
      * - WPQTException
      */
     public function test_markSessionInactive_integration() {
-        $this->markTestIncomplete('Requires WordPress environment with $wpdb');
-    }
-
-    /**
-     * Integration test for deleteSession
-     * 
-     * This test requires WordPress environment with $wpdb.
-     * 
-     * Test scenarios:
-     * 1. Should delete session from TABLE_WP_QUICKTASKER_USER_SESSIONS
-     * 2. Should delete WHERE id = $sessionId
-     * 3. Should throw WPQTException 'Failed to delete session' with shouldSendToFrontEnd=true if delete fails
-     * 4. Should return true on success
-     * 5. $wpdb->delete() returns false on error, 0 if no rows deleted, >0 if rows deleted
-     * 6. Only checks if $result === false (strict comparison)
-     * 
-     * Dependencies:
-     * - global $wpdb with delete()
-     * - TABLE_WP_QUICKTASKER_USER_SESSIONS constant
-     * - WPQTException
-     */
-    public function test_deleteSession_integration() {
         $this->markTestIncomplete('Requires WordPress environment with $wpdb');
     }
 

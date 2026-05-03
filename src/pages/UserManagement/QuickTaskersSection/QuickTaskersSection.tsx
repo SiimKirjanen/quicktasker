@@ -21,18 +21,16 @@ function QuickTaskersSection() {
       <div className="wpqt-flex wpqt-items-start wpqt-justify-between wpqt-mb-4">
         <AddUser />
         {hasUsers && (
-          <div className="wpqt-relative wpqt-flex wpqt-items-center wpqt-w-52">
-            <MagnifyingGlassIcon className="wpqt-absolute wpqt-left-2 wpqt-size-4 wpqt-text-gray-400 wpqt-pointer-events-none" />
-            <WPQTInput
-              value={usersSearchValue}
-              onChange={(v) =>
-                userDispatch({ type: SET_USERS_SEARCH_VALUE, payload: v })
-              }
-              placeholder={__("Search by name", "quicktasker")}
-              className="wpqt-pl-7 wpqt-w-full"
-              wrapperClassName="!wpqt-mb-0 wpqt-w-full"
-            />
-          </div>
+          <WPQTInput
+            value={usersSearchValue}
+            onChange={(v) =>
+              userDispatch({ type: SET_USERS_SEARCH_VALUE, payload: v })
+            }
+            placeholder={__("Search by name", "quicktasker")}
+            className="wpqt-w-52"
+            wrapperClassName="!wpqt-mb-0"
+            leftIcon={<MagnifyingGlassIcon className="wpqt-size-4" />}
+          />
         )}
       </div>
       <div className="wpqt-mb-2">

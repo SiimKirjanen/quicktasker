@@ -641,14 +641,6 @@ function changeUserSessionStatusRequest(
   });
 }
 
-function deleteUserSessionRequest(sessionId: string): Promise<WPQTResponse> {
-  return apiFetch({
-    path: `/wpqt/v1/users/sessions/${sessionId}`,
-    method: "DELETE",
-    headers: getCommonHeaders(),
-  });
-}
-
 /*
   ==================================================================================================================================================================================================================
   Custom Field requests
@@ -1126,7 +1118,6 @@ export {
   deleteTaskRequest,
   deleteUploadRequest,
   deleteUserRequest,
-  deleteUserSessionRequest,
   editPipelineRequest,
   editStageRequest,
   editTaskRequest,

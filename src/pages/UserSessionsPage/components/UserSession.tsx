@@ -1,19 +1,11 @@
-import { PowerIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PowerIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import {
-  changeUserSessionStatusRequest,
-  deleteUserSessionRequest,
-} from "../../../api/api";
-import { WPQTConfirmTooltip } from "../../../components/Dialog/ConfirmTooltip/ConfirmTooltip";
+import { changeUserSessionStatusRequest } from "../../../api/api";
 import { WPQTOnlyIconBtn } from "../../../components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn";
-import {
-  CHANGE_USER_SESSION_STATUS,
-  DELETE_USER_SESSION,
-} from "../../../constants";
+import { CHANGE_USER_SESSION_STATUS } from "../../../constants";
 import { useTimezone } from "../../../hooks/useTimezone";
-import { AppContext } from "../../../providers/AppContextProvider";
 import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { UserSession } from "../../../types/user-session";
 
@@ -23,9 +15,6 @@ type Props = {
 
 function UserSession({ session }: Props) {
   const { usersSessionDispatch } = useContext(UserSessionsContext);
-  const {
-    state: { isUserAllowedToDelete },
-  } = useContext(AppContext);
   const { convertToWPTimezone } = useTimezone();
   const isActive = session.is_active;
 
@@ -39,19 +28,6 @@ function UserSession({ session }: Props) {
     } catch (error) {
       console.error(error);
       toast.error(__("Failed to change session status", "quicktasker"));
-    }
-  };
-
-  const deleteSession = async () => {
-    try {
-      await deleteUserSessionRequest(session.id);
-      usersSessionDispatch({
-        type: DELETE_USER_SESSION,
-        payload: session.id,
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error(__("Failed to delete session", "quicktasker"));
     }
   };
 
@@ -89,21 +65,6 @@ function UserSession({ session }: Props) {
             }
             onClick={() => changeSessionStatus(true)}
           />
-        )}
-        {isUserAllowedToDelete && (
-          <WPQTConfirmTooltip onConfirm={deleteSession}>
-            {({ onClick }) => (
-              <WPQTOnlyIconBtn
-                icon={
-                  <TrashIcon
-                    className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
-                    title={__("Delete session", "quicktasker")}
-                  />
-                }
-                onClick={onClick}
-              />
-            )}
-          </WPQTConfirmTooltip>
         )}
       </div>
     </>

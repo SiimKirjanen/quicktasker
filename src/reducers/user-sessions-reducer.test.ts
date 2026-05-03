@@ -1,6 +1,5 @@
 import {
   CHANGE_USER_SESSION_STATUS,
-  DELETE_USER_SESSION,
   SET_USER_SESSIONS,
   SET_USER_SESSIONS_SEARCH_VALUE,
 } from "../constants";
@@ -61,15 +60,6 @@ describe("user-sessions reducer", () => {
     });
     expect(next.userSessions.find((s) => s.id === "a")?.is_active).toBe(false);
     expect(next.userSessions.find((s) => s.id === "b")?.is_active).toBe(true);
-  });
-
-  it("DELETE_USER_SESSION removes by id", () => {
-    const state: State = {
-      ...baseState,
-      userSessions: [makeSession({ id: "a" }), makeSession({ id: "b" })],
-    };
-    const next = reducer(state, { type: DELETE_USER_SESSION, payload: "a" });
-    expect(next.userSessions.map((s) => s.id)).toEqual(["b"]);
   });
 
   it("returns state for unknown action", () => {

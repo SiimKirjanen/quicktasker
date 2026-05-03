@@ -51,16 +51,14 @@ function RegularWPUsersSection() {
           icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
         />
         {hasUsers && (
-          <div className="wpqt-relative wpqt-flex wpqt-items-center wpqt-w-52">
-            <MagnifyingGlassIcon className="wpqt-absolute wpqt-left-2 wpqt-size-4 wpqt-text-gray-400 wpqt-pointer-events-none" />
-            <WPQTInput
-              value={searchValue}
-              onChange={setSearchValue}
-              placeholder={__("Search by name", "quicktasker")}
-              className="wpqt-pl-7 wpqt-w-full"
-              wrapperClassName="!wpqt-mb-0 wpqt-w-full"
-            />
-          </div>
+          <WPQTInput
+            value={searchValue}
+            onChange={setSearchValue}
+            placeholder={__("Search by name", "quicktasker")}
+            className="wpqt-w-52"
+            wrapperClassName="!wpqt-mb-0"
+            leftIcon={<MagnifyingGlassIcon className="wpqt-size-4" />}
+          />
         )}
       </div>
       {!hasUsers ? (
