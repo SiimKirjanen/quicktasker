@@ -108,17 +108,11 @@ test.describe('Tasks App – Assigned Tasks', () => {
       await assignWordPressUserToTask(page, taskName, ADMIN_USERNAME);
     });
 
-    test('shows task card with task name and board name', async ({ page }) => {
+    test('shows task card with task name, board name and completion status', async ({ page }) => {
       await navigateToAssignedTasks(page);
       const card = getTasksAppTaskCard(page, taskName);
       await expect(card).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
       await expect(card.getByText(boardName)).toBeVisible();
-    });
-
-    test('shows task completion status on card', async ({ page }) => {
-      await navigateToAssignedTasks(page);
-      const card = getTasksAppTaskCard(page, taskName);
-      await expect(card).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
       await expect(card.getByText('Task not completed')).toBeVisible();
     });
 
@@ -176,26 +170,14 @@ test.describe('Tasks App – Task Detail', () => {
     await assignWordPressUserToTask(page, taskName, ADMIN_USERNAME);
   });
 
-  test('shows task name and board name', async ({ page }) => {
+  test('renders task detail with name, board, stage, action buttons and done toggle', async ({ page }) => {
     await openTaskDetail(page, taskName);
     await expect(page.getByText(taskName).first()).toBeVisible();
     await expect(page.getByText(boardName)).toBeVisible();
-  });
-
-  test('shows current stage information', async ({ page }) => {
-    await openTaskDetail(page, taskName);
     await expect(page.getByText(`Task is on stage ${stageName}`)).toBeVisible();
-  });
-
-  test('shows action buttons when assigned', async ({ page }) => {
-    await openTaskDetail(page, taskName);
     await expect(page.getByText('Unassign from task')).toBeVisible();
     await expect(page.getByText('Manage task comments')).toBeVisible();
     await expect(page.getByText('Change stage')).toBeVisible();
-  });
-
-  test('shows done status toggle when assigned', async ({ page }) => {
-    await openTaskDetail(page, taskName);
     await expect(page.getByText('Task is incomplete')).toBeVisible();
     await expect(page.getByText('Click to change')).toBeVisible();
   });
@@ -217,16 +199,10 @@ test.describe('Tasks App – Task Detail', () => {
     await expect(page.getByText(`Task is on stage ${stage2Name}`)).toBeVisible();
   });
 
-  test('can toggle task done status to completed', async ({ page }) => {
+  test('can toggle task done status to completed and back to incomplete', async ({ page }) => {
     await openTaskDetail(page, taskName);
     await expect(page.getByText('Task is incomplete')).toBeVisible();
     // The incomplete CheckBadgeIcon has wpqt-text-gray-300, unique among SVG icons on this page
-    await page.locator('svg.wpqt-text-gray-300').click();
-    await expect(page.getByText('Task is completed')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
-  });
-
-  test('can toggle task done status back to incomplete', async ({ page }) => {
-    await openTaskDetail(page, taskName);
     await page.locator('svg.wpqt-text-gray-300').click();
     await expect(page.getByText('Task is completed')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
     // The completed CheckBadgeIcon has wpqt-icon-green wpqt-size-9 (size-9 is unique vs action button icons at size-5)
@@ -265,17 +241,12 @@ test.describe('Tasks App – Task Comments', () => {
     await expect(page.getByText('Comments related to the task')).toBeVisible();
   });
 
-  test('can add a comment', async ({ page }) => {
+  test('can add a comment and it shows the author name', async ({ page }) => {
     await openTaskComments(page);
     await addTasksAppComment(page, 'Test task comment');
     await expect(page.getByText('Test task comment')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
-  });
-
-  test('comment shows author name', async ({ page }) => {
-    await openTaskComments(page);
-    await addTasksAppComment(page, 'Author check comment');
     // Use .first() since WP admin bar also contains the username
-    await expect(page.getByText(ADMIN_USERNAME).first()).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByText(ADMIN_USERNAME).first()).toBeVisible();
   });
 
   test('shows toast error when submitting empty comment', async ({ page }) => {

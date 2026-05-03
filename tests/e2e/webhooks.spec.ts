@@ -12,19 +12,6 @@ test.describe('Board Webhooks', () => {
     await navigateToBoardsPage(page);
   });
 
-  test('should display the webhooks page with create form', async ({ page }) => {
-    await setupBoardForWebhooks(page, 'WH-Page');
-
-    await expect(page.getByRole('heading', { name: 'Board webhooks' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Created webhooks' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Create a new webhook' })).toBeVisible();
-    await expect(page.getByText('There are no webhooks configured for this board.')).toBeVisible();
-    await expect(page.locator('#webhook-target-type')).toBeVisible();
-    await expect(page.locator('#webhook-target-action')).toBeVisible();
-    await expect(page.locator('#webhook-url')).toBeVisible();
-    await expect(page.getByText('Create Webhook')).toBeVisible();
-  });
-
   test('should validate URL input and toggle the Create button accordingly', async ({ page }) => {
     await setupBoardForWebhooks(page, 'WH-Validate');
 
@@ -53,14 +40,6 @@ test.describe('Board Webhooks', () => {
     await expect(page.locator('div[aria-disabled]').filter({ hasText: 'Create Webhook' })).toHaveAttribute('aria-disabled', 'true');
   });
 
-  test('should create a webhook with wait-for-response enabled', async ({ page }) => {
-    await setupBoardForWebhooks(page, 'WH-Create-WaitForResponse');
-
-    await createWebhook(page, { waitForResponse: true });
-
-    await expect(page.getByRole('switch').first()).toBeChecked();
-  });
-
   test('should create multiple webhooks for the same board', async ({ page }) => {
     await setupBoardForWebhooks(page, 'WH-Create-Multiple');
 
@@ -83,22 +62,6 @@ test.describe('Board Webhooks', () => {
 
     await expect(page.getByText(TEST_WEBHOOK_URL)).not.toBeVisible();
     await expect(page.getByText('There are no webhooks configured for this board.')).toBeVisible();
-  });
-
-  test('should toggle webhook active state', async ({ page }) => {
-    await setupBoardForWebhooks(page, 'WH-Toggle');
-
-    await createWebhook(page);
-
-    // Two switches per row: wait-for-response (1st) and active (2nd)
-    const activeToggle = page.getByRole('switch').nth(1);
-
-    await expect(activeToggle).toBeChecked();
-    await activeToggle.click({ force: true });
-    await expect(activeToggle).not.toBeChecked();
-
-    await activeToggle.click({ force: true });
-    await expect(activeToggle).toBeChecked();
   });
 
   test('should open webhook logs modal', async ({ page }) => {

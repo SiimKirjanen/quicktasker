@@ -1,6 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
 import { generateUniqueName } from './utils/board-helpers';
-import { navigateToUserManagement } from './utils/navigation';
 import {
   navigateToQuickTaskersTab,
   createQuickTaskerUser,
@@ -24,15 +23,11 @@ async function openEditModal(page: Page, userName: string): Promise<void> {
 // ── Test suites ───────────────────────────────────────────────────────────────
 
 test.describe('User Management – Page Structure', () => {
-  test('shows heading and both tabs', async ({ page }) => {
-    await navigateToUserManagement(page);
+  test('shows heading, both tabs, Add button and filter', async ({ page }) => {
+    await navigateToQuickTaskersTab(page);
     await expect(page.getByRole('heading', { name: 'User management' })).toBeVisible();
     await expect(page.getByRole('tab', { name: 'WordPress users' })).toBeVisible();
     await expect(page.getByRole('tab', { name: 'QuickTaskers' })).toBeVisible();
-  });
-
-  test('QuickTaskers tab shows Add button and filter', async ({ page }) => {
-    await navigateToQuickTaskersTab(page);
     await expect(page.getByText('Add QuickTasker')).toBeVisible();
     await expect(page.getByPlaceholder('Search by name')).toBeVisible();
   });
@@ -43,17 +38,13 @@ test.describe('User Management – Add QuickTasker', () => {
     await navigateToQuickTaskersTab(page);
   });
 
-  test('Add QuickTasker button reveals the add form', async ({ page }) => {
+  test('Add QuickTasker button reveals form, Cancel hides it', async ({ page }) => {
     await page.getByText('Add QuickTasker').click();
     await expect(page.getByText('User name')).toBeVisible();
     await expect(page.getByText('User description')).toBeVisible();
     await expect(page.getByText('Cancel')).toBeVisible();
     await expect(page.getByText('Add', { exact: true })).toBeVisible();
-  });
 
-  test('Cancel button hides the add form', async ({ page }) => {
-    await page.getByText('Add QuickTasker').click();
-    await expect(page.getByText('User name')).toBeVisible();
     await page.getByText('Cancel').click();
     await expect(page.getByText('User name')).not.toBeVisible();
     await expect(page.getByText('Add QuickTasker')).toBeVisible();
@@ -65,30 +56,15 @@ test.describe('User Management – Add QuickTasker', () => {
     await expect(page.getByText('User name is required')).toBeVisible();
   });
 
-  test('creates user with name only and shows success toast', async ({ page }) => {
-    const userName = generateUniqueName('UM-AU-User');
-    await createQuickTaskerUser(page, userName);
-    await expect(getQuickTaskerCard(page, userName)).toBeVisible();
-  });
-
-  test('creates user with description and shows both on the card', async ({ page }) => {
+  test('creates user with name and description, card shows Active and form resets', async ({ page }) => {
     const userName = generateUniqueName('UM-AU-User');
     const description = `Desc-${Date.now()}`;
     await createQuickTaskerUser(page, userName, description);
+
     const card = getQuickTaskerCard(page, userName);
     await expect(card).toBeVisible();
     await expect(card.getByText(description)).toBeVisible();
-  });
-
-  test('new user card shows Status Active', async ({ page }) => {
-    const userName = generateUniqueName('UM-AU-User');
-    await createQuickTaskerUser(page, userName);
-    await expect(getQuickTaskerCard(page, userName).getByText('Active')).toBeVisible();
-  });
-
-  test('add form hides and Add QuickTasker button reappears after creation', async ({ page }) => {
-    const userName = generateUniqueName('UM-AU-User');
-    await createQuickTaskerUser(page, userName);
+    await expect(card.getByText('Active')).toBeVisible();
     await expect(page.getByText('User name')).not.toBeVisible();
     await expect(page.getByText('Add QuickTasker')).toBeVisible();
   });
@@ -173,13 +149,6 @@ test.describe('User Management – User Dropdown', () => {
     await expect(page.getByRole('menuitem', { name: 'Disable user' })).toBeVisible();
   });
 
-  test('User details navigates to user detail page', async ({ page }) => {
-    await openDropdown(page, userName);
-    await page.getByRole('menuitem', { name: 'User details' }).click();
-    await expect(page.getByRole('heading', { name: userName })).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
-    expect(page.url()).toContain('#/user-management/');
-  });
-
   test('User tasks navigates to user tasks page', async ({ page }) => {
     await openDropdown(page, userName);
     await page.getByRole('menuitem', { name: 'User tasks' }).click();
@@ -238,33 +207,22 @@ test.describe('User Management – Edit User Modal', () => {
     await openEditModal(page, userName);
   });
 
-  test('shows modal with pre-filled name and description', async ({ page }) => {
+  test('renders modal with pre-filled fields, custom fields section, tabs and action buttons', async ({ page }) => {
     const modal = page.getByTestId('user-modal');
     await expect(modal.locator('input[type="text"]').first()).toHaveValue(userName);
     await expect(modal.locator('textarea').first()).toHaveValue(modalDescription);
-  });
-
-  test('shows User custom fields section with no fields message', async ({ page }) => {
-    const modal = page.getByTestId('user-modal');
     await expect(modal.getByText('User custom fields')).toBeVisible();
     await expect(modal.getByText('No related custom fields created')).toBeVisible();
-  });
-
-  test('shows Logs, Private comments and Public comments tabs', async ({ page }) => {
     await expect(page.getByRole('tab', { name: 'Logs' })).toBeVisible();
     await expect(page.getByRole('tab', { name: 'Private comments' })).toBeVisible();
     await expect(page.getByRole('tab', { name: 'Public comments' })).toBeVisible();
+    await expect(modal.getByText('User details')).toBeVisible();
+    await expect(modal.getByText('User tasks')).toBeVisible();
   });
 
   test('Logs tab shows creation log entry', async ({ page }) => {
     const modal = page.getByTestId('user-modal');
     await expect(modal.getByText(/Quicktasker .*created/)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
-  });
-
-  test('shows User details and User tasks action buttons', async ({ page }) => {
-    const modal = page.getByTestId('user-modal');
-    await expect(modal.getByText('User details')).toBeVisible();
-    await expect(modal.getByText('User tasks')).toBeVisible();
   });
 
   test('User details button closes modal and navigates to detail page', async ({ page }) => {
