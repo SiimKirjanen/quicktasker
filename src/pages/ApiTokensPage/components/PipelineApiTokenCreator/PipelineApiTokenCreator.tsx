@@ -1,6 +1,9 @@
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTButton } from "../../../../components/common/Button/Button";
+import {
+  ButtonStyleType,
+  WPQTButton,
+} from "../../../../components/common/Button/Button";
 import { WPQTInput } from "../../../../components/common/Input/Input";
 import { WPQTLabel } from "../../../../components/common/Label/WPQTLabel";
 import { WPQTTextarea } from "../../../../components/common/TextArea/TextArea";
@@ -14,6 +17,11 @@ import { converApiTokenFromServer } from "../../../../utils/api-token";
 type Props = {
   pipelineId: string;
 };
+
+type PermissionKey = keyof Omit<
+  NewApiToken,
+  "name" | "description" | "pipeline_id"
+>;
 
 const defaultNewApiToken: Omit<NewApiToken, "pipeline_id"> = {
   name: "",
@@ -29,6 +37,25 @@ const defaultNewApiToken: Omit<NewApiToken, "pipeline_id"> = {
   patch_pipeline_tasks: false,
   delete_pipeline_tasks: false,
 };
+
+const allPermissionKeys: PermissionKey[] = [
+  "get_pipeline",
+  "patch_pipeline",
+  "get_pipeline_stages",
+  "post_pipeline_stages",
+  "patch_pipeline_stages",
+  "delete_pipeline_stages",
+  "get_pipeline_tasks",
+  "post_pipeline_tasks",
+  "patch_pipeline_tasks",
+  "delete_pipeline_tasks",
+];
+
+const readOnlyKeys: PermissionKey[] = [
+  "get_pipeline",
+  "get_pipeline_stages",
+  "get_pipeline_tasks",
+];
 
 function PipelineApiTokenCreator({ pipelineId }: Props) {
   const [newApiToken, setNewApiToken] = useState<NewApiToken>({
@@ -57,6 +84,14 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
     setNewApiToken({ ...defaultNewApiToken, pipeline_id: pipelineId });
   };
 
+  const applyPreset = (granted: PermissionKey[]) => {
+    const updates: Record<string, boolean> = {};
+    for (const key of allPermissionKeys) {
+      updates[key] = granted.includes(key);
+    }
+    setNewApiToken({ ...newApiToken, ...updates });
+  };
+
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-items-start">
       <WPQTLabel labelFor="api-token-name">
@@ -77,88 +112,83 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
           setNewApiToken({ ...newApiToken, description })
         }
       />
-      <div className="wpqt-flex wpqt-gap-4">
-        <div>
-          <WPQTLabel className="wpqt-block wpqt-font-semibold wpqt-mb-2">
-            {__("Board permissions", "quicktasker")}
-          </WPQTLabel>
-          <div className="wpqt-flex wpqt-gap-2">
-            <PermissionsCheckbox
-              label={__("GET board", "quicktasker")}
-              permissionKey="get_pipeline"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-            <PermissionsCheckbox
-              label={__("PATCH board", "quicktasker")}
-              permissionKey="patch_pipeline"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-          </div>
-        </div>
-        <div>
-          <WPQTLabel className="wpqt-block wpqt-font-semibold wpqt-mb-2">
-            {__("Board stage permissions", "quicktasker")}
-          </WPQTLabel>
-          <div className="wpqt-flex wpqt-gap-2">
-            <PermissionsCheckbox
-              label={__("GET stages", "quicktasker")}
-              permissionKey="get_pipeline_stages"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-            <PermissionsCheckbox
-              label={__("POST stages", "quicktasker")}
-              permissionKey="post_pipeline_stages"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-            <PermissionsCheckbox
-              label={__("PATCH stages", "quicktasker")}
-              permissionKey="patch_pipeline_stages"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-            <PermissionsCheckbox
-              label={__("DELETE stages", "quicktasker")}
-              permissionKey="delete_pipeline_stages"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-          </div>
-        </div>
-        <div>
-          <WPQTLabel className="wpqt-block wpqt-font-semibold wpqt-mb-2">
-            {__("Board task permissions", "quicktasker")}
-          </WPQTLabel>
-          <div className="wpqt-flex wpqt-gap-2">
-            <PermissionsCheckbox
-              label={__("GET tasks", "quicktasker")}
-              permissionKey="get_pipeline_tasks"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-            <PermissionsCheckbox
-              label={__("POST tasks", "quicktasker")}
-              permissionKey="post_pipeline_tasks"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-            <PermissionsCheckbox
-              label={__("PATCH tasks", "quicktasker")}
-              permissionKey="patch_pipeline_tasks"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-            <PermissionsCheckbox
-              label={__("DELETE tasks", "quicktasker")}
-              permissionKey="delete_pipeline_tasks"
-              newApiToken={newApiToken}
-              setNewApiToken={setNewApiToken}
-            />
-          </div>
-        </div>
+
+      <div className="wpqt-flex wpqt-gap-2 wpqt-mb-3">
+        <WPQTButton
+          btnText={__("Read-only", "quicktasker")}
+          buttonStyleType={ButtonStyleType.SECONDARY}
+          onClick={() => applyPreset(readOnlyKeys)}
+        />
+        <WPQTButton
+          btnText={__("Full access", "quicktasker")}
+          buttonStyleType={ButtonStyleType.SECONDARY}
+          onClick={() => applyPreset(allPermissionKeys)}
+        />
+        <WPQTButton
+          btnText={__("Clear", "quicktasker")}
+          buttonStyleType={ButtonStyleType.SECONDARY}
+          onClick={() => applyPreset([])}
+        />
+      </div>
+
+      <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">
+        <PermissionGroup
+          title={__("Board permissions", "quicktasker")}
+          items={[
+            { label: __("GET board", "quicktasker"), key: "get_pipeline" },
+            { label: __("PATCH board", "quicktasker"), key: "patch_pipeline" },
+          ]}
+          newApiToken={newApiToken}
+          setNewApiToken={setNewApiToken}
+        />
+        <PermissionGroup
+          title={__("Board stage permissions", "quicktasker")}
+          items={[
+            {
+              label: __("GET stages", "quicktasker"),
+              key: "get_pipeline_stages",
+            },
+            {
+              label: __("POST stages", "quicktasker"),
+              key: "post_pipeline_stages",
+            },
+            {
+              label: __("PATCH stages", "quicktasker"),
+              key: "patch_pipeline_stages",
+            },
+            {
+              label: __("DELETE stages", "quicktasker"),
+              key: "delete_pipeline_stages",
+              destructive: true,
+            },
+          ]}
+          newApiToken={newApiToken}
+          setNewApiToken={setNewApiToken}
+        />
+        <PermissionGroup
+          title={__("Board task permissions", "quicktasker")}
+          items={[
+            {
+              label: __("GET tasks", "quicktasker"),
+              key: "get_pipeline_tasks",
+            },
+            {
+              label: __("POST tasks", "quicktasker"),
+              key: "post_pipeline_tasks",
+            },
+            {
+              label: __("PATCH tasks", "quicktasker"),
+              key: "patch_pipeline_tasks",
+            },
+            {
+              label: __("DELETE tasks", "quicktasker"),
+              key: "delete_pipeline_tasks",
+              destructive: true,
+            },
+          ]}
+          newApiToken={newApiToken}
+          setNewApiToken={setNewApiToken}
+        />
       </div>
 
       <WPQTButton
@@ -166,29 +196,75 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
         className="wpqt-my-4"
         onClick={handleCreateApiToken}
         loading={saving}
+        disabled={
+          newApiToken.name.trim() === "" ||
+          !allPermissionKeys.some((key) => newApiToken[key])
+        }
       />
+    </div>
+  );
+}
+
+type PermissionItem = {
+  label: string;
+  key: PermissionKey;
+  destructive?: boolean;
+};
+
+type PermissionGroupProps = {
+  title: string;
+  items: PermissionItem[];
+  newApiToken: NewApiToken;
+  setNewApiToken: React.Dispatch<React.SetStateAction<NewApiToken>>;
+};
+
+function PermissionGroup({
+  title,
+  items,
+  newApiToken,
+  setNewApiToken,
+}: PermissionGroupProps) {
+  return (
+    <div>
+      <WPQTLabel className="wpqt-block wpqt-font-semibold wpqt-mb-2">
+        {title}
+      </WPQTLabel>
+      <div className="wpqt-flex wpqt-flex-wrap wpqt-gap-4">
+        {items.map((item) => (
+          <PermissionsCheckbox
+            key={item.key}
+            label={item.label}
+            permissionKey={item.key}
+            destructive={item.destructive}
+            newApiToken={newApiToken}
+            setNewApiToken={setNewApiToken}
+          />
+        ))}
+      </div>
     </div>
   );
 }
 
 type PermissionsCheckboxProps = {
   label: string;
-  permissionKey: keyof Omit<
-    NewApiToken,
-    "name" | "description" | "pipeline_id"
-  >;
+  permissionKey: PermissionKey;
+  destructive?: boolean;
   newApiToken: NewApiToken;
   setNewApiToken: React.Dispatch<React.SetStateAction<NewApiToken>>;
 };
 function PermissionsCheckbox({
   label,
   permissionKey,
+  destructive,
   newApiToken,
   setNewApiToken,
 }: PermissionsCheckboxProps) {
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-1">
-      <WPQTLabel labelFor={`api-token-permission-${permissionKey}`}>
+      <WPQTLabel
+        labelFor={`api-token-permission-${permissionKey}`}
+        className={destructive ? "wpqt-text-red-600" : ""}
+      >
         {label}
       </WPQTLabel>
       <Toggle

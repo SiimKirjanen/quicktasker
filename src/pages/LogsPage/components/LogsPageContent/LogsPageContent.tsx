@@ -3,13 +3,14 @@ import { toast } from "react-toastify";
 import { getGlobalLogsRequest } from "../../../../api/api";
 import { LogsFilter } from "../../../../components/Filter/LogsFilter/LogsFilter";
 import { Loading } from "../../../../components/Loading/Loading";
-import { LogBox } from "../../../../components/LogBox/LogBox";
+import { useTimezone } from "../../../../hooks/useTimezone";
 import {
   Log,
   LogCreatedByEnum,
   LogStatusEnum,
   LogTypeEnum,
 } from "../../../../types/log";
+import { logCreatedByString } from "../../../../utils/log";
 
 import { __ } from "@wordpress/i18n";
 import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
@@ -111,27 +112,81 @@ const LogsPageContent = () => {
   };
 
   return (
-    <div className="wpqt-max-w-[1000px] wpqt-mx-auto">
+    <div className="wpqt-max-w-[1200px] wpqt-mx-auto">
       <LogsFilter
         filterSettings={filterSettings}
         setFilterSettings={applyFilter}
       />
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
-        {loadingLogs ? (
+      {loadingLogs ? (
+        <div className="wpqt-flex wpqt-justify-center wpqt-py-6">
           <Loading ovalSize="32" />
-        ) : logs.length === 0 ? (
-          <NoFilterResults text={__("No logs found", "quicktasker")} />
-        ) : (
-          logs.map((log) => (
-            <LogBox log={log} key={log.id}>
-              {log.text}
-            </LogBox>
-          ))
-        )}
-      </div>
+        </div>
+      ) : logs.length === 0 ? (
+        <NoFilterResults text={__("No logs found", "quicktasker")} />
+      ) : (
+        <GroupedLogs logs={logs} />
+      )}
     </div>
   );
 };
+
+function GroupedLogs({ logs }: { logs: Log[] }) {
+  const { convertToWPTimezone } = useTimezone();
+  const groups: { date: string; logs: Log[] }[] = [];
+  for (const log of logs) {
+    const formatted = convertToWPTimezone(log.created_at);
+    const date = formatted.slice(0, formatted.lastIndexOf(" "));
+    const last = groups[groups.length - 1];
+    if (last && last.date === date) {
+      last.logs.push(log);
+    } else {
+      groups.push({ date, logs: [log] });
+    }
+  }
+
+  return (
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">
+      {groups.map((group) => (
+        <section key={group.date}>
+          <h3 className="wpqt-sticky wpqt-top-8 wpqt-z-10 wpqt-mb-1 wpqt-bg-gray-50 wpqt-px-3 wpqt-py-1 wpqt-text-xs wpqt-font-semibold wpqt-uppercase wpqt-tracking-wide wpqt-text-gray-500 wpqt-rounded">
+            {group.date}
+          </h3>
+          <ul className="wpqt-main-border wpqt-rounded wpqt-bg-white wpqt-divide-y">
+            {group.logs.map((log) => (
+              <LogRow log={log} key={log.id} />
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function LogRow({ log }: { log: Log }) {
+  const { convertToWPTimezone } = useTimezone();
+  const createdBy = logCreatedByString[log.created_by];
+  const formatted = convertToWPTimezone(log.created_at);
+  const time = formatted.split(" ").pop() ?? formatted;
+  const isError = log.log_status === LogStatusEnum.Error;
+  return (
+    <li className="wpqt-flex wpqt-items-baseline wpqt-gap-3 wpqt-px-3 wpqt-py-2 wpqt-text-sm hover:wpqt-bg-gray-50">
+      <span
+        className={`wpqt-mt-1.5 wpqt-h-2 wpqt-w-2 wpqt-shrink-0 wpqt-rounded-full ${
+          isError ? "wpqt-bg-red-500" : "wpqt-bg-green-500"
+        }`}
+        title={isError ? "Error" : "Success"}
+      />
+      <span className="wpqt-w-12 wpqt-shrink-0 wpqt-text-gray-500 wpqt-tabular-nums">
+        {time}
+      </span>
+      <span className="wpqt-w-44 wpqt-shrink-0 wpqt-truncate">
+        <span className="wpqt-font-semibold">{log.author_name}</span>
+        <span className="wpqt-text-gray-500"> ({createdBy})</span>
+      </span>
+      <span className="wpqt-flex-1 wpqt-min-w-0">{log.text}</span>
+    </li>
+  );
+}
 
 export {
   LogCreatedByEnum,

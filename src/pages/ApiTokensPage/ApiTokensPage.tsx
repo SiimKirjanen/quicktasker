@@ -50,7 +50,7 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
       <h2>{__("Create a new API token", "quicktasker")}</h2>
       <p>
         {__(
-          "API tokens allow external applications to access this board's data. You can create a new token and specify its permissions below. After you create a token, it will be shown only once. Be sure to copy and save the token when it is displayed. The name and description are for your reference only.",
+          "Configure permissions below. The token is displayed only once after creation.",
           "quicktasker",
         )}
       </p>

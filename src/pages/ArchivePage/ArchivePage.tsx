@@ -19,7 +19,10 @@ function ArchivePage() {
       <LabelsContextProvider>
         <Page>
           <WPQTPageHeader
-            description={__("Archived tasks management page.", "quicktasker")}
+            description={__(
+              "Browse and restore archived tasks.",
+              "quicktasker",
+            )}
             rightSideContent={
               <span
                 data-testid="archive-settings-button"
