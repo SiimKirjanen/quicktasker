@@ -45,16 +45,19 @@ function UserManagement() {
     };
     updateUsersAsync();
   }, []);
+
+  const description = __(
+    "Manage access for users of this plugin.\n WordPress admins have full access by default. Other WordPress users have no access by default but can be granted permissions.\n QuickTaskers are plugin-managed users who access tasks through the tasks app and have no access to the WordPress admin area.",
+    "quicktasker",
+  );
+
   return (
     <Page>
       <WPQTPageHeader
-        description={__(
-          "Manage QuickTasker and WordPress type users. This plugin supports three types of users: WordPress admins, other WordPress users, and QuickTaskers. WordPress admins have full access to all admin areas. Other WordPress users do not have any access by default but can be granted if needed. QuickTaskers are different type of users who do not have admin access but can manage tasks through a tasks app provided by this plugin.",
-          "quicktasker",
-        )}
-        icon={
+        description={description}
+        rightSideContent={
           <span
-            className="wpqt-inline-flex wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-400 wpqt-group"
+            className="wpqt-inline-flex wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-500 wpqt-group wpqt-gap-1 wpqt-border wpqt-border-solid wpqt-border-blue-400 wpqt-rounded wpqt-px-3 wpqt-py-1 hover:wpqt-bg-blue-50 hover:wpqt-border-blue-600"
             onClick={() => {
               modalDispatch({
                 type: CHANGE_USER_SETTINGS_MODAL_OPEN,
@@ -62,7 +65,7 @@ function UserManagement() {
               });
             }}
           >
-            <Cog8ToothIcon className="wpqt-size-6 group-hover:wpqt-text-blue-600" />
+            <Cog8ToothIcon className="wpqt-size-4 group-hover:wpqt-text-blue-600" />
             <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
               {__("Settings", "quicktasker")}
             </span>

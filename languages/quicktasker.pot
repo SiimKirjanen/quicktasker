@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.50.0\n"
+"Project-Id-Version: QuickTasker 1.52.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-07T16:22:08+00:00\n"
+"POT-Creation-Date: 2026-05-04T10:48:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -76,7 +76,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: php/api/admin-api.php:2989
+#: php/api/admin-api.php:2927
 msgid "No valid settings provided"
 msgstr ""
 
@@ -663,10 +663,6 @@ msgid "Asc"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to fetch users"
-msgstr ""
-
-#: build/app.js:1
 msgid "Failed to fetch custom fields"
 msgstr ""
 
@@ -913,6 +909,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Add, edit, or remove board labels. Created labels can be applied or removed from this task."
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to fetch users"
 msgstr ""
 
 #: build/app.js:1
@@ -1331,27 +1331,27 @@ msgid "The logs page where you can see all logs and filter them."
 msgstr ""
 
 #: build/app.js:1
-msgid "Data filtering"
+msgid "Pie"
 msgstr ""
 
 #: build/app.js:1
-msgid "Task creation date"
+msgid "Bar"
 msgstr ""
 
 #: build/app.js:1
-msgid "(Filter tasks that have creation date equal or bigger than)"
+msgid "Column"
 msgstr ""
 
 #: build/app.js:1
-msgid "Task done date"
-msgstr ""
-
-#: build/app.js:1
-msgid "(Filter tasks that have done date equal or smaller than)"
+msgid "Archived tasks"
 msgstr ""
 
 #: build/app.js:1
 msgid "Not enough data to display archived tasks chart"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task distribution by stages"
 msgstr ""
 
 #: build/app.js:1
@@ -1360,6 +1360,22 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Not enough data to display task status chart"
+msgstr ""
+
+#: build/app.js:1
+msgid "Total tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Completed tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Incomplete tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Overdue tasks"
 msgstr ""
 
 #: build/app.js:1
@@ -1532,10 +1548,6 @@ msgid "Apply"
 msgstr ""
 
 #: build/app.js:1
-msgid "Add board"
-msgstr ""
-
-#: build/app.js:1
 msgid "Failed to delete board"
 msgstr ""
 
@@ -1553,6 +1565,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Failed to update board"
+msgstr ""
+
+#: build/app.js:1
+msgid "Add board"
 msgstr ""
 
 #: build/app.js:1
@@ -1628,6 +1644,22 @@ msgid "Include board custom fields"
 msgstr ""
 
 #: build/app.js:1
+msgid "Stage updated successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to update stage"
+msgstr ""
+
+#: build/app.js:1
+msgid "Stage created successfully"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to create stage"
+msgstr ""
+
+#: build/app.js:1
 msgid "Edit Stage"
 msgstr ""
 
@@ -1642,22 +1674,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Add stage"
-msgstr ""
-
-#: build/app.js:1
-msgid "Stage updated successfully"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to update stage"
-msgstr ""
-
-#: build/app.js:1
-msgid "Stage created successfully"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to create stage"
 msgstr ""
 
 #: build/app.js:1
@@ -1739,6 +1755,10 @@ msgid "Task name is required"
 msgstr ""
 
 #: build/app.js:1
+msgid "Task name"
+msgstr ""
+
+#: build/app.js:1
 msgid "Add task"
 msgstr ""
 
@@ -1779,11 +1799,11 @@ msgid "Automations"
 msgstr ""
 
 #: build/app.js:1
-msgid "API tokens"
+msgid "Webhooks"
 msgstr ""
 
 #: build/app.js:1
-msgid "Webhooks"
+msgid "API tokens"
 msgstr ""
 
 #: build/app.js:1
@@ -1847,7 +1867,36 @@ msgid "Failed to reset user password. Please try again"
 msgstr ""
 
 #: build/app.js:1
+msgid "Failed to load log"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load private comments"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to add private comment"
+msgstr ""
+
+#: build/app.js:1
+msgid "No comments available"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load comments"
+msgstr ""
+
+#: build/app.js:1
+#: build/userApp.js:1
+msgid "User details"
+msgstr ""
+
+#: build/app.js:1
 msgid "User tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Reset password"
 msgstr ""
 
 #: build/app.js:1
@@ -1859,11 +1908,106 @@ msgid "Disable user"
 msgstr ""
 
 #: build/app.js:1
-msgid "Reset password"
+msgid "Are you sure you want to delete this user?"
 msgstr ""
 
 #: build/app.js:1
 msgid "Delete user"
+msgstr ""
+
+#: build/app.js:1
+msgid "User name"
+msgstr ""
+
+#: build/app.js:1
+msgid "User description"
+msgstr ""
+
+#: build/app.js:1
+msgid "Add QuickTasker"
+msgstr ""
+
+#: build/app.js:1
+msgid "Edit user"
+msgstr ""
+
+#: build/app.js:1
+msgid "Open tasks app"
+msgstr ""
+
+#: build/app.js:1
+msgid "View user details"
+msgstr ""
+
+#: build/app.js:1
+msgid "Disabled"
+msgstr ""
+
+#: build/app.js:1
+msgid "No users found"
+msgstr ""
+
+#: build/app.js:1
+msgid "Search by name"
+msgstr ""
+
+#: build/app.js:1
+msgid "QuickTaskers are plugin-managed users, separate from WordPress accounts, who access tasks through the tasks app."
+msgstr ""
+
+#: build/app.js:1
+msgid "Role"
+msgstr ""
+
+#: build/app.js:1
+msgid "Access to plugin admin area"
+msgstr ""
+
+#: build/app.js:1
+msgid "Access to user management"
+msgstr ""
+
+#: build/app.js:1
+msgid "Access to manage settings (boards, stages, automations, webhooks, api tokens)"
+msgstr ""
+
+#: build/app.js:1
+msgid "Access to archive page"
+msgstr ""
+
+#: build/app.js:1
+msgid "Allow to delete resources"
+msgstr ""
+
+#: build/app.js:1
+msgid "Allow access to user tasks app"
+msgstr ""
+
+#: build/app.js:1
+msgid "Add WordPress user"
+msgstr ""
+
+#: build/app.js:1
+msgid "WordPress users without administrator privileges."
+msgstr ""
+
+#: build/app.js:1
+msgid "No WordPress users without administrator privileges found"
+msgstr ""
+
+#: build/app.js:1
+msgid "WordPress users"
+msgstr ""
+
+#: build/app.js:1
+msgid "QuickTaskers"
+msgstr ""
+
+#: build/app.js:1
+msgid ""
+"Manage access for users of this plugin.\n"
+" WordPress admins have full access by default. Other WordPress users have no access by default but can be granted permissions.\n"
+" QuickTaskers are plugin-managed users who access tasks through the tasks app and have no access to the WordPress admin area."
 msgstr ""
 
 #: build/app.js:1
@@ -1887,44 +2031,15 @@ msgid "Failed to get user data. Please try again"
 msgstr ""
 
 #: build/app.js:1
-#: build/userApp.js:1
-msgid "User details"
-msgstr ""
-
-#: build/app.js:1
 msgid "Failed to fetch user sessions"
 msgstr ""
 
 #: build/app.js:1
-msgid "Session filtering"
+msgid "Expired"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to change session status"
-msgstr ""
-
-#: build/app.js:1
-msgid "On"
-msgstr ""
-
-#: build/app.js:1
-msgid "Off"
-msgstr ""
-
-#: build/app.js:1
-msgid "Turn session off"
-msgstr ""
-
-#: build/app.js:1
-msgid "Turn session on"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to delete session"
-msgstr ""
-
-#: build/app.js:1
-msgid "Delete session"
+msgid "Logged out"
 msgstr ""
 
 #: build/app.js:1
@@ -1940,11 +2055,7 @@ msgid "Expires at"
 msgstr ""
 
 #: build/app.js:1
-msgid "Actions"
-msgstr ""
-
-#: build/app.js:1
-msgid "Track and manage QuickTasker user sessions"
+msgid "Track QuickTasker user sessions"
 msgstr ""
 
 #: build/app.js:1
@@ -1953,114 +2064,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "No QuickTasker sessions found"
-msgstr ""
-
-#: build/app.js:1
-msgid "User filtering"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load log"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load private comments"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to add private comment"
-msgstr ""
-
-#: build/app.js:1
-msgid "No comments available"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load comments"
-msgstr ""
-
-#: build/app.js:1
-msgid "Are you sure you want to delete this user?"
-msgstr ""
-
-#: build/app.js:1
-msgid "User name"
-msgstr ""
-
-#: build/app.js:1
-msgid "User description"
-msgstr ""
-
-#: build/app.js:1
-msgid "Add QuickTasker"
-msgstr ""
-
-#: build/app.js:1
-msgid "Edit user"
-msgstr ""
-
-#: build/app.js:1
-msgid "Open user page"
-msgstr ""
-
-#: build/app.js:1
-msgid "View user details"
-msgstr ""
-
-#: build/app.js:1
-msgid "Disabled"
-msgstr ""
-
-#: build/app.js:1
-msgid "No users found"
-msgstr ""
-
-#: build/app.js:1
-msgid "Role"
-msgstr ""
-
-#: build/app.js:1
-msgid "Access to plugin admin area"
-msgstr ""
-
-#: build/app.js:1
-msgid "Access to user management"
-msgstr ""
-
-#: build/app.js:1
-msgid "Access to manage settings (boards, stages, automations, webhooks)"
-msgstr ""
-
-#: build/app.js:1
-msgid "Access to archive page"
-msgstr ""
-
-#: build/app.js:1
-msgid "Allow to delete resources"
-msgstr ""
-
-#: build/app.js:1
-msgid "Allow access to user tasks app"
-msgstr ""
-
-#: build/app.js:1
-msgid "No WordPress users without administrator privileges found"
-msgstr ""
-
-#: build/app.js:1
-msgid "WordPress users without administrator privileges."
-msgstr ""
-
-#: build/app.js:1
-msgid "WordPress users"
-msgstr ""
-
-#: build/app.js:1
-msgid "QuickTaskers"
-msgstr ""
-
-#: build/app.js:1
-msgid "Manage QuickTasker and WordPress type users. This plugin supports three types of users: WordPress admins, other WordPress users, and QuickTaskers. WordPress admins have full access to all admin areas. Other WordPress users do not have any access by default but can be granted if needed. QuickTaskers are different type of users who do not have admin access but can manage tasks through a tasks app provided by this plugin."
 msgstr ""
 
 #: build/app.js:1

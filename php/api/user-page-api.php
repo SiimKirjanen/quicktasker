@@ -48,7 +48,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                             throw new WPQTException('User page not found', true);
                         }
                         $hasSetupCompleted = ServiceLocator::get('UserPageService')->checkIfUserPageSetupCompleted($userPage->user_id);
-                        $isUserActive = $userPage->is_active;
+                        $isUserActive = (bool) $userPage->is_active;
                         $userId = $userPage->user_id;
                         $userName = $userPage->name;
                     } else {

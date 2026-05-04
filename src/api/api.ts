@@ -629,26 +629,6 @@ function getUserSessionsRequest(): Promise<WPQTResponse<ServerUserSession[]>> {
   });
 }
 
-function changeUserSessionStatusRequest(
-  sessionId: string,
-  status: boolean,
-): Promise<WPQTResponse> {
-  return apiFetch({
-    path: `/wpqt/v1/users/sessions/${sessionId}/status`,
-    method: "PATCH",
-    data: { status },
-    headers: getCommonHeaders(),
-  });
-}
-
-function deleteUserSessionRequest(sessionId: string): Promise<WPQTResponse> {
-  return apiFetch({
-    path: `/wpqt/v1/users/sessions/${sessionId}`,
-    method: "DELETE",
-    headers: getCommonHeaders(),
-  });
-}
-
 /*
   ==================================================================================================================================================================================================================
   Custom Field requests
@@ -1107,7 +1087,6 @@ export {
   archiveTaskRequest,
   assignLabelToTaskRequest,
   assignTaskToUserRequest,
-  changeUserSessionStatusRequest,
   changeUserStatusRequest,
   cleanArchiveTasksRequest,
   createNewStageRequest,
@@ -1126,7 +1105,6 @@ export {
   deleteTaskRequest,
   deleteUploadRequest,
   deleteUserRequest,
-  deleteUserSessionRequest,
   editPipelineRequest,
   editStageRequest,
   editTaskRequest,

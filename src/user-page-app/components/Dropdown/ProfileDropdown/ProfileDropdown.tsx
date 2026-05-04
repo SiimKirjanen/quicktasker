@@ -12,17 +12,14 @@ import {
 } from "../../../../components/Dropdown/WPQTDropdown";
 import { reloadPage } from "../../../../utils/url";
 import { logoutUserPageRequest } from "../../../api/user-page-api";
-import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSession } from "../../../hooks/useSession";
 import { UserPageAppContext } from "../../../providers/UserPageAppContextProvider";
 
 function ProfileDropdown() {
   const {
-    loadUserPageStatus,
     state: { profilePictureUrl },
   } = useContext(UserPageAppContext);
   const [loggingOut, setLoggingOut] = useState(false);
-  const { handleError } = useErrorHandler();
   const { deleteSessionCookie } = useSession();
   const navigate = useNavigate();
 
@@ -32,12 +29,11 @@ function ProfileDropdown() {
     try {
       setLoggingOut(true);
       await logoutUserPageRequest();
+    } catch (error) {
+      console.error(error);
+    } finally {
       await deleteSessionCookie();
       reloadPage();
-    } catch (error) {
-      setLoggingOut(false);
-      handleError(error);
-      loadUserPageStatus();
     }
   };
 

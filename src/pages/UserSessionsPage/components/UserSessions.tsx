@@ -17,19 +17,22 @@ function UserSessions() {
   }
 
   return (
-    <div>
-      <div className="wpqt-mb-4 wpqt-grid wpqt-grid-cols-5 wpqt-font-bold">
-        <div>{__("Session owner", "quicktasker")}</div>
-        <div>{__("Created at", "quicktasker")}</div>
-        <div>{__("Expires at", "quicktasker")}</div>
-        <div>{__("Status", "quicktasker")}</div>
-        <div>{__("Actions", "quicktasker")}</div>
+    <div className="wpqt-inline-grid wpqt-grid-cols-[auto_auto_auto_auto] wpqt-items-center wpqt-gap-x-16 wpqt-gap-y-4">
+      <div className="wpqt-mb-4 wpqt-font-bold">
+        {__("Session owner", "quicktasker")}
       </div>
-      <div className="wpqt-grid wpqt-grid-cols-5 wpqt-items-center wpqt-gap-y-4">
-        {filteredSessions.map((session) => (
-          <UserSession key={session.id} session={session} />
-        ))}
+      <div className="wpqt-mb-4 wpqt-font-bold">
+        {__("Created at", "quicktasker")}
       </div>
+      <div className="wpqt-mb-4 wpqt-font-bold">
+        {__("Expires at", "quicktasker")}
+      </div>
+      <div className="wpqt-mb-4 wpqt-font-bold">
+        {__("Status", "quicktasker")}
+      </div>
+      {filteredSessions.map((session) => (
+        <UserSession key={session.id} session={session} />
+      ))}
     </div>
   );
 }

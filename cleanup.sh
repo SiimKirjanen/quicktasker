@@ -31,6 +31,8 @@ FILES_TO_REMOVE=(
     "src"
     "playwright.config.ts"
     ".wp-env.json"
+    ".mcp.json"
+    "CLAUDE.md"
 )
 
 # Prompt the user for confirmation

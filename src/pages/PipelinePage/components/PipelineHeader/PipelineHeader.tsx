@@ -8,7 +8,6 @@ import { __ } from "@wordpress/i18n";
 import { PipelineSelectionDropdown } from "../../../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { LoadingOval } from "../../../../components/Loading/Loading";
 import { PIPELINE_TOGGLE_VIEW } from "../../../../constants";
-import { useApp } from "../../../../hooks/useApp";
 import { useMissingContent } from "../../../../hooks/useMissingContent";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { PipelineView } from "../../../../types/pipeline";
@@ -20,9 +19,6 @@ function PipelineHeader() {
     state: { activePipeline, loading },
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
-  const {
-    state: { isUserAllowedToManageSettings },
-  } = useApp();
   const { pipelineMissing } = useMissingContent();
 
   if (!activePipeline || pipelineMissing) {
@@ -43,7 +39,7 @@ function PipelineHeader() {
       </div>
 
       <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-3">
-        {isUserAllowedToManageSettings && <BoardOptionsSelection />}
+        <BoardOptionsSelection />
         <TaskExportSelection />
         <PipelineModeSelector />
         {loading ? (

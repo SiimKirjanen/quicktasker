@@ -6,7 +6,13 @@ import {
   createTask,
   generateUniqueName,
 } from './utils/board-helpers';
-import { assignWordPressUserToTask } from './utils/user-helpers';
+import {
+  assignWordPressUserToTask,
+  createQuickTaskerUser,
+  disableQuickTaskerUser,
+  navigateToQuickTaskersTab,
+  navigateToUserDetailPage,
+} from './utils/user-helpers';
 import { ADMIN_USERNAME } from './constants';
 import { TIMEOUTS } from './utils/timeouts';
 import {
@@ -18,6 +24,9 @@ import {
   navigateToNotifications,
   getTasksAppTaskCard,
   addTasksAppComment,
+  getQuickTaskerUserPageUrl,
+  openAnonymousPage,
+  completeQuickTaskerSetup,
 } from './utils/tasks-app-helpers';
 
 // ── Shared setup helpers ──────────────────────────────────────────────────────
@@ -99,17 +108,11 @@ test.describe('Tasks App – Assigned Tasks', () => {
       await assignWordPressUserToTask(page, taskName, ADMIN_USERNAME);
     });
 
-    test('shows task card with task name and board name', async ({ page }) => {
+    test('shows task card with task name, board name and completion status', async ({ page }) => {
       await navigateToAssignedTasks(page);
       const card = getTasksAppTaskCard(page, taskName);
       await expect(card).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
       await expect(card.getByText(boardName)).toBeVisible();
-    });
-
-    test('shows task completion status on card', async ({ page }) => {
-      await navigateToAssignedTasks(page);
-      const card = getTasksAppTaskCard(page, taskName);
-      await expect(card).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
       await expect(card.getByText('Task not completed')).toBeVisible();
     });
 
@@ -167,26 +170,14 @@ test.describe('Tasks App – Task Detail', () => {
     await assignWordPressUserToTask(page, taskName, ADMIN_USERNAME);
   });
 
-  test('shows task name and board name', async ({ page }) => {
+  test('renders task detail with name, board, stage, action buttons and done toggle', async ({ page }) => {
     await openTaskDetail(page, taskName);
     await expect(page.getByText(taskName).first()).toBeVisible();
     await expect(page.getByText(boardName)).toBeVisible();
-  });
-
-  test('shows current stage information', async ({ page }) => {
-    await openTaskDetail(page, taskName);
     await expect(page.getByText(`Task is on stage ${stageName}`)).toBeVisible();
-  });
-
-  test('shows action buttons when assigned', async ({ page }) => {
-    await openTaskDetail(page, taskName);
     await expect(page.getByText('Unassign from task')).toBeVisible();
     await expect(page.getByText('Manage task comments')).toBeVisible();
     await expect(page.getByText('Change stage')).toBeVisible();
-  });
-
-  test('shows done status toggle when assigned', async ({ page }) => {
-    await openTaskDetail(page, taskName);
     await expect(page.getByText('Task is incomplete')).toBeVisible();
     await expect(page.getByText('Click to change')).toBeVisible();
   });
@@ -208,16 +199,10 @@ test.describe('Tasks App – Task Detail', () => {
     await expect(page.getByText(`Task is on stage ${stage2Name}`)).toBeVisible();
   });
 
-  test('can toggle task done status to completed', async ({ page }) => {
+  test('can toggle task done status to completed and back to incomplete', async ({ page }) => {
     await openTaskDetail(page, taskName);
     await expect(page.getByText('Task is incomplete')).toBeVisible();
     // The incomplete CheckBadgeIcon has wpqt-text-gray-300, unique among SVG icons on this page
-    await page.locator('svg.wpqt-text-gray-300').click();
-    await expect(page.getByText('Task is completed')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
-  });
-
-  test('can toggle task done status back to incomplete', async ({ page }) => {
-    await openTaskDetail(page, taskName);
     await page.locator('svg.wpqt-text-gray-300').click();
     await expect(page.getByText('Task is completed')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
     // The completed CheckBadgeIcon has wpqt-icon-green wpqt-size-9 (size-9 is unique vs action button icons at size-5)
@@ -256,17 +241,12 @@ test.describe('Tasks App – Task Comments', () => {
     await expect(page.getByText('Comments related to the task')).toBeVisible();
   });
 
-  test('can add a comment', async ({ page }) => {
+  test('can add a comment and it shows the author name', async ({ page }) => {
     await openTaskComments(page);
     await addTasksAppComment(page, 'Test task comment');
     await expect(page.getByText('Test task comment')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
-  });
-
-  test('comment shows author name', async ({ page }) => {
-    await openTaskComments(page);
-    await addTasksAppComment(page, 'Author check comment');
     // Use .first() since WP admin bar also contains the username
-    await expect(page.getByText(ADMIN_USERNAME).first()).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByText(ADMIN_USERNAME).first()).toBeVisible();
   });
 
   test('shows toast error when submitting empty comment', async ({ page }) => {
@@ -319,5 +299,59 @@ test.describe('Tasks App – Notifications', () => {
   test('shows new comment count', async ({ page }) => {
     await navigateToNotifications(page);
     await expect(page.getByText(/You have \d+ new comment/)).toBeVisible();
+  });
+});
+
+test.describe('Tasks App – QuickTasker User First Login Flow', () => {
+  let userName: string;
+  let userPageUrl: string;
+  const password = 'qt-pass-123';
+
+  test.beforeEach(async ({ page }) => {
+    userName = generateUniqueName('TA-FL-User');
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, userName);
+    await navigateToUserDetailPage(page, userName);
+    userPageUrl = await getQuickTaskerUserPageUrl(page);
+  });
+
+  test('first visit walks through setup, login, and reaches homepage', async ({ browser }) => {
+    const { context, page } = await openAnonymousPage(browser);
+    await page.goto(userPageUrl);
+    await expect(page.getByText(`Hello ${userName}`)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByText('Please complete the setup')).toBeVisible();
+    await page.locator('input[type="password"]').nth(0).fill(password);
+    await page.locator('input[type="password"]').nth(1).fill(password);
+    await page.getByRole('button', { name: 'Setup' }).click();
+    await expect(page.getByText('Please log in to continue')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await page.getByTestId('password-input').fill(password);
+    await page.getByRole('button', { name: 'Login' }).click();
+    await expect(page.getByText(/Assigned tasks:/)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await context.close();
+  });
+
+  test('returning visit after setup goes straight to login page', async ({ browser }) => {
+    const { context, page } = await openAnonymousPage(browser);
+    await completeQuickTaskerSetup(page, userPageUrl, password);
+    await page.goto(userPageUrl);
+    await expect(page.getByText('Please log in to continue')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByText('Please complete the setup')).not.toBeVisible();
+    await context.close();
+  });
+
+  test('disabled user sees not-active notification instead of setup or login', async ({ page, browser }) => {
+    await navigateToQuickTaskersTab(page);
+    await disableQuickTaskerUser(page, userName);
+
+    const { context, page: anonPage } = await openAnonymousPage(browser);
+    await anonPage.goto(userPageUrl);
+    await expect(
+      anonPage.getByRole('heading', { name: 'User is not active' }),
+    ).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(
+      anonPage.getByText('Your user is not active. Please contact site administrator.'),
+    ).toBeVisible();
+    await expect(anonPage.getByText('Please complete the setup')).not.toBeVisible();
+    await context.close();
   });
 });

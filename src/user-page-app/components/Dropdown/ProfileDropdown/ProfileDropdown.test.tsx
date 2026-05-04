@@ -150,10 +150,10 @@ describe("ProfileDropdown", () => {
     const logoutItem = await screen.findByText("Log out");
     fireEvent.click(logoutItem);
 
-    // Verify error handling
+    // Even on error, the finally block still clears the session and reloads
     await waitFor(() => {
-      expect(mockLoadUserPageStatus).toHaveBeenCalled();
-      expect(reloadPageSpy).not.toHaveBeenCalled();
+      expect(mockDeleteSessionCookie).toHaveBeenCalled();
+      expect(reloadPageSpy).toHaveBeenCalled();
     });
   });
 });

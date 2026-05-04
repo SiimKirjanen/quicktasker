@@ -160,13 +160,6 @@ describe("PipelineHeader", () => {
     expect(screen.getByText("Webhooks")).toBeInTheDocument();
   });
 
-  it("does not render board options when user is not allowed to manage settings", () => {
-    renderWithProviders({}, {}, { isUserAllowedToManageSettings: false });
-    expect(
-      screen.queryByTestId("board-options-selection"),
-    ).not.toBeInTheDocument();
-  });
-
   it("calls fetchAndSetPipelineData when refresh icon is clicked", () => {
     renderWithProviders();
     const refreshIcon = screen.getByTestId("refresh-icon");

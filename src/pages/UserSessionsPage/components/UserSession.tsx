@@ -1,59 +1,25 @@
-import { PowerIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { toast } from "react-toastify";
-import {
-  changeUserSessionStatusRequest,
-  deleteUserSessionRequest,
-} from "../../../api/api";
-import { WPQTConfirmTooltip } from "../../../components/Dialog/ConfirmTooltip/ConfirmTooltip";
-import { WPQTOnlyIconBtn } from "../../../components/common/Button/WPQTOnlyIconBtn/WPQTOnlyIconBtn";
-import {
-  CHANGE_USER_SESSION_STATUS,
-  DELETE_USER_SESSION,
-} from "../../../constants";
 import { useTimezone } from "../../../hooks/useTimezone";
-import { AppContext } from "../../../providers/AppContextProvider";
-import { UserSessionsContext } from "../../../providers/UserSessionsContextProvider";
 import { UserSession } from "../../../types/user-session";
+import { isUTCDateInPast } from "../../../utils/timezone";
 
 type Props = {
   session: UserSession;
 };
 
 function UserSession({ session }: Props) {
-  const { usersSessionDispatch } = useContext(UserSessionsContext);
-  const {
-    state: { isUserAllowedToDelete },
-  } = useContext(AppContext);
   const { convertToWPTimezone } = useTimezone();
-  const isActive = session.is_active;
+  const isExpired = isUTCDateInPast(session.expires_at_utc);
+  const isActive = session.is_active && !isExpired;
 
-  const changeSessionStatus = async (status: boolean) => {
-    try {
-      await changeUserSessionStatusRequest(session.id, status);
-      usersSessionDispatch({
-        type: CHANGE_USER_SESSION_STATUS,
-        payload: { sessionId: session.id, status },
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error(__("Failed to change session status", "quicktasker"));
-    }
-  };
-
-  const deleteSession = async () => {
-    try {
-      await deleteUserSessionRequest(session.id);
-      usersSessionDispatch({
-        type: DELETE_USER_SESSION,
-        payload: session.id,
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error(__("Failed to delete session", "quicktasker"));
-    }
-  };
+  let statusLabel: string;
+  if (isExpired) {
+    statusLabel = __("Expired", "quicktasker");
+  } else if (session.is_active) {
+    statusLabel = __("Active", "quicktasker");
+  } else {
+    statusLabel = __("Logged out", "quicktasker");
+  }
 
   return (
     <>
@@ -66,45 +32,7 @@ function UserSession({ session }: Props) {
       <div
         className={isActive ? "wpqt-text-qtTextGreen" : "wpqt-text-qtTextRed"}
       >
-        {isActive ? __("On", "quicktasker") : __("Off", "quicktasker")}
-      </div>
-      <div className="wpqt-flex wpqt-items-center wpqt-gap-4">
-        {isActive ? (
-          <WPQTOnlyIconBtn
-            icon={
-              <PowerIcon
-                className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
-                title={__("Turn session off", "quicktasker")}
-              />
-            }
-            onClick={() => changeSessionStatus(false)}
-          />
-        ) : (
-          <WPQTOnlyIconBtn
-            icon={
-              <PowerIcon
-                className="wpqt-icon-green wpqt-size-5 wpqt-cursor-pointer"
-                title={__("Turn session on", "quicktasker")}
-              />
-            }
-            onClick={() => changeSessionStatus(true)}
-          />
-        )}
-        {isUserAllowedToDelete && (
-          <WPQTConfirmTooltip onConfirm={deleteSession}>
-            {({ onClick }) => (
-              <WPQTOnlyIconBtn
-                icon={
-                  <TrashIcon
-                    className="wpqt-icon-red wpqt-size-5 wpqt-cursor-pointer"
-                    title={__("Delete session", "quicktasker")}
-                  />
-                }
-                onClick={onClick}
-              />
-            )}
-          </WPQTConfirmTooltip>
-        )}
+        {statusLabel}
       </div>
     </>
   );

@@ -19,6 +19,7 @@ import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { User } from "../../../types/user";
+import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
   WPQTDropdown,
   WPQTDropdownIcon,
@@ -60,8 +61,7 @@ function UserDropdown({ user }: Props) {
     setIsChangingStatus(false);
   };
 
-  const onDeleteUser = async (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const onDeleteUser = async () => {
     setIsDeleting(true);
     await deleteUser(user.id, (userId) => {
       userDispatch({
@@ -129,7 +129,6 @@ function UserDropdown({ user }: Props) {
           text={__("Disable user", "quicktasker")}
           loading={isChangingStatus}
           icon={<PowerIcon className="wpqt-icon-red wpqt-size-4" />}
-          className="!wpqt-mb-0"
           onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
             onChangeUserStatus(false);
@@ -138,24 +137,33 @@ function UserDropdown({ user }: Props) {
       )}
 
       {!userIsActive && (
-        <>
-          <WPQTDropdownItem
-            text={__("Activate user", "quicktasker")}
-            loading={isChangingStatus}
-            icon={<PowerIcon className="wpqt-icon-green wpqt-size-4" />}
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation();
-              onChangeUserStatus(true);
-            }}
-          />
+        <WPQTDropdownItem
+          text={__("Activate user", "quicktasker")}
+          loading={isChangingStatus}
+          icon={<PowerIcon className="wpqt-icon-green wpqt-size-4" />}
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            onChangeUserStatus(true);
+          }}
+        />
+      )}
+      <WPQTConfirmTooltip
+        onConfirm={onDeleteUser}
+        confirmMessage={__(
+          "Are you sure you want to delete this user?",
+          "quicktasker",
+        )}
+        confirmButtonText={__("Delete", "quicktasker")}
+      >
+        {({ onClick }) => (
           <WPQTDropdownItem
             text={__("Delete user", "quicktasker")}
             loading={isDeleting}
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
-            onClick={onDeleteUser}
+            onClick={onClick}
           />
-        </>
-      )}
+        )}
+      </WPQTConfirmTooltip>
     </WPQTDropdown>
   );
 }

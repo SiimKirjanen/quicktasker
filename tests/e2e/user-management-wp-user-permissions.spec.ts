@@ -1,12 +1,12 @@
 import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
-import { createWPUser, addWPUserCap } from './utils/user-helpers';
+import { createWPUser, grantWPUserCaps, uniqueLogin } from './utils/user-helpers';
 import { loginToWordPress } from './utils/auth';
 import { TIMEOUTS } from './utils/timeouts';
 
 /**
  * Tests verifying that WordPress user capabilities control access to QuickTasker plugin features.
  *
- * Each suite creates a fresh WP user via WP-CLI, grants specific capabilities, then opens a
+ * Each test creates a fresh WP user via the WP REST API, grants specific capabilities, then opens a
  * separate browser context to log in as that user and check what's accessible.
  */
 
@@ -23,14 +23,9 @@ async function loginAsWPUser(
 // ── Test suites ───────────────────────────────────────────────────────────────
 
 test.describe('WP User Capabilities – No Capabilities', () => {
-  let userLogin: string;
-
-  test.beforeEach(() => {
-    userLogin = `wpnone${Date.now()}`;
-    createWPUser(userLogin, `${userLogin}@example.com`, 'editor');
-  });
-
-  test('QuickTasker admin menu is not visible', async ({ browser }) => {
+  test('QuickTasker admin menu is not visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpnone');
+    await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/');
     await expect(
@@ -39,7 +34,9 @@ test.describe('WP User Capabilities – No Capabilities', () => {
     await context.close();
   });
 
-  test('accessing boards page directly shows insufficient permissions error', async ({ browser }) => {
+  test('accessing boards page directly shows insufficient permissions error', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpnone');
+    await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByText('Sorry, you are not allowed to access this page.')).toBeVisible({
@@ -50,15 +47,10 @@ test.describe('WP User Capabilities – No Capabilities', () => {
 });
 
 test.describe('WP User Capabilities – Plugin Admin Role', () => {
-  let userLogin: string;
-
-  test.beforeEach(() => {
-    userLogin = `wpadmin${Date.now()}`;
-    createWPUser(userLogin, `${userLogin}@example.com`, 'editor');
-    addWPUserCap(userLogin, 'quicktasker_admin_role');
-  });
-
-  test('QuickTasker admin menu is visible', async ({ browser }) => {
+  test('QuickTasker admin menu is visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/');
     await expect(
@@ -67,7 +59,10 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await context.close();
   });
 
-  test('can access the boards page', async ({ browser }) => {
+  test('can access the boards page', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -76,7 +71,10 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await context.close();
   });
 
-  test('User management submenu is not visible', async ({ browser }) => {
+  test('User management submenu is not visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     // Navigate to boards page so the QuickTasker menu is expanded in the sidebar
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
@@ -89,7 +87,10 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await context.close();
   });
 
-  test('Archive submenu is not visible', async ({ browser }) => {
+  test('Archive submenu is not visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -101,7 +102,10 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await context.close();
   });
 
-  test('Tasks app submenu is not visible', async ({ browser }) => {
+  test('Tasks app submenu is not visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -113,7 +117,10 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await context.close();
   });
 
-  test('Add new board button is not visible in pipeline dropdown', async ({ browser }) => {
+  test('Add new board button is not visible in pipeline dropdown', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -123,7 +130,10 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await context.close();
   });
 
-  test('Board settings options are not visible', async ({ browser }) => {
+  test('Board settings options are not visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -133,7 +143,10 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await context.close();
   });
 
-  test('Add stage button is not visible', async ({ browser }) => {
+  test('Add stage button is not visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -145,16 +158,10 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
 });
 
 test.describe('WP User Capabilities – Manage Users', () => {
-  let userLogin: string;
-
-  test.beforeEach(() => {
-    userLogin = `wpusermgmt${Date.now()}`;
-    createWPUser(userLogin, `${userLogin}@example.com`, 'editor');
-    addWPUserCap(userLogin, 'quicktasker_admin_role');
-    addWPUserCap(userLogin, 'quicktasker_admin_role_manage_users');
-  });
-
-  test('User management submenu is visible', async ({ browser }) => {
+  test('User management submenu is visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -166,7 +173,10 @@ test.describe('WP User Capabilities – Manage Users', () => {
     await context.close();
   });
 
-  test('can navigate to and access user management page', async ({ browser }) => {
+  test('can navigate to and access user management page', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/');
     const quickTaskerLink = page.locator('#adminmenu').getByRole('link', {
@@ -183,16 +193,10 @@ test.describe('WP User Capabilities – Manage Users', () => {
 });
 
 test.describe('WP User Capabilities – Manage Archive', () => {
-  let userLogin: string;
-
-  test.beforeEach(() => {
-    userLogin = `wparch${Date.now()}`;
-    createWPUser(userLogin, `${userLogin}@example.com`, 'editor');
-    addWPUserCap(userLogin, 'quicktasker_admin_role');
-    addWPUserCap(userLogin, 'quicktasker_admin_role_manage_archive');
-  });
-
-  test('Archive submenu is visible', async ({ browser }) => {
+  test('Archive submenu is visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wparch');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_archive']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -204,7 +208,10 @@ test.describe('WP User Capabilities – Manage Archive', () => {
     await context.close();
   });
 
-  test('can navigate to and access archive page', async ({ browser }) => {
+  test('can navigate to and access archive page', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wparch');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_archive']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/');
     const quickTaskerLink = page.locator('#adminmenu').getByRole('link', {
@@ -221,16 +228,10 @@ test.describe('WP User Capabilities – Manage Archive', () => {
 });
 
 test.describe('WP User Capabilities – Tasks App', () => {
-  let userLogin: string;
-
-  test.beforeEach(() => {
-    userLogin = `wptasks${Date.now()}`;
-    createWPUser(userLogin, `${userLogin}@example.com`, 'editor');
-    addWPUserCap(userLogin, 'quicktasker_admin_role');
-    addWPUserCap(userLogin, 'quicktasker_access_user_page_app');
-  });
-
-  test('Tasks app submenu is visible', async ({ browser }) => {
+  test('Tasks app submenu is visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wptasks');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_access_user_page_app']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -244,16 +245,10 @@ test.describe('WP User Capabilities – Tasks App', () => {
 });
 
 test.describe('WP User Capabilities – Manage Settings', () => {
-  let userLogin: string;
-
-  test.beforeEach(() => {
-    userLogin = `wpsettings${Date.now()}`;
-    createWPUser(userLogin, `${userLogin}@example.com`, 'editor');
-    addWPUserCap(userLogin, 'quicktasker_admin_role');
-    addWPUserCap(userLogin, 'quicktasker_admin_role_manage_settings');
-  });
-
-  test('Add new board button is visible in pipeline dropdown', async ({ browser }) => {
+  test('Add new board button is visible in pipeline dropdown', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpsettings');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -264,7 +259,10 @@ test.describe('WP User Capabilities – Manage Settings', () => {
     await context.close();
   });
 
-  test('Board settings options are visible', async ({ browser }) => {
+  test('Board settings options are visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpsettings');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -274,7 +272,10 @@ test.describe('WP User Capabilities – Manage Settings', () => {
     await context.close();
   });
 
-  test('Add stage button is visible', async ({ browser }) => {
+  test('Add stage button is visible', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpsettings');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -284,7 +285,10 @@ test.describe('WP User Capabilities – Manage Settings', () => {
     await context.close();
   });
 
-  test('Delete stage option is not visible in stage controls dropdown', async ({ browser }) => {
+  test('Delete stage option is not visible in stage controls dropdown', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpsettings');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -298,17 +302,10 @@ test.describe('WP User Capabilities – Manage Settings', () => {
 });
 
 test.describe('WP User Capabilities – Allow Delete', () => {
-  let userLogin: string;
-
-  test.beforeEach(() => {
-    userLogin = `wpdelete${Date.now()}`;
-    createWPUser(userLogin, `${userLogin}@example.com`, 'editor');
-    addWPUserCap(userLogin, 'quicktasker_admin_role');
-    addWPUserCap(userLogin, 'quicktasker_admin_role_manage_settings');
-    addWPUserCap(userLogin, 'quicktasker_admin_role_allow_delete');
-  });
-
-  test('Delete stage option is visible in stage controls dropdown', async ({ browser }) => {
+  test('Delete stage option is visible in stage controls dropdown', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpdelete');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings', 'quicktasker_admin_role_allow_delete']);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
