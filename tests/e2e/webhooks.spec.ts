@@ -56,9 +56,10 @@ test.describe('Board Webhooks', () => {
     await createWebhook(page);
     await expect(page.getByText(TEST_WEBHOOK_URL).first()).toBeVisible();
 
-    await page.getByTestId('pipeline-webhook').first().getByText('Delete', { exact: true }).click();
+    await page.getByTestId('pipeline-webhook').first().getByTestId('dropdown-icon').click();
+    await page.getByText('Delete webhook').click();
     await expect(page.getByText('Are you sure you want to delete this webhook?')).toBeVisible();
-    await page.getByRole('button', { name: 'Yes' }).click();
+    await page.getByRole('button', { name: 'Delete' }).click();
 
     await expect(page.getByText(TEST_WEBHOOK_URL)).not.toBeVisible();
     await expect(page.getByText('There are no webhooks configured for this board.')).toBeVisible();

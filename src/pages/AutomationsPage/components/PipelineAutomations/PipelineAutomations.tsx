@@ -12,9 +12,14 @@ function PipelineAutomations() {
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-gap-6 wpqt-mx-auto wpqt-max-w-7xl">
+    <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center wpqt-gap-4">
       {automations.map((automation) => (
-        <PipelineAutomation key={automation.id} automation={automation} />
+        <div
+          key={automation.id}
+          className="wpqt-w-full md:wpqt-w-[calc(33%-0.5rem)] xl:wpqt-w-[calc(25%-0.75rem)] wpqt-flex"
+        >
+          <PipelineAutomation automation={automation} />
+        </div>
       ))}
     </div>
   );

@@ -39,7 +39,7 @@ export async function navigateToArchivePage(page: Page) {
   const quickTaskerLink = page.getByRole('link', { name: 'QuickTasker', exact: true });
   await quickTaskerLink.hover();
   await page.getByRole('link', { name: 'Archive' }).click();
-  await expect(page.getByRole('heading', { name: 'Archive' })).toBeVisible({timeout: TIMEOUTS.NAVIGATION});
+  await expect(page.getByRole('heading', { name: 'Archive', exact: true })).toBeVisible({timeout: TIMEOUTS.NAVIGATION});
 }
 
 /**

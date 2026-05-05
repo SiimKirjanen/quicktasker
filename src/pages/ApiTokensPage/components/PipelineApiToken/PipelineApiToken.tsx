@@ -50,6 +50,7 @@ function PipelineApiToken({ apiToken }: Props) {
       title={apiToken.name}
       dropdown={<ApiTokenDropdown tokenId={apiToken.id} />}
       dataTestId="pipeline-api-token"
+      className="wpqt-w-full"
     >
       {apiToken.description && (
         <WPQTCardDataItem

@@ -81,25 +81,27 @@ export async function createTaskAutomation(
  * Ensures the first (and typically only) automation on the page is active.
  */
 export async function enableAutomation(page: Page): Promise<void> {
-  const toggle = page.getByRole('switch').first();
-  const isChecked = await toggle.isChecked();
-  if (!isChecked) {
-    await toggle.click();
-    await page.waitForTimeout(300);
+  const automationRow = page.getByTestId('pipeline-automation').first();
+  const isInactive = await automationRow
+    .getByText('Inactive', { exact: true })
+    .isVisible();
+  if (isInactive) {
+    await automationRow.getByTestId('dropdown-icon').click();
+    await page.getByText('Activate', { exact: true }).click();
+    await expect(automationRow.getByText('Active', { exact: true })).toBeVisible();
   }
 }
 
-/**
- * Deletes the first automation on the page via the Delete button + confirm tooltip.
- */
 export async function openFirstAutomationLogs(page: Page): Promise<void> {
   const automationRow = page.getByTestId('pipeline-automation').first();
-  await automationRow.getByText('Logs', { exact: true }).click();
+  await automationRow.getByTestId('dropdown-icon').click();
+  await page.getByText('View logs', { exact: true }).click();
   await expect(page.getByTestId('automation-logs-modal')).toBeVisible();
 }
 
 export async function deleteFirstAutomation(page: Page): Promise<void> {
   const automationRow = page.getByTestId('pipeline-automation').first();
-  await automationRow.getByText('Delete', { exact: true }).click();
-  await page.getByRole('button', { name: 'Yes' }).click();
+  await automationRow.getByTestId('dropdown-icon').click();
+  await page.getByText('Delete automation', { exact: true }).click();
+  await page.getByRole('button', { name: 'Delete' }).click();
 }

@@ -65,8 +65,9 @@ test.describe('Board API Tokens', () => {
     });
 
     const tokenCard = page.getByTestId('pipeline-api-token').first();
-    await expect(tokenCard.getByText('GET tasks')).toBeVisible();
-    await expect(tokenCard.getByText('POST tasks')).toBeVisible();
+    const tasksRow = tokenCard.getByText('Tasks', { exact: true }).locator('..');
+    await expect(tasksRow.getByText('GET', { exact: true })).toBeVisible();
+    await expect(tasksRow.getByText('POST', { exact: true })).toBeVisible();
   });
 
   test('should create multiple tokens for the same board', async ({ page }) => {

@@ -93,13 +93,15 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
   };
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-start">
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-max-w-xl wpqt-mx-auto wpqt-mt-6">
       <WPQTLabel labelFor="api-token-name">
         {__("Name", "quicktasker")}
       </WPQTLabel>
       <WPQTInput
         inputId="api-token-name"
         value={newApiToken.name}
+        wrapperClassName="wpqt-w-full"
+        className="wpqt-w-full"
         onChange={(name) => setNewApiToken({ ...newApiToken, name })}
       />
       <WPQTLabel labelFor="api-token-description">
@@ -108,6 +110,8 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
       <WPQTTextarea
         id="api-token-description"
         value={newApiToken.description}
+        wrapperClassName="wpqt-w-full"
+        className="!wpqt-w-full"
         onChange={(description) =>
           setNewApiToken({ ...newApiToken, description })
         }
@@ -193,7 +197,7 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
 
       <WPQTButton
         btnText={__("Create API Token", "quicktasker")}
-        className="wpqt-my-4"
+        className="wpqt-my-4 wpqt-self-end"
         onClick={handleCreateApiToken}
         loading={saving}
         disabled={
