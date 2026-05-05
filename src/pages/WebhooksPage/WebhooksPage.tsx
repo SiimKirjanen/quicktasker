@@ -4,6 +4,7 @@ import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSel
 import { Info } from "../../components/Info/Info";
 import { Loading } from "../../components/Loading/Loading";
 import { WebhookLogsModal } from "../../components/Modal/WebhookLogsModal/WebhookLogsModal";
+import { useApp } from "../../hooks/useApp";
 import { useMissingContent } from "../../hooks/useMissingContent";
 import { useNavigation } from "../../hooks/useNavigation";
 import { usePipelines } from "../../hooks/usePipelines";
@@ -43,6 +44,12 @@ function WebhooksPageContent({ pipelineId }: Props) {
       <PipelineWebhooksInfo />
       <PipelineWebhooks />
       <h2>{__("Create a new webhook", "quicktasker")}</h2>
+      <p>
+        {__(
+          "Choose which board event should trigger the webhook and the URL it will be sent to.",
+          "quicktasker",
+        )}
+      </p>
       <WebhookCreator pipelineId={pipelineId} />
       <WebhookLogsModal />
     </div>
@@ -53,6 +60,9 @@ function WebhooksPage({ pipelineId }: Props) {
   const { pipelines } = usePipelines();
   const { navigatePageWithoutHistory } = useNavigation();
   const { pipelineMissing } = useMissingContent();
+  const {
+    state: { pluginURL },
+  } = useApp();
   const activePipeline =
     pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
@@ -65,6 +75,15 @@ function WebhooksPage({ pipelineId }: Props) {
               "Send real-time board event data to external services using webhooks.",
               "quicktasker",
             )}
+            readMoreLink={
+              <a
+                href={`${pluginURL}/help/index.html#webhooks`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {__("Read more", "quicktasker")}
+              </a>
+            }
             rightSideContent={
               <PipelineSelectionDropdown
                 activePipeline={activePipeline}

@@ -117,11 +117,11 @@ test.describe('Webhook Delivery', () => {
     await navigateToWebhooksPage(page);
     await createWebhook(page, { action: 'created', url });
 
-    // Toggle the active switch off (2nd switch in row: 1st=wait-for-response, 2nd=active)
-    const activeToggle = page.getByRole('switch').nth(1);
-    await expect(activeToggle).toBeChecked();
-    await activeToggle.click({ force: true });
-    await expect(activeToggle).not.toBeChecked();
+    const webhookCard = page.getByTestId('pipeline-webhook').first();
+    await expect(webhookCard.getByText('Active', { exact: true })).toBeVisible();
+    await webhookCard.getByTestId('dropdown-icon').click();
+    await page.getByText('Deactivate', { exact: true }).click();
+    await expect(webhookCard.getByText('Inactive', { exact: true })).toBeVisible();
 
     await navigateToBoardsPage(page);
     await selectBoard(page, boardName);

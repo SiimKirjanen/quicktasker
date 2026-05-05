@@ -1,8 +1,7 @@
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 
-import { SiProbot } from "react-icons/si";
-import { WPQTIconButton } from "../../../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
+import { WPQTButton } from "../../../../../../components/common/Button/Button";
 import {
   Action,
   AutomationCreationState,
@@ -100,9 +99,9 @@ function AutomationCreationSteps({
       className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4"
     >
       <div className="wpqt-flex wpqt-flex-row wpqt-gap-4">{stepComponent}</div>
-      <WPQTIconButton
-        text={__("Create automation", "quicktasker")}
-        icon={<SiProbot className="wpqt-size-6 wpqt-text-blue-400" />}
+      <WPQTButton
+        className="wpqt-self-end"
+        btnText={__("Create automation", "quicktasker")}
         onClick={handleCreateAutomation}
         loading={creationLoading}
         disabled={!isAutomationReady(automation)}

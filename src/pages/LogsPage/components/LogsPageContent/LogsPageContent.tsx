@@ -3,13 +3,14 @@ import { toast } from "react-toastify";
 import { getGlobalLogsRequest } from "../../../../api/api";
 import { LogsFilter } from "../../../../components/Filter/LogsFilter/LogsFilter";
 import { Loading } from "../../../../components/Loading/Loading";
-import { LogBox } from "../../../../components/LogBox/LogBox";
+import { useTimezone } from "../../../../hooks/useTimezone";
 import {
   Log,
   LogCreatedByEnum,
   LogStatusEnum,
   LogTypeEnum,
 } from "../../../../types/log";
+import { logCreatedByString } from "../../../../utils/log";
 
 import { __ } from "@wordpress/i18n";
 import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
@@ -111,27 +112,69 @@ const LogsPageContent = () => {
   };
 
   return (
-    <div className="wpqt-max-w-[1000px] wpqt-mx-auto">
+    <div className="wpqt-max-w-[1200px] wpqt-mx-auto">
       <LogsFilter
         filterSettings={filterSettings}
         setFilterSettings={applyFilter}
       />
-      <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3">
-        {loadingLogs ? (
+      {loadingLogs ? (
+        <div className="wpqt-flex wpqt-justify-center wpqt-py-6">
           <Loading ovalSize="32" />
-        ) : logs.length === 0 ? (
-          <NoFilterResults text={__("No logs found", "quicktasker")} />
-        ) : (
-          logs.map((log) => (
-            <LogBox log={log} key={log.id}>
-              {log.text}
-            </LogBox>
-          ))
-        )}
-      </div>
+        </div>
+      ) : logs.length === 0 ? (
+        <NoFilterResults text={__("No logs found", "quicktasker")} />
+      ) : (
+        <LogsTable logs={logs} />
+      )}
     </div>
   );
 };
+
+function LogsTable({ logs }: { logs: Log[] }) {
+  return (
+    <div className="wpqt-grid wpqt-grid-cols-[auto_auto_auto_1fr] wpqt-items-center wpqt-gap-x-8 wpqt-gap-y-3">
+      <div className="wpqt-mb-2 wpqt-font-bold">
+        {__("Status", "quicktasker")}
+      </div>
+      <div className="wpqt-mb-2 wpqt-font-bold">
+        {__("Created at", "quicktasker")}
+      </div>
+      <div className="wpqt-mb-2 wpqt-font-bold">
+        {__("Author", "quicktasker")}
+      </div>
+      <div className="wpqt-mb-2 wpqt-font-bold">
+        {__("Message", "quicktasker")}
+      </div>
+      {logs.map((log) => (
+        <LogRow log={log} key={log.id} />
+      ))}
+    </div>
+  );
+}
+
+function LogRow({ log }: { log: Log }) {
+  const { convertToWPTimezone } = useTimezone();
+  const createdBy = logCreatedByString[log.created_by];
+  const isError = log.log_status === LogStatusEnum.Error;
+  return (
+    <>
+      <span
+        className={`wpqt-h-2 wpqt-w-2 wpqt-rounded-full ${
+          isError ? "wpqt-bg-red-500" : "wpqt-bg-green-500"
+        }`}
+        title={isError ? "Error" : "Success"}
+      />
+      <span className="wpqt-text-gray-500 wpqt-tabular-nums">
+        {convertToWPTimezone(log.created_at)}
+      </span>
+      <span>
+        <span className="wpqt-font-semibold">{log.author_name}</span>
+        <span className="wpqt-text-gray-500"> ({createdBy})</span>
+      </span>
+      <span>{log.text}</span>
+    </>
+  );
+}
 
 export {
   LogCreatedByEnum,

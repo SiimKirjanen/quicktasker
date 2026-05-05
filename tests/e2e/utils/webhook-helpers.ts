@@ -112,6 +112,7 @@ export async function createWebhook(
 
 export async function openFirstWebhookLogs(page: Page): Promise<void> {
   const webhookRow = page.getByTestId('pipeline-webhook').first();
-  await webhookRow.getByText('Logs', { exact: true }).click();
+  await webhookRow.getByTestId('dropdown-icon').click();
+  await page.getByText('View logs', { exact: true }).click();
   await expect(page.getByTestId('webhook-logs-modal')).toBeVisible();
 }

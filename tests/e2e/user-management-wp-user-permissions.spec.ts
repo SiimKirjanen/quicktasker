@@ -220,7 +220,7 @@ test.describe('WP User Capabilities – Manage Archive', () => {
     });
     await quickTaskerLink.hover();
     await page.getByRole('link', { name: 'Archive' }).click();
-    await expect(page.getByRole('heading', { name: 'Archive' })).toBeVisible({
+    await expect(page.getByRole('heading', { name: 'Archive', exact: true })).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
     await context.close();

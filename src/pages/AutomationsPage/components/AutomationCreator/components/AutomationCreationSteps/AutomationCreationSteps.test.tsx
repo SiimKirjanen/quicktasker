@@ -128,10 +128,8 @@ describe("AutomationCreationSteps", () => {
         createAutomation={jest.fn()}
       />,
     );
-    // Find the button container by text, then walk up to the element with the disabled class
-    const buttonText = screen.getByText("Create automation");
-    const buttonContainer = buttonText.closest("div.wpqt-main-border");
-    expect(buttonContainer).toHaveClass("wpqt-opacity-50");
+    const button = screen.getByRole("button", { name: "Create automation" });
+    expect(button).toBeDisabled();
   });
 
   it("enables Create automation button if ready", () => {
@@ -142,9 +140,8 @@ describe("AutomationCreationSteps", () => {
         createAutomation={jest.fn()}
       />,
     );
-    const button = screen.getByText("Create automation").closest("div");
-    expect(button).not.toHaveClass("wpqt-opacity-50");
-    expect(button).not.toHaveClass("wpqt-cursor-not-allowed");
+    const button = screen.getByRole("button", { name: "Create automation" });
+    expect(button).toBeEnabled();
   });
 
   it("calls createAutomation when button is clicked and ready", async () => {

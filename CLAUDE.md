@@ -81,3 +81,7 @@ Error handling is centralized in `ErrorHandlerService` — all API catch blocks 
 - **JS unit tests**: Jest + `@testing-library/react`, configured in `jest.config.js`. Test files colocated with source (`*.test.tsx`).
 - **PHP unit tests**: PHPUnit, tests in `tests/unit/be/`.
 - **E2E tests**: Playwright in `tests/e2e/`. Auth state stored in `playwright/.auth/` (gitignored). Shared helpers in `tests/e2e/utils/` — use `getStageContainer()`, `getTaskCard()`, `createBoard()`, `createStage()`, `createTask()` rather than raw locators. Fixture files for import tests in `tests/e2e/fixtures/`.
+
+## Working conventions
+
+- **Playwright MCP screenshots**: when you take screenshots via `mcp__playwright__browser_take_screenshot` to inspect the UI, delete the resulting `.png` files from the project root before ending the task. Don't leave them lying around.

@@ -18,7 +18,7 @@ test.describe('Archive – Page Structure', () => {
   });
 
   test('renders archive page with heading, filter controls and settings button', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Archive' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Archive', exact: true })).toBeVisible();
     await expect(page.getByText('Archive filtering')).toBeVisible();
     await expect(page.getByTestId('archive-settings-button')).toBeVisible();
 

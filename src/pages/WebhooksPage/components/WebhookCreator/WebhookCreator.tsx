@@ -1,4 +1,3 @@
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
@@ -15,14 +14,12 @@ import {
   WebhookTargetTypeActions,
 } from "../../../../utils/webhooks";
 
-import { PiWebhooksLogo } from "react-icons/pi";
-import { WPQTIconButton } from "../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
+import { WPQTButton } from "../../../../components/common/Button/Button";
 import { WPQTInput } from "../../../../components/common/Input/Input";
 import { InputErrorText } from "../../../../components/common/Input/InputErrorText/InputErrorText";
 import { WPQTLabel } from "../../../../components/common/Label/WPQTLabel";
 import { WPQTSelect } from "../../../../components/common/Select/WPQTSelect";
 import { Toggle } from "../../../../components/common/Toggle/Toggle";
-import { WPQTTooltip } from "../../../../components/Tooltip/WPQTTooltip";
 
 type Props = {
   pipelineId: string;
@@ -86,14 +83,14 @@ function WebhookCreator({ pipelineId }: Props) {
   }, [webhookUrl]);
 
   return (
-    <>
-      <div className="wpqt-flex wpqt-gap-4 wpqt-mb-5 wpqt-justify-center">
-        <div>
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-max-w-xl wpqt-mx-auto wpqt-mt-6">
+      <div className="wpqt-flex wpqt-gap-4 wpqt-w-full">
+        <div className="wpqt-flex wpqt-flex-col wpqt-flex-1">
           <WPQTLabel
             labelFor="webhook-target-type"
-            className="wpqt-block wpqt-mb-3"
+            className="wpqt-block wpqt-mb-1"
           >
-            {__("Select a target type", "quicktasker")}
+            {__("Target type", "quicktasker")}
           </WPQTLabel>
           <WPQTSelect
             id="webhook-target-type"
@@ -108,12 +105,13 @@ function WebhookCreator({ pipelineId }: Props) {
             }
           />
         </div>
-        <div>
+
+        <div className="wpqt-flex wpqt-flex-col wpqt-flex-1">
           <WPQTLabel
             labelFor="webhook-target-action"
-            className="wpqt-block wpqt-mb-3"
+            className="wpqt-block wpqt-mb-1"
           >
-            {__("Select a target action", "quicktasker")}
+            {__("Target action", "quicktasker")}
           </WPQTLabel>
           <WPQTSelect
             id="webhook-target-action"
@@ -128,60 +126,61 @@ function WebhookCreator({ pipelineId }: Props) {
             }
           />
         </div>
-        <div>
-          <WPQTLabel
-            labelFor="webhook-confirm"
-            className="wpqt-flex wpqt-mb-3 wpqt-gap-1"
-            data-tooltip-id="webhook-confirm-tooltip"
-            data-tooltip-content={__(
-              "If enabled, the webhook will wait for the HTTP response. Much slower performance but better for debugging.",
-              "quicktasker",
-            )}
-            data-tooltip-variant="info"
-          >
-            {__("Wait for response", "quicktasker")}
-            <QuestionMarkCircleIcon className="wpqt-size-5" />
-          </WPQTLabel>
-          <Toggle
-            checked={webhookConfirm}
-            handleChange={setWebhookConfirm}
-            id="webhook-confirm"
-          />
-          <WPQTTooltip id="webhook-confirm-tooltip" />
-        </div>
-        <div>
-          <WPQTLabel labelFor="webhook-url" className="wpqt-block wpqt-mb-3">
-            {__("Enter the webhook URL", "quicktasker")}
-          </WPQTLabel>
-          <WPQTInput
-            inputId="webhook-url"
-            value={webhookUrl}
-            wrapperClassName="!wpqt-mb-0"
-            onChange={(value) => {
-              setWebhookUrl(value);
-              setValidationState((prev) => ({
-                ...prev,
-                urlDirty: true,
-              }));
-            }}
-          />
-          {!validationState.urlValid && validationState.urlDirty && (
-            <InputErrorText
-              errorText={__("Please enter a valid URL", "quicktasker")}
-            />
+      </div>
+
+      <WPQTLabel
+        labelFor="webhook-url"
+        className="wpqt-block wpqt-mb-1 wpqt-mt-3"
+      >
+        {__("Webhook URL", "quicktasker")}
+      </WPQTLabel>
+      <WPQTInput
+        inputId="webhook-url"
+        value={webhookUrl}
+        wrapperClassName="!wpqt-mb-0 wpqt-w-full"
+        className="wpqt-w-full"
+        onChange={(value) => {
+          setWebhookUrl(value);
+          setValidationState((prev) => ({
+            ...prev,
+            urlDirty: true,
+          }));
+        }}
+      />
+      {!validationState.urlValid && validationState.urlDirty && (
+        <InputErrorText
+          errorText={__(
+            "Please enter a valid URL including the protocol, e.g. https://example.com/webhook",
+            "quicktasker",
           )}
-        </div>
-      </div>
-      <div className="wpqt-flex wpqt-justify-center">
-        <WPQTIconButton
-          text={__("Create Webhook", "quicktasker")}
-          icon={<PiWebhooksLogo className="wpqt-size-6 wpqt-text-blue-400" />}
-          onClick={handleCreateWebhook}
-          loading={isCreating}
-          disabled={!validationState.urlValid}
         />
+      )}
+
+      <div className="wpqt-mt-4 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-text-center wpqt-gap-1 wpqt-self-center">
+        <WPQTLabel labelFor="webhook-confirm" className="wpqt-block">
+          {__("Wait for response", "quicktasker")}
+        </WPQTLabel>
+        <Toggle
+          checked={webhookConfirm}
+          handleChange={setWebhookConfirm}
+          id="webhook-confirm"
+        />
+        <span className="wpqt-text-xs wpqt-text-gray-500">
+          {__(
+            "Intended for development and debugging only. When enabled, the webhook waits for the HTTP response — leaving this on in production will severely slow down board actions.",
+            "quicktasker",
+          )}
+        </span>
       </div>
-    </>
+
+      <WPQTButton
+        className="wpqt-mt-4 wpqt-mb-6 wpqt-self-end"
+        btnText={__("Create Webhook", "quicktasker")}
+        onClick={handleCreateWebhook}
+        loading={isCreating}
+        disabled={!validationState.urlValid}
+      />
+    </div>
   );
 }
 

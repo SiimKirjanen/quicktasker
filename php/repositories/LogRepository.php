@@ -83,10 +83,10 @@ if (!class_exists('WPQT\Log\LogRepository')) {
          * @param string|null $logType The type of log to filter by. If null, no filtering by type is applied.
          * @param int|null $typeId The ID of the log type to filter by. If null, no filtering by type ID is applied.
          * @param string|null $logCreatedBy The creator of the log to filter by. If null, no filtering by creator is applied.
-         * @param int $numberOfLogs The number of logs to retrieve. Currently not used in the query.
+         * @param int $numberOfLogs The maximum number of logs to retrieve.
          * @param string $logOrder The order of the logs, either 'ASC' for ascending or 'DESC' for descending.
          * @param string|null $logStatus The status of the log to filter by. If null, no filtering by status is applied.
-         * @param string|null $logSearch A search term to filter logs by text. Currently not used in the query.
+         * @param string|null $logSearch A search term to filter logs by text.
          * @param string|null $logCreatedById The ID of the creator to filter by.
          * @return array The retrieved logs from the database.
          */
@@ -156,6 +156,8 @@ if (!class_exists('WPQT\Log\LogRepository')) {
             }
 
             $sql .= ' ORDER BY logs.created_at ' . $order;
+            $sql .= ' LIMIT %d';
+            $queryParams[] = (int) $numberOfLogs;
 
             $results = $wpdb->get_results($wpdb->prepare($sql, ...$queryParams));
 
