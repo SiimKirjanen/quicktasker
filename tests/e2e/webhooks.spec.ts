@@ -15,15 +15,15 @@ test.describe('Board Webhooks', () => {
   test('should validate URL input and toggle the Create button accordingly', async ({ page }) => {
     await setupBoardForWebhooks(page, 'WH-Validate');
 
-    const createButton = page.locator('div[aria-disabled]').filter({ hasText: 'Create Webhook' });
-    await expect(createButton).toHaveAttribute('aria-disabled', 'true');
+    const createButton = page.getByRole('button', { name: 'Create Webhook' });
+    await expect(createButton).toBeDisabled();
 
     await page.locator('#webhook-url').fill('not-a-url');
     await expect(page.getByText('Please enter a valid URL')).toBeVisible();
-    await expect(createButton).toHaveAttribute('aria-disabled', 'true');
+    await expect(createButton).toBeDisabled();
 
     await page.locator('#webhook-url').fill(TEST_WEBHOOK_URL);
-    await expect(createButton).toHaveAttribute('aria-disabled', 'false');
+    await expect(createButton).toBeEnabled();
   });
 
   test('should create a webhook and reset the form', async ({ page }) => {
@@ -37,7 +37,7 @@ test.describe('Board Webhooks', () => {
 
     await expect(page.locator('#webhook-url')).toHaveValue('');
     await expect(page.locator('#webhook-target-action')).toHaveValue('created');
-    await expect(page.locator('div[aria-disabled]').filter({ hasText: 'Create Webhook' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('button', { name: 'Create Webhook' })).toBeDisabled();
   });
 
   test('should create multiple webhooks for the same board', async ({ page }) => {

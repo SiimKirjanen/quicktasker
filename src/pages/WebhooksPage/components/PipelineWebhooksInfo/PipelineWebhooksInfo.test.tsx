@@ -10,6 +10,8 @@ import { PipelineWebhooksInfo } from "./PipelineWebhooksInfo";
 
 jest.mock("@wordpress/i18n", () => ({
   __: (str: string) => str,
+  _n: (single: string, plural: string, num: number) =>
+    num === 1 ? single : plural,
   sprintf: (str: string, num: number) => str.replace("%d", num.toString()),
 }));
 

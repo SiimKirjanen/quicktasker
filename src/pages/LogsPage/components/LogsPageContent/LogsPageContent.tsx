@@ -124,39 +124,29 @@ const LogsPageContent = () => {
       ) : logs.length === 0 ? (
         <NoFilterResults text={__("No logs found", "quicktasker")} />
       ) : (
-        <GroupedLogs logs={logs} />
+        <LogsTable logs={logs} />
       )}
     </div>
   );
 };
 
-function GroupedLogs({ logs }: { logs: Log[] }) {
-  const { convertToWPTimezone } = useTimezone();
-  const groups: { date: string; logs: Log[] }[] = [];
-  for (const log of logs) {
-    const formatted = convertToWPTimezone(log.created_at);
-    const date = formatted.slice(0, formatted.lastIndexOf(" "));
-    const last = groups[groups.length - 1];
-    if (last && last.date === date) {
-      last.logs.push(log);
-    } else {
-      groups.push({ date, logs: [log] });
-    }
-  }
-
+function LogsTable({ logs }: { logs: Log[] }) {
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">
-      {groups.map((group) => (
-        <section key={group.date}>
-          <h3 className="wpqt-sticky wpqt-top-8 wpqt-z-10 wpqt-mb-1 wpqt-bg-gray-50 wpqt-px-3 wpqt-py-1 wpqt-text-xs wpqt-font-semibold wpqt-uppercase wpqt-tracking-wide wpqt-text-gray-500 wpqt-rounded">
-            {group.date}
-          </h3>
-          <ul className="wpqt-main-border wpqt-rounded wpqt-bg-white wpqt-divide-y">
-            {group.logs.map((log) => (
-              <LogRow log={log} key={log.id} />
-            ))}
-          </ul>
-        </section>
+    <div className="wpqt-grid wpqt-grid-cols-[auto_auto_auto_1fr] wpqt-items-center wpqt-gap-x-8 wpqt-gap-y-3">
+      <div className="wpqt-mb-2 wpqt-font-bold">
+        {__("Status", "quicktasker")}
+      </div>
+      <div className="wpqt-mb-2 wpqt-font-bold">
+        {__("Created at", "quicktasker")}
+      </div>
+      <div className="wpqt-mb-2 wpqt-font-bold">
+        {__("Author", "quicktasker")}
+      </div>
+      <div className="wpqt-mb-2 wpqt-font-bold">
+        {__("Message", "quicktasker")}
+      </div>
+      {logs.map((log) => (
+        <LogRow log={log} key={log.id} />
       ))}
     </div>
   );
@@ -165,26 +155,24 @@ function GroupedLogs({ logs }: { logs: Log[] }) {
 function LogRow({ log }: { log: Log }) {
   const { convertToWPTimezone } = useTimezone();
   const createdBy = logCreatedByString[log.created_by];
-  const formatted = convertToWPTimezone(log.created_at);
-  const time = formatted.split(" ").pop() ?? formatted;
   const isError = log.log_status === LogStatusEnum.Error;
   return (
-    <li className="wpqt-flex wpqt-items-baseline wpqt-gap-3 wpqt-px-3 wpqt-py-2 wpqt-text-sm hover:wpqt-bg-gray-50">
+    <>
       <span
-        className={`wpqt-mt-1.5 wpqt-h-2 wpqt-w-2 wpqt-shrink-0 wpqt-rounded-full ${
+        className={`wpqt-h-2 wpqt-w-2 wpqt-rounded-full ${
           isError ? "wpqt-bg-red-500" : "wpqt-bg-green-500"
         }`}
         title={isError ? "Error" : "Success"}
       />
-      <span className="wpqt-w-12 wpqt-shrink-0 wpqt-text-gray-500 wpqt-tabular-nums">
-        {time}
+      <span className="wpqt-text-gray-500 wpqt-tabular-nums">
+        {convertToWPTimezone(log.created_at)}
       </span>
-      <span className="wpqt-w-44 wpqt-shrink-0 wpqt-truncate">
+      <span>
         <span className="wpqt-font-semibold">{log.author_name}</span>
         <span className="wpqt-text-gray-500"> ({createdBy})</span>
       </span>
-      <span className="wpqt-flex-1 wpqt-min-w-0">{log.text}</span>
-    </li>
+      <span>{log.text}</span>
+    </>
   );
 }
 
