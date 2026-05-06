@@ -16,6 +16,77 @@ if (!class_exists('WPQT\DB\DBMigrateService')) {
             $this->changeTaskPipelineIdToNullable();
             $this->dropCommentsIsAdminCommentColumn();
             $this->addForeignKeys();
+            $this->optimizeLogsTableIndexes();
+        }
+
+        private function optimizeLogsTableIndexes()
+        {
+            $table = TABLE_WP_QUICKTASKS_LOGS;
+
+            $this->dropIndexIfExists($table, 'type_id');
+            $this->dropIndexIfExists($table, 'type');
+            $this->dropIndexIfExists($table, 'created_by');
+            $this->dropIndexIfExists($table, 'user_id');
+
+            $this->addIndexIfNotExists(
+                $table,
+                'type_type_id_created_at',
+                'type, type_id, created_at'
+            );
+            $this->addIndexIfNotExists($table, 'created_at', 'created_at');
+        }
+
+        private function dropIndexIfExists($table, $indexName)
+        {
+            global $wpdb;
+
+            if (!$this->indexExists($table, $indexName)) {
+                return true;
+            }
+
+            $result = $wpdb->query("ALTER TABLE {$table} DROP INDEX {$indexName}");
+
+            if (false === $result) {
+                error_log("Failed to drop index {$indexName} on {$table}: " . $wpdb->last_error);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private function addIndexIfNotExists($table, $indexName, $columns)
+        {
+            global $wpdb;
+
+            if ($this->indexExists($table, $indexName)) {
+                return true;
+            }
+
+            $result = $wpdb->query("ALTER TABLE {$table} ADD INDEX {$indexName} ({$columns})");
+
+            if (false === $result) {
+                error_log("Failed to add index {$indexName} on {$table}: " . $wpdb->last_error);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private function indexExists($table, $indexName)
+        {
+            global $wpdb;
+
+            $exists = $wpdb->get_var($wpdb->prepare('
+                SELECT COUNT(1)
+                FROM information_schema.STATISTICS
+                WHERE TABLE_SCHEMA = DATABASE()
+                AND TABLE_NAME = %s
+                AND INDEX_NAME = %s
+            ', $table, $indexName));
+
+            return (bool) $exists;
         }
 
         private function changeTaskLocationStageIdToNullable()
