@@ -127,10 +127,8 @@ if (!function_exists('wpqt_set_up_db')) {
 				created_at datetime NOT NULL COMMENT 'UTC',
 				log_status ENUM('success', 'error') DEFAULT 'success',
 				PRIMARY KEY  (id),
-				INDEX type_id (type_id),
-				INDEX type (type),
-				INDEX created_by (created_by),
-				INDEX user_id (user_id)
+				INDEX type_type_id_created_at (type, type_id, created_at),
+				INDEX created_at (created_at)
 			) $charset_collate;";
 
             dbDelta($sql7);
