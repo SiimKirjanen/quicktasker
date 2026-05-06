@@ -1,5 +1,6 @@
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { LuKeySquare } from "react-icons/lu";
 import {
   ButtonStyleType,
   WPQTButton,
@@ -93,7 +94,7 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
   };
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-max-w-xl wpqt-mx-auto wpqt-mt-6">
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-mt-6">
       <WPQTLabel labelFor="api-token-name">
         {__("Name", "quicktasker")}
       </WPQTLabel>
@@ -197,6 +198,7 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
 
       <WPQTButton
         btnText={__("Create API Token", "quicktasker")}
+        icon={<LuKeySquare className="wpqt-size-4" />}
         className="wpqt-my-4 wpqt-self-end"
         onClick={handleCreateApiToken}
         loading={saving}

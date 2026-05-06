@@ -9,12 +9,9 @@ function PipelineWebhooks() {
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center wpqt-gap-4 wpqt-mb-4">
+    <div className="wpqt-grid wpqt-grid-cols-1 md:wpqt-grid-cols-2 xl:wpqt-grid-cols-3 wpqt-gap-4 wpqt-mb-4">
       {webhooks.map((webhook) => (
-        <div
-          key={webhook.id}
-          className="wpqt-w-full md:wpqt-w-[calc(33%-0.5rem)] xl:wpqt-w-[calc(25%-0.75rem)] wpqt-flex"
-        >
+        <div key={webhook.id} className="wpqt-flex">
           <PipelineWebhook webhook={webhook} />
         </div>
       ))}

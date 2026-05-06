@@ -1,5 +1,6 @@
 import { useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import { PiWebhooksLogo } from "react-icons/pi";
 import { toast } from "react-toastify";
 import { ADD_PIPELINE_WEBHOOK } from "../../../../constants";
 import { useWebhookActions } from "../../../../hooks/actions/useWebhookActions";
@@ -83,7 +84,7 @@ function WebhookCreator({ pipelineId }: Props) {
   }, [webhookUrl]);
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-max-w-xl wpqt-mx-auto wpqt-mt-6">
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-mt-6">
       <div className="wpqt-flex wpqt-gap-4 wpqt-w-full">
         <div className="wpqt-flex wpqt-flex-col wpqt-flex-1">
           <WPQTLabel
@@ -176,6 +177,7 @@ function WebhookCreator({ pipelineId }: Props) {
       <WPQTButton
         className="wpqt-mt-4 wpqt-mb-6 wpqt-self-end"
         btnText={__("Create Webhook", "quicktasker")}
+        icon={<PiWebhooksLogo className="wpqt-size-4" />}
         onClick={handleCreateWebhook}
         loading={isCreating}
         disabled={!validationState.urlValid}

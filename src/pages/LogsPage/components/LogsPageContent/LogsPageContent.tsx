@@ -112,7 +112,7 @@ const LogsPageContent = () => {
   };
 
   return (
-    <div className="wpqt-max-w-[1200px] wpqt-mx-auto">
+    <div>
       <LogsFilter
         filterSettings={filterSettings}
         setFilterSettings={applyFilter}
@@ -132,7 +132,7 @@ const LogsPageContent = () => {
 
 function LogsTable({ logs }: { logs: Log[] }) {
   return (
-    <div className="wpqt-grid wpqt-grid-cols-[auto_auto_auto_1fr] wpqt-items-center wpqt-gap-x-8 wpqt-gap-y-3">
+    <div className="wpqt-inline-grid wpqt-grid-cols-[auto_auto_auto_auto] wpqt-items-center wpqt-gap-x-8 wpqt-gap-y-3">
       <div className="wpqt-mb-2 wpqt-font-bold">
         {__("Status", "quicktasker")}
       </div>

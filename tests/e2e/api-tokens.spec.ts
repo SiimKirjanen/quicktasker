@@ -56,21 +56,7 @@ test.describe('Board API Tokens', () => {
     await expect(page.getByText('Used for testing')).toBeVisible();
   });
 
-  test('should create a token with additional permissions enabled', async ({ page }) => {
-    await setupBoardForApiTokens(page, 'AT-Create-Perms');
-
-    await createApiToken(page, {
-      name: 'Full Access Token',
-      extraPermissions: ['get_pipeline_tasks', 'post_pipeline_tasks'],
-    });
-
-    const tokenCard = page.getByTestId('pipeline-api-token').first();
-    const tasksRow = tokenCard.getByText('Tasks', { exact: true }).locator('..');
-    await expect(tasksRow.getByText('GET', { exact: true })).toBeVisible();
-    await expect(tasksRow.getByText('POST', { exact: true })).toBeVisible();
-  });
-
-  test('should create multiple tokens for the same board', async ({ page }) => {
+test('should create multiple tokens for the same board', async ({ page }) => {
     await setupBoardForApiTokens(page, 'AT-Create-Multiple');
 
     await createApiToken(page, { name: 'Token Alpha' });

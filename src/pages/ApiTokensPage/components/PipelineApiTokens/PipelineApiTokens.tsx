@@ -9,12 +9,9 @@ function PipelineApiTokens() {
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center wpqt-gap-4">
+    <div className="wpqt-grid wpqt-grid-cols-1 md:wpqt-grid-cols-2 xl:wpqt-grid-cols-3 wpqt-gap-4">
       {apiTokens.map((apiToken) => (
-        <div
-          key={apiToken.id}
-          className="wpqt-w-full md:wpqt-w-[calc(33%-0.5rem)] xl:wpqt-w-[calc(25%-0.75rem)] wpqt-flex"
-        >
+        <div key={apiToken.id} className="wpqt-flex">
           <PipelineApiToken apiToken={apiToken} />
         </div>
       ))}

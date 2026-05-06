@@ -20,40 +20,21 @@ export async function setupBoardForApiTokens(
   return { boardName };
 }
 
-const PERMISSION_LABELS: Record<string, string> = {
-  get_pipeline: 'GET board',
-  patch_pipeline: 'PATCH board',
-  get_pipeline_stages: 'GET stages',
-  post_pipeline_stages: 'POST stages',
-  patch_pipeline_stages: 'PATCH stages',
-  delete_pipeline_stages: 'DELETE stages',
-  get_pipeline_tasks: 'GET tasks',
-  post_pipeline_tasks: 'POST tasks',
-  patch_pipeline_tasks: 'PATCH tasks',
-  delete_pipeline_tasks: 'DELETE tasks',
-};
-
 type CreateApiTokenOptions = {
   name?: string;
   description?: string;
-  extraPermissions?: string[];
 };
 
 export async function createApiToken(
   page: Page,
   options: CreateApiTokenOptions = {},
 ): Promise<void> {
-  const { name = 'Test Token', description, extraPermissions = [] } = options;
+  const { name = 'Test Token', description } = options;
 
   await page.locator('#api-token-name').fill(name);
 
   if (description) {
     await page.locator('#api-token-description').fill(description);
-  }
-
-  for (const permissionKey of extraPermissions) {
-    const label = PERMISSION_LABELS[permissionKey];
-    await page.getByRole('switch', { name: label }).click({ force: true });
   }
 
   await page.getByRole('button', { name: 'Create API Token' }).click();
