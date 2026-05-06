@@ -43,18 +43,22 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
   }
 
   return (
-    <div>
-      <h2>{__("Created API tokens", "quicktasker")}</h2>
-      <PipelineApiTokensInfo />
-      <PipelineApiTokens />
-      <h2>{__("Create a new API token", "quicktasker")}</h2>
-      <p>
-        {__(
-          "Configure permissions below. The token is displayed only once after creation.",
-          "quicktasker",
-        )}
-      </p>
-      <PipelineApiTokenCreator pipelineId={pipelineId} />
+    <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-8">
+      <div className="wpqt-flex-1 wpqt-min-w-0">
+        <h2>{__("Created API tokens", "quicktasker")}</h2>
+        <PipelineApiTokensInfo />
+        <PipelineApiTokens />
+      </div>
+      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0">
+        <h2>{__("Create a new API token", "quicktasker")}</h2>
+        <p>
+          {__(
+            "Configure permissions below. The token is displayed only once after creation.",
+            "quicktasker",
+          )}
+        </p>
+        <PipelineApiTokenCreator pipelineId={pipelineId} />
+      </div>
       <ApiTokenLogsModal />
     </div>
   );

@@ -39,13 +39,19 @@ function AutomationsPageContent({ pipelineId }: Props) {
   }
 
   return (
-    <div>
-      <h2>{__("Created automations", "quicktasker")}</h2>
-      <PipelineAutomationsInfo />
-      <PipelineAutomations />
-      <h2>{__("Create a new automation", "quicktasker")}</h2>
-      <p>{__("Follow the steps to create a new automation.", "quicktasker")}</p>
-      <AutomationCreator pipelineId={pipelineId} />
+    <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-8">
+      <div className="wpqt-flex-1 wpqt-min-w-0">
+        <h2>{__("Created automations", "quicktasker")}</h2>
+        <PipelineAutomationsInfo />
+        <PipelineAutomations />
+      </div>
+      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0">
+        <h2>{__("Create a new automation", "quicktasker")}</h2>
+        <p>
+          {__("Follow the steps to create a new automation.", "quicktasker")}
+        </p>
+        <AutomationCreator pipelineId={pipelineId} />
+      </div>
       <AutomationLogsModal />
     </div>
   );
