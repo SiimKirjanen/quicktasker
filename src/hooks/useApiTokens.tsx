@@ -5,6 +5,7 @@ function useApiTokens() {
   const {
     state: { loading, apiTokens, activePipelineId },
     pipelineApiTokensDispatch,
+    refetchPipelineApiTokens,
   } = useContext(PipelineApiTokensContext);
 
   return {
@@ -12,6 +13,7 @@ function useApiTokens() {
     apiTokens,
     activePipelineId,
     pipelineApiTokensDispatch,
+    refetchPipelineApiTokens,
   };
 }
 

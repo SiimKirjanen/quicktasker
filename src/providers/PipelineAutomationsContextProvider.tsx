@@ -56,12 +56,14 @@ type Dispatch = (action: Action) => void;
 type PipelineAutomationsContextType = {
   state: State;
   pipelineAutomationsDispatch: Dispatch;
+  refetchPipelineAutomations: () => Promise<void>;
 };
 
 const PipelineAutomationsContext =
   createContext<PipelineAutomationsContextType>({
     state: initialState,
     pipelineAutomationsDispatch: () => {},
+    refetchPipelineAutomations: () => Promise.resolve(),
   });
 
 const PipelineAutomationsContextProvider = ({
@@ -109,7 +111,11 @@ const PipelineAutomationsContextProvider = ({
 
   return (
     <PipelineAutomationsContext.Provider
-      value={{ state, pipelineAutomationsDispatch }}
+      value={{
+        state,
+        pipelineAutomationsDispatch,
+        refetchPipelineAutomations: loadAutomations,
+      }}
     >
       {children}
     </PipelineAutomationsContext.Provider>

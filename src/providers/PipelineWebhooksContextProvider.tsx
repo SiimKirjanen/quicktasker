@@ -60,11 +60,13 @@ type Dispatch = (action: Action) => void;
 type PipelineWebhooksContextType = {
   state: State;
   pipelineWebhooksDispatch: Dispatch;
+  refetchPipelineWebhooks: () => Promise<void>;
 };
 
 const PipelineWebhooksContext = createContext<PipelineWebhooksContextType>({
   state: initialState,
   pipelineWebhooksDispatch: () => {},
+  refetchPipelineWebhooks: () => Promise.resolve(),
 });
 
 const PipelineWebhooksContextProvider = ({
@@ -110,7 +112,11 @@ const PipelineWebhooksContextProvider = ({
 
   return (
     <PipelineWebhooksContext.Provider
-      value={{ state, pipelineWebhooksDispatch }}
+      value={{
+        state,
+        pipelineWebhooksDispatch,
+        refetchPipelineWebhooks: loadWebhooks,
+      }}
     >
       {children}
     </PipelineWebhooksContext.Provider>

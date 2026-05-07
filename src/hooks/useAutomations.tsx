@@ -4,11 +4,13 @@ import { PipelineAutomationsContext } from "../providers/PipelineAutomationsCont
 function useAutomations() {
   const {
     state: { automations, loading },
+    refetchPipelineAutomations,
   } = useContext(PipelineAutomationsContext);
 
   return {
     automations,
     loading,
+    refetchPipelineAutomations,
   };
 }
 

@@ -1,11 +1,11 @@
-import { ViewColumnsIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, ViewColumnsIcon } from "@heroicons/react/24/outline";
 import { __ } from "@wordpress/i18n";
 import { PiWebhooksLogo } from "react-icons/pi";
 import { SiProbot } from "react-icons/si";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
-import { Loading } from "../../components/Loading/Loading";
+import { Loading, LoadingOval } from "../../components/Loading/Loading";
 import { ApiTokenLogsModal } from "../../components/Modal/ApiTokenLogsModal/ApiTokenLogsModal";
 import { useApiTokens } from "../../hooks/useApiTokens";
 import { useApp } from "../../hooks/useApp";
@@ -97,43 +97,48 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
             }
             rightSideContent={
               <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
-                <div
-                  className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
-                  onClick={() => {
-                    navigatePageWithoutHistory(`#/board/${pipelineId}`);
-                  }}
-                >
-                  <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-                  <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-                    {__("Board", "quicktasker")}
-                  </span>
+                <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-mr-2 wpqt-pr-4 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
+                  <div
+                    className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
+                    onClick={() => {
+                      navigatePageWithoutHistory(`#/board/${pipelineId}`);
+                    }}
+                  >
+                    <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+                    <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                      {__("Board", "quicktasker")}
+                    </span>
+                  </div>
+                  <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
+                    <div
+                      className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
+                      onClick={() => {
+                        navigatePageWithoutHistory(
+                          `#/board/${pipelineId}/automations`,
+                        );
+                      }}
+                    >
+                      <SiProbot className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+                      <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                        {__("Automations", "quicktasker")}
+                      </span>
+                    </div>
+                    <div
+                      className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
+                      onClick={() => {
+                        navigatePageWithoutHistory(
+                          `#/board/${pipelineId}/webhooks`,
+                        );
+                      }}
+                    >
+                      <PiWebhooksLogo className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+                      <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                        {__("Webhooks", "quicktasker")}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div
-                  className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
-                  onClick={() => {
-                    navigatePageWithoutHistory(
-                      `#/board/${pipelineId}/automations`,
-                    );
-                  }}
-                >
-                  <SiProbot className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-                  <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-                    {__("Automations", "quicktasker")}
-                  </span>
-                </div>
-                <div
-                  className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
-                  onClick={() => {
-                    navigatePageWithoutHistory(
-                      `#/board/${pipelineId}/webhooks`,
-                    );
-                  }}
-                >
-                  <PiWebhooksLogo className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-                  <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-                    {__("Webhooks", "quicktasker")}
-                  </span>
-                </div>
+                <RefreshApiTokens />
                 <PipelineSelectionDropdown
                   activePipeline={activePipeline}
                   enableActions={false}
@@ -150,6 +155,24 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
         <ApiTokensPageContent pipelineId={pipelineId} />
       </Page>
     </PipelineApiTokensContextProvider>
+  );
+}
+
+function RefreshApiTokens() {
+  const { loading, refetchPipelineApiTokens } = useApiTokens();
+
+  return (
+    <div className="wpqt-mx-5">
+      {loading ? (
+        <LoadingOval width="28" height="28" />
+      ) : (
+        <ArrowPathIcon
+          className="wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+          data-testid="refresh-icon"
+          onClick={() => refetchPipelineApiTokens()}
+        />
+      )}
+    </div>
   );
 }
 

@@ -29,6 +29,7 @@ describe("PipelineWebhooksInfo", () => {
       webhooks: [],
       loading: false,
       pipelineWebhooksDispatch: jest.fn(),
+      refetchPipelineWebhooks: jest.fn(),
     });
     render(<PipelineWebhooksInfo />);
     expect(
@@ -64,6 +65,7 @@ describe("PipelineWebhooksInfo", () => {
       ],
       loading: false,
       pipelineWebhooksDispatch: jest.fn(),
+      refetchPipelineWebhooks: jest.fn(),
     });
     render(<PipelineWebhooksInfo />);
     expect(
@@ -76,6 +78,7 @@ describe("PipelineWebhooksInfo", () => {
       webhooks: [],
       loading: false,
       pipelineWebhooksDispatch: jest.fn(),
+      refetchPipelineWebhooks: jest.fn(),
     });
     render(<PipelineWebhooksInfo />);
     expect(
