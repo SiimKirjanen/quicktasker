@@ -39,7 +39,7 @@ function WebhooksPageContent({ pipelineId }: Props) {
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-8">
+    <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-16">
       <div className="wpqt-flex-1 wpqt-min-w-0">
         <h2>{__("Created webhooks", "quicktasker")}</h2>
         <PipelineWebhooksInfo />

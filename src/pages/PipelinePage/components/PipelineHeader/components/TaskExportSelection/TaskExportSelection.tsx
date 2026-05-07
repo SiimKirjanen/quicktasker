@@ -1,5 +1,4 @@
 import { useContext } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import { BsFiletypeJson } from "react-icons/bs";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { OPEN_TASK_EXPORT_MODAL } from "../../../../../../constants";
@@ -19,8 +18,7 @@ function TaskExportSelection() {
   };
 
   return (
-    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-mr-5 wpqt-gap-1">
-      <span className="wpqt-text-sm">{__("Export", "quicktasker")}</span>
+    <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-1">
       <div className="wpqt-flex wpqt-gap-2">
         <FaRegFilePdf
           className="wpqt-size-5 wpqt-pdf-red wpqt-cursor-pointer"

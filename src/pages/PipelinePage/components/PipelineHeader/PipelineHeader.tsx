@@ -1,16 +1,9 @@
-import {
-  ArrowPathIcon,
-  RectangleStackIcon,
-  ViewColumnsIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import { PipelineSelectionDropdown } from "../../../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { LoadingOval } from "../../../../components/Loading/Loading";
-import { PIPELINE_TOGGLE_VIEW } from "../../../../constants";
 import { useMissingContent } from "../../../../hooks/useMissingContent";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
-import { PipelineView } from "../../../../types/pipeline";
 import { BoardOptionsSelection } from "./components/BoardOptionsSelection/BoardOptionsSelection";
 import { TaskExportSelection } from "./components/TaskExportSelection/TaskExportSelection";
 
@@ -41,62 +34,23 @@ function PipelineHeader() {
       <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-3">
         <BoardOptionsSelection />
         <TaskExportSelection />
-        <PipelineModeSelector />
-        {loading ? (
-          <LoadingOval width="24" height="24" />
-        ) : (
-          <ArrowPathIcon
-            className="wpqt-size-6 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
-            data-testid="refresh-icon"
-            onClick={() => fetchAndSetPipelineData(activePipeline.id)}
-          />
-        )}
+        <div className="wpqt-mx-5">
+          {loading ? (
+            <LoadingOval width="28" height="28" />
+          ) : (
+            <ArrowPathIcon
+              className="wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+              data-testid="refresh-icon"
+              onClick={() => fetchAndSetPipelineData(activePipeline.id)}
+            />
+          )}
+        </div>
 
         <PipelineSelectionDropdown
           activePipeline={activePipeline}
           onPipelineClick={(pipelineId) => fetchAndSetPipelineData(pipelineId)}
         />
       </div>
-    </div>
-  );
-}
-
-function PipelineModeSelector() {
-  const {
-    state: { view },
-    dispatch,
-  } = useContext(ActivePipelineContext);
-
-  const toggleView = () => {
-    dispatch({
-      type: PIPELINE_TOGGLE_VIEW,
-      payload:
-        view === PipelineView.PIPELINE
-          ? PipelineView.TASK
-          : PipelineView.PIPELINE,
-    });
-  };
-
-  return (
-    <div
-      className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-text-blue-400 wpqt-text-base :hover:wpqt-text-blue-600 wpqt-group"
-      onClick={toggleView}
-    >
-      {view === PipelineView.PIPELINE ? (
-        <>
-          <RectangleStackIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-          <span className="group-hover:wpqt-text-blue-600">
-            {__("Switch to Task view", "quicktasker")}
-          </span>
-        </>
-      ) : (
-        <>
-          <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-          <span className="group-hover:wpqt-text-blue-600">
-            {__("Switch to Board view", "quicktasker")}
-          </span>
-        </>
-      )}
     </div>
   );
 }

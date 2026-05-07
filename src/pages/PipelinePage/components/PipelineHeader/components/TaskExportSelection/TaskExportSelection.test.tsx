@@ -24,15 +24,6 @@ describe("TaskExportSelection Component", () => {
     mockModalDispatch.mockClear();
   });
 
-  it('renders "Export" text above the icons', () => {
-    render(
-      <ModalContext.Provider value={mockModalContext}>
-        <TaskExportSelection />
-      </ModalContext.Provider>,
-    );
-    expect(screen.getByText("Export")).toBeInTheDocument();
-  });
-
   it("renders both PDF and JSON icons", () => {
     render(
       <ModalContext.Provider value={mockModalContext}>
@@ -103,7 +94,6 @@ describe("TaskExportSelection Component", () => {
     expect(outerWrapper).toHaveClass("wpqt-flex");
     expect(outerWrapper).toHaveClass("wpqt-flex-col");
     expect(outerWrapper).toHaveClass("wpqt-items-center");
-    expect(outerWrapper).toHaveClass("wpqt-mr-5");
     expect(outerWrapper).toHaveClass("wpqt-gap-1");
   });
 

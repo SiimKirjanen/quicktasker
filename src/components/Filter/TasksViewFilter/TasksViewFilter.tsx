@@ -12,7 +12,7 @@ import { UserTypes } from "../../../types/user";
 import { userTypeStrings } from "../../../utils/user";
 import { WPQTInput } from "../../common/Input/Input";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
-import { WPQTFilter, WPQTFilterSection } from "../WPQTFilter";
+import { WPQTFilterSection } from "../WPQTFilter";
 
 function TasksViewFilter() {
   const {
@@ -59,40 +59,43 @@ function TasksViewFilter() {
   };
 
   return (
-    <WPQTFilter
-      title={__("Filter tasks", "quicktasker")}
-      searchChildren={
+    <div className="wpqt-mb-10">
+      <h3 className="wpqt-mb-3 wpqt-text-center wpqt-text-lg wpqt-font-semibold">
+        {__("Filter tasks", "quicktasker")}
+      </h3>
+      <div className="wpqt-flex wpqt-flex-wrap wpqt-items-end wpqt-justify-center wpqt-gap-3">
         <WPQTFilterSection
           title={__("Search", "quicktasker")}
           labelIdFor="task-view-search"
         >
           <WPQTInput
             inputId="task-view-search"
+            wrapperClassName="!wpqt-mb-0"
+            className="!wpqt-py-1 !wpqt-border !wpqt-border-solid !wpqt-border-qtBorder !wpqt-shadow-none"
             value={searchText}
             onChange={onSearchChange}
           />
         </WPQTFilterSection>
-      }
-    >
-      <WPQTFilterSection title={__("Stage", "quicktasker")}>
-        <WPQTSelect
-          id="task-view-stage-filter"
-          allSelectorLabel={__("All stages", "quicktasker")}
-          selectedOptionValue={stageIdFilter}
-          options={stageOptions}
-          onSelectionChange={onStageSelectionChange}
-        />
-      </WPQTFilterSection>
-      <WPQTFilterSection title={__("Assigned user", "quicktasker")}>
-        <WPQTSelect
-          id="task-view-assigned-user-filter"
-          allSelectorLabel={__("All users", "quicktasker")}
-          selectedOptionValue={selectedUserOption}
-          options={userOptions}
-          onSelectionChange={onUserSelectionChange}
-        />
-      </WPQTFilterSection>
-    </WPQTFilter>
+        <WPQTFilterSection title={__("Stage", "quicktasker")}>
+          <WPQTSelect
+            id="task-view-stage-filter"
+            allSelectorLabel={__("All stages", "quicktasker")}
+            selectedOptionValue={stageIdFilter}
+            options={stageOptions}
+            onSelectionChange={onStageSelectionChange}
+          />
+        </WPQTFilterSection>
+        <WPQTFilterSection title={__("Assigned user", "quicktasker")}>
+          <WPQTSelect
+            id="task-view-assigned-user-filter"
+            allSelectorLabel={__("All users", "quicktasker")}
+            selectedOptionValue={selectedUserOption}
+            options={userOptions}
+            onSelectionChange={onUserSelectionChange}
+          />
+        </WPQTFilterSection>
+      </div>
+    </div>
   );
 }
 

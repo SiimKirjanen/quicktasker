@@ -164,7 +164,6 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
             {
               label: __("DELETE stages", "quicktasker"),
               key: "delete_pipeline_stages",
-              destructive: true,
             },
           ]}
           newApiToken={newApiToken}
@@ -188,7 +187,6 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
             {
               label: __("DELETE tasks", "quicktasker"),
               key: "delete_pipeline_tasks",
-              destructive: true,
             },
           ]}
           newApiToken={newApiToken}
@@ -214,7 +212,6 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
 type PermissionItem = {
   label: string;
   key: PermissionKey;
-  destructive?: boolean;
 };
 
 type PermissionGroupProps = {
@@ -241,7 +238,6 @@ function PermissionGroup({
             key={item.key}
             label={item.label}
             permissionKey={item.key}
-            destructive={item.destructive}
             newApiToken={newApiToken}
             setNewApiToken={setNewApiToken}
           />
@@ -254,23 +250,18 @@ function PermissionGroup({
 type PermissionsCheckboxProps = {
   label: string;
   permissionKey: PermissionKey;
-  destructive?: boolean;
   newApiToken: NewApiToken;
   setNewApiToken: React.Dispatch<React.SetStateAction<NewApiToken>>;
 };
 function PermissionsCheckbox({
   label,
   permissionKey,
-  destructive,
   newApiToken,
   setNewApiToken,
 }: PermissionsCheckboxProps) {
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-1">
-      <WPQTLabel
-        labelFor={`api-token-permission-${permissionKey}`}
-        className={destructive ? "wpqt-text-red-600" : ""}
-      >
+      <WPQTLabel labelFor={`api-token-permission-${permissionKey}`}>
         {label}
       </WPQTLabel>
       <Toggle

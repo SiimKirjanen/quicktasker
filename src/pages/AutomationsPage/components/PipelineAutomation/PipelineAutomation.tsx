@@ -59,7 +59,7 @@ function PipelineAutomation({ automation }: Props) {
       title={`${triggerLabel} → ${actionLabel}`}
       dropdown={<AutomationDropdown automation={automation} />}
       dataTestId="pipeline-automation"
-      className="wpqt-w-full"
+      className="wpqt-w-full wpqt-h-full"
     >
       <WPQTCardDataItem
         label={__("Target", "quicktasker")}

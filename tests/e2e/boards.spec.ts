@@ -176,7 +176,7 @@ test.describe('Board Task View', () => {
     await page.getByPlaceholder('Task name').press('Enter');
     await expect(page.getByText('Task Gamma')).toBeVisible();
 
-    await page.getByText('Switch to Task view').click();
+    await page.getByText('Task view', { exact: true }).click();
 
     await expect(page.getByText('Task Alpha')).toBeVisible();
     await expect(page.getByText('Task Beta')).toBeVisible();
@@ -227,8 +227,8 @@ test.describe('Board Task View', () => {
     await expect(page.getByText('Task Beta')).toBeVisible();
     await expect(page.getByText('Task Gamma')).not.toBeVisible();
 
-    await page.getByText('Switch to Board view').click();
-    await expect(page.getByText('Switch to Task view')).toBeVisible();
+    await page.getByText('Board view').click();
+    await expect(page.getByText('Task view', { exact: true })).toBeVisible();
   });
 
   test('should handle empty search results in task view', async ({ page }) => {
@@ -241,7 +241,7 @@ test.describe('Board Task View', () => {
     await page.getByPlaceholder('Task name').first().press('Enter');
     await expect(page.getByText('Sample Task')).toBeVisible();
 
-    await page.getByText('Switch to Task view').click();
+    await page.getByText('Task view').click();
 
     await page.getByRole('textbox', { name: 'Search' }).fill('NonExistentTask');
 

@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { PIPELINE_TOGGLE_VIEW } from "../../../../constants";
 import * as useAppModule from "../../../../hooks/useApp";
 import * as useMissingContentModule from "../../../../hooks/useMissingContent";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
@@ -165,34 +164,6 @@ describe("PipelineHeader", () => {
     const refreshIcon = screen.getByTestId("refresh-icon");
     fireEvent.click(refreshIcon);
     expect(fetchAndSetPipelineData).toHaveBeenCalledWith("1");
-  });
-
-  it("toggles view when PipelineModeSelector is clicked", () => {
-    const dispatch = jest.fn();
-    render(
-      <ActivePipelineContext.Provider
-        value={{
-          state: {
-            activePipeline,
-            loading: false,
-            view: PipelineView.PIPELINE,
-          },
-          fetchAndSetPipelineData,
-          dispatch,
-        }}
-      >
-        <ModalContext.Provider
-          value={{ state: defaultModalState, modalDispatch }}
-        >
-          <PipelineHeader />
-        </ModalContext.Provider>
-      </ActivePipelineContext.Provider>,
-    );
-    fireEvent.click(screen.getByText(/Switch to Task view/i));
-    expect(dispatch).toHaveBeenCalledWith({
-      type: PIPELINE_TOGGLE_VIEW,
-      payload: PipelineView.TASK,
-    });
   });
 
   it("shows loading indicator when loading", () => {
