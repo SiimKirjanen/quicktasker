@@ -29,7 +29,7 @@ function WPQTCard({
   return (
     <div
       className={clsx(
-        "wpqt-relative wpqt-flex wpqt-flex-col wpqt-rounded wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-4",
+        "wpqt-relative wpqt-flex wpqt-flex-col wpqt-rounded wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-p-4 wpqt-box-border",
         hasDropdown && "wpqt-pr-[24px]",
         className,
       )}
