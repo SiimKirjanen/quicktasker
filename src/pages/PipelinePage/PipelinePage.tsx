@@ -18,9 +18,13 @@ import Pipeline from "./components/Pipeline";
 import { PipelineHeader } from "./components/PipelineHeader/PipelineHeader";
 import { TaskView } from "./components/TaskView/TaskView";
 
-const PipelinePage = () => {
+type Props = {
+  pipelineId?: string;
+};
+
+const PipelinePage = ({ pipelineId }: Props) => {
   return (
-    <ActivePipelineContextProvider>
+    <ActivePipelineContextProvider initialPipelineId={pipelineId}>
       <LabelsContextProvider>
         <PipelinePageContent />
       </LabelsContextProvider>

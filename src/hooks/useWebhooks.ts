@@ -5,12 +5,14 @@ function useWebhooks() {
   const {
     state: { webhooks, loading },
     pipelineWebhooksDispatch,
+    refetchPipelineWebhooks,
   } = useContext(PipelineWebhooksContext);
 
   return {
     webhooks,
     loading,
     pipelineWebhooksDispatch,
+    refetchPipelineWebhooks,
   };
 }
 

@@ -76,6 +76,12 @@ const getPageFromUrl = () => {
       return <OverviewPage pipelineId={boardId} />;
     }
 
+    const boardMatch = hash.match(/^#\/board\/(\d+)$/);
+    if (boardMatch) {
+      const boardId = boardMatch[1];
+      return <PipelinePage pipelineId={boardId} />;
+    }
+
     switch (hash) {
       case "#/user-management":
         return <UserManagement />;

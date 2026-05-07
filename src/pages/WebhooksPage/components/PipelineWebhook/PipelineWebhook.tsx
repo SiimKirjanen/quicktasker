@@ -84,7 +84,7 @@ function PipelineWebhook({ webhook }: Props) {
       titleClassName="wpqt-font-mono wpqt-text-base"
       dropdown={<WebhookDropdown webhook={webhook} />}
       dataTestId="pipeline-webhook"
-      className="wpqt-w-full wpqt-h-full"
+      className="wpqt-w-full"
     >
       <WPQTCardDataItem
         label={__("Event", "quicktasker")}

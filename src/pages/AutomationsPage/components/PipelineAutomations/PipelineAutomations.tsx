@@ -14,9 +14,7 @@ function PipelineAutomations() {
   return (
     <div className="wpqt-grid wpqt-grid-cols-1 md:wpqt-grid-cols-2 xl:wpqt-grid-cols-3 wpqt-gap-4">
       {automations.map((automation) => (
-        <div key={automation.id} className="wpqt-flex">
-          <PipelineAutomation automation={automation} />
-        </div>
+        <PipelineAutomation key={automation.id} automation={automation} />
       ))}
     </div>
   );

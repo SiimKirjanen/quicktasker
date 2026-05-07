@@ -1,12 +1,14 @@
 import { __ } from "@wordpress/i18n";
 import { Info } from "../../../../components/Info/Info";
 import { useMissingContent } from "../../../../hooks/useMissingContent";
+import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipeline-overview-response";
 import { PipelineOverviewContent } from "./components/PipelineOverviewContent";
 
 type Props = {
-  pipelineId: string;
+  loading: boolean;
+  pipelineOverviewData: PipelineOverviewResponse | null;
 };
-function PipelineOverview({ pipelineId }: Props) {
+function PipelineOverview({ loading, pipelineOverviewData }: Props) {
   const { pipelineMissing } = useMissingContent();
 
   if (pipelineMissing) {
@@ -20,7 +22,12 @@ function PipelineOverview({ pipelineId }: Props) {
     );
   }
 
-  return <PipelineOverviewContent pipelineId={pipelineId} />;
+  return (
+    <PipelineOverviewContent
+      loading={loading}
+      pipelineOverviewData={pipelineOverviewData}
+    />
+  );
 }
 
 export { PipelineOverview };

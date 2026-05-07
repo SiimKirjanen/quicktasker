@@ -57,11 +57,13 @@ type Dispatch = (action: Action) => void;
 type PipelineApiTokensContextType = {
   state: State;
   pipelineApiTokensDispatch: Dispatch;
+  refetchPipelineApiTokens: () => Promise<void>;
 };
 
 const PipelineApiTokensContext = createContext<PipelineApiTokensContextType>({
   state: initialState,
   pipelineApiTokensDispatch: () => {},
+  refetchPipelineApiTokens: () => Promise.resolve(),
 });
 
 const PipelineApiTokensContextProvider = ({
@@ -109,7 +111,11 @@ const PipelineApiTokensContextProvider = ({
 
   return (
     <PipelineApiTokensContext.Provider
-      value={{ state, pipelineApiTokensDispatch }}
+      value={{
+        state,
+        pipelineApiTokensDispatch,
+        refetchPipelineApiTokens: fetchPipelineApiTokens,
+      }}
     >
       {children}
     </PipelineApiTokensContext.Provider>

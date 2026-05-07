@@ -132,18 +132,21 @@ const ActivePipelineContext = createContext<PipelineContextType>({
 
 const ActivePipelineContextProvider = ({
   children,
+  initialPipelineId,
 }: {
   children: React.ReactNode;
+  initialPipelineId?: string;
 }) => {
   const [state, dispatch] = useReducer(activePipelineReducer, initialState);
   const { loadingDispatch } = useContext(LoadingContext);
   const { detectMissingResources } = useMissingResourceDetection();
 
   useEffect(() => {
-    const initialActivePipelineId = window.wpqt.initialActivePipelineId;
+    const pipelineIdToLoad =
+      initialPipelineId ?? window.wpqt.initialActivePipelineId;
 
-    if (initialActivePipelineId) {
-      fetchAndSetPipelineData(initialActivePipelineId, true);
+    if (pipelineIdToLoad) {
+      fetchAndSetPipelineData(pipelineIdToLoad, true);
     }
   }, []);
 
