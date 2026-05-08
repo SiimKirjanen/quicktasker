@@ -1750,7 +1750,8 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $task = $userService->assignTaskToUser($data['id'], $data['task_id'], $data['user_type']);
                         $user = $userRepo->getUserByIdAndType($data['id'], $data['user_type']);
-                        $userId = get_current_user_id();
+                        $currentUser = wp_get_current_user();
+                        $userId = $currentUser->ID;
 
                         $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, [
                             'type'          => WP_QT_LOG_TYPE_TASK,
@@ -1772,8 +1773,6 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         /* Create in-app notification for the assigned user */
                         try {
-                            $assigner = wp_get_current_user();
-                            $assignerName = $assigner && $assigner->display_name ? $assigner->display_name : __('Someone', 'quicktasker');
                             ServiceLocator::get('NotificationService')->createNotification(
                                 $task->pipeline_id,
                                 (int) $data['id'],
@@ -1781,7 +1780,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 sprintf(
                                     /* translators: %1$s = assigner name, %2$s = task name */
                                     __('%1$s assigned you to task "%2$s"', 'quicktasker'),
-                                    $assignerName,
+                                    $currentUser->display_name,
                                     $task->name
                                 )
                             );
