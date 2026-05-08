@@ -6,6 +6,7 @@ import {
   ModalContext,
   State as ModalState,
 } from "../../../../providers/ModalContextProvider";
+import { NotificationsContext } from "../../../../providers/NotificationsContextProvider";
 import { PipelineView } from "../../../../types/pipeline";
 import { TaskExportMethods } from "../../../../types/task";
 import { PipelineHeader } from "./PipelineHeader";
@@ -82,6 +83,7 @@ describe("PipelineHeader", () => {
     automationLogsModalSettings: { automationId: null },
     apiTokenLogsModalOpen: false,
     apiTokenLogsModalSettings: { apiTokenId: null },
+    notificationsModalOpen: false,
   };
 
   function renderWithProviders(
@@ -136,7 +138,15 @@ describe("PipelineHeader", () => {
             ...modalOverrides,
           }}
         >
-          <PipelineHeader />
+          <NotificationsContext.Provider
+            value={{
+              state: { notifications: [], loading: false },
+              notificationsDispatch: jest.fn(),
+              fetchNotifications: jest.fn(),
+            }}
+          >
+            <PipelineHeader />
+          </NotificationsContext.Provider>
         </ModalContext.Provider>
       </ActivePipelineContext.Provider>,
     );
@@ -193,7 +203,15 @@ describe("PipelineHeader", () => {
         <ModalContext.Provider
           value={{ state: defaultModalState, modalDispatch }}
         >
-          <PipelineHeader />
+          <NotificationsContext.Provider
+            value={{
+              state: { notifications: [], loading: false },
+              notificationsDispatch: jest.fn(),
+              fetchNotifications: jest.fn(),
+            }}
+          >
+            <PipelineHeader />
+          </NotificationsContext.Provider>
         </ModalContext.Provider>
       </ActivePipelineContext.Provider>,
     );

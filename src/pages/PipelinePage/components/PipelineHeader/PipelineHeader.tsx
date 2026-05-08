@@ -4,6 +4,7 @@ import { PipelineSelectionDropdown } from "../../../../components/Dropdown/Pipel
 import { LoadingOval } from "../../../../components/Loading/Loading";
 import { useMissingContent } from "../../../../hooks/useMissingContent";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
+import { NotificationsContext } from "../../../../providers/NotificationsContextProvider";
 import { BoardOptionsSelection } from "./components/BoardOptionsSelection/BoardOptionsSelection";
 import { TaskExportSelection } from "./components/TaskExportSelection/TaskExportSelection";
 
@@ -12,7 +13,13 @@ function PipelineHeader() {
     state: { activePipeline, loading },
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
+  const { fetchNotifications } = useContext(NotificationsContext);
   const { pipelineMissing } = useMissingContent();
+
+  const handleRefresh = (pipelineId: string) => {
+    fetchAndSetPipelineData(pipelineId);
+    fetchNotifications(pipelineId);
+  };
 
   if (!activePipeline || pipelineMissing) {
     return null;
@@ -41,7 +48,7 @@ function PipelineHeader() {
             <ArrowPathIcon
               className="wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
               data-testid="refresh-icon"
-              onClick={() => fetchAndSetPipelineData(activePipeline.id)}
+              onClick={() => handleRefresh(activePipeline.id)}
             />
           )}
         </div>
