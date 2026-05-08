@@ -1770,6 +1770,26 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'pipeline_id'   => $task->pipeline_id
                         ]);
 
+                        /* Create in-app notification for the assigned user */
+                        try {
+                            $assigner = wp_get_current_user();
+                            $assignerName = $assigner && $assigner->display_name ? $assigner->display_name : __('Someone', 'quicktasker');
+                            ServiceLocator::get('NotificationService')->createNotification(
+                                $task->pipeline_id,
+                                (int) $data['id'],
+                                $data['user_type'],
+                                sprintf(
+                                    /* translators: %1$s = assigner name, %2$s = task name */
+                                    __('%1$s assigned you to task "%2$s"', 'quicktasker'),
+                                    $assignerName,
+                                    $task->name
+                                )
+                            );
+                        } catch (Throwable $notificationError) {
+                            error_log('Failed to create assignment notification: ' . $notificationError->getMessage());
+                        }
+                        /* End in-app notification */
+
                         /* Handle automations */
                         $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
                             $task->pipeline_id,
@@ -4089,6 +4109,87 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 return new WP_Error('validation_error', $e->getMessage());
                             }
                         },
+                    ],
+                ],
+            ],
+        );
+
+        /*
+        ==================================================================================================================================================================================================================
+        Notification endpoints
+        ==================================================================================================================================================================================================================
+        */
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/notifications',
+            [
+                'methods'  => 'GET',
+                'callback' => function ($data) {
+                    try {
+                        $maxAgeHours = $data->get_param('max_age_hours');
+                        if (null === $maxAgeHours || '' === $maxAgeHours) {
+                            $maxAgeHours = 24;
+                        }
+
+                        $currentUserId = get_current_user_id();
+                        $notifications = ServiceLocator::get('NotificationService')->getNotificationsForViewer(
+                            (int) $data['id'],
+                            (int) $currentUserId,
+                            WP_QT_WORDPRESS_USER_TYPE,
+                            (int) $maxAgeHours
+                        );
+
+                        return new WP_REST_Response((new ApiResponse(true, [], $notifications))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, 'Failed to get notifications');
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => [
+                    'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'max_age_hours' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                ],
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'notifications/(?P<id>\d+)/read',
+            [
+                'methods'  => 'POST',
+                'callback' => function ($data) {
+                    try {
+                        $currentUserId = get_current_user_id();
+                        $notification = ServiceLocator::get('NotificationService')->markAsRead(
+                            (int) $data['id'],
+                            (int) $currentUserId,
+                            WP_QT_WORDPRESS_USER_TYPE
+                        );
+
+                        return new WP_REST_Response((new ApiResponse(true, [], $notification))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, 'Failed to mark notification as read');
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => [
+                    'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
                 ],
             ],
