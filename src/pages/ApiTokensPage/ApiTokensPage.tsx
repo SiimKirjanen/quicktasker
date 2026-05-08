@@ -7,6 +7,8 @@ import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSel
 import { Info } from "../../components/Info/Info";
 import { Loading, LoadingOval } from "../../components/Loading/Loading";
 import { ApiTokenLogsModal } from "../../components/Modal/ApiTokenLogsModal/ApiTokenLogsModal";
+import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
+import { NotificationsNavLink } from "../../components/NotificationsNavLink/NotificationsNavLink";
 import { useApiTokens } from "../../hooks/useApiTokens";
 import { useApp } from "../../hooks/useApp";
 import { useMissingContent } from "../../hooks/useMissingContent";
@@ -98,16 +100,19 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
             rightSideContent={
               <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                 <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-mr-2 wpqt-pr-4 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
-                  <div
-                    className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
-                    onClick={() => {
-                      navigatePageWithoutHistory(`#/board/${pipelineId}`);
-                    }}
-                  >
-                    <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-                    <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-                      {__("Board", "quicktasker")}
-                    </span>
+                  <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
+                    <div
+                      className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
+                      onClick={() => {
+                        navigatePageWithoutHistory(`#/board/${pipelineId}`);
+                      }}
+                    >
+                      <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+                      <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                        {__("Board", "quicktasker")}
+                      </span>
+                    </div>
+                    <NotificationsNavLink pipelineId={pipelineId} />
                   </div>
                   <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                     <div
@@ -153,6 +158,7 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
           </WPQTPageHeader>
         )}
         <ApiTokensPageContent pipelineId={pipelineId} />
+        <NotificationsModal pipelineId={pipelineId} />
       </Page>
     </PipelineApiTokensContextProvider>
   );

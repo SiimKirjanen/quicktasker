@@ -6,7 +6,9 @@ import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
 import { Loading, LoadingOval } from "../../components/Loading/Loading";
+import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
 import { WebhookLogsModal } from "../../components/Modal/WebhookLogsModal/WebhookLogsModal";
+import { NotificationsNavLink } from "../../components/NotificationsNavLink/NotificationsNavLink";
 import { useApp } from "../../hooks/useApp";
 import { useMissingContent } from "../../hooks/useMissingContent";
 import { useNavigation } from "../../hooks/useNavigation";
@@ -94,16 +96,19 @@ function WebhooksPage({ pipelineId }: Props) {
             rightSideContent={
               <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                 <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-mr-2 wpqt-pr-4 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
-                  <div
-                    className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
-                    onClick={() => {
-                      navigatePageWithoutHistory(`#/board/${pipelineId}`);
-                    }}
-                  >
-                    <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-                    <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-                      {__("Board", "quicktasker")}
-                    </span>
+                  <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
+                    <div
+                      className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
+                      onClick={() => {
+                        navigatePageWithoutHistory(`#/board/${pipelineId}`);
+                      }}
+                    >
+                      <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+                      <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                        {__("Board", "quicktasker")}
+                      </span>
+                    </div>
+                    <NotificationsNavLink pipelineId={pipelineId} />
                   </div>
                   <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                     <div
@@ -149,6 +154,7 @@ function WebhooksPage({ pipelineId }: Props) {
           </WPQTPageHeader>
         )}
         <WebhooksPageContent pipelineId={pipelineId} />
+        <NotificationsModal pipelineId={pipelineId} />
       </Page>
     </PipelineWebhooksContextProvider>
   );

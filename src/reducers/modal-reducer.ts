@@ -8,6 +8,7 @@ import {
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_AUTOMATION_LOGS_MODAL,
   CLOSE_MOVE_TASK_MODAL,
+  CLOSE_NOTIFICATIONS_MODAL,
   CLOSE_PIPELINE_IMPORT_MODAL,
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
@@ -27,6 +28,7 @@ import {
   OPEN_NEW_PIPELINE_MODAL,
   OPEN_NEW_STAGE_MODAL,
   OPEN_NEW_USER_MODAL,
+  OPEN_NOTIFICATIONS_MODAL,
   OPEN_PIPELINE_IMPORT_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
@@ -401,6 +403,18 @@ const reducer = (state: State, action: Action): State => {
           ...state.apiTokenLogsModalSettings,
           ...settings,
         },
+      };
+    }
+    case OPEN_NOTIFICATIONS_MODAL: {
+      return {
+        ...state,
+        notificationsModalOpen: true,
+      };
+    }
+    case CLOSE_NOTIFICATIONS_MODAL: {
+      return {
+        ...state,
+        notificationsModalOpen: false,
       };
     }
     default:

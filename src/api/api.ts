@@ -19,6 +19,7 @@ import {
 import { PipelineImportSource, WPQTImport } from "../types/imports";
 import { Label } from "../types/label";
 import { LogFromServer } from "../types/log";
+import { NotificationFromServer } from "../types/notification";
 import {
   FullPipelineDataFromServer,
   PipelineEditData,
@@ -1080,6 +1081,32 @@ function importRequest(
   });
 }
 
+/*
+  ==================================================================================================================================================================================================================
+  Notification requests
+  ==================================================================================================================================================================================================================
+*/
+
+function getNotificationsRequest(
+  pipelineId: string,
+  maxAgeHours = 24,
+): Promise<WPQTResponse<NotificationFromServer[]>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/notifications?max_age_hours=${maxAgeHours}`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function markNotificationReadRequest(
+  notificationId: string,
+): Promise<WPQTResponse<NotificationFromServer>> {
+  return apiFetch({
+    path: `/wpqt/v1/notifications/${notificationId}/read`,
+    method: "POST",
+    headers: getCommonHeaders(),
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -1117,6 +1144,7 @@ export {
   getExtendedUserRequest,
   getGlobalLogsRequest,
   getLogsRequest,
+  getNotificationsRequest,
   getPipelineApiTokensRequest,
   getPipelineAutomationsRequest,
   getPipelineData,
@@ -1132,6 +1160,7 @@ export {
   getWPUsersRequest,
   importRequest,
   markCustomFieldAsDeletedRequest,
+  markNotificationReadRequest,
   markTaskDoneRequest,
   moveStageRequest,
   moveTaskRequest,
