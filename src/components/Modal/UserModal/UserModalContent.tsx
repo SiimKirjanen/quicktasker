@@ -25,7 +25,7 @@ import { AutoSaveInput } from "../../common/Input/AutoSaveInput/AutoSaveInput";
 import { AutoSaveTextarea } from "../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
-import { UserModalTabs } from "../../Tab/CommentsAndLogs/UserModalTabs/UserModalTabs";
+import { CommentsAndLogsTabs } from "../../Tab/CommentsAndLogs/CommentsAndLogsTabs";
 import { WPQTModalField, WPQTModalFieldSet } from "../WPQTModal";
 
 const UserModalContent = () => {
@@ -108,7 +108,7 @@ const UserModalContent = () => {
             />
           </div>
           <div className="wpqt-mt-7">
-            <UserModalTabs user={userToEdit} />
+            <CommentsAndLogsTabs subjectId={userToEdit.id} subject="user" />
           </div>
         </div>
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">

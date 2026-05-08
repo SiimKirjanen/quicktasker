@@ -1,35 +1,40 @@
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { getComments } from "../../../../api/api";
-import { useCommentActions } from "../../../../hooks/actions/useCommentActions";
-import { WPQTComment } from "../../../../types/comment";
-import { UserTypes } from "../../../../types/user";
-import { CommentBox } from "../../../CommentBox/CommentBox";
-import { CommentsAndLogsTabContent } from "../CommentsAndLogsTabContent";
+import { getComments } from "../../../api/api";
+import { useCommentActions } from "../../../hooks/actions/useCommentActions";
+import { WPQTComment } from "../../../types/comment";
+import { WPQTTypes } from "../../../types/enums";
+import { UserTypes } from "../../../types/user";
+import { CommentBox } from "../../CommentBox/CommentBox";
+import { CommentsAndLogsTabContent } from "./CommentsAndLogsTabContent";
+
+type CommentSubjectType = WPQTTypes.Task | UserTypes.QUICKTASKER;
 
 type Props = {
-  userId: string;
+  subjectId: string;
+  subjectType: CommentSubjectType;
+  isPrivate: boolean;
 };
 
-function PublicCommentsTabContent({ userId }: Props) {
+function CommentsTabContent({ subjectId, subjectType, isPrivate }: Props) {
   const { addComment } = useCommentActions();
 
   const onAddComment = async (newEntry: string) => {
-    const commentFromServer = await addComment(
-      userId,
-      UserTypes.QUICKTASKER,
-      false,
+    const response = await addComment(
+      subjectId,
+      subjectType,
+      isPrivate,
       newEntry,
     );
 
-    if (commentFromServer) {
-      return commentFromServer;
+    if (response) {
+      return response;
     }
   };
 
   const fetchComments = async () => {
     try {
-      const response = await getComments(userId, UserTypes.QUICKTASKER, false);
+      const response = await getComments(subjectId, subjectType, isPrivate);
 
       return response.data;
     } catch (error) {
@@ -40,7 +45,7 @@ function PublicCommentsTabContent({ userId }: Props) {
 
   return (
     <CommentsAndLogsTabContent<WPQTComment>
-      typeId={userId}
+      typeId={subjectId}
       fetchData={fetchComments}
       onAdd={onAddComment}
       renderItem={(comment: WPQTComment) => (
@@ -59,4 +64,4 @@ function PublicCommentsTabContent({ userId }: Props) {
   );
 }
 
-export { PublicCommentsTabContent };
+export { CommentsTabContent };
