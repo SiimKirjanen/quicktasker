@@ -33,6 +33,43 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
         }
 
         /**
+         * Sends an in-app notification to every user assigned to the given task.
+         * Optionally skips a WordPress user (typically the actor performing the action).
+         */
+        public function notifyTaskAssignees(
+            $pipelineId,
+            $taskId,
+            $messageTemplate,
+            $taskName,
+            $skipWordPressUserId = null
+        ) {
+            $userRepo = ServiceLocator::get('UserRepository');
+            $qtUsers = $userRepo->getAssignedUsersByTaskId((int) $taskId);
+            $wpUsers = $userRepo->getAssignedWPUsersByTaskIds([(int) $taskId]);
+
+            $message = sprintf($messageTemplate, $taskName);
+
+            foreach ((array) $qtUsers as $u) {
+                try {
+                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message);
+                } catch (\Throwable $e) {
+                    error_log('Failed to create task notification: ' . $e->getMessage());
+                }
+            }
+            foreach ((array) $wpUsers as $u) {
+                if (null !== $skipWordPressUserId && (int) $u->id === (int) $skipWordPressUserId) {
+                    continue;
+                }
+
+                try {
+                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message);
+                } catch (\Throwable $e) {
+                    error_log('Failed to create task notification: ' . $e->getMessage());
+                }
+            }
+        }
+
+        /**
          * Returns notifications for the given viewer on a pipeline,
          * filtered to those at most $maxAgeHours old.
          */

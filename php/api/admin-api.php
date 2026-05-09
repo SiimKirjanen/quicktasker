@@ -816,6 +816,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                             $args['due_date'] = $taskData['due_date'];
                         }
 
+                        $previousTask = ServiceLocator::get('TaskRepository')->getTaskById((int) $data['id']);
+                        $previousDueDate = $previousTask ? $previousTask->due_date : null;
+
                         $task = ServiceLocator::get('TaskService')->editTask($data['id'], $args);
 
                         ServiceLocator::get('LogService')->log('Task ' . $task->name . ' edited', [
@@ -845,6 +848,23 @@ if (!function_exists('wpqt_register_api_routes')) {
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
+
+                        /* Notify assignees that the task's due date changed */
+                        if (array_key_exists('due_date', $taskData) && $previousDueDate !== $task->due_date) {
+                            try {
+                                ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                                    $task->pipeline_id,
+                                    $task->id,
+                                    /* translators: %s = task name */
+                                    __('Due date for task "%s" changed', 'quicktasker'),
+                                    $task->name,
+                                    get_current_user_id()
+                                );
+                            } catch (Throwable $notificationError) {
+                                error_log('Failed to create due-date change notification: ' . $notificationError->getMessage());
+                            }
+                        }
+                        /* End in-app notification */
 
                         return new WP_REST_Response((new ApiResponse(true, [], $task))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -897,6 +917,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                     try {
                         $wpdb->query('START TRANSACTION');
 
+                        /* Capture assignees before deletion cascades user_task rows */
+                        $assignedQtUsers = ServiceLocator::get('UserRepository')->getAssignedUsersByTaskId((int) $data['id']);
+                        $assignedWpUsers = ServiceLocator::get('UserRepository')->getAssignedWPUsersByTaskIds([(int) $data['id']]);
+
                         $deletedTask = ServiceLocator::get('TaskService')->deleteTask($data['id']);
                         ServiceLocator::get('LogService')->log('Task ' . $deletedTask->name . ' deleted', [
                             'type'          => WP_QT_LOG_TYPE_TASK,
@@ -938,6 +962,26 @@ if (!function_exists('wpqt_register_api_routes')) {
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
+
+                        /* Notify assignees that their task was deleted */
+                        try {
+                            $actorId = get_current_user_id();
+                            /* translators: %s = task name */
+                            $message = sprintf(__('Task "%s" was deleted', 'quicktasker'), $deletedTask->name);
+                            $notificationService = ServiceLocator::get('NotificationService');
+                            foreach ((array) $assignedQtUsers as $u) {
+                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message);
+                            }
+                            foreach ((array) $assignedWpUsers as $u) {
+                                if ((int) $u->id === (int) $actorId) {
+                                    continue;
+                                }
+                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message);
+                            }
+                        } catch (Throwable $notificationError) {
+                            error_log('Failed to create task deletion notification: ' . $notificationError->getMessage());
+                        }
+                        /* End in-app notification */
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'executedAutomations' => $executionResults->executedAutomations,
@@ -1006,6 +1050,21 @@ if (!function_exists('wpqt_register_api_routes')) {
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
+
+                        /* Notify assignees that their task was archived */
+                        try {
+                            ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                                $task->pipeline_id,
+                                $task->id,
+                                /* translators: %s = task name */
+                                __('Task "%s" was archived', 'quicktasker'),
+                                $task->name,
+                                get_current_user_id()
+                            );
+                        } catch (Throwable $notificationError) {
+                            error_log('Failed to create task archive notification: ' . $notificationError->getMessage());
+                        }
+                        /* End in-app notification */
 
                         return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
                     } catch (TaskMissingException $e) {
@@ -1083,6 +1142,21 @@ if (!function_exists('wpqt_register_api_routes')) {
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
+
+                        /* Notify assignees that their task was restored from the archive */
+                        try {
+                            ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                                $task->pipeline_id,
+                                $task->id,
+                                /* translators: %s = task name */
+                                __('Task "%s" was restored from the archive', 'quicktasker'),
+                                $task->name,
+                                get_current_user_id()
+                            );
+                        } catch (Throwable $notificationError) {
+                            error_log('Failed to create task restore notification: ' . $notificationError->getMessage());
+                        }
+                        /* End in-app notification */
 
                         return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -1174,6 +1248,26 @@ if (!function_exists('wpqt_register_api_routes')) {
                         /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
+
+                        /* Notify assignees that their task's done status changed */
+                        try {
+                            $messageTemplate = $taskMarkedAsDone
+                                /* translators: %s = task name */
+                                ? __('Task "%s" was marked done', 'quicktasker')
+                                /* translators: %s = task name */
+                                : __('Task "%s" was marked not done', 'quicktasker');
+
+                            ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                                $task->pipeline_id,
+                                $task->id,
+                                $messageTemplate,
+                                $task->name,
+                                $currentUserId
+                            );
+                        } catch (Throwable $notificationError) {
+                            error_log('Failed to create task done-toggle notification: ' . $notificationError->getMessage());
+                        }
+                        /* End in-app notification */
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'task'                => $task,
@@ -1870,7 +1964,8 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $task = ServiceLocator::get('UserService')->removeTaskFromUser($data['id'], $data['task_id'], $data['user_type']);
                         $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($data['id'], $data['user_type']);
-                        $userId = get_current_user_id();
+                        $currentUser = wp_get_current_user();
+                        $userId = $currentUser->ID;
 
                         $logService->log('Task ' . $task->name . ' unassigned from ' . $user->name, [
                             'type'          => WP_QT_LOG_TYPE_TASK,
@@ -1889,6 +1984,24 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'created_by_id' => $userId,
                             'pipeline_id'   => $task->pipeline_id
                         ]);
+
+                        /* Create in-app notification for the unassigned user */
+                        try {
+                            ServiceLocator::get('NotificationService')->createNotification(
+                                $task->pipeline_id,
+                                (int) $data['id'],
+                                $data['user_type'],
+                                sprintf(
+                                    /* translators: %1$s = unassigner name, %2$s = task name */
+                                    __('%1$s unassigned you from task "%2$s"', 'quicktasker'),
+                                    $currentUser->display_name,
+                                    $task->name
+                                )
+                            );
+                        } catch (Throwable $notificationError) {
+                            error_log('Failed to create unassignment notification: ' . $notificationError->getMessage());
+                        }
+                        /* End in-app notification */
 
                         /* Handle automations */
                         $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
@@ -2497,6 +2610,24 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 ]
                             );
                             /* End Handle webhooks */
+
+                            /* Notify assignees that a comment was added to their task */
+                            try {
+                                ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                                    $task->pipeline_id,
+                                    $task->id,
+                                    $data['isPrivate']
+                                        /* translators: %s = task name */
+                                        ? __('A private comment was added to task "%s"', 'quicktasker')
+                                        /* translators: %s = task name */
+                                        : __('A public comment was added to task "%s"', 'quicktasker'),
+                                    $task->name,
+                                    $adminId
+                                );
+                            } catch (Throwable $notificationError) {
+                                error_log('Failed to create task comment notification: ' . $notificationError->getMessage());
+                            }
+                            /* End in-app notification */
                         }
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
