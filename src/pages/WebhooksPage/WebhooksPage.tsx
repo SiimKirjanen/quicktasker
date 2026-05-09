@@ -5,7 +5,7 @@ import { SiProbot } from "react-icons/si";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
-import { Loading, LoadingOval } from "../../components/Loading/Loading";
+import { LoadingOval } from "../../components/Loading/Loading";
 import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
 import { WebhookLogsModal } from "../../components/Modal/WebhookLogsModal/WebhookLogsModal";
 import { NotificationsNavLink } from "../../components/NotificationsNavLink/NotificationsNavLink";
@@ -25,12 +25,7 @@ type Props = {
 };
 
 function WebhooksPageContent({ pipelineId }: Props) {
-  const { loading } = useWebhooks();
   const { pipelineMissing } = useMissingContent();
-
-  if (loading) {
-    return <Loading ovalSize="24" />;
-  }
 
   if (pipelineMissing) {
     return (

@@ -5,10 +5,9 @@ import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipe
 import { PipelineOverviewContent } from "./components/PipelineOverviewContent";
 
 type Props = {
-  loading: boolean;
   pipelineOverviewData: PipelineOverviewResponse | null;
 };
-function PipelineOverview({ loading, pipelineOverviewData }: Props) {
+function PipelineOverview({ pipelineOverviewData }: Props) {
   const { pipelineMissing } = useMissingContent();
 
   if (pipelineMissing) {
@@ -23,10 +22,7 @@ function PipelineOverview({ loading, pipelineOverviewData }: Props) {
   }
 
   return (
-    <PipelineOverviewContent
-      loading={loading}
-      pipelineOverviewData={pipelineOverviewData}
-    />
+    <PipelineOverviewContent pipelineOverviewData={pipelineOverviewData} />
   );
 }
 

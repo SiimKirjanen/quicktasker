@@ -139,10 +139,7 @@ function OverviewPage({ pipelineId }: Props) {
           {__("Overview", "quicktasker")}
         </WPQTPageHeader>
       )}
-      <PipelineOverview
-        loading={loading}
-        pipelineOverviewData={pipelineOverviewData}
-      />
+      <PipelineOverview pipelineOverviewData={pipelineOverviewData} />
       <NotificationsModal pipelineId={pipelineId} />
     </Page>
   );

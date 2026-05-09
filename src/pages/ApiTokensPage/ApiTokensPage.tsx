@@ -5,7 +5,7 @@ import { SiProbot } from "react-icons/si";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
-import { Loading, LoadingOval } from "../../components/Loading/Loading";
+import { LoadingOval } from "../../components/Loading/Loading";
 import { ApiTokenLogsModal } from "../../components/Modal/ApiTokenLogsModal/ApiTokenLogsModal";
 import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
 import { NotificationsNavLink } from "../../components/NotificationsNavLink/NotificationsNavLink";
@@ -29,12 +29,7 @@ type ApiTokensPageProps = {
 };
 
 function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
-  const { loading } = useApiTokens();
   const { pipelineMissing } = useMissingContent();
-
-  if (loading) {
-    return <Loading ovalSize="24" />;
-  }
 
   if (pipelineMissing) {
     return (

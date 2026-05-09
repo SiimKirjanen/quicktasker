@@ -1,3 +1,4 @@
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
@@ -82,7 +83,21 @@ function NotificationsModal({ pipelineId }: Props) {
       testId="notifications-modal"
     >
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-3">
-        <WPQTModalTitle>{__("Notifications", "quicktasker")}</WPQTModalTitle>
+        <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
+          <WPQTModalTitle className="!wpqt-mb-0">
+            {__("Notifications", "quicktasker")}
+          </WPQTModalTitle>
+          <ArrowPathIcon
+            className={`wpqt-size-5 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover ${
+              loading ? "wpqt-animate-spin wpqt-text-gray-400" : ""
+            }`}
+            data-testid="notifications-refresh-icon"
+            aria-label={__("Refresh notifications", "quicktasker")}
+            onClick={() => {
+              if (!loading) fetchNotifications(pipelineId, maxAgeHours);
+            }}
+          />
+        </div>
 
         <div className="wpqt-flex wpqt-items-center wpqt-gap-4">
           <div className="wpqt-flex wpqt-items-center wpqt-gap-2">

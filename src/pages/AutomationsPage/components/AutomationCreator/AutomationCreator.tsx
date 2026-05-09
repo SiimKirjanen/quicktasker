@@ -30,10 +30,9 @@ type props = {
   pipelineId: string;
 };
 function AutomationCreator({ pipelineId }: props) {
-  const {
-    pipelineAutomationsDispatch,
-    state: { loading },
-  } = useContext(PipelineAutomationsContext);
+  const { pipelineAutomationsDispatch } = useContext(
+    PipelineAutomationsContext,
+  );
   const [automation, automationDispatch] = useReducer(
     automationCreationReducer,
     automationCreationInitialState,
@@ -65,10 +64,6 @@ function AutomationCreator({ pipelineId }: props) {
   const resetAutomationState = () => {
     automationDispatch({ type: "RESET" });
   };
-
-  if (loading) {
-    return null;
-  }
 
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-3 wpqt-mb-8">
