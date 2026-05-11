@@ -2069,7 +2069,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
                 },
                 'args' => [
                     'id' => [
@@ -4273,7 +4273,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'pipelines/(?P<id>\d+)/notifications',
+            'notifications',
             [
                 'methods'  => 'GET',
                 'callback' => function ($data) {
@@ -4283,12 +4283,17 @@ if (!function_exists('wpqt_register_api_routes')) {
                             $maxAgeHours = 24;
                         }
 
+                        $rawPipelineIds = $data->get_param('pipeline_ids');
+                        $pipelineIds = is_array($rawPipelineIds)
+                            ? array_values(array_filter(array_map('absint', $rawPipelineIds)))
+                            : [];
+
                         $currentUserId = get_current_user_id();
-                        $notifications = ServiceLocator::get('NotificationService')->getNotificationsForViewer(
-                            (int) $data['id'],
+                        $notifications = ServiceLocator::get('NotificationService')->getNotificationsForUserGlobal(
                             (int) $currentUserId,
                             WP_QT_WORDPRESS_USER_TYPE,
-                            (int) $maxAgeHours
+                            (int) $maxAgeHours,
+                            $pipelineIds
                         );
 
                         return new WP_REST_Response((new ApiResponse(true, [], $notifications))->toArray(), 200);
@@ -4300,15 +4305,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
                 },
                 'args' => [
-                    'id' => [
-                        'required'          => true,
-                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
-                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
-                    ],
                     'max_age_hours' => [
                         'required'          => false,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'pipeline_ids' => [
+                        'required' => false,
                     ],
                 ],
             ],
@@ -4348,7 +4351,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
-            'pipelines/(?P<id>\d+)/notifications/read-all',
+            'notifications/read-all',
             [
                 'methods'  => 'POST',
                 'callback' => function ($data) {
@@ -4362,8 +4365,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $notificationIds = array_values(array_filter(array_map('absint', $rawIds)));
 
-                        ServiceLocator::get('NotificationService')->markNotificationsAsReadForViewer(
-                            (int) $data['id'],
+                        ServiceLocator::get('NotificationService')->markNotificationsAsReadForUserGlobal(
                             (int) $currentUserId,
                             WP_QT_WORDPRESS_USER_TYPE,
                             $notificationIds
@@ -4378,13 +4380,64 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPI();
                 },
                 'args' => [
-                    'id' => [
+                    'notification_ids' => [
+                        'required' => true,
+                    ],
+                ],
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'notifications/preferences',
+            [
+                'methods'  => 'POST',
+                'callback' => function ($data) {
+                    try {
+                        $filter = (string) $data->get_param('filter');
+                        $maxAgeHours = (int) $data->get_param('max_age_hours');
+
+                        $rawIds = $data->get_param('pipeline_ids');
+                        $selectedPipelineIds = null;
+                        if (is_array($rawIds)) {
+                            $selectedPipelineIds = array_values(array_filter(array_map('absint', $rawIds)));
+                        }
+
+                        $currentUserId = get_current_user_id();
+                        ServiceLocator::get('NotificationService')->savePreferences(
+                            (int) $currentUserId,
+                            WP_QT_WORDPRESS_USER_TYPE,
+                            $filter,
+                            $maxAgeHours,
+                            $selectedPipelineIds
+                        );
+
+                        $prefs = ServiceLocator::get('NotificationService')->getPreferences(
+                            (int) $currentUserId,
+                            WP_QT_WORDPRESS_USER_TYPE
+                        );
+
+                        return new WP_REST_Response((new ApiResponse(true, [], $prefs))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, 'Failed to save notification preferences');
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => [
+                    'filter' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateStringParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+                    ],
+                    'max_age_hours' => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
-                    'notification_ids' => [
-                        'required' => true,
+                    'pipeline_ids' => [
+                        'required' => false,
                     ],
                 ],
             ],

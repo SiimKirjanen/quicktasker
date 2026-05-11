@@ -99,6 +99,32 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
         }
 
         /**
+         * Returns notifications for the given viewer across all pipelines (or a subset),
+         * filtered to those at most $maxAgeHours old.
+         *
+         * @param int[] $pipelineIds Optional list of pipeline IDs to restrict to. Empty array means all pipelines.
+         */
+        public function getNotificationsForUserGlobal($userId, $userType, $maxAgeHours = self::DEFAULT_MAX_AGE_HOURS, array $pipelineIds = [])
+        {
+            $maxAgeHours = (int) $maxAgeHours;
+            if ($maxAgeHours < 1) {
+                $maxAgeHours = self::DEFAULT_MAX_AGE_HOURS;
+            }
+            if ($maxAgeHours > self::MAX_MAX_AGE_HOURS) {
+                $maxAgeHours = self::MAX_MAX_AGE_HOURS;
+            }
+
+            $sinceUtc = ServiceLocator::get('TimeRepository')->modifyUTCTime(-$maxAgeHours, 'hour');
+
+            return ServiceLocator::get('NotificationRepository')->getNotificationsForUser(
+                (int) $userId,
+                $userType,
+                $sinceUtc,
+                $pipelineIds
+            );
+        }
+
+        /**
          * Marks a notification as read after verifying it belongs to the given viewer.
          */
         public function markAsRead($notificationId, $userId, $userType)
@@ -131,6 +157,83 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                 $userType,
                 $notificationIds
             );
+        }
+
+        /**
+         * Marks the given notifications as read, but only those that belong to the given viewer.
+         *
+         * @param int[] $notificationIds
+         */
+        public function markNotificationsAsReadForUserGlobal($userId, $userType, array $notificationIds)
+        {
+            return ServiceLocator::get('NotificationRepository')->markNotificationsAsReadForUser(
+                (int) $userId,
+                $userType,
+                $notificationIds
+            );
+        }
+
+        public const VALID_FILTERS = ['all', 'unread', 'read'];
+
+        /**
+         * Returns the viewer's notification modal preferences, or sensible defaults if none persisted.
+         *
+         * @return array{filter: string, max_age_hours: int, selected_pipeline_ids: int[]|null}
+         */
+        public function getPreferences($userId, $userType)
+        {
+            $row = ServiceLocator::get('NotificationPreferencesRepository')->get((int) $userId, $userType);
+
+            if (!$row) {
+                return [
+                    'filter'                => 'all',
+                    'max_age_hours'         => self::DEFAULT_MAX_AGE_HOURS,
+                    'selected_pipeline_ids' => null,
+                ];
+            }
+
+            $row['max_age_hours'] = $this->clampMaxAgeHours((int) $row['max_age_hours']);
+            if (!in_array($row['filter'], self::VALID_FILTERS, true)) {
+                $row['filter'] = 'all';
+            }
+
+            return $row;
+        }
+
+        /**
+         * @param int[]|null $selectedPipelineIds null means "all boards".
+         */
+        public function savePreferences($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds)
+        {
+            if (!in_array($filter, self::VALID_FILTERS, true)) {
+                $filter = 'all';
+            }
+            $maxAgeHours = $this->clampMaxAgeHours((int) $maxAgeHours);
+
+            $normalisedIds = null;
+            if (is_array($selectedPipelineIds)) {
+                $normalisedIds = array_values(array_map('intval', $selectedPipelineIds));
+            }
+
+            ServiceLocator::get('NotificationPreferencesRepository')->upsert(
+                (int) $userId,
+                $userType,
+                $filter,
+                $maxAgeHours,
+                $normalisedIds
+            );
+        }
+
+        private function clampMaxAgeHours($maxAgeHours)
+        {
+            if ($maxAgeHours < 1) {
+                return self::DEFAULT_MAX_AGE_HOURS;
+            }
+            if ($maxAgeHours > self::MAX_MAX_AGE_HOURS) {
+                return self::MAX_MAX_AGE_HOURS;
+            }
+
+            return $maxAgeHours;
         }
     }
 }

@@ -18,6 +18,7 @@ class NotificationServiceTest extends TestCase
 {
     private $service;
     private $notificationRepo;
+    private $preferencesRepo;
     private $userRepo;
     private $timeRepo;
 
@@ -26,7 +27,18 @@ class NotificationServiceTest extends TestCase
         parent::setUp();
 
         $this->notificationRepo = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['insertNotification', 'getNotificationById', 'getNotificationsForUserOnPipeline', 'markAsRead'])
+            ->addMethods([
+                'insertNotification',
+                'getNotificationById',
+                'getNotificationsForUserOnPipeline',
+                'getNotificationsForUser',
+                'markAsRead',
+                'markNotificationsAsReadForUser',
+            ])
+            ->getMock();
+
+        $this->preferencesRepo = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['get', 'upsert'])
             ->getMock();
 
         $this->userRepo = $this->getMockBuilder(stdClass::class)
@@ -38,6 +50,7 @@ class NotificationServiceTest extends TestCase
             ->getMock();
 
         ServiceLocator::register('NotificationRepository', $this->notificationRepo);
+        ServiceLocator::register('NotificationPreferencesRepository', $this->preferencesRepo);
         ServiceLocator::register('UserRepository', $this->userRepo);
         ServiceLocator::register('TimeRepository', $this->timeRepo);
 
@@ -93,6 +106,44 @@ class NotificationServiceTest extends TestCase
         $this->notificationRepo->method('getNotificationsForUserOnPipeline')->willReturn([]);
 
         $this->service->getNotificationsForViewer(1, 2, 'wp-user', 100000);
+    }
+
+    public function testGetNotificationsForUserGlobalPassesPipelineIdsToRepository(): void
+    {
+        $this->timeRepo->expects($this->once())
+            ->method('modifyUTCTime')
+            ->willReturn('2026-05-07 12:00:00');
+
+        $this->notificationRepo->expects($this->once())
+            ->method('getNotificationsForUser')
+            ->with(2, 'wp-user', '2026-05-07 12:00:00', [3, 4])
+            ->willReturn([]);
+
+        $this->service->getNotificationsForUserGlobal(2, 'wp-user', 24, [3, 4]);
+    }
+
+    public function testGetNotificationsForUserGlobalClampsTooSmallMaxAge(): void
+    {
+        $this->timeRepo->expects($this->once())
+            ->method('modifyUTCTime')
+            ->with(-NotificationService::DEFAULT_MAX_AGE_HOURS, 'hour')
+            ->willReturn('2026-05-07 12:00:00');
+
+        $this->notificationRepo->method('getNotificationsForUser')->willReturn([]);
+
+        $this->service->getNotificationsForUserGlobal(2, 'wp-user', 0);
+    }
+
+    public function testMarkNotificationsAsReadForUserGlobalDelegatesToRepository(): void
+    {
+        $this->notificationRepo->expects($this->once())
+            ->method('markNotificationsAsReadForUser')
+            ->with(2, 'wp-user', [10, 11])
+            ->willReturn(2);
+
+        $result = $this->service->markNotificationsAsReadForUserGlobal(2, 'wp-user', [10, 11]);
+
+        $this->assertSame(2, $result);
     }
 
     public function testMarkAsReadThrowsWhenNotificationNotFound(): void
@@ -281,5 +332,71 @@ class NotificationServiceTest extends TestCase
         $this->notificationRepo->expects($this->never())->method('insertNotification');
 
         $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', null);
+    }
+
+    public function testGetPreferencesReturnsDefaultsWhenNoRow(): void
+    {
+        $this->preferencesRepo->method('get')->willReturn(null);
+
+        $result = $this->service->getPreferences(2, 'wp-user');
+
+        $this->assertSame('all', $result['filter']);
+        $this->assertSame(NotificationService::DEFAULT_MAX_AGE_HOURS, $result['max_age_hours']);
+        $this->assertNull($result['selected_pipeline_ids']);
+    }
+
+    public function testGetPreferencesClampsMaxAgeHours(): void
+    {
+        $this->preferencesRepo->method('get')->willReturn([
+            'filter'                => 'unread',
+            'max_age_hours'         => 999999,
+            'selected_pipeline_ids' => [1, 2],
+        ]);
+
+        $result = $this->service->getPreferences(2, 'wp-user');
+
+        $this->assertSame(NotificationService::MAX_MAX_AGE_HOURS, $result['max_age_hours']);
+        $this->assertSame('unread', $result['filter']);
+        $this->assertSame([1, 2], $result['selected_pipeline_ids']);
+    }
+
+    public function testGetPreferencesFallsBackOnInvalidFilter(): void
+    {
+        $this->preferencesRepo->method('get')->willReturn([
+            'filter'                => 'bogus',
+            'max_age_hours'         => 24,
+            'selected_pipeline_ids' => null,
+        ]);
+
+        $result = $this->service->getPreferences(2, 'wp-user');
+
+        $this->assertSame('all', $result['filter']);
+    }
+
+    public function testSavePreferencesNormalisesAndDelegates(): void
+    {
+        $this->preferencesRepo->expects($this->once())
+            ->method('upsert')
+            ->with(2, 'wp-user', 'unread', 72, [3, 5]);
+
+        $this->service->savePreferences(2, 'wp-user', 'unread', 72, ['3', '5']);
+    }
+
+    public function testSavePreferencesPassesNullSelectedPipelineIds(): void
+    {
+        $this->preferencesRepo->expects($this->once())
+            ->method('upsert')
+            ->with(2, 'wp-user', 'all', NotificationService::DEFAULT_MAX_AGE_HOURS, null);
+
+        $this->service->savePreferences(2, 'wp-user', 'all', 24, null);
+    }
+
+    public function testSavePreferencesCoercesInvalidFilterAndClampsMaxAge(): void
+    {
+        $this->preferencesRepo->expects($this->once())
+            ->method('upsert')
+            ->with(2, 'wp-user', 'all', NotificationService::MAX_MAX_AGE_HOURS, null);
+
+        $this->service->savePreferences(2, 'wp-user', 'bogus', 999999, null);
     }
 }

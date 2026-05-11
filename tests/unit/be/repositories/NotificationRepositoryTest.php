@@ -24,7 +24,7 @@ class NotificationRepositoryTest extends TestCase
         $this->wpdbBackup = $wpdb ?? null;
 
         $this->wpdbMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['prepare', 'get_row', 'get_results', 'insert', 'update'])
+            ->addMethods(['prepare', 'get_row', 'get_results', 'insert', 'update', 'query'])
             ->getMock();
 
         $GLOBALS['wpdb'] = $this->wpdbMock;
@@ -78,6 +78,71 @@ class NotificationRepositoryTest extends TestCase
         $result = $this->repository->getNotificationsForUserOnPipeline(1, 2, 'wp-user', '2026-05-07 00:00:00');
 
         $this->assertSame($rows, $result);
+    }
+
+    public function test_getNotificationsForUser_without_pipeline_filter_returns_results()
+    {
+        $rows = [(object) ['id' => 1], (object) ['id' => 2]];
+        $capturedSql = null;
+
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->willReturnCallback(function ($sql) use (&$capturedSql) {
+                $capturedSql = $sql;
+                return 'PREPARED';
+            });
+        $this->wpdbMock->expects($this->once())->method('get_results')->with('PREPARED')->willReturn($rows);
+
+        $result = $this->repository->getNotificationsForUser(2, 'wp-user', '2026-05-07 00:00:00');
+
+        $this->assertSame($rows, $result);
+        $this->assertStringNotContainsString('pipeline_id IN', $capturedSql);
+    }
+
+    public function test_getNotificationsForUser_with_pipeline_filter_includes_in_clause()
+    {
+        $rows = [(object) ['id' => 1]];
+        $capturedSql = null;
+
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->willReturnCallback(function ($sql) use (&$capturedSql) {
+                $capturedSql = $sql;
+                return 'PREPARED';
+            });
+        $this->wpdbMock->expects($this->once())->method('get_results')->willReturn($rows);
+
+        $result = $this->repository->getNotificationsForUser(2, 'wp-user', '2026-05-07 00:00:00', [3, 4]);
+
+        $this->assertSame($rows, $result);
+        $this->assertStringContainsString('pipeline_id IN (%d,%d)', $capturedSql);
+    }
+
+    public function test_markNotificationsAsReadForUser_with_empty_ids_returns_zero()
+    {
+        $this->wpdbMock->expects($this->never())->method('prepare');
+        $this->wpdbMock->expects($this->never())->method('query');
+
+        $this->assertSame(0, $this->repository->markNotificationsAsReadForUser(2, 'wp-user', []));
+    }
+
+    public function test_markNotificationsAsReadForUser_runs_update()
+    {
+        $capturedSql = null;
+
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->willReturnCallback(function ($sql) use (&$capturedSql) {
+                $capturedSql = $sql;
+                return 'PREPARED';
+            });
+        $this->wpdbMock->expects($this->once())->method('query')->with('PREPARED')->willReturn(2);
+
+        $result = $this->repository->markNotificationsAsReadForUser(2, 'wp-user', [5, 6]);
+
+        $this->assertSame(2, $result);
+        $this->assertStringContainsString('id IN (%d,%d)', $capturedSql);
+        $this->assertStringNotContainsString('pipeline_id', $capturedSql);
     }
 
     public function test_insertNotification_returns_inserted_row()
