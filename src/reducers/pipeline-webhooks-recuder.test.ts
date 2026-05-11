@@ -53,7 +53,7 @@ describe("pipeline-webhooks reducer", () => {
     };
     const next = reducer(baseState, action);
     expect(next.webhooks).toHaveLength(3);
-    expect(next.webhooks[2]).toEqual(added);
+    expect(next.webhooks![2]).toEqual(added);
     expect(baseState.webhooks).toHaveLength(2);
   });
 
@@ -63,15 +63,15 @@ describe("pipeline-webhooks reducer", () => {
       payload: { webhookId: mockedWebhooks[0].id },
     };
     const next = reducer(baseState, action);
-    expect(next.webhooks.map((w) => w.id)).toEqual([mockedWebhooks[1].id]);
-    expect(baseState.webhooks.map((w) => w.id)).toEqual([
+    expect(next.webhooks!.map((w) => w.id)).toEqual([mockedWebhooks[1].id]);
+    expect(baseState.webhooks!.map((w) => w.id)).toEqual([
       mockedWebhooks[0].id,
       mockedWebhooks[1].id,
     ]);
   });
 
   it("handles EDIT_PIPELINE_WEBHOOK (updates only targeted webhook)", () => {
-    const originalFirst = baseState.webhooks[0];
+    const originalFirst = baseState.webhooks![0];
     const updatedUrl = originalFirst.webhook_url + "/updated";
     const action: Action = {
       type: EDIT_PIPELINE_WEBHOOK,
@@ -85,16 +85,16 @@ describe("pipeline-webhooks reducer", () => {
     };
     const next = reducer(baseState, action);
 
-    const edited = next.webhooks.find((w) => w.id === originalFirst.id)!;
+    const edited = next.webhooks!.find((w) => w.id === originalFirst.id)!;
     expect(edited.webhook_url).toBe(updatedUrl);
     expect(edited.webhook_confirm).toBe(!originalFirst.webhook_confirm);
 
     // Ensure other webhook unchanged
-    expect(next.webhooks[1]).toEqual(baseState.webhooks[1]);
+    expect(next.webhooks![1]).toEqual(baseState.webhooks![1]);
 
     // Ensure original object reference not mutated (different object)
     expect(edited).not.toBe(originalFirst);
-    expect(baseState.webhooks[0].webhook_url).toBe(originalFirst.webhook_url);
+    expect(baseState.webhooks![0].webhook_url).toBe(originalFirst.webhook_url);
   });
 
   it("EDIT_PIPELINE_WEBHOOK on non-existing id leaves list logically unchanged (but new array)", () => {

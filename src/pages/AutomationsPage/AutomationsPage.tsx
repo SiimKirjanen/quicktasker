@@ -6,7 +6,7 @@ import { WPQTPageHeader } from "../../components/common/Header/Header";
 
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
-import { Loading, LoadingOval } from "../../components/Loading/Loading";
+import { LoadingOval } from "../../components/Loading/Loading";
 import { AutomationLogsModal } from "../../components/Modal/AutomationLogsModal/AutomationLogsModal";
 import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
 import { NotificationsNavLink } from "../../components/NotificationsNavLink/NotificationsNavLink";
@@ -25,12 +25,8 @@ type Props = {
 };
 
 function AutomationsPageContent({ pipelineId }: Props) {
-  const { loading } = useAutomations();
   const { pipelineMissing } = useMissingContent();
-
-  if (loading) {
-    return <Loading ovalSize="24" />;
-  }
+  const { automations } = useAutomations();
 
   if (pipelineMissing) {
     return (
@@ -43,6 +39,27 @@ function AutomationsPageContent({ pipelineId }: Props) {
     );
   }
 
+  if (automations === null) {
+    return null;
+  }
+
+  const isEmpty = automations.length === 0;
+
+  if (isEmpty) {
+    return (
+      <div className="wpqt-max-w-[460px] wpqt-mx-auto wpqt-mt-12 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new automation", "quicktasker")}
+        </h2>
+        <p>
+          {__("Follow the steps to create a new automation.", "quicktasker")}
+        </p>
+        <AutomationCreator pipelineId={pipelineId} />
+        <AutomationLogsModal />
+      </div>
+    );
+  }
+
   return (
     <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-16">
       <div className="wpqt-flex-1 wpqt-min-w-0">
@@ -50,8 +67,10 @@ function AutomationsPageContent({ pipelineId }: Props) {
         <PipelineAutomationsInfo />
         <PipelineAutomations />
       </div>
-      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0">
-        <h2>{__("Create a new automation", "quicktasker")}</h2>
+      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6 wpqt-self-start">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new automation", "quicktasker")}
+        </h2>
         <p>
           {__("Follow the steps to create a new automation.", "quicktasker")}
         </p>

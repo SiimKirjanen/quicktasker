@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.52.0\n"
+"Project-Id-Version: QuickTasker 1.54.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-05T17:15:10+00:00\n"
+"POT-Creation-Date: 2026-05-11T10:40:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -76,8 +76,90 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: php/api/admin-api.php:2927
+#. translators: %s = task name
+#: php/api/admin-api.php:639
+#: php/api/user-page-api.php:862
+#, php-format
+msgid "Stage was changed for task \"%s\""
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/admin-api.php:874
+#, php-format
+msgid "Due date for task \"%s\" changed"
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/admin-api.php:985
+#, php-format
+msgid "Task \"%s\" was deleted"
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/admin-api.php:1075
+#, php-format
+msgid "Task \"%s\" was archived"
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/admin-api.php:1167
+#, php-format
+msgid "Task \"%s\" was restored from the archive"
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/admin-api.php:1271
+#: php/api/user-page-api.php:969
+#, php-format
+msgid "Task \"%s\" was marked done"
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/admin-api.php:1273
+#: php/api/user-page-api.php:971
+#, php-format
+msgid "Task \"%s\" was marked not done"
+msgstr ""
+
+#. translators: %1$s = assigner name, %2$s = task name
+#: php/api/admin-api.php:1893
+#, php-format
+msgid "%1$s assigned you to task \"%2$s\""
+msgstr ""
+
+#. translators: %1$s = unassigner name, %2$s = task name
+#: php/api/admin-api.php:2016
+#, php-format
+msgid "%1$s unassigned you from task \"%2$s\""
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/admin-api.php:2642
+#, php-format
+msgid "A private comment was added to task \"%s\""
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/admin-api.php:2644
+#: php/api/user-page-api.php:436
+#, php-format
+msgid "A public comment was added to task \"%s\""
+msgstr ""
+
+#: php/api/admin-api.php:3098
 msgid "No valid settings provided"
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/user-page-api.php:646
+#, php-format
+msgid "A user was assigned to task \"%s\""
+msgstr ""
+
+#. translators: %s = task name
+#: php/api/user-page-api.php:758
+#, php-format
+msgid "A user was unassigned from task \"%s\""
 msgstr ""
 
 #: php/filters.php:72
@@ -310,7 +392,83 @@ msgid "No logs found"
 msgstr ""
 
 #: build/app.js:1
+msgid "Author"
+msgstr ""
+
+#: build/app.js:1
+msgid "Message"
+msgstr ""
+
+#: build/app.js:1
 msgid "Error fetching logs"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load notifications"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to mark notification as read"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to mark all notifications as read"
+msgstr ""
+
+#: build/app.js:1
+msgid "Unread"
+msgstr ""
+
+#: build/app.js:1
+msgid "Read"
+msgstr ""
+
+#: build/app.js:1
+msgid "Last 24 hours"
+msgstr ""
+
+#: build/app.js:1
+msgid "Last 3 days"
+msgstr ""
+
+#: build/app.js:1
+msgid "Last 7 days"
+msgstr ""
+
+#: build/app.js:1
+msgid "Last 30 days"
+msgstr ""
+
+#: build/app.js:1
+msgid "Notifications"
+msgstr ""
+
+#: build/app.js:1
+msgid "Refresh notifications"
+msgstr ""
+
+#: build/app.js:1
+msgid "Filter"
+msgstr ""
+
+#: build/app.js:1
+msgid "Show"
+msgstr ""
+
+#: build/app.js:1
+msgid "Mark all as read"
+msgstr ""
+
+#: build/app.js:1
+msgid "Loading…"
+msgstr ""
+
+#: build/app.js:1
+msgid "No notifications"
+msgstr ""
+
+#: build/app.js:1
+msgid "Mark as read"
 msgstr ""
 
 #: build/app.js:1
@@ -484,10 +642,6 @@ msgid "The board related to these API tokens seems to be missing. It may have be
 msgstr ""
 
 #: build/app.js:1
-msgid "Created API tokens"
-msgstr ""
-
-#: build/app.js:1
 msgid "Create a new API token"
 msgstr ""
 
@@ -496,11 +650,23 @@ msgid "Configure permissions below. The token is displayed only once after creat
 msgstr ""
 
 #: build/app.js:1
+msgid "Created API tokens"
+msgstr ""
+
+#: build/app.js:1
 msgid "Manage the API tokens for this board. You can create, view, and delete tokens that allow external applications to access this board's data."
 msgstr ""
 
 #: build/app.js:1
 msgid "Read more"
+msgstr ""
+
+#: build/app.js:1
+msgid "Automations"
+msgstr ""
+
+#: build/app.js:1
+msgid "Webhooks"
 msgstr ""
 
 #: build/app.js:1
@@ -993,19 +1159,27 @@ msgid "No WordPress users with required permissions available to assign"
 msgstr ""
 
 #: build/app.js:1
-msgid "Failed to get logs"
-msgstr ""
-
-#: build/app.js:1
-msgid "No logs available"
-msgstr ""
-
-#: build/app.js:1
 msgid "Comment added"
 msgstr ""
 
 #: build/app.js:1
 msgid "Failed to add comment"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load comments"
+msgstr ""
+
+#: build/app.js:1
+msgid "No comments available"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load logs"
+msgstr ""
+
+#: build/app.js:1
+msgid "No logs available"
 msgstr ""
 
 #: build/app.js:1
@@ -1356,10 +1530,6 @@ msgid "The board related to these automations seems to be missing. It may have b
 msgstr ""
 
 #: build/app.js:1
-msgid "Created automations"
-msgstr ""
-
-#: build/app.js:1
 msgid "Create a new automation"
 msgstr ""
 
@@ -1368,7 +1538,15 @@ msgid "Follow the steps to create a new automation."
 msgstr ""
 
 #: build/app.js:1
+msgid "Created automations"
+msgstr ""
+
+#: build/app.js:1
 msgid "Set up automated processes to help manage your board."
+msgstr ""
+
+#: build/app.js:1
+msgid "API tokens"
 msgstr ""
 
 #: build/app.js:1
@@ -1848,23 +2026,11 @@ msgid "Import an existing board"
 msgstr ""
 
 #: build/app.js:1
-msgid "Automations"
+msgid "Task view"
 msgstr ""
 
 #: build/app.js:1
-msgid "Webhooks"
-msgstr ""
-
-#: build/app.js:1
-msgid "API tokens"
-msgstr ""
-
-#: build/app.js:1
-msgid "Switch to Task view"
-msgstr ""
-
-#: build/app.js:1
-msgid "Switch to Board view"
+msgid "Board view"
 msgstr ""
 
 #: build/app.js:1
@@ -1917,26 +2083,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Failed to reset user password. Please try again"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load log"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load private comments"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to add private comment"
-msgstr ""
-
-#: build/app.js:1
-msgid "No comments available"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load comments"
 msgstr ""
 
 #: build/app.js:1
@@ -2232,15 +2378,15 @@ msgid "The board related to these webhooks seems to be missing. It may have been
 msgstr ""
 
 #: build/app.js:1
-msgid "Created webhooks"
-msgstr ""
-
-#: build/app.js:1
 msgid "Create a new webhook"
 msgstr ""
 
 #: build/app.js:1
 msgid "Choose which board event should trigger the webhook and the URL it will be sent to."
+msgstr ""
+
+#: build/app.js:1
+msgid "Created webhooks"
 msgstr ""
 
 #: build/app.js:1

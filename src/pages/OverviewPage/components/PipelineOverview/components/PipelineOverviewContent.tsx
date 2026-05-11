@@ -1,5 +1,4 @@
 import { __ } from "@wordpress/i18n";
-import { Loading } from "../../../../../components/Loading/Loading";
 import { PipelineOverviewResponse } from "../../../../../types/requestResponse/pipeline-overview-response";
 import { ArhivedTaskChart } from "../../ArchivedTaskChart/ArchivedTaskChart";
 import { StageDistributionChart } from "../../StageDistributionChart/StageDistributionChart";
@@ -19,12 +18,11 @@ const defaultChartoptions = {
 };
 
 type Props = {
-  loading: boolean;
   pipelineOverviewData: PipelineOverviewResponse | null;
 };
-function PipelineOverviewContent({ loading, pipelineOverviewData }: Props) {
-  if (loading || !pipelineOverviewData) {
-    return <Loading ovalSize="48" />;
+function PipelineOverviewContent({ pipelineOverviewData }: Props) {
+  if (!pipelineOverviewData) {
+    return null;
   }
 
   return (

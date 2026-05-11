@@ -1107,6 +1107,18 @@ function markNotificationReadRequest(
   });
 }
 
+function markAllNotificationsReadRequest(
+  pipelineId: string,
+  notificationIds: string[],
+): Promise<WPQTResponse<null>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines/${pipelineId}/notifications/read-all`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data: { notification_ids: notificationIds },
+  });
+}
+
 export {
   addCommentRequest,
   addCustomFieldRequest,
@@ -1159,6 +1171,7 @@ export {
   getUserTasksRequest,
   getWPUsersRequest,
   importRequest,
+  markAllNotificationsReadRequest,
   markCustomFieldAsDeletedRequest,
   markNotificationReadRequest,
   markTaskDoneRequest,

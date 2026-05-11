@@ -157,7 +157,7 @@ function WebhookCreator({ pipelineId }: Props) {
         />
       )}
 
-      <div className="wpqt-mt-4 wpqt-flex wpqt-flex-col wpqt-items-center wpqt-text-center wpqt-gap-1 wpqt-self-center">
+      <div className="wpqt-mt-4 wpqt-flex wpqt-flex-col wpqt-items-start wpqt-gap-1">
         <WPQTLabel labelFor="webhook-confirm" className="wpqt-block">
           {__("Wait for response", "quicktasker")}
         </WPQTLabel>

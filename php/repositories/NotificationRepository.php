@@ -83,5 +83,39 @@ if (!class_exists('WPQT\Notification\NotificationRepository')) {
 
             return $this->getNotificationById($id);
         }
+
+        /**
+         * Marks the given notifications as read, but only those that belong to the
+         * given viewer on the given pipeline. Returns the number of affected rows.
+         *
+         * @param int[] $notificationIds
+         */
+        public function markNotificationsAsReadForViewer($pipelineId, $userId, $userType, array $notificationIds)
+        {
+            global $wpdb;
+
+            if (empty($notificationIds)) {
+                return 0;
+            }
+
+            $ids = array_values(array_filter(array_map('intval', $notificationIds)));
+            if (empty($ids)) {
+                return 0;
+            }
+
+            $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+            $params = array_merge([$pipelineId, $userId, $userType], $ids);
+
+            return $wpdb->query($wpdb->prepare(
+                'UPDATE ' . TABLE_WP_QUICKTASKER_NOTIFICATIONS . '
+                SET mark_as_read = 1
+                WHERE pipeline_id = %d
+                  AND user_id = %d
+                  AND user_type = %s
+                  AND mark_as_read = 0
+                  AND id IN (' . $placeholders . ')',
+                $params
+            ));
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { MinusIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
@@ -19,6 +19,7 @@ import { QuickTaskerIcon } from "../../../../Icon/QuickTaskerIcon/QuickTaskerIco
 import { WordPressIcon } from "../../../../Icon/WordPressIcon/WordPressIcon";
 import { LoadingOval } from "../../../../Loading/Loading";
 import { UserAssignementSection } from "../../../../User/UserAssignementSection/UserAssignementSection";
+import { WPQTInput } from "../../../../common/Input/Input";
 
 type UserAssignementSelectionProps = {
   task: Task;
@@ -37,19 +38,29 @@ function UserAssignementSelection({
   const { handleExecutedAutomations } = useAutomationActions();
   const { dispatch } = useContext(ActivePipelineContext);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const availableToAssignUsers = users.filter(
-    (user: User) =>
-      !(task.assigned_users ?? []).some(
-        (assignedUser: User) => assignedUser.id === user.id,
-      ),
-  );
-  const availableToAssignWPUsers = wpUsers.filter(
-    (user: WPUser) =>
-      !(task.assigned_wp_users ?? []).some(
-        (assignedWPUser: WPUser) => assignedWPUser.id === user.id,
-      ),
-  );
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const matchesSearch = (user: User | WPUser) =>
+    !normalizedSearch ||
+    (user.name ?? "").toLowerCase().includes(normalizedSearch);
+
+  const availableToAssignUsers = users
+    .filter(
+      (user: User) =>
+        !(task.assigned_users ?? []).some(
+          (assignedUser: User) => assignedUser.id === user.id,
+        ),
+    )
+    .filter(matchesSearch);
+  const availableToAssignWPUsers = wpUsers
+    .filter(
+      (user: WPUser) =>
+        !(task.assigned_wp_users ?? []).some(
+          (assignedWPUser: WPUser) => assignedWPUser.id === user.id,
+        ),
+    )
+    .filter(matchesSearch);
 
   const assignUser = async (user: User | WPUser) => {
     try {
@@ -127,6 +138,16 @@ function UserAssignementSelection({
         className="!wpqt-mb-0"
       />
       <hr className="wpqt-my-4 wpqt-w-full wpqt-border-0 wpqt-border-t wpqt-border-solid wpqt-border-qtBorder" />
+      <div onClick={(e) => e.stopPropagation()}>
+        <WPQTInput
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder={__("Search", "quicktasker")}
+          leftIcon={<MagnifyingGlassIcon className="wpqt-size-4" />}
+          wrapperClassName="wpqt-block wpqt-w-full"
+          className="wpqt-w-full"
+        />
+      </div>
       <UserAssignementSection
         sectionTitle={__("Assign a quicktasker", "quicktasker")}
         sectionTitleIcon={<QuickTaskerIcon />}

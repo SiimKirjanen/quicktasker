@@ -5,7 +5,7 @@ import { SiProbot } from "react-icons/si";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
-import { Loading, LoadingOval } from "../../components/Loading/Loading";
+import { LoadingOval } from "../../components/Loading/Loading";
 import { ApiTokenLogsModal } from "../../components/Modal/ApiTokenLogsModal/ApiTokenLogsModal";
 import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
 import { NotificationsNavLink } from "../../components/NotificationsNavLink/NotificationsNavLink";
@@ -29,12 +29,8 @@ type ApiTokensPageProps = {
 };
 
 function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
-  const { loading } = useApiTokens();
   const { pipelineMissing } = useMissingContent();
-
-  if (loading) {
-    return <Loading ovalSize="24" />;
-  }
+  const { apiTokens } = useApiTokens();
 
   if (pipelineMissing) {
     return (
@@ -47,6 +43,30 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
     );
   }
 
+  if (apiTokens === null) {
+    return null;
+  }
+
+  const isEmpty = apiTokens.length === 0;
+
+  if (isEmpty) {
+    return (
+      <div className="wpqt-max-w-[460px] wpqt-mx-auto wpqt-mt-12 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new API token", "quicktasker")}
+        </h2>
+        <p>
+          {__(
+            "Configure permissions below. The token is displayed only once after creation.",
+            "quicktasker",
+          )}
+        </p>
+        <PipelineApiTokenCreator pipelineId={pipelineId} />
+        <ApiTokenLogsModal />
+      </div>
+    );
+  }
+
   return (
     <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-16">
       <div className="wpqt-flex-1 wpqt-min-w-0">
@@ -54,8 +74,10 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
         <PipelineApiTokensInfo />
         <PipelineApiTokens />
       </div>
-      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0">
-        <h2>{__("Create a new API token", "quicktasker")}</h2>
+      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6 wpqt-self-start">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new API token", "quicktasker")}
+        </h2>
         <p>
           {__(
             "Configure permissions below. The token is displayed only once after creation.",
