@@ -26,6 +26,7 @@ type Props = {
 
 function WebhooksPageContent({ pipelineId }: Props) {
   const { pipelineMissing } = useMissingContent();
+  const { webhooks } = useWebhooks();
 
   if (pipelineMissing) {
     return (
@@ -38,6 +39,30 @@ function WebhooksPageContent({ pipelineId }: Props) {
     );
   }
 
+  if (webhooks === null) {
+    return null;
+  }
+
+  const isEmpty = webhooks.length === 0;
+
+  if (isEmpty) {
+    return (
+      <div className="wpqt-max-w-[460px] wpqt-mx-auto wpqt-mt-12 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new webhook", "quicktasker")}
+        </h2>
+        <p>
+          {__(
+            "Choose which board event should trigger the webhook and the URL it will be sent to.",
+            "quicktasker",
+          )}
+        </p>
+        <WebhookCreator pipelineId={pipelineId} />
+        <WebhookLogsModal />
+      </div>
+    );
+  }
+
   return (
     <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-16">
       <div className="wpqt-flex-1 wpqt-min-w-0">
@@ -45,8 +70,10 @@ function WebhooksPageContent({ pipelineId }: Props) {
         <PipelineWebhooksInfo />
         <PipelineWebhooks />
       </div>
-      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0">
-        <h2>{__("Create a new webhook", "quicktasker")}</h2>
+      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6 wpqt-self-start">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new webhook", "quicktasker")}
+        </h2>
         <p>
           {__(
             "Choose which board event should trigger the webhook and the URL it will be sent to.",

@@ -15,12 +15,12 @@ import { Webhook } from "../types/webhook";
 import { convertWebhooksFromServer } from "../utils/webhooks";
 
 type State = {
-  webhooks: Webhook[];
+  webhooks: Webhook[] | null;
   loading: boolean;
 };
 
 const initialState: State = {
-  webhooks: [],
+  webhooks: null,
   loading: true,
 };
 

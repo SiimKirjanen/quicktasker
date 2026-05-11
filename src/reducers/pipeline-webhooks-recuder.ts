@@ -24,15 +24,18 @@ const reducer = (state: State, action: Action): State => {
     case ADD_PIPELINE_WEBHOOK: {
       return {
         ...state,
-        webhooks: [...state.webhooks, action.payload.webhook],
+        webhooks: state.webhooks
+          ? [...state.webhooks, action.payload.webhook]
+          : [action.payload.webhook],
       };
     }
     case REMOVE_PIPELINE_WEBHOOK: {
       return {
         ...state,
-        webhooks: state.webhooks.filter(
-          (webhook) => webhook.id !== action.payload.webhookId,
-        ),
+        webhooks:
+          state.webhooks?.filter(
+            (webhook) => webhook.id !== action.payload.webhookId,
+          ) ?? null,
       };
     }
     case EDIT_PIPELINE_WEBHOOK: {
@@ -40,9 +43,10 @@ const reducer = (state: State, action: Action): State => {
 
       return {
         ...state,
-        webhooks: state.webhooks.map((webhook) =>
-          webhook.id === webhookId ? { ...webhook, ...webhookData } : webhook,
-        ),
+        webhooks:
+          state.webhooks?.map((webhook) =>
+            webhook.id === webhookId ? { ...webhook, ...webhookData } : webhook,
+          ) ?? null,
       };
     }
     default: {

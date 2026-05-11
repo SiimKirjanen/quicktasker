@@ -30,6 +30,7 @@ type ApiTokensPageProps = {
 
 function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
   const { pipelineMissing } = useMissingContent();
+  const { apiTokens } = useApiTokens();
 
   if (pipelineMissing) {
     return (
@@ -42,6 +43,30 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
     );
   }
 
+  if (apiTokens === null) {
+    return null;
+  }
+
+  const isEmpty = apiTokens.length === 0;
+
+  if (isEmpty) {
+    return (
+      <div className="wpqt-max-w-[460px] wpqt-mx-auto wpqt-mt-12 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new API token", "quicktasker")}
+        </h2>
+        <p>
+          {__(
+            "Configure permissions below. The token is displayed only once after creation.",
+            "quicktasker",
+          )}
+        </p>
+        <PipelineApiTokenCreator pipelineId={pipelineId} />
+        <ApiTokenLogsModal />
+      </div>
+    );
+  }
+
   return (
     <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-16">
       <div className="wpqt-flex-1 wpqt-min-w-0">
@@ -49,8 +74,10 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
         <PipelineApiTokensInfo />
         <PipelineApiTokens />
       </div>
-      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0">
-        <h2>{__("Create a new API token", "quicktasker")}</h2>
+      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6 wpqt-self-start">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new API token", "quicktasker")}
+        </h2>
         <p>
           {__(
             "Configure permissions below. The token is displayed only once after creation.",
