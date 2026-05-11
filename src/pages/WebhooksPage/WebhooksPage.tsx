@@ -5,8 +5,10 @@ import { SiProbot } from "react-icons/si";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
-import { Loading, LoadingOval } from "../../components/Loading/Loading";
+import { LoadingOval } from "../../components/Loading/Loading";
+import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
 import { WebhookLogsModal } from "../../components/Modal/WebhookLogsModal/WebhookLogsModal";
+import { NotificationsNavLink } from "../../components/NotificationsNavLink/NotificationsNavLink";
 import { useApp } from "../../hooks/useApp";
 import { useMissingContent } from "../../hooks/useMissingContent";
 import { useNavigation } from "../../hooks/useNavigation";
@@ -23,12 +25,8 @@ type Props = {
 };
 
 function WebhooksPageContent({ pipelineId }: Props) {
-  const { loading } = useWebhooks();
   const { pipelineMissing } = useMissingContent();
-
-  if (loading) {
-    return <Loading ovalSize="24" />;
-  }
+  const { webhooks } = useWebhooks();
 
   if (pipelineMissing) {
     return (
@@ -41,6 +39,30 @@ function WebhooksPageContent({ pipelineId }: Props) {
     );
   }
 
+  if (webhooks === null) {
+    return null;
+  }
+
+  const isEmpty = webhooks.length === 0;
+
+  if (isEmpty) {
+    return (
+      <div className="wpqt-max-w-[460px] wpqt-mx-auto wpqt-mt-12 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new webhook", "quicktasker")}
+        </h2>
+        <p>
+          {__(
+            "Choose which board event should trigger the webhook and the URL it will be sent to.",
+            "quicktasker",
+          )}
+        </p>
+        <WebhookCreator pipelineId={pipelineId} />
+        <WebhookLogsModal />
+      </div>
+    );
+  }
+
   return (
     <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-16">
       <div className="wpqt-flex-1 wpqt-min-w-0">
@@ -48,8 +70,10 @@ function WebhooksPageContent({ pipelineId }: Props) {
         <PipelineWebhooksInfo />
         <PipelineWebhooks />
       </div>
-      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0">
-        <h2>{__("Create a new webhook", "quicktasker")}</h2>
+      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6 wpqt-self-start">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new webhook", "quicktasker")}
+        </h2>
         <p>
           {__(
             "Choose which board event should trigger the webhook and the URL it will be sent to.",
@@ -94,16 +118,19 @@ function WebhooksPage({ pipelineId }: Props) {
             rightSideContent={
               <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                 <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-mr-2 wpqt-pr-4 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
-                  <div
-                    className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
-                    onClick={() => {
-                      navigatePageWithoutHistory(`#/board/${pipelineId}`);
-                    }}
-                  >
-                    <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-                    <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-                      {__("Board", "quicktasker")}
-                    </span>
+                  <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
+                    <div
+                      className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
+                      onClick={() => {
+                        navigatePageWithoutHistory(`#/board/${pipelineId}`);
+                      }}
+                    >
+                      <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+                      <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                        {__("Board", "quicktasker")}
+                      </span>
+                    </div>
+                    <NotificationsNavLink pipelineId={pipelineId} />
                   </div>
                   <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                     <div
@@ -149,6 +176,7 @@ function WebhooksPage({ pipelineId }: Props) {
           </WPQTPageHeader>
         )}
         <WebhooksPageContent pipelineId={pipelineId} />
+        <NotificationsModal pipelineId={pipelineId} />
       </Page>
     </PipelineWebhooksContextProvider>
   );

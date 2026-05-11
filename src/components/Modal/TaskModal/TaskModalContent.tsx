@@ -35,7 +35,7 @@ import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { LoadingOval } from "../../Loading/Loading";
-import { TaskModalTabs } from "../../Tab/CommentsAndLogs/TaskModalTabs/TaskModalTabs";
+import { CommentsAndLogsTabs } from "../../Tab/CommentsAndLogs/CommentsAndLogsTabs";
 import { UploadManager } from "../../Upload/UploadManager/UploadManager";
 import { FreeForAllToggle } from "./components/FreeForAllToggle/FreeForAllToggle";
 import { TaskDueDateInput } from "./components/TaskDueDateInput/TaskDueDateInput";
@@ -223,7 +223,7 @@ const TaskModalContent = ({ deleteTask }: Props) => {
           </WPQTModalField>
 
           <div className="wpqt-mt-7 md:wpqt-pr-3">
-            <TaskModalTabs task={taskToEdit} />
+            <CommentsAndLogsTabs subjectId={taskToEdit.id} subject="task" />
           </div>
         </div>
 

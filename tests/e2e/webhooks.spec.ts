@@ -62,7 +62,8 @@ test.describe('Board Webhooks', () => {
     await page.getByRole('button', { name: 'Delete' }).click();
 
     await expect(page.getByText(TEST_WEBHOOK_URL)).not.toBeVisible();
-    await expect(page.getByText('There are no webhooks configured for this board.')).toBeVisible();
+    await expect(page.getByTestId('pipeline-webhook')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Created webhooks' })).not.toBeVisible();
   });
 
   test('should open webhook logs modal', async ({ page }) => {
@@ -81,7 +82,8 @@ test.describe('Board Webhooks', () => {
     await navigateToBoardsPage(page);
     await setupBoardForWebhooks(page, 'WH-Switch-B');
 
-    await expect(page.getByText('There are no webhooks configured for this board.')).toBeVisible();
+    await expect(page.getByTestId('pipeline-webhook')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Created webhooks' })).not.toBeVisible();
     await expect(page.getByText('https://board-one.example.com/wh')).not.toBeVisible();
   });
 });

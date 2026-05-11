@@ -9,6 +9,7 @@ import {
   CLOSE_ARCHIVE_TASK_MODAL,
   CLOSE_AUTOMATION_LOGS_MODAL,
   CLOSE_MOVE_TASK_MODAL,
+  CLOSE_NOTIFICATIONS_MODAL,
   CLOSE_PIPELINE_IMPORT_MODAL,
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
@@ -28,6 +29,7 @@ import {
   OPEN_NEW_PIPELINE_MODAL,
   OPEN_NEW_STAGE_MODAL,
   OPEN_NEW_USER_MODAL,
+  OPEN_NOTIFICATIONS_MODAL,
   OPEN_PIPELINE_IMPORT_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
@@ -103,6 +105,7 @@ const initialState: State = {
   apiTokenLogsModalSettings: {
     apiTokenId: null,
   },
+  notificationsModalOpen: false,
 };
 
 type State = {
@@ -141,6 +144,7 @@ type State = {
   automationLogsModalSettings: AutomationLogsModalSettings;
   apiTokenLogsModalOpen: boolean;
   apiTokenLogsModalSettings: ApiTokenLogsModalSettings;
+  notificationsModalOpen: boolean;
 };
 
 type Action =
@@ -221,7 +225,9 @@ type Action =
   | {
       type: typeof UPDATE_API_TOKEN_LOGS_MODAL_SETTINGS;
       payload: Partial<ApiTokenLogsModalSettings>;
-    };
+    }
+  | { type: typeof OPEN_NOTIFICATIONS_MODAL }
+  | { type: typeof CLOSE_NOTIFICATIONS_MODAL };
 
 type ModalDispatch = (action: Action) => void;
 

@@ -427,6 +427,22 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     );
                     /* End Handle webhooks */
 
+                    /* Notify assignees that a comment was added to their task */
+                    try {
+                        ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                            $task->pipeline_id,
+                            $task->id,
+                            /* translators: %s = task name */
+                            __('A public comment was added to task "%s"', 'quicktasker'),
+                            $task->name,
+                            $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
+                            $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
+                        );
+                    } catch (Throwable $notificationError) {
+                        error_log('Failed to create task comment notification: ' . $notificationError->getMessage());
+                    }
+                    /* End in-app notification */
+
                     $wpdb->query('COMMIT');
 
                     return new WP_REST_Response((new ApiResponse(true, [], $comments))->toArray(), 200);
@@ -621,6 +637,22 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         ]
                     );
 
+                    /* Notify other assignees that a user joined the task */
+                    try {
+                        ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                            $task->pipeline_id,
+                            $task->id,
+                            /* translators: %s = task name */
+                            __('A user was assigned to task "%s"', 'quicktasker'),
+                            $task->name,
+                            $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
+                            $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
+                        );
+                    } catch (Throwable $notificationError) {
+                        error_log('Failed to create task self-assign notification: ' . $notificationError->getMessage());
+                    }
+                    /* End in-app notification */
+
                     $wpdb->query('COMMIT');
 
                     return new WP_REST_Response((new ApiResponse(true, [], (object) [
@@ -717,6 +749,22 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         ]
                     );
 
+                    /* Notify remaining assignees that a user left the task */
+                    try {
+                        ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                            $task->pipeline_id,
+                            $task->id,
+                            /* translators: %s = task name */
+                            __('A user was unassigned from task "%s"', 'quicktasker'),
+                            $task->name,
+                            $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
+                            $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
+                        );
+                    } catch (Throwable $notificationError) {
+                        error_log('Failed to create task self-unassign notification: ' . $notificationError->getMessage());
+                    }
+                    /* End in-app notification */
+
                     $wpdb->query('COMMIT');
 
                     return new WP_REST_Response((new ApiResponse(true, [], (object) [
@@ -804,6 +852,22 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         ]
                     );
                     /* End Handle webhooks */
+
+                    /* Notify assignees that the task stage changed */
+                    try {
+                        ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                            $moveInfo->task->pipeline_id,
+                            $moveInfo->task->id,
+                            /* translators: %s = task name */
+                            __('Stage was changed for task "%s"', 'quicktasker'),
+                            $moveInfo->task->name,
+                            $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
+                            $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
+                        );
+                    } catch (Throwable $notificationError) {
+                        error_log('Failed to create task stage-change notification: ' . $notificationError->getMessage());
+                    }
+                    /* End in-app notification */
 
                     $wpdb->query('COMMIT');
 
@@ -897,6 +961,27 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         ]
                     );
                     /* End Handle webhooks */
+
+                    /* Notify assignees that the task done status changed */
+                    try {
+                        $messageTemplate = $data['done']
+                            /* translators: %s = task name */
+                            ? __('Task "%s" was marked done', 'quicktasker')
+                            /* translators: %s = task name */
+                            : __('Task "%s" was marked not done', 'quicktasker');
+
+                        ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                            $task->pipeline_id,
+                            $task->id,
+                            $messageTemplate,
+                            $task->name,
+                            $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
+                            $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
+                        );
+                    } catch (Throwable $notificationError) {
+                        error_log('Failed to create task done-toggle notification: ' . $notificationError->getMessage());
+                    }
+                    /* End in-app notification */
 
                     $wpdb->query('COMMIT');
 

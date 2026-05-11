@@ -5,6 +5,7 @@ import { AppContextProvider } from "./providers/AppContextProvider";
 import { LoadingContextProvider } from "./providers/LoadingContextProvider";
 import { MissingContentProvider } from "./providers/MissingContentProvider";
 import { ModalContextProvider } from "./providers/ModalContextProvider";
+import { NotificationsContextProvider } from "./providers/NotificationsContextProvider";
 import { PipelinesContextProvider } from "./providers/PipelinesContextProvider";
 import { UserContextProvider } from "./providers/UserContextProvider";
 
@@ -17,15 +18,17 @@ function App() {
         <UserContextProvider>
           <ModalContextProvider>
             <PipelinesContextProvider>
-              <LoadingContextProvider>
-                <MissingContentProvider>
-                  {currentPage}
-                  <ToastContainer
-                    position="bottom-right"
-                    className="wpqt-z-[999999]"
-                  />
-                </MissingContentProvider>
-              </LoadingContextProvider>
+              <NotificationsContextProvider>
+                <LoadingContextProvider>
+                  <MissingContentProvider>
+                    {currentPage}
+                    <ToastContainer
+                      position="bottom-right"
+                      className="wpqt-z-[999999]"
+                    />
+                  </MissingContentProvider>
+                </LoadingContextProvider>
+              </NotificationsContextProvider>
             </PipelinesContextProvider>
           </ModalContextProvider>
         </UserContextProvider>

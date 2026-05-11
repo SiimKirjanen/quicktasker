@@ -9,6 +9,7 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import { LuKeySquare } from "react-icons/lu";
 import { PiWebhooksLogo } from "react-icons/pi";
 import { SiProbot } from "react-icons/si";
+import { NotificationsNavLink } from "../../../../../../components/NotificationsNavLink/NotificationsNavLink";
 import {
   OPEN_EDIT_PIPELINE_MODAL,
   PIPELINE_TOGGLE_VIEW,
@@ -55,7 +56,7 @@ function BoardOptionsSelection() {
   };
 
   return (
-    <div className="wpqt-grid wpqt-grid-cols-[auto,auto,auto] wpqt-mr-2 wpqt-pr-4 wpqt-gap-y-2 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
+    <div className="wpqt-grid wpqt-grid-cols-[auto,auto,auto,auto] wpqt-mr-2 wpqt-pr-4 wpqt-gap-y-2 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
       <div
         className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
         onClick={() => {
@@ -66,6 +67,12 @@ function BoardOptionsSelection() {
         <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
           {__("Overview", "quicktasker")}
         </span>
+      </div>
+
+      <div className="wpqt-pl-4">
+        {activePipelineId && (
+          <NotificationsNavLink pipelineId={activePipelineId} />
+        )}
       </div>
 
       <div

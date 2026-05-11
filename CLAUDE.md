@@ -82,6 +82,30 @@ Error handling is centralized in `ErrorHandlerService` — all API catch blocks 
 - **PHP unit tests**: PHPUnit, tests in `tests/unit/be/`.
 - **E2E tests**: Playwright in `tests/e2e/`. Auth state stored in `playwright/.auth/` (gitignored). Shared helpers in `tests/e2e/utils/` — use `getStageContainer()`, `getTaskCard()`, `createBoard()`, `createStage()`, `createTask()` rather than raw locators. Fixture files for import tests in `tests/e2e/fixtures/`.
 
+## Plugin page URLs (wp-env, port 8889)
+
+Admin app — base: `http://localhost:8889/wp-admin/admin.php?page=wp-quicktasker`
+
+Routes are hash-based (append to base URL):
+- `#/` — Boards list (default)
+- `#/board/{pipelineId}` — Board (kanban view)
+- `#/board/{pipelineId}/overview` — Board overview
+- `#/board/{pipelineId}/automations` — Board automations
+- `#/board/{pipelineId}/webhooks` — Board webhooks
+- `#/board/{pipelineId}/api-tokens` — Board API tokens
+- `#/user-management` — User management
+- `#/user-management/{userId}` — Single user
+- `#/user-management/{userId}/tasks` — User's tasks
+- `#/tasks-app-settings` — Tasks app settings
+- `#/quicktasker-sessions` — Quicktasker sessions
+- `#/archive` — Archive
+- `#/logs` — Logs
+- `#/about` — About
+
+User page app — routes (React Router, hash-based) defined in `src/user-page-app/UserPageApp.tsx`:
+- `/`, `/user/profile`, `/user-tasks`, `/assignable-tasks`, `/tasks/:taskHash`, `/tasks/:taskHash/comments`, `/notifications`, `/user/comments`.
+- Rendered on whichever WP page embeds the user-app script (no fixed URL).
+
 ## Working conventions
 
 - **Playwright MCP screenshots**: when you take screenshots via `mcp__playwright__browser_take_screenshot` to inspect the UI, delete the resulting `.png` files from the project root before ending the task. Don't leave them lying around.

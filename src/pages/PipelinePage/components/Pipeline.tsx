@@ -24,6 +24,7 @@ import { useMissingContent } from "../../../hooks/useMissingContent";
 import useTabVisibility from "../../../hooks/useTabVisibility";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { NotificationsContext } from "../../../providers/NotificationsContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { AddStage } from "./AddStage";
 import { Stage } from "./Stage";
@@ -36,6 +37,7 @@ const Pipeline = () => {
   } = useContext(ActivePipelineContext);
   const { isTabVisible } = useTabVisibility();
   const { modalDispatch } = useContext(ModalContext);
+  const { fetchNotifications } = useContext(NotificationsContext);
   const { pipelineMissing } = useMissingContent();
   const {
     state: { isUserAllowedToManageSettings },
@@ -48,6 +50,7 @@ const Pipeline = () => {
     const refetchDataInterval = setInterval(() => {
       if (activePipeline && isTabVisible && !pipelineMissing) {
         fetchAndSetPipelineData(activePipeline.id);
+        fetchNotifications(activePipeline.id);
       }
     }, refreshInterval * 1000);
 

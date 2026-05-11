@@ -6,8 +6,10 @@ import { WPQTPageHeader } from "../../components/common/Header/Header";
 
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
-import { Loading, LoadingOval } from "../../components/Loading/Loading";
+import { LoadingOval } from "../../components/Loading/Loading";
 import { AutomationLogsModal } from "../../components/Modal/AutomationLogsModal/AutomationLogsModal";
+import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
+import { NotificationsNavLink } from "../../components/NotificationsNavLink/NotificationsNavLink";
 import { useAutomations } from "../../hooks/useAutomations";
 import { useMissingContent } from "../../hooks/useMissingContent";
 import { useNavigation } from "../../hooks/useNavigation";
@@ -23,12 +25,8 @@ type Props = {
 };
 
 function AutomationsPageContent({ pipelineId }: Props) {
-  const { loading } = useAutomations();
   const { pipelineMissing } = useMissingContent();
-
-  if (loading) {
-    return <Loading ovalSize="24" />;
-  }
+  const { automations } = useAutomations();
 
   if (pipelineMissing) {
     return (
@@ -41,6 +39,27 @@ function AutomationsPageContent({ pipelineId }: Props) {
     );
   }
 
+  if (automations === null) {
+    return null;
+  }
+
+  const isEmpty = automations.length === 0;
+
+  if (isEmpty) {
+    return (
+      <div className="wpqt-max-w-[460px] wpqt-mx-auto wpqt-mt-12 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new automation", "quicktasker")}
+        </h2>
+        <p>
+          {__("Follow the steps to create a new automation.", "quicktasker")}
+        </p>
+        <AutomationCreator pipelineId={pipelineId} />
+        <AutomationLogsModal />
+      </div>
+    );
+  }
+
   return (
     <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-16">
       <div className="wpqt-flex-1 wpqt-min-w-0">
@@ -48,8 +67,10 @@ function AutomationsPageContent({ pipelineId }: Props) {
         <PipelineAutomationsInfo />
         <PipelineAutomations />
       </div>
-      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0">
-        <h2>{__("Create a new automation", "quicktasker")}</h2>
+      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6 wpqt-self-start">
+        <h2 className="wpqt-mt-0">
+          {__("Create a new automation", "quicktasker")}
+        </h2>
         <p>
           {__("Follow the steps to create a new automation.", "quicktasker")}
         </p>
@@ -79,16 +100,19 @@ function AutomationsPage({ pipelineId }: Props) {
             rightSideContent={
               <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                 <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-mr-2 wpqt-pr-4 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
-                  <div
-                    className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
-                    onClick={() => {
-                      navigatePageWithoutHistory(`#/board/${pipelineId}`);
-                    }}
-                  >
-                    <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
-                    <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
-                      {__("Board", "quicktasker")}
-                    </span>
+                  <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
+                    <div
+                      className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
+                      onClick={() => {
+                        navigatePageWithoutHistory(`#/board/${pipelineId}`);
+                      }}
+                    >
+                      <ViewColumnsIcon className="wpqt-size-5 wpqt-text-blue-400 group-hover:wpqt-text-blue-600" />
+                      <span className="wpqt-text-sm wpqt-blue-text group-hover:wpqt-text-blue-600">
+                        {__("Board", "quicktasker")}
+                      </span>
+                    </div>
+                    <NotificationsNavLink pipelineId={pipelineId} />
                   </div>
                   <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                     <div
@@ -134,6 +158,7 @@ function AutomationsPage({ pipelineId }: Props) {
           </WPQTPageHeader>
         )}
         <AutomationsPageContent pipelineId={pipelineId} />
+        <NotificationsModal pipelineId={pipelineId} />
       </Page>
     </PipelineAutomationsContextProvider>
   );
