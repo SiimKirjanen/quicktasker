@@ -17,6 +17,11 @@ declare global {
       isUserAllowedToManageSettings: "1" | "0";
       userPageCustomStyles: string;
       taskUploadsURL: string;
+      initialNotificationPreferences: {
+        filter: string;
+        max_age_hours: number;
+        selected_pipeline_ids: number[] | null;
+      };
     };
   }
 }

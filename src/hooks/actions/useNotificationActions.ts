@@ -27,13 +27,10 @@ function useNotificationActions() {
     }
   };
 
-  const markAllAsRead = async (
-    pipelineId: string,
-    notificationIds: string[],
-  ) => {
+  const markAllAsRead = async (notificationIds: string[]) => {
     if (notificationIds.length === 0) return;
     try {
-      await markAllNotificationsReadRequest(pipelineId, notificationIds);
+      await markAllNotificationsReadRequest(notificationIds);
       notificationsDispatch({
         type: NOTIFICATIONS_MARK_ALL_READ,
         payload: notificationIds,

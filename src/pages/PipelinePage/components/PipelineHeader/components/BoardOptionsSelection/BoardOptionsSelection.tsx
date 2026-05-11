@@ -70,9 +70,7 @@ function BoardOptionsSelection() {
       </div>
 
       <div className="wpqt-pl-4">
-        {activePipelineId && (
-          <NotificationsNavLink pipelineId={activePipelineId} />
-        )}
+        {activePipelineId && <NotificationsNavLink />}
       </div>
 
       <div

@@ -7,6 +7,7 @@ import {
   State as ModalState,
 } from "../../../../providers/ModalContextProvider";
 import { NotificationsContext } from "../../../../providers/NotificationsContextProvider";
+import { NotificationFilter } from "../../../../types/notification";
 import { PipelineView } from "../../../../types/pipeline";
 import { TaskExportMethods } from "../../../../types/task";
 import { PipelineHeader } from "./PipelineHeader";
@@ -44,6 +45,7 @@ describe("PipelineHeader", () => {
   };
 
   const fetchAndSetPipelineData = jest.fn();
+  const fetchNotifications = jest.fn();
   const modalDispatch = jest.fn();
 
   // Define a default modal state for your tests
@@ -140,9 +142,16 @@ describe("PipelineHeader", () => {
         >
           <NotificationsContext.Provider
             value={{
-              state: { notifications: [], loading: false },
+              state: {
+                notifications: [],
+                loading: false,
+                filter: NotificationFilter.ALL,
+                maxAgeHours: 24,
+                selectedPipelineIds: null,
+              },
               notificationsDispatch: jest.fn(),
-              fetchNotifications: jest.fn(),
+              fetchNotifications,
+              savePreferences: jest.fn(),
             }}
           >
             <PipelineHeader />
@@ -169,11 +178,14 @@ describe("PipelineHeader", () => {
     expect(screen.getByText("Webhooks")).toBeInTheDocument();
   });
 
-  it("calls fetchAndSetPipelineData when refresh icon is clicked", () => {
+  it("calls fetchAndSetPipelineData and fetchNotifications when refresh icon is clicked", () => {
+    fetchAndSetPipelineData.mockClear();
+    fetchNotifications.mockClear();
     renderWithProviders();
     const refreshIcon = screen.getByTestId("refresh-icon");
     fireEvent.click(refreshIcon);
     expect(fetchAndSetPipelineData).toHaveBeenCalledWith("1");
+    expect(fetchNotifications).toHaveBeenCalled();
   });
 
   it("shows loading indicator when loading", () => {
@@ -205,9 +217,16 @@ describe("PipelineHeader", () => {
         >
           <NotificationsContext.Provider
             value={{
-              state: { notifications: [], loading: false },
+              state: {
+                notifications: [],
+                loading: false,
+                filter: NotificationFilter.ALL,
+                maxAgeHours: 24,
+                selectedPipelineIds: null,
+              },
               notificationsDispatch: jest.fn(),
-              fetchNotifications: jest.fn(),
+              fetchNotifications,
+              savePreferences: jest.fn(),
             }}
           >
             <PipelineHeader />

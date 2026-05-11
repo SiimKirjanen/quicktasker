@@ -71,7 +71,7 @@ function OverviewPage({ pipelineId }: Props) {
                       {__("Board", "quicktasker")}
                     </span>
                   </div>
-                  <NotificationsNavLink pipelineId={pipelineId} />
+                  <NotificationsNavLink />
                 </div>
                 <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                   <div
@@ -140,7 +140,7 @@ function OverviewPage({ pipelineId }: Props) {
         </WPQTPageHeader>
       )}
       <PipelineOverview pipelineOverviewData={pipelineOverviewData} />
-      <NotificationsModal pipelineId={pipelineId} />
+      <NotificationsModal />
     </Page>
   );
 }

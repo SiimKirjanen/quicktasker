@@ -1088,11 +1088,15 @@ function importRequest(
 */
 
 function getNotificationsRequest(
-  pipelineId: string,
   maxAgeHours = 24,
+  pipelineIds: string[] = [],
 ): Promise<WPQTResponse<NotificationFromServer[]>> {
+  const params = new URLSearchParams();
+  params.set("max_age_hours", String(maxAgeHours));
+  pipelineIds.forEach((id) => params.append("pipeline_ids[]", id));
+
   return apiFetch({
-    path: `/wpqt/v1/pipelines/${pipelineId}/notifications?max_age_hours=${maxAgeHours}`,
+    path: `/wpqt/v1/notifications?${params.toString()}`,
     headers: getCommonHeaders(),
   });
 }
@@ -1108,14 +1112,39 @@ function markNotificationReadRequest(
 }
 
 function markAllNotificationsReadRequest(
-  pipelineId: string,
   notificationIds: string[],
 ): Promise<WPQTResponse<null>> {
   return apiFetch({
-    path: `/wpqt/v1/pipelines/${pipelineId}/notifications/read-all`,
+    path: `/wpqt/v1/notifications/read-all`,
     method: "POST",
     headers: getCommonHeaders(),
     data: { notification_ids: notificationIds },
+  });
+}
+
+type NotificationPreferencesFromServer = {
+  filter: string;
+  max_age_hours: number;
+  selected_pipeline_ids: number[] | null;
+};
+
+function saveNotificationPreferencesRequest(args: {
+  filter: string;
+  maxAgeHours: number;
+  pipelineIds: string[] | null;
+}): Promise<WPQTResponse<NotificationPreferencesFromServer>> {
+  const data: Record<string, unknown> = {
+    filter: args.filter,
+    max_age_hours: args.maxAgeHours,
+  };
+  if (args.pipelineIds !== null) {
+    data.pipeline_ids = args.pipelineIds;
+  }
+  return apiFetch({
+    path: `/wpqt/v1/notifications/preferences`,
+    method: "POST",
+    headers: getCommonHeaders(),
+    data,
   });
 }
 
@@ -1182,6 +1211,7 @@ export {
   resetUserPasswordRequest,
   restoreArchivedTaskRequest,
   restoreCustomFieldRequest,
+  saveNotificationPreferencesRequest,
   savePipelineSettingsRequest,
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
