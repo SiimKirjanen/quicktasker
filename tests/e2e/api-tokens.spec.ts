@@ -76,7 +76,8 @@ test('should create multiple tokens for the same board', async ({ page }) => {
     await deleteFirstApiToken(page);
 
     await expect(page.getByText('Token To Delete')).not.toBeVisible();
-    await expect(page.getByText('There are no API tokens created for this board.')).toBeVisible();
+    await expect(page.getByTestId('pipeline-api-token')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Created API tokens' })).not.toBeVisible();
   });
 
   test('should open the logs modal for a token', async ({ page }) => {
@@ -95,7 +96,8 @@ test('should create multiple tokens for the same board', async ({ page }) => {
     await navigateToBoardsPage(page);
     await setupBoardForApiTokens(page, 'AT-Switch-B');
 
-    await expect(page.getByText('There are no API tokens created for this board.')).toBeVisible();
+    await expect(page.getByTestId('pipeline-api-token')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Created API tokens' })).not.toBeVisible();
     await expect(page.getByText('Board A Token')).not.toBeVisible();
   });
 });
