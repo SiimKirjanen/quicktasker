@@ -629,6 +629,21 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 ]
                             );
                             /* End Handle webhooks */
+
+                            /* Notify assignees that the task stage changed */
+                            try {
+                                ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                                    $moveInfo->task->pipeline_id,
+                                    $moveInfo->task->id,
+                                    /* translators: %s = task name */
+                                    __('Stage was changed for task "%s"', 'quicktasker'),
+                                    $moveInfo->task->name,
+                                    get_current_user_id()
+                                );
+                            } catch (Throwable $notificationError) {
+                                error_log('Failed to create task stage-change notification: ' . $notificationError->getMessage());
+                            }
+                            /* End in-app notification */
                         } else {
                             $logService->log('Task ' . $moveInfo->task->name . ' order changed in ' . $stage->name . ' stage', [
                                 'type'        => WP_QT_LOG_TYPE_STAGE,
@@ -1865,21 +1880,24 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'pipeline_id'   => $task->pipeline_id
                         ]);
 
-                        /* Create in-app notification for the assigned user */
-                        try {
-                            ServiceLocator::get('NotificationService')->createNotification(
-                                $task->pipeline_id,
-                                (int) $data['id'],
-                                $data['user_type'],
-                                sprintf(
-                                    /* translators: %1$s = assigner name, %2$s = task name */
-                                    __('%1$s assigned you to task "%2$s"', 'quicktasker'),
-                                    $currentUser->display_name,
-                                    $task->name
-                                )
-                            );
-                        } catch (Throwable $notificationError) {
-                            error_log('Failed to create assignment notification: ' . $notificationError->getMessage());
+                        /* Create in-app notification for the assigned user (skip self-assignment) */
+                        $isSelfAssignment = 'wp-user' === $data['user_type'] && (int) $data['id'] === (int) $userId;
+                        if (!$isSelfAssignment) {
+                            try {
+                                ServiceLocator::get('NotificationService')->createNotification(
+                                    $task->pipeline_id,
+                                    (int) $data['id'],
+                                    $data['user_type'],
+                                    sprintf(
+                                        /* translators: %1$s = assigner name, %2$s = task name */
+                                        __('%1$s assigned you to task "%2$s"', 'quicktasker'),
+                                        $currentUser->display_name,
+                                        $task->name
+                                    )
+                                );
+                            } catch (Throwable $notificationError) {
+                                error_log('Failed to create assignment notification: ' . $notificationError->getMessage());
+                            }
                         }
                         /* End in-app notification */
 
@@ -1985,21 +2003,24 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'pipeline_id'   => $task->pipeline_id
                         ]);
 
-                        /* Create in-app notification for the unassigned user */
-                        try {
-                            ServiceLocator::get('NotificationService')->createNotification(
-                                $task->pipeline_id,
-                                (int) $data['id'],
-                                $data['user_type'],
-                                sprintf(
-                                    /* translators: %1$s = unassigner name, %2$s = task name */
-                                    __('%1$s unassigned you from task "%2$s"', 'quicktasker'),
-                                    $currentUser->display_name,
-                                    $task->name
-                                )
-                            );
-                        } catch (Throwable $notificationError) {
-                            error_log('Failed to create unassignment notification: ' . $notificationError->getMessage());
+                        /* Create in-app notification for the unassigned user (skip self-unassignment) */
+                        $isSelfUnassignment = 'wp-user' === $data['user_type'] && (int) $data['id'] === (int) $userId;
+                        if (!$isSelfUnassignment) {
+                            try {
+                                ServiceLocator::get('NotificationService')->createNotification(
+                                    $task->pipeline_id,
+                                    (int) $data['id'],
+                                    $data['user_type'],
+                                    sprintf(
+                                        /* translators: %1$s = unassigner name, %2$s = task name */
+                                        __('%1$s unassigned you from task "%2$s"', 'quicktasker'),
+                                        $currentUser->display_name,
+                                        $task->name
+                                    )
+                                );
+                            } catch (Throwable $notificationError) {
+                                error_log('Failed to create unassignment notification: ' . $notificationError->getMessage());
+                            }
                         }
                         /* End in-app notification */
 
@@ -4320,6 +4341,50 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                ],
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'pipelines/(?P<id>\d+)/notifications/read-all',
+            [
+                'methods'  => 'POST',
+                'callback' => function ($data) {
+                    try {
+                        $currentUserId = get_current_user_id();
+                        $rawIds = $data->get_param('notification_ids');
+
+                        if (!is_array($rawIds)) {
+                            throw new WPQTException('notification_ids must be an array', false);
+                        }
+
+                        $notificationIds = array_values(array_filter(array_map('absint', $rawIds)));
+
+                        ServiceLocator::get('NotificationService')->markNotificationsAsReadForViewer(
+                            (int) $data['id'],
+                            (int) $currentUserId,
+                            WP_QT_WORDPRESS_USER_TYPE,
+                            $notificationIds
+                        );
+
+                        return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, 'Failed to mark all notifications as read');
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                },
+                'args' => [
+                    'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'notification_ids' => [
+                        'required' => true,
                     ],
                 ],
             ],

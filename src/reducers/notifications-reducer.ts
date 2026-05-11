@@ -1,5 +1,6 @@
 import {
   NOTIFICATION_MARK_READ,
+  NOTIFICATIONS_MARK_ALL_READ,
   NOTIFICATIONS_SET,
   NOTIFICATIONS_SET_LOADING,
 } from "../constants";
@@ -26,6 +27,14 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         notifications: state.notifications.map((n) =>
           n.id === action.payload ? { ...n, mark_as_read: true } : n,
+        ),
+      };
+    }
+    case NOTIFICATIONS_MARK_ALL_READ: {
+      return {
+        ...state,
+        notifications: state.notifications.map((n) =>
+          action.payload.includes(n.id) ? { ...n, mark_as_read: true } : n,
         ),
       };
     }

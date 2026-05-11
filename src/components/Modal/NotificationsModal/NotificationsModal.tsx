@@ -27,7 +27,7 @@ function NotificationsModal({ pipelineId }: Props) {
     state: { notifications, loading },
     fetchNotifications,
   } = useContext(NotificationsContext);
-  const { markAsRead } = useNotificationActions();
+  const { markAsRead, markAllAsRead } = useNotificationActions();
   const { convertToWPTimezone } = useTimezone();
   const [filter, setFilter] = useState<NotificationFilter>(
     NotificationFilter.ALL,
@@ -36,6 +36,7 @@ function NotificationsModal({ pipelineId }: Props) {
     DEFAULT_NOTIFICATIONS_MAX_AGE_HOURS,
   );
   const [markingIds, setMarkingIds] = useState<string[]>([]);
+  const [markingAll, setMarkingAll] = useState(false);
 
   const handleMaxAgeChange = (value: string) => {
     const hours = Number(value);
@@ -49,6 +50,21 @@ function NotificationsModal({ pipelineId }: Props) {
       await markAsRead(id);
     } finally {
       setMarkingIds((prev) => prev.filter((markingId) => markingId !== id));
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    const unreadIds = filteredNotifications
+      .filter((n) => !n.mark_as_read)
+      .map((n) => n.id);
+
+    if (unreadIds.length === 0) return;
+
+    setMarkingAll(true);
+    try {
+      await markAllAsRead(pipelineId, unreadIds);
+    } finally {
+      setMarkingAll(false);
     }
   };
 
@@ -125,6 +141,18 @@ function NotificationsModal({ pipelineId }: Props) {
               selectedOptionValue={String(maxAgeHours)}
               options={maxAgeOptions}
               onSelectionChange={handleMaxAgeChange}
+            />
+          </div>
+
+          <div className="wpqt-ml-auto">
+            <WPQTButton
+              btnText={__("Mark all as read", "quicktasker")}
+              loading={markingAll}
+              disabled={
+                !filteredNotifications.some((n) => !n.mark_as_read) ||
+                markingAll
+              }
+              onClick={handleMarkAllAsRead}
             />
           </div>
         </div>

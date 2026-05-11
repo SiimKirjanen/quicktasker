@@ -41,7 +41,8 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
             $taskId,
             $messageTemplate,
             $taskName,
-            $skipWordPressUserId = null
+            $skipWordPressUserId = null,
+            $skipQuicktaskerUserId = null
         ) {
             $userRepo = ServiceLocator::get('UserRepository');
             $qtUsers = $userRepo->getAssignedUsersByTaskId((int) $taskId);
@@ -50,6 +51,10 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
             $message = sprintf($messageTemplate, $taskName);
 
             foreach ((array) $qtUsers as $u) {
+                if (null !== $skipQuicktaskerUserId && (int) $u->id === (int) $skipQuicktaskerUserId) {
+                    continue;
+                }
+
                 try {
                     $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message);
                 } catch (\Throwable $e) {
@@ -110,6 +115,22 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
             }
 
             return $repo->markAsRead((int) $notificationId);
+        }
+
+        /**
+         * Marks the given notifications as read, but only those that belong to the
+         * given viewer on the given pipeline.
+         *
+         * @param int[] $notificationIds
+         */
+        public function markNotificationsAsReadForViewer($pipelineId, $userId, $userType, array $notificationIds)
+        {
+            return ServiceLocator::get('NotificationRepository')->markNotificationsAsReadForViewer(
+                (int) $pipelineId,
+                (int) $userId,
+                $userType,
+                $notificationIds
+            );
         }
     }
 }

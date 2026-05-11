@@ -210,7 +210,7 @@ class NotificationServiceTest extends TestCase
         $this->assertSame([20], $notifiedIds);
     }
 
-    public function testNotifyTaskAssigneesActorSkipDoesNotApplyToQuicktaskerUsers(): void
+    public function testNotifyTaskAssigneesWordPressActorSkipDoesNotApplyToQuicktaskerUsers(): void
     {
         $this->timeRepo->method('getCurrentUTCTime')->willReturn('2026-05-08 12:00:00');
 
@@ -224,6 +224,28 @@ class NotificationServiceTest extends TestCase
             ->willReturn((object) ['id' => 21]);
 
         $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', 21);
+    }
+
+    public function testNotifyTaskAssigneesSkipsActorQuicktaskerUser(): void
+    {
+        $this->timeRepo->method('getCurrentUTCTime')->willReturn('2026-05-08 12:00:00');
+
+        $this->userRepo->method('getAssignedUsersByTaskId')->willReturn([
+            (object) ['id' => 10, 'user_type' => 'quicktasker'],
+            (object) ['id' => 11, 'user_type' => 'quicktasker'],
+        ]);
+        $this->userRepo->method('getAssignedWPUsersByTaskIds')->willReturn([]);
+
+        $notifiedIds = [];
+        $this->notificationRepo->method('insertNotification')
+            ->willReturnCallback(function ($pipelineId, $userId) use (&$notifiedIds) {
+                $notifiedIds[] = $userId;
+                return (object) ['id' => $userId];
+            });
+
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', null, 11);
+
+        $this->assertSame([10], $notifiedIds);
     }
 
     public function testNotifyTaskAssigneesSwallowsPerUserExceptions(): void

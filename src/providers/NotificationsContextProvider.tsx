@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { getNotificationsRequest } from "../api/api";
 import {
   DEFAULT_NOTIFICATIONS_MAX_AGE_HOURS,
+  NOTIFICATIONS_MARK_ALL_READ,
   NOTIFICATIONS_SET,
   NOTIFICATIONS_SET_LOADING,
   NOTIFICATION_MARK_READ,
@@ -24,7 +25,8 @@ type State = {
 type Action =
   | { type: typeof NOTIFICATIONS_SET; payload: NotificationFromServer[] }
   | { type: typeof NOTIFICATIONS_SET_LOADING; payload: boolean }
-  | { type: typeof NOTIFICATION_MARK_READ; payload: string };
+  | { type: typeof NOTIFICATION_MARK_READ; payload: string }
+  | { type: typeof NOTIFICATIONS_MARK_ALL_READ; payload: string[] };
 
 type Dispatch = (action: Action) => void;
 

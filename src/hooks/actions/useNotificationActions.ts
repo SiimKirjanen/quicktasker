@@ -1,8 +1,14 @@
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { markNotificationReadRequest } from "../../api/api";
-import { NOTIFICATION_MARK_READ } from "../../constants";
+import {
+  markAllNotificationsReadRequest,
+  markNotificationReadRequest,
+} from "../../api/api";
+import {
+  NOTIFICATIONS_MARK_ALL_READ,
+  NOTIFICATION_MARK_READ,
+} from "../../constants";
 import { NotificationsContext } from "../../providers/NotificationsContextProvider";
 
 function useNotificationActions() {
@@ -21,8 +27,28 @@ function useNotificationActions() {
     }
   };
 
+  const markAllAsRead = async (
+    pipelineId: string,
+    notificationIds: string[],
+  ) => {
+    if (notificationIds.length === 0) return;
+    try {
+      await markAllNotificationsReadRequest(pipelineId, notificationIds);
+      notificationsDispatch({
+        type: NOTIFICATIONS_MARK_ALL_READ,
+        payload: notificationIds,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        __("Failed to mark all notifications as read", "quicktasker"),
+      );
+    }
+  };
+
   return {
     markAsRead,
+    markAllAsRead,
   };
 }
 
