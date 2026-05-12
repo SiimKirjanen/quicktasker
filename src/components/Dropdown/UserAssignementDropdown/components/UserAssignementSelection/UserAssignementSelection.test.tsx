@@ -110,16 +110,17 @@ describe("UserAssignementSelection", () => {
     jest.clearAllMocks();
   });
 
-  it("renders all user sections", () => {
+  it("renders both quicktasker and WP users in a single list", () => {
     renderWithProviders({
       task,
       onUserAdd: jest.fn(),
       onUserDelete: jest.fn(),
     });
-    expect(screen.getByText("Assigned quicktaskers")).toBeInTheDocument();
-    expect(screen.getByText("Assigned WordPress users")).toBeInTheDocument();
-    expect(screen.getByText("Assign a quicktasker")).toBeInTheDocument();
-    expect(screen.getByText("Assign a WordPress user")).toBeInTheDocument();
+    expect(screen.getByText("John")).toBeInTheDocument();
+    expect(screen.getByText("Jane")).toBeInTheDocument();
+    expect(screen.getAllByTestId("user-assignment-row-assigned")).toHaveLength(
+      2,
+    );
   });
 
   it("calls onUserDelete and dispatch when removing a user", async () => {

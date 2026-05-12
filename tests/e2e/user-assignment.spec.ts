@@ -24,8 +24,10 @@ test.describe('WordPress User Assignment', () => {
 
     await assignWordPressUserToTask(page, taskName, ADMIN_USERNAME, false);
 
-    const assignedSection = page.locator('div').filter({ hasText: 'Assigned WordPress users' }).first();
-    await expect(assignedSection.getByText(ADMIN_USERNAME, { exact: true })).toBeVisible();
+    const list = page.getByTestId('user-assignment-list');
+    await expect(
+      list.locator('[data-testid="user-assignment-row-assigned"]').filter({ hasText: ADMIN_USERNAME })
+    ).toBeVisible();
 
     await closeUserAssignmentDropdown(page, taskName);
 
@@ -43,15 +45,15 @@ test.describe('WordPress User Assignment', () => {
 
     await assignWordPressUserToTask(page, taskName, ADMIN_USERNAME, false);
 
-    await expect(page.getByText('No WordPress users assigned')).not.toBeVisible();
-    const assignedSection = page.locator('div').filter({ hasText: 'Assigned WordPress users' }).first();
-    await expect(assignedSection.getByText(ADMIN_USERNAME, { exact: true })).toBeVisible();
+    const list = page.getByTestId('user-assignment-list');
+    const assignedRow = list.locator('[data-testid="user-assignment-row-assigned"]').filter({ hasText: ADMIN_USERNAME });
+    await expect(assignedRow).toBeVisible();
 
-    await assignedSection.getByText(ADMIN_USERNAME, { exact: true }).click();
+    await assignedRow.click();
 
-    await page.waitForTimeout(500);
-
-    await expect(page.getByText('No WordPress users assigned')).toBeVisible();
+    await expect(
+      list.locator('[data-testid="user-assignment-row-assigned"]').filter({ hasText: ADMIN_USERNAME })
+    ).not.toBeVisible();
   });
 });
 
@@ -69,15 +71,11 @@ test.describe('QuickTasker User Assignment', () => {
     await expect(page.getByText(taskName)).toBeVisible();
     const taskCard = getTaskCard(page, taskName);
     await openUserAssignmentDropdown(page, taskName);
-    await expect(page.getByText('Assigned quicktaskers')).toBeVisible();
-    await expect(page.getByText('No quicktaskers assigned')).toBeVisible();
-    await expect(page.getByText('Assign a quicktasker')).toBeVisible();
-    const qtAssignSection = page.locator('div').filter({ hasText: 'Assign a quicktasker' }).first();
-    await qtAssignSection.getByText(qtUserName, { exact: true }).click();
-    await page.waitForTimeout(500);
-    await expect(page.getByText('No quicktaskers assigned')).not.toBeVisible();
-    const assignedSection = page.locator('div').filter({ hasText: 'Assigned quicktaskers' }).first();
-    await expect(assignedSection.getByText(qtUserName, { exact: true })).toBeVisible();
+    const list = page.getByTestId('user-assignment-list');
+    await list.getByText(qtUserName, { exact: true }).click();
+    await expect(
+      list.locator('[data-testid="user-assignment-row-assigned"]').filter({ hasText: qtUserName })
+    ).toBeVisible();
 
     await closeUserAssignmentDropdown(page, taskName);
     await expect(taskCard.getByText(qtUserName, { exact: true })).toBeVisible();
@@ -96,17 +94,13 @@ test.describe('QuickTasker User Assignment', () => {
     await expect(page.getByText(taskName)).toBeVisible();
 
     await openUserAssignmentDropdown(page, taskName);
-    await expect(page.getByText('Assigned quicktaskers')).toBeVisible();
-    await expect(page.getByText('No quicktaskers assigned')).toBeVisible();
-    await expect(page.getByText('Assign a quicktasker')).toBeVisible();
-    const qtAssignSection = page.locator('div').filter({ hasText: 'Assign a quicktasker' }).first();
-    await qtAssignSection.getByText(qtUserName, { exact: true }).click();
-    await page.waitForTimeout(500);
-    await expect(page.getByText('No quicktaskers assigned')).not.toBeVisible();
-    const assignedSection = page.locator('div').filter({ hasText: 'Assigned quicktaskers' }).first();
-    await expect(assignedSection.getByText(qtUserName, { exact: true })).toBeVisible();
-    await assignedSection.getByText(qtUserName, { exact: true }).click();
-    await page.waitForTimeout(500);
-    await expect(page.getByText('No quicktaskers assigned')).toBeVisible();
+    const list = page.getByTestId('user-assignment-list');
+    await list.getByText(qtUserName, { exact: true }).click();
+    const assignedRow = list.locator('[data-testid="user-assignment-row-assigned"]').filter({ hasText: qtUserName });
+    await expect(assignedRow).toBeVisible();
+    await assignedRow.click();
+    await expect(
+      list.locator('[data-testid="user-assignment-row-assigned"]').filter({ hasText: qtUserName })
+    ).not.toBeVisible();
   });
 });

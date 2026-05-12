@@ -115,15 +115,13 @@ export async function createQuickTasker(page: Page, name: string, description = 
 export async function openUserAssignmentDropdown(page: Page, taskName: string): Promise<void> {
   const taskCard = getTaskCard(page, taskName);
   await taskCard.getByTestId('user-assignment-icon').click();
-  await expect(page.getByText('Assigned quicktaskers')).toBeVisible();
-  await expect(page.getByText('Assigned WordPress users')).toBeVisible();
+  await expect(page.getByTestId('user-assignment-list')).toBeVisible();
 }
 
 export async function closeUserAssignmentDropdown(page: Page, taskName: string): Promise<void> {
   const taskCard = getTaskCard(page, taskName);
   await taskCard.getByTestId('user-assignment-icon').click();
-  await expect(page.getByText('Assigned quicktaskers')).not.toBeVisible();
-  await expect(page.getByText('Assigned WordPress users')).not.toBeVisible();
+  await expect(page.getByTestId('user-assignment-list')).not.toBeVisible();
 }
 
 /**
@@ -136,11 +134,12 @@ export async function closeUserAssignmentDropdown(page: Page, taskName: string):
 export async function assignWordPressUserToTask(page: Page, taskName: string, username: string, closeDropdown: boolean = true): Promise<void> {
   await openUserAssignmentDropdown(page, taskName);
 
-  const wpAssignSection = page.locator('div').filter({ hasText: 'Assign a WordPress user' }).first();
-  await wpAssignSection.getByText(username, { exact: true }).click();
+  const list = page.getByTestId('user-assignment-list');
+  await list.getByText(username, { exact: true }).click();
 
-  const assignedSection = page.locator('div').filter({ hasText: 'Assigned WordPress users' }).first();
-  await expect(assignedSection.getByText(username, { exact: true })).toBeVisible();
+  await expect(
+    list.locator('[data-testid="user-assignment-row-assigned"]').filter({ hasText: username })
+  ).toBeVisible();
 
   if (closeDropdown) {
     await closeUserAssignmentDropdown(page, taskName);
@@ -211,10 +210,11 @@ export async function disableQuickTaskerUser(page: Page, userName: string): Prom
  */
 export async function assignQuickTaskerToTask(page: Page, taskName: string, quicktaskerName: string, closeDropdown = true): Promise<void> {
   await openUserAssignmentDropdown(page, taskName);
-  const assignSection = page.locator('div').filter({ hasText: 'Assign a quicktasker' }).first();
-  await assignSection.getByText(quicktaskerName, { exact: true }).click();
-  const assignedSection = page.locator('div').filter({ hasText: 'Assigned quicktaskers' }).first();
-  await expect(assignedSection.getByText(quicktaskerName, { exact: true })).toBeVisible();
+  const list = page.getByTestId('user-assignment-list');
+  await list.getByText(quicktaskerName, { exact: true }).click();
+  await expect(
+    list.locator('[data-testid="user-assignment-row-assigned"]').filter({ hasText: quicktaskerName })
+  ).toBeVisible();
   if (closeDropdown) {
     await closeUserAssignmentDropdown(page, taskName);
   }
