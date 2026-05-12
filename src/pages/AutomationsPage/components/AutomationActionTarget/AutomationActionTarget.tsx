@@ -1,4 +1,6 @@
 import { __ } from "@wordpress/i18n";
+import { QuickTaskerIcon } from "../../../../components/Icon/QuickTaskerIcon/QuickTaskerIcon";
+import { WordPressIcon } from "../../../../components/Icon/WordPressIcon/WordPressIcon";
 import { useUser } from "../../../../hooks/useUser";
 import { ActionTargetType } from "../../../../types/automation";
 import { mapActionTargetTypeToUserType } from "../../../../utils/user";
@@ -24,8 +26,13 @@ function AutomationActionTarget({ actionTargetId, actionTargetType }: Props) {
       const user = getUser(actionTargetId, userType);
 
       return (
-        <div className="wpqt-text-center">
-          {user?.name || __("User not found", "quicktasker")}
+        <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-1">
+          {actionTargetType === ActionTargetType.WP_USER ? (
+            <WordPressIcon size={16} />
+          ) : (
+            <QuickTaskerIcon />
+          )}
+          <span>{user?.name || __("User not found", "quicktasker")}</span>
         </div>
       );
     }
