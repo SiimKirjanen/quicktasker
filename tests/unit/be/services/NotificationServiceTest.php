@@ -38,8 +38,9 @@ class NotificationServiceTest extends TestCase
             ->getMock();
 
         $this->preferencesRepo = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['get', 'upsert'])
+            ->addMethods(['get', 'upsert', 'isTypeEnabled'])
             ->getMock();
+        $this->preferencesRepo->method('isTypeEnabled')->willReturn(true);
 
         $this->userRepo = $this->getMockBuilder(stdClass::class)
             ->addMethods(['getAssignedUsersByTaskId', 'getAssignedWPUsersByTaskIds'])
@@ -76,7 +77,7 @@ class NotificationServiceTest extends TestCase
             ->with(7, 11, 'wp-user', 'hello', $now)
             ->willReturn($expected);
 
-        $result = $this->service->createNotification(7, 11, 'wp-user', 'hello');
+        $result = $this->service->createNotification(7, 11, 'wp-user', 'hello', NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED);
 
         $this->assertSame($expected, $result);
     }
@@ -228,6 +229,7 @@ class NotificationServiceTest extends TestCase
             50,
             'Task "%s" was archived',
             'Foo',
+            NotificationService::TYPE_TASK_ARCHIVE_CHANGED,
             null
         );
 
@@ -256,7 +258,7 @@ class NotificationServiceTest extends TestCase
                 return (object) ['id' => $userId];
             });
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', 21);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, 21);
 
         $this->assertSame([20], $notifiedIds);
     }
@@ -274,7 +276,7 @@ class NotificationServiceTest extends TestCase
             ->method('insertNotification')
             ->willReturn((object) ['id' => 21]);
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', 21);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, 21);
     }
 
     public function testNotifyTaskAssigneesSkipsActorQuicktaskerUser(): void
@@ -294,7 +296,7 @@ class NotificationServiceTest extends TestCase
                 return (object) ['id' => $userId];
             });
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', null, 11);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, null, 11);
 
         $this->assertSame([10], $notifiedIds);
     }
@@ -319,7 +321,7 @@ class NotificationServiceTest extends TestCase
                 return (object) ['id' => 11];
             });
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', null);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, null);
 
         $this->assertSame(2, $callCount, 'Second user should still be notified after first failure');
     }
@@ -331,7 +333,7 @@ class NotificationServiceTest extends TestCase
 
         $this->notificationRepo->expects($this->never())->method('insertNotification');
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', null);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, null);
     }
 
     public function testGetPreferencesReturnsDefaultsWhenNoRow(): void
@@ -377,7 +379,7 @@ class NotificationServiceTest extends TestCase
     {
         $this->preferencesRepo->expects($this->once())
             ->method('upsert')
-            ->with(2, 'wp-user', 'unread', 72, [3, 5]);
+            ->with(2, 'wp-user', 'unread', 72, [3, 5], []);
 
         $this->service->savePreferences(2, 'wp-user', 'unread', 72, ['3', '5']);
     }
@@ -386,7 +388,7 @@ class NotificationServiceTest extends TestCase
     {
         $this->preferencesRepo->expects($this->once())
             ->method('upsert')
-            ->with(2, 'wp-user', 'all', NotificationService::DEFAULT_MAX_AGE_HOURS, null);
+            ->with(2, 'wp-user', 'all', NotificationService::DEFAULT_MAX_AGE_HOURS, null, []);
 
         $this->service->savePreferences(2, 'wp-user', 'all', 24, null);
     }
@@ -395,7 +397,7 @@ class NotificationServiceTest extends TestCase
     {
         $this->preferencesRepo->expects($this->once())
             ->method('upsert')
-            ->with(2, 'wp-user', 'all', NotificationService::MAX_MAX_AGE_HOURS, null);
+            ->with(2, 'wp-user', 'all', NotificationService::MAX_MAX_AGE_HOURS, null, []);
 
         $this->service->savePreferences(2, 'wp-user', 'bogus', 999999, null);
     }

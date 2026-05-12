@@ -9,6 +9,7 @@ use WPQT\Comment\CommentService;
 use WPQT\CustomField\CustomFieldRepository;
 use WPQT\CustomField\CustomFieldService;
 use WPQT\Log\LogService;
+use WPQT\Notification\NotificationService;
 use WPQT\Password\PasswordService;
 use WPQT\Permission\PermissionService;
 use WPQT\RequestValidation;
@@ -435,6 +436,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                             /* translators: %s = task name */
                             __('A public comment was added to task "%s"', 'quicktasker'),
                             $task->name,
+                            NotificationService::TYPE_COMMENT_ADDED,
                             $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
                             $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
                         );
@@ -645,6 +647,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                             /* translators: %s = task name */
                             __('A user was assigned to task "%s"', 'quicktasker'),
                             $task->name,
+                            NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED,
                             $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
                             $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
                         );
@@ -757,6 +760,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                             /* translators: %s = task name */
                             __('A user was unassigned from task "%s"', 'quicktasker'),
                             $task->name,
+                            NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED,
                             $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
                             $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
                         );
@@ -861,6 +865,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                             /* translators: %s = task name */
                             __('Stage was changed for task "%s"', 'quicktasker'),
                             $moveInfo->task->name,
+                            NotificationService::TYPE_STAGE_CHANGED,
                             $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
                             $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
                         );
@@ -975,6 +980,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                             $task->id,
                             $messageTemplate,
                             $task->name,
+                            NotificationService::TYPE_TASK_COMPLETION_CHANGED,
                             $requestData['isQuicktaskerUser'] ? null : (int) $requestData['session']->user_id,
                             $requestData['isQuicktaskerUser'] ? (int) $requestData['session']->user_id : null
                         );
