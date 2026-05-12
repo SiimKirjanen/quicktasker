@@ -40,5 +40,44 @@ enum NotificationFilter {
   READ = "read",
 }
 
-export { mapNotificationFromServer, NotificationFilter };
-export type { Notification, NotificationFromServer };
+enum NotificationType {
+  TASK_COMPLETION_CHANGED = "task_completion_changed",
+  TASK_ASSIGNMENT_CHANGED = "task_assignment_changed",
+  TASK_ARCHIVE_CHANGED = "task_archive_changed",
+  TASK_DELETED = "task_deleted",
+  STAGE_CHANGED = "stage_changed",
+  DUE_DATE_CHANGED = "due_date_changed",
+  COMMENT_ADDED = "comment_added",
+}
+
+const NOTIFICATION_TYPE_VALUES: NotificationType[] = [
+  NotificationType.TASK_COMPLETION_CHANGED,
+  NotificationType.TASK_ASSIGNMENT_CHANGED,
+  NotificationType.TASK_ARCHIVE_CHANGED,
+  NotificationType.TASK_DELETED,
+  NotificationType.STAGE_CHANGED,
+  NotificationType.DUE_DATE_CHANGED,
+  NotificationType.COMMENT_ADDED,
+];
+
+type NotificationTypePreferences = Record<NotificationType, boolean>;
+
+function defaultNotificationTypePreferences(): NotificationTypePreferences {
+  return NOTIFICATION_TYPE_VALUES.reduce((acc, type) => {
+    acc[type] = true;
+    return acc;
+  }, {} as NotificationTypePreferences);
+}
+
+export {
+  defaultNotificationTypePreferences,
+  mapNotificationFromServer,
+  NOTIFICATION_TYPE_VALUES,
+  NotificationFilter,
+  NotificationType,
+};
+export type {
+  Notification,
+  NotificationFromServer,
+  NotificationTypePreferences,
+};

@@ -16,7 +16,11 @@ import {
 } from "../../../providers/ModalContextProvider";
 import { NotificationsContext } from "../../../providers/NotificationsContextProvider";
 import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
-import { NotificationFilter } from "../../../types/notification";
+import {
+  defaultNotificationTypePreferences,
+  NotificationFilter,
+  NotificationTypePreferences,
+} from "../../../types/notification";
 import { UserTypes } from "../../../types/user";
 import { NotificationsModal } from "./NotificationsModal";
 
@@ -109,6 +113,7 @@ describe("NotificationsModal", () => {
       filter: NotificationFilter;
       maxAgeHours: number;
       selectedPipelineIds: string[] | null;
+      notificationTypes: NotificationTypePreferences;
     }> = {},
   ) {
     const defaultState = {
@@ -117,6 +122,7 @@ describe("NotificationsModal", () => {
       filter: NotificationFilter.ALL,
       maxAgeHours: 24,
       selectedPipelineIds: null as string[] | null,
+      notificationTypes: defaultNotificationTypePreferences(),
       ...notificationsState,
     };
 
@@ -195,6 +201,7 @@ describe("NotificationsModal", () => {
                   filter: NotificationFilter.ALL,
                   maxAgeHours: 24,
                   selectedPipelineIds: null,
+                  notificationTypes: defaultNotificationTypePreferences(),
                 },
                 notificationsDispatch,
                 fetchNotifications,
@@ -247,6 +254,7 @@ describe("NotificationsModal", () => {
       filter: NotificationFilter.UNREAD,
       maxAgeHours: 24,
       selectedPipelineIds: ["1"],
+      notificationTypes: defaultNotificationTypePreferences(),
     });
   });
 
@@ -265,6 +273,7 @@ describe("NotificationsModal", () => {
       filter: NotificationFilter.ALL,
       maxAgeHours: 72,
       selectedPipelineIds: null,
+      notificationTypes: defaultNotificationTypePreferences(),
     });
   });
 
@@ -281,6 +290,7 @@ describe("NotificationsModal", () => {
       filter: NotificationFilter.ALL,
       maxAgeHours: 24,
       selectedPipelineIds: null,
+      notificationTypes: defaultNotificationTypePreferences(),
     });
   });
 

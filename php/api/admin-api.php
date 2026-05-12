@@ -11,6 +11,7 @@ use WPQT\Customfield\CustomFieldRepository;
 use WPQT\Customfield\CustomFieldService;
 use WPQT\Log\LogRepository;
 use WPQT\Log\LogService;
+use WPQT\Notification\NotificationService;
 use WPQT\Permission\PermissionService;
 use WPQT\Pipeline\PipelineRepository;
 use WPQT\Pipeline\PipelineService;
@@ -638,6 +639,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                     /* translators: %s = task name */
                                     __('Stage was changed for task "%s"', 'quicktasker'),
                                     $moveInfo->task->name,
+                                    NotificationService::TYPE_STAGE_CHANGED,
                                     get_current_user_id()
                                 );
                             } catch (Throwable $notificationError) {
@@ -873,6 +875,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                     /* translators: %s = task name */
                                     __('Due date for task "%s" changed', 'quicktasker'),
                                     $task->name,
+                                    NotificationService::TYPE_DUE_DATE_CHANGED,
                                     get_current_user_id()
                                 );
                             } catch (Throwable $notificationError) {
@@ -985,13 +988,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                             $message = sprintf(__('Task "%s" was deleted', 'quicktasker'), $deletedTask->name);
                             $notificationService = ServiceLocator::get('NotificationService');
                             foreach ((array) $assignedQtUsers as $u) {
-                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message);
+                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message, NotificationService::TYPE_TASK_DELETED);
                             }
                             foreach ((array) $assignedWpUsers as $u) {
                                 if ((int) $u->id === (int) $actorId) {
                                     continue;
                                 }
-                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message);
+                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message, NotificationService::TYPE_TASK_DELETED);
                             }
                         } catch (Throwable $notificationError) {
                             error_log('Failed to create task deletion notification: ' . $notificationError->getMessage());
@@ -1074,6 +1077,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 /* translators: %s = task name */
                                 __('Task "%s" was archived', 'quicktasker'),
                                 $task->name,
+                                NotificationService::TYPE_TASK_ARCHIVE_CHANGED,
                                 get_current_user_id()
                             );
                         } catch (Throwable $notificationError) {
@@ -1166,6 +1170,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 /* translators: %s = task name */
                                 __('Task "%s" was restored from the archive', 'quicktasker'),
                                 $task->name,
+                                NotificationService::TYPE_TASK_ARCHIVE_CHANGED,
                                 get_current_user_id()
                             );
                         } catch (Throwable $notificationError) {
@@ -1277,6 +1282,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 $task->id,
                                 $messageTemplate,
                                 $task->name,
+                                NotificationService::TYPE_TASK_COMPLETION_CHANGED,
                                 $currentUserId
                             );
                         } catch (Throwable $notificationError) {
@@ -1893,7 +1899,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                                         __('%1$s assigned you to task "%2$s"', 'quicktasker'),
                                         $currentUser->display_name,
                                         $task->name
-                                    )
+                                    ),
+                                    NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED
                                 );
                             } catch (Throwable $notificationError) {
                                 error_log('Failed to create assignment notification: ' . $notificationError->getMessage());
@@ -2016,7 +2023,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                                         __('%1$s unassigned you from task "%2$s"', 'quicktasker'),
                                         $currentUser->display_name,
                                         $task->name
-                                    )
+                                    ),
+                                    NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED
                                 );
                             } catch (Throwable $notificationError) {
                                 error_log('Failed to create unassignment notification: ' . $notificationError->getMessage());
@@ -2643,6 +2651,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                         /* translators: %s = task name */
                                         : __('A public comment was added to task "%s"', 'quicktasker'),
                                     $task->name,
+                                    NotificationService::TYPE_COMMENT_ADDED,
                                     $adminId
                                 );
                             } catch (Throwable $notificationError) {
@@ -4403,16 +4412,26 @@ if (!function_exists('wpqt_register_api_routes')) {
                             $selectedPipelineIds = array_values(array_filter(array_map('absint', $rawIds)));
                         }
 
+                        $rawTypes = $data->get_param('notification_types');
+                        $notificationTypes = [];
+                        if (is_array($rawTypes)) {
+                            foreach ($rawTypes as $typeKey => $typeValue) {
+                                $notificationTypes[(string) $typeKey] = (bool) $typeValue;
+                            }
+                        }
+
                         $currentUserId = get_current_user_id();
-                        ServiceLocator::get('NotificationService')->savePreferences(
+                        $notificationService = ServiceLocator::get('NotificationService');
+                        $notificationService->savePreferences(
                             (int) $currentUserId,
                             WP_QT_WORDPRESS_USER_TYPE,
                             $filter,
                             $maxAgeHours,
-                            $selectedPipelineIds
+                            $selectedPipelineIds,
+                            $notificationTypes
                         );
 
-                        $prefs = ServiceLocator::get('NotificationService')->getPreferences(
+                        $prefs = $notificationService->getPreferences(
                             (int) $currentUserId,
                             WP_QT_WORDPRESS_USER_TYPE
                         );
@@ -4437,6 +4456,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
                     'pipeline_ids' => [
+                        'required' => false,
+                    ],
+                    'notification_types' => [
                         'required' => false,
                     ],
                 ],

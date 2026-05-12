@@ -64,7 +64,7 @@ function WPQTMultiSelect({
         </ListboxButton>
         <ListboxOptions
           anchor="bottom start"
-          className="wpqt-z-50 wpqt-mt-1 wpqt-max-h-60 wpqt-w-max wpqt-min-w-[--button-width] wpqt-max-w-xs wpqt-overflow-auto wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-1 wpqt-shadow-lg focus:wpqt-outline-none"
+          className="wpqt-z-50 wpqt-box-border wpqt-mt-1 wpqt-max-h-60 wpqt-w-max wpqt-min-w-[--button-width] wpqt-max-w-xs wpqt-overflow-auto wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-p-1 wpqt-shadow-lg focus:wpqt-outline-none"
         >
           {options.map((option) => (
             <ListboxOption

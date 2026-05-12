@@ -38,8 +38,9 @@ class NotificationServiceTest extends TestCase
             ->getMock();
 
         $this->preferencesRepo = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['get', 'upsert'])
+            ->addMethods(['get', 'insert', 'update', 'getNotifyFlag'])
             ->getMock();
+        $this->preferencesRepo->method('getNotifyFlag')->willReturn(true);
 
         $this->userRepo = $this->getMockBuilder(stdClass::class)
             ->addMethods(['getAssignedUsersByTaskId', 'getAssignedWPUsersByTaskIds'])
@@ -76,7 +77,7 @@ class NotificationServiceTest extends TestCase
             ->with(7, 11, 'wp-user', 'hello', $now)
             ->willReturn($expected);
 
-        $result = $this->service->createNotification(7, 11, 'wp-user', 'hello');
+        $result = $this->service->createNotification(7, 11, 'wp-user', 'hello', NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED);
 
         $this->assertSame($expected, $result);
     }
@@ -228,6 +229,7 @@ class NotificationServiceTest extends TestCase
             50,
             'Task "%s" was archived',
             'Foo',
+            NotificationService::TYPE_TASK_ARCHIVE_CHANGED,
             null
         );
 
@@ -256,7 +258,7 @@ class NotificationServiceTest extends TestCase
                 return (object) ['id' => $userId];
             });
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', 21);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, 21);
 
         $this->assertSame([20], $notifiedIds);
     }
@@ -274,7 +276,7 @@ class NotificationServiceTest extends TestCase
             ->method('insertNotification')
             ->willReturn((object) ['id' => 21]);
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', 21);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, 21);
     }
 
     public function testNotifyTaskAssigneesSkipsActorQuicktaskerUser(): void
@@ -294,7 +296,7 @@ class NotificationServiceTest extends TestCase
                 return (object) ['id' => $userId];
             });
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', null, 11);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, null, 11);
 
         $this->assertSame([10], $notifiedIds);
     }
@@ -319,7 +321,7 @@ class NotificationServiceTest extends TestCase
                 return (object) ['id' => 11];
             });
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', null);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, null);
 
         $this->assertSame(2, $callCount, 'Second user should still be notified after first failure');
     }
@@ -331,7 +333,7 @@ class NotificationServiceTest extends TestCase
 
         $this->notificationRepo->expects($this->never())->method('insertNotification');
 
-        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', null);
+        $this->service->notifyTaskAssignees(7, 50, 'Task "%s" deleted', 'Bar', NotificationService::TYPE_TASK_DELETED, null);
     }
 
     public function testGetPreferencesReturnsDefaultsWhenNoRow(): void
@@ -373,30 +375,114 @@ class NotificationServiceTest extends TestCase
         $this->assertSame('all', $result['filter']);
     }
 
-    public function testSavePreferencesNormalisesAndDelegates(): void
+    public function testSavePreferencesInsertsWhenNoRowExists(): void
     {
+        $this->preferencesRepo->method('get')->willReturn(null);
         $this->preferencesRepo->expects($this->once())
-            ->method('upsert')
-            ->with(2, 'wp-user', 'unread', 72, [3, 5]);
+            ->method('insert')
+            ->with(2, 'wp-user', 'unread', 72, [3, 5], []);
+        $this->preferencesRepo->expects($this->never())->method('update');
 
-        $this->service->savePreferences(2, 'wp-user', 'unread', 72, ['3', '5']);
+        $this->service->savePreferences(2, 'wp-user', 'unread', 72, [3, 5]);
     }
 
-    public function testSavePreferencesPassesNullSelectedPipelineIds(): void
+    public function testSavePreferencesUpdatesWhenRowExists(): void
     {
+        $this->preferencesRepo->method('get')->willReturn([
+            'filter'                => 'all',
+            'max_age_hours'         => 24,
+            'selected_pipeline_ids' => null,
+        ]);
         $this->preferencesRepo->expects($this->once())
-            ->method('upsert')
-            ->with(2, 'wp-user', 'all', NotificationService::DEFAULT_MAX_AGE_HOURS, null);
+            ->method('update')
+            ->with(2, 'wp-user', 'unread', 72, [3, 5], []);
+        $this->preferencesRepo->expects($this->never())->method('insert');
 
-        $this->service->savePreferences(2, 'wp-user', 'all', 24, null);
+        $this->service->savePreferences(2, 'wp-user', 'unread', 72, [3, 5]);
     }
 
-    public function testSavePreferencesCoercesInvalidFilterAndClampsMaxAge(): void
+    public function testCreatePreferencesNormalisesAndDelegatesToInsert(): void
     {
         $this->preferencesRepo->expects($this->once())
-            ->method('upsert')
-            ->with(2, 'wp-user', 'all', NotificationService::MAX_MAX_AGE_HOURS, null);
+            ->method('insert')
+            ->with(2, 'wp-user', 'unread', 72, [3, 5], []);
 
-        $this->service->savePreferences(2, 'wp-user', 'bogus', 999999, null);
+        $this->service->createPreferences(2, 'wp-user', 'unread', 72, ['3', '5']);
+    }
+
+    public function testUpdatePreferencesNormalisesAndDelegatesToUpdate(): void
+    {
+        $this->preferencesRepo->expects($this->once())
+            ->method('update')
+            ->with(2, 'wp-user', 'unread', 72, [3, 5], []);
+
+        $this->service->updatePreferences(2, 'wp-user', 'unread', 72, ['3', '5']);
+    }
+
+    public function testCreatePreferencesPassesNullSelectedPipelineIds(): void
+    {
+        $this->preferencesRepo->expects($this->once())
+            ->method('insert')
+            ->with(2, 'wp-user', 'all', NotificationService::DEFAULT_MAX_AGE_HOURS, null, []);
+
+        $this->service->createPreferences(2, 'wp-user', 'all', 24, null);
+    }
+
+    public function testUpdatePreferencesCoercesInvalidFilterAndClampsMaxAge(): void
+    {
+        $this->preferencesRepo->expects($this->once())
+            ->method('update')
+            ->with(2, 'wp-user', 'all', NotificationService::MAX_MAX_AGE_HOURS, null, []);
+
+        $this->service->updatePreferences(2, 'wp-user', 'bogus', 999999, null);
+    }
+
+    public function testPreferencesExistReturnsTrueWhenRowExists(): void
+    {
+        $this->preferencesRepo->method('get')->willReturn([
+            'filter'                => 'all',
+            'max_age_hours'         => 24,
+            'selected_pipeline_ids' => null,
+        ]);
+
+        $this->assertTrue($this->service->preferencesExist(2, 'wp-user'));
+    }
+
+    public function testPreferencesExistReturnsFalseWhenNoRow(): void
+    {
+        $this->preferencesRepo->method('get')->willReturn(null);
+
+        $this->assertFalse($this->service->preferencesExist(2, 'wp-user'));
+    }
+
+    public function testIsTypeEnabledReturnsTrueWhenFlagNull(): void
+    {
+        $repo = $this->getMockBuilder(stdClass::class)->addMethods(['get', 'insert', 'update', 'getNotifyFlag'])->getMock();
+        $repo->method('getNotifyFlag')->willReturn(null);
+        ServiceLocator::register('NotificationPreferencesRepository', $repo);
+
+        $this->assertTrue($this->service->isTypeEnabled(2, 'wp-user', NotificationService::TYPE_TASK_DELETED));
+    }
+
+    public function testIsTypeEnabledReturnsFlagValue(): void
+    {
+        $repo = $this->getMockBuilder(stdClass::class)->addMethods(['get', 'insert', 'update', 'getNotifyFlag'])->getMock();
+        $repo->method('getNotifyFlag')->willReturn(false);
+        ServiceLocator::register('NotificationPreferencesRepository', $repo);
+
+        $this->assertFalse($this->service->isTypeEnabled(2, 'wp-user', NotificationService::TYPE_TASK_DELETED));
+    }
+
+    public function testCreateNotificationSkipsInsertWhenTypeDisabled(): void
+    {
+        $repo = $this->getMockBuilder(stdClass::class)->addMethods(['get', 'insert', 'update', 'getNotifyFlag'])->getMock();
+        $repo->method('getNotifyFlag')->willReturn(false);
+        ServiceLocator::register('NotificationPreferencesRepository', $repo);
+
+        $this->notificationRepo->expects($this->never())->method('insertNotification');
+
+        $result = $this->service->createNotification(1, 2, 'wp-user', 'hi', NotificationService::TYPE_TASK_DELETED);
+
+        $this->assertNull($result);
     }
 }

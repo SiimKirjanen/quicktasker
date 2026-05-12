@@ -94,19 +94,40 @@ class NotificationPreferencesRepositoryTest extends TestCase
         $this->assertNull($result['selected_pipeline_ids']);
     }
 
-    public function test_upsert_runs_prepared_query()
+    public function test_insert_runs_prepared_query()
     {
         $this->wpdbMock->expects($this->once())->method('prepare')->willReturn('PREPARED');
         $this->wpdbMock->expects($this->once())->method('query')->with('PREPARED');
 
-        $this->repository->upsert(1, 'wp-user', 'unread', 72, [3, 5]);
+        $this->repository->insert(1, 'wp-user', 'unread', 72, [3, 5]);
     }
 
-    public function test_upsert_handles_null_selected_pipeline_ids()
+    public function test_insert_handles_null_selected_pipeline_ids()
     {
         $this->wpdbMock->expects($this->once())->method('prepare')->willReturn('PREPARED');
         $this->wpdbMock->expects($this->once())->method('query')->with('PREPARED');
 
-        $this->repository->upsert(1, 'wp-user', 'all', 24, null);
+        $this->repository->insert(1, 'wp-user', 'all', 24, null);
+    }
+
+    public function test_update_runs_prepared_query()
+    {
+        $this->wpdbMock->expects($this->once())->method('prepare')->willReturn('PREPARED');
+        $this->wpdbMock->expects($this->once())->method('query')->with('PREPARED');
+
+        $this->repository->update(1, 'wp-user', 'unread', 72, [3, 5]);
+    }
+
+    public function test_update_handles_null_selected_pipeline_ids()
+    {
+        $this->wpdbMock->expects($this->once())->method('prepare')->willReturn('PREPARED');
+        $this->wpdbMock->expects($this->once())->method('query')->with('PREPARED');
+
+        $this->repository->update(1, 'wp-user', 'all', 24, null);
+    }
+
+    public function test_get_notify_flag_returns_null_for_unknown_type()
+    {
+        $this->assertNull($this->repository->getNotifyFlag(1, 'wp-user', 'not_a_real_type'));
     }
 }

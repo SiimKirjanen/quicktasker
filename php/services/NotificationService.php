@@ -14,13 +14,36 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
         public const DEFAULT_MAX_AGE_HOURS = 24;
         public const MAX_MAX_AGE_HOURS = 24 * 30;
 
+        public const TYPE_TASK_COMPLETION_CHANGED = 'task_completion_changed';
+        public const TYPE_TASK_ASSIGNMENT_CHANGED = 'task_assignment_changed';
+        public const TYPE_TASK_ARCHIVE_CHANGED = 'task_archive_changed';
+        public const TYPE_TASK_DELETED = 'task_deleted';
+        public const TYPE_STAGE_CHANGED = 'stage_changed';
+        public const TYPE_DUE_DATE_CHANGED = 'due_date_changed';
+        public const TYPE_COMMENT_ADDED = 'comment_added';
+
+        public const NOTIFICATION_TYPES = [
+            self::TYPE_TASK_COMPLETION_CHANGED,
+            self::TYPE_TASK_ASSIGNMENT_CHANGED,
+            self::TYPE_TASK_ARCHIVE_CHANGED,
+            self::TYPE_TASK_DELETED,
+            self::TYPE_STAGE_CHANGED,
+            self::TYPE_DUE_DATE_CHANGED,
+            self::TYPE_COMMENT_ADDED,
+        ];
+
         /**
-         * Creates a new notification for the given recipient on a pipeline.
+         * Creates a new notification for the given recipient on a pipeline,
+         * unless the recipient has disabled this notification type.
          *
-         * @return object|null The inserted notification row.
+         * @return object|null The inserted notification row, or null if suppressed.
          */
-        public function createNotification($pipelineId, $userId, $userType, $text)
+        public function createNotification($pipelineId, $userId, $userType, $text, $type)
         {
+            if (!$this->isTypeEnabled((int) $userId, $userType, $type)) {
+                return null;
+            }
+
             $now = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
 
             return ServiceLocator::get('NotificationRepository')->insertNotification(
@@ -41,6 +64,7 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
             $taskId,
             $messageTemplate,
             $taskName,
+            $type,
             $skipWordPressUserId = null,
             $skipQuicktaskerUserId = null
         ) {
@@ -56,7 +80,7 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                 }
 
                 try {
-                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message);
+                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message, $type);
                 } catch (\Throwable $e) {
                     error_log('Failed to create task notification: ' . $e->getMessage());
                 }
@@ -67,7 +91,7 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                 }
 
                 try {
-                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message);
+                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message, $type);
                 } catch (\Throwable $e) {
                     error_log('Failed to create task notification: ' . $e->getMessage());
                 }
@@ -178,7 +202,7 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
         /**
          * Returns the viewer's notification modal preferences, or sensible defaults if none persisted.
          *
-         * @return array{filter: string, max_age_hours: int, selected_pipeline_ids: int[]|null}
+         * @return array{filter: string, max_age_hours: int, selected_pipeline_ids: int[]|null, notification_types: array<string,bool>}
          */
         public function getPreferences($userId, $userType)
         {
@@ -189,6 +213,7 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                     'filter'                => 'all',
                     'max_age_hours'         => self::DEFAULT_MAX_AGE_HOURS,
                     'selected_pipeline_ids' => null,
+                    'notification_types'    => $this->defaultNotificationTypes(),
                 ];
             }
 
@@ -196,14 +221,99 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
             if (!in_array($row['filter'], self::VALID_FILTERS, true)) {
                 $row['filter'] = 'all';
             }
+            if (!isset($row['notification_types']) || !is_array($row['notification_types'])) {
+                $row['notification_types'] = $this->defaultNotificationTypes();
+            }
 
             return $row;
         }
 
         /**
-         * @param int[]|null $selectedPipelineIds null means "all boards".
+         * Returns true if the given user already has a preferences row.
          */
-        public function savePreferences($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds)
+        public function preferencesExist($userId, $userType)
+        {
+            return null !== ServiceLocator::get('NotificationPreferencesRepository')->get((int) $userId, $userType);
+        }
+
+        /**
+         * Returns true if the given notification type is enabled for the user.
+         * Defaults to true when no preferences row (or column) exists yet.
+         */
+        public function isTypeEnabled($userId, $userType, $type)
+        {
+            $flag = ServiceLocator::get('NotificationPreferencesRepository')->getNotifyFlag(
+                (int) $userId,
+                $userType,
+                $type
+            );
+
+            return null === $flag ? true : $flag;
+        }
+
+        /**
+         * Persists preferences for the viewer, inserting a new row or updating
+         * the existing one as appropriate.
+         *
+         * @param int[]|null $selectedPipelineIds null means "all boards".
+         * @param array<string,bool> $notificationTypes Map of type => enabled. Defaults to all-on when empty.
+         */
+        public function savePreferences($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds, array $notificationTypes = [])
+        {
+            if ($this->preferencesExist($userId, $userType)) {
+                $this->updatePreferences($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds, $notificationTypes);
+            } else {
+                $this->createPreferences($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds, $notificationTypes);
+            }
+        }
+
+        /**
+         * @param int[]|null $selectedPipelineIds null means "all boards".
+         * @param array<string,bool> $notificationTypes Map of type => enabled. Defaults to all-on when empty.
+         */
+        public function createPreferences($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds, array $notificationTypes = [])
+        {
+            [$filter, $maxAgeHours, $normalisedIds, $sanitisedTypes] = $this->normalisePreferencesInput(
+                $filter,
+                $maxAgeHours,
+                $selectedPipelineIds,
+                $notificationTypes
+            );
+
+            ServiceLocator::get('NotificationPreferencesRepository')->insert(
+                (int) $userId,
+                $userType,
+                $filter,
+                $maxAgeHours,
+                $normalisedIds,
+                $sanitisedTypes
+            );
+        }
+
+        /**
+         * @param int[]|null $selectedPipelineIds null means "all boards".
+         * @param array<string,bool> $notificationTypes Map of type => enabled. Defaults to all-on when empty.
+         */
+        public function updatePreferences($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds, array $notificationTypes = [])
+        {
+            [$filter, $maxAgeHours, $normalisedIds, $sanitisedTypes] = $this->normalisePreferencesInput(
+                $filter,
+                $maxAgeHours,
+                $selectedPipelineIds,
+                $notificationTypes
+            );
+
+            ServiceLocator::get('NotificationPreferencesRepository')->update(
+                (int) $userId,
+                $userType,
+                $filter,
+                $maxAgeHours,
+                $normalisedIds,
+                $sanitisedTypes
+            );
+        }
+
+        private function normalisePreferencesInput($filter, $maxAgeHours, $selectedPipelineIds, array $notificationTypes)
         {
             if (!in_array($filter, self::VALID_FILTERS, true)) {
                 $filter = 'all';
@@ -215,13 +325,27 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                 $normalisedIds = array_values(array_map('intval', $selectedPipelineIds));
             }
 
-            ServiceLocator::get('NotificationPreferencesRepository')->upsert(
-                (int) $userId,
-                $userType,
-                $filter,
-                $maxAgeHours,
-                $normalisedIds
-            );
+            $sanitisedTypes = [];
+            foreach (self::NOTIFICATION_TYPES as $type) {
+                if (array_key_exists($type, $notificationTypes)) {
+                    $sanitisedTypes[$type] = (bool) $notificationTypes[$type];
+                }
+            }
+
+            return [$filter, $maxAgeHours, $normalisedIds, $sanitisedTypes];
+        }
+
+        /**
+         * @return array<string,bool>
+         */
+        private function defaultNotificationTypes()
+        {
+            $defaults = [];
+            foreach (self::NOTIFICATION_TYPES as $type) {
+                $defaults[$type] = true;
+            }
+
+            return $defaults;
         }
 
         private function clampMaxAgeHours($maxAgeHours)

@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Browser, BrowserContext, Page, expect } from '@playwright/test';
 import { TIMEOUTS } from './timeouts';
 
 /**
@@ -35,6 +35,49 @@ export async function loginToWordPress(page: Page, username = WP_ADMIN_USER.user
   await page.click('#wp-submit');
 
   await expect(page.locator('#wpadminbar')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+}
+
+/**
+ * Programmatically log in to WordPress by POSTing the login form via the
+ * context's request API, avoiding the flaky `wp-login.php` UI flow under
+ * parallel load. Returns a new BrowserContext that already has the WP auth
+ * cookies set; create pages from it as usual.
+ */
+export async function loginToWordPressViaApi(
+  browser: Browser,
+  username: string,
+  password = 'password123',
+): Promise<BrowserContext> {
+  const context = await browser.newContext();
+  // WP refuses to process the login form unless the test cookie was set by a
+  // prior request. Seed it directly on the context.
+  await context.addCookies([
+    {
+      name: 'wordpress_test_cookie',
+      value: 'WP%20Cookie%20check',
+      url: 'http://localhost:8889',
+    },
+  ]);
+
+  const response = await context.request.post('/wp-login.php', {
+    form: {
+      log: username,
+      pwd: password,
+      'wp-submit': 'Log In',
+      testcookie: '1',
+      redirect_to: '/wp-admin/',
+    },
+    maxRedirects: 0,
+  });
+
+  // WP returns 302 on success. A 200 means the login form was re-rendered
+  // with an error (bad credentials, missing test cookie, etc).
+  if (response.status() !== 302) {
+    await context.close();
+    throw new Error(`WP login failed for "${username}": status ${response.status()}`);
+  }
+
+  return context;
 }
 
 /**

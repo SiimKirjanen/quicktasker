@@ -1,8 +1,8 @@
 import { test, expect, Browser, APIRequestContext } from '@playwright/test';
-import { createBoard, createStage, generateUniqueName } from './utils/board-helpers';
+import { createBoard, createStage, createTask, generateUniqueName } from './utils/board-helpers';
 import { navigateToBoardsPage } from './utils/navigation';
 import { assignWordPressUserToTask, createWPUser, uniqueLogin } from './utils/user-helpers';
-import { loginToWordPress } from './utils/auth';
+import { loginToWordPressViaApi } from './utils/auth';
 
 test.describe('Notifications', () => {
   async function assignerCreatesAndAssignsTask(
@@ -16,18 +16,14 @@ test.describe('Notifications', () => {
     const assignerLogin = uniqueLogin('notifAssigner');
     await createWPUser(request, assignerLogin, `${assignerLogin}@example.com`, 'administrator');
 
-    const assignerContext = await browser.newContext();
+    const assignerContext = await loginToWordPressViaApi(browser, assignerLogin);
     const assignerPage = await assignerContext.newPage();
-    await loginToWordPress(assignerPage, assignerLogin, 'password123');
     await navigateToBoardsPage(assignerPage);
     await assignerPage.getByTestId('pipeline-selection-dropdown').click();
     await assignerPage.getByText(boardName).click();
     await expect(assignerPage.getByText(stageName)).toBeVisible();
 
-    await assignerPage.getByText('Add task').first().click();
-    await assignerPage.getByPlaceholder('Task name').fill(taskName);
-    await assignerPage.getByPlaceholder('Task name').press('Enter');
-    await expect(assignerPage.getByText(taskName)).toBeVisible();
+    await createTask(assignerPage, stageName, taskName);
     await assignWordPressUserToTask(assignerPage, taskName, assigneeLogin);
 
     await assignerContext.close();
@@ -36,9 +32,8 @@ test.describe('Notifications', () => {
   async function createReceiverPage(browser: Browser, request: APIRequestContext, prefix: string) {
     const login = uniqueLogin(prefix);
     await createWPUser(request, login, `${login}@example.com`, 'administrator');
-    const context = await browser.newContext();
+    const context = await loginToWordPressViaApi(browser, login);
     const page = await context.newPage();
-    await loginToWordPress(page, login, 'password123');
     return { login, context, page };
   }
 
@@ -136,6 +131,69 @@ test.describe('Notifications', () => {
 
     await expect(modal.getByText(taskAName, { exact: false })).toBeVisible();
     await expect(modal.getByText(taskBName, { exact: false })).toHaveCount(0);
+
+    await context.close();
+  });
+
+  test('disabling a notification type prevents future notifications of that type', async ({
+    browser,
+    request,
+  }) => {
+    const boardName = generateUniqueName('NotifTypeToggleBoard');
+    const stageName = generateUniqueName('NotifTypeToggleStage');
+    const taskWhileDisabled = generateUniqueName('NotifTypeToggleTaskDisabled');
+    const taskWhileEnabled = generateUniqueName('NotifTypeToggleTaskEnabled');
+
+    const { login, context, page } = await createReceiverPage(browser, request, 'notifTypeToggle');
+
+    await navigateToBoardsPage(page);
+    await createBoard(page, boardName, '');
+    await createStage(page, stageName, '');
+
+    await page.getByTestId('notifications-nav-link').first().click();
+    const modal = page.getByTestId('notifications-modal');
+    await expect(modal).toBeVisible();
+
+    await modal.getByTestId('notifications-types-toggle-icon').click();
+    const assignmentToggle = modal.getByTestId(
+      'notification-type-toggle-task_assignment_changed',
+    );
+    await expect(assignmentToggle).toBeVisible();
+    const assignmentToggleLabel = modal.locator(
+      'label[for="notification-type-task_assignment_changed"]',
+    );
+
+    await assignmentToggleLabel.click();
+    await expect(assignmentToggle).toHaveAttribute('aria-checked', 'false');
+
+    await assignerCreatesAndAssignsTask(
+      browser,
+      request,
+      boardName,
+      stageName,
+      taskWhileDisabled,
+      login,
+    );
+
+    await modal.getByTestId('notifications-refresh-icon').click();
+    await expect(modal.getByTestId('notifications-empty')).toBeVisible();
+    await expect(modal.getByText(taskWhileDisabled, { exact: false })).toHaveCount(0);
+
+    await assignmentToggleLabel.click();
+    await expect(assignmentToggle).toHaveAttribute('aria-checked', 'true');
+
+    await assignerCreatesAndAssignsTask(
+      browser,
+      request,
+      boardName,
+      stageName,
+      taskWhileEnabled,
+      login,
+    );
+
+    await modal.getByTestId('notifications-refresh-icon').click();
+    await expect(modal.getByText(taskWhileEnabled, { exact: false })).toBeVisible();
+    await expect(modal.getByText(taskWhileDisabled, { exact: false })).toHaveCount(0);
 
     await context.close();
   });
