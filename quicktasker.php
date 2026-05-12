@@ -46,6 +46,7 @@ require('php/repositories/WebhookRepository.php');
 require('php/repositories/WebhookEventRepository.php');
 require('php/repositories/ApiTokenRepository.php');
 require('php/repositories/NotificationRepository.php');
+require('php/repositories/NotificationPreferencesRepository.php');
 require('php/services/PipelineService.php');
 require('php/services/PermissionService.php');
 require('php/services/StageService.php');
@@ -135,6 +136,7 @@ ServiceLocator::register('ResponseService', new WPQT\Response\ResponseService())
 ServiceLocator::register('PipelineService', new WPQT\Pipeline\PipelineService());
 ServiceLocator::register('SettingsValidationService', new WPQT\Settings\SettingsValidationService());
 ServiceLocator::register('NotificationRepository', new WPQT\Notification\NotificationRepository());
+ServiceLocator::register('NotificationPreferencesRepository', new WPQT\Notification\NotificationPreferencesRepository());
 ServiceLocator::register('NotificationService', new WPQT\Notification\NotificationService());
 
 require('php/hooks.php');

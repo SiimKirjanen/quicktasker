@@ -36,6 +36,48 @@ if (!class_exists('WPQT\Notification\NotificationRepository')) {
             ));
         }
 
+        /**
+         * Retrieves notifications for a given user across all pipelines (or a subset) since a UTC datetime.
+         *
+         * @param int $userId
+         * @param string $userType
+         * @param string $sinceUtc Datetime string (UTC) — only rows with date >= this are returned.
+         * @param int[] $pipelineIds Optional list of pipeline IDs to restrict to. Empty array means all pipelines.
+         * @return array
+         */
+        public function getNotificationsForUser($userId, $userType, $sinceUtc, array $pipelineIds = [])
+        {
+            global $wpdb;
+
+            $ids = array_values(array_filter(array_map('intval', $pipelineIds)));
+
+            if (!empty($ids)) {
+                $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+                $params = array_merge([$userId, $userType, $sinceUtc], $ids);
+
+                return $wpdb->get_results($wpdb->prepare(
+                    'SELECT id, pipeline_id, user_id, user_type, date, text, mark_as_read FROM ' . TABLE_WP_QUICKTASKER_NOTIFICATIONS . '
+                    WHERE user_id = %d
+                      AND user_type = %s
+                      AND date >= %s
+                      AND pipeline_id IN (' . $placeholders . ')
+                    ORDER BY date DESC',
+                    $params
+                ));
+            }
+
+            return $wpdb->get_results($wpdb->prepare(
+                'SELECT id, pipeline_id, user_id, user_type, date, text, mark_as_read FROM ' . TABLE_WP_QUICKTASKER_NOTIFICATIONS . '
+                WHERE user_id = %d
+                  AND user_type = %s
+                  AND date >= %s
+                ORDER BY date DESC',
+                $userId,
+                $userType,
+                $sinceUtc
+            ));
+        }
+
         public function getNotificationById($id)
         {
             global $wpdb;
@@ -111,6 +153,39 @@ if (!class_exists('WPQT\Notification\NotificationRepository')) {
                 SET mark_as_read = 1
                 WHERE pipeline_id = %d
                   AND user_id = %d
+                  AND user_type = %s
+                  AND mark_as_read = 0
+                  AND id IN (' . $placeholders . ')',
+                $params
+            ));
+        }
+
+        /**
+         * Marks the given notifications as read, but only those that belong to the given viewer.
+         * Returns the number of affected rows.
+         *
+         * @param int[] $notificationIds
+         */
+        public function markNotificationsAsReadForUser($userId, $userType, array $notificationIds)
+        {
+            global $wpdb;
+
+            if (empty($notificationIds)) {
+                return 0;
+            }
+
+            $ids = array_values(array_filter(array_map('intval', $notificationIds)));
+            if (empty($ids)) {
+                return 0;
+            }
+
+            $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+            $params = array_merge([$userId, $userType], $ids);
+
+            return $wpdb->query($wpdb->prepare(
+                'UPDATE ' . TABLE_WP_QUICKTASKER_NOTIFICATIONS . '
+                SET mark_as_read = 1
+                WHERE user_id = %d
                   AND user_type = %s
                   AND mark_as_read = 0
                   AND id IN (' . $placeholders . ')',

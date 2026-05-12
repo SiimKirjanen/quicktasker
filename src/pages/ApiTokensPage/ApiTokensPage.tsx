@@ -134,7 +134,7 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
                         {__("Board", "quicktasker")}
                       </span>
                     </div>
-                    <NotificationsNavLink pipelineId={pipelineId} />
+                    <NotificationsNavLink />
                   </div>
                   <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                     <div
@@ -180,7 +180,7 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
           </WPQTPageHeader>
         )}
         <ApiTokensPageContent pipelineId={pipelineId} />
-        <NotificationsModal pipelineId={pipelineId} />
+        <NotificationsModal />
       </Page>
     </PipelineApiTokensContextProvider>
   );

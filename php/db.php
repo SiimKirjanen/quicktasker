@@ -369,6 +369,21 @@ if (!function_exists('wpqt_set_up_db')) {
 
             dbDelta($sql21);
 
+            $sql22 = 'CREATE TABLE ' . TABLE_WP_QUICKTASKER_USER_NOTIFICATION_PREFERENCES . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				user_id int(11) NOT NULL,
+				user_type ENUM('quicktasker', 'wp-user') NOT NULL,
+				filter varchar(20) NOT NULL DEFAULT 'all',
+				max_age_hours int(11) NOT NULL DEFAULT 24,
+				selected_pipeline_ids longtext DEFAULT NULL,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				updated_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id),
+				UNIQUE KEY user_key (user_id, user_type)
+			) $charset_collate;";
+
+            dbDelta($sql22);
+
             update_option('wp_quicktasker_db_current_version', WP_QUICKTASKER_DB_VERSION);
         }
     }

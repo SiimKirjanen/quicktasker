@@ -3,45 +3,87 @@ import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
   CLOSE_NOTIFICATIONS_MODAL,
-  DEFAULT_NOTIFICATIONS_MAX_AGE_HOURS,
+  NOTIFICATIONS_SET_FILTER,
+  NOTIFICATIONS_SET_MAX_AGE,
+  NOTIFICATIONS_SET_SELECTED_PIPELINES,
 } from "../../../constants";
 import { useNotificationActions } from "../../../hooks/actions/useNotificationActions";
 import { useTimezone } from "../../../hooks/useTimezone";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { NotificationsContext } from "../../../providers/NotificationsContextProvider";
+import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { Notification, NotificationFilter } from "../../../types/notification";
 import { WPQTButton } from "../../common/Button/Button";
+import { WPQTMultiSelect } from "../../common/Select/WPQTMultiSelect";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
 import { WPQTModal, WPQTModalTitle } from "../WPQTModal";
 
-type Props = {
-  pipelineId: string;
-};
-
-function NotificationsModal({ pipelineId }: Props) {
+function NotificationsModal() {
   const {
     state: { notificationsModalOpen },
     modalDispatch,
   } = useContext(ModalContext);
   const {
-    state: { notifications, loading },
+    state: { notifications, loading, filter, maxAgeHours, selectedPipelineIds },
+    notificationsDispatch,
     fetchNotifications,
+    savePreferences,
   } = useContext(NotificationsContext);
+  const {
+    state: { pipelines },
+  } = useContext(PipelinesContext);
   const { markAsRead, markAllAsRead } = useNotificationActions();
   const { convertToWPTimezone } = useTimezone();
-  const [filter, setFilter] = useState<NotificationFilter>(
-    NotificationFilter.ALL,
-  );
-  const [maxAgeHours, setMaxAgeHours] = useState<number>(
-    DEFAULT_NOTIFICATIONS_MAX_AGE_HOURS,
-  );
   const [markingIds, setMarkingIds] = useState<string[]>([]);
   const [markingAll, setMarkingAll] = useState(false);
 
+  const allPipelineIds = pipelines.map((p) => p.id);
+  const pipelineNameById = new Map(pipelines.map((p) => [p.id, p.name]));
+  // null = "all boards" (no filter); [] = explicit none; array = filter.
+  const effectiveSelectedIds =
+    selectedPipelineIds === null ? allPipelineIds : selectedPipelineIds;
+
+  const handleFilterChange = (value: string) => {
+    const nextFilter = value as NotificationFilter;
+    notificationsDispatch({
+      type: NOTIFICATIONS_SET_FILTER,
+      payload: nextFilter,
+    });
+    savePreferences({
+      filter: nextFilter,
+      maxAgeHours,
+      selectedPipelineIds,
+    });
+  };
+
   const handleMaxAgeChange = (value: string) => {
     const hours = Number(value);
-    setMaxAgeHours(hours);
-    fetchNotifications(pipelineId, hours);
+    notificationsDispatch({
+      type: NOTIFICATIONS_SET_MAX_AGE,
+      payload: hours,
+    });
+    fetchNotifications({ maxAgeHours: hours });
+    savePreferences({
+      filter,
+      maxAgeHours: hours,
+      selectedPipelineIds,
+    });
+  };
+
+  const handleBoardsChange = (values: string[]) => {
+    // Picking exactly all boards collapses to the "no filter" null state.
+    const payload: string[] | null =
+      values.length === allPipelineIds.length ? null : values;
+    notificationsDispatch({
+      type: NOTIFICATIONS_SET_SELECTED_PIPELINES,
+      payload,
+    });
+    fetchNotifications({ pipelineIds: payload });
+    savePreferences({
+      filter,
+      maxAgeHours,
+      selectedPipelineIds: payload,
+    });
   };
 
   const handleMarkAsRead = async (id: string) => {
@@ -62,7 +104,7 @@ function NotificationsModal({ pipelineId }: Props) {
 
     setMarkingAll(true);
     try {
-      await markAllAsRead(pipelineId, unreadIds);
+      await markAllAsRead(unreadIds);
     } finally {
       setMarkingAll(false);
     }
@@ -91,6 +133,11 @@ function NotificationsModal({ pipelineId }: Props) {
     { value: "720", label: __("Last 30 days", "quicktasker") },
   ];
 
+  const boardOptions = pipelines.map((p) => ({
+    value: p.id,
+    label: p.name,
+  }));
+
   return (
     <WPQTModal
       modalOpen={notificationsModalOpen}
@@ -110,12 +157,12 @@ function NotificationsModal({ pipelineId }: Props) {
             data-testid="notifications-refresh-icon"
             aria-label={__("Refresh notifications", "quicktasker")}
             onClick={() => {
-              if (!loading) fetchNotifications(pipelineId, maxAgeHours);
+              if (!loading) fetchNotifications();
             }}
           />
         </div>
 
-        <div className="wpqt-flex wpqt-items-center wpqt-gap-4">
+        <div className="wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-4">
           <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
             <label htmlFor="notifications-filter">
               {__("Filter", "quicktasker")}
@@ -125,9 +172,23 @@ function NotificationsModal({ pipelineId }: Props) {
               allSelector={false}
               selectedOptionValue={filter}
               options={filterOptions}
-              onSelectionChange={(value) =>
-                setFilter(value as NotificationFilter)
-              }
+              onSelectionChange={handleFilterChange}
+            />
+          </div>
+
+          <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
+            <label htmlFor="notifications-boards">
+              {__("Boards", "quicktasker")}
+            </label>
+            <WPQTMultiSelect
+              id="notifications-boards"
+              options={boardOptions}
+              selectedValues={effectiveSelectedIds}
+              onSelectionChange={handleBoardsChange}
+              allLabel={__("All boards", "quicktasker")}
+              noneLabel={__("No boards", "quicktasker")}
+              resetLabel={__("Select all boards", "quicktasker")}
+              deselectLabel={__("Deselect all boards", "quicktasker")}
             />
           </div>
 
@@ -144,24 +205,20 @@ function NotificationsModal({ pipelineId }: Props) {
             />
           </div>
 
-          <div className="wpqt-ml-auto">
-            <WPQTButton
-              btnText={__("Mark all as read", "quicktasker")}
-              loading={markingAll}
-              disabled={
-                !filteredNotifications.some((n) => !n.mark_as_read) ||
-                markingAll
-              }
-              onClick={handleMarkAllAsRead}
-            />
-          </div>
+          {filteredNotifications.length > 0 && (
+            <div className="wpqt-ml-auto">
+              <WPQTButton
+                btnText={__("Mark all as read", "quicktasker")}
+                loading={markingAll}
+                disabled={
+                  !filteredNotifications.some((n) => !n.mark_as_read) ||
+                  markingAll
+                }
+                onClick={handleMarkAllAsRead}
+              />
+            </div>
+          )}
         </div>
-
-        {loading && (
-          <div className="wpqt-py-4 wpqt-text-center wpqt-text-sm wpqt-text-gray-500">
-            {__("Loading…", "quicktasker")}
-          </div>
-        )}
 
         {!loading && filteredNotifications.length === 0 && (
           <div
@@ -183,8 +240,18 @@ function NotificationsModal({ pipelineId }: Props) {
             >
               <div className="wpqt-flex wpqt-flex-col wpqt-gap-1">
                 <div className="wpqt-text-sm">{notification.text}</div>
-                <div className="wpqt-text-xs wpqt-text-gray-500">
-                  {convertToWPTimezone(notification.date)}
+                <div className="wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-text-xs wpqt-text-gray-500">
+                  <span>{convertToWPTimezone(notification.date)}</span>
+                  {pipelineNameById.get(notification.pipeline_id) && (
+                    <>
+                      <span>·</span>
+                      <span
+                        data-testid={`notification-board-${notification.id}`}
+                      >
+                        {pipelineNameById.get(notification.pipeline_id)}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
               {!notification.mark_as_read && (

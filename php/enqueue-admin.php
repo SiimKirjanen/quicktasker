@@ -9,6 +9,7 @@ use WPQT\Location\LocationService;
 use WPQT\Nonce\NonceService;
 use WPQT\Permission\PermissionService;
 use WPQT\Pipeline\PipelineRepository;
+use WPQT\Services\ServiceLocator;
 use WPQT\Settings\SettingRepository;
 use WPQT\Time\TimeRepository;
 use WPQT\User\UserRepository;
@@ -31,6 +32,10 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
         $pipelines = $pipelineRepo->getPipelines();
         $users = $userRepo->getUsers();
         $wpUsers = $userRepo->getWPUsersWithCapabilities([WP_QUICKTASKER_ADMIN_ROLE]);
+        $notificationPreferences = ServiceLocator::get('NotificationService')->getPreferences(
+            get_current_user_id(),
+            WP_QT_WORDPRESS_USER_TYPE
+        );
 
         $build_asset = AssetRepository::getWPQTScriptBildAssets();
         $vendors_asset = AssetRepository::getWPQTVendorScriptBildAssets();
@@ -41,19 +46,20 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
         wp_enqueue_script('wpqt-script', WP_QUICKTASKER_PLUGIN_FOLDER_URL . 'build/app.js', $scriptDependencies, $build_asset['version'], true);
 
         wp_localize_script('wpqt-script', 'wpqt', [
-            'apiNonce'                      => NonceService::createNonce(WPQT_ADMIN_API_NONCE),
-            'siteURL'                       => site_url(),
-            'pluginURL'                     => WP_QUICKTASKER_PLUGIN_FOLDER_URL,
-            'initialActivePipelineId'       => $activePipeline ? $activePipeline->id : null,
-            'initialPipelines'              => $pipelines,
-            'initialUsers'                  => $users,
-            'initialWPUsers'                => $wpUsers,
-            'publicUserPageId'              => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
-            'timezone'                      => $timeRepository->getWPTimezone(),
-            'isUserAllowedToDelete'         => PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints() ? '1' : '0',
-            'isUserAllowedToManageSettings' => PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints() ? '1' : '0',
-            'userPageCustomStyles'          => SettingRepository::getUserPageCustomStyles(),
-            'taskUploadsURL'                => WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL,
+            'apiNonce'                       => NonceService::createNonce(WPQT_ADMIN_API_NONCE),
+            'siteURL'                        => site_url(),
+            'pluginURL'                      => WP_QUICKTASKER_PLUGIN_FOLDER_URL,
+            'initialActivePipelineId'        => $activePipeline ? $activePipeline->id : null,
+            'initialPipelines'               => $pipelines,
+            'initialUsers'                   => $users,
+            'initialWPUsers'                 => $wpUsers,
+            'publicUserPageId'               => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
+            'timezone'                       => $timeRepository->getWPTimezone(),
+            'isUserAllowedToDelete'          => PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints() ? '1' : '0',
+            'isUserAllowedToManageSettings'  => PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints() ? '1' : '0',
+            'userPageCustomStyles'           => SettingRepository::getUserPageCustomStyles(),
+            'taskUploadsURL'                 => WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL,
+            'initialNotificationPreferences' => $notificationPreferences,
         ]);
 
         // Set script translations

@@ -5,11 +5,7 @@ import { OPEN_NOTIFICATIONS_MODAL } from "../../constants";
 import { ModalContext } from "../../providers/ModalContextProvider";
 import { NotificationsContext } from "../../providers/NotificationsContextProvider";
 
-type Props = {
-  pipelineId: string;
-};
-
-function NotificationsNavLink({ pipelineId }: Props) {
+function NotificationsNavLink() {
   const { modalDispatch } = useContext(ModalContext);
   const {
     state: { notifications },
@@ -18,10 +14,8 @@ function NotificationsNavLink({ pipelineId }: Props) {
   const unreadCount = notifications.filter((n) => !n.mark_as_read).length;
 
   useEffect(() => {
-    if (pipelineId) {
-      fetchNotifications(pipelineId);
-    }
-  }, [pipelineId]);
+    fetchNotifications();
+  }, [fetchNotifications]);
 
   return (
     <div

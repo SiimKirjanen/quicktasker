@@ -54,7 +54,7 @@ const PipelinePageContent = () => {
       <MoveTaskModal />
       <PipelineExportModal pipelineId={activePipeline?.id || null} />
       <ImportPipelineModal />
-      {activePipeline && <NotificationsModal pipelineId={activePipeline.id} />}
+      {activePipeline && <NotificationsModal />}
     </Page>
   );
 };

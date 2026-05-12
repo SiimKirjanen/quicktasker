@@ -130,7 +130,7 @@ function WebhooksPage({ pipelineId }: Props) {
                         {__("Board", "quicktasker")}
                       </span>
                     </div>
-                    <NotificationsNavLink pipelineId={pipelineId} />
+                    <NotificationsNavLink />
                   </div>
                   <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                     <div
@@ -176,7 +176,7 @@ function WebhooksPage({ pipelineId }: Props) {
           </WPQTPageHeader>
         )}
         <WebhooksPageContent pipelineId={pipelineId} />
-        <NotificationsModal pipelineId={pipelineId} />
+        <NotificationsModal />
       </Page>
     </PipelineWebhooksContextProvider>
   );

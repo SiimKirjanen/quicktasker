@@ -112,7 +112,7 @@ function AutomationsPage({ pipelineId }: Props) {
                         {__("Board", "quicktasker")}
                       </span>
                     </div>
-                    <NotificationsNavLink pipelineId={pipelineId} />
+                    <NotificationsNavLink />
                   </div>
                   <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                     <div
@@ -158,7 +158,7 @@ function AutomationsPage({ pipelineId }: Props) {
           </WPQTPageHeader>
         )}
         <AutomationsPageContent pipelineId={pipelineId} />
-        <NotificationsModal pipelineId={pipelineId} />
+        <NotificationsModal />
       </Page>
     </PipelineAutomationsContextProvider>
   );

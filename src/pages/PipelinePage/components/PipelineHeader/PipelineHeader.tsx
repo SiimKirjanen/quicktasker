@@ -18,7 +18,7 @@ function PipelineHeader() {
 
   const handleRefresh = (pipelineId: string) => {
     fetchAndSetPipelineData(pipelineId);
-    fetchNotifications(pipelineId);
+    fetchNotifications();
   };
 
   if (!activePipeline || pipelineMissing) {

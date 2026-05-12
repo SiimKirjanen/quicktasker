@@ -50,12 +50,12 @@ const Pipeline = () => {
     const refetchDataInterval = setInterval(() => {
       if (activePipeline && isTabVisible && !pipelineMissing) {
         fetchAndSetPipelineData(activePipeline.id);
-        fetchNotifications(activePipeline.id);
+        fetchNotifications();
       }
     }, refreshInterval * 1000);
 
     return () => clearInterval(refetchDataInterval);
-  }, [activePipeline, isTabVisible, pipelineMissing]);
+  }, [activePipeline, isTabVisible, pipelineMissing, fetchNotifications]);
 
   const dispatchMove = (
     source: DraggableLocation,
