@@ -9,6 +9,7 @@ import {
 } from "../constants";
 import type { Action, State } from "../providers/NotificationsContextProvider";
 import {
+  defaultNotificationTypePreferences,
   Notification,
   NotificationFilter,
   NotificationFromServer,
@@ -35,6 +36,7 @@ const baseState: State = {
   filter: NotificationFilter.ALL,
   maxAgeHours: 24,
   selectedPipelineIds: null,
+  notificationTypes: defaultNotificationTypePreferences(),
 };
 
 describe("notifications reducer", () => {

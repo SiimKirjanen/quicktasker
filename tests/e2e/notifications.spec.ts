@@ -140,6 +140,69 @@ test.describe('Notifications', () => {
     await context.close();
   });
 
+  test('disabling a notification type prevents future notifications of that type', async ({
+    browser,
+    request,
+  }) => {
+    const boardName = generateUniqueName('NotifTypeToggleBoard');
+    const stageName = generateUniqueName('NotifTypeToggleStage');
+    const taskWhileDisabled = generateUniqueName('NotifTypeToggleTaskDisabled');
+    const taskWhileEnabled = generateUniqueName('NotifTypeToggleTaskEnabled');
+
+    const { login, context, page } = await createReceiverPage(browser, request, 'notifTypeToggle');
+
+    await navigateToBoardsPage(page);
+    await createBoard(page, boardName, '');
+    await createStage(page, stageName, '');
+
+    await page.getByTestId('notifications-nav-link').first().click();
+    const modal = page.getByTestId('notifications-modal');
+    await expect(modal).toBeVisible();
+
+    await modal.getByTestId('notifications-types-toggle-icon').click();
+    const assignmentToggle = modal.getByTestId(
+      'notification-type-toggle-task_assignment_changed',
+    );
+    await expect(assignmentToggle).toBeVisible();
+    const assignmentToggleLabel = modal.locator(
+      'label[for="notification-type-task_assignment_changed"]',
+    );
+
+    await assignmentToggleLabel.click();
+    await expect(assignmentToggle).toHaveAttribute('aria-checked', 'false');
+
+    await assignerCreatesAndAssignsTask(
+      browser,
+      request,
+      boardName,
+      stageName,
+      taskWhileDisabled,
+      login,
+    );
+
+    await modal.getByTestId('notifications-refresh-icon').click();
+    await expect(modal.getByTestId('notifications-empty')).toBeVisible();
+    await expect(modal.getByText(taskWhileDisabled, { exact: false })).toHaveCount(0);
+
+    await assignmentToggleLabel.click();
+    await expect(assignmentToggle).toHaveAttribute('aria-checked', 'true');
+
+    await assignerCreatesAndAssignsTask(
+      browser,
+      request,
+      boardName,
+      stageName,
+      taskWhileEnabled,
+      login,
+    );
+
+    await modal.getByTestId('notifications-refresh-icon').click();
+    await expect(modal.getByText(taskWhileEnabled, { exact: false })).toBeVisible();
+    await expect(modal.getByText(taskWhileDisabled, { exact: false })).toHaveCount(0);
+
+    await context.close();
+  });
+
   test('preferences (filter and max-age) persist across reloads', async ({ browser, request }) => {
     const { context, page } = await createReceiverPage(browser, request, 'notifPrefs');
 

@@ -19,7 +19,10 @@ import {
 import { PipelineImportSource, WPQTImport } from "../types/imports";
 import { Label } from "../types/label";
 import { LogFromServer } from "../types/log";
-import { NotificationFromServer } from "../types/notification";
+import {
+  NotificationFromServer,
+  NotificationTypePreferences,
+} from "../types/notification";
 import {
   FullPipelineDataFromServer,
   PipelineEditData,
@@ -1126,16 +1129,19 @@ type NotificationPreferencesFromServer = {
   filter: string;
   max_age_hours: number;
   selected_pipeline_ids: number[] | null;
+  notification_types: NotificationTypePreferences;
 };
 
 function saveNotificationPreferencesRequest(args: {
   filter: string;
   maxAgeHours: number;
   pipelineIds: string[] | null;
+  notificationTypes: NotificationTypePreferences;
 }): Promise<WPQTResponse<NotificationPreferencesFromServer>> {
   const data: Record<string, unknown> = {
     filter: args.filter,
     max_age_hours: args.maxAgeHours,
+    notification_types: args.notificationTypes,
   };
   if (args.pipelineIds !== null) {
     data.pipeline_ids = args.pipelineIds;

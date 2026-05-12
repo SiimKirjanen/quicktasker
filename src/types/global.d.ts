@@ -1,3 +1,4 @@
+import { NotificationTypePreferences } from "./notification";
 import { PipelineFromServer } from "./pipeline";
 import { ServerUser, WPUser } from "./user";
 
@@ -21,6 +22,7 @@ declare global {
         filter: string;
         max_age_hours: number;
         selected_pipeline_ids: number[] | null;
+        notification_types: NotificationTypePreferences;
       };
     };
   }

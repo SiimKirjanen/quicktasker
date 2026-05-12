@@ -7,7 +7,10 @@ import {
   State as ModalState,
 } from "../../../../providers/ModalContextProvider";
 import { NotificationsContext } from "../../../../providers/NotificationsContextProvider";
-import { NotificationFilter } from "../../../../types/notification";
+import {
+  defaultNotificationTypePreferences,
+  NotificationFilter,
+} from "../../../../types/notification";
 import { PipelineView } from "../../../../types/pipeline";
 import { TaskExportMethods } from "../../../../types/task";
 import { PipelineHeader } from "./PipelineHeader";
@@ -148,6 +151,7 @@ describe("PipelineHeader", () => {
                 filter: NotificationFilter.ALL,
                 maxAgeHours: 24,
                 selectedPipelineIds: null,
+                notificationTypes: defaultNotificationTypePreferences(),
               },
               notificationsDispatch: jest.fn(),
               fetchNotifications,
@@ -223,6 +227,7 @@ describe("PipelineHeader", () => {
                 filter: NotificationFilter.ALL,
                 maxAgeHours: 24,
                 selectedPipelineIds: null,
+                notificationTypes: defaultNotificationTypePreferences(),
               },
               notificationsDispatch: jest.fn(),
               fetchNotifications,

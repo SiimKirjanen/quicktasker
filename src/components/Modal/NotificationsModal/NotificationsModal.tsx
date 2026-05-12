@@ -1,4 +1,7 @@
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import {
+  AdjustmentsHorizontalIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import {
@@ -6,16 +9,23 @@ import {
   NOTIFICATIONS_SET_FILTER,
   NOTIFICATIONS_SET_MAX_AGE,
   NOTIFICATIONS_SET_SELECTED_PIPELINES,
+  NOTIFICATIONS_SET_TYPE_ENABLED,
 } from "../../../constants";
 import { useNotificationActions } from "../../../hooks/actions/useNotificationActions";
 import { useTimezone } from "../../../hooks/useTimezone";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { NotificationsContext } from "../../../providers/NotificationsContextProvider";
 import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
-import { Notification, NotificationFilter } from "../../../types/notification";
+import {
+  NOTIFICATION_TYPE_VALUES,
+  Notification,
+  NotificationFilter,
+  NotificationType,
+} from "../../../types/notification";
 import { WPQTButton } from "../../common/Button/Button";
 import { WPQTMultiSelect } from "../../common/Select/WPQTMultiSelect";
 import { WPQTSelect } from "../../common/Select/WPQTSelect";
+import { Toggle } from "../../common/Toggle/Toggle";
 import { WPQTModal, WPQTModalTitle } from "../WPQTModal";
 
 function NotificationsModal() {
@@ -24,7 +34,14 @@ function NotificationsModal() {
     modalDispatch,
   } = useContext(ModalContext);
   const {
-    state: { notifications, loading, filter, maxAgeHours, selectedPipelineIds },
+    state: {
+      notifications,
+      loading,
+      filter,
+      maxAgeHours,
+      selectedPipelineIds,
+      notificationTypes,
+    },
     notificationsDispatch,
     fetchNotifications,
     savePreferences,
@@ -36,6 +53,7 @@ function NotificationsModal() {
   const { convertToWPTimezone } = useTimezone();
   const [markingIds, setMarkingIds] = useState<string[]>([]);
   const [markingAll, setMarkingAll] = useState(false);
+  const [typesOpen, setTypesOpen] = useState(false);
 
   const allPipelineIds = pipelines.map((p) => p.id);
   const pipelineNameById = new Map(pipelines.map((p) => [p.id, p.name]));
@@ -53,6 +71,7 @@ function NotificationsModal() {
       filter: nextFilter,
       maxAgeHours,
       selectedPipelineIds,
+      notificationTypes,
     });
   };
 
@@ -67,6 +86,7 @@ function NotificationsModal() {
       filter,
       maxAgeHours: hours,
       selectedPipelineIds,
+      notificationTypes,
     });
   };
 
@@ -83,7 +103,44 @@ function NotificationsModal() {
       filter,
       maxAgeHours,
       selectedPipelineIds: payload,
+      notificationTypes,
     });
+  };
+
+  const handleNotificationTypeToggle = (
+    type: NotificationType,
+    enabled: boolean,
+  ) => {
+    const nextTypes = { ...notificationTypes, [type]: enabled };
+    notificationsDispatch({
+      type: NOTIFICATIONS_SET_TYPE_ENABLED,
+      payload: { type, enabled },
+    });
+    savePreferences({
+      filter,
+      maxAgeHours,
+      selectedPipelineIds,
+      notificationTypes: nextTypes,
+    });
+  };
+
+  const notificationTypeLabels: Record<NotificationType, string> = {
+    [NotificationType.TASK_COMPLETION_CHANGED]: __(
+      "Task completion changed",
+      "quicktasker",
+    ),
+    [NotificationType.TASK_ASSIGNMENT_CHANGED]: __(
+      "Task assignment changed",
+      "quicktasker",
+    ),
+    [NotificationType.TASK_ARCHIVE_CHANGED]: __(
+      "Task archived or restored",
+      "quicktasker",
+    ),
+    [NotificationType.TASK_DELETED]: __("Task deleted", "quicktasker"),
+    [NotificationType.STAGE_CHANGED]: __("Stage changed", "quicktasker"),
+    [NotificationType.DUE_DATE_CHANGED]: __("Due date changed", "quicktasker"),
+    [NotificationType.COMMENT_ADDED]: __("Comment added", "quicktasker"),
   };
 
   const handleMarkAsRead = async (id: string) => {
@@ -150,16 +207,66 @@ function NotificationsModal() {
           <WPQTModalTitle className="!wpqt-mb-0">
             {__("Notifications", "quicktasker")}
           </WPQTModalTitle>
-          <ArrowPathIcon
-            className={`wpqt-size-5 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover ${
-              loading ? "wpqt-animate-spin wpqt-text-gray-400" : ""
-            }`}
-            data-testid="notifications-refresh-icon"
-            aria-label={__("Refresh notifications", "quicktasker")}
-            onClick={() => {
-              if (!loading) fetchNotifications();
-            }}
-          />
+          <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-2">
+            <ArrowPathIcon
+              className={`wpqt-size-5 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover ${
+                loading ? "wpqt-animate-spin wpqt-text-gray-400" : ""
+              }`}
+              data-testid="notifications-refresh-icon"
+              aria-label={__("Refresh notifications", "quicktasker")}
+              onClick={() => {
+                if (!loading) fetchNotifications();
+              }}
+            />
+            <AdjustmentsHorizontalIcon
+              className={`wpqt-size-5 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover ${
+                typesOpen ? "wpqt-text-qtBlue" : ""
+              }`}
+              data-testid="notifications-types-toggle-icon"
+              aria-label={__("Toggle notification types", "quicktasker")}
+              aria-expanded={typesOpen}
+              onClick={() => setTypesOpen((open) => !open)}
+            />
+          </div>
+        </div>
+
+        <div
+          className={`wpqt-grid wpqt-transition-all wpqt-duration-300 wpqt-ease-in-out ${
+            typesOpen
+              ? "wpqt-grid-rows-[1fr] wpqt-opacity-100"
+              : "wpqt-grid-rows-[0fr] wpqt-opacity-0"
+          }`}
+          aria-hidden={!typesOpen}
+        >
+          <div className="wpqt-overflow-hidden">
+            <div
+              className="wpqt-rounded wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-px-3 wpqt-py-3"
+              data-testid="notifications-types-section"
+            >
+              <div className="wpqt-mb-2 wpqt-text-sm wpqt-font-medium">
+                {__("Notification types", "quicktasker")}
+              </div>
+              <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-2 sm:wpqt-grid-cols-2">
+                {NOTIFICATION_TYPE_VALUES.map((type) => (
+                  <label
+                    key={type}
+                    className="wpqt-flex wpqt-items-center wpqt-justify-between wpqt-gap-3 wpqt-text-sm"
+                    htmlFor={`notification-type-${type}`}
+                  >
+                    <span>{notificationTypeLabels[type]}</span>
+                    <Toggle
+                      id={`notification-type-${type}`}
+                      dataTestId={`notification-type-toggle-${type}`}
+                      checked={notificationTypes[type]}
+                      handleChange={(checked) =>
+                        handleNotificationTypeToggle(type, checked)
+                      }
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-4">
@@ -220,12 +327,16 @@ function NotificationsModal() {
           )}
         </div>
 
-        {!loading && filteredNotifications.length === 0 && (
+        {filteredNotifications.length === 0 && (
           <div
             className="wpqt-py-4 wpqt-text-center wpqt-text-sm wpqt-text-gray-500"
-            data-testid="notifications-empty"
+            data-testid={
+              loading ? "notifications-loading" : "notifications-empty"
+            }
           >
-            {__("No notifications", "quicktasker")}
+            {loading
+              ? __("Loading…", "quicktasker")
+              : __("No notifications", "quicktasker")}
           </div>
         )}
 

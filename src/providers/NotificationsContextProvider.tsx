@@ -7,19 +7,23 @@ import {
 } from "../api/api";
 import {
   DEFAULT_NOTIFICATIONS_MAX_AGE_HOURS,
+  NOTIFICATION_MARK_READ,
   NOTIFICATIONS_MARK_ALL_READ,
   NOTIFICATIONS_SET,
   NOTIFICATIONS_SET_FILTER,
   NOTIFICATIONS_SET_LOADING,
   NOTIFICATIONS_SET_MAX_AGE,
   NOTIFICATIONS_SET_SELECTED_PIPELINES,
-  NOTIFICATION_MARK_READ,
+  NOTIFICATIONS_SET_TYPE_ENABLED,
 } from "../constants";
 import { reducer } from "../reducers/notifications-reducer";
 import {
+  defaultNotificationTypePreferences,
   Notification,
   NotificationFilter,
   NotificationFromServer,
+  NotificationType,
+  NotificationTypePreferences,
 } from "../types/notification";
 
 const VALID_FILTERS: NotificationFilter[] = [
@@ -41,6 +45,10 @@ const buildInitialState = (): State => {
     prefs && prefs.selected_pipeline_ids !== null
       ? prefs.selected_pipeline_ids.map((id) => String(id))
       : null;
+  const notificationTypes = {
+    ...defaultNotificationTypePreferences(),
+    ...(prefs?.notification_types ?? {}),
+  };
 
   return {
     notifications: [],
@@ -48,6 +56,7 @@ const buildInitialState = (): State => {
     filter,
     maxAgeHours,
     selectedPipelineIds,
+    notificationTypes,
   };
 };
 
@@ -60,6 +69,7 @@ type State = {
   maxAgeHours: number;
   // null = "all boards" (no filter); [] = explicit none (skip fetch); string[] = filter to those.
   selectedPipelineIds: string[] | null;
+  notificationTypes: NotificationTypePreferences;
 };
 
 type Action =
@@ -72,6 +82,10 @@ type Action =
   | {
       type: typeof NOTIFICATIONS_SET_SELECTED_PIPELINES;
       payload: string[] | null;
+    }
+  | {
+      type: typeof NOTIFICATIONS_SET_TYPE_ENABLED;
+      payload: { type: NotificationType; enabled: boolean };
     };
 
 type Dispatch = (action: Action) => void;
@@ -85,6 +99,7 @@ type SavePreferencesArgs = {
   filter: NotificationFilter;
   maxAgeHours: number;
   selectedPipelineIds: string[] | null;
+  notificationTypes: NotificationTypePreferences;
 };
 
 type NotificationsContextValue = {
@@ -152,6 +167,7 @@ const NotificationsContextProvider = ({
       filter: args.filter,
       maxAgeHours: args.maxAgeHours,
       pipelineIds: args.selectedPipelineIds,
+      notificationTypes: args.notificationTypes,
     }).catch(() => {
       toast.error(__("Failed to save notification preferences", "quicktasker"));
     });

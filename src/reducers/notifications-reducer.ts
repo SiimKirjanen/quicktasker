@@ -6,6 +6,7 @@ import {
   NOTIFICATIONS_SET_LOADING,
   NOTIFICATIONS_SET_MAX_AGE,
   NOTIFICATIONS_SET_SELECTED_PIPELINES,
+  NOTIFICATIONS_SET_TYPE_ENABLED,
 } from "../constants";
 import { Action, State } from "../providers/NotificationsContextProvider";
 import { mapNotificationFromServer } from "../types/notification";
@@ -57,6 +58,15 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         selectedPipelineIds: action.payload,
+      };
+    }
+    case NOTIFICATIONS_SET_TYPE_ENABLED: {
+      return {
+        ...state,
+        notificationTypes: {
+          ...state.notificationTypes,
+          [action.payload.type]: action.payload.enabled,
+        },
       };
     }
     default:

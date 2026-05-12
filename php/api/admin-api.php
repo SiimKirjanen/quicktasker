@@ -4421,7 +4421,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         }
 
                         $currentUserId = get_current_user_id();
-                        ServiceLocator::get('NotificationService')->savePreferences(
+                        $notificationService = ServiceLocator::get('NotificationService');
+                        $notificationService->savePreferences(
                             (int) $currentUserId,
                             WP_QT_WORDPRESS_USER_TYPE,
                             $filter,
@@ -4430,7 +4431,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             $notificationTypes
                         );
 
-                        $prefs = ServiceLocator::get('NotificationService')->getPreferences(
+                        $prefs = $notificationService->getPreferences(
                             (int) $currentUserId,
                             WP_QT_WORDPRESS_USER_TYPE
                         );

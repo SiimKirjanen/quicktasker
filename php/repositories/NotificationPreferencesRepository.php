@@ -70,13 +70,13 @@ if (!class_exists('WPQT\Notification\NotificationPreferencesRepository')) {
         }
 
         /**
-         * Returns true if the given notification type is enabled for the user.
-         * Defaults to true when no preferences row exists yet.
+         * Raw lookup of a single notify_<type> column.
+         * Returns null when the row does not exist or the type is unknown.
          */
-        public function isTypeEnabled($userId, $userType, $type)
+        public function getNotifyFlag($userId, $userType, $type)
         {
             if (!in_array($type, self::NOTIFICATION_TYPES, true)) {
-                return true;
+                return null;
             }
 
             global $wpdb;
@@ -89,7 +89,7 @@ if (!class_exists('WPQT\Notification\NotificationPreferencesRepository')) {
             ));
 
             if (null === $value) {
-                return true;
+                return null;
             }
 
             return (bool) ((int) $value);
@@ -100,54 +100,96 @@ if (!class_exists('WPQT\Notification\NotificationPreferencesRepository')) {
          * @param array<string,bool> $notificationTypes Map of type => enabled. Unknown keys are ignored;
          *                                              missing keys default to true.
          */
-        public function upsert($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds, array $notificationTypes = [])
+        public function insert($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds, array $notificationTypes = [])
         {
             global $wpdb;
 
-            $encoded = null === $selectedPipelineIds
-                ? null
-                : wp_json_encode(array_values(array_map('intval', $selectedPipelineIds)));
-
+            $encoded = $this->encodePipelineIds($selectedPipelineIds);
             $nowUtc = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
 
-            $insertColumns = ['user_id', 'user_type', 'filter', 'max_age_hours', 'selected_pipeline_ids'];
-            $insertPlaceholders = ['%d', '%s', '%s', '%d', (null === $encoded ? 'NULL' : '%s')];
+            $columns = ['user_id', 'user_type', 'filter', 'max_age_hours', 'selected_pipeline_ids'];
+            $placeholders = ['%d', '%s', '%s', '%d', (null === $encoded ? 'NULL' : '%s')];
             $params = [$userId, $userType, $filter, $maxAgeHours];
             if (null !== $encoded) {
                 $params[] = $encoded;
             }
 
-            $updateAssignments = [
-                'filter = VALUES(filter)',
-                'max_age_hours = VALUES(max_age_hours)',
-                'selected_pipeline_ids = VALUES(selected_pipeline_ids)',
-                'updated_at = VALUES(updated_at)',
-            ];
-
             foreach (self::NOTIFICATION_TYPES as $type) {
-                $column = 'notify_' . $type;
-                $enabled = array_key_exists($type, $notificationTypes)
-                    ? ($notificationTypes[$type] ? 1 : 0)
-                    : 1;
-                $insertColumns[] = $column;
-                $insertPlaceholders[] = '%d';
-                $params[] = $enabled;
-                $updateAssignments[] = $column . ' = VALUES(' . $column . ')';
+                $columns[] = 'notify_' . $type;
+                $placeholders[] = '%d';
+                $params[] = $this->resolveNotifyValue($type, $notificationTypes);
             }
 
-            $insertColumns[] = 'created_at';
-            $insertColumns[] = 'updated_at';
-            $insertPlaceholders[] = '%s';
-            $insertPlaceholders[] = '%s';
+            $columns[] = 'created_at';
+            $columns[] = 'updated_at';
+            $placeholders[] = '%s';
+            $placeholders[] = '%s';
             $params[] = $nowUtc;
             $params[] = $nowUtc;
 
             $sql = 'INSERT INTO ' . TABLE_WP_QUICKTASKER_USER_NOTIFICATION_PREFERENCES . '
-                (' . implode(', ', $insertColumns) . ')
-                VALUES (' . implode(', ', $insertPlaceholders) . ')
-                ON DUPLICATE KEY UPDATE ' . implode(', ', $updateAssignments);
+                (' . implode(', ', $columns) . ')
+                VALUES (' . implode(', ', $placeholders) . ')';
 
             $wpdb->query($wpdb->prepare($sql, $params));
+        }
+
+        /**
+         * @param int[]|null $selectedPipelineIds null means "all boards" (no filter).
+         * @param array<string,bool> $notificationTypes Map of type => enabled. Unknown keys are ignored;
+         *                                              missing keys default to true.
+         */
+        public function update($userId, $userType, $filter, $maxAgeHours, $selectedPipelineIds, array $notificationTypes = [])
+        {
+            global $wpdb;
+
+            $encoded = $this->encodePipelineIds($selectedPipelineIds);
+            $nowUtc = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
+
+            $assignments = ['filter = %s', 'max_age_hours = %d'];
+            $params = [$filter, $maxAgeHours];
+
+            if (null === $encoded) {
+                $assignments[] = 'selected_pipeline_ids = NULL';
+            } else {
+                $assignments[] = 'selected_pipeline_ids = %s';
+                $params[] = $encoded;
+            }
+
+            foreach (self::NOTIFICATION_TYPES as $type) {
+                $assignments[] = 'notify_' . $type . ' = %d';
+                $params[] = $this->resolveNotifyValue($type, $notificationTypes);
+            }
+
+            $assignments[] = 'updated_at = %s';
+            $params[] = $nowUtc;
+
+            $params[] = $userId;
+            $params[] = $userType;
+
+            $sql = 'UPDATE ' . TABLE_WP_QUICKTASKER_USER_NOTIFICATION_PREFERENCES . '
+                SET ' . implode(', ', $assignments) . '
+                WHERE user_id = %d AND user_type = %s';
+
+            $wpdb->query($wpdb->prepare($sql, $params));
+        }
+
+        private function encodePipelineIds($selectedPipelineIds)
+        {
+            if (null === $selectedPipelineIds) {
+                return null;
+            }
+
+            return wp_json_encode(array_values(array_map('intval', $selectedPipelineIds)));
+        }
+
+        private function resolveNotifyValue($type, array $notificationTypes)
+        {
+            if (!array_key_exists($type, $notificationTypes)) {
+                return 1;
+            }
+
+            return $notificationTypes[$type] ? 1 : 0;
         }
     }
 }
