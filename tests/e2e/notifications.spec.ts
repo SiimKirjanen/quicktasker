@@ -1,8 +1,8 @@
 import { test, expect, Browser, APIRequestContext } from '@playwright/test';
-import { createBoard, createStage, generateUniqueName } from './utils/board-helpers';
+import { createBoard, createStage, createTask, generateUniqueName } from './utils/board-helpers';
 import { navigateToBoardsPage } from './utils/navigation';
 import { assignWordPressUserToTask, createWPUser, uniqueLogin } from './utils/user-helpers';
-import { loginToWordPress } from './utils/auth';
+import { loginToWordPressViaApi } from './utils/auth';
 
 test.describe('Notifications', () => {
   async function assignerCreatesAndAssignsTask(
@@ -16,18 +16,14 @@ test.describe('Notifications', () => {
     const assignerLogin = uniqueLogin('notifAssigner');
     await createWPUser(request, assignerLogin, `${assignerLogin}@example.com`, 'administrator');
 
-    const assignerContext = await browser.newContext();
+    const assignerContext = await loginToWordPressViaApi(browser, assignerLogin);
     const assignerPage = await assignerContext.newPage();
-    await loginToWordPress(assignerPage, assignerLogin, 'password123');
     await navigateToBoardsPage(assignerPage);
     await assignerPage.getByTestId('pipeline-selection-dropdown').click();
     await assignerPage.getByText(boardName).click();
     await expect(assignerPage.getByText(stageName)).toBeVisible();
 
-    await assignerPage.getByText('Add task').first().click();
-    await assignerPage.getByPlaceholder('Task name').fill(taskName);
-    await assignerPage.getByPlaceholder('Task name').press('Enter');
-    await expect(assignerPage.getByText(taskName)).toBeVisible();
+    await createTask(assignerPage, stageName, taskName);
     await assignWordPressUserToTask(assignerPage, taskName, assigneeLogin);
 
     await assignerContext.close();
@@ -36,9 +32,8 @@ test.describe('Notifications', () => {
   async function createReceiverPage(browser: Browser, request: APIRequestContext, prefix: string) {
     const login = uniqueLogin(prefix);
     await createWPUser(request, login, `${login}@example.com`, 'administrator');
-    const context = await browser.newContext();
+    const context = await loginToWordPressViaApi(browser, login);
     const page = await context.newPage();
-    await loginToWordPress(page, login, 'password123');
     return { login, context, page };
   }
 
