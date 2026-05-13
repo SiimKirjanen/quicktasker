@@ -151,7 +151,7 @@ const NotificationsContextProvider = ({
           type: NOTIFICATIONS_SET,
           payload: response.data,
         });
-      } catch (error) {
+      } catch (_error) {
         notificationsDispatch({
           type: NOTIFICATIONS_SET_LOADING,
           payload: false,

@@ -22,7 +22,7 @@ function SlackWebhookMetaInput({ setAutomationMeta }: Props) {
     try {
       slackMessageWebhookSchema.parse(webhook);
       setIsWebhookValid(true);
-    } catch (e) {
+    } catch (_e) {
       setIsWebhookValid(false);
     }
   };
