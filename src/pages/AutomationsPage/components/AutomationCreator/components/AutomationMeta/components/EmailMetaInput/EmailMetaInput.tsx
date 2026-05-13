@@ -19,7 +19,7 @@ function EmailMetaInput({ setAutomationMeta }: Props) {
     try {
       emailSchema.parse(email);
       setIsEmailValid(true);
-    } catch (e) {
+    } catch (_e) {
       setIsEmailValid(false);
     }
   };

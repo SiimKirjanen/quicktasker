@@ -51,7 +51,7 @@ function useUploadActions() {
     try {
       const response = await fetch(url, { method: "HEAD" });
       return response.ok;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   };
