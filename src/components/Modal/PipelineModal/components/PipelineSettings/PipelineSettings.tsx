@@ -58,6 +58,7 @@ function PipelineSettings({ pipeline }: Props) {
         allowPublicTaskCreation={settings.allow_public_task_creation}
         publicTaskCreationLimit={settings.public_task_creation_limit}
         publicTaskCreationCount={settings.public_task_creation_count}
+        requireLoggedInUser={settings.require_logged_in_user}
       />
     </div>
   );

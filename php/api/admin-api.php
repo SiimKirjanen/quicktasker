@@ -3106,10 +3106,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                             $settings['allow_public_task_creation'] = $data['allow_public_task_creation'] ? 1 : 0;
                         }
                         if (isset($data['public_task_creation_limit'])) {
-                            $settings['public_task_creation_limit'] = (int) $data['public_task_creation_limit'];
+                            $settings['public_task_creation_limit'] = max(1, (int) $data['public_task_creation_limit']);
                         }
                         if (isset($data['public_task_creation_count'])) {
                             $settings['public_task_creation_count'] = (int) $data['public_task_creation_count'];
+                        }
+                        if (isset($data['require_logged_in_user'])) {
+                            $settings['require_logged_in_user'] = $data['require_logged_in_user'] ? 1 : 0;
                         }
 
                         if (0 === count($settings)) {
@@ -3156,6 +3159,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'required'          => false,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'require_logged_in_user' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
                     ],
                 ],
             ],

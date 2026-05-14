@@ -35,9 +35,13 @@ if (!class_exists('WPQT\PublicTask\PublicTaskService')) {
                 throw new WPQTException('Public task submissions are disabled for this board', true);
             }
 
-            $limit = (int) $settings->public_task_creation_limit;
+            if (!empty($settings->require_logged_in_user) && !is_user_logged_in()) {
+                throw new WPQTException('Login required to submit a task to this board', true);
+            }
+
+            $limit = max(1, (int) $settings->public_task_creation_limit);
             $count = (int) $settings->public_task_creation_count;
-            if ($limit > 0 && $count >= $limit) {
+            if ($count >= $limit) {
                 throw new WPQTException('Submission limit reached for this board', true);
             }
         }
@@ -101,13 +105,17 @@ if (!class_exists('WPQT\PublicTask\PublicTaskService')) {
             }
             $settings = ServiceLocator::get('SettingRepository')->getPublicTaskCreationSettings($pipelineId);
             $enabled = $settings && !empty($settings->allow_public_task_creation);
-            $limit = $settings ? (int) $settings->public_task_creation_limit : 0;
+            $limit = $settings ? max(1, (int) $settings->public_task_creation_limit) : 1;
             $count = $settings ? (int) $settings->public_task_creation_count : 0;
-            $limitReached = $enabled && $limit > 0 && $count >= $limit;
+            $limitReached = $enabled && $count >= $limit;
+            $requiresLogin = $enabled && !empty($settings->require_logged_in_user);
+            $loginRequired = $requiresLogin && !is_user_logged_in();
 
             return (object) [
-                'enabled'       => (bool) $enabled,
-                'limit_reached' => (bool) $limitReached,
+                'enabled'        => (bool) $enabled,
+                'limit_reached'  => (bool) $limitReached,
+                'requires_login' => (bool) $requiresLogin,
+                'login_required' => (bool) $loginRequired,
             ];
         }
 

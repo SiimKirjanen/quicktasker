@@ -246,6 +246,7 @@ if (!function_exists('wpqt_set_up_db')) {
 				allow_public_task_creation tinyint(1) NOT NULL DEFAULT 0,
 				public_task_creation_limit int(11) NOT NULL DEFAULT 50,
 				public_task_creation_count int(11) NOT NULL DEFAULT 0,
+				require_logged_in_user tinyint(1) NOT NULL DEFAULT 1,
 				PRIMARY KEY  (id),
 				UNIQUE KEY pipeline_id (pipeline_id)
 			) $charset_collate;";

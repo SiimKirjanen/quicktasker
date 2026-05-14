@@ -9,6 +9,7 @@ type PipelineSettings = BasePipelineSettings & {
   allow_public_task_creation: boolean;
   public_task_creation_limit: number;
   public_task_creation_count: number;
+  require_logged_in_user: boolean;
 };
 
 type PipelineSettingsFromServer = BasePipelineSettings & {
@@ -17,6 +18,7 @@ type PipelineSettingsFromServer = BasePipelineSettings & {
   allow_public_task_creation: string;
   public_task_creation_limit: string;
   public_task_creation_count: string;
+  require_logged_in_user: string;
 };
 
 type PublicPipelineSettings = {

@@ -13,6 +13,7 @@ type Props = {
   allowPublicTaskCreation: boolean;
   publicTaskCreationLimit: number;
   publicTaskCreationCount: number;
+  requireLoggedInUser: boolean;
 };
 
 function PublicTaskSubmissionsSetting({
@@ -20,11 +21,14 @@ function PublicTaskSubmissionsSetting({
   allowPublicTaskCreation,
   publicTaskCreationLimit,
   publicTaskCreationCount,
+  requireLoggedInUser,
 }: Props) {
   const [enabled, setEnabled] = useState(allowPublicTaskCreation);
   const [limit, setLimit] = useState(publicTaskCreationLimit);
   const [count, setCount] = useState(publicTaskCreationCount);
+  const [requireLogin, setRequireLogin] = useState(requireLoggedInUser);
   const [toggling, setToggling] = useState(false);
+  const [togglingLogin, setTogglingLogin] = useState(false);
   const [resetting, setResetting] = useState(false);
   const { savePipelineSettings } = useSettingActions();
 
@@ -48,11 +52,23 @@ function PublicTaskSubmissionsSetting({
   };
 
   const onLimitChange = async (value: string) => {
-    const next = Math.max(0, parseInt(value, 10) || 0);
+    const next = Math.max(1, parseInt(value, 10) || 1);
     setLimit(next);
     await savePipelineSettings(pipelineId, {
       public_task_creation_limit: next,
     });
+  };
+
+  const onRequireLoginToggle = async (checked: boolean) => {
+    setRequireLogin(checked);
+    setTogglingLogin(true);
+    const { success } = await savePipelineSettings(pipelineId, {
+      require_logged_in_user: checked,
+    });
+    setTogglingLogin(false);
+    if (!success) {
+      setRequireLogin(!checked);
+    }
   };
 
   const onReset = async () => {
@@ -86,11 +102,30 @@ function PublicTaskSubmissionsSetting({
         <div className="wpqt-pl-3 wpqt-border-0 wpqt-border-l-2 wpqt-border-solid wpqt-border-gray-200">
           <div className="wpqt-mb-2">
             <h5 className="wpqt-m-0 wpqt-mb-1">
+              {__("Require logged-in WordPress user", "quicktasker")}
+            </h5>
+            <p className="wpqt-mt-0">
+              {__(
+                "When enabled, only logged-in WordPress users can submit tasks via the block.",
+                "quicktasker",
+              )}
+            </p>
+            <div className="wpqt-flex wpqt-gap-2 wpqt-items-center">
+              <Toggle
+                checked={requireLogin}
+                handleChange={onRequireLoginToggle}
+                dataTestId="public-task-submissions-require-login-toggle"
+              />
+              {togglingLogin && <LoadingOval width="20" height="20" />}
+            </div>
+          </div>
+          <div className="wpqt-mb-2">
+            <h5 className="wpqt-m-0 wpqt-mb-1">
               {__("Max submissions", "quicktasker")}
             </h5>
             <p className="wpqt-mt-0">
               {__(
-                "Public submissions are blocked once the counter reaches this value. Reset the counter to allow more. Set to 0 for no limit.",
+                "Public submissions are blocked once the counter reaches this value. Reset the counter to allow more.",
                 "quicktasker",
               )}
             </p>

@@ -96,10 +96,12 @@ class PublicTaskServiceTest extends TestCase
      * Throws WPQTException ("Public task submissions are disabled for this board")
      *   when SettingRepository->getPublicTaskCreationSettings returns null or
      *   allow_public_task_creation is falsy.
+     * Throws WPQTException ("Login required to submit a task to this board")
+     *   when require_logged_in_user is truthy and !is_user_logged_in().
      * Throws WPQTException ("Submission limit reached for this board")
-     *   when public_task_creation_limit > 0 AND public_task_creation_count >= limit.
-     * Returns void (no return) when submissions are enabled and limit not reached
-     *   (or limit is 0 = unlimited).
+     *   when public_task_creation_count >= max(1, public_task_creation_limit).
+     * Returns void (no return) when submissions are enabled, the login
+     *   requirement is satisfied, and the limit is not reached.
      *
      * Dependencies:
      * - ServiceLocator::get('SettingRepository')->getPublicTaskCreationSettings()
@@ -140,9 +142,12 @@ class PublicTaskServiceTest extends TestCase
     /**
      * INTEGRATION TEST REQUIRED: getSubmissionStatus()
      *
-     * Returns object with `enabled` (bool) and `limit_reached` (bool).
+     * Returns object with `enabled`, `limit_reached`, `requires_login`,
+     * `login_required` (all bool).
      * - enabled = settings exist AND allow_public_task_creation is truthy.
-     * - limit_reached = enabled AND limit > 0 AND count >= limit.
+     * - limit_reached = enabled AND count >= max(1, limit).
+     * - requires_login = enabled AND require_logged_in_user is truthy.
+     * - login_required = requires_login AND !is_user_logged_in().
      * Throws WPQTException ("Invalid board") when $pipelineId <= 0.
      *
      * Dependencies:

@@ -7,11 +7,21 @@ export async function openBoardSettingsModal(page: Page): Promise<void> {
 
 export async function enablePublicSubmissions(
   page: Page,
-  options: { limit?: number } = {},
+  options: { limit?: number; requireLogin?: boolean } = {},
 ): Promise<void> {
   const toggleSection = page.getByText('Public task submissions').locator('..');
   await toggleSection.locator('.react-switch-bg').first().click();
   await expect(page.getByRole('heading', { name: 'Max submissions' })).toBeVisible();
+
+  if (options.requireLogin === false) {
+    const requireLoginToggle = page
+      .getByRole('heading', { name: 'Require logged-in WordPress user' })
+      .locator('..')
+      .locator('.react-switch-bg')
+      .first();
+    await requireLoginToggle.click();
+    await page.waitForTimeout(1500);
+  }
 
   if (options.limit !== undefined && options.limit !== 50) {
     const limitInput = page

@@ -5,12 +5,14 @@ jest.mock("../../../../common/Toggle/Toggle", () => ({
   Toggle: ({
     checked,
     handleChange,
+    dataTestId,
   }: {
     checked: boolean;
     handleChange: (checked: boolean) => void;
+    dataTestId?: string;
   }) => (
     <input
-      data-testid="toggle"
+      data-testid={dataTestId ?? "toggle"}
       type="checkbox"
       checked={checked}
       onChange={(e) => handleChange(e.target.checked)}
@@ -73,6 +75,7 @@ const renderComponent = (overrides = {}) =>
       allowPublicTaskCreation={false}
       publicTaskCreationLimit={0}
       publicTaskCreationCount={0}
+      requireLoggedInUser={true}
       {...overrides}
     />,
   );
@@ -100,7 +103,7 @@ describe("PublicTaskSubmissionsSetting", () => {
 
   it("seeds limit to 50 when toggling on with limit=0", async () => {
     renderComponent();
-    fireEvent.click(screen.getByTestId("toggle"));
+    fireEvent.click(screen.getByTestId("public-task-submissions-toggle"));
     await waitFor(() =>
       expect(mockSavePipelineSettings).toHaveBeenCalledWith("42", {
         allow_public_task_creation: true,
@@ -117,7 +120,7 @@ describe("PublicTaskSubmissionsSetting", () => {
       allowPublicTaskCreation: false,
       publicTaskCreationLimit: 10,
     });
-    fireEvent.click(screen.getByTestId("toggle"));
+    fireEvent.click(screen.getByTestId("public-task-submissions-toggle"));
     await waitFor(() =>
       expect(mockSavePipelineSettings).toHaveBeenCalledWith("42", {
         allow_public_task_creation: true,
@@ -128,12 +131,12 @@ describe("PublicTaskSubmissionsSetting", () => {
   it("reverts toggle on save failure", async () => {
     mockSavePipelineSettings.mockResolvedValue({ success: false });
     renderComponent();
-    const toggle = screen.getByTestId("toggle");
+    const toggle = screen.getByTestId("public-task-submissions-toggle");
     fireEvent.click(toggle);
     await waitFor(() => expect(toggle).not.toBeChecked());
   });
 
-  it("clamps negative/garbage limit input to 0", async () => {
+  it("clamps negative/garbage limit input to 1", async () => {
     renderComponent({
       allowPublicTaskCreation: true,
       publicTaskCreationLimit: 5,
@@ -143,9 +146,50 @@ describe("PublicTaskSubmissionsSetting", () => {
     });
     await waitFor(() =>
       expect(mockSavePipelineSettings).toHaveBeenCalledWith("42", {
-        public_task_creation_limit: 0,
+        public_task_creation_limit: 1,
       }),
     );
+  });
+
+  it("renders require-login toggle checked by default when enabled", () => {
+    renderComponent({
+      allowPublicTaskCreation: true,
+      publicTaskCreationLimit: 5,
+      requireLoggedInUser: true,
+    });
+    expect(
+      screen.getByTestId("public-task-submissions-require-login-toggle"),
+    ).toBeChecked();
+  });
+
+  it("persists require-login toggle change", async () => {
+    renderComponent({
+      allowPublicTaskCreation: true,
+      publicTaskCreationLimit: 5,
+      requireLoggedInUser: true,
+    });
+    fireEvent.click(
+      screen.getByTestId("public-task-submissions-require-login-toggle"),
+    );
+    await waitFor(() =>
+      expect(mockSavePipelineSettings).toHaveBeenCalledWith("42", {
+        require_logged_in_user: false,
+      }),
+    );
+  });
+
+  it("reverts require-login toggle on save failure", async () => {
+    mockSavePipelineSettings.mockResolvedValue({ success: false });
+    renderComponent({
+      allowPublicTaskCreation: true,
+      publicTaskCreationLimit: 5,
+      requireLoggedInUser: true,
+    });
+    const toggle = screen.getByTestId(
+      "public-task-submissions-require-login-toggle",
+    );
+    fireEvent.click(toggle);
+    await waitFor(() => expect(toggle).toBeChecked());
   });
 
   it("disables reset button when count is 0", () => {

@@ -20,6 +20,7 @@ describe("pipeline-settings", () => {
       allow_public_task_creation: "0",
       public_task_creation_limit: "0",
       public_task_creation_count: "0",
+      require_logged_in_user: "1",
       ...overrides,
     });
 
@@ -131,7 +132,29 @@ describe("pipeline-settings", () => {
         allow_public_task_creation: false,
         public_task_creation_limit: 0,
         public_task_creation_count: 0,
+        require_logged_in_user: true,
       });
+    });
+
+    it("should convert require_logged_in_user from '0' to false", () => {
+      const serverSettings = createMockPipelineSettingsFromServer({
+        require_logged_in_user: "0",
+      });
+
+      const result = convertPipelineSettingsFromServer(serverSettings);
+
+      expect(result.require_logged_in_user).toBe(false);
+    });
+
+    it("should default require_logged_in_user to true when missing", () => {
+      const serverSettings = createMockPipelineSettingsFromServer();
+      // Simulate a server response that predates this field.
+      delete (serverSettings as Partial<PipelineSettingsFromServer>)
+        .require_logged_in_user;
+
+      const result = convertPipelineSettingsFromServer(serverSettings);
+
+      expect(result.require_logged_in_user).toBe(true);
     });
   });
 

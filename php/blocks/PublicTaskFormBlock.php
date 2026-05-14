@@ -37,6 +37,15 @@ if (!function_exists('wpqt_register_public_task_form_block')) {
             true
         );
 
+        wp_localize_script(
+            'wpqt-public-task-block-view',
+            'wpqtPublicTaskBlock',
+            [
+                'root'  => esc_url_raw(rest_url()),
+                'nonce' => wp_create_nonce('wp_rest'),
+            ]
+        );
+
         if (file_exists($build_dir . 'publicTaskBlock.css')) {
             wp_register_style(
                 'wpqt-public-task-block-editor-style',

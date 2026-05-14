@@ -26,7 +26,7 @@ test.describe('Public Task Form block', () => {
     await createStage(page, stageName);
 
     await openBoardSettingsModal(page);
-    await enablePublicSubmissions(page, { limit: 5 });
+    await enablePublicSubmissions(page, { limit: 5, requireLogin: false });
     await closeModal(page);
 
     const { link } = await createPageWithBlock(page, { boardName, title: pageTitle });
@@ -101,7 +101,7 @@ test.describe('Public Task Form block', () => {
     await createStage(page, stageName);
 
     await openBoardSettingsModal(page);
-    await enablePublicSubmissions(page, { limit: 1 });
+    await enablePublicSubmissions(page, { limit: 1, requireLogin: false });
     await closeModal(page);
 
     const { link } = await createPageWithBlock(page, { boardName, title: pageTitle });
@@ -130,6 +130,39 @@ test.describe('Public Task Form block', () => {
       await expect(secondPage.getByLabel('Task title')).not.toBeVisible();
     } finally {
       await secondVisitor.close();
+    }
+  });
+
+  test('shows login-required message when board requires logged-in user', async ({
+    page,
+    browser,
+  }) => {
+    const boardName = generateUniqueName('PTF-LOGIN-Board');
+    const stageName = generateUniqueName('PTF-LOGIN-Stage');
+    const pageTitle = generateUniqueName('PTF-LOGIN-Page');
+
+    await navigateToBoardsPage(page);
+    await createBoard(page, boardName);
+    await createStage(page, stageName);
+
+    await openBoardSettingsModal(page);
+    await enablePublicSubmissions(page, { limit: 5 });
+    await closeModal(page);
+
+    const { link } = await createPageWithBlock(page, { boardName, title: pageTitle });
+
+    const anonContext = await browser.newContext();
+    const anonPage = await anonContext.newPage();
+    try {
+      await anonPage.goto(link);
+      await expect(
+        anonPage.getByText(
+          'You must be logged in as a WordPress user to submit a task to this board.',
+        ),
+      ).toBeVisible();
+      await expect(anonPage.getByLabel('Task title')).not.toBeVisible();
+    } finally {
+      await anonContext.close();
     }
   });
 });

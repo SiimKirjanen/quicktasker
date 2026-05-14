@@ -1,17 +1,32 @@
 import { useEffect, useState } from "@wordpress/element";
 import "./style.css";
 
+const BLOCK_SETTINGS =
+  (typeof window !== "undefined" && window.wpqtPublicTaskBlock) || {};
 const API_BASE =
+  BLOCK_SETTINGS.root ||
   (typeof window !== "undefined" &&
     window.wpApiSettings &&
     window.wpApiSettings.root) ||
   "/wp-json/";
+const REST_NONCE =
+  BLOCK_SETTINGS.nonce ||
+  (typeof window !== "undefined" &&
+    window.wpApiSettings &&
+    window.wpApiSettings.nonce) ||
+  "";
 const ENDPOINT_CREATE = API_BASE.replace(/\/$/, "") + "/wpqt/v1/public/tasks";
 const ENDPOINT_STATUSES =
   API_BASE.replace(/\/$/, "") + "/wpqt/v1/public/tasks/statuses";
 const ENDPOINT_PIPELINE_STATUS = (pipelineId) =>
   API_BASE.replace(/\/$/, "") +
   `/wpqt/v1/public/pipelines/${pipelineId}/status`;
+
+function authHeaders(extra = {}) {
+  const headers = { ...extra };
+  if (REST_NONCE) headers["X-WP-Nonce"] = REST_NONCE;
+  return headers;
+}
 
 const MAX_TRACKED = 10;
 
@@ -85,7 +100,8 @@ export default function PublicTaskForm({
     let cancelled = false;
     setBoardStatus(null);
     fetch(ENDPOINT_PIPELINE_STATUS(pipelineId), {
-      headers: { Accept: "application/json" },
+      credentials: "same-origin",
+      headers: authHeaders({ Accept: "application/json" }),
     })
       .then((res) => res.json())
       .then((body) => {
@@ -111,10 +127,11 @@ export default function PublicTaskForm({
     let cancelled = false;
     fetch(ENDPOINT_STATUSES, {
       method: "POST",
-      headers: {
+      credentials: "same-origin",
+      headers: authHeaders({
         "Content-Type": "application/json",
         Accept: "application/json",
-      },
+      }),
       body: JSON.stringify({ hashes: toFetch }),
     })
       .then((res) => res.json())
@@ -185,10 +202,11 @@ export default function PublicTaskForm({
     try {
       const res = await fetch(ENDPOINT_CREATE, {
         method: "POST",
-        headers: {
+        credentials: "same-origin",
+        headers: authHeaders({
           "Content-Type": "application/json",
           Accept: "application/json",
-        },
+        }),
         body: JSON.stringify({
           pipeline_id: pipelineId,
           name,
@@ -232,7 +250,10 @@ export default function PublicTaskForm({
 
   const canSubmit =
     preview ||
-    (boardStatus && boardStatus.enabled && !boardStatus.limit_reached);
+    (boardStatus &&
+      boardStatus.enabled &&
+      !boardStatus.limit_reached &&
+      !boardStatus.login_required);
 
   return (
     <div>
@@ -270,6 +291,13 @@ export default function PublicTaskForm({
       ) : boardStatus && !boardStatus.enabled ? (
         <div className="wpqt-public-task-closed">
           <p>This board is not currently accepting task submissions.</p>
+        </div>
+      ) : boardStatus && boardStatus.login_required ? (
+        <div className="wpqt-public-task-closed">
+          <p>
+            You must be logged in as a WordPress user to submit a task to this
+            board.
+          </p>
         </div>
       ) : boardStatus && boardStatus.limit_reached ? (
         <div className="wpqt-public-task-closed">
