@@ -3102,6 +3102,15 @@ if (!function_exists('wpqt_register_api_routes')) {
                         if (isset($data['allow_only_last_stage_task_done'])) {
                             $settings['allow_only_last_stage_task_done'] = $data['allow_only_last_stage_task_done'];
                         }
+                        if (isset($data['allow_public_task_creation'])) {
+                            $settings['allow_public_task_creation'] = $data['allow_public_task_creation'] ? 1 : 0;
+                        }
+                        if (isset($data['public_task_creation_limit'])) {
+                            $settings['public_task_creation_limit'] = (int) $data['public_task_creation_limit'];
+                        }
+                        if (isset($data['public_task_creation_count'])) {
+                            $settings['public_task_creation_count'] = (int) $data['public_task_creation_count'];
+                        }
 
                         if (0 === count($settings)) {
                             return new WP_REST_Response((new ApiResponse(false, [esc_html_e('No valid settings provided', 'quicktasker')]))->toArray(), 200);
@@ -3132,6 +3141,21 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'required'          => false,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+                    ],
+                    'allow_public_task_creation' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+                    ],
+                    'public_task_creation_limit' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'public_task_creation_count' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
                 ],
             ],

@@ -61,10 +61,12 @@ if (!function_exists('wpqt_set_up_db')) {
 				task_completed_at datetime DEFAULT NULL COMMENT 'UTC',
 				task_hash varchar(255) NOT NULL,
 				task_focus_color varchar(255) DEFAULT NULL,
+				is_public_submission tinyint(1) NOT NULL DEFAULT 0,
 				PRIMARY KEY  (id),
 				UNIQUE KEY task_hash (task_hash),
 				INDEX pipeline_id (pipeline_id),
-				INDEX is_archived (is_archived)
+				INDEX is_archived (is_archived),
+				INDEX is_public_submission (is_public_submission)
 			) $charset_collate;";
 
             dbDelta($sql3);
@@ -241,6 +243,9 @@ if (!function_exists('wpqt_set_up_db')) {
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
 				pipeline_refresh_interval smallint unsigned DEFAULT 30 COMMENT 'in seconds',
+				allow_public_task_creation tinyint(1) NOT NULL DEFAULT 0,
+				public_task_creation_limit int(11) NOT NULL DEFAULT 50,
+				public_task_creation_count int(11) NOT NULL DEFAULT 0,
 				PRIMARY KEY  (id),
 				UNIQUE KEY pipeline_id (pipeline_id)
 			) $charset_collate;";

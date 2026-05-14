@@ -99,7 +99,13 @@ if (!class_exists('WPQT\Settings\SettingsService')) {
         {
             global $wpdb;
 
-            $allowedSettings = ['allow_only_last_stage_task_done', 'pipeline_refresh_interval'];
+            $allowedSettings = [
+                'allow_only_last_stage_task_done',
+                'pipeline_refresh_interval',
+                'allow_public_task_creation',
+                'public_task_creation_limit',
+                'public_task_creation_count',
+            ];
             $updateData = [
                 'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ];

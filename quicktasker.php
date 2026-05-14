@@ -86,6 +86,7 @@ require('php/services/WebhookEventService.php');
 require('php/services/ApiTokenService.php');
 require('php/services/ResponseService.php');
 require('php/services/NotificationService.php');
+require('php/services/PublicTaskService.php');
 
 ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
@@ -138,6 +139,7 @@ ServiceLocator::register('SettingsValidationService', new WPQT\Settings\Settings
 ServiceLocator::register('NotificationRepository', new WPQT\Notification\NotificationRepository());
 ServiceLocator::register('NotificationPreferencesRepository', new WPQT\Notification\NotificationPreferencesRepository());
 ServiceLocator::register('NotificationService', new WPQT\Notification\NotificationService());
+ServiceLocator::register('PublicTaskService', new WPQT\PublicTask\PublicTaskService());
 
 require('php/hooks.php');
 require('php/actions.php');
@@ -145,6 +147,8 @@ require('php/filters.php');
 require('php/api/admin-api.php');
 require('php/api/user-page-api.php');
 require('php/api/token-api.php');
+require('php/api/public-api.php');
+require('php/blocks/PublicTaskFormBlock.php');
 require('php/side-effects.php');
 require('php/db-seeder.php');
 

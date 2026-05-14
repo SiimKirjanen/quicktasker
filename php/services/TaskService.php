@@ -47,12 +47,13 @@ if (!class_exists('WPQT\Task\TaskService')) {
             global $wpdb;
 
             $defaults = [
-                'description'       => null,
-                'task_focus_color'  => null,
-                'due_date'          => null,
-                'is_archived'       => 0,
-                'task_completed_at' => null,
-                'is_done'           => 0,
+                'description'          => null,
+                'task_focus_color'     => null,
+                'due_date'             => null,
+                'is_archived'          => 0,
+                'task_completed_at'    => null,
+                'is_done'              => 0,
+                'is_public_submission' => 0
             ];
 
             $args = wp_parse_args($args, $defaults);
@@ -62,17 +63,18 @@ if (!class_exists('WPQT\Task\TaskService')) {
             }
 
             $result = $wpdb->insert(TABLE_WP_QUICKTASKER_TASKS, [
-                'name'              => $args['name'],
-                'description'       => $args['description'],
-                'pipeline_id'       => $args['pipelineId'],
-                'task_hash'         => ServiceLocator::get('HashService')->generateTaskHash($args['name']),
-                'created_at'        => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
-                'updated_at'        => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
-                'task_focus_color'  => $args['task_focus_color'],
-                'due_date'          => $args['due_date'],
-                'is_archived'       => $args['is_archived'],
-                'task_completed_at' => $args['task_completed_at'],
-                'is_done'           => $args['is_done']
+                'name'                 => $args['name'],
+                'description'          => $args['description'],
+                'pipeline_id'          => $args['pipelineId'],
+                'task_hash'            => ServiceLocator::get('HashService')->generateTaskHash($args['name']),
+                'created_at'           => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'updated_at'           => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
+                'task_focus_color'     => $args['task_focus_color'],
+                'due_date'             => $args['due_date'],
+                'is_archived'          => $args['is_archived'],
+                'task_completed_at'    => $args['task_completed_at'],
+                'is_done'              => $args['is_done'],
+                'is_public_submission' => $args['is_public_submission']
             ]);
 
             if (false === $result) {
