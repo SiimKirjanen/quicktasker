@@ -76,17 +76,17 @@ class PublicTaskServiceTest extends TestCase
         $this->assertEquals('pipelineId', $params[0]->getName());
     }
 
-    public function test_getPublicTaskStatus_method_exists()
+    public function test_getPublicTaskStatuses_method_exists()
     {
-        $this->assertTrue(method_exists(\WPQT\PublicTask\PublicTaskService::class, 'getPublicTaskStatus'));
+        $this->assertTrue(method_exists(\WPQT\PublicTask\PublicTaskService::class, 'getPublicTaskStatuses'));
 
-        $reflection = new ReflectionMethod(\WPQT\PublicTask\PublicTaskService::class, 'getPublicTaskStatus');
+        $reflection = new ReflectionMethod(\WPQT\PublicTask\PublicTaskService::class, 'getPublicTaskStatuses');
         $this->assertTrue($reflection->isPublic());
         $this->assertFalse($reflection->isStatic());
         $this->assertEquals(1, $reflection->getNumberOfParameters());
 
         $params = $reflection->getParameters();
-        $this->assertEquals('taskHash', $params[0]->getName());
+        $this->assertEquals('hashes', $params[0]->getName());
     }
 
     /**
@@ -159,22 +159,23 @@ class PublicTaskServiceTest extends TestCase
     }
 
     /**
-     * INTEGRATION TEST REQUIRED: getPublicTaskStatus()
+     * INTEGRATION TEST REQUIRED: getPublicTaskStatuses()
      *
-     * - Delegates to TaskRepository->getPublicTaskByHash($taskHash).
-     * - Throws WPQTException ("Task not found") if repo returns null.
-     * - Returns object: {name, description, is_done (bool), stage_name,
+     * - Delegates to TaskRepository->getPublicTasksByHashes($hashes).
+     * - Returns map keyed by hash; missing hashes map to null.
+     * - Found tasks map to {name, description, is_done (bool), stage_name,
      *   pipeline_name, created_at}.
+     * - Empty input returns empty array.
      *
      * Dependencies:
-     * - ServiceLocator::get('TaskRepository')->getPublicTaskByHash()
+     * - ServiceLocator::get('TaskRepository')->getPublicTasksByHashes()
      */
-    public function test_getPublicTaskStatus_requires_integration_test()
+    public function test_getPublicTaskStatuses_requires_integration_test()
     {
         $this->markTestIncomplete(
-            'getPublicTaskStatus() requires ServiceLocator + TaskRepository mocks. ' .
-            'Scenarios: hash not found → throws, found public task → returns ' .
-            'shaped object with is_done cast to bool.'
+            'getPublicTaskStatuses() requires ServiceLocator + TaskRepository mocks. ' .
+            'Scenarios: empty input → empty array, all hashes found, some missing → null, ' .
+            'is_done cast to bool.'
         );
     }
 }

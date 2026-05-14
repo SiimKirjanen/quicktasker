@@ -614,18 +614,29 @@ class TaskRepositoryTest extends TestCase
         $this->assertIsArray($result[0]->custom_fields);
     }
 
-    public function test_getPublicTaskByHash_returns_task_when_found()
+    public function test_getPublicTasksByHashes_returns_empty_when_no_hashes()
+    {
+        $this->wpdbMock->expects($this->never())->method('prepare');
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $result = $this->repository->getPublicTasksByHashes([]);
+
+        $this->assertSame([], $result);
+    }
+
+    public function test_getPublicTasksByHashes_returns_tasks_when_found()
     {
         $preparedSql = "PREPARED_SQL";
-        $expectedTask = (object)[
-            'id'                   => 42,
-            'name'                 => 'Public task',
-            'description'          => 'desc',
-            'is_done'              => 0,
-            'created_at'           => '2026-01-01 12:00:00',
-            'is_public_submission' => 1,
-            'stage_name'           => 'Inbox',
-            'pipeline_name'        => 'Board',
+        $expectedTasks = [
+            (object)[
+                'task_hash'     => 'abc',
+                'name'          => 'Task A',
+                'description'   => 'd',
+                'is_done'       => 0,
+                'created_at'    => '2026-01-01 12:00:00',
+                'stage_name'    => 'Inbox',
+                'pipeline_name' => 'Board',
+            ],
         ];
 
         $this->wpdbMock->expects($this->once())
@@ -633,30 +644,12 @@ class TaskRepositoryTest extends TestCase
             ->willReturn($preparedSql);
 
         $this->wpdbMock->expects($this->once())
-            ->method('get_row')
+            ->method('get_results')
             ->with($preparedSql)
-            ->willReturn($expectedTask);
+            ->willReturn($expectedTasks);
 
-        $result = $this->repository->getPublicTaskByHash('abc123');
+        $result = $this->repository->getPublicTasksByHashes(['abc', 'xyz']);
 
-        $this->assertSame($expectedTask, $result);
-    }
-
-    public function test_getPublicTaskByHash_returns_null_when_not_found()
-    {
-        $preparedSql = "PREPARED_SQL";
-
-        $this->wpdbMock->expects($this->once())
-            ->method('prepare')
-            ->willReturn($preparedSql);
-
-        $this->wpdbMock->expects($this->once())
-            ->method('get_row')
-            ->with($preparedSql)
-            ->willReturn(null);
-
-        $result = $this->repository->getPublicTaskByHash('nope');
-
-        $this->assertNull($result);
+        $this->assertSame($expectedTasks, $result);
     }
 }

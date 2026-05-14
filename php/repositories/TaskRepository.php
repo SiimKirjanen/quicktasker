@@ -458,29 +458,25 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
             return $tasks;
         }
 
-        /**
-         * Retrieves a publicly submitted task by its hash, with stage and board names.
-         *
-         * Only returns rows where `is_public_submission = 1`. Joins the task's
-         * current stage and parent board so callers can render tracking views
-         * without further lookups.
-         *
-         * @param string $hash The task hash.
-         * @return object|null Task row with `stage_name` and `pipeline_name`, or null if not found.
-         */
-        public function getPublicTaskByHash($hash)
+        public function getPublicTasksByHashes($hashes)
         {
             global $wpdb;
 
-            return $wpdb->get_row($wpdb->prepare(
-                'SELECT t.id, t.name, t.description, t.is_done, t.created_at, t.is_public_submission,
+            if (empty($hashes)) {
+                return [];
+            }
+
+            $placeholders = implode(',', array_fill(0, count($hashes), '%s'));
+
+            return $wpdb->get_results($wpdb->prepare(
+                'SELECT t.task_hash, t.name, t.description, t.is_done, t.created_at,
                         s.name AS stage_name, p.name AS pipeline_name
                  FROM ' . TABLE_WP_QUICKTASKER_TASKS . ' AS t
                  LEFT JOIN ' . TABLE_WP_QUICKTASKER_TASKS_LOCATION . ' AS tl ON t.id = tl.task_id
                  LEFT JOIN ' . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . ' AS s ON tl.stage_id = s.id
                  LEFT JOIN ' . TABLE_WP_QUICKTASKER_PIPELINES . ' AS p ON t.pipeline_id = p.id
-                 WHERE t.task_hash = %s AND t.is_public_submission = 1',
-                $hash
+                 WHERE t.task_hash IN (' . $placeholders . ') AND t.is_public_submission = 1 AND t.is_archived = 0',
+                $hashes
             ));
         }
     }

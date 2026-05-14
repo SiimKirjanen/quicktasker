@@ -535,6 +535,26 @@ if (!class_exists('WPQT\RequestValidation')) {
         }
 
         /**
+         * Validates that the given parameter is an array of alphanumeric hash strings.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is an array of alphanumeric strings, false otherwise.
+         */
+        public static function validateHashArray($param)
+        {
+            if (!is_array($param)) {
+                return false;
+            }
+            foreach ($param as $item) {
+                if (!is_string($item) || !preg_match('/^[a-zA-Z0-9]+$/', $item)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /**
          * Validates the webhook target action parameter.
          *
          * This method checks if the provided parameter is a valid webhook target action.

@@ -112,39 +112,39 @@ if (!class_exists('WPQT\PublicTask\PublicTaskService')) {
         }
 
         /**
-         * Returns the tracking status for a publicly submitted task.
+         * Returns tracking statuses for a batch of public task hashes.
          *
-         * Looks up a task by its hash and returns user-facing status fields
-         * (name, description, current stage, board name, done flag). Only
-         * returns tasks that were created via public submission.
+         * Used by the public block to fetch every tracked submission in a
+         * single request. Hashes that match no public task (deleted, archived,
+         * or never existed) map to null.
          *
-         * @param string $taskHash The opaque hash identifying the public task.
-         * @return object {
-         * @type string $name          Task name.
-         * @type string|null $description   Task description.
-         * @type bool $is_done       Whether the task is marked done.
-         * @type string|null $stage_name    Current stage name, or null if unassigned.
-         * @type string $pipeline_name Board name.
-         * @type string $created_at    Task creation timestamp.
-         *              }
-         * @throws WPQTException If no public task matches the given hash.
+         * @param string[] $hashes List of task hashes.
+         * @return array<string, object|null> Map keyed by hash.
          */
-        public function getPublicTaskStatus($taskHash)
+        public function getPublicTaskStatuses($hashes)
         {
-            $task = ServiceLocator::get('TaskRepository')->getPublicTaskByHash($taskHash);
-
-            if (!$task) {
-                throw new WPQTException('Task not found', true);
+            $result = [];
+            foreach ($hashes as $hash) {
+                $result[$hash] = null;
             }
 
-            return (object) [
-                'name'          => $task->name,
-                'description'   => $task->description,
-                'is_done'       => (bool) $task->is_done,
-                'stage_name'    => $task->stage_name,
-                'pipeline_name' => $task->pipeline_name,
-                'created_at'    => $task->created_at,
-            ];
+            if (empty($hashes)) {
+                return $result;
+            }
+
+            $tasks = ServiceLocator::get('TaskRepository')->getPublicTasksByHashes($hashes);
+            foreach ($tasks as $task) {
+                $result[$task->task_hash] = (object) [
+                    'name'          => $task->name,
+                    'description'   => $task->description,
+                    'is_done'       => (bool) $task->is_done,
+                    'stage_name'    => $task->stage_name,
+                    'pipeline_name' => $task->pipeline_name,
+                    'created_at'    => $task->created_at,
+                ];
+            }
+
+            return $result;
         }
     }
 }

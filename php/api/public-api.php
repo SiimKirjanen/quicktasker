@@ -92,13 +92,13 @@ if (!function_exists('wpqt_register_public_api_routes')) {
             ],
         ]);
 
-        register_rest_route('wpqt/v1', 'public/tasks/(?P<taskHash>[a-zA-Z0-9]+)', [
-            'methods'  => 'GET',
+        register_rest_route('wpqt/v1', 'public/tasks/statuses', [
+            'methods'  => 'POST',
             'callback' => function ($data) {
                 try {
-                    $status = ServiceLocator::get('PublicTaskService')->getPublicTaskStatus($data['taskHash']);
+                    $statuses = ServiceLocator::get('PublicTaskService')->getPublicTaskStatuses($data['hashes']);
 
-                    return new WP_REST_Response((new ApiResponse(true, [], $status))->toArray(), 200);
+                    return new WP_REST_Response((new ApiResponse(true, [], $statuses))->toArray(), 200);
                 } catch (WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, [$e->getMessage()]))->toArray(), 400);
                 } catch (Throwable $e) {
@@ -107,12 +107,12 @@ if (!function_exists('wpqt_register_public_api_routes')) {
             },
             'permission_callback' => '__return_true',
             'args'                => [
-                'taskHash' => [
+                'hashes' => [
                     'required'          => true,
-                    'validate_callback' => ['WPQT\RequestValidation', 'validateStringParam'],
-                    'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+                    'validate_callback' => ['WPQT\RequestValidation', 'validateHashArray'],
                 ],
             ],
         ]);
+
     }
 }
