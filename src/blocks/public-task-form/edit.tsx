@@ -10,27 +10,46 @@ import { useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import PublicTaskForm from "./PublicTaskForm";
 
-export default function Edit({ attributes, setAttributes }) {
+type Pipeline = { id: number | string; name: string };
+
+type Attributes = {
+  pipelineId: number;
+  submitLabel: string;
+  successMessage: string;
+};
+
+type EditProps = {
+  attributes: Attributes;
+  setAttributes: (next: Partial<Attributes>) => void;
+};
+
+export default function Edit({ attributes, setAttributes }: EditProps) {
   const { pipelineId, submitLabel, successMessage } = attributes;
   const blockProps = useBlockProps();
-  const [pipelines, setPipelines] = useState([]);
+  const [pipelines, setPipelines] = useState<Pipeline[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    apiFetch({ path: "/wpqt/v1/pipelines" })
-      .then((res) => {
+    const loadPipelines = async () => {
+      try {
+        const res = await apiFetch<{ data?: Pipeline[] }>({
+          path: "/wpqt/v1/pipelines",
+        });
         const list = (res && res.data) || [];
         setPipelines(list);
-      })
-      .catch((e) => {
-        setError(e.message || __("Failed to load boards.", "quicktasker"));
-      })
-      .finally(() => setLoading(false));
+      } catch (e) {
+        const err = e as Error;
+        setError(err.message || __("Failed to load boards.", "quicktasker"));
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPipelines();
   }, []);
 
   const selectedPipeline = pipelines.find(
-    (p) => parseInt(p.id, 10) === parseInt(pipelineId, 10),
+    (p) => parseInt(String(p.id), 10) === parseInt(String(pipelineId), 10),
   );
 
   const options = [
@@ -54,7 +73,7 @@ export default function Edit({ attributes, setAttributes }) {
               label={__("Board", "quicktasker")}
               value={String(pipelineId || 0)}
               options={options}
-              onChange={(value) =>
+              onChange={(value: string) =>
                 setAttributes({ pipelineId: parseInt(value, 10) || 0 })
               }
             />
@@ -62,12 +81,14 @@ export default function Edit({ attributes, setAttributes }) {
           <TextControl
             label={__("Submit button label", "quicktasker")}
             value={submitLabel}
-            onChange={(value) => setAttributes({ submitLabel: value })}
+            onChange={(value: string) => setAttributes({ submitLabel: value })}
           />
           <TextControl
             label={__("Success message", "quicktasker")}
             value={successMessage}
-            onChange={(value) => setAttributes({ successMessage: value })}
+            onChange={(value: string) =>
+              setAttributes({ successMessage: value })
+            }
           />
         </PanelBody>
       </InspectorControls>

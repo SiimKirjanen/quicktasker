@@ -151,7 +151,7 @@ test.describe('Public Task Form block', () => {
 
     const { link } = await createPageWithBlock(page, { boardName, title: pageTitle });
 
-    const anonContext = await browser.newContext();
+    const anonContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
     const anonPage = await anonContext.newPage();
     try {
       await anonPage.goto(link);

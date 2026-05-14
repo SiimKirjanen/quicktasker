@@ -307,15 +307,12 @@
   color: #065f46;
 }
 
-.wpqt-public-task-submission-link {
-  font-size: 12px;
-  color: #2563eb;
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.wpqt-public-task-submission-link:hover {
-  text-decoration: underline;
+.wpqt-public-task-submission-description {
+  margin: 4px 0 0;
+  color: #4b5563;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .wpqt-public-task-submission-loading {
