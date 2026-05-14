@@ -17,6 +17,9 @@ describe("pipeline-settings", () => {
       pipeline_id: "10",
       allow_only_last_stage_task_done: "0",
       pipeline_refresh_interval: "30",
+      allow_public_task_creation: "0",
+      public_task_creation_limit: "0",
+      public_task_creation_count: "0",
       ...overrides,
     });
 
@@ -125,6 +128,9 @@ describe("pipeline-settings", () => {
         pipeline_id: "15",
         allow_only_last_stage_task_done: true,
         pipeline_refresh_interval: 45,
+        allow_public_task_creation: false,
+        public_task_creation_limit: 0,
+        public_task_creation_count: 0,
       });
     });
   });

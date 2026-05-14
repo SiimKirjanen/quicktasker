@@ -6,11 +6,17 @@ type BasePipelineSettings = {
 type PipelineSettings = BasePipelineSettings & {
   allow_only_last_stage_task_done: boolean;
   pipeline_refresh_interval: number;
+  allow_public_task_creation: boolean;
+  public_task_creation_limit: number;
+  public_task_creation_count: number;
 };
 
 type PipelineSettingsFromServer = BasePipelineSettings & {
   allow_only_last_stage_task_done: string;
   pipeline_refresh_interval: string;
+  allow_public_task_creation: string;
+  public_task_creation_limit: string;
+  public_task_creation_count: string;
 };
 
 type PublicPipelineSettings = {

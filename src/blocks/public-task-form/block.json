@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "quicktasker/public-task-form",
+  "title": "QuickTasker: Public Task Form",
+  "category": "widgets",
+  "icon": "list-view",
+  "description": "Lets anonymous website visitors submit a task into a chosen board and track its status.",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "pipelineId": {
+      "type": "number",
+      "default": 0
+    },
+    "submitLabel": {
+      "type": "string"
+    },
+    "successMessage": {
+      "type": "string"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js"
+}

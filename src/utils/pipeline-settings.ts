@@ -21,6 +21,12 @@ const convertPipelineSettingsFromServer = (
       }
       return seconds;
     })(),
+    allow_public_task_creation:
+      pipelineSettings.allow_public_task_creation === "1",
+    public_task_creation_limit:
+      parseInt(pipelineSettings.public_task_creation_limit, 10) || 0,
+    public_task_creation_count:
+      parseInt(pipelineSettings.public_task_creation_count, 10) || 0,
   };
 };
 

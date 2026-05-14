@@ -6,6 +6,7 @@ import { PipelineSettings } from "../../../../../types/pipeline-settings";
 import { convertPipelineSettingsFromServer } from "../../../../../utils/pipeline-settings";
 import { Loading } from "../../../../Loading/Loading";
 import { PipelineRefreshIntervalSetting } from "../PipelineRefreshIntervalSetting/PipelineRefreshIntervalSetting";
+import { PublicTaskSubmissionsSetting } from "../PublicTaskSubmissionsSetting/PublicTaskSubmissionsSetting";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
 
 type Props = {
@@ -51,6 +52,12 @@ function PipelineSettings({ pipeline }: Props) {
       <PipelineRefreshIntervalSetting
         pipelineId={pipeline.id}
         pipelineRefreshInterval={settings.pipeline_refresh_interval}
+      />
+      <PublicTaskSubmissionsSetting
+        pipelineId={pipeline.id}
+        allowPublicTaskCreation={settings.allow_public_task_creation}
+        publicTaskCreationLimit={settings.public_task_creation_limit}
+        publicTaskCreationCount={settings.public_task_creation_count}
       />
     </div>
   );
