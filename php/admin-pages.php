@@ -37,6 +37,15 @@ if (!function_exists('wp_quick_taks_add_admin_menu')) {
 
         add_submenu_page(
             'wp-quicktasker',
+            esc_html__('My Tasks', 'quicktasker'),
+            esc_html__('My Tasks', 'quicktasker'),
+            WP_QUICKTASKER_VIEW_MY_TASKS,
+            'wp-quicktasker-my-tasks',
+            'wp_quick_taks_generate_app_page'
+        );
+
+        add_submenu_page(
+            'wp-quicktasker',
             esc_html__('Tasks app', 'quicktasker'),
             esc_html__('Tasks app', 'quicktasker'),
             WP_QUICKTASKER_ACCESS_USER_PAGE_APP,

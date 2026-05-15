@@ -723,8 +723,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $stageService->validateStageAndPipeline($data['stageId'], $data['pipelineId']);
 
                         $newTask = $taskService->createTask($data['stageId'], [
-                            'name'       => $data['name'],
-                            'pipelineId' => $data['pipelineId'],
+                            'name'            => $data['name'],
+                            'pipelineId'      => $data['pipelineId'],
+                            'created_by_id'   => $userId,
+                            'created_by_type' => WP_QT_WORDPRESS_USER_TYPE,
                         ]);
                         $logService->log('Task ' . $newTask->name . ' created', [
                             'type'          => WP_QT_LOG_TYPE_TASK,
@@ -1851,6 +1853,36 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
+            'my-tasks',
+            [
+                'methods'  => 'GET',
+                'callback' => function () {
+                    try {
+                        $userId = get_current_user_id();
+                        $taskRepo = ServiceLocator::get('TaskRepository');
+
+                        $created = $taskRepo->getTasksCreatedByUser($userId, WP_QT_WORDPRESS_USER_TYPE);
+                        $hasAdminAccess = current_user_can(WP_QUICKTASKER_ADMIN_ROLE);
+                        $assigned = $hasAdminAccess
+                            ? $taskRepo->getTasksAssignedToUser($userId, false, WP_QT_WORDPRESS_USER_TYPE)
+                            : null;
+
+                        return new WP_REST_Response((new ApiResponse(true, [], (object) [
+                            'created'  => $created,
+                            'assigned' => $assigned,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForMyTasks();
+                },
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
             'users/(?P<id>\d+)/tasks/(?P<task_id>\d+)',
             [
                 'methods'  => 'POST',
@@ -2384,6 +2416,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS],
                             WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE  => $data[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE],
                             WP_QUICKTASKER_ACCESS_USER_PAGE_APP       => $data[WP_QUICKTASKER_ACCESS_USER_PAGE_APP],
+                            WP_QUICKTASKER_VIEW_MY_TASKS              => $data[WP_QUICKTASKER_VIEW_MY_TASKS],
                         ];
 
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
@@ -2423,6 +2456,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
                     ],
                     WP_QUICKTASKER_ACCESS_USER_PAGE_APP => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+                    ],
+                    WP_QUICKTASKER_VIEW_MY_TASKS => [
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],

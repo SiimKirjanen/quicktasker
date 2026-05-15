@@ -53,7 +53,9 @@ if (!class_exists('WPQT\Task\TaskService')) {
                 'is_archived'          => 0,
                 'task_completed_at'    => null,
                 'is_done'              => 0,
-                'is_public_submission' => 0
+                'is_public_submission' => 0,
+                'created_by_id'        => null,
+                'created_by_type'      => null
             ];
 
             $args = wp_parse_args($args, $defaults);
@@ -74,7 +76,9 @@ if (!class_exists('WPQT\Task\TaskService')) {
                 'is_archived'          => $args['is_archived'],
                 'task_completed_at'    => $args['task_completed_at'],
                 'is_done'              => $args['is_done'],
-                'is_public_submission' => $args['is_public_submission']
+                'is_public_submission' => $args['is_public_submission'],
+                'created_by_id'        => $args['created_by_id'],
+                'created_by_type'      => $args['created_by_type']
             ]);
 
             if (false === $result) {

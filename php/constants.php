@@ -60,7 +60,7 @@ DB constants
 */
 
 if (!defined('WP_QUICKTASKER_DB_VERSION')) {
-    define('WP_QUICKTASKER_DB_VERSION', '1.60.0');
+    define('WP_QUICKTASKER_DB_VERSION', '1.61.0');
 }
 
 if (!defined('TABLE_WP_QUICKTASKER_USERS')) {
@@ -381,7 +381,7 @@ if (!defined('WP_QUICKTASKER_INVALID_SESSION_TOKEN')) {
 }
 
 if (!defined('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER')) {
-    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', '9');
+    define('WP_QUICKTASKER_SIDE_EFFECT_TRIGGER', '10');
 }
 
 if (!defined('WP_QUICKTASKER_DB_SEEDER_TRIGGER')) {
@@ -424,6 +424,10 @@ if (!defined('WP_QUICKTASKER_ACCESS_USER_PAGE_APP')) {
 
 if (!defined('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS')) {
     define('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS', 'quicktasker_admin_role_manage_quicktasker_sessions'); // Allows access to QuickTasker user sessions page and related private API endpoints
+}
+
+if (!defined('WP_QUICKTASKER_VIEW_MY_TASKS')) {
+    define('WP_QUICKTASKER_VIEW_MY_TASKS', 'quicktasker_view_my_tasks'); // Allows access to the My Tasks page and related private API endpoint
 }
 
 /*

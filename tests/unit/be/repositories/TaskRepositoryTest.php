@@ -25,6 +25,9 @@ if (!defined('TABLE_WP_QUICKTASKER_PIPELINE_STAGES')) {
 if (!defined('WP_QT_QUICKTASKER_USER_TYPE')) {
     define('WP_QT_QUICKTASKER_USER_TYPE', 'quicktasker');
 }
+if (!defined('WP_QT_WORDPRESS_USER_TYPE')) {
+    define('WP_QT_WORDPRESS_USER_TYPE', 'wp-user');
+}
 if (!defined('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE')) {
     define('WP_QUICKTASKER_WP_USER_OBJECT_FILTER_ADMIN_FE', 'admin_fe');
 }
@@ -389,6 +392,97 @@ class TaskRepositoryTest extends TestCase
         $result = $this->repository->getTasksAssignedToUser($userId);
 
         $this->assertSame($expectedTasks, $result);
+    }
+
+    public function test_getTasksAssignedToUser_query_selects_stage_name()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->stringContains('e.name as stage_name'),
+                $this->anything()
+            )
+            ->willReturn('PREPARED_SQL');
+
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->willReturn([]);
+
+        $this->repository->getTasksAssignedToUser(5);
+    }
+
+    public function test_getTasksCreatedByUser_returns_tasks_for_wp_user()
+    {
+        $userId = 7;
+        $preparedSql = 'PREPARED_SQL';
+        $expectedTasks = [
+            (object)[
+                'id' => 1,
+                'name' => 'Created Task',
+                'pipeline_name' => 'Board A',
+                'stage_name' => 'In Progress',
+                'created_by_id' => $userId,
+                'created_by_type' => WP_QT_WORDPRESS_USER_TYPE,
+            ],
+        ];
+
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->logicalAnd(
+                    $this->stringContains('a.created_by_id = %d'),
+                    $this->stringContains('a.created_by_type = %s'),
+                    $this->stringContains('a.is_archived = 0'),
+                    $this->stringContains('e.name as stage_name')
+                ),
+                $userId,
+                WP_QT_WORDPRESS_USER_TYPE
+            )
+            ->willReturn($preparedSql);
+
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with($preparedSql)
+            ->willReturn($expectedTasks);
+
+        $result = $this->repository->getTasksCreatedByUser($userId);
+
+        $this->assertSame($expectedTasks, $result);
+    }
+
+    public function test_getTasksCreatedByUser_passes_quicktasker_user_type()
+    {
+        $userId = 12;
+
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->anything(),
+                $userId,
+                WP_QT_QUICKTASKER_USER_TYPE
+            )
+            ->willReturn('PREPARED_SQL');
+
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->willReturn([]);
+
+        $this->repository->getTasksCreatedByUser($userId, WP_QT_QUICKTASKER_USER_TYPE);
+    }
+
+    public function test_getTasksCreatedByUser_returns_empty_when_no_matches()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->willReturn('PREPARED_SQL');
+
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->willReturn([]);
+
+        $result = $this->repository->getTasksCreatedByUser(99);
+
+        $this->assertSame([], $result);
     }
 
     public function test_getTasksAssignableToUser_returns_free_for_all_tasks()
