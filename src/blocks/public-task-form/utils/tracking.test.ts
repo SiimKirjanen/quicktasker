@@ -1,6 +1,5 @@
 import {
   getInitialHashes,
-  MAX_TRACKED,
   readStoredHashes,
   writeStoredHashes,
 } from "./tracking";
@@ -50,14 +49,13 @@ describe("tracking utils", () => {
       ).toEqual(["a", "b"]);
     });
 
-    test("caps stored hashes at MAX_TRACKED", () => {
-      const many = Array.from({ length: MAX_TRACKED + 5 }, (_, i) => `h${i}`);
+    test("persists arbitrarily large lists without capping", () => {
+      const many = Array.from({ length: 50 }, (_, i) => `h${i}`);
       writeStoredHashes(1, many);
       const stored = JSON.parse(
         window.localStorage.getItem("wpqt_pub_track_1") || "",
       );
-      expect(stored).toHaveLength(MAX_TRACKED);
-      expect(stored[0]).toBe("h0");
+      expect(stored).toEqual(many);
     });
 
     test("does not throw when localStorage.setItem fails", () => {
@@ -72,32 +70,13 @@ describe("tracking utils", () => {
   });
 
   describe("getInitialHashes", () => {
-    test("returns stored hashes when URL has no wpqt_track", () => {
+    test("returns stored hashes", () => {
       writeStoredHashes(1, ["a", "b"]);
       expect(getInitialHashes(1)).toEqual(["a", "b"]);
     });
 
-    test("merges wpqt_track from URL into stored list", () => {
-      writeStoredHashes(1, ["a"]);
-      window.history.replaceState({}, "", "/?wpqt_track=new");
-      const result = getInitialHashes(1);
-      expect(result).toEqual(["new", "a"]);
-      expect(readStoredHashes(1)).toEqual(["new", "a"]);
-    });
-
-    test("does not duplicate hash already present in stored list", () => {
-      writeStoredHashes(1, ["a", "b"]);
-      window.history.replaceState({}, "", "/?wpqt_track=a");
-      expect(getInitialHashes(1)).toEqual(["a", "b"]);
-    });
-
-    test("caps merged result at MAX_TRACKED", () => {
-      const many = Array.from({ length: MAX_TRACKED }, (_, i) => `h${i}`);
-      writeStoredHashes(1, many);
-      window.history.replaceState({}, "", "/?wpqt_track=new");
-      const result = getInitialHashes(1);
-      expect(result).toHaveLength(MAX_TRACKED);
-      expect(result[0]).toBe("new");
+    test("returns empty array when nothing stored", () => {
+      expect(getInitialHashes(1)).toEqual([]);
     });
   });
 });

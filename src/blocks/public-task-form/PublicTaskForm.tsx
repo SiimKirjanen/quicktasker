@@ -6,11 +6,7 @@ import SubmissionsList from "./components/SubmissionsList";
 import TaskForm from "./components/TaskForm";
 import "./style.css";
 import type { BoardStatus } from "./types";
-import {
-  getInitialHashes,
-  MAX_TRACKED,
-  writeStoredHashes,
-} from "./utils/tracking";
+import { getInitialHashes, writeStoredHashes } from "./utils/tracking";
 
 type Props = {
   pipelineId: number;
@@ -54,10 +50,7 @@ export default function PublicTaskForm({
   }, [pipelineId, preview]);
 
   const handleSubmitted = (hash: string) => {
-    const next = [hash, ...trackedHashes.filter((h) => h !== hash)].slice(
-      0,
-      MAX_TRACKED,
-    );
+    const next = [hash, ...trackedHashes.filter((h) => h !== hash)];
     writeStoredHashes(pipelineId, next);
     setTrackedHashes(next);
   };

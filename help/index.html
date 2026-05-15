@@ -58,6 +58,7 @@
 			<li><a href="#settings">Settings</a></li>
 			<li><a href="#webhooks">Webhooks</a></li>
 			<li><a href="#api-tokens">API Tokens</a></li>
+			<li><a href="#public-task-form">Public task form block</a></li>
 		</ol>
 		
 		<hr>
@@ -324,6 +325,25 @@
 		</ul>
 
 		<p><strong>Managing Tokens:</strong> You can view all created tokens on the API Tokens page. Each token displays its name, description, creation date, and assigned permissions. To revoke access, simply delete the token from this page.</p>
+
+		<hr>
+
+		<h3 id="public-task-form"><strong>K) Public task form block</strong> - <a href="#toc">top</a></h3>
+
+		<p>The Public task form is a Gutenberg block that lets you embed a task submission form on any WordPress page or post. Visitors can submit tasks directly into a board you select, without needing access to the admin area. After submitting, they see a tracking view that shows the current stage of their submission.</p>
+
+		<p><strong>Adding the block:</strong> In the WordPress block editor, insert the <em>QuickTasker — Public task form</em> block, then pick which board submissions should go into. You can customize the submit button label and the success message shown after submission.</p>
+
+		<p><strong>Per-board submission settings:</strong> Public submissions are configured per board, from the board settings modal. The following options are available:</p>
+		<ul>
+			<li><strong>Allow public task creation:</strong> Master toggle. When off, the block shows <em>"This board is not currently accepting task submissions."</em></li>
+			<li><strong>Require logged-in WordPress user:</strong> When on, only authenticated WordPress users can submit. Anonymous visitors see a login-required message. This is on by default for new boards.</li>
+			<li><strong>Submission limit:</strong> Maximum number of public submissions accepted for the board. Once the limit is reached the block shows <em>"This board has reached its submission limit."</em> Minimum is 1.</li>
+		</ul>
+
+		<p><strong>Submission tracking:</strong> When a visitor submits a task, the block stores a tracking hash in their browser's local storage, scoped per board. Below the form, a <em>Your submissions</em> list appears showing each submission's current stage, or <em>Completed</em> if the task is done. Tasks that are deleted or archived show as no longer available and are removed from the list automatically.</p>
+
+		<p><strong>How submissions reach the board:</strong> Submitted tasks land in the board's first stage and behave like any other task — admins can move, edit, assign, or archive them from the regular board view.</p>
 
 		<p><a href="#toc">Go To Table of Contents</a></p>
 		

@@ -57,16 +57,6 @@ export default function SubmissionsList({ pipelineId, trackedHashes }: Props) {
             (h) => !goneHashes.includes(h),
           );
           writeStoredHashes(pipelineId, remaining);
-          try {
-            const url = new URL(window.location.href);
-            const current = url.searchParams.get("wpqt_track");
-            if (current && goneHashes.includes(current)) {
-              url.searchParams.delete("wpqt_track");
-              window.history.replaceState({}, "", url.toString());
-            }
-          } catch (_e) {
-            // ignore
-          }
         }
       } catch (_e) {
         if (cancelled) return;
