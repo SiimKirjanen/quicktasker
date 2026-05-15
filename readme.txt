@@ -51,6 +51,7 @@ QuickTasker is a plugin that offers the following and more to organize your proj
 
 = 1.55.0 =
 * Added a Public Task Form Gutenberg block that lets visitors submit tasks to a selected board from any page.
+* Fixed an issue where the automation, webhook and API token logs modals showed no entries.
 
 = 1.54.0 =
 * Added board notifications.
