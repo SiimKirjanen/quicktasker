@@ -580,6 +580,16 @@ function getUserTasksRequest(
   });
 }
 
+function getMyTasksRequest(): Promise<
+  WPQTResponse<{ created: TaskFromServer[]; assigned: TaskFromServer[] }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/my-tasks`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
 function resetUserPasswordRequest(userId: string): Promise<WPQTResponse> {
   return apiFetch({
     path: `/wpqt/v1/users/${userId}/password-reset`,
@@ -615,6 +625,7 @@ function updateWPUserPermissionsRequest(
         capabilities.quicktasker_admin_role_manage_archive,
       quicktasker_access_user_page_app:
         capabilities.quicktasker_access_user_page_app,
+      quicktasker_view_my_tasks: capabilities.quicktasker_view_my_tasks,
     },
     headers: getCommonHeaders(),
   });
@@ -1191,6 +1202,7 @@ export {
   getExtendedUserRequest,
   getGlobalLogsRequest,
   getLogsRequest,
+  getMyTasksRequest,
   getNotificationsRequest,
   getPipelineApiTokensRequest,
   getPipelineAutomationsRequest,

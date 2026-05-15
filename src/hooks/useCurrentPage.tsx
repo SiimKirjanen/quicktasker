@@ -4,6 +4,7 @@ import { ArchivePage } from "../pages/ArchivePage/ArchivePage";
 import { AutomationsPage } from "../pages/AutomationsPage/AutomationsPage";
 import { GuidePage } from "../pages/GuidePage/GuidePage";
 import { LogsPage } from "../pages/LogsPage/LogsPage";
+import { MyTasksPage } from "../pages/MyTasksPage/MyTasksPage";
 import { OverviewPage } from "../pages/OverviewPage/OverviewPage";
 import { PipelinePage } from "../pages/PipelinePage/PipelinePage";
 import { UserAppPage } from "../pages/UserAppPage/UserAppPage";
@@ -38,6 +39,10 @@ const useCurrentPage = () => {
 
 const getPageFromUrl = () => {
   const { page, hash } = getUrlParams();
+
+  if (page === "wp-quicktasker-my-tasks") {
+    return <MyTasksPage />;
+  }
 
   if (page === "wp-quicktasker") {
     const userTasksMatch = hash.match(/^#\/user-management\/(\d+)\/tasks$/);
@@ -83,6 +88,8 @@ const getPageFromUrl = () => {
     }
 
     switch (hash) {
+      case "#/my-tasks":
+        return <MyTasksPage />;
       case "#/user-management":
         return <UserManagement />;
       case "#/archive":
@@ -114,6 +121,7 @@ const setSubMenuItemActive = () => {
   submenuItems.forEach((item) => item.classList.remove("wpqt-current"));
 
   const hashMap: { [key: string]: string } = {
+    "#/my-tasks": "#/my-tasks",
     "#/user-management": "#/user-management",
     "#/overview": "#/overview",
     "#/archive": "#/archive",

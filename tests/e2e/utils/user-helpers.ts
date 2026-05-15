@@ -14,6 +14,7 @@ const ALL_CAPS = [
   'quicktasker_admin_role_manage_settings',
   'quicktasker_admin_role_manage_archive',
   'quicktasker_access_user_page_app',
+  'quicktasker_view_my_tasks',
 ] as const;
 
 async function getAdminNonce(request: APIRequestContext): Promise<string> {

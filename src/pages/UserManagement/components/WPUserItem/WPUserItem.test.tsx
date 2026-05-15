@@ -79,8 +79,9 @@ beforeEach(() => {
 // 1: quicktasker_admin_role_manage_users
 // 2: quicktasker_admin_role_manage_settings
 // 3: quicktasker_admin_role_manage_archive
-// 4: quicktasker_admin_role_allow_delete
-// 5: quicktasker_access_user_page_app
+// 4: quicktasker_access_user_page_app
+// 5: quicktasker_admin_role_allow_delete
+// 6: quicktasker_view_my_tasks
 
 describe("WPUserItem", () => {
   describe("capability initialisation from allcaps", () => {
@@ -102,7 +103,7 @@ describe("WPUserItem", () => {
       const checkboxes = screen.getAllByRole("checkbox");
       expect(checkboxes[0]).toBeChecked();
       expect(checkboxes[1]).not.toBeChecked();
-      expect(checkboxes[5]).toBeChecked();
+      expect(checkboxes[4]).toBeChecked();
     });
   });
 

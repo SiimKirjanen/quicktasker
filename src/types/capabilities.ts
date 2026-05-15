@@ -5,6 +5,7 @@ type WPUserCapabilities = {
   quicktasker_admin_role_manage_settings: boolean;
   quicktasker_admin_role_manage_archive: boolean;
   quicktasker_access_user_page_app: boolean;
+  quicktasker_view_my_tasks: boolean;
 };
 
 export type { WPUserCapabilities };

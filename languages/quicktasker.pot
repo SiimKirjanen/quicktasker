@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.55.0\n"
+"Project-Id-Version: QuickTasker 1.56.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-15T11:02:59+00:00\n"
+"POT-Creation-Date: 2026-05-15T16:38:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -48,31 +48,37 @@ msgstr ""
 
 #: php/admin-pages.php:40
 #: php/admin-pages.php:41
+#: build/app.js:1
+msgid "My Tasks"
+msgstr ""
+
+#: php/admin-pages.php:49
+#: php/admin-pages.php:50
 #: php/templates/user-page-app-root.php:11
 #: build/app.js:1
 msgid "Tasks app"
 msgstr ""
 
-#: php/admin-pages.php:49
-#: php/admin-pages.php:50
-#: build/app.js:1
-msgid "Quicktasker sessions"
-msgstr ""
-
 #: php/admin-pages.php:58
 #: php/admin-pages.php:59
 #: build/app.js:1
-msgid "Archive"
+msgid "Quicktasker sessions"
 msgstr ""
 
 #: php/admin-pages.php:67
 #: php/admin-pages.php:68
 #: build/app.js:1
-msgid "Logs"
+msgid "Archive"
 msgstr ""
 
 #: php/admin-pages.php:76
 #: php/admin-pages.php:77
+#: build/app.js:1
+msgid "Logs"
+msgstr ""
+
+#: php/admin-pages.php:85
+#: php/admin-pages.php:86
 #: build/app.js:1
 msgid "About"
 msgstr ""
@@ -85,69 +91,69 @@ msgid "Stage was changed for task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:876
+#: php/api/admin-api.php:878
 #, php-format
 msgid "Due date for task \"%s\" changed"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:988
+#: php/api/admin-api.php:990
 #, php-format
 msgid "Task \"%s\" was deleted"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1078
+#: php/api/admin-api.php:1080
 #, php-format
 msgid "Task \"%s\" was archived"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1171
+#: php/api/admin-api.php:1173
 #, php-format
 msgid "Task \"%s\" was restored from the archive"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1276
+#: php/api/admin-api.php:1278
 #: php/api/user-page-api.php:974
 #, php-format
 msgid "Task \"%s\" was marked done"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1278
+#: php/api/admin-api.php:1280
 #: php/api/user-page-api.php:976
 #, php-format
 msgid "Task \"%s\" was marked not done"
 msgstr ""
 
 #. translators: %1$s = assigner name, %2$s = task name
-#: php/api/admin-api.php:1899
+#: php/api/admin-api.php:1931
 #, php-format
 msgid "%1$s assigned you to task \"%2$s\""
 msgstr ""
 
 #. translators: %1$s = unassigner name, %2$s = task name
-#: php/api/admin-api.php:2023
+#: php/api/admin-api.php:2055
 #, php-format
 msgid "%1$s unassigned you from task \"%2$s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:2650
+#: php/api/admin-api.php:2688
 #, php-format
 msgid "A private comment was added to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:2652
+#: php/api/admin-api.php:2690
 #: php/api/user-page-api.php:437
 #, php-format
 msgid "A public comment was added to task \"%s\""
 msgstr ""
 
-#: php/api/admin-api.php:3119
+#: php/api/admin-api.php:3157
 msgid "No valid settings provided"
 msgstr ""
 
@@ -278,7 +284,7 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-#: php/services/TaskService.php:450
+#: php/services/TaskService.php:454
 msgid "Cannot restore the task. The selected board needs at least one stage."
 msgstr ""
 
@@ -1633,6 +1639,40 @@ msgid "The logs page where you can see all logs and filter them."
 msgstr ""
 
 #: build/app.js:1
+msgid "Tasks you have created and tasks assigned to you."
+msgstr ""
+
+#: build/app.js:1
+msgid "Search tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "Tasks I created"
+msgstr ""
+
+#: build/app.js:1
+msgid "You haven't created any tasks yet."
+msgstr ""
+
+#: build/app.js:1
+msgid "Tasks assigned to me"
+msgstr ""
+
+#: build/app.js:1
+msgid "No tasks assigned to you."
+msgstr ""
+
+#: build/app.js:1
+msgid "Done"
+msgstr ""
+
+#: build/app.js:1
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "In progress"
+msgstr ""
+
+#: build/app.js:1
 msgid "Pie"
 msgstr ""
 
@@ -2278,11 +2318,15 @@ msgid "Access to archive page"
 msgstr ""
 
 #: build/app.js:1
+msgid "Allow access to Tasks App"
+msgstr ""
+
+#: build/app.js:1
 msgid "Allow to delete resources"
 msgstr ""
 
 #: build/app.js:1
-msgid "Allow access to user tasks app"
+msgid "Access to My Tasks page"
 msgstr ""
 
 #: build/app.js:1
@@ -2518,11 +2562,6 @@ msgstr ""
 #: build/publicTaskBlock.js:1
 #: build/publicTaskBlockView.js:1
 msgid "This task is no longer available."
-msgstr ""
-
-#: build/publicTaskBlock.js:1
-#: build/publicTaskBlockView.js:1
-msgid "In progress"
 msgstr ""
 
 #: build/publicTaskBlock.js:1

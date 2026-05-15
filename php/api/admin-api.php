@@ -1862,7 +1862,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $taskRepo = ServiceLocator::get('TaskRepository');
 
                         $created = $taskRepo->getTasksCreatedByUser($userId, WP_QT_WORDPRESS_USER_TYPE);
-                        $hasAdminAccess = current_user_can(WP_QUICKTASKER_ADMIN_ROLE);
+                        $hasAdminAccess = PermissionService::hasRequiredPermissionsForPrivateAPI();
                         $assigned = $hasAdminAccess
                             ? $taskRepo->getTasksAssignedToUser($userId, false, WP_QT_WORDPRESS_USER_TYPE)
                             : null;
