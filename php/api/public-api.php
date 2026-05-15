@@ -45,6 +45,29 @@ if (!function_exists('wpqt_register_public_api_routes')) {
                         'pipeline_id'   => (int) $data['pipeline_id'],
                     ]);
 
+                    $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                        $task->pipeline_id,
+                        $task->id,
+                        WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                        WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED,
+                    );
+
+                    ServiceLocator::get('WebhookService')->handleWebhooks(
+                        $task->pipeline_id,
+                        [
+                            [
+                                'data' => [
+                                    'relatedObject' => $task
+                                ],
+                                'webhookData' => [
+                                    'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                                    'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_CREATED,
+                                ]
+                            ]
+                        ],
+                        $executionResults->executedAutomations
+                    );
+
                     $wpdb->query('COMMIT');
 
                     return new WP_REST_Response((new ApiResponse(true, [], [
