@@ -5,7 +5,7 @@ module.exports = {
     ".(ts|tsx)": "ts-jest",
   },
   moduleNameMapper: {
-    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "\\.(css|less|scss|sass)$": "<rootDir>/src/test-utils/__mocks__/fileMock.js",
     "\\.(png|jpg|jpeg|gif|svg|webp)$": "<rootDir>/src/test-utils/__mocks__/fileMock.js",
   },
   testPathIgnorePatterns: ["/node_modules/", "/build/"],
