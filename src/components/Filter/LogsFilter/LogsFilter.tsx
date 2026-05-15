@@ -124,6 +124,14 @@ const LogsFilter = ({ filterSettings, setFilterSettings }: Props) => {
                 label: __("System", "quicktasker"),
                 value: LogCreatedByEnum.System,
               },
+              {
+                label: __("Anonymous", "quicktasker"),
+                value: LogCreatedByEnum.Anonymous,
+              },
+              {
+                label: __("WP user", "quicktasker"),
+                value: LogCreatedByEnum.WpUser,
+              },
             ]}
             onSelectionChange={(selection: string) => {
               setLocalFilterSettings({

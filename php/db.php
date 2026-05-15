@@ -123,7 +123,7 @@ if (!function_exists('wpqt_set_up_db')) {
 				text text NOT NULL,
 				type_id int(11) DEFAULT NULL,
 				type ENUM('task', 'pipeline', 'stage', 'user', 'users', 'webhook') NOT NULL,
-				created_by ENUM('system', 'admin', 'quicktasker_user', 'automation', 'import', 'webhook', 'api_token') NOT NULL,
+				created_by ENUM('system', 'admin', 'quicktasker_user', 'automation', 'import', 'webhook', 'api_token', 'anonymous', 'wp_user') NOT NULL,
 				created_by_id int(11) DEFAULT NULL,
 				user_id int(11) DEFAULT NULL,
 				created_at datetime NOT NULL COMMENT 'UTC',

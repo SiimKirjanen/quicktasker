@@ -10,6 +10,8 @@ enum WPQTLogCreatedBy {
   Automation = "automation",
   Import = "import",
   Webhook = "webhook",
+  Anonymous = "anonymous",
+  WpUser = "wp_user",
 }
 
 enum WPQTArchiveDoneFilter {

@@ -60,13 +60,14 @@ if (!class_exists('WPQT\Log\LogRepository')) {
                     logs.user_id,
                     logs.created_at,
                     logs.log_status,
-                    CASE 
+                    CASE
                         WHEN logs.created_by = 'admin' THEN wp_users.display_name
+                        WHEN logs.created_by = 'wp_user' THEN wp_users.display_name
                         WHEN logs.created_by = 'quicktasker_user' THEN quicktasker_users.name
                         ELSE 'system'
                     END AS author_name
                 FROM $table_logs AS logs
-                LEFT JOIN $table_users AS wp_users ON logs.created_by = 'admin' AND logs.user_id = wp_users.ID
+                LEFT JOIN $table_users AS wp_users ON logs.created_by IN ('admin', 'wp_user') AND logs.user_id = wp_users.ID
                 LEFT JOIN $table_quicktasker_users AS quicktasker_users ON logs.created_by = 'quicktasker_user' AND logs.user_id = quicktasker_users.id
                 WHERE logs.type_id = %d AND logs.type = %s
                 ORDER BY logs.created_at DESC
@@ -110,13 +111,14 @@ if (!class_exists('WPQT\Log\LogRepository')) {
                     logs.user_id,
                     logs.created_at,
                     logs.log_status,
-                    CASE 
+                    CASE
                         WHEN logs.created_by = 'admin' THEN wp_users.display_name
+                        WHEN logs.created_by = 'wp_user' THEN wp_users.display_name
                         WHEN logs.created_by = 'quicktasker_user' THEN quicktasker_users.name
                         ELSE 'system'
                     END AS author_name
                 FROM $table_logs AS logs
-                LEFT JOIN $table_users AS wp_users ON logs.created_by = 'admin' AND logs.user_id = wp_users.ID
+                LEFT JOIN $table_users AS wp_users ON logs.created_by IN ('admin', 'wp_user') AND logs.user_id = wp_users.ID
                 LEFT JOIN $table_quicktasker_users AS quicktasker_users ON logs.created_by = 'quicktasker_user' AND logs.user_id = quicktasker_users.id";
             $whereClauses = [];
             $queryParams = [];

@@ -27,11 +27,22 @@ if (!function_exists('wpqt_register_public_api_routes')) {
                         'description' => $data['description'],
                     ]);
 
+                    if (is_user_logged_in()) {
+                        $createdBy = current_user_can('manage_options')
+                            ? WP_QT_LOG_CREATED_BY_ADMIN
+                            : WP_QT_LOG_CREATED_BY_WP_USER;
+                        $createdById = get_current_user_id();
+                    } else {
+                        $createdBy = WP_QT_LOG_CREATED_BY_ANONYMOUS;
+                        $createdById = null;
+                    }
                     ServiceLocator::get('LogService')->log('Public submission: task ' . $task->name . ' created', [
-                        'type'        => WP_QT_LOG_TYPE_TASK,
-                        'type_id'     => $task->id,
-                        'created_by'  => WP_QT_LOG_CREATED_BY_SYSTEM,
-                        'pipeline_id' => (int) $data['pipeline_id'],
+                        'type'          => WP_QT_LOG_TYPE_TASK,
+                        'type_id'       => $task->id,
+                        'user_id'       => $createdById,
+                        'created_by'    => $createdBy,
+                        'created_by_id' => $createdById,
+                        'pipeline_id'   => (int) $data['pipeline_id'],
                     ]);
 
                     $wpdb->query('COMMIT');
