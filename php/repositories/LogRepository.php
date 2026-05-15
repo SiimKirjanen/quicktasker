@@ -158,10 +158,15 @@ if (!class_exists('WPQT\Log\LogRepository')) {
             }
 
             $sql .= ' ORDER BY logs.created_at ' . $order;
-            $sql .= ' LIMIT %d';
-            $queryParams[] = (int) $numberOfLogs;
 
-            $results = $wpdb->get_results($wpdb->prepare($sql, ...$queryParams));
+            if (null !== $numberOfLogs) {
+                $sql .= ' LIMIT %d';
+                $queryParams[] = (int) $numberOfLogs;
+            }
+
+            $results = empty($queryParams)
+                ? $wpdb->get_results($sql)
+                : $wpdb->get_results($wpdb->prepare($sql, ...$queryParams));
 
             return $results;
         }

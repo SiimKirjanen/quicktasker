@@ -55,12 +55,24 @@ function wpqt_register_token_api_routes()
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $pipeline = ServiceLocator::get('PipelineRepository')->getPipelineById($cachedDbToken->pipeline_id);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
 
                 if (!$pipeline) {
                     return $responseService->createTokenApiResponse(false, 404, [
                         'message' => 'Board not found for the provided token'
                     ]);
                 }
+
+                ServiceLocator::get('LogService')->log(
+                    "Board {$pipeline->name} fetched by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type'          => WP_QT_LOG_TYPE_PIPELINE,
+                        'type_id'       => $pipeline->id,
+                        'pipeline_id'   => $pipeline->id,
+                        'created_by'    => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
 
                 return $responseService->createTokenApiResponse(true, 200, [
                     'board' => $pipeline
@@ -139,11 +151,23 @@ function wpqt_register_token_api_routes()
             try {
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $stages = ServiceLocator::get('StageRepository')->getStagesByPipelineId($cachedDbToken->pipeline_id);
 
                 if (null === $stages) {
                     throw new \Exception('No stages found for the board associated with the provided token.');
                 }
+
+                ServiceLocator::get('LogService')->log(
+                    "Board stages fetched by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type'          => WP_QT_LOG_TYPE_PIPELINE,
+                        'type_id'       => $cachedDbToken->pipeline_id,
+                        'pipeline_id'   => $cachedDbToken->pipeline_id,
+                        'created_by'    => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
 
                 return $responseService->createTokenApiResponse(true, 200, [
                     'stages' => $stages
@@ -346,7 +370,19 @@ function wpqt_register_token_api_routes()
             try {
                 $cachedDbToken = ServiceLocator::get('ApiTokenService')->getRequestTokenCache(WP_QUICKTASKER_CACHED_API_DB_TOKEN);
                 $responseService = ServiceLocator::get('ResponseService');
+                $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $tasks = ServiceLocator::get('TaskRepository')->getTasks(['pipeline_id' => $cachedDbToken->pipeline_id, 'is_archived' => false]);
+
+                ServiceLocator::get('LogService')->log(
+                    "Board tasks fetched by {$apiTokenRepository->getApiTokenName($cachedDbToken)}",
+                    [
+                        'type'          => WP_QT_LOG_TYPE_PIPELINE,
+                        'type_id'       => $cachedDbToken->pipeline_id,
+                        'pipeline_id'   => $cachedDbToken->pipeline_id,
+                        'created_by'    => WP_QT_LOG_CREATED_BY_API_TOKEN,
+                        'created_by_id' => $cachedDbToken->id,
+                    ]
+                );
 
                 return $responseService->createTokenApiResponse(true, 200, [
                     'tasks' => $tasks
