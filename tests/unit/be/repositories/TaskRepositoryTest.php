@@ -613,4 +613,43 @@ class TaskRepositoryTest extends TestCase
         $this->assertIsArray($result[0]->assigned_labels);
         $this->assertIsArray($result[0]->custom_fields);
     }
+
+    public function test_getPublicTasksByHashes_returns_empty_when_no_hashes()
+    {
+        $this->wpdbMock->expects($this->never())->method('prepare');
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $result = $this->repository->getPublicTasksByHashes([]);
+
+        $this->assertSame([], $result);
+    }
+
+    public function test_getPublicTasksByHashes_returns_tasks_when_found()
+    {
+        $preparedSql = "PREPARED_SQL";
+        $expectedTasks = [
+            (object)[
+                'task_hash'     => 'abc',
+                'name'          => 'Task A',
+                'description'   => 'd',
+                'is_done'       => 0,
+                'created_at'    => '2026-01-01 12:00:00',
+                'stage_name'    => 'Inbox',
+                'pipeline_name' => 'Board',
+            ],
+        ];
+
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->willReturn($preparedSql);
+
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with($preparedSql)
+            ->willReturn($expectedTasks);
+
+        $result = $this->repository->getPublicTasksByHashes(['abc', 'xyz']);
+
+        $this->assertSame($expectedTasks, $result);
+    }
 }

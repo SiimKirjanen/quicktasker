@@ -8,6 +8,8 @@ const logCreatedByString: { [key in WPQTLogCreatedBy]: string } = {
   [WPQTLogCreatedBy.WPQTUser]: "Quicktasker",
   [WPQTLogCreatedBy.Import]: __("Import", "quicktasker"),
   [WPQTLogCreatedBy.Webhook]: __("Webhook", "quicktasker"),
+  [WPQTLogCreatedBy.Anonymous]: __("Anonymous", "quicktasker"),
+  [WPQTLogCreatedBy.WpUser]: __("WP user", "quicktasker"),
 };
 
 export { logCreatedByString };

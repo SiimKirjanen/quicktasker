@@ -112,7 +112,7 @@ test.describe('Board Operations', () => {
     await expect(completedTaskCard.getByTestId('task-done-icon-uncompleted')).toBeVisible();
 
     await page.locator('#wpqt-app').getByText('Settings').click();
-    await page.locator('.react-switch-bg').click();
+    await page.getByTestId('task-completion-restriction-toggle').click({ force: true });
 
     await page.waitForTimeout(1000);
 

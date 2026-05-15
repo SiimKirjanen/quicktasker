@@ -35,7 +35,7 @@ if (!class_exists('WPQT\Settings\SettingRepository')) {
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    'SELECT id, pipeline_id, allow_only_last_stage_task_done, pipeline_refresh_interval, created_at, updated_at FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
+                    'SELECT id, pipeline_id, allow_only_last_stage_task_done, pipeline_refresh_interval, allow_public_task_creation, public_task_creation_limit, public_task_creation_count, require_logged_in_user, created_at, updated_at FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
                     $pipelineId
                 )
             );
@@ -54,6 +54,30 @@ if (!class_exists('WPQT\Settings\SettingRepository')) {
             return $wpdb->get_row(
                 $wpdb->prepare(
                     'SELECT allow_only_last_stage_task_done FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
+                    $pipelineId
+                )
+            );
+        }
+
+        public function getPublicTaskCreationSettings($pipelineId)
+        {
+            global $wpdb;
+
+            return $wpdb->get_row(
+                $wpdb->prepare(
+                    'SELECT allow_public_task_creation, public_task_creation_limit, public_task_creation_count, require_logged_in_user FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
+                    $pipelineId
+                )
+            );
+        }
+
+        public function incrementPublicTaskCount($pipelineId)
+        {
+            global $wpdb;
+
+            return $wpdb->query(
+                $wpdb->prepare(
+                    'UPDATE ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' SET public_task_creation_count = public_task_creation_count + 1 WHERE pipeline_id = %d',
                     $pipelineId
                 )
             );

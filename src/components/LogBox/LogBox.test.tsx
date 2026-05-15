@@ -18,6 +18,8 @@ jest.mock("../../utils/log", () => ({
     automation: "Automation",
     import: "Import",
     system: "System",
+    anonymous: "Anonymous",
+    wp_user: "WP user",
     all: "All",
   },
 }));
@@ -59,5 +61,17 @@ describe("LogBox", () => {
     };
     render(<LogBox log={logQuicktasker} />);
     expect(screen.getByText("(QuickTasker)")).toBeInTheDocument();
+  });
+
+  it("renders only the Anonymous label without author_name for anonymous logs", () => {
+    const logAnonymous = {
+      ...log,
+      author_name: "system",
+      created_by: "anonymous" as WPQTLogCreatedBy,
+    };
+    render(<LogBox log={logAnonymous} />);
+    expect(screen.getByText("Anonymous")).toBeInTheDocument();
+    expect(screen.queryByText("system")).not.toBeInTheDocument();
+    expect(screen.queryByText("(Anonymous)")).not.toBeInTheDocument();
   });
 });

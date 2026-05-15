@@ -4,6 +4,7 @@ import { getGlobalLogsRequest } from "../../../../api/api";
 import { LogsFilter } from "../../../../components/Filter/LogsFilter/LogsFilter";
 import { Loading } from "../../../../components/Loading/Loading";
 import { useTimezone } from "../../../../hooks/useTimezone";
+import { WPQTLogCreatedBy } from "../../../../types/enums";
 import {
   Log,
   LogCreatedByEnum,
@@ -155,6 +156,7 @@ function LogsTable({ logs }: { logs: Log[] }) {
 function LogRow({ log }: { log: Log }) {
   const { convertToWPTimezone } = useTimezone();
   const createdBy = logCreatedByString[log.created_by];
+  const isAnonymous = log.created_by === WPQTLogCreatedBy.Anonymous;
   const isError = log.log_status === LogStatusEnum.Error;
   return (
     <>
@@ -168,8 +170,14 @@ function LogRow({ log }: { log: Log }) {
         {convertToWPTimezone(log.created_at)}
       </span>
       <span>
-        <span className="wpqt-font-semibold">{log.author_name}</span>
-        <span className="wpqt-text-gray-500"> ({createdBy})</span>
+        {isAnonymous ? (
+          <span className="wpqt-font-semibold">{createdBy}</span>
+        ) : (
+          <>
+            <span className="wpqt-font-semibold">{log.author_name}</span>
+            <span className="wpqt-text-gray-500"> ({createdBy})</span>
+          </>
+        )}
       </span>
       <span>{log.text}</span>
     </>

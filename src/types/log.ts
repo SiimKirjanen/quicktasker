@@ -34,6 +34,8 @@ enum LogCreatedByEnum {
   Import = "import",
   System = "system",
   ApiToken = "api_token",
+  Anonymous = "anonymous",
+  WpUser = "wp_user",
   All = "all",
 }
 

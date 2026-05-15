@@ -7,6 +7,8 @@ module.exports = {
   entry: {
     app: path.resolve(process.cwd(), "src", "index.js"),
     userApp: path.resolve(process.cwd(), "src", "user-page-app", "index.js"),
+    publicTaskBlock: path.resolve(process.cwd(), "src", "blocks", "public-task-form", "index.tsx"),
+    publicTaskBlockView: path.resolve(process.cwd(), "src", "blocks", "public-task-form", "view.tsx"),
   },
   module: {
     rules: [

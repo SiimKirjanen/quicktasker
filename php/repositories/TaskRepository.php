@@ -457,5 +457,27 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
 
             return $tasks;
         }
+
+        public function getPublicTasksByHashes($hashes)
+        {
+            global $wpdb;
+
+            if (empty($hashes)) {
+                return [];
+            }
+
+            $placeholders = implode(',', array_fill(0, count($hashes), '%s'));
+
+            return $wpdb->get_results($wpdb->prepare(
+                'SELECT t.task_hash, t.name, t.description, t.is_done, t.created_at,
+                        s.name AS stage_name, p.name AS pipeline_name
+                 FROM ' . TABLE_WP_QUICKTASKER_TASKS . ' AS t
+                 LEFT JOIN ' . TABLE_WP_QUICKTASKER_TASKS_LOCATION . ' AS tl ON t.id = tl.task_id
+                 LEFT JOIN ' . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . ' AS s ON tl.stage_id = s.id
+                 LEFT JOIN ' . TABLE_WP_QUICKTASKER_PIPELINES . ' AS p ON t.pipeline_id = p.id
+                 WHERE t.task_hash IN (' . $placeholders . ') AND t.is_public_submission = 1 AND t.is_archived = 0',
+                $hashes
+            ));
+        }
     }
 }

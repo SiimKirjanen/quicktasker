@@ -130,6 +130,17 @@ if (!class_exists('WPQT\RequestValidation')) {
         }
 
         /**
+         * Validates that the given parameter is a non-empty string (after trim).
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is a non-empty string, false otherwise.
+         */
+        public static function validateNonEmptyStringParam($param)
+        {
+            return is_string($param) && '' !== trim($param);
+        }
+
+        /**
          * Sanitizes a string parameter to ensure it is safe for use.
          *
          * @param mixed $param The parameter to sanitize.
@@ -141,6 +152,17 @@ if (!class_exists('WPQT\RequestValidation')) {
         public static function sanitizeStringParam($param)
         {
             return sanitize_text_field($param);
+        }
+
+        /**
+         * Sanitizes a textarea parameter, preserving newlines.
+         *
+         * @param mixed $param The parameter to sanitize.
+         * @return string The sanitized textarea value.
+         */
+        public static function sanitizeTextareaParam($param)
+        {
+            return sanitize_textarea_field($param);
         }
 
         /**
@@ -510,6 +532,26 @@ if (!class_exists('WPQT\RequestValidation')) {
         public static function validateWebhookTargetType($param)
         {
             return in_array($param, WP_QUICKTASKER_WEBHOOK_TARGET_TYPES, true);
+        }
+
+        /**
+         * Validates that the given parameter is an array of alphanumeric hash strings.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is an array of alphanumeric strings, false otherwise.
+         */
+        public static function validateHashArray($param)
+        {
+            if (!is_array($param)) {
+                return false;
+            }
+            foreach ($param as $item) {
+                if (!is_string($item) || !preg_match('/^[a-zA-Z0-9]+$/', $item)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /**

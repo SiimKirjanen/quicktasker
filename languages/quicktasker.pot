@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.54.0\n"
+"Project-Id-Version: QuickTasker 1.55.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-11T10:40:49+00:00\n"
+"POT-Creation-Date: 2026-05-15T11:02:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -36,6 +36,7 @@ msgstr ""
 
 #: php/admin-pages.php:22
 #: php/admin-pages.php:23
+#: build/app.js:1
 msgid "Boards"
 msgstr ""
 
@@ -77,89 +78,101 @@ msgid "About"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:639
-#: php/api/user-page-api.php:862
+#: php/api/admin-api.php:640
+#: php/api/user-page-api.php:866
 #, php-format
 msgid "Stage was changed for task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:874
+#: php/api/admin-api.php:876
 #, php-format
 msgid "Due date for task \"%s\" changed"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:985
+#: php/api/admin-api.php:988
 #, php-format
 msgid "Task \"%s\" was deleted"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1075
+#: php/api/admin-api.php:1078
 #, php-format
 msgid "Task \"%s\" was archived"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1167
+#: php/api/admin-api.php:1171
 #, php-format
 msgid "Task \"%s\" was restored from the archive"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1271
-#: php/api/user-page-api.php:969
+#: php/api/admin-api.php:1276
+#: php/api/user-page-api.php:974
 #, php-format
 msgid "Task \"%s\" was marked done"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1273
-#: php/api/user-page-api.php:971
+#: php/api/admin-api.php:1278
+#: php/api/user-page-api.php:976
 #, php-format
 msgid "Task \"%s\" was marked not done"
 msgstr ""
 
 #. translators: %1$s = assigner name, %2$s = task name
-#: php/api/admin-api.php:1893
+#: php/api/admin-api.php:1899
 #, php-format
 msgid "%1$s assigned you to task \"%2$s\""
 msgstr ""
 
 #. translators: %1$s = unassigner name, %2$s = task name
-#: php/api/admin-api.php:2016
+#: php/api/admin-api.php:2023
 #, php-format
 msgid "%1$s unassigned you from task \"%2$s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:2642
+#: php/api/admin-api.php:2650
 #, php-format
 msgid "A private comment was added to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:2644
-#: php/api/user-page-api.php:436
+#: php/api/admin-api.php:2652
+#: php/api/user-page-api.php:437
 #, php-format
 msgid "A public comment was added to task \"%s\""
 msgstr ""
 
-#: php/api/admin-api.php:3098
+#: php/api/admin-api.php:3119
 msgid "No valid settings provided"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:646
+#: php/api/user-page-api.php:648
 #, php-format
 msgid "A user was assigned to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:758
+#: php/api/user-page-api.php:761
 #, php-format
 msgid "A user was unassigned from task \"%s\""
+msgstr ""
+
+#: php/blocks/PublicTaskFormBlock.php:89
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Submit task"
+msgstr ""
+
+#: php/blocks/PublicTaskFormBlock.php:92
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Thanks! Your task has been submitted."
 msgstr ""
 
 #: php/filters.php:72
@@ -185,6 +198,7 @@ msgstr ""
 #: php/services/export/PDFExportService.php:54
 #: php/services/export/PDFExportService.php:55
 #: php/services/export/PDFExportService.php:56
+#: build/app.js:1
 msgid "None"
 msgstr ""
 
@@ -221,6 +235,7 @@ msgstr ""
 
 #: php/services/export/PDFExportService.php:64
 #: build/app.js:1
+#: build/publicTaskBlock.js:1
 #: build/userApp.js:1
 msgid "Board"
 msgstr ""
@@ -232,6 +247,8 @@ msgstr ""
 
 #: php/services/export/PDFExportService.php:66
 #: build/app.js:1
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
 msgid "Completed"
 msgstr ""
 
@@ -242,7 +259,6 @@ msgid "Due date"
 msgstr ""
 
 #: php/services/export/PDFExportService.php:68
-#: build/app.js:1
 msgid "Assigned WordPress users"
 msgstr ""
 
@@ -262,7 +278,7 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-#: php/services/TaskService.php:448
+#: php/services/TaskService.php:450
 msgid "Cannot restore the task. The selected board needs at least one stage."
 msgstr ""
 
@@ -333,6 +349,14 @@ msgstr ""
 
 #: build/app.js:1
 msgid "System"
+msgstr ""
+
+#: build/app.js:1
+msgid "Anonymous"
+msgstr ""
+
+#: build/app.js:1
+msgid "WP user"
 msgstr ""
 
 #: build/app.js:1
@@ -408,11 +432,56 @@ msgid "Failed to load notifications"
 msgstr ""
 
 #: build/app.js:1
+msgid "Failed to save notification preferences"
+msgstr ""
+
+#: build/app.js:1
+#, js-format
+msgid "%d selected"
+msgstr ""
+
+#: build/app.js:1
+msgid "Reset to all"
+msgstr ""
+
+#: build/app.js:1
+msgid "Deselect all"
+msgstr ""
+
+#: build/app.js:1
 msgid "Failed to mark notification as read"
 msgstr ""
 
 #: build/app.js:1
 msgid "Failed to mark all notifications as read"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task completion changed"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task assignment changed"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task archived or restored"
+msgstr ""
+
+#: build/app.js:1
+msgid "Task deleted"
+msgstr ""
+
+#: build/app.js:1
+msgid "Stage changed"
+msgstr ""
+
+#: build/app.js:1
+msgid "Due date changed"
+msgstr ""
+
+#: build/app.js:1
+msgid "Comment added"
 msgstr ""
 
 #: build/app.js:1
@@ -448,7 +517,31 @@ msgid "Refresh notifications"
 msgstr ""
 
 #: build/app.js:1
+msgid "Toggle notification types"
+msgstr ""
+
+#: build/app.js:1
+msgid "Notification types"
+msgstr ""
+
+#: build/app.js:1
 msgid "Filter"
+msgstr ""
+
+#: build/app.js:1
+msgid "All boards"
+msgstr ""
+
+#: build/app.js:1
+msgid "No boards"
+msgstr ""
+
+#: build/app.js:1
+msgid "Select all boards"
+msgstr ""
+
+#: build/app.js:1
+msgid "Deselect all boards"
 msgstr ""
 
 #: build/app.js:1
@@ -460,6 +553,8 @@ msgid "Mark all as read"
 msgstr ""
 
 #: build/app.js:1
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
 msgid "Loading…"
 msgstr ""
 
@@ -731,10 +826,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Failed to update task"
-msgstr ""
-
-#: build/app.js:1
-msgid "Task deleted"
 msgstr ""
 
 #: build/app.js:1
@@ -1131,35 +1222,15 @@ msgid "Failed to remove user"
 msgstr ""
 
 #: build/app.js:1
-msgid "Assigned quicktaskers"
+msgid "WordPress"
 msgstr ""
 
 #: build/app.js:1
-msgid "No quicktaskers assigned"
+msgid "Quicktaskers"
 msgstr ""
 
 #: build/app.js:1
-msgid "No WordPress users assigned"
-msgstr ""
-
-#: build/app.js:1
-msgid "Assign a quicktasker"
-msgstr ""
-
-#: build/app.js:1
-msgid "No quicktaskers available to assign"
-msgstr ""
-
-#: build/app.js:1
-msgid "Assign a WordPress user"
-msgstr ""
-
-#: build/app.js:1
-msgid "No WordPress users with required permissions available to assign"
-msgstr ""
-
-#: build/app.js:1
-msgid "Comment added"
+msgid "No users found"
 msgstr ""
 
 #: build/app.js:1
@@ -1827,6 +1898,42 @@ msgid "Set how often the board automatically refreshes (in seconds)."
 msgstr ""
 
 #: build/app.js:1
+msgid "Public task submissions"
+msgstr ""
+
+#: build/app.js:1
+msgid "Allow website visitors to submit tasks into this board via the QuickTasker block on pages/posts."
+msgstr ""
+
+#: build/app.js:1
+msgid "Require logged-in WordPress user"
+msgstr ""
+
+#: build/app.js:1
+msgid "When enabled, only logged-in WordPress users can submit tasks via the block."
+msgstr ""
+
+#: build/app.js:1
+msgid "Max submissions"
+msgstr ""
+
+#: build/app.js:1
+msgid "Public submissions are blocked once the counter reaches this value. Reset the counter to allow more."
+msgstr ""
+
+#: build/app.js:1
+msgid "Submissions so far:"
+msgstr ""
+
+#: build/app.js:1
+msgid "Public submissions counted toward the current limit. Reset to clear it and start counting from zero again."
+msgstr ""
+
+#: build/app.js:1
+msgid "Reset counter"
+msgstr ""
+
+#: build/app.js:1
 msgid "Restrict Task Completion"
 msgstr ""
 
@@ -2143,10 +2250,6 @@ msgid "Disabled"
 msgstr ""
 
 #: build/app.js:1
-msgid "No users found"
-msgstr ""
-
-#: build/app.js:1
 msgid "Search by name"
 msgstr ""
 
@@ -2395,6 +2498,104 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Board webhooks"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "You must be logged in as a WordPress user to submit a task to this board."
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "This board has reached its submission limit."
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "This board is not currently accepting task submissions."
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "This task is no longer available."
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "In progress"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Could not load task status."
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Your submissions"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Refresh submissions"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Refresh"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Submission failed."
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Network error. Please try again."
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Task title"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Description (optional)"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+#: build/publicTaskBlockView.js:1
+msgid "Submitting…"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+msgid "Failed to load boards."
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+msgid "— Select a board —"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+msgid "Board settings"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+msgid "Submit button label"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+msgid "Success message"
+msgstr ""
+
+#: build/publicTaskBlock.js:1
+msgid "Pick a board in the block sidebar to start accepting submissions."
+msgstr ""
+
+#: build/publicTaskBlockView.js:1
+msgid "QuickTasker block: no board selected."
 msgstr ""
 
 #: build/userApp.js:1
