@@ -22,10 +22,6 @@ if (!function_exists('wpqt_register_public_api_routes')) {
 
                     $publicTaskService = ServiceLocator::get('PublicTaskService');
                     $publicTaskService->ensureCanCreatePublicTask($data['pipeline_id']);
-                    $task = $publicTaskService->createPublicTask($data['pipeline_id'], [
-                        'name'        => $data['name'],
-                        'description' => $data['description'],
-                    ]);
 
                     if (is_user_logged_in()) {
                         $createdBy = current_user_can('manage_options')
@@ -36,6 +32,13 @@ if (!function_exists('wpqt_register_public_api_routes')) {
                         $createdBy = WP_QT_LOG_CREATED_BY_ANONYMOUS;
                         $createdById = null;
                     }
+
+                    $task = $publicTaskService->createPublicTask($data['pipeline_id'], [
+                        'name'            => $data['name'],
+                        'description'     => $data['description'],
+                        'created_by_id'   => $createdById,
+                        'created_by_type' => $createdById ? WP_QT_WORDPRESS_USER_TYPE : null,
+                    ]);
                     ServiceLocator::get('LogService')->log('Public submission: task ' . $task->name . ' created', [
                         'type'          => WP_QT_LOG_TYPE_TASK,
                         'type_id'       => $task->id,

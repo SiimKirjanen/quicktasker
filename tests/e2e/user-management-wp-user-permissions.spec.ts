@@ -301,6 +301,91 @@ test.describe('WP User Capabilities – Manage Settings', () => {
   });
 });
 
+test.describe('WP User Capabilities – View My Tasks', () => {
+  test('My Tasks submenu is not visible without the capability', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpnomytasks');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
+    await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(
+      page.locator('#adminmenu').getByRole('link', { name: 'My Tasks' }),
+    ).not.toBeVisible();
+    await context.close();
+  });
+
+  test('accessing My Tasks page directly shows insufficient permissions error', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpnomytasks');
+    await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker-my-tasks');
+    await expect(page.getByText('Sorry, you are not allowed to access this page.')).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await context.close();
+  });
+
+  test('user with only view-my-tasks cap sees QuickTasker menu and My Tasks submenu', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpmytasks');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_view_my_tasks']);
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await page.goto('/wp-admin/');
+    await expect(
+      page.locator('#adminmenu').getByRole('link', { name: 'QuickTasker', exact: true }),
+    ).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(
+      page.locator('#adminmenu').getByRole('link', { name: 'My Tasks' }),
+    ).toBeVisible();
+    await context.close();
+  });
+
+  test('user with only view-my-tasks cap can load the My Tasks page but no Boards', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpmytasks');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_view_my_tasks']);
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker-my-tasks');
+    await expect(page.getByRole('heading', { name: 'My Tasks' })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(page.getByText('Tasks I created')).toBeVisible();
+    await expect(
+      page.locator('#adminmenu').getByRole('link', { name: 'Boards' }),
+    ).not.toBeVisible();
+    await context.close();
+  });
+
+  test('non-admin user does not see the "Tasks assigned to me" section', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpmytasks');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_view_my_tasks']);
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker-my-tasks');
+    await expect(page.getByText('Tasks I created')).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(page.getByText('Tasks assigned to me')).not.toBeVisible();
+    await context.close();
+  });
+
+  test('admin user sees the "Tasks assigned to me" section', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpmytasksadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_view_my_tasks']);
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker-my-tasks');
+    await expect(page.getByText('Tasks I created')).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(page.getByText('Tasks assigned to me')).toBeVisible();
+    await context.close();
+  });
+});
+
 test.describe('WP User Capabilities – Allow Delete', () => {
   test('Delete stage option is visible in stage controls dropdown', async ({ browser, request }) => {
     const userLogin = uniqueLogin('wpdelete');

@@ -77,6 +77,8 @@ if (!class_exists('WPQT\PublicTask\PublicTaskService')) {
                 'description'          => $description,
                 'pipelineId'           => $pipelineId,
                 'is_public_submission' => 1,
+                'created_by_id'        => isset($args['created_by_id']) ? $args['created_by_id'] : null,
+                'created_by_type'      => isset($args['created_by_type']) ? $args['created_by_type'] : null,
             ]);
 
             ServiceLocator::get('SettingRepository')->incrementPublicTaskCount($pipelineId);

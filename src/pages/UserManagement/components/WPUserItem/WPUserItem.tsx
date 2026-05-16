@@ -25,6 +25,7 @@ function WPUserItem({ user }: Props) {
         "quicktasker_admin_role_manage_archive" in user.allcaps,
       quicktasker_access_user_page_app:
         "quicktasker_access_user_page_app" in user.allcaps,
+      quicktasker_view_my_tasks: "quicktasker_view_my_tasks" in user.allcaps,
     });
   const [updating, setUpdating] = useState(false);
   const { updateWPUserCapabilities } = useCapabilityActions();
@@ -69,67 +70,94 @@ function WPUserItem({ user }: Props) {
             onToggleChange(checked, "quicktasker_admin_role");
           }}
         />
+
+        <div className="wpqt-mt-3 wpqt-pl-4 wpqt-border-l-2 wpqt-border-gray-200">
+          <div className="wpqt-mb-2">
+            <div className="wpqt-mb-2">
+              {__("Access to user management", "quicktasker")}
+            </div>
+            <Toggle
+              checked={capabilitySettings.quicktasker_admin_role_manage_users}
+              disabled={!capabilitySettings.quicktasker_admin_role}
+              handleChange={(checked: boolean) => {
+                onToggleChange(checked, "quicktasker_admin_role_manage_users");
+              }}
+            />
+          </div>
+
+          <div className="wpqt-mb-2">
+            <div className="wpqt-mb-2">
+              {__(
+                "Access to manage settings (boards, stages, automations, webhooks, api tokens)",
+                "quicktasker",
+              )}
+            </div>
+            <Toggle
+              checked={
+                capabilitySettings.quicktasker_admin_role_manage_settings
+              }
+              disabled={!capabilitySettings.quicktasker_admin_role}
+              handleChange={(checked: boolean) => {
+                onToggleChange(
+                  checked,
+                  "quicktasker_admin_role_manage_settings",
+                );
+              }}
+            />
+          </div>
+
+          <div className="wpqt-mb-2">
+            <div className="wpqt-mb-2">
+              {__("Access to archive page", "quicktasker")}
+            </div>
+            <Toggle
+              checked={capabilitySettings.quicktasker_admin_role_manage_archive}
+              disabled={!capabilitySettings.quicktasker_admin_role}
+              handleChange={(checked: boolean) => {
+                onToggleChange(
+                  checked,
+                  "quicktasker_admin_role_manage_archive",
+                );
+              }}
+            />
+          </div>
+
+          <div className="wpqt-mb-2">
+            <div className="wpqt-mb-2">
+              {__("Allow access to Tasks App", "quicktasker")}
+            </div>
+            <Toggle
+              checked={capabilitySettings.quicktasker_access_user_page_app}
+              disabled={!capabilitySettings.quicktasker_admin_role}
+              handleChange={(checked: boolean) => {
+                onToggleChange(checked, "quicktasker_access_user_page_app");
+              }}
+            />
+          </div>
+
+          <div className="wpqt-mb-2">
+            <div className="wpqt-mb-2">
+              {__("Allow to delete resources", "quicktasker")}
+            </div>
+            <Toggle
+              checked={capabilitySettings.quicktasker_admin_role_allow_delete}
+              disabled={!capabilitySettings.quicktasker_admin_role}
+              handleChange={(checked: boolean) => {
+                onToggleChange(checked, "quicktasker_admin_role_allow_delete");
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
-          {__("Access to user management", "quicktasker")}
+          {__("Access to My Tasks page", "quicktasker")}
         </div>
         <Toggle
-          checked={capabilitySettings.quicktasker_admin_role_manage_users}
+          checked={capabilitySettings.quicktasker_view_my_tasks}
           handleChange={(checked: boolean) => {
-            onToggleChange(checked, "quicktasker_admin_role_manage_users");
-          }}
-        />
-      </div>
-
-      <div className="wpqt-mb-2">
-        <div className="wpqt-mb-2">
-          {__(
-            "Access to manage settings (boards, stages, automations, webhooks, api tokens)",
-            "quicktasker",
-          )}
-        </div>
-        <Toggle
-          checked={capabilitySettings.quicktasker_admin_role_manage_settings}
-          handleChange={(checked: boolean) => {
-            onToggleChange(checked, "quicktasker_admin_role_manage_settings");
-          }}
-        />
-      </div>
-
-      <div className="wpqt-mb-2">
-        <div className="wpqt-mb-2">
-          {__("Access to archive page", "quicktasker")}
-        </div>
-        <Toggle
-          checked={capabilitySettings.quicktasker_admin_role_manage_archive}
-          handleChange={(checked: boolean) => {
-            onToggleChange(checked, "quicktasker_admin_role_manage_archive");
-          }}
-        />
-      </div>
-
-      <div className="wpqt-mb-2">
-        <div className="wpqt-mb-2">
-          {__("Allow to delete resources", "quicktasker")}
-        </div>
-        <Toggle
-          checked={capabilitySettings.quicktasker_admin_role_allow_delete}
-          handleChange={(checked: boolean) => {
-            onToggleChange(checked, "quicktasker_admin_role_allow_delete");
-          }}
-        />
-      </div>
-
-      <div className="wpqt-mb-2">
-        <div className="wpqt-mb-2">
-          {__("Allow access to user tasks app", "quicktasker")}
-        </div>
-        <Toggle
-          checked={capabilitySettings.quicktasker_access_user_page_app}
-          handleChange={(checked: boolean) => {
-            onToggleChange(checked, "quicktasker_access_user_page_app");
+            onToggleChange(checked, "quicktasker_view_my_tasks");
           }}
         />
       </div>

@@ -62,11 +62,14 @@ if (!function_exists('wpqt_set_up_db')) {
 				task_hash varchar(255) NOT NULL,
 				task_focus_color varchar(255) DEFAULT NULL,
 				is_public_submission tinyint(1) NOT NULL DEFAULT 0,
+				created_by_id int(11) DEFAULT NULL,
+				created_by_type ENUM('wp-user','quicktasker') DEFAULT NULL,
 				PRIMARY KEY  (id),
 				UNIQUE KEY task_hash (task_hash),
 				INDEX pipeline_id (pipeline_id),
 				INDEX is_archived (is_archived),
-				INDEX is_public_submission (is_public_submission)
+				INDEX is_public_submission (is_public_submission),
+				INDEX created_by (created_by_type, created_by_id)
 			) $charset_collate;";
 
             dbDelta($sql3);

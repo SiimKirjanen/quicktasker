@@ -339,9 +339,11 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
                 $userId
             )); */
 
-            $sql = 'SELECT b.*, c.name as pipeline_name FROM ' . TABLE_WP_QUICKTASKER_USER_TASK . ' AS a
+            $sql = 'SELECT b.*, c.name as pipeline_name, e.name as stage_name FROM ' . TABLE_WP_QUICKTASKER_USER_TASK . ' AS a
                 LEFT JOIN ' . TABLE_WP_QUICKTASKER_TASKS . ' AS b ON a.task_id = b.id
                 LEFT JOIN ' . TABLE_WP_QUICKTASKER_PIPELINES . ' AS c ON b.pipeline_id = c.id
+                LEFT JOIN ' . TABLE_WP_QUICKTASKER_TASKS_LOCATION . ' AS d ON b.id = d.task_id
+                LEFT JOIN ' . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . ' AS e ON d.stage_id = e.id
                 WHERE a.user_id = %d';
             $args = [$userId];
 
@@ -362,6 +364,34 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
             }
 
             return $tasks;
+        }
+
+        /**
+         * Retrieves tasks created by a specific user.
+         *
+         * @param int $userId The ID of the user.
+         * @param string $userType The creator type ('wp-user' or 'quicktasker').
+         * @return array Tasks created by the user.
+         */
+        public function getTasksCreatedByUser($userId, $userType = WP_QT_WORDPRESS_USER_TYPE)
+        {
+            global $wpdb;
+
+            return $wpdb->get_results($wpdb->prepare(
+                'SELECT a.id, a.pipeline_id, a.name, a.description, a.is_archived, a.is_done,
+                        a.free_for_all, a.created_at, a.updated_at, a.due_date, a.task_completed_at,
+                        a.task_hash, a.task_focus_color, a.is_public_submission,
+                        a.created_by_id, a.created_by_type,
+                        c.name as pipeline_name, e.name as stage_name
+                FROM ' . TABLE_WP_QUICKTASKER_TASKS . ' AS a
+                LEFT JOIN ' . TABLE_WP_QUICKTASKER_PIPELINES . ' AS c ON a.pipeline_id = c.id
+                LEFT JOIN ' . TABLE_WP_QUICKTASKER_TASKS_LOCATION . ' AS d ON a.id = d.task_id
+                LEFT JOIN ' . TABLE_WP_QUICKTASKER_PIPELINE_STAGES . ' AS e ON d.stage_id = e.id
+                WHERE a.created_by_id = %d AND a.created_by_type = %s AND a.is_archived = 0
+                ORDER BY a.created_at DESC',
+                $userId,
+                $userType
+            ));
         }
 
         /**

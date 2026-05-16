@@ -6,6 +6,7 @@ type BaseTask = {
   pipeline_id: string;
   pipeline_name: string | null;
   stage_id: string;
+  stage_name?: string | null;
   name: string;
   description: string;
   task_hash: string;
@@ -13,6 +14,7 @@ type BaseTask = {
   assigned_labels: Label[];
   due_date: string | null;
   task_focus_color: string | null;
+  task_completed_at?: string | null;
 };
 
 type Task = BaseTask & {

@@ -45,8 +45,8 @@ test.describe('WordPress Users Tab – User Card', () => {
     const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
     await expect(card).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
     const toggles = card.getByRole('switch');
-    await expect(toggles).toHaveCount(6);
-    for (let i = 0; i < 6; i++) {
+    await expect(toggles).toHaveCount(7);
+    for (let i = 0; i < 7; i++) {
       await expect(toggles.nth(i)).toHaveAttribute('aria-checked', 'false');
     }
   });

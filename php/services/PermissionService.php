@@ -100,6 +100,16 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         }
 
         /**
+         * Checks if the current user has the required permissions to view the My Tasks page.
+         *
+         * @return bool True if the user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredPermissionsForMyTasks()
+        {
+            return current_user_can(WP_QUICKTASKER_VIEW_MY_TASKS);
+        }
+
+        /**
          * Checks if a user is allowed to view a task.
          *
          * @param int $userId The ID of the user.

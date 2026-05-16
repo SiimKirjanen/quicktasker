@@ -57,6 +57,10 @@ if (!class_exists('WPQT\Capability\CapabilityService')) {
             if (!$adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS)) {
                 $adminRole->add_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS);
             }
+
+            if (!$adminRole->has_cap(WP_QUICKTASKER_VIEW_MY_TASKS)) {
+                $adminRole->add_cap(WP_QUICKTASKER_VIEW_MY_TASKS);
+            }
         }
 
         /**
@@ -105,6 +109,10 @@ if (!class_exists('WPQT\Capability\CapabilityService')) {
 
             if ($adminRole->has_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS)) {
                 $adminRole->remove_cap(WP_QUICKTASKER_ADMIN_ROLE_MANAGE_QUICKTASKER_SESSIONS);
+            }
+
+            if ($adminRole->has_cap(WP_QUICKTASKER_VIEW_MY_TASKS)) {
+                $adminRole->remove_cap(WP_QUICKTASKER_VIEW_MY_TASKS);
             }
         }
 
