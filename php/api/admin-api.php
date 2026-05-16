@@ -1867,6 +1867,34 @@ if (!function_exists('wpqt_register_api_routes')) {
                             ? $taskRepo->getTasksAssignedToUser($userId, false, WP_QT_WORDPRESS_USER_TYPE)
                             : null;
 
+                        $allTasks = array_merge($created, $assigned ?: []);
+                        $taskIds = array_map(function ($t) {
+                            return $t->id;
+                        }, $allTasks);
+                        $labelsByTask = [];
+                        $usersByTask = [];
+                        $wpUsersByTask = [];
+                        if (!empty($taskIds)) {
+                            $labels = ServiceLocator::get('LabelRepository')->getAssignedLabelsByTaskIds($taskIds);
+                            foreach ($labels as $label) {
+                                $labelsByTask[$label->entity_id][] = $label;
+                            }
+                            $userRepository = ServiceLocator::get('UserRepository');
+                            $assignedUsers = $userRepository->getAssignedUsersByTaskIds($taskIds);
+                            foreach ($assignedUsers as $user) {
+                                $usersByTask[$user->task_id][] = $user;
+                            }
+                            $assignedWPUsers = $userRepository->getAssignedWPUsersByTaskIds($taskIds);
+                            foreach ($assignedWPUsers as $user) {
+                                $wpUsersByTask[$user->task_id][] = $user;
+                            }
+                        }
+                        foreach ($allTasks as $task) {
+                            $task->assigned_labels = isset($labelsByTask[$task->id]) ? $labelsByTask[$task->id] : [];
+                            $task->assigned_users = isset($usersByTask[$task->id]) ? $usersByTask[$task->id] : [];
+                            $task->assigned_wp_users = isset($wpUsersByTask[$task->id]) ? $wpUsersByTask[$task->id] : [];
+                        }
+
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'created'  => $created,
                             'assigned' => $assigned,
