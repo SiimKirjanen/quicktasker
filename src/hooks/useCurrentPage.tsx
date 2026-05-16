@@ -88,8 +88,6 @@ const getPageFromUrl = () => {
     }
 
     switch (hash) {
-      case "#/my-tasks":
-        return <MyTasksPage />;
       case "#/user-management":
         return <UserManagement />;
       case "#/archive":
@@ -111,7 +109,7 @@ const getPageFromUrl = () => {
 const setSubMenuItemActive = () => {
   const { page, hash } = getUrlParams();
 
-  if (page !== "wp-quicktasker") {
+  if (page !== "wp-quicktasker" && page !== "wp-quicktasker-my-tasks") {
     return;
   }
 
@@ -120,35 +118,38 @@ const setSubMenuItemActive = () => {
   );
   submenuItems.forEach((item) => item.classList.remove("wpqt-current"));
 
-  const hashMap: { [key: string]: string } = {
-    "#/my-tasks": "#/my-tasks",
-    "#/user-management": "#/user-management",
-    "#/overview": "#/overview",
-    "#/archive": "#/archive",
-    "#/quicktasker-sessions": "#/quicktasker-sessions",
-    "#/tasks-app-settings": "#/tasks-app-settings",
-    "#/logs": "#/logs",
-    "#/settings": "#/settings",
-    "#/about": "#/about",
-    default: "",
-  };
+  let targetHref: string | null = null;
 
-  let targetHash = hashMap.default;
+  if (page === "wp-quicktasker-my-tasks") {
+    targetHref = "admin.php?page=wp-quicktasker-my-tasks";
+  } else {
+    const hashMap: { [key: string]: string } = {
+      "#/user-management": "#/user-management",
+      "#/overview": "#/overview",
+      "#/archive": "#/archive",
+      "#/quicktasker-sessions": "#/quicktasker-sessions",
+      "#/tasks-app-settings": "#/tasks-app-settings",
+      "#/logs": "#/logs",
+      "#/settings": "#/settings",
+      "#/about": "#/about",
+      default: "",
+    };
 
-  if (hashMap[hash] !== undefined) {
-    targetHash = hashMap[hash];
-  } else if (/^#\/user-management(\/\d+)?(\/tasks)?$/.test(hash)) {
-    targetHash = "#/user-management";
+    let targetHash = hashMap.default;
+
+    if (hashMap[hash] !== undefined) {
+      targetHash = hashMap[hash];
+    } else if (/^#\/user-management(\/\d+)?(\/tasks)?$/.test(hash)) {
+      targetHash = "#/user-management";
+    }
+
+    targetHref = `admin.php?page=wp-quicktasker${targetHash}`;
   }
 
   submenuItems.forEach((item) => {
     const link = item.querySelector("a");
 
-    if (
-      link &&
-      link.getAttribute("href") &&
-      link.getAttribute("href") === `admin.php?page=wp-quicktasker${targetHash}`
-    ) {
+    if (link && link.getAttribute("href") === targetHref) {
       item.classList.add("wpqt-current");
     }
   });
