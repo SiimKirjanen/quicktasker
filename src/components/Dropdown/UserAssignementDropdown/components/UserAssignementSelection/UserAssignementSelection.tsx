@@ -152,6 +152,15 @@ function UserAssignementSelection({
 
   return (
     <div className="wpqt-flex wpqt-w-[320px] wpqt-flex-col">
+      <div className="wpqt-mb-2">
+        <div className="wpqt-text-lg">{__("Assign users", "quicktasker")}</div>
+        <div className="wpqt-max-w-sm">
+          {__(
+            'WordPress users need the "Access to plugin admin area" permission to be assignable.',
+            "quicktasker",
+          )}
+        </div>
+      </div>
       <div onClick={(e) => e.stopPropagation()} className="wpqt-mb-2">
         <WPQTInput
           value={searchTerm}

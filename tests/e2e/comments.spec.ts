@@ -21,23 +21,25 @@ test.describe('Task Comments', () => {
 			const taskCard = getTaskCard(page, taskName);
 			await taskCard.click();
 
-			await page.getByText('Private comments').click();
-			const privatePanel = page.getByRole('tabpanel', { name: 'Private comments' });
-			await addComment(privatePanel, 'Test private comment');
+			await page.getByRole('tab', { name: 'Comments', exact: true }).click();
+			await page.getByRole('button', { name: 'Private' }).click();
+			const modal = page.getByTestId('task-modal');
+			await addComment(modal, 'Test private comment');
 
-			await expect(privatePanel.getByText('Test private comment')).toBeVisible();
+			await expect(modal.getByText('Test private comment')).toBeVisible();
 		});
 
 		test('private comment shows author name', async ({ page }) => {
 			const taskCard = getTaskCard(page, taskName);
 			await taskCard.click();
 
-			await page.getByText('Private comments').click();
-			const privatePanel = page.getByRole('tabpanel', { name: 'Private comments' });
-			await addComment(privatePanel, 'Author test comment');
+			await page.getByRole('tab', { name: 'Comments', exact: true }).click();
+			await page.getByRole('button', { name: 'Private' }).click();
+			const modal = page.getByTestId('task-modal');
+			await addComment(modal, 'Author test comment');
 
-			await expect(privatePanel.getByText('admin')).toBeVisible();
-			await expect(privatePanel.getByText('(WP User)')).toBeVisible();
+			await expect(modal.getByText('admin')).toBeVisible();
+			await expect(modal.getByText('(WP User)')).toBeVisible();
 		});
 	});
 
@@ -46,23 +48,25 @@ test.describe('Task Comments', () => {
 			const taskCard = getTaskCard(page, taskName);
 			await taskCard.click();
 
-			await page.getByText('Public comments').click();
-			const publicPanel = page.getByRole('tabpanel', { name: 'Public comments' });
-			await addComment(publicPanel, 'Test public comment');
+			await page.getByRole('tab', { name: 'Comments', exact: true }).click();
+			await page.getByRole('button', { name: 'Public' }).click();
+			const modal = page.getByTestId('task-modal');
+			await addComment(modal, 'Test public comment');
 
-			await expect(publicPanel.getByText('Test public comment')).toBeVisible();
+			await expect(modal.getByText('Test public comment')).toBeVisible();
 		});
 
 		test('public comment shows author name', async ({ page }) => {
 			const taskCard = getTaskCard(page, taskName);
 			await taskCard.click();
 
-			await page.getByText('Public comments').click();
-			const publicPanel = page.getByRole('tabpanel', { name: 'Public comments' });
-			await addComment(publicPanel, 'Public author test');
+			await page.getByRole('tab', { name: 'Comments', exact: true }).click();
+			await page.getByRole('button', { name: 'Public' }).click();
+			const modal = page.getByTestId('task-modal');
+			await addComment(modal, 'Public author test');
 
-			await expect(publicPanel.getByText('admin')).toBeVisible();
-			await expect(publicPanel.getByText('(WP User)')).toBeVisible();
+			await expect(modal.getByText('admin')).toBeVisible();
+			await expect(modal.getByText('(WP User)')).toBeVisible();
 		});
 	});
 });

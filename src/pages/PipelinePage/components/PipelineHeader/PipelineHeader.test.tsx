@@ -88,6 +88,8 @@ describe("PipelineHeader", () => {
     automationLogsModalSettings: { automationId: null },
     apiTokenLogsModalOpen: false,
     apiTokenLogsModalSettings: { apiTokenId: null },
+    taskLogsModalOpen: false,
+    taskLogsModalSettings: { taskId: null },
     notificationsModalOpen: false,
   };
 

@@ -60,10 +60,14 @@ function MyTasksPage() {
   return (
     <Page>
       <WPQTPageHeader
-        description={__(
-          "Tasks you have created and tasks assigned to you.",
-          "quicktasker",
-        )}
+        description={
+          tasks.assigned !== null
+            ? __(
+                "Tasks you have created and tasks assigned to you.",
+                "quicktasker",
+              )
+            : __("Tasks you have created.", "quicktasker")
+        }
         rightSideContent={
           <MyTasksHeaderControls
             boardOptions={boardOptions}

@@ -203,10 +203,18 @@ function NotificationsModal() {
       testId="notifications-modal"
     >
       <div className="wpqt-flex wpqt-flex-col wpqt-gap-3">
-        <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
-          <WPQTModalTitle className="!wpqt-mb-0">
-            {__("Notifications", "quicktasker")}
-          </WPQTModalTitle>
+        <div className="wpqt-flex wpqt-items-start wpqt-gap-2">
+          <div className="wpqt-flex wpqt-flex-col">
+            <WPQTModalTitle className="!wpqt-mb-0">
+              {__("Notifications", "quicktasker")}
+            </WPQTModalTitle>
+            <div className="wpqt-text-sm wpqt-text-gray-500">
+              {__(
+                "Review activity across your boards. Use the filters to narrow results and the settings icon to choose which event types you want to be notified about.",
+                "quicktasker",
+              )}
+            </div>
+          </div>
           <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-2">
             <ArrowPathIcon
               className={`wpqt-size-5 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover ${

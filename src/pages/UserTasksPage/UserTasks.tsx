@@ -5,6 +5,7 @@ import { TaskCardActions } from "../../components/Card/TaskCardActions/TaskCardA
 import { UserAssignementDropdown } from "../../components/Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { UserTaskDropdown } from "../../components/Dropdown/UserTaskDropdown/UserTaskDropdown";
 import { NoFilterResults } from "../../components/Filter/NoFilterResults/NoFilterResults";
+import { TaskLogsModal } from "../../components/Modal/TaskLogsModal/TaskLogsModal";
 import { TaskModal } from "../../components/Modal/TaskModal/TaskModal";
 import {
   ADD_ASSIGNED_USER_TO_USER_TASK,
@@ -107,6 +108,7 @@ function UserTasks({ userId }: Props) {
         })}
       </div>
       <TaskModal editTaskCallback={onEditTaskCallback} />
+      <TaskLogsModal />
     </>
   );
 }

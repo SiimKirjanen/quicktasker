@@ -12,6 +12,7 @@ import { WPQTIconButton } from "../../../components/common/Button/WPQTIconButton
 import { Info } from "../../../components/Info/Info";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { TaskColorModal } from "../../../components/Modal/TaskColorModal/TaskColorModal";
+import { TaskLogsModal } from "../../../components/Modal/TaskLogsModal/TaskLogsModal";
 import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
 import {
   OPEN_NEW_PIPELINE_MODAL,
@@ -173,6 +174,7 @@ const Pipeline = () => {
         />
       )}
       <TaskModal deleteTaskCallback={deleteTaskCallback} />
+      <TaskLogsModal />
       <TaskColorModal />
       <StageModal />
     </div>

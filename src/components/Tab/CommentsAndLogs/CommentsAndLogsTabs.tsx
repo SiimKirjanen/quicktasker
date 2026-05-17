@@ -11,36 +11,41 @@ type Props = {
 };
 
 function CommentsAndLogsTabs({ subjectId, subject }: Props) {
-  const logsType = subject === "task" ? WPQTTypes.Task : WPQTTypes.User;
-  const commentsType =
-    subject === "task" ? WPQTTypes.Task : UserTypes.QUICKTASKER;
+  const isTask = subject === "task";
+  const logsType = isTask ? WPQTTypes.Task : WPQTTypes.User;
+  const commentsType = isTask ? WPQTTypes.Task : UserTypes.QUICKTASKER;
 
   const tabs = [
-    { name: __("Logs", "quicktasker") },
+    ...(isTask ? [] : [{ name: __("Logs", "quicktasker") }]),
     { name: __("Private comments", "quicktasker") },
     { name: __("Public comments", "quicktasker") },
   ];
 
-  return (
-    <WPQTTabs
-      tabs={tabs}
-      tabsContent={[
-        <LogsTabContent subjectId={subjectId} subjectType={logsType} key={1} />,
-        <CommentsTabContent
-          subjectId={subjectId}
-          subjectType={commentsType}
-          isPrivate={true}
-          key={2}
-        />,
-        <CommentsTabContent
-          subjectId={subjectId}
-          subjectType={commentsType}
-          isPrivate={false}
-          key={3}
-        />,
-      ]}
-    />
-  );
+  const tabsContent = [
+    ...(isTask
+      ? []
+      : [
+          <LogsTabContent
+            subjectId={subjectId}
+            subjectType={logsType}
+            key="logs"
+          />,
+        ]),
+    <CommentsTabContent
+      subjectId={subjectId}
+      subjectType={commentsType}
+      isPrivate={true}
+      key="private"
+    />,
+    <CommentsTabContent
+      subjectId={subjectId}
+      subjectType={commentsType}
+      isPrivate={false}
+      key="public"
+    />,
+  ];
+
+  return <WPQTTabs tabs={tabs} tabsContent={tabsContent} />;
 }
 
 export { CommentsAndLogsTabs };

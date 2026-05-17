@@ -1,6 +1,6 @@
 === QuickTasker ===
 Donate link: https://www.paypal.com/donate/?hosted_button_id=QEU9KGTX4NZHN
-Tags: task manager, task management, project manager, project management, task board 
+Tags: task manager, task management, project management, task board, kanban board
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.9.0
@@ -13,23 +13,34 @@ Task management plugin designed to help you organize your projects, streamline w
 
 == Description ==
 
-Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently.
+QuickTasker is a kanban-style task management plugin for WordPress. Organize work into boards and stages, collaborate with WordPress users or dedicated QuickTasker users, and extend your workflow with automations, webhooks, and an API.
 
-QuickTasker is a plugin that offers the following and more to organize your project tasks.
+= Organize your work =
+* Create boards with multiple stages and move tasks between them to track progress.
+* Categorize and prioritize work with labels.
+* Capture additional task data with custom fields.
+* Highlight tasks with colors and set due dates.
+* View board overview with task stats and charts.
+* Archive completed tasks to keep boards focused.
 
-* Create boards with multiple stages and move tasks between stages to track progress.
-* Add labels to tasks to categorize and prioritize them effectively.
-* Grant permissions to WordPress users to allow them to use the plugin.
-* In addition to WordPress users, you can create dedicated QuickTasker users who can manage their tasks through a special webpage provided by the plugin.
-* Track quicktasker type user sessions to monitor activity.
-* Archive tasks to keep your boards clean and organized.
-* Private and public comments on tasks and users.
+= Collaborate with your team =
+* Grant board access to existing WordPress users, or invite dedicated QuickTasker users who manage their tasks through a built-in front-end page.
+* Control what each user can do with per-user permissions.
+* Assign tasks to users.
+* Let users review tasks they created or were assigned on a personal "My Tasks" page.
+* Leave private (team-only) or public comments on tasks and users.
+* Keep users informed with board notifications.
 * Attach files to tasks.
-* Logs to track changes and updates.
-* Add custom fields to tasks to capture additional information specific to your workflow. This flexibility allows you to tailor the task details to your project's unique requirements.
-* Automate various tasks with automations.
-* Webhooks to integrate with external applications and services.
-* API token support for programmatic access.
+* Track QuickTasker user sessions to monitor activity.
+* Review logs of changes across the plugin.
+
+= Extend and integrate =
+* Automate repetitive work with board automations.
+* Send task events to external services via webhooks.
+* Access your data programmatically with API tokens.
+* Collect tasks from visitors with a public task form Gutenberg block.
+* Import boards from other task management tools or QuickTasker installations.
+* Export tasks to PDF or boards to JSON.
 
 
 == Installation ==
@@ -52,6 +63,9 @@ QuickTasker is a plugin that offers the following and more to organize your proj
 = 1.56.0 =
 * Added a "My Tasks" admin page that lists tasks the current user created and tasks assigned to them, gated by a new "Access to My Tasks page" capability.
 * Added per-board toggles in board settings to enable or disable log generation for automations, webhooks and API tokens independently.
+* Split the task modal into Task and Comments tabs so comments use the full modal width.
+* Moved task logs out of the task modal into a dedicated logs modal.
+* UI polish across log modals, the user assignment dropdown and the notifications header.
 
 = 1.55.0 =
 * Added a Public Task Form Gutenberg block that lets visitors submit tasks to a selected board from any page.
