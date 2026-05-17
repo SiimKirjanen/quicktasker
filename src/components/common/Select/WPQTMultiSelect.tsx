@@ -57,7 +57,7 @@ function WPQTMultiSelect({
       <div className="wpqt-relative">
         <ListboxButton
           id={id}
-          className={`wpqt-flex wpqt-h-[30px] wpqt-items-center wpqt-gap-2 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-px-2 wpqt-text-left focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`}
+          className={`wpqt-flex wpqt-min-h-[38px] wpqt-items-center wpqt-gap-2 wpqt-rounded-lg wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-bg-white wpqt-px-2 wpqt-py-1 wpqt-text-left focus:wpqt-outline-none data-[focus]:wpqt-outline-2 data-[focus]:wpqt--outline-offset-2 data-[focus]:wpqt-outline-gray-300 ${className}`}
         >
           <span>{triggerLabel}</span>
           <ChevronDownIcon className="wpqt-size-4 wpqt-text-gray-500" />
