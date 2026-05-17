@@ -51,6 +51,7 @@ QuickTasker is a plugin that offers the following and more to organize your proj
 
 = 1.56.0 =
 * Added a "My Tasks" admin page that lists tasks the current user created and tasks assigned to them, gated by a new "Access to My Tasks page" capability.
+* Added per-board toggles in board settings to enable or disable log generation for automations, webhooks and API tokens independently.
 
 = 1.55.0 =
 * Added a Public Task Form Gutenberg block that lets visitors submit tasks to a selected board from any page.

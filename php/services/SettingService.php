@@ -106,6 +106,9 @@ if (!class_exists('WPQT\Settings\SettingsService')) {
                 'public_task_creation_limit',
                 'public_task_creation_count',
                 'require_logged_in_user',
+                'enable_automation_logs',
+                'enable_webhook_logs',
+                'enable_api_token_logs',
             ];
             $updateData = [
                 'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()

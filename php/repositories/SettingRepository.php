@@ -35,7 +35,7 @@ if (!class_exists('WPQT\Settings\SettingRepository')) {
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    'SELECT id, pipeline_id, allow_only_last_stage_task_done, pipeline_refresh_interval, allow_public_task_creation, public_task_creation_limit, public_task_creation_count, require_logged_in_user, created_at, updated_at FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
+                    'SELECT id, pipeline_id, allow_only_last_stage_task_done, pipeline_refresh_interval, allow_public_task_creation, public_task_creation_limit, public_task_creation_count, require_logged_in_user, enable_automation_logs, enable_webhook_logs, enable_api_token_logs, created_at, updated_at FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
                     $pipelineId
                 )
             );
@@ -66,6 +66,18 @@ if (!class_exists('WPQT\Settings\SettingRepository')) {
             return $wpdb->get_row(
                 $wpdb->prepare(
                     'SELECT allow_public_task_creation, public_task_creation_limit, public_task_creation_count, require_logged_in_user FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
+                    $pipelineId
+                )
+            );
+        }
+
+        public function getLogEnabledFlags($pipelineId)
+        {
+            global $wpdb;
+
+            return $wpdb->get_row(
+                $wpdb->prepare(
+                    'SELECT enable_automation_logs, enable_webhook_logs, enable_api_token_logs FROM ' . TABLE_WP_QUICKTASKER_PIPELINE_SETTINGS . ' WHERE pipeline_id = %d',
                     $pipelineId
                 )
             );
