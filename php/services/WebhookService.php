@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use WPQT\Log\LogService;
 use WPQT\Services\ServiceLocator;
 
 if (!class_exists('WPQT\Webhooks\WebhookService')) {
@@ -97,6 +98,9 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
             $eventsFromExecutedAutomations = ServiceLocator::get('WebhookEventService')->constructWebhookEventsFromExecutedAutomations($executedAutomations);
             $allWebhookEvents = array_merge($events, $eventsFromExecutedAutomations);
 
+            $logService = ServiceLocator::get('LogService');
+            $shouldLog = $logService->shouldLog($pipelineId, LogService::SOURCE_WEBHOOK);
+
             foreach ($allWebhookEvents as $event) {
                 if (
                     !isset($event['webhookData']) ||
@@ -122,7 +126,9 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
                     ];
 
                     if (!$webhook->active) {
-                        ServiceLocator::get('LogService')->log('Skipped ' . $webHookName . ' because it is inactive', $baseLog);
+                        if ($shouldLog) {
+                            $logService->log('Skipped ' . $webHookName . ' because it is inactive', $baseLog);
+                        }
 
                         continue;
                     }
@@ -130,14 +136,18 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
                     try {
                         $this->processWebhook($webhook, $data);
 
-                        ServiceLocator::get('LogService')->log('Executed ' . $webHookName, $baseLog);
+                        if ($shouldLog) {
+                            $logService->log('Executed ' . $webHookName, $baseLog);
+                        }
                     } catch (\Exception $e) {
-                        $errorMessage = $e->getMessage();
-                        $message = 'Error processing ' . $webHookName . ' Reason: ' . $errorMessage;
+                        if ($shouldLog) {
+                            $errorMessage = $e->getMessage();
+                            $message = 'Error processing ' . $webHookName . ' Reason: ' . $errorMessage;
 
-                        ServiceLocator::get('LogService')->log($message, array_merge($baseLog, [
-                          'log_status' => WP_QT_LOG_STATUS_ERROR
-                        ]));
+                            $logService->log($message, array_merge($baseLog, [
+                              'log_status' => WP_QT_LOG_STATUS_ERROR
+                            ]));
+                        }
                     }
                 }
             }

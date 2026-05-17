@@ -5,6 +5,7 @@ import { Pipeline } from "../../../../../types/pipeline";
 import { PipelineSettings } from "../../../../../types/pipeline-settings";
 import { convertPipelineSettingsFromServer } from "../../../../../utils/pipeline-settings";
 import { Loading } from "../../../../Loading/Loading";
+import { LogGenerationSetting } from "../LogGenerationSetting/LogGenerationSetting";
 import { PipelineRefreshIntervalSetting } from "../PipelineRefreshIntervalSetting/PipelineRefreshIntervalSetting";
 import { PublicTaskSubmissionsSetting } from "../PublicTaskSubmissionsSetting/PublicTaskSubmissionsSetting";
 import { TaskCompletionDoneSetting } from "../TaskCompletionDoneSetting/TaskCompletionDoneSetting";
@@ -59,6 +60,12 @@ function PipelineSettings({ pipeline }: Props) {
         publicTaskCreationLimit={settings.public_task_creation_limit}
         publicTaskCreationCount={settings.public_task_creation_count}
         requireLoggedInUser={settings.require_logged_in_user}
+      />
+      <LogGenerationSetting
+        pipelineId={pipeline.id}
+        enableAutomationLogs={settings.enable_automation_logs}
+        enableWebhookLogs={settings.enable_webhook_logs}
+        enableApiTokenLogs={settings.enable_api_token_logs}
       />
     </div>
   );

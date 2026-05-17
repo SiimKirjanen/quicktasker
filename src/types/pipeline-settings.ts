@@ -10,6 +10,9 @@ type PipelineSettings = BasePipelineSettings & {
   public_task_creation_limit: number;
   public_task_creation_count: number;
   require_logged_in_user: boolean;
+  enable_automation_logs: boolean;
+  enable_webhook_logs: boolean;
+  enable_api_token_logs: boolean;
 };
 
 type PipelineSettingsFromServer = BasePipelineSettings & {
@@ -19,6 +22,9 @@ type PipelineSettingsFromServer = BasePipelineSettings & {
   public_task_creation_limit: string;
   public_task_creation_count: string;
   require_logged_in_user: string;
+  enable_automation_logs: string;
+  enable_webhook_logs: string;
+  enable_api_token_logs: string;
 };
 
 type PublicPipelineSettings = {

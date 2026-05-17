@@ -15,10 +15,12 @@ if (!defined('WP_QT_LOG_CREATED_BY_SYSTEM')) {
     define('WP_QT_LOG_CREATED_BY_SYSTEM', 'system');
 }
 
+require_once __DIR__ . '/../../../../php/services/ServiceLocator.php';
 require_once __DIR__ . '/../../../../php/services/LogService.php';
 
 use PHPUnit\Framework\TestCase;
 use WPQT\Log\LogService;
+use WPQT\Services\ServiceLocator;
 
 /**
  * Test suite for LogService
@@ -198,6 +200,63 @@ class LogServiceTest extends TestCase {
      * - Test default values are applied correctly
      * - Test error handling with Exception messages
      */
+    public function testShouldLogReturnsTrueWhenPipelineIdIsEmpty(): void {
+        $this->assertTrue($this->service->shouldLog(null, LogService::SOURCE_AUTOMATION));
+        $this->assertTrue($this->service->shouldLog(0, LogService::SOURCE_WEBHOOK));
+    }
+
+    public function testShouldLogReturnsTrueForUnknownSource(): void {
+        $this->assertTrue($this->service->shouldLog(123, 'unknown-source'));
+    }
+
+    public function testShouldLogReturnsTrueWhenSettingsRowMissing(): void {
+        $settingRepo = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['getLogEnabledFlags'])
+            ->getMock();
+        $settingRepo->method('getLogEnabledFlags')->willReturn(null);
+        ServiceLocator::register('SettingRepository', $settingRepo);
+
+        $service = new LogService();
+        $this->assertTrue($service->shouldLog(42, LogService::SOURCE_API_TOKEN));
+    }
+
+    public function testShouldLogReturnsFalseWhenFlagDisabled(): void {
+        $settingRepo = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['getLogEnabledFlags'])
+            ->getMock();
+        $settingRepo->method('getLogEnabledFlags')->willReturn((object) [
+            'enable_automation_logs' => '1',
+            'enable_webhook_logs'    => '1',
+            'enable_api_token_logs'  => '0',
+        ]);
+        ServiceLocator::register('SettingRepository', $settingRepo);
+
+        $service = new LogService();
+        $this->assertFalse($service->shouldLog(42, LogService::SOURCE_API_TOKEN));
+        $this->assertTrue($service->shouldLog(42, LogService::SOURCE_AUTOMATION));
+        $this->assertTrue($service->shouldLog(42, LogService::SOURCE_WEBHOOK));
+    }
+
+    public function testShouldLogCachesPerPipelineLookup(): void {
+        $settingRepo = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['getLogEnabledFlags'])
+            ->getMock();
+        $settingRepo->expects($this->once())
+            ->method('getLogEnabledFlags')
+            ->with(7)
+            ->willReturn((object) [
+                'enable_automation_logs' => '0',
+                'enable_webhook_logs'    => '1',
+                'enable_api_token_logs'  => '1',
+            ]);
+        ServiceLocator::register('SettingRepository', $settingRepo);
+
+        $service = new LogService();
+        $service->shouldLog(7, LogService::SOURCE_AUTOMATION);
+        $service->shouldLog(7, LogService::SOURCE_WEBHOOK);
+        $service->shouldLog(7, LogService::SOURCE_API_TOKEN);
+    }
+
     public function testLogRequiresIntegrationTest(): void {
         $this->markTestIncomplete(
             'log() requires $wpdb, wp_parse_args(), ServiceLocator (TimeRepository, LogRepository). ' .

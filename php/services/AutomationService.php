@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use WPQT\Log\LogService;
 use WPQT\Services\ServiceLocator;
 
 if (!class_exists('WPQT\Automation\AutomationService')) {
@@ -93,6 +94,8 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
 
             $relatedAutomations = ServiceLocator::get('AutomationRepository')->getActiveAutomations($boardId, $targetId, $targetType, $automationTrigger);
             $userId = get_current_user_id();
+            $logService = ServiceLocator::get('LogService');
+            $shouldLog = $logService->shouldLog($boardId, LogService::SOURCE_AUTOMATION);
 
             if (!empty($relatedAutomations)) {
                 foreach ($relatedAutomations as $automation) {
@@ -106,28 +109,32 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
                             } else {
                                 $automation->executionResult = $result;
                             }
-                            $logMessage = $this->getAutomationLogMessage($automation);
-                            ServiceLocator::get('LogService')->log($logMessage, [
+                            if ($shouldLog) {
+                                $logMessage = $this->getAutomationLogMessage($automation);
+                                $logService->log($logMessage, [
+                                    'type'          => $targetType,
+                                    'type_id'       => $targetId,
+                                    'log_status'    => WP_QT_LOG_STATUS_SUCCESS,
+                                    'created_by'    => WP_QT_LOG_CREATED_BY_AUTOMATION,
+                                    'created_by_id' => $automation->id,
+                                    'pipeline_id'   => $boardId,
+                                ]);
+                            }
+                            $executedAutomations[] = $automation;
+                        }
+                    } catch (\Throwable $e) {
+                        $failedAutomations[] = $automation;
+                        if ($shouldLog) {
+                            $failureLogMessage = $this->getAutomationFailedLogMessage($automation) . $e->getMessage();
+                            $logService->log($failureLogMessage, [
                                 'type'          => $targetType,
                                 'type_id'       => $targetId,
-                                'log_status'    => WP_QT_LOG_STATUS_SUCCESS,
+                                'log_status'    => WP_QT_LOG_STATUS_ERROR,
                                 'created_by'    => WP_QT_LOG_CREATED_BY_AUTOMATION,
                                 'created_by_id' => $automation->id,
                                 'pipeline_id'   => $boardId,
                             ]);
-                            $executedAutomations[] = $automation;
                         }
-                    } catch (\Throwable $e) {
-                        $failureLogMessage = $this->getAutomationFailedLogMessage($automation) . $e->getMessage();
-                        $failedAutomations[] = $automation;
-                        ServiceLocator::get('LogService')->log($failureLogMessage, [
-                            'type'          => $targetType,
-                            'type_id'       => $targetId,
-                            'log_status'    => WP_QT_LOG_STATUS_ERROR,
-                            'created_by'    => WP_QT_LOG_CREATED_BY_AUTOMATION,
-                            'created_by_id' => $automation->id,
-                            'pipeline_id'   => $boardId,
-                        ]);
                     }
                 }
             }

@@ -29,7 +29,10 @@ function PipelineHeader() {
     <div className="wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-py-5">
       <div>
         <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
-          <div className="wpqt-text-lg wpqt-font-semibold">
+          <div
+            className="wpqt-text-lg wpqt-font-semibold"
+            data-testid="active-pipeline-name"
+          >
             {activePipeline.name}
           </div>
         </div>

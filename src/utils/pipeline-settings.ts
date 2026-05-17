@@ -31,6 +31,18 @@ const convertPipelineSettingsFromServer = (
       pipelineSettings.require_logged_in_user === undefined
         ? true
         : pipelineSettings.require_logged_in_user === "1",
+    enable_automation_logs:
+      pipelineSettings.enable_automation_logs === undefined
+        ? true
+        : pipelineSettings.enable_automation_logs === "1",
+    enable_webhook_logs:
+      pipelineSettings.enable_webhook_logs === undefined
+        ? true
+        : pipelineSettings.enable_webhook_logs === "1",
+    enable_api_token_logs:
+      pipelineSettings.enable_api_token_logs === undefined
+        ? true
+        : pipelineSettings.enable_api_token_logs === "1",
   };
 };
 

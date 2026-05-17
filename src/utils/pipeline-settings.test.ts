@@ -21,6 +21,9 @@ describe("pipeline-settings", () => {
       public_task_creation_limit: "0",
       public_task_creation_count: "0",
       require_logged_in_user: "1",
+      enable_automation_logs: "1",
+      enable_webhook_logs: "1",
+      enable_api_token_logs: "1",
       ...overrides,
     });
 
@@ -133,6 +136,9 @@ describe("pipeline-settings", () => {
         public_task_creation_limit: 0,
         public_task_creation_count: 0,
         require_logged_in_user: true,
+        enable_automation_logs: true,
+        enable_webhook_logs: true,
+        enable_api_token_logs: true,
       });
     });
 
@@ -155,6 +161,33 @@ describe("pipeline-settings", () => {
       const result = convertPipelineSettingsFromServer(serverSettings);
 
       expect(result.require_logged_in_user).toBe(true);
+    });
+
+    it.each([
+      ["enable_automation_logs"],
+      ["enable_webhook_logs"],
+      ["enable_api_token_logs"],
+    ] as const)("should convert %s from '0' to false", (field) => {
+      const serverSettings = createMockPipelineSettingsFromServer({
+        [field]: "0",
+      });
+
+      const result = convertPipelineSettingsFromServer(serverSettings);
+
+      expect(result[field]).toBe(false);
+    });
+
+    it.each([
+      ["enable_automation_logs"],
+      ["enable_webhook_logs"],
+      ["enable_api_token_logs"],
+    ] as const)("should default %s to true when missing", (field) => {
+      const serverSettings = createMockPipelineSettingsFromServer();
+      delete (serverSettings as Partial<PipelineSettingsFromServer>)[field];
+
+      const result = convertPipelineSettingsFromServer(serverSettings);
+
+      expect(result[field]).toBe(true);
     });
   });
 

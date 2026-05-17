@@ -3180,6 +3180,15 @@ if (!function_exists('wpqt_register_api_routes')) {
                         if (isset($data['require_logged_in_user'])) {
                             $settings['require_logged_in_user'] = $data['require_logged_in_user'] ? 1 : 0;
                         }
+                        if (isset($data['enable_automation_logs'])) {
+                            $settings['enable_automation_logs'] = $data['enable_automation_logs'] ? 1 : 0;
+                        }
+                        if (isset($data['enable_webhook_logs'])) {
+                            $settings['enable_webhook_logs'] = $data['enable_webhook_logs'] ? 1 : 0;
+                        }
+                        if (isset($data['enable_api_token_logs'])) {
+                            $settings['enable_api_token_logs'] = $data['enable_api_token_logs'] ? 1 : 0;
+                        }
 
                         if (0 === count($settings)) {
                             return new WP_REST_Response((new ApiResponse(false, [esc_html_e('No valid settings provided', 'quicktasker')]))->toArray(), 200);
@@ -3227,6 +3236,21 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
                     'require_logged_in_user' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+                    ],
+                    'enable_automation_logs' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+                    ],
+                    'enable_webhook_logs' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+                    ],
+                    'enable_api_token_logs' => [
                         'required'          => false,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
