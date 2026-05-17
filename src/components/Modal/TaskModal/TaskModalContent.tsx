@@ -37,9 +37,10 @@ import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { LoadingOval } from "../../Loading/Loading";
-import { CommentsAndLogsTabs } from "../../Tab/CommentsAndLogs/CommentsAndLogsTabs";
+import { WPQTTabs } from "../../Tab/WPQTTabs";
 import { UploadManager } from "../../Upload/UploadManager/UploadManager";
 import { FreeForAllToggle } from "./components/FreeForAllToggle/FreeForAllToggle";
+import { TaskComments } from "./components/TaskComments/TaskComments";
 import { TaskDueDateInput } from "./components/TaskDueDateInput/TaskDueDateInput";
 
 type Props = {
@@ -106,127 +107,139 @@ const TaskModalContent = ({ deleteTask }: Props) => {
     <>
       <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
         <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-6">
-          <div className="wpqt-mb-2 wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 md:wpqt-grid-cols-[1fr_0.7fr]">
-            <WPQTModalFieldSet>
-              <WPQTModalField label={__("Name", "quicktasker")}>
-                <AutoSaveInput
-                  value={taskToEdit.name}
-                  wrapperClassName="wpqt-w-full"
-                  className="wpqt-w-full"
-                  onChange={async (value) => {
-                    const { success, task: updatedTask } = await editTask(
-                      taskToEdit.id,
-                      { name: value },
-                    );
-                    if (success && updatedTask) {
-                      onEditTaskCompleted(updatedTask);
-                      toast.success(__("Task name updated", "quicktasker"));
-                    }
-                  }}
-                />
-              </WPQTModalField>
+          <WPQTTabs
+            tabs={[
+              { name: __("Details", "quicktasker") },
+              { name: __("Comments", "quicktasker") },
+            ]}
+            tabClassName="!wpqt-flex-none wpqt-px-4 wpqt-text-left wpqt-font-semibold wpqt-text-gray-400 hover:wpqt-text-gray-600 data-[selected]:wpqt-text-blue-600 data-[selected]:!wpqt-border-b-[3px]"
+            tabsContent={[
+              <div key="details">
+                <div className="wpqt-mb-2 wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 md:wpqt-grid-cols-[1fr_0.7fr]">
+                  <WPQTModalFieldSet>
+                    <WPQTModalField label={__("Name", "quicktasker")}>
+                      <AutoSaveInput
+                        value={taskToEdit.name}
+                        wrapperClassName="wpqt-w-full"
+                        className="wpqt-w-full"
+                        onChange={async (value) => {
+                          const { success, task: updatedTask } = await editTask(
+                            taskToEdit.id,
+                            { name: value },
+                          );
+                          if (success && updatedTask) {
+                            onEditTaskCompleted(updatedTask);
+                            toast.success(
+                              __("Task name updated", "quicktasker"),
+                            );
+                          }
+                        }}
+                      />
+                    </WPQTModalField>
 
-              <WPQTModalField label={__("Description", "quicktasker")}>
-                <AutoSaveTextarea
-                  value={taskToEdit.description}
-                  className="wpqt-w-full"
-                  onChange={async (value) => {
-                    const { success, task: updatedTask } = await editTask(
-                      taskToEdit.id,
-                      { description: value },
-                    );
-                    if (success && updatedTask) {
-                      onEditTaskCompleted(updatedTask);
-                      toast.success(
-                        __("Task description updated", "quicktasker"),
-                      );
-                    }
-                  }}
-                />
-              </WPQTModalField>
+                    <WPQTModalField label={__("Description", "quicktasker")}>
+                      <AutoSaveTextarea
+                        value={taskToEdit.description}
+                        className="wpqt-w-full"
+                        onChange={async (value) => {
+                          const { success, task: updatedTask } = await editTask(
+                            taskToEdit.id,
+                            { description: value },
+                          );
+                          if (success && updatedTask) {
+                            onEditTaskCompleted(updatedTask);
+                            toast.success(
+                              __("Task description updated", "quicktasker"),
+                            );
+                          }
+                        }}
+                      />
+                    </WPQTModalField>
 
-              <WPQTModalField label={__("Assigned users", "quicktasker")}>
-                <UserAssignementDropdown
-                  task={taskToEdit}
-                  onUserAdd={(user) => {
-                    modalDispatch({
-                      type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
-                      payload: user,
-                    });
-                  }}
-                  onUserDelete={(user) => {
-                    modalDispatch({
-                      type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
-                      payload: user,
-                    });
-                  }}
-                />
-              </WPQTModalField>
+                    <WPQTModalField label={__("Assigned users", "quicktasker")}>
+                      <UserAssignementDropdown
+                        task={taskToEdit}
+                        onUserAdd={(user) => {
+                          modalDispatch({
+                            type: ADD_ASSIGNED_USER_TO_EDITING_TASK,
+                            payload: user,
+                          });
+                        }}
+                        onUserDelete={(user) => {
+                          modalDispatch({
+                            type: REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
+                            payload: user,
+                          });
+                        }}
+                      />
+                    </WPQTModalField>
 
-              <WPQTModalField label={__("Labels", "quicktasker")}>
-                <TaskLabelDropdown
-                  task={{
-                    ...taskToEdit,
-                    assigned_labels: assignedTaskLabels,
-                  }}
-                  labelSelected={onLabelSelected}
-                  labelDeselected={onLabelDeSelected}
-                  labelDeleted={onLabelDeleted}
-                />
-              </WPQTModalField>
+                    <WPQTModalField label={__("Labels", "quicktasker")}>
+                      <TaskLabelDropdown
+                        task={{
+                          ...taskToEdit,
+                          assigned_labels: assignedTaskLabels,
+                        }}
+                        labelSelected={onLabelSelected}
+                        labelDeselected={onLabelDeSelected}
+                        labelDeleted={onLabelDeleted}
+                      />
+                    </WPQTModalField>
 
-              <WPQTModalField
-                label={__("Free for all task", "quicktasker")}
-                description={__(
-                  "When enabled, users have the ability to self-assign or unassign this task.",
-                  "quicktasker",
-                )}
-              >
-                <FreeForAllToggle
-                  task={taskToEdit}
-                  initialValue={taskToEdit.free_for_all}
-                  onEditTaskCompleted={onEditTaskCompleted}
-                />
-              </WPQTModalField>
+                    <WPQTModalField
+                      label={__("Free for all task", "quicktasker")}
+                      description={__(
+                        "When enabled, users have the ability to self-assign or unassign this task.",
+                        "quicktasker",
+                      )}
+                    >
+                      <FreeForAllToggle
+                        task={taskToEdit}
+                        initialValue={taskToEdit.free_for_all}
+                        onEditTaskCompleted={onEditTaskCompleted}
+                      />
+                    </WPQTModalField>
 
-              <WPQTModalField
-                label={
-                  __("Due date", "quicktasker") +
-                  ` (${browserTimezoneAbbreviation})`
-                }
-              >
-                <TaskDueDateInput
-                  initialValue={taskToEdit.due_date || ""}
-                  task={taskToEdit}
-                  onEditTaskCompleted={onEditTaskCompleted}
-                />
-              </WPQTModalField>
+                    <WPQTModalField
+                      label={
+                        __("Due date", "quicktasker") +
+                        ` (${browserTimezoneAbbreviation})`
+                      }
+                    >
+                      <TaskDueDateInput
+                        initialValue={taskToEdit.due_date || ""}
+                        task={taskToEdit}
+                        onEditTaskCompleted={onEditTaskCompleted}
+                      />
+                    </WPQTModalField>
 
-              {taskModalSettings.allowToMarkTaskAsDone && (
-                <TaskDoneStatus
-                  taskId={taskToEdit.id}
-                  isCompleted={taskToEdit.is_done}
-                />
-              )}
-            </WPQTModalFieldSet>
-            <div>
-              <CustomFieldsInModalWrap
-                entityId={taskToEdit.id}
-                entityType={CustomFieldEntityType.Task}
-              />
-            </div>
-          </div>
+                    {taskModalSettings.allowToMarkTaskAsDone && (
+                      <TaskDoneStatus
+                        taskId={taskToEdit.id}
+                        isCompleted={taskToEdit.is_done}
+                      />
+                    )}
+                  </WPQTModalFieldSet>
+                  <div>
+                    <CustomFieldsInModalWrap
+                      entityId={taskToEdit.id}
+                      entityType={CustomFieldEntityType.Task}
+                    />
+                  </div>
+                </div>
 
-          <WPQTModalField label={__("File attachment", "quicktasker")}>
-            <UploadManager
-              entityId={taskToEdit.id}
-              entityType={UploadEntityType.TASK}
-            />
-          </WPQTModalField>
-
-          <div className="wpqt-mt-7 md:wpqt-pr-3">
-            <CommentsAndLogsTabs subjectId={taskToEdit.id} subject="task" />
-          </div>
+                <WPQTModalField label={__("File attachment", "quicktasker")}>
+                  <UploadManager
+                    entityId={taskToEdit.id}
+                    entityType={UploadEntityType.TASK}
+                  />
+                </WPQTModalField>
+              </div>,
+              <div key="comments" className="md:wpqt-pr-3">
+                <TaskComments taskId={taskToEdit.id} />
+              </div>,
+            ]}
+          />
         </div>
 
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
