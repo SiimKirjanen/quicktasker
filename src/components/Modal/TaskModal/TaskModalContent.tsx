@@ -10,10 +10,12 @@ import {
   CheckBadgeIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { TbLogs } from "react-icons/tb";
 import { toast } from "react-toastify";
 import {
   ADD_ASSIGNED_USER_TO_EDITING_TASK,
   CLOSE_TASK_MODAL,
+  OPEN_TASK_LOGS_MODAL,
   OPEN_TASK_RESTORE_MODAL,
   PIPELINE_CHANGE_TASK_DONE_STATUS,
   PIPELINE_EDIT_TASK,
@@ -228,6 +230,16 @@ const TaskModalContent = ({ deleteTask }: Props) => {
         </div>
 
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
+          <WPQTIconButton
+            icon={<TbLogs className="wpqt-icon-blue wpqt-size-5" />}
+            text={__("View logs", "quicktasker")}
+            onClick={() => {
+              modalDispatch({
+                type: OPEN_TASK_LOGS_MODAL,
+                payload: { taskId: taskToEdit.id },
+              });
+            }}
+          />
           {isTaskArchived && (
             <WPQTIconButton
               icon={

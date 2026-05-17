@@ -7,6 +7,7 @@ import { UserAssignementDropdown } from "../../../../components/Dropdown/UserAss
 import { NoFilterResults } from "../../../../components/Filter/NoFilterResults/NoFilterResults";
 import { DueDateInfo } from "../../../../components/Icon/DueDateInfo/DueDateInfo";
 import { TaskColorModal } from "../../../../components/Modal/TaskColorModal/TaskColorModal";
+import { TaskLogsModal } from "../../../../components/Modal/TaskLogsModal/TaskLogsModal";
 import { TaskModal } from "../../../../components/Modal/TaskModal/TaskModal";
 import {
   OPEN_EDIT_TASK_MODAL,
@@ -77,6 +78,7 @@ function TaskView() {
         );
       })}
       <TaskModal />
+      <TaskLogsModal />
       <TaskColorModal />
     </div>
   );

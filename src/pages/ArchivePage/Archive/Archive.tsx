@@ -1,5 +1,6 @@
 import { useContext } from "@wordpress/element";
 import { ArchiveFilter } from "../../../components/Filter/ArchiveFilter/ArchiveFilter";
+import { TaskLogsModal } from "../../../components/Modal/TaskLogsModal/TaskLogsModal";
 import { TaskModal } from "../../../components/Modal/TaskModal/TaskModal";
 import { EDIT_ARCHIVED_TASK, REMOVE_ARCHIVED_TASK } from "../../../constants";
 import { ArchiveContext } from "../../../providers/ArchiveContextProvider";
@@ -27,6 +28,7 @@ function Archive() {
           });
         }}
       />
+      <TaskLogsModal />
     </div>
   );
 }

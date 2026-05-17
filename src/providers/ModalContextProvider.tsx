@@ -15,6 +15,7 @@ import {
   CLOSE_STAGE_MODAL,
   CLOSE_TASK_COLOR_MODAL,
   CLOSE_TASK_EXPORT_MODAL,
+  CLOSE_TASK_LOGS_MODAL,
   CLOSE_TASK_MODAL,
   CLOSE_TASK_RESTORE_MODAL,
   CLOSE_USER_MODAL,
@@ -34,6 +35,7 @@ import {
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
   OPEN_TASK_EXPORT_MODAL,
+  OPEN_TASK_LOGS_MODAL,
   OPEN_TASK_RESTORE_MODAL,
   OPEN_WEBHOOKS_LOGS_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
@@ -48,6 +50,7 @@ import {
   ApiTokenLogsModalSettings,
   AutomationLogsModalSettings,
   TaskExportModalSettings,
+  TaskLogsModalSettings,
   TaskModalSettings,
   TaskRestoreModalSettings,
   WebhooksLogsModalSettings,
@@ -105,6 +108,10 @@ const initialState: State = {
   apiTokenLogsModalSettings: {
     apiTokenId: null,
   },
+  taskLogsModalOpen: false,
+  taskLogsModalSettings: {
+    taskId: null,
+  },
   notificationsModalOpen: false,
 };
 
@@ -144,6 +151,8 @@ type State = {
   automationLogsModalSettings: AutomationLogsModalSettings;
   apiTokenLogsModalOpen: boolean;
   apiTokenLogsModalSettings: ApiTokenLogsModalSettings;
+  taskLogsModalOpen: boolean;
+  taskLogsModalSettings: TaskLogsModalSettings;
   notificationsModalOpen: boolean;
 };
 
@@ -226,6 +235,11 @@ type Action =
       type: typeof UPDATE_API_TOKEN_LOGS_MODAL_SETTINGS;
       payload: Partial<ApiTokenLogsModalSettings>;
     }
+  | {
+      type: typeof OPEN_TASK_LOGS_MODAL;
+      payload: { taskId: string };
+    }
+  | { type: typeof CLOSE_TASK_LOGS_MODAL }
   | { type: typeof OPEN_NOTIFICATIONS_MODAL }
   | { type: typeof CLOSE_NOTIFICATIONS_MODAL };
 

@@ -8,10 +8,12 @@ import {
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { BiMove } from "react-icons/bi";
+import { TbLogs } from "react-icons/tb";
 import {
   OPEN_EDIT_TASK_MODAL,
   OPEN_MOVE_TASK_MODAL,
   OPEN_TASK_COLOR_MODAL,
+  OPEN_TASK_LOGS_MODAL,
   PIPELINE_REMOVE_TASK,
 } from "../../../constants";
 import { useTaskActions } from "../../../hooks/actions/useTaskActions";
@@ -117,6 +119,17 @@ function TaskControlsDropdown({ task }: Props) {
           modalDispatch({
             type: OPEN_MOVE_TASK_MODAL,
             payload: { task },
+          });
+        }}
+      />
+      <WPQTDropdownItem
+        text={__("View logs", "quicktasker")}
+        icon={<TbLogs className="wpqt-icon-blue wpqt-size-5" />}
+        onClick={(e: React.MouseEvent) => {
+          e.stopPropagation();
+          modalDispatch({
+            type: OPEN_TASK_LOGS_MODAL,
+            payload: { taskId: task.id },
           });
         }}
       />
