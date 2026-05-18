@@ -214,8 +214,8 @@ test.describe('User Management – Edit User Modal', () => {
     await expect(modal.getByText('User custom fields')).toBeVisible();
     await expect(modal.getByText('No related custom fields created')).toBeVisible();
     await expect(page.getByRole('tab', { name: 'Logs' })).not.toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Private comments' })).toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Public comments' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Details' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Comments' })).toBeVisible();
     await expect(modal.getByText('User details')).toBeVisible();
     await expect(modal.getByText('User tasks')).toBeVisible();
     await expect(modal.getByText('View logs')).toBeVisible();

@@ -22,12 +22,14 @@ import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
+import { UserTypes } from "../../../types/user";
 import { WPQTIconButton } from "../../common/Button/WPQTIconButton/WPQTIconButton";
 import { AutoSaveInput } from "../../common/Input/AutoSaveInput/AutoSaveInput";
 import { AutoSaveTextarea } from "../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
-import { CommentsTabs } from "../../Tab/CommentsAndLogs/CommentsTabs";
+import { CommentsWithVisibility } from "../../Tab/CommentsAndLogs/CommentsWithVisibility";
+import { WPQTTabs } from "../../Tab/WPQTTabs";
 import { WPQTModalField, WPQTModalFieldSet } from "../WPQTModal";
 
 const UserModalContent = () => {
@@ -66,52 +68,73 @@ const UserModalContent = () => {
     <>
       <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
         <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-6">
-          <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 md:wpqt-grid-cols-[1fr_0.7fr]">
-            <div>
-              <WPQTModalFieldSet>
-                <WPQTModalField label={__("Name", "quicktasker")}>
-                  <AutoSaveInput
-                    isAutoFocus={true}
-                    value={userToEdit.name}
-                    wrapperClassName="wpqt-w-full"
-                    className="wpqt-w-full"
-                    onChange={async (value) => {
-                      const { success, user: updatedUser } = await editUser(
-                        userToEdit.id,
-                        { name: value },
-                      );
-                      if (success && updatedUser) {
-                        userDispatch({ type: EDIT_USER, payload: updatedUser });
-                      }
-                    }}
-                  />
-                </WPQTModalField>
+          <WPQTTabs
+            tabs={[
+              { name: __("Details", "quicktasker") },
+              { name: __("Comments", "quicktasker") },
+            ]}
+            tabClassName="!wpqt-flex-none wpqt-px-4 wpqt-text-left wpqt-font-semibold wpqt-text-gray-400 hover:wpqt-text-gray-600 data-[selected]:wpqt-text-blue-600 data-[selected]:!wpqt-border-b-[3px]"
+            tabsContent={[
+              <div
+                key="details"
+                className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 md:wpqt-grid-cols-[1fr_0.7fr]"
+              >
+                <div>
+                  <WPQTModalFieldSet>
+                    <WPQTModalField label={__("Name", "quicktasker")}>
+                      <AutoSaveInput
+                        isAutoFocus={true}
+                        value={userToEdit.name}
+                        wrapperClassName="wpqt-w-full"
+                        className="wpqt-w-full"
+                        onChange={async (value) => {
+                          const { success, user: updatedUser } = await editUser(
+                            userToEdit.id,
+                            { name: value },
+                          );
+                          if (success && updatedUser) {
+                            userDispatch({
+                              type: EDIT_USER,
+                              payload: updatedUser,
+                            });
+                          }
+                        }}
+                      />
+                    </WPQTModalField>
 
-                <WPQTModalField label={__("Description", "quicktasker")}>
-                  <AutoSaveTextarea
-                    value={userToEdit.description}
-                    className="wpqt-w-full"
-                    onChange={async (value) => {
-                      const { success, user: updatedUser } = await editUser(
-                        userToEdit.id,
-                        { description: value },
-                      );
-                      if (success && updatedUser) {
-                        userDispatch({ type: EDIT_USER, payload: updatedUser });
-                      }
-                    }}
-                  />
-                </WPQTModalField>
-              </WPQTModalFieldSet>
-            </div>
-            <CustomFieldsInModalWrap
-              entityId={userToEdit!.id}
-              entityType={CustomFieldEntityType.QUICKTASKER}
-            />
-          </div>
-          <div className="wpqt-mt-7">
-            <CommentsTabs subjectId={userToEdit.id} subject="user" />
-          </div>
+                    <WPQTModalField label={__("Description", "quicktasker")}>
+                      <AutoSaveTextarea
+                        value={userToEdit.description}
+                        className="wpqt-w-full"
+                        onChange={async (value) => {
+                          const { success, user: updatedUser } = await editUser(
+                            userToEdit.id,
+                            { description: value },
+                          );
+                          if (success && updatedUser) {
+                            userDispatch({
+                              type: EDIT_USER,
+                              payload: updatedUser,
+                            });
+                          }
+                        }}
+                      />
+                    </WPQTModalField>
+                  </WPQTModalFieldSet>
+                </div>
+                <CustomFieldsInModalWrap
+                  entityId={userToEdit!.id}
+                  entityType={CustomFieldEntityType.QUICKTASKER}
+                />
+              </div>,
+              <div key="comments">
+                <CommentsWithVisibility
+                  subjectId={userToEdit.id}
+                  subjectType={UserTypes.QUICKTASKER}
+                />
+              </div>,
+            ]}
+          />
         </div>
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
           <WPQTIconButton
