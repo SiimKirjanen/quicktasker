@@ -120,12 +120,13 @@ if (!function_exists('wpqt_set_up_db')) {
 
             dbDelta($sql6);
 
+            // type ENUM: 'user' and 'users' are legacy values kept for historical rows; new writes use 'quicktasker_user' or 'wp_user'.
             $sql7 = 'CREATE TABLE ' . TABLE_WP_QUICKTASKS_LOGS . " (
 				id int(11) NOT NULL AUTO_INCREMENT,
 				pipeline_id int(11) DEFAULT NULL,
 				text text NOT NULL,
 				type_id int(11) DEFAULT NULL,
-				type ENUM('task', 'pipeline', 'stage', 'user', 'users', 'webhook') NOT NULL,
+				type ENUM('task', 'pipeline', 'stage', 'user', 'users', 'webhook', 'quicktasker_user', 'wp_user') NOT NULL,
 				created_by ENUM('system', 'admin', 'quicktasker_user', 'automation', 'import', 'webhook', 'api_token', 'anonymous', 'wp_user') NOT NULL,
 				created_by_id int(11) DEFAULT NULL,
 				user_id int(11) DEFAULT NULL,

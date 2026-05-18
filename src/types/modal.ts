@@ -1,4 +1,5 @@
 import { Task, TaskExportMethods } from "./task";
+import { UserTypes } from "./user";
 
 type TaskModalSettings = {
   allowToMarkTaskAsDone: boolean;
@@ -30,6 +31,7 @@ type TaskLogsModalSettings = {
 
 type UserLogsModalSettings = {
   userId: string | null;
+  userType: UserTypes | null;
 };
 
 export type {

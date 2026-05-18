@@ -1,6 +1,8 @@
 enum WPQTTypes {
   Task = "task",
   User = "user",
+  QuicktaskerUser = "quicktasker_user",
+  WpUser = "wp_user",
 }
 
 enum WPQTLogCreatedBy {

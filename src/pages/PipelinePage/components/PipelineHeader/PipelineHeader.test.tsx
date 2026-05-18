@@ -91,7 +91,7 @@ describe("PipelineHeader", () => {
     taskLogsModalOpen: false,
     taskLogsModalSettings: { taskId: null },
     userLogsModalOpen: false,
-    userLogsModalSettings: { userId: null },
+    userLogsModalSettings: { userId: null, userType: null },
     notificationsModalOpen: false,
   };
 

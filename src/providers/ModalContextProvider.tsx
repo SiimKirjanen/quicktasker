@@ -61,7 +61,7 @@ import {
 import { Pipeline } from "../types/pipeline";
 import { Stage } from "../types/stage";
 import { Task, TaskExportMethods } from "../types/task";
-import { User, WPUser } from "../types/user";
+import { User, UserTypes, WPUser } from "../types/user";
 
 const initialState: State = {
   taskModalOpen: false,
@@ -118,6 +118,7 @@ const initialState: State = {
   userLogsModalOpen: false,
   userLogsModalSettings: {
     userId: null,
+    userType: null,
   },
   notificationsModalOpen: false,
 };
@@ -251,7 +252,7 @@ type Action =
   | { type: typeof CLOSE_TASK_LOGS_MODAL }
   | {
       type: typeof OPEN_USER_LOGS_MODAL;
-      payload: { userId: string };
+      payload: { userId: string; userType: UserTypes };
     }
   | { type: typeof CLOSE_USER_LOGS_MODAL }
   | { type: typeof OPEN_NOTIFICATIONS_MODAL }

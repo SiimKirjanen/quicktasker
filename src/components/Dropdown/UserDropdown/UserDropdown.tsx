@@ -20,7 +20,7 @@ import {
 import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
-import { User } from "../../../types/user";
+import { User, UserTypes } from "../../../types/user";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
   WPQTDropdown,
@@ -110,7 +110,7 @@ function UserDropdown({ user }: Props) {
           e.stopPropagation();
           modalDispatch({
             type: OPEN_USER_LOGS_MODAL,
-            payload: { userId: user.id },
+            payload: { userId: user.id, userType: UserTypes.QUICKTASKER },
           });
         }}
       />
