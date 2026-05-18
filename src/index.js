@@ -1,4 +1,7 @@
-import { render } from "@wordpress/element";
+import { createRoot } from "@wordpress/element";
 import App from "./App";
 
-render(<App />, document.getElementById("wpqt-app"));
+const container = document.getElementById("wpqt-app");
+if (container) {
+  createRoot(container).render(<App />);
+}
