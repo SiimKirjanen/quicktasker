@@ -2,6 +2,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTInput } from "../../../components/common/Input/Input";
+import { UserLogsModal } from "../../../components/Modal/UserLogsModal/UserLogsModal";
 import { UserModal } from "../../../components/Modal/UserModal/UserModal";
 import { SET_USERS_SEARCH_VALUE } from "../../../constants";
 import { UserContext } from "../../../providers/UserContextProvider";
@@ -41,6 +42,7 @@ function QuickTaskersSection() {
       </div>
       <UserList />
       <UserModal />
+      <UserLogsModal />
     </div>
   );
 }

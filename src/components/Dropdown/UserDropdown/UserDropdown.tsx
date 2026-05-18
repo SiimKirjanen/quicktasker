@@ -1,4 +1,5 @@
 import {
+  ClipboardDocumentListIcon,
   EllipsisHorizontalIcon,
   KeyIcon,
   PencilSquareIcon,
@@ -13,6 +14,7 @@ import {
   CHANGE_USER_STATUS,
   DELETE_USER,
   OPEN_EDIT_USER_MODAL,
+  OPEN_USER_LOGS_MODAL,
   RESET_PASSWORD,
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
@@ -96,6 +98,20 @@ function UserDropdown({ user }: Props) {
         onClick={(e) => {
           e.stopPropagation();
           window.location.hash = `#/user-management/${user.id}/tasks`;
+        }}
+      />
+
+      <WPQTDropdownItem
+        text={__("View logs", "quicktasker")}
+        icon={
+          <ClipboardDocumentListIcon className="wpqt-icon-blue wpqt-size-4" />
+        }
+        onClick={(e) => {
+          e.stopPropagation();
+          modalDispatch({
+            type: OPEN_USER_LOGS_MODAL,
+            payload: { userId: user.id },
+          });
         }}
       />
 

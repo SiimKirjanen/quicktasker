@@ -213,16 +213,19 @@ test.describe('User Management – Edit User Modal', () => {
     await expect(modal.locator('textarea').first()).toHaveValue(modalDescription);
     await expect(modal.getByText('User custom fields')).toBeVisible();
     await expect(modal.getByText('No related custom fields created')).toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Logs' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Logs' })).not.toBeVisible();
     await expect(page.getByRole('tab', { name: 'Private comments' })).toBeVisible();
     await expect(page.getByRole('tab', { name: 'Public comments' })).toBeVisible();
     await expect(modal.getByText('User details')).toBeVisible();
     await expect(modal.getByText('User tasks')).toBeVisible();
+    await expect(modal.getByText('View logs')).toBeVisible();
   });
 
-  test('Logs tab shows creation log entry', async ({ page }) => {
-    const modal = page.getByTestId('user-modal');
-    await expect(modal.getByText(/Quicktasker .*created/)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+  test('View logs button opens user logs modal with creation log entry', async ({ page }) => {
+    await page.getByTestId('user-modal').getByText('View logs').click();
+    const logsModal = page.getByTestId('user-logs-modal');
+    await expect(logsModal).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(logsModal.getByText(/Quicktasker .*created/)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
   });
 
   test('User details button closes modal and navigates to detail page', async ({ page }) => {

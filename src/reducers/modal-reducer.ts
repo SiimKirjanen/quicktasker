@@ -17,6 +17,7 @@ import {
   CLOSE_TASK_LOGS_MODAL,
   CLOSE_TASK_MODAL,
   CLOSE_TASK_RESTORE_MODAL,
+  CLOSE_USER_LOGS_MODAL,
   CLOSE_USER_MODAL,
   CLOSE_WEBHOOKS_LOGS_MODAL,
   OPEN_API_TOKEN_LOGS_MODAL,
@@ -36,6 +37,7 @@ import {
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_LOGS_MODAL,
   OPEN_TASK_RESTORE_MODAL,
+  OPEN_USER_LOGS_MODAL,
   OPEN_WEBHOOKS_LOGS_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
@@ -425,6 +427,27 @@ const reducer = (state: State, action: Action): State => {
         taskLogsModalOpen: false,
         taskLogsModalSettings: {
           ...initialState.taskLogsModalSettings,
+        },
+      };
+    }
+    case OPEN_USER_LOGS_MODAL: {
+      const { userId }: { userId: string } = action.payload;
+
+      return {
+        ...state,
+        userLogsModalOpen: true,
+        userLogsModalSettings: {
+          ...state.userLogsModalSettings,
+          userId,
+        },
+      };
+    }
+    case CLOSE_USER_LOGS_MODAL: {
+      return {
+        ...state,
+        userLogsModalOpen: false,
+        userLogsModalSettings: {
+          ...initialState.userLogsModalSettings,
         },
       };
     }

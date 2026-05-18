@@ -1,4 +1,5 @@
 import {
+  ClipboardDocumentListIcon,
   KeyIcon,
   PowerIcon,
   RectangleStackIcon,
@@ -11,6 +12,7 @@ import {
   CLOSE_USER_MODAL,
   DELETE_USER,
   EDIT_USER,
+  OPEN_USER_LOGS_MODAL,
   RESET_PASSWORD,
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
@@ -25,7 +27,7 @@ import { AutoSaveInput } from "../../common/Input/AutoSaveInput/AutoSaveInput";
 import { AutoSaveTextarea } from "../../common/Input/AutoSaveTextarea/AutoSaveTextarea";
 import { CustomFieldsInModalWrap } from "../../CustomField/CustomFieldsInModalWrap/CustomFieldsInModalWrap";
 import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
-import { CommentsAndLogsTabs } from "../../Tab/CommentsAndLogs/CommentsAndLogsTabs";
+import { CommentsTabs } from "../../Tab/CommentsAndLogs/CommentsTabs";
 import { WPQTModalField, WPQTModalFieldSet } from "../WPQTModal";
 
 const UserModalContent = () => {
@@ -108,7 +110,7 @@ const UserModalContent = () => {
             />
           </div>
           <div className="wpqt-mt-7">
-            <CommentsAndLogsTabs subjectId={userToEdit.id} subject="user" />
+            <CommentsTabs subjectId={userToEdit.id} subject="user" />
           </div>
         </div>
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
@@ -129,6 +131,18 @@ const UserModalContent = () => {
               navigatePage(`#/user-management/${userToEdit!.id}/tasks`);
               modalDispatch({
                 type: CLOSE_USER_MODAL,
+              });
+            }}
+          />
+          <WPQTIconButton
+            icon={
+              <ClipboardDocumentListIcon className="wpqt-icon-blue wpqt-size-5" />
+            }
+            text={__("View logs", "quicktasker")}
+            onClick={() => {
+              modalDispatch({
+                type: OPEN_USER_LOGS_MODAL,
+                payload: { userId: userToEdit.id },
               });
             }}
           />
