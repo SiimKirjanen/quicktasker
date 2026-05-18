@@ -28,6 +28,10 @@ type TaskLogsModalSettings = {
   taskId: string | null;
 };
 
+type UserLogsModalSettings = {
+  userId: string | null;
+};
+
 export type {
   ApiTokenLogsModalSettings,
   AutomationLogsModalSettings,
@@ -35,5 +39,6 @@ export type {
   TaskLogsModalSettings,
   TaskModalSettings,
   TaskRestoreModalSettings,
+  UserLogsModalSettings,
   WebhooksLogsModalSettings,
 };

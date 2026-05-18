@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { ModalContext } from "../../../providers/ModalContextProvider";
+import { WPQTTypes } from "../../../types/enums";
 import { Task, TaskFromServer } from "../../../types/task";
 import { WPQTModalField, WPQTModalFieldSet } from "../WPQTModal";
 
@@ -37,10 +38,10 @@ import { WPQTConfirmTooltip } from "../../Dialog/ConfirmTooltip/ConfirmTooltip";
 import { TaskLabelDropdown } from "../../Dropdown/TaskLabelDropdown/TaskLabelDropdown";
 import { UserAssignementDropdown } from "../../Dropdown/UserAssignementDropdown/UserAssignementDropdown";
 import { LoadingOval } from "../../Loading/Loading";
+import { CommentsWithVisibility } from "../../Tab/CommentsAndLogs/CommentsWithVisibility";
 import { WPQTTabs } from "../../Tab/WPQTTabs";
 import { UploadManager } from "../../Upload/UploadManager/UploadManager";
 import { FreeForAllToggle } from "./components/FreeForAllToggle/FreeForAllToggle";
-import { TaskComments } from "./components/TaskComments/TaskComments";
 import { TaskDueDateInput } from "./components/TaskDueDateInput/TaskDueDateInput";
 
 type Props = {
@@ -236,7 +237,10 @@ const TaskModalContent = ({ deleteTask }: Props) => {
                 </WPQTModalField>
               </div>,
               <div key="comments" className="lg:wpqt-pr-3">
-                <TaskComments taskId={taskToEdit.id} />
+                <CommentsWithVisibility
+                  subjectId={taskToEdit.id}
+                  subjectType={WPQTTypes.Task}
+                />
               </div>,
             ]}
           />

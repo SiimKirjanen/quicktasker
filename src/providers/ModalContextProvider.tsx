@@ -18,6 +18,7 @@ import {
   CLOSE_TASK_LOGS_MODAL,
   CLOSE_TASK_MODAL,
   CLOSE_TASK_RESTORE_MODAL,
+  CLOSE_USER_LOGS_MODAL,
   CLOSE_USER_MODAL,
   CLOSE_WEBHOOKS_LOGS_MODAL,
   OPEN_API_TOKEN_LOGS_MODAL,
@@ -37,6 +38,7 @@ import {
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_LOGS_MODAL,
   OPEN_TASK_RESTORE_MODAL,
+  OPEN_USER_LOGS_MODAL,
   OPEN_WEBHOOKS_LOGS_MODAL,
   REMOVE_ASSIGNED_USER_FROM_EDITING_TASK,
   SET_CUSTOM_FIELD_CREATOR_MODAL_OPEN,
@@ -53,6 +55,7 @@ import {
   TaskLogsModalSettings,
   TaskModalSettings,
   TaskRestoreModalSettings,
+  UserLogsModalSettings,
   WebhooksLogsModalSettings,
 } from "../types/modal";
 import { Pipeline } from "../types/pipeline";
@@ -112,6 +115,10 @@ const initialState: State = {
   taskLogsModalSettings: {
     taskId: null,
   },
+  userLogsModalOpen: false,
+  userLogsModalSettings: {
+    userId: null,
+  },
   notificationsModalOpen: false,
 };
 
@@ -153,6 +160,8 @@ type State = {
   apiTokenLogsModalSettings: ApiTokenLogsModalSettings;
   taskLogsModalOpen: boolean;
   taskLogsModalSettings: TaskLogsModalSettings;
+  userLogsModalOpen: boolean;
+  userLogsModalSettings: UserLogsModalSettings;
   notificationsModalOpen: boolean;
 };
 
@@ -240,6 +249,11 @@ type Action =
       payload: { taskId: string };
     }
   | { type: typeof CLOSE_TASK_LOGS_MODAL }
+  | {
+      type: typeof OPEN_USER_LOGS_MODAL;
+      payload: { userId: string };
+    }
+  | { type: typeof CLOSE_USER_LOGS_MODAL }
   | { type: typeof OPEN_NOTIFICATIONS_MODAL }
   | { type: typeof CLOSE_NOTIFICATIONS_MODAL };
 

@@ -1,16 +1,18 @@
 import { LockClosedIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
-import { WPQTTypes } from "../../../../../types/enums";
-import { CommentsTabContent } from "../../../../Tab/CommentsAndLogs/CommentsTabContent";
+import { WPQTTypes } from "../../../types/enums";
+import { UserTypes } from "../../../types/user";
+import { CommentsTabContent } from "./CommentsTabContent";
 
 type Visibility = "private" | "public";
 
 type Props = {
-  taskId: string;
+  subjectId: string;
+  subjectType: WPQTTypes.Task | UserTypes.QUICKTASKER;
 };
 
-function TaskComments({ taskId }: Props) {
+function CommentsWithVisibility({ subjectId, subjectType }: Props) {
   const [visibility, setVisibility] = useState<Visibility>("private");
 
   return (
@@ -31,8 +33,8 @@ function TaskComments({ taskId }: Props) {
       </div>
       <CommentsTabContent
         key={visibility}
-        subjectId={taskId}
-        subjectType={WPQTTypes.Task}
+        subjectId={subjectId}
+        subjectType={subjectType}
         isPrivate={visibility === "private"}
       />
     </div>
@@ -68,4 +70,4 @@ function SegmentedButton({
   );
 }
 
-export { TaskComments };
+export { CommentsWithVisibility };
