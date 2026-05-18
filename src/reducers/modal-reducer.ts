@@ -431,7 +431,7 @@ const reducer = (state: State, action: Action): State => {
       };
     }
     case OPEN_USER_LOGS_MODAL: {
-      const { userId }: { userId: string } = action.payload;
+      const { userId, userType } = action.payload;
 
       return {
         ...state,
@@ -439,6 +439,7 @@ const reducer = (state: State, action: Action): State => {
         userLogsModalSettings: {
           ...state.userLogsModalSettings,
           userId,
+          userType,
         },
       };
     }

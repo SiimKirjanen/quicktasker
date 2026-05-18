@@ -108,7 +108,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $logService->log('User page setup completed', [
                         'user_id'    => $userPage->user_id,
                         'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
-                        'type'       => WP_QT_LOG_TYPE_USER,
+                        'type'       => WP_QT_LOG_TYPE_QUICKTASKER_USER,
                         'type_id'    => $userPage->user_id,
                     ]);
 
@@ -158,7 +158,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $logService->log('User logged in', [
                         'user_id'    => $userPage->user_id,
                         'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
-                        'type'       => WP_QT_LOG_TYPE_USER,
+                        'type'       => WP_QT_LOG_TYPE_QUICKTASKER_USER,
                         'type_id'    => $userPage->user_id,
                     ]);
 
@@ -197,7 +197,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         $logService->log('User logged out', [
                            'user_id'    => $requestData['session']->user_id,
                            'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
-                           'type'       => WP_QT_LOG_TYPE_USER,
+                           'type'       => WP_QT_LOG_TYPE_QUICKTASKER_USER,
                            'type_id'    => $requestData['session']->user_id,
                             ]);
                     } else {
@@ -535,7 +535,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $userComments = $commentRepository->getComments($requestData['session']->user_id, $requestData['userType'], false);
 
                     $logService->log('User posted a comment on its profile', [
-                        'type'       => WP_QT_LOG_TYPE_USER,
+                        'type'       => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
                         'type_id'    => $requestData['session']->user_id,
                         'created_by' => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN,
                         'user_id'    => $requestData['session']->user_id
@@ -595,7 +595,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $userService->assignTaskToUser($requestData['session']->user_id, $taskId, $requestData['userType']);
 
                     $logService->log('Assigned itself to ' . $task->name . ' task', [
-                        'type'       => WP_QT_LOG_TYPE_USER,
+                        'type'       => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
                         'type_id'    => $requestData['session']->user_id,
                         'created_by' => $createdBy,
                         'user_id'    => $requestData['session']->user_id
@@ -708,7 +708,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $userService->removeTaskFromUser($requestData['session']->user_id, $taskId, $requestData['userType']);
 
                     $logService->log('Unassigned itself from ' . $task->name . ' task', [
-                        'type'        => WP_QT_LOG_TYPE_USER,
+                        'type'        => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
                         'type_id'     => $requestData['session']->user_id,
                         'created_by'  => $createdBy,
                         'user_id'     => $requestData['session']->user_id,
@@ -829,7 +829,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         'pipeline_id' => $task->pipeline_id
                     ]);
                     $logService->log('User changed task ' . $task->name . ' stage to ' . $stage->name, [
-                        'type'        => WP_QT_LOG_TYPE_USER,
+                        'type'        => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
                         'type_id'     => $requestData['session']->user_id,
                         'created_by'  => $createdBy,
                         'user_id'     => $requestData['session']->user_id,
@@ -935,7 +935,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $task = $taskRepository->getTaskByHash($data['task_hash']); //Get new task data
 
                     $logService->log($logMessage, [
-                        'type'        => WP_QT_LOG_TYPE_USER,
+                        'type'        => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
                         'type_id'     => $requestData['session']->user_id,
                         'created_by'  => $createdBy,
                         'user_id'     => $requestData['session']->user_id,

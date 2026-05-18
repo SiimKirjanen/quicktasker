@@ -165,7 +165,10 @@ const UserModalContent = () => {
             onClick={() => {
               modalDispatch({
                 type: OPEN_USER_LOGS_MODAL,
-                payload: { userId: userToEdit.id },
+                payload: {
+                  userId: userToEdit.id,
+                  userType: UserTypes.QUICKTASKER,
+                },
               });
             }}
           />

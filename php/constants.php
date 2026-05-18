@@ -60,7 +60,7 @@ DB constants
 */
 
 if (!defined('WP_QUICKTASKER_DB_VERSION')) {
-    define('WP_QUICKTASKER_DB_VERSION', '1.62.0');
+    define('WP_QUICKTASKER_DB_VERSION', '1.63.0');
 }
 
 if (!defined('TABLE_WP_QUICKTASKER_USERS')) {
@@ -169,8 +169,18 @@ if (!defined('WP_QT_LOG_TYPE_STAGE')) {
     define('WP_QT_LOG_TYPE_STAGE', 'stage');
 }
 
+// Legacy: kept so historical 'user' rows remain valid in WP_QT_LOG_TYPES.
+// Do not use for new log writes — use WP_QT_LOG_TYPE_QUICKTASKER_USER or WP_QT_LOG_TYPE_WP_USER.
 if (!defined('WP_QT_LOG_TYPE_USER')) {
     define('WP_QT_LOG_TYPE_USER', 'user');
+}
+
+if (!defined('WP_QT_LOG_TYPE_QUICKTASKER_USER')) {
+    define('WP_QT_LOG_TYPE_QUICKTASKER_USER', 'quicktasker_user');
+}
+
+if (!defined('WP_QT_LOG_TYPE_WP_USER')) {
+    define('WP_QT_LOG_TYPE_WP_USER', 'wp_user');
 }
 
 if (!defined('WP_QT_LOG_TYPE_PIPELINE')) {
@@ -182,7 +192,7 @@ if (!defined('WP_QT_LOG_TYPE_WEBHOOK')) {
 }
 
 if (!defined('WP_QT_LOG_TYPES')) {
-    define('WP_QT_LOG_TYPES', [WP_QT_LOG_TYPE_TASK, WP_QT_LOG_TYPE_PIPELINE, WP_QT_LOG_TYPE_STAGE, WP_QT_LOG_TYPE_USER, WP_QT_LOG_TYPE_WEBHOOK]);
+    define('WP_QT_LOG_TYPES', [WP_QT_LOG_TYPE_TASK, WP_QT_LOG_TYPE_PIPELINE, WP_QT_LOG_TYPE_STAGE, WP_QT_LOG_TYPE_USER, WP_QT_LOG_TYPE_QUICKTASKER_USER, WP_QT_LOG_TYPE_WP_USER, WP_QT_LOG_TYPE_WEBHOOK]);
 }
 
 if (!defined('WP_QT_LOG_CREATED_BY_ADMIN')) {

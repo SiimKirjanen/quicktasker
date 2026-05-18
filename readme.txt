@@ -4,7 +4,7 @@ Tags: task manager, task management, project management, task board, kanban boar
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.9.0
-Stable tag: 1.56.0
+Stable tag: 1.57.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,12 @@ QuickTasker is an open source kanban-style task management plugin for WordPress.
 
 
 == Changelog ==
+
+= 1.57.0 =
+* Improved mobile experience across admin pages.
+* Reorganized the user details view with separate tabs for details and comments.
+* Moved user activity logs into their own window for easier viewing.
+* Fixed an issue where a user's activity log could show entries from an unrelated user.
 
 = 1.56.0 =
 * Added a "My Tasks" admin page that lists tasks the current user created and tasks assigned to them, gated by a new "Access to My Tasks page" capability.

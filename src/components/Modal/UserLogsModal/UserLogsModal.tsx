@@ -7,6 +7,7 @@ import { ModalContext } from "../../../providers/ModalContextProvider";
 import { WPQTTypes } from "../../../types/enums";
 import { Log } from "../../../types/log";
 import { UserLogsModalSettings } from "../../../types/modal";
+import { UserTypes } from "../../../types/user";
 import { NoFilterResults } from "../../Filter/NoFilterResults/NoFilterResults";
 import { LogsTable } from "../../LogsTable/LogsTable";
 import { WPQTModal, WPQTModalTitle } from "../WPQTModal";
@@ -41,13 +42,18 @@ function UserLogsModalContent({ settings }: UserLogsModalContentProps) {
   const [hasError, setHasError] = useState(false);
 
   const fetchLogs = async () => {
-    if (!settings.userId) return;
+    if (!settings.userId || !settings.userType) return;
 
     setLoadingLogs(true);
     setHasError(false);
 
+    const logType =
+      settings.userType === UserTypes.QUICKTASKER
+        ? WPQTTypes.QuicktaskerUser
+        : WPQTTypes.WpUser;
+
     try {
-      const response = await getLogsRequest(settings.userId, WPQTTypes.User);
+      const response = await getLogsRequest(settings.userId, logType);
       setLogs(response.data);
     } catch (error) {
       console.error("Error fetching user logs:", error);
@@ -61,7 +67,7 @@ function UserLogsModalContent({ settings }: UserLogsModalContentProps) {
     if (settings.userId) {
       fetchLogs();
     }
-  }, [settings.userId]);
+  }, [settings.userId, settings.userType]);
 
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-4">

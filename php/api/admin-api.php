@@ -1790,7 +1790,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'description' => $data['description'],
                         ]);
                         $logService->log('Quicktasker ' . $user->name . ' created', [
-                            'type'          => WP_QT_LOG_TYPE_USER,
+                            'type'          => WP_QT_LOG_TYPE_QUICKTASKER_USER,
                             'type_id'       => $user->id,
                             'user_id'       => get_current_user_id(),
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
@@ -1938,7 +1938,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         ]);
 
                         $logService->log('Task ' . $task->name . ' assigned to ' . $user->name, [
-                            'type'          => WP_QT_LOG_TYPE_USER,
+                            'type'          => WP_QT_WORDPRESS_USER_TYPE === $data['user_type'] ? WP_QT_LOG_TYPE_WP_USER : WP_QT_LOG_TYPE_QUICKTASKER_USER,
                             'type_id'       => $user->id,
                             'user_id'       => $userId,
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
@@ -2062,7 +2062,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         ]);
 
                         $logService->log('User ' . $user->name . ' unassigned from ' . $task->name . ' task', [
-                            'type'          => WP_QT_LOG_TYPE_USER,
+                            'type'          => WP_QT_WORDPRESS_USER_TYPE === $data['user_type'] ? WP_QT_LOG_TYPE_WP_USER : WP_QT_LOG_TYPE_QUICKTASKER_USER,
                             'type_id'       => $user->id,
                             'user_id'       => $userId,
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
@@ -2186,7 +2186,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $user = $userService->editUser($data['id'], $args);
 
                         $logService->log('User ' . $user->name . ' edited', [
-                            'type'          => WP_QT_LOG_TYPE_USER,
+                            'type'          => WP_QT_LOG_TYPE_QUICKTASKER_USER,
                             'type_id'       => $user->id,
                             'user_id'       => get_current_user_id(),
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
@@ -2243,7 +2243,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $user = $userService->resetUserPassword($data['id']);
 
                         $logService->log('User ' . $user->name . ' password reset', [
-                            'type'          => WP_QT_LOG_TYPE_USER,
+                            'type'          => WP_QT_LOG_TYPE_QUICKTASKER_USER,
                             'type_id'       => $data['id'],
                             'user_id'       => get_current_user_id(),
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
@@ -2289,7 +2289,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $user = $userService->changeUserStatus($data['id'], $data['status']);
                         $statusString = $data['status'] ? 'active' : 'disabled';
                         $logService->log('User ' . $user->name . ' status changed to ' . $statusString, [
-                            'type'          => WP_QT_LOG_TYPE_USER,
+                            'type'          => WP_QT_LOG_TYPE_QUICKTASKER_USER,
                             'type_id'       => $data['id'],
                             'user_id'       => get_current_user_id(),
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
@@ -2339,7 +2339,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $user = $userService->deleteUser($data['id']);
                         $logService->log('User ' . $user->name . ' marked as deleted', [
-                            'type'          => WP_QT_LOG_TYPE_USER,
+                            'type'          => WP_QT_LOG_TYPE_QUICKTASKER_USER,
                             'type_id'       => $data['id'],
                             'user_id'       => get_current_user_id(),
                             'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
