@@ -6,22 +6,24 @@ import { logCreatedByString } from "../../utils/log";
 
 function LogsTable({ logs }: { logs: Log[] }) {
   return (
-    <div className="wpqt-inline-grid wpqt-grid-cols-[auto_auto_auto_auto] wpqt-items-center wpqt-gap-x-8 wpqt-gap-y-3">
-      <div className="wpqt-mb-2 wpqt-font-bold">
-        {__("Status", "quicktasker")}
+    <div className="wpqt-overflow-x-auto">
+      <div className="wpqt-inline-grid wpqt-min-w-[640px] wpqt-grid-cols-[auto_auto_auto_auto] wpqt-items-center wpqt-gap-x-8 wpqt-gap-y-3">
+        <div className="wpqt-mb-2 wpqt-font-bold">
+          {__("Status", "quicktasker")}
+        </div>
+        <div className="wpqt-mb-2 wpqt-font-bold">
+          {__("Created at", "quicktasker")}
+        </div>
+        <div className="wpqt-mb-2 wpqt-font-bold">
+          {__("Author", "quicktasker")}
+        </div>
+        <div className="wpqt-mb-2 wpqt-font-bold">
+          {__("Message", "quicktasker")}
+        </div>
+        {logs.map((log) => (
+          <LogRow log={log} key={log.id} />
+        ))}
       </div>
-      <div className="wpqt-mb-2 wpqt-font-bold">
-        {__("Created at", "quicktasker")}
-      </div>
-      <div className="wpqt-mb-2 wpqt-font-bold">
-        {__("Author", "quicktasker")}
-      </div>
-      <div className="wpqt-mb-2 wpqt-font-bold">
-        {__("Message", "quicktasker")}
-      </div>
-      {logs.map((log) => (
-        <LogRow log={log} key={log.id} />
-      ))}
     </div>
   );
 }

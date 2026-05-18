@@ -56,7 +56,7 @@ function BoardOptionsSelection() {
   };
 
   return (
-    <div className="wpqt-grid wpqt-grid-cols-[auto,auto,auto,auto] wpqt-mr-2 wpqt-pr-4 wpqt-gap-y-2 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
+    <div className="wpqt-flex wpqt-flex-wrap wpqt-gap-x-4 wpqt-gap-y-2 sm:wpqt-grid sm:wpqt-grid-cols-[auto,auto,auto,auto] sm:wpqt-gap-x-0 xl:wpqt-mr-2 xl:wpqt-pr-4 xl:wpqt-border-0 xl:wpqt-border-r xl:wpqt-border-solid xl:wpqt-border-qtBorder">
       <div
         className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
         onClick={() => {
@@ -69,12 +69,12 @@ function BoardOptionsSelection() {
         </span>
       </div>
 
-      <div className="wpqt-pl-4">
+      <div className="sm:wpqt-pl-4">
         {activePipelineId && <NotificationsNavLink />}
       </div>
 
       <div
-        className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-pl-4 wpqt-group"
+        className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 sm:wpqt-pl-4 wpqt-group"
         onClick={toggleView}
       >
         {view === PipelineView.PIPELINE ? (
@@ -97,7 +97,7 @@ function BoardOptionsSelection() {
       {isUserAllowedToManageSettings && (
         <>
           <div
-            className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer wpqt-pl-4 wpqt-group"
+            className="wpqt-flex wpqt-gap-1 wpqt-items-center wpqt-cursor-pointer sm:wpqt-pl-4 wpqt-group"
             onClick={openEditPipelineModal}
           >
             <Cog8ToothIcon className="wpqt-text-blue-400 wpqt-size-5 group-hover:wpqt-text-blue-600" />
@@ -119,7 +119,7 @@ function BoardOptionsSelection() {
           </div>
 
           <div
-            className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-pl-4 wpqt-group"
+            className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 sm:wpqt-pl-4 wpqt-group"
             onClick={() => {
               navigatePage(`#/board/${activePipelineId}/webhooks`);
             }}
@@ -131,7 +131,7 @@ function BoardOptionsSelection() {
           </div>
 
           <div
-            className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-pl-4 wpqt-group"
+            className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 sm:wpqt-pl-4 wpqt-group"
             onClick={() => {
               navigatePage(`#/board/${activePipelineId}/api-tokens`);
             }}

@@ -105,8 +105,8 @@ const TaskModalContent = ({ deleteTask }: Props) => {
 
   return (
     <>
-      <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 md:wpqt-grid-cols-[1fr_auto]">
-        <div className="wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-r-gray-300 md:wpqt-pr-6">
+      <div className="wpqt-grid wpqt-grid-cols-1 wpqt-gap-7 lg:wpqt-grid-cols-[1fr_auto]">
+        <div className="wpqt-border-0 lg:wpqt-border-r lg:wpqt-border-solid lg:wpqt-border-r-gray-300 lg:wpqt-pr-6">
           <WPQTTabs
             tabs={[
               { name: __("Details", "quicktasker") },
@@ -115,7 +115,7 @@ const TaskModalContent = ({ deleteTask }: Props) => {
             tabClassName="!wpqt-flex-none wpqt-px-4 wpqt-text-left wpqt-font-semibold wpqt-text-gray-400 hover:wpqt-text-gray-600 data-[selected]:wpqt-text-blue-600 data-[selected]:!wpqt-border-b-[3px]"
             tabsContent={[
               <div key="details">
-                <div className="wpqt-mb-2 wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 md:wpqt-grid-cols-[1fr_0.7fr]">
+                <div className="wpqt-mb-2 wpqt-grid wpqt-grid-cols-1 wpqt-gap-10 lg:wpqt-grid-cols-[1fr_0.7fr]">
                   <WPQTModalFieldSet>
                     <WPQTModalField label={__("Name", "quicktasker")}>
                       <AutoSaveInput
@@ -235,14 +235,14 @@ const TaskModalContent = ({ deleteTask }: Props) => {
                   />
                 </WPQTModalField>
               </div>,
-              <div key="comments" className="md:wpqt-pr-3">
+              <div key="comments" className="lg:wpqt-pr-3">
                 <TaskComments taskId={taskToEdit.id} />
               </div>,
             ]}
           />
         </div>
 
-        <div className="wpqt-flex wpqt-flex-col wpqt-gap-2">
+        <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-end wpqt-gap-2 lg:wpqt-flex-col lg:wpqt-justify-start">
           <WPQTIconButton
             icon={<TbLogs className="wpqt-icon-blue wpqt-size-5" />}
             text={__("View logs", "quicktasker")}

@@ -57,8 +57,8 @@ function OverviewPage({ pipelineId }: Props) {
         <WPQTPageHeader
           description={__("Get overview of the board.", "quicktasker")}
           rightSideContent={
-            <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
-              <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-mr-2 wpqt-pr-4 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
+            <div className="wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-3 sm:wpqt-gap-6">
+              <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 sm:wpqt-mr-2 sm:wpqt-pr-4 sm:wpqt-border-0 sm:wpqt-border-r sm:wpqt-border-solid sm:wpqt-border-qtBorder">
                 <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                   <div
                     className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
@@ -115,7 +115,7 @@ function OverviewPage({ pipelineId }: Props) {
                   </div>
                 </div>
               </div>
-              <div className="wpqt-mx-5">
+              <div className="wpqt-mx-2 sm:wpqt-mx-5">
                 {loading ? (
                   <LoadingOval width="28" height="28" />
                 ) : (

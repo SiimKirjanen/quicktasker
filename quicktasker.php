@@ -2,6 +2,7 @@
 
 /*
     Plugin Name: QuickTasker
+    Plugin URI: https://github.com/SiimKirjanen/quicktasker
     Description: Task management plugin designed to help you organize your projects, streamline workflows, and get tasks done efficiently.
     Author: Siim Kirjanen
     Author URI: https://github.com/SiimKirjanen

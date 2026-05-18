@@ -86,7 +86,7 @@ function WebhookCreator({ pipelineId }: Props) {
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-items-start wpqt-mt-6">
       <div className="wpqt-flex wpqt-gap-4 wpqt-w-full">
-        <div className="wpqt-flex wpqt-flex-col wpqt-flex-1">
+        <div className="wpqt-flex wpqt-flex-col wpqt-flex-1 wpqt-min-w-0">
           <WPQTLabel
             labelFor="webhook-target-type"
             className="wpqt-block wpqt-mb-1"
@@ -95,6 +95,7 @@ function WebhookCreator({ pipelineId }: Props) {
           </WPQTLabel>
           <WPQTSelect
             id="webhook-target-type"
+            className="wpqt-w-full"
             selectedOptionValue={targetType}
             options={Object.values(WebhookTargetType).map((type) => ({
               value: type,
@@ -107,7 +108,7 @@ function WebhookCreator({ pipelineId }: Props) {
           />
         </div>
 
-        <div className="wpqt-flex wpqt-flex-col wpqt-flex-1">
+        <div className="wpqt-flex wpqt-flex-col wpqt-flex-1 wpqt-min-w-0">
           <WPQTLabel
             labelFor="webhook-target-action"
             className="wpqt-block wpqt-mb-1"
@@ -116,6 +117,7 @@ function WebhookCreator({ pipelineId }: Props) {
           </WPQTLabel>
           <WPQTSelect
             id="webhook-target-action"
+            className="wpqt-w-full"
             selectedOptionValue={targetAction}
             options={Object.values(allowedActions).map((action) => ({
               value: action,
