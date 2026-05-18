@@ -11,7 +11,7 @@ function Page({ children }: Props) {
     state: { fullPageLoading },
   } = useContext(LoadingContext);
   return (
-    <div className="wpqt-pr-4">
+    <div className="wpqt-px-3 sm:wpqt-pl-0 sm:wpqt-pr-4">
       {fullPageLoading ? <FullLoading /> : children}
     </div>
   );

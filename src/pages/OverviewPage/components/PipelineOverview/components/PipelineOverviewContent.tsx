@@ -49,22 +49,28 @@ function PipelineOverviewContent({ pipelineOverviewData }: Props) {
           colorClass="wpqt-bg-red-500"
         />
       </div>
-      <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center">
-        <StageDistributionChart
-          pipelineOverviewData={pipelineOverviewData}
-          options={defaultChartoptions}
-          width="500px"
-        />
-        <TaskStatusChart
-          pipelineOverviewData={pipelineOverviewData}
-          options={defaultChartoptions}
-          width="500px"
-        />
-        <ArhivedTaskChart
-          pipelineOverviewData={pipelineOverviewData}
-          options={defaultChartoptions}
-          width="500px"
-        />
+      <div className="wpqt-flex wpqt-flex-wrap wpqt-justify-center wpqt-gap-4">
+        <div className="wpqt-w-full wpqt-max-w-[500px]">
+          <StageDistributionChart
+            pipelineOverviewData={pipelineOverviewData}
+            options={defaultChartoptions}
+            width="100%"
+          />
+        </div>
+        <div className="wpqt-w-full wpqt-max-w-[500px]">
+          <TaskStatusChart
+            pipelineOverviewData={pipelineOverviewData}
+            options={defaultChartoptions}
+            width="100%"
+          />
+        </div>
+        <div className="wpqt-w-full wpqt-max-w-[500px]">
+          <ArhivedTaskChart
+            pipelineOverviewData={pipelineOverviewData}
+            options={defaultChartoptions}
+            width="100%"
+          />
+        </div>
       </div>
     </div>
   );

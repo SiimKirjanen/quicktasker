@@ -29,23 +29,23 @@ function MyTasksHeaderControls({
   onRefresh,
 }: Props) {
   return (
-    <div className="wpqt-flex wpqt-items-center wpqt-gap-4">
+    <div className="wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-3 sm:wpqt-gap-4">
       <WPQTSelect
         options={boardOptions}
         selectedOptionValue={boardFilter}
         onSelectionChange={onBoardFilterChange}
         allSelectorLabel={__("All boards", "quicktasker")}
-        className="!wpqt-h-[30px] !wpqt-min-h-[30px] !wpqt-py-0 !wpqt-pl-2 !wpqt-pr-6 !wpqt-text-sm/6 !wpqt-border-[#8c8f94] !wpqt-shadow-none"
+        className="!wpqt-h-[30px] !wpqt-min-h-[30px] !wpqt-py-[0px] !wpqt-pl-2 !wpqt-pr-6 !wpqt-text-sm/6 !wpqt-leading-[28px] !wpqt-shadow-none"
       />
       <WPQTInput
         value={searchValue}
         onChange={onSearchChange}
         placeholder={__("Search tasks", "quicktasker")}
-        className="wpqt-w-52"
+        className="wpqt-w-52 !wpqt-border-qtBorder"
         wrapperClassName="!wpqt-mb-0"
         leftIcon={<MagnifyingGlassIcon className="wpqt-size-4" />}
       />
-      <div className="wpqt-mx-5">
+      <div className="wpqt-mx-2 sm:wpqt-mx-5">
         {loading ? (
           <LoadingOval width="28" height="28" />
         ) : (

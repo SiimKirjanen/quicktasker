@@ -13,7 +13,7 @@ Task management plugin designed to help you organize your projects, streamline w
 
 == Description ==
 
-QuickTasker is a kanban-style task management plugin for WordPress. Organize work into boards and stages, collaborate with WordPress users or dedicated QuickTasker users, and extend your workflow with automations, webhooks, and an API.
+QuickTasker is an open source kanban-style task management plugin for WordPress. Organize work into boards and stages, collaborate with WordPress users or dedicated QuickTasker users, and extend your workflow with automations, webhooks, and an API.
 
 = Organize your work =
 * Create boards with multiple stages and move tasks between them to track progress.

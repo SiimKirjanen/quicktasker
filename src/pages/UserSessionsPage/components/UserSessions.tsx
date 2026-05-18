@@ -17,22 +17,24 @@ function UserSessions() {
   }
 
   return (
-    <div className="wpqt-inline-grid wpqt-grid-cols-[auto_auto_auto_auto] wpqt-items-center wpqt-gap-x-16 wpqt-gap-y-4">
-      <div className="wpqt-mb-4 wpqt-font-bold">
-        {__("Session owner", "quicktasker")}
+    <div className="wpqt-overflow-x-auto">
+      <div className="wpqt-inline-grid wpqt-min-w-[640px] wpqt-grid-cols-[auto_auto_auto_auto] wpqt-items-center wpqt-gap-x-16 wpqt-gap-y-4">
+        <div className="wpqt-mb-4 wpqt-font-bold">
+          {__("Session owner", "quicktasker")}
+        </div>
+        <div className="wpqt-mb-4 wpqt-font-bold">
+          {__("Created at", "quicktasker")}
+        </div>
+        <div className="wpqt-mb-4 wpqt-font-bold">
+          {__("Expires at", "quicktasker")}
+        </div>
+        <div className="wpqt-mb-4 wpqt-font-bold">
+          {__("Status", "quicktasker")}
+        </div>
+        {filteredSessions.map((session) => (
+          <UserSession key={session.id} session={session} />
+        ))}
       </div>
-      <div className="wpqt-mb-4 wpqt-font-bold">
-        {__("Created at", "quicktasker")}
-      </div>
-      <div className="wpqt-mb-4 wpqt-font-bold">
-        {__("Expires at", "quicktasker")}
-      </div>
-      <div className="wpqt-mb-4 wpqt-font-bold">
-        {__("Status", "quicktasker")}
-      </div>
-      {filteredSessions.map((session) => (
-        <UserSession key={session.id} session={session} />
-      ))}
     </div>
   );
 }

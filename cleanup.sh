@@ -3,7 +3,7 @@
 # List of files and directories to remove
 FILES_TO_REMOVE=(
     "tsconfig.json"
-    ".eslint.config.js"
+    "eslint.config.js"
     ".prettierrc"
     ".vscode"
     ".github"

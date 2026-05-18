@@ -51,7 +51,7 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
 
   if (isEmpty) {
     return (
-      <div className="wpqt-max-w-[460px] wpqt-mx-auto wpqt-mt-12 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6">
+      <div className="wpqt-box-border wpqt-max-w-[460px] wpqt-mx-auto wpqt-mt-12 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6">
         <h2 className="wpqt-mt-0">
           {__("Create a new API token", "quicktasker")}
         </h2>
@@ -68,13 +68,13 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
   }
 
   return (
-    <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-16">
+    <div className="wpqt-flex wpqt-flex-col lg:wpqt-flex-row wpqt-gap-6 lg:wpqt-gap-16">
       <div className="wpqt-flex-1 wpqt-min-w-0">
         <h2>{__("Created API tokens", "quicktasker")}</h2>
         <PipelineApiTokensInfo />
         <PipelineApiTokens />
       </div>
-      <div className="lg:wpqt-w-[460px] lg:wpqt-shrink-0 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6 wpqt-self-start">
+      <div className="wpqt-box-border wpqt-w-full wpqt-min-w-0 lg:wpqt-w-[460px] lg:wpqt-shrink-0 wpqt-border wpqt-border-solid wpqt-border-qtBorder wpqt-rounded-md wpqt-p-6 wpqt-self-start">
         <h2 className="wpqt-mt-0">
           {__("Create a new API token", "quicktasker")}
         </h2>
@@ -120,8 +120,8 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
               </a>
             }
             rightSideContent={
-              <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
-                <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-mr-2 wpqt-pr-4 wpqt-border-0 wpqt-border-r wpqt-border-solid wpqt-border-qtBorder">
+              <div className="wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-3 sm:wpqt-gap-6">
+                <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 sm:wpqt-mr-2 sm:wpqt-pr-4 sm:wpqt-border-0 sm:wpqt-border-r sm:wpqt-border-solid sm:wpqt-border-qtBorder">
                   <div className="wpqt-flex wpqt-items-center wpqt-gap-6">
                     <div
                       className="wpqt-flex wpqt-items-center wpqt-cursor-pointer wpqt-gap-2 wpqt-group"
@@ -190,7 +190,7 @@ function RefreshApiTokens() {
   const { loading, refetchPipelineApiTokens } = useApiTokens();
 
   return (
-    <div className="wpqt-mx-5">
+    <div className="wpqt-mx-2 sm:wpqt-mx-5">
       {loading ? (
         <LoadingOval width="28" height="28" />
       ) : (

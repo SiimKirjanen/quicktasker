@@ -26,7 +26,7 @@ function PipelineHeader() {
   }
 
   return (
-    <div className="wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-py-5">
+    <div className="wpqt-flex wpqt-flex-col wpqt-gap-3 wpqt-py-5 xl:wpqt-flex-row xl:wpqt-items-center xl:wpqt-gap-2">
       <div>
         <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
           <div
@@ -41,25 +41,29 @@ function PipelineHeader() {
         )}
       </div>
 
-      <div className="wpqt-ml-auto wpqt-flex wpqt-items-center wpqt-gap-3">
+      <div className="wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-3 xl:wpqt-ml-auto xl:wpqt-flex-nowrap">
         <BoardOptionsSelection />
-        <TaskExportSelection />
-        <div className="wpqt-mx-5">
-          {loading ? (
-            <LoadingOval width="28" height="28" />
-          ) : (
-            <ArrowPathIcon
-              className="wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
-              data-testid="refresh-icon"
-              onClick={() => handleRefresh(activePipeline.id)}
-            />
-          )}
-        </div>
+        <div className="wpqt-ml-auto wpqt-flex wpqt-flex-wrap wpqt-items-center wpqt-justify-end wpqt-gap-3 xl:wpqt-ml-0 xl:wpqt-flex-nowrap">
+          <TaskExportSelection />
+          <div className="wpqt-mx-2 sm:wpqt-mx-5">
+            {loading ? (
+              <LoadingOval width="28" height="28" />
+            ) : (
+              <ArrowPathIcon
+                className="wpqt-size-7 wpqt-cursor-pointer hover:wpqt-text-qtBlueHover"
+                data-testid="refresh-icon"
+                onClick={() => handleRefresh(activePipeline.id)}
+              />
+            )}
+          </div>
 
-        <PipelineSelectionDropdown
-          activePipeline={activePipeline}
-          onPipelineClick={(pipelineId) => fetchAndSetPipelineData(pipelineId)}
-        />
+          <PipelineSelectionDropdown
+            activePipeline={activePipeline}
+            onPipelineClick={(pipelineId) =>
+              fetchAndSetPipelineData(pipelineId)
+            }
+          />
+        </div>
       </div>
     </div>
   );

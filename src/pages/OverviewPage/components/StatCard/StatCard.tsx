@@ -7,7 +7,7 @@ type Props = {
 function StatCard({ label, value, colorClass }: Props) {
   return (
     <div
-      className={`wpqt-rounded-lg wpqt-p-6 wpqt-shadow wpqt-text-white wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2 wpqt-min-w-[160px] ${colorClass}`}
+      className={`wpqt-rounded-lg wpqt-p-6 wpqt-shadow wpqt-text-white wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-2 wpqt-min-w-0 sm:wpqt-min-w-[160px] ${colorClass}`}
     >
       <span
         className="wpqt-text-4xl wpqt-font-bold"
