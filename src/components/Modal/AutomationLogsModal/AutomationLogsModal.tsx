@@ -5,7 +5,7 @@ import { getGlobalLogsRequest } from "../../../api/api";
 import { CLOSE_AUTOMATION_LOGS_MODAL } from "../../../constants";
 import { LogOrderEnum } from "../../../pages/LogsPage/components/LogsPageContent/LogsPageContent";
 import { ModalContext } from "../../../providers/ModalContextProvider";
-import { Log, LogCreatedByEnum } from "../../../types/log";
+import { Log, LogCreatedByEnum, LogTypeEnum } from "../../../types/log";
 import { AutomationLogsModalSettings } from "../../../types/modal";
 import { NoFilterResults } from "../../Filter/NoFilterResults/NoFilterResults";
 import { LogsTable } from "../../LogsTable/LogsTable";
@@ -49,12 +49,23 @@ function AutomationLogsModalContent({
     setHasError(false);
 
     try {
-      const response = await getGlobalLogsRequest({
-        createdById: settings.automationId,
-        createdBy: LogCreatedByEnum.Automation,
-        order: LogOrderEnum.Desc,
-      });
-      setLogs(response.data);
+      const [executionResponse, crudResponse] = await Promise.all([
+        getGlobalLogsRequest({
+          createdById: settings.automationId,
+          createdBy: LogCreatedByEnum.Automation,
+          order: LogOrderEnum.Desc,
+        }),
+        getGlobalLogsRequest({
+          type: LogTypeEnum.Automation,
+          typeId: settings.automationId,
+          order: LogOrderEnum.Desc,
+        }),
+      ]);
+      const merged = [...executionResponse.data, ...crudResponse.data].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      );
+      setLogs(merged);
     } catch (error) {
       console.error("Error fetching automation logs:", error);
       setHasError(true);

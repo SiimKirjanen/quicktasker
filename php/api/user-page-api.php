@@ -105,7 +105,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         throw new WPQTException('User page setup has already been completed', true);
                     }
                     $passwordService->storePassword($userPage->user_id, $data['password']);
-                    $logService->log('User page setup completed', [
+                    $logService->log('User completed account setup', [
                         'user_id'    => $userPage->user_id,
                         'created_by' => WP_QT_LOG_CREATED_BY_QUICKTASKER_USER,
                         'type'       => WP_QT_LOG_TYPE_QUICKTASKER_USER,
@@ -534,7 +534,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
 
                     $userComments = $commentRepository->getComments($requestData['session']->user_id, $requestData['userType'], false);
 
-                    $logService->log('User posted a comment on its profile', [
+                    $logService->log('User commented on their profile', [
                         'type'       => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
                         'type_id'    => $requestData['session']->user_id,
                         'created_by' => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN,
@@ -594,14 +594,14 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
 
                     $userService->assignTaskToUser($requestData['session']->user_id, $taskId, $requestData['userType']);
 
-                    $logService->log('Assigned itself to ' . $task->name . ' task', [
+                    $logService->log('Self-assigned to task ' . $task->name, [
                         'type'       => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
                         'type_id'    => $requestData['session']->user_id,
                         'created_by' => $createdBy,
                         'user_id'    => $requestData['session']->user_id
                     ]);
 
-                    $logService->log($user->name . ' assigned itself to the task ' . $task->name, [
+                    $logService->log($user->name . ' self-assigned to task ' . $task->name, [
                         'type'        => WP_QT_LOG_TYPE_TASK,
                         'type_id'     => $taskId,
                         'created_by'  => $createdBy,
@@ -707,14 +707,14 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
 
                     $userService->removeTaskFromUser($requestData['session']->user_id, $taskId, $requestData['userType']);
 
-                    $logService->log('Unassigned itself from ' . $task->name . ' task', [
+                    $logService->log('Self-unassigned from task ' . $task->name, [
                         'type'        => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
                         'type_id'     => $requestData['session']->user_id,
                         'created_by'  => $createdBy,
                         'user_id'     => $requestData['session']->user_id,
                         'pipeline_id' => $task->pipeline_id
                     ]);
-                    $logService->log($user->name . ' unassigned itself from the task', [
+                    $logService->log($user->name . ' self-unassigned from task ' . $task->name, [
                         'type'        => WP_QT_LOG_TYPE_TASK,
                         'type_id'     => $taskId,
                         'created_by'  => $createdBy,
