@@ -11,6 +11,15 @@ if (!defined('TABLE_WP_QUICKTASKS_LOGS')) {
 if (!defined('TABLE_WP_QUICKTASKER_USERS')) {
     define('TABLE_WP_QUICKTASKER_USERS', 'wp_quicktasker_users');
 }
+if (!defined('TABLE_WP_QUICKTASKER_PIPELINES')) {
+    define('TABLE_WP_QUICKTASKER_PIPELINES', 'wp_quicktasker_pipelines');
+}
+if (!defined('WP_QT_LOG_TYPE_AUTOMATION')) {
+    define('WP_QT_LOG_TYPE_AUTOMATION', 'automation');
+}
+if (!defined('WP_QT_LOG_TYPE_API_TOKEN')) {
+    define('WP_QT_LOG_TYPE_API_TOKEN', 'api_token');
+}
 
 require_once __DIR__ . '/../../../../php/repositories/LogRepository.php';
 

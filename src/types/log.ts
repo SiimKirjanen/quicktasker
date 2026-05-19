@@ -19,6 +19,8 @@ type BaseLog = {
   user_id: string;
   created_by: WPQTLogCreatedBy;
   log_status: LogStatusEnum;
+  pipeline_id: string | null;
+  pipeline_name: string | null;
 };
 
 enum LogTypeEnum {

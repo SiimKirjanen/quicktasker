@@ -34,6 +34,8 @@ const log = {
   user_id: "42",
   created_by: "admin" as WPQTLogCreatedBy,
   log_status: LogStatusEnum.Success,
+  pipeline_id: null,
+  pipeline_name: null,
 };
 
 describe("LogBox", () => {
