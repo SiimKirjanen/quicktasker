@@ -57,7 +57,7 @@ if (!function_exists('wpqt_enqueue_user_public_page')) {
 		');
 
         if ($customUserPageStyles) {
-            wp_add_inline_style('wpqt-tailwind', $customUserPageStyles);
+            wp_add_inline_style('wpqt-tailwind', wp_strip_all_tags($customUserPageStyles));
         }
     }
 }

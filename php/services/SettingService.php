@@ -12,38 +12,26 @@ if (!class_exists('WPQT\Settings\SettingsService')) {
     class SettingsService
     {
         /**
-         * Validates the custom styles provided by the user for a page.
-         *
-         * This function checks if the provided custom styles contain any HTML tags.
-         * If HTML tags are found, the function returns false, indicating invalid styles.
-         * Otherwise, it returns true, indicating valid styles.
-         *
-         * @param string $customStyles The custom styles provided by the user.
-         * @return bool True if the custom styles are valid, false otherwise.
+         * Mirrors WP Core's Customizer Additional CSS check
+         * (WP_Customize_Custom_CSS_Setting::validate): rejects raw HTML tags.
+         * The save endpoint requires the manage-settings capability, so the
+         * cap check is the real security boundary — this is just hygiene.
          */
         public static function validateUserPageCustomStyles($customStyles)
         {
-            if (preg_match('#</?\w+#', $css)) {
+            if (preg_match('#</?\w+#', $customStyles)) {
                 return false;
             }
 
             return true;
         }
 
-        /**
-         * Save custom styles for the user page and return the updated styles.
-         *
-         * This function updates the custom styles for the user page by saving the provided
-         * styles to the WordPress options table. After saving, it retrieves and returns
-         * the updated custom styles.
-         *
-         * @param string $customStyles The custom styles to be saved for the user page.
-         *
-         * @return string The updated custom styles for the user page.
-         */
         public static function saveUserPageCustomStyles($customStyles)
         {
-            self::validateUserPageCustomStyles($customStyles);
+            if (!self::validateUserPageCustomStyles($customStyles)) {
+                throw new \Exception('Invalid custom styles: HTML markup is not allowed in CSS.');
+            }
+
             update_option(WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES, $customStyles);
 
             return SettingRepository::getUserPageCustomStyles();
