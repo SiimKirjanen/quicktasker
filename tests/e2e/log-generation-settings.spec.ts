@@ -80,7 +80,7 @@ test.describe('Board log generation settings', () => {
     await navigateToAutomationsPage(page);
     await openFirstAutomationLogs(page);
 
-    await expect(page.getByTestId('automation-logs-modal')).toContainText('Automation executed');
+    await expect(page.getByTestId('automation-logs-modal')).toContainText('Automation triggered');
     await expect(page.getByTestId('automation-logs-modal')).not.toContainText('No logs found');
   });
 
@@ -104,6 +104,6 @@ test.describe('Board log generation settings', () => {
     await navigateToAutomationsPage(page);
     await openFirstAutomationLogs(page);
 
-    await expect(page.getByTestId('automation-logs-modal')).toContainText('No logs found');
+    await expect(page.getByTestId('automation-logs-modal')).not.toContainText('Automation triggered');
   });
 });

@@ -127,7 +127,7 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
 
                     if (!$webhook->active) {
                         if ($shouldLog) {
-                            $logService->log('Skipped ' . $webHookName . ' because it is inactive', $baseLog);
+                            $logService->log('Webhook ' . $webHookName . ' skipped (inactive)', $baseLog);
                         }
 
                         continue;
@@ -137,12 +137,12 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
                         $this->processWebhook($webhook, $data);
 
                         if ($shouldLog) {
-                            $logService->log('Executed ' . $webHookName, $baseLog);
+                            $logService->log('Webhook ' . $webHookName . ' executed', $baseLog);
                         }
                     } catch (\Exception $e) {
                         if ($shouldLog) {
                             $errorMessage = $e->getMessage();
-                            $message = 'Error processing ' . $webHookName . ' Reason: ' . $errorMessage;
+                            $message = 'Webhook ' . $webHookName . ' failed: ' . $errorMessage;
 
                             $logService->log($message, array_merge($baseLog, [
                               'log_status' => WP_QT_LOG_STATUS_ERROR

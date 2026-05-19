@@ -125,7 +125,7 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
                     } catch (\Throwable $e) {
                         $failedAutomations[] = $automation;
                         if ($shouldLog) {
-                            $failureLogMessage = $this->getAutomationFailedLogMessage($automation) . $e->getMessage();
+                            $failureLogMessage = $this->getAutomationFailedLogMessage($automation) . ': ' . $e->getMessage();
                             $logService->log($failureLogMessage, [
                                 'type'          => $targetType,
                                 'type_id'       => $targetId,
@@ -873,7 +873,19 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
          */
         private function getAutomationLogMessage($automation)
         {
-            return "Automation executed: Board ID: {$automation->pipeline_id}, Target ID: {$automation->target_id}, Target Type: {$automation->target_type}, Trigger: {$automation->automation_trigger}, Action: {$automation->automation_action}";
+            return 'Automation triggered on ' . $this->getAutomationDescription($automation);
+        }
+
+        /**
+         * Returns "{trigger label} → {action label}" for an automation. Public so
+         * API endpoints can include it in CRUD log messages.
+         */
+        public function getAutomationDescription($automation)
+        {
+            $trigger = $this->getTriggerLabel($automation->automation_trigger);
+            $action = $this->getActionLabel($automation->automation_action);
+
+            return "{$trigger} → {$action}";
         }
 
         /**
@@ -884,7 +896,60 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
          */
         private function getAutomationFailedLogMessage($automation)
         {
-            return "Automation failed: Board ID: {$automation->pipeline_id}, Target ID: {$automation->target_id}, Target Type: {$automation->target_type}, Trigger: {$automation->automation_trigger}, Action: {$automation->automation_action}, Action target type: {$automation->automation_action_target_type}, Action target id: {$automation->automation_action_target_id}, Metadata: {$automation->metadata}";
+            return 'Automation failed on ' . $this->getAutomationDescription($automation);
+        }
+
+        /**
+         * Returns a human-readable label for an automation trigger constant.
+         * Falls back to the raw value if a label is not defined, so newly added
+         * triggers without a label still produce a non-empty log message.
+         */
+        private function getTriggerLabel($trigger)
+        {
+            $labels = [
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DONE                            => 'Task marked done',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_NOT_DONE                        => 'Task marked not done',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_CREATED                         => 'Task created',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_DELETED                         => 'Task deleted',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ASSIGNED                        => 'Task assigned',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED                      => 'Task unassigned',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED            => 'Public comment added',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED           => 'Private comment added',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_ADDED                => 'Attachment added',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_ATTACHMENT_DELETED              => 'Attachment deleted',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_WOOCOMMERCE_ORDER_ADDED              => 'WooCommerce order added',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_CREATED              => 'Seatreg booking created',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED             => 'Seatreg booking approved',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING              => 'Seatreg booking pending',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_PENDING_VIA_MANAGER  => 'Seatreg booking pending (via manager)',
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_SEATREG_BOOKING_APPROVED_VIA_MANAGER => 'Seatreg booking approved (via manager)',
+            ];
+
+            return $labels[$trigger] ?? $trigger;
+        }
+
+        /**
+         * Returns a human-readable label for an automation action constant.
+         * Falls back to the raw value if a label is not defined.
+         */
+        private function getActionLabel($action)
+        {
+            $labels = [
+                WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK                     => 'Archive task',
+                WP_QUICKTASKER_AUTOMATION_ACTION_ASSIGN_USER                      => 'Assign user',
+                WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY                       => 'Send new-entity email',
+                WP_QUICKTASKER_AUTOMATION_ACTION_DELETED_ENTITY_EMAIL             => 'Send deleted-entity email',
+                WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ASSIGNED_EMAIL              => 'Send task-assigned email',
+                WP_QUICKTASKER_AUTOMATION_ACTION_TASK_UNASSIGNED_EMAIL            => 'Send task-unassigned email',
+                WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PUBLIC_COMMENT_ADDED_EMAIL  => 'Send public-comment email',
+                WP_QUICKTASKER_AUTOMATION_ACTION_TASK_PRIVATE_COMMENT_ADDED_EMAIL => 'Send private-comment email',
+                WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_ADDED_EMAIL      => 'Send attachment-added email',
+                WP_QUICKTASKER_AUTOMATION_ACTION_TASK_ATTACHMENT_DELETED_EMAIL    => 'Send attachment-deleted email',
+                WP_QUICKTASKER_AUTOMATION_ACTION_CREATE_TASK                      => 'Create task',
+                WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE               => 'Send Slack message',
+            ];
+
+            return $labels[$action] ?? $action;
         }
 
         /**

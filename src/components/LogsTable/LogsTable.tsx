@@ -4,10 +4,21 @@ import { WPQTLogCreatedBy } from "../../types/enums";
 import { Log, LogStatusEnum } from "../../types/log";
 import { logCreatedByString } from "../../utils/log";
 
-function LogsTable({ logs }: { logs: Log[] }) {
+function LogsTable({
+  logs,
+  showBoard = false,
+}: {
+  logs: Log[];
+  showBoard?: boolean;
+}) {
+  const gridCols = showBoard
+    ? "wpqt-grid-cols-[auto_auto_auto_auto_auto]"
+    : "wpqt-grid-cols-[auto_auto_auto_auto]";
   return (
     <div className="wpqt-overflow-x-auto">
-      <div className="wpqt-inline-grid wpqt-min-w-[640px] wpqt-grid-cols-[auto_auto_auto_auto] wpqt-items-center wpqt-gap-x-8 wpqt-gap-y-3">
+      <div
+        className={`wpqt-inline-grid wpqt-min-w-[640px] ${gridCols} wpqt-items-center wpqt-gap-x-8 wpqt-gap-y-3`}
+      >
         <div className="wpqt-mb-2 wpqt-font-bold">
           {__("Status", "quicktasker")}
         </div>
@@ -17,18 +28,23 @@ function LogsTable({ logs }: { logs: Log[] }) {
         <div className="wpqt-mb-2 wpqt-font-bold">
           {__("Author", "quicktasker")}
         </div>
+        {showBoard && (
+          <div className="wpqt-mb-2 wpqt-font-bold">
+            {__("Board", "quicktasker")}
+          </div>
+        )}
         <div className="wpqt-mb-2 wpqt-font-bold">
           {__("Message", "quicktasker")}
         </div>
         {logs.map((log) => (
-          <LogRow log={log} key={log.id} />
+          <LogRow log={log} showBoard={showBoard} key={log.id} />
         ))}
       </div>
     </div>
   );
 }
 
-function LogRow({ log }: { log: Log }) {
+function LogRow({ log, showBoard }: { log: Log; showBoard: boolean }) {
   const { convertToWPTimezone } = useTimezone();
   const createdBy = logCreatedByString[log.created_by];
   const isAnonymous = log.created_by === WPQTLogCreatedBy.Anonymous;
@@ -54,6 +70,9 @@ function LogRow({ log }: { log: Log }) {
           </>
         )}
       </span>
+      {showBoard && (
+        <span className="wpqt-text-gray-500">{log.pipeline_name ?? "—"}</span>
+      )}
       <span>{log.text}</span>
     </>
   );

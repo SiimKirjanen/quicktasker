@@ -376,6 +376,15 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $dbToken = (array) $apiTokenData['db_token'];
                         $dbToken['token'] = $apiTokenData['token'];
 
+                        ServiceLocator::get('LogService')->log('API token ' . $dbToken['name'] . ' created', [
+                            'type'          => WP_QT_LOG_TYPE_API_TOKEN,
+                            'type_id'       => $dbToken['id'],
+                            'user_id'       => get_current_user_id(),
+                            'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
+                            'pipeline_id'   => $data['id'],
+                        ]);
+
                         return new WP_REST_Response((new ApiResponse(true, [], $dbToken))->toArray(), 200);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
@@ -461,10 +470,22 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'DELETE',
                 'callback' => function ($data) {
                     try {
+                        $tokenForLog = ServiceLocator::get('ApiTokenRepository')->getTokenForFrontend($data['token_id']);
                         $numberOfDeleted = ServiceLocator::get('ApiTokenService')->deleteApiToken($data['id'], $data['token_id']);
 
                         if (0 === $numberOfDeleted) {
                             return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 404);
+                        }
+
+                        if ($tokenForLog) {
+                            ServiceLocator::get('LogService')->log('API token ' . $tokenForLog->name . ' deleted', [
+                                'type'          => WP_QT_LOG_TYPE_API_TOKEN,
+                                'type_id'       => $tokenForLog->id,
+                                'user_id'       => get_current_user_id(),
+                                'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                                'created_by_id' => get_current_user_id(),
+                                'pipeline_id'   => $data['id'],
+                            ]);
                         }
 
                         return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
@@ -3388,7 +3409,17 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'POST',
                 'callback' => function ($data) {
                     try {
-                        $automation = ServiceLocator::get('AutomationService')->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata']);
+                        $automationService = ServiceLocator::get('AutomationService');
+                        $automation = $automationService->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata']);
+
+                        ServiceLocator::get('LogService')->log('Automation created: ' . $automationService->getAutomationDescription($automation), [
+                            'type'          => WP_QT_LOG_TYPE_AUTOMATION,
+                            'type_id'       => $automation->id,
+                            'user_id'       => get_current_user_id(),
+                            'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
+                            'pipeline_id'   => $automation->pipeline_id,
+                        ]);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $automation))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -3445,7 +3476,18 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
                     try {
-                        $automation = ServiceLocator::get('AutomationService')->updateAutomationActiveState($data['automation_id'], $data['active']);
+                        $automationService = ServiceLocator::get('AutomationService');
+                        $automation = $automationService->updateAutomationActiveState($data['automation_id'], $data['active']);
+
+                        $verb = $data['active'] ? 'activated' : 'deactivated';
+                        ServiceLocator::get('LogService')->log('Automation ' . $verb . ': ' . $automationService->getAutomationDescription($automation), [
+                            'type'          => WP_QT_LOG_TYPE_AUTOMATION,
+                            'type_id'       => $automation->id,
+                            'user_id'       => get_current_user_id(),
+                            'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
+                            'pipeline_id'   => $automation->pipeline_id,
+                        ]);
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'automation' => $automation,
@@ -3487,7 +3529,17 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        $deletedAutomation = ServiceLocator::get('AutomationService')->deleteAutomation($data['automation_id']);
+                        $automationService = ServiceLocator::get('AutomationService');
+                        $deletedAutomation = $automationService->deleteAutomation($data['automation_id']);
+
+                        ServiceLocator::get('LogService')->log('Automation deleted: ' . $automationService->getAutomationDescription($deletedAutomation), [
+                            'type'          => WP_QT_LOG_TYPE_AUTOMATION,
+                            'type_id'       => $deletedAutomation->id,
+                            'user_id'       => get_current_user_id(),
+                            'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
+                            'pipeline_id'   => $deletedAutomation->pipeline_id,
+                        ]);
 
                         $wpdb->query('COMMIT');
 
@@ -3602,7 +3654,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         );
                         $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
 
-                        ServiceLocator::get('LogService')->log('Created ' . $webhookName, [
+                        ServiceLocator::get('LogService')->log('Webhook ' . $webhookName . ' created', [
                             'type'          => WP_QT_LOG_TYPE_WEBHOOK,
                             'type_id'       => $webhook->id,
                             'user_id'       => get_current_user_id(),
@@ -3683,7 +3735,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         );
                         $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
 
-                        ServiceLocator::get('LogService')->log('Edited ' . $webhookName, [
+                        ServiceLocator::get('LogService')->log('Webhook ' . $webhookName . ' edited', [
                             'type'          => WP_QT_LOG_TYPE_WEBHOOK,
                             'type_id'       => $webhook->id,
                             'user_id'       => get_current_user_id(),
@@ -3742,7 +3794,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
 
-                        ServiceLocator::get('LogService')->log('Deleted ' . $webhookName, [
+                        ServiceLocator::get('LogService')->log('Webhook ' . $webhookName . ' deleted', [
                             'type'          => WP_QT_LOG_TYPE_WEBHOOK,
                             'type_id'       => $webhook->id,
                             'user_id'       => get_current_user_id(),

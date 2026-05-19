@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.56.0\n"
+"Project-Id-Version: QuickTasker 1.57.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-17T18:43:35+00:00\n"
+"POT-Creation-Date: 2026-05-19T10:53:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -17,6 +17,11 @@ msgstr ""
 #. Plugin Name of the plugin
 #: quicktasker.php
 msgid "QuickTasker"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: quicktasker.php
+msgid "https://github.com/SiimKirjanen/quicktasker"
 msgstr ""
 
 #. Description of the plugin
@@ -84,76 +89,76 @@ msgid "About"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:640
+#: php/api/admin-api.php:661
 #: php/api/user-page-api.php:866
 #, php-format
 msgid "Stage was changed for task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:878
+#: php/api/admin-api.php:899
 #, php-format
 msgid "Due date for task \"%s\" changed"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:990
+#: php/api/admin-api.php:1011
 #, php-format
 msgid "Task \"%s\" was deleted"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1080
+#: php/api/admin-api.php:1101
 #, php-format
 msgid "Task \"%s\" was archived"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1173
+#: php/api/admin-api.php:1194
 #, php-format
 msgid "Task \"%s\" was restored from the archive"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1278
+#: php/api/admin-api.php:1299
 #: php/api/user-page-api.php:974
 #, php-format
 msgid "Task \"%s\" was marked done"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1280
+#: php/api/admin-api.php:1301
 #: php/api/user-page-api.php:976
 #, php-format
 msgid "Task \"%s\" was marked not done"
 msgstr ""
 
 #. translators: %1$s = assigner name, %2$s = task name
-#: php/api/admin-api.php:1959
+#: php/api/admin-api.php:1980
 #, php-format
 msgid "%1$s assigned you to task \"%2$s\""
 msgstr ""
 
 #. translators: %1$s = unassigner name, %2$s = task name
-#: php/api/admin-api.php:2083
+#: php/api/admin-api.php:2104
 #, php-format
 msgid "%1$s unassigned you from task \"%2$s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:2716
+#: php/api/admin-api.php:2737
 #, php-format
 msgid "A private comment was added to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:2718
+#: php/api/admin-api.php:2739
 #: php/api/user-page-api.php:437
 #, php-format
 msgid "A public comment was added to task \"%s\""
 msgstr ""
 
-#: php/api/admin-api.php:3194
+#: php/api/admin-api.php:3215
 msgid "No valid settings provided"
 msgstr ""
 
@@ -334,6 +339,18 @@ msgid "Task"
 msgstr ""
 
 #: build/app.js:1
+msgid "Webhook"
+msgstr ""
+
+#: build/app.js:1
+msgid "Automation"
+msgstr ""
+
+#: build/app.js:1
+msgid "API token"
+msgstr ""
+
+#: build/app.js:1
 msgid "Created by"
 msgstr ""
 
@@ -343,10 +360,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Admin"
-msgstr ""
-
-#: build/app.js:1
-msgid "Automation"
 msgstr ""
 
 #: build/app.js:1
@@ -411,10 +424,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "No results found"
-msgstr ""
-
-#: build/app.js:1
-msgid "Webhook"
 msgstr ""
 
 #: build/app.js:1
@@ -1272,6 +1281,26 @@ msgid "No users found"
 msgstr ""
 
 #: build/app.js:1
+msgid "Failed to add comment"
+msgstr ""
+
+#: build/app.js:1
+msgid "Failed to load comments"
+msgstr ""
+
+#: build/app.js:1
+msgid "No comments available"
+msgstr ""
+
+#: build/app.js:1
+msgid "Private"
+msgstr ""
+
+#: build/app.js:1
+msgid "Public"
+msgstr ""
+
+#: build/app.js:1
 msgid "File uploaded successfully"
 msgstr ""
 
@@ -1331,26 +1360,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Free for all updated"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to add comment"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load comments"
-msgstr ""
-
-#: build/app.js:1
-msgid "No comments available"
-msgstr ""
-
-#: build/app.js:1
-msgid "Private"
-msgstr ""
-
-#: build/app.js:1
-msgid "Public"
 msgstr ""
 
 #: build/app.js:1
@@ -2261,6 +2270,14 @@ msgid "Add custom CSS rules for user tasks page."
 msgstr ""
 
 #: build/app.js:1
+msgid "User logs"
+msgstr ""
+
+#: build/app.js:1
+msgid "Activity recorded for this user."
+msgstr ""
+
+#: build/app.js:1
 msgid "User created successfully"
 msgstr ""
 
@@ -2294,22 +2311,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Failed to reset user password. Please try again"
-msgstr ""
-
-#: build/app.js:1
-msgid "Failed to load logs"
-msgstr ""
-
-#: build/app.js:1
-msgid "No logs available"
-msgstr ""
-
-#: build/app.js:1
-msgid "Private comments"
-msgstr ""
-
-#: build/app.js:1
-msgid "Public comments"
 msgstr ""
 
 #: build/app.js:1

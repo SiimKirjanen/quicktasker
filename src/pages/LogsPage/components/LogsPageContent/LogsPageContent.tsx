@@ -123,7 +123,7 @@ const LogsPageContent = () => {
       ) : logs.length === 0 ? (
         <NoFilterResults text={__("No logs found", "quicktasker")} />
       ) : (
-        <LogsTable logs={logs} />
+        <LogsTable logs={logs} showBoard />
       )}
     </div>
   );

@@ -66,6 +66,18 @@ const LogsFilter = ({ filterSettings, setFilterSettings }: Props) => {
                 label: __("Task", "quicktasker"),
                 value: LogTypeEnum.Task,
               },
+              {
+                label: __("Webhook", "quicktasker"),
+                value: LogTypeEnum.Webhook,
+              },
+              {
+                label: __("Automation", "quicktasker"),
+                value: LogTypeEnum.Automation,
+              },
+              {
+                label: __("API token", "quicktasker"),
+                value: LogTypeEnum.ApiToken,
+              },
             ]}
             onSelectionChange={(selection: string) => {
               setLocalFilterSettings({
