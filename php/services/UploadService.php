@@ -37,28 +37,64 @@ if (!class_exists('WPQT\Upload\UploadService')) {
 
         public function validateUploadFile($file)
         {
-            $fileType = mime_content_type($file['tmp_name']);
-            $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
-
             if (UPLOAD_ERR_OK !== $file['error']) {
                 throw new \Exception('File upload error. Error code: ' . esc_html($file['error']));
             }
 
-            if (!in_array($fileType, WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES)) {
-                throw new \Exception('Not supported file type ' . esc_html($fileType));
+            if (!isset($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+                throw new \Exception('Invalid uploaded file.');
             }
 
-            if (!in_array(strtolower($fileExtension), WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS)) {
-                throw new \Exception('Not supported file extension ' . esc_html($fileExtension));
+            if (!preg_match(WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX, $file['name'])) {
+                throw new \Exception('Invalid file name');
             }
 
             if ($file['size'] > WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE) {
                 throw new \Exception(sprintf('File size exceeds the maximum limit of %d MB', esc_html(WP_QUICKTASKER_MAX_UPLOAD_FILE_SIZE / (1024 * 1024))));
             }
 
-            if (!preg_match(WP_QUICKTASKER_UPLOAD_FILE_NAME_REGEX, $file['name'])) {
-                throw new \Exception('Invalid file name');
+            $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+            if (!in_array($fileExtension, WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_EXTENSIONS, true)) {
+                throw new \Exception('Not supported file extension ' . esc_html($fileExtension));
             }
+
+            // Detect MIME from the file's magic bytes rather than trusting the
+            // browser-provided $file['type'] or the (deprecated) mime_content_type().
+            $detectedType = $this->detectMimeType($file['tmp_name']);
+
+            if (!$detectedType || !in_array($detectedType, WP_QUICKTASKER_ALLOWED_UPLOAD_FILE_TYPES, true)) {
+                throw new \Exception('Not supported file type ' . esc_html((string) $detectedType));
+            }
+
+            // Require extension and detected MIME to agree (using WP's mapping).
+            // This blocks an attacker renaming `evil.php` to `evil.jpg`.
+            $checked = wp_check_filetype_and_ext($file['tmp_name'], $file['name']);
+
+            if (empty($checked['ext']) || empty($checked['type'])) {
+                throw new \Exception('File extension does not match file contents.');
+            }
+
+            if (strtolower($checked['ext']) !== $fileExtension) {
+                throw new \Exception('File extension does not match file contents.');
+            }
+        }
+
+        private function detectMimeType($tmpPath)
+        {
+            if (function_exists('finfo_open')) {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                if ($finfo) {
+                    $type = finfo_file($finfo, $tmpPath);
+                    finfo_close($finfo);
+                    if ($type) {
+                        return $type;
+                    }
+                }
+            }
+
+            // Last-resort fallback. mime_content_type is deprecated but still works on most hosts.
+            return function_exists('mime_content_type') ? mime_content_type($tmpPath) : false;
         }
 
         public function saveFileToDisc($file, $uploadRecord)

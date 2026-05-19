@@ -10,11 +10,13 @@ if (!class_exists('WPQT\Session\SessionRepository')) {
     class SessionRepository
     {
         /**
-         * Retrieves the user session based on the session token.
-         *
-         * @param string $sessionToken The session token to retrieve the user session.
-         * @return object|null The user session object if found, null otherwise.
+         * Hashes a plaintext session token for DB storage / lookup.
          */
+        public static function hashToken($plaintextToken)
+        {
+            return hash('sha256', $plaintextToken);
+        }
+
         public function getUserSession($sessionToken)
         {
             global $wpdb;
@@ -22,17 +24,11 @@ if (!class_exists('WPQT\Session\SessionRepository')) {
             return $wpdb->get_row(
                 $wpdb->prepare(
                     'SELECT * FROM ' . TABLE_WP_QUICKTASKER_USER_SESSIONS . ' WHERE session_token = %s',
-                    $sessionToken
+                    self::hashToken($sessionToken)
                 )
             );
         }
 
-        /**
-         * Retrieves the active user session based on the provided session token.
-         *
-         * @param string $sessionToken The session token used to identify the active user session.
-         * @return object|null The active user session object if found, null otherwise.
-         */
         public function getActiveUserSession($sessionToken)
         {
             global $wpdb;
@@ -40,7 +36,7 @@ if (!class_exists('WPQT\Session\SessionRepository')) {
             return $wpdb->get_row(
                 $wpdb->prepare(
                     'SELECT * FROM ' . TABLE_WP_QUICKTASKER_USER_SESSIONS . ' WHERE session_token = %s AND is_active = 1',
-                    $sessionToken
+                    self::hashToken($sessionToken)
                 )
             );
         }

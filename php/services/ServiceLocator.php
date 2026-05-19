@@ -2,6 +2,10 @@
 
 namespace WPQT\Services;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 class ServiceLocator
 {
     private static $services = [];
