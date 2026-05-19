@@ -14,6 +14,7 @@ enum WPQTLogCreatedBy {
   Webhook = "webhook",
   Anonymous = "anonymous",
   WpUser = "wp_user",
+  ApiToken = "api_token",
 }
 
 enum WPQTArchiveDoneFilter {

@@ -6,7 +6,8 @@ type WPQTLogType =
   | "pipeline"
   | "user"
   | "webhook"
-  | "automation";
+  | "automation"
+  | "api_token";
 
 type BaseLog = {
   id: string;
@@ -26,6 +27,7 @@ enum LogTypeEnum {
   Task = "task",
   Webhook = "webhook",
   Automation = "automation",
+  ApiToken = "api_token",
   All = "all",
 }
 
