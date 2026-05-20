@@ -11,6 +11,7 @@ use WPQT\Customfield\CustomFieldRepository;
 use WPQT\Customfield\CustomFieldService;
 use WPQT\Log\LogRepository;
 use WPQT\Log\LogService;
+use WPQT\Notification\NotificationRepository;
 use WPQT\Notification\NotificationService;
 use WPQT\Permission\PermissionService;
 use WPQT\Pipeline\PipelineRepository;
@@ -1011,13 +1012,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                             $message = sprintf(__('Task "%s" was deleted', 'quicktasker'), $deletedTask->name);
                             $notificationService = ServiceLocator::get('NotificationService');
                             foreach ((array) $assignedQtUsers as $u) {
-                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message, NotificationService::TYPE_TASK_DELETED);
+                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message, NotificationService::TYPE_TASK_DELETED, NotificationRepository::ENTITY_TYPE_TASK, (int) $deletedTask->id);
                             }
                             foreach ((array) $assignedWpUsers as $u) {
                                 if ((int) $u->id === (int) $actorId) {
                                     continue;
                                 }
-                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message, NotificationService::TYPE_TASK_DELETED);
+                                $notificationService->createNotification($deletedTask->pipeline_id, (int) $u->id, $u->user_type, $message, NotificationService::TYPE_TASK_DELETED, NotificationRepository::ENTITY_TYPE_TASK, (int) $deletedTask->id);
                             }
                         } catch (Throwable $notificationError) {
                             error_log('Failed to create task deletion notification: ' . $notificationError->getMessage());
@@ -1981,7 +1982,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                                         $currentUser->display_name,
                                         $task->name
                                     ),
-                                    NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED
+                                    NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED,
+                                    NotificationRepository::ENTITY_TYPE_TASK,
+                                    (int) $task->id
                                 );
                             } catch (Throwable $notificationError) {
                                 error_log('Failed to create assignment notification: ' . $notificationError->getMessage());
@@ -2105,7 +2108,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                                         $currentUser->display_name,
                                         $task->name
                                     ),
-                                    NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED
+                                    NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED,
+                                    NotificationRepository::ENTITY_TYPE_TASK,
+                                    (int) $task->id
                                 );
                             } catch (Throwable $notificationError) {
                                 error_log('Failed to create unassignment notification: ' . $notificationError->getMessage());

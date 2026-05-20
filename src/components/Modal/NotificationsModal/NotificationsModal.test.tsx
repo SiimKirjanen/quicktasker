@@ -166,11 +166,15 @@ describe("NotificationsModal", () => {
     return {
       id: "n1",
       pipeline_id: "1",
+      type: null,
+      entity_type: null,
+      entity_id: null,
       user_id: "10",
       user_type: UserTypes.WP_USER,
       date: "2026-01-01 00:00:00",
       text: "Hello",
       mark_as_read: false,
+      entity_hash: null,
       ...overrides,
     };
   }

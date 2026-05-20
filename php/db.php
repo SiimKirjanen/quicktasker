@@ -372,6 +372,9 @@ if (!function_exists('wpqt_set_up_db')) {
             $sql21 = 'CREATE TABLE ' . TABLE_WP_QUICKTASKER_NOTIFICATIONS . " (
 				id int(11) NOT NULL AUTO_INCREMENT,
 				pipeline_id int(11) NOT NULL,
+				type varchar(50) DEFAULT NULL,
+				entity_type varchar(50) DEFAULT NULL,
+				entity_id int(11) DEFAULT NULL,
 				user_id int(11) NOT NULL,
 				user_type ENUM('quicktasker', 'wp-user') NOT NULL,
 				date datetime NOT NULL COMMENT 'UTC',
@@ -379,6 +382,7 @@ if (!function_exists('wpqt_set_up_db')) {
 				mark_as_read tinyint(1) NOT NULL DEFAULT 0,
 				PRIMARY KEY  (id),
 				INDEX pipeline_id (pipeline_id),
+				INDEX entity (entity_type, entity_id),
 				INDEX user_lookup (user_id, user_type),
 				INDEX mark_as_read (mark_as_read)
 			) $charset_collate;";
