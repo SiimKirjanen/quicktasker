@@ -71,6 +71,19 @@ if (!class_exists('WPQT\RequestValidation')) {
                     if (!$isActive) {
                         throw new WPQTException('User is not active', true);
                     }
+
+                    if ($userRepo->isQuicktaskerUserBanned($requestData['session']->user_id)) {
+                        throw new WPQTException('User is banned. Please contact an administrator.', true);
+                    }
+                }
+
+                if (isset($requestData['session']) && self::isWriteMethod($data)) {
+                    ServiceLocator::get('UserService')->enforceWriteRateLimit(
+                        'write_global',
+                        $requestData['session']->user_id,
+                        WP_QUICKTASKER_RATE_LIMIT_WRITE_GLOBAL_LIMIT,
+                        WP_QUICKTASKER_RATE_LIMIT_WRITE_GLOBAL_WINDOW
+                    );
                 }
             } else {
                 // We are dealing with WordPress user type
@@ -92,6 +105,15 @@ if (!class_exists('WPQT\RequestValidation')) {
             }
 
             return $requestData;
+        }
+
+        private static function isWriteMethod($data)
+        {
+            if (!is_object($data) || !method_exists($data, 'get_method')) {
+                return false;
+            }
+
+            return in_array(strtoupper((string) $data->get_method()), ['POST', 'PATCH', 'PUT', 'DELETE'], true);
         }
 
         /**

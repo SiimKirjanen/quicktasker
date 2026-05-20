@@ -81,10 +81,13 @@ if (!function_exists('wpqt_set_up_db')) {
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
 				is_active tinyint(1) DEFAULT 1,
+				is_banned tinyint(1) DEFAULT 0,
+				banned_at datetime DEFAULT NULL COMMENT 'UTC',
 				password varchar(255) DEFAULT NULL,
 				deleted tinyint(1) DEFAULT 0,
 				PRIMARY KEY  (id),
-				INDEX deleted (deleted)
+				INDEX deleted (deleted),
+				INDEX is_banned (is_banned)
 			) $charset_collate;";
 
             dbDelta($sql4);

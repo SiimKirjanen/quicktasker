@@ -1766,7 +1766,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $userRepo = new UserRepository();
                         $userService = new UserService();
                         $userPageService = new UserPageService();
-                        $user = $userRepo->getUserById($data['id']);
+                        $user = $userRepo->getQuicktaskerUserById($data['id']);
 
                         if (!$user) {
                             throw new WPQTException('Failed to get user data', true);
@@ -2339,6 +2339,51 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+                    ],
+                ],
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'users/(?P<id>\d+)/unban',
+            [
+                'methods'  => 'PATCH',
+                'callback' => function ($data) {
+                    global $wpdb;
+
+                    try {
+                        $wpdb->query('START TRANSACTION');
+
+                        $userService = new UserService();
+                        $logService = new LogService();
+
+                        $user = $userService->unbanQuicktaskerUser($data['id']);
+                        $logService->log('User ' . $user->name . ' was unbanned', [
+                            'type'          => WP_QT_LOG_TYPE_QUICKTASKER_USER,
+                            'type_id'       => $data['id'],
+                            'user_id'       => get_current_user_id(),
+                            'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                            'created_by_id' => get_current_user_id(),
+                        ]);
+
+                        $wpdb->query('COMMIT');
+
+                        return new WP_REST_Response((new ApiResponse(true, [], $user))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
+                },
+                'args' => [
+                    'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
                 ],
             ],

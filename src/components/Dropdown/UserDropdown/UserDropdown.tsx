@@ -2,6 +2,7 @@ import {
   ClipboardDocumentListIcon,
   EllipsisHorizontalIcon,
   KeyIcon,
+  NoSymbolIcon,
   PencilSquareIcon,
   PowerIcon,
   RectangleStackIcon,
@@ -13,6 +14,7 @@ import { __ } from "@wordpress/i18n";
 import {
   CHANGE_USER_STATUS,
   DELETE_USER,
+  EDIT_USER,
   OPEN_EDIT_USER_MODAL,
   OPEN_USER_LOGS_MODAL,
   RESET_PASSWORD,
@@ -34,10 +36,12 @@ type Props = {
 function UserDropdown({ user }: Props) {
   const { modalDispatch } = useContext(ModalContext);
   const { userDispatch } = useContext(UserContext);
-  const { changeUserStatus, deleteUser, resetUserPassword } = useUserActions();
+  const { changeUserStatus, deleteUser, resetUserPassword, unbanUser } =
+    useUserActions();
   const [isResettingPw, setIsResettingPw] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isChangingStatus, setIsChangingStatus] = useState(false);
+  const [isUnbanning, setIsUnbanning] = useState(false);
 
   const userIsActive = user.is_active;
 
@@ -127,6 +131,7 @@ function UserDropdown({ user }: Props) {
           loading={isResettingPw}
           icon={<KeyIcon className="wpqt-icon-red wpqt-size-4" />}
           onClick={async (e) => {
+            e.preventDefault();
             e.stopPropagation();
             setIsResettingPw(true);
             await resetUserPassword(user.id, () => {
@@ -146,6 +151,7 @@ function UserDropdown({ user }: Props) {
           loading={isChangingStatus}
           icon={<PowerIcon className="wpqt-icon-red wpqt-size-4" />}
           onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
             e.stopPropagation();
             onChangeUserStatus(false);
           }}
@@ -158,8 +164,29 @@ function UserDropdown({ user }: Props) {
           loading={isChangingStatus}
           icon={<PowerIcon className="wpqt-icon-green wpqt-size-4" />}
           onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
             e.stopPropagation();
             onChangeUserStatus(true);
+          }}
+        />
+      )}
+
+      {user.is_banned && (
+        <WPQTDropdownItem
+          text={__("Unban user", "quicktasker")}
+          loading={isUnbanning}
+          icon={<NoSymbolIcon className="wpqt-icon-green wpqt-size-4" />}
+          onClick={async (e: React.MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsUnbanning(true);
+            await unbanUser(user.id, (userData) => {
+              userDispatch({
+                type: EDIT_USER,
+                payload: userData,
+              });
+            });
+            setIsUnbanning(false);
           }}
         />
       )}

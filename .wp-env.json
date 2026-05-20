@@ -3,7 +3,8 @@
   "core": null,
   "plugins": [
     ".",
-    "./tests/e2e/test-plugins/qt-webhook-receiver"
+    "./tests/e2e/test-plugins/qt-webhook-receiver",
+    "./tests/e2e/test-plugins/qt-rate-limit-helper"
   ],
   "port": 8889,
   "testsEnvironment": false,

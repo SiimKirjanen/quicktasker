@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 use WP_User_Query;
+use WPQT\Services\ServiceLocator;
 
 if (!class_exists('WPQT\User\UserRepository')) {
     class UserRepository
@@ -25,7 +26,7 @@ if (!class_exists('WPQT\User\UserRepository')) {
         public function getUserByIdAndType($userId, $userType)
         {
             if (WP_QT_QUICKTASKER_USER_TYPE === $userType) {
-                return $this->getUserById($userId);
+                return $this->getQuicktaskerUserById($userId);
             } elseif (WP_QT_WORDPRESS_USER_TYPE === $userType) {
                 return $this->getWPUserById($userId);
             }
@@ -49,11 +50,11 @@ if (!class_exists('WPQT\User\UserRepository')) {
             global $wpdb;
 
             return $wpdb->get_results(
-                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, 'quicktasker' AS user_type,
-                        CASE 
-                            WHEN a.password IS NULL THEN 0 
-                            ELSE 1 
-                        END AS has_password, b.page_hash, 
+                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, a.is_banned, a.banned_at, 'quicktasker' AS user_type,
+                        CASE
+                            WHEN a.password IS NULL THEN 0
+                            ELSE 1
+                        END AS has_password, b.page_hash,
                         (SELECT COUNT(*)
                         FROM " . TABLE_WP_QUICKTASKER_USER_TASK . ' AS c
                         JOIN ' . TABLE_WP_QUICKTASKER_TASKS . " AS d
@@ -75,13 +76,13 @@ if (!class_exists('WPQT\User\UserRepository')) {
          * @param int $id The ID of the user to retrieve.
          * @return object|null The user object containing user details and assigned tasks count, or null if the user is not found.
          */
-        public function getUserById($id)
+        public function getQuicktaskerUserById($id)
         {
             global $wpdb;
 
             return $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, 'quicktasker' AS user_type, 
+                    "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, a.is_banned, a.banned_at, b.page_hash, 'quicktasker' AS user_type,
                             (SELECT COUNT(*)
                             FROM " . TABLE_WP_QUICKTASKER_USER_TASK . ' AS c
                             JOIN ' . TABLE_WP_QUICKTASKER_TASKS . " AS d
@@ -265,6 +266,67 @@ if (!class_exists('WPQT\User\UserRepository')) {
             } else {
                 return false;
             }
+        }
+
+        /**
+         * Checks whether the QuickTasker user is currently banned.
+         *
+         * @param int $userId The ID of the QuickTasker user.
+         * @return bool True if is_banned = 1, false otherwise.
+         */
+        public function isQuicktaskerUserBanned($userId)
+        {
+            global $wpdb;
+
+            $result = $wpdb->get_var(
+                $wpdb->prepare(
+                    'SELECT is_banned FROM ' . TABLE_WP_QUICKTASKER_USERS . ' WHERE id = %d AND deleted = 0',
+                    $userId
+                )
+            );
+
+            return 1 === (int) $result;
+        }
+
+        /**
+         * Marks a QuickTasker user as banned for spam. Sets is_banned = 1 and
+         * banned_at to the current UTC time.
+         *
+         * @param int $userId The ID of the QuickTasker user to ban.
+         * @return int|false Rows affected on success, false on DB error.
+         */
+        public function banQuicktaskerUserForSpam($userId)
+        {
+            global $wpdb;
+            $now = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
+
+            return $wpdb->update(
+                TABLE_WP_QUICKTASKER_USERS,
+                ['is_banned' => 1, 'banned_at' => $now],
+                ['id'        => $userId],
+                ['%d', '%s'],
+                ['%d']
+            );
+        }
+
+        /**
+         * Clears the ban on a QuickTasker user. Sets is_banned = 0 and
+         * banned_at = NULL.
+         *
+         * @param int $userId The ID of the QuickTasker user to unban.
+         * @return int|false Rows affected on success, false on DB error.
+         */
+        public function unbanQuicktaskerUser($userId)
+        {
+            global $wpdb;
+
+            return $wpdb->update(
+                TABLE_WP_QUICKTASKER_USERS,
+                ['is_banned' => 0, 'banned_at' => null],
+                ['id'        => $userId],
+                ['%d', '%s'],
+                ['%d']
+            );
         }
 
         public function getWPUsersWithCapabilities($capabilities)
