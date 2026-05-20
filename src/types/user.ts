@@ -12,19 +12,27 @@ type BaseUser = {
 
 type User = BaseUser & {
   is_active: boolean;
+  is_banned: boolean;
+  banned_at: string | null;
   has_password: boolean;
 };
 type ServerUser = BaseUser & {
   is_active: string;
+  is_banned: string;
+  banned_at: string | null;
   has_password: string;
 };
 type ServerExtendedUser = BaseUser & {
   is_active: string;
+  is_banned: string;
+  banned_at: string | null;
   has_password: boolean;
   setup_completed: boolean;
 };
 type ExtendedUser = BaseUser & {
   is_active: boolean;
+  is_banned: boolean;
+  banned_at: string | null;
   has_password: boolean;
   setup_completed: boolean;
 };

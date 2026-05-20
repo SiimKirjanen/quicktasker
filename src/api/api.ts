@@ -528,6 +528,14 @@ function changeUserStatusRequest(
   });
 }
 
+function unbanUserRequest(userId: string): Promise<WPQTResponse<ServerUser>> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${userId}/unban`,
+    method: "PATCH",
+    headers: getCommonHeaders(),
+  });
+}
+
 function assignTaskToUserRequest(
   userId: string,
   taskId: string,
@@ -1234,6 +1242,7 @@ export {
   saveUserPageCustomStylesRequest,
   setPipelinePrimaryRequest,
   unassignLabelFromTaskRequest,
+  unbanUserRequest,
   updateAutomationActiveStatusRequest,
   updateCustomFieldDefaultValueRequest,
   updateCustomFieldValueRequest,

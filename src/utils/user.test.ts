@@ -25,6 +25,8 @@ const createMockServerUser = (
   page_hash: "test-hash",
   assigned_tasks_count: "5",
   is_active: "1",
+  is_banned: "0",
+  banned_at: null,
   has_password: "1",
   ...overrides,
 });
@@ -53,6 +55,8 @@ const createMockServerExtendedUser = (
   page_hash: "extended-hash",
   assigned_tasks_count: "10",
   is_active: "1",
+  is_banned: "0",
+  banned_at: null,
   // Add these required boolean properties with default values
   has_password: true,
   setup_completed: false,
@@ -72,6 +76,7 @@ describe("user utilities", () => {
       expect(result).toEqual({
         ...serverUser,
         is_active: true,
+        is_banned: false,
         has_password: true,
       });
     });
@@ -87,6 +92,7 @@ describe("user utilities", () => {
       expect(result).toEqual({
         ...serverUser,
         is_active: false,
+        is_banned: false,
         has_password: false,
       });
     });
@@ -130,6 +136,7 @@ describe("user utilities", () => {
       expect(result).toEqual({
         ...serverUser,
         is_active: true,
+        is_banned: false,
         has_password: false,
       });
     });
@@ -146,6 +153,7 @@ describe("user utilities", () => {
       expect(result).toEqual({
         ...serverExtendedUser,
         is_active: true,
+        is_banned: false,
       });
     });
 
@@ -159,6 +167,7 @@ describe("user utilities", () => {
       expect(result).toEqual({
         ...serverExtendedUser,
         is_active: false,
+        is_banned: false,
       });
     });
 

@@ -6,6 +6,7 @@ import {
   deleteUserRequest,
   editUserRequest,
   resetUserPasswordRequest,
+  unbanUserRequest,
 } from "../../api/api";
 import { ServerUser, UserEditData } from "../../types/user";
 
@@ -90,12 +91,27 @@ function useUserActions() {
     }
   };
 
+  const unbanUser = async (
+    userId: string,
+    callback?: (userData: ServerUser) => void,
+  ) => {
+    try {
+      const response = await unbanUserRequest(userId);
+      if (callback) callback(response.data);
+      toast.success(__("User unbanned successfully", "quicktasker"));
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to unban user. Please try again", "quicktasker"));
+    }
+  };
+
   return {
     createUser,
     editUser,
     changeUserStatus,
     deleteUser,
     resetUserPassword,
+    unbanUser,
   };
 }
 

@@ -678,4 +678,69 @@ class RequestValidationTest extends TestCase {
     public function test_sanitizeBooleanParam_integration() {
         $this->markTestIncomplete('Requires WordPress environment with rest_sanitize_boolean()');
     }
+
+    // ========================================
+    // isWriteMethod Tests (Pure Logic)
+    // Private helper — invoked via reflection.
+    // ========================================
+
+    private function invokeIsWriteMethod($data) {
+        $ref = new \ReflectionClass(\WPQT\RequestValidation::class);
+        $method = $ref->getMethod('isWriteMethod');
+        $method->setAccessible(true);
+
+        return $method->invoke(null, $data);
+    }
+
+    private function fakeRequest(string $httpMethod): object {
+        return new class($httpMethod) {
+            private $method;
+            public function __construct(string $method) { $this->method = $method; }
+            public function get_method(): string { return $this->method; }
+        };
+    }
+
+    public function test_isWriteMethod_returns_true_for_post() {
+        $this->assertTrue($this->invokeIsWriteMethod($this->fakeRequest('POST')));
+    }
+
+    public function test_isWriteMethod_returns_true_for_patch() {
+        $this->assertTrue($this->invokeIsWriteMethod($this->fakeRequest('PATCH')));
+    }
+
+    public function test_isWriteMethod_returns_true_for_put() {
+        $this->assertTrue($this->invokeIsWriteMethod($this->fakeRequest('PUT')));
+    }
+
+    public function test_isWriteMethod_returns_true_for_delete() {
+        $this->assertTrue($this->invokeIsWriteMethod($this->fakeRequest('DELETE')));
+    }
+
+    public function test_isWriteMethod_returns_true_for_lowercase_method() {
+        $this->assertTrue($this->invokeIsWriteMethod($this->fakeRequest('post')));
+    }
+
+    public function test_isWriteMethod_returns_false_for_get() {
+        $this->assertFalse($this->invokeIsWriteMethod($this->fakeRequest('GET')));
+    }
+
+    public function test_isWriteMethod_returns_false_for_head() {
+        $this->assertFalse($this->invokeIsWriteMethod($this->fakeRequest('HEAD')));
+    }
+
+    public function test_isWriteMethod_returns_false_for_options() {
+        $this->assertFalse($this->invokeIsWriteMethod($this->fakeRequest('OPTIONS')));
+    }
+
+    public function test_isWriteMethod_returns_false_when_data_is_not_object() {
+        $this->assertFalse($this->invokeIsWriteMethod('POST'));
+        $this->assertFalse($this->invokeIsWriteMethod(null));
+        $this->assertFalse($this->invokeIsWriteMethod([]));
+    }
+
+    public function test_isWriteMethod_returns_false_when_object_has_no_get_method() {
+        $obj = new stdClass();
+        $obj->method = 'POST';
+        $this->assertFalse($this->invokeIsWriteMethod($obj));
+    }
 }

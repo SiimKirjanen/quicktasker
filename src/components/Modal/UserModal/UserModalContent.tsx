@@ -1,6 +1,7 @@
 import {
   ClipboardDocumentListIcon,
   KeyIcon,
+  NoSymbolIcon,
   PowerIcon,
   RectangleStackIcon,
   TrashIcon,
@@ -41,9 +42,16 @@ const UserModalContent = () => {
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
   const [isActiveUser, setIsActiveUser] = useState(false);
+  const [isBannedUser, setIsBannedUser] = useState(false);
+  const [isUnbanLoading, setIsUnbanLoading] = useState(false);
   const [hasPassword, setHasPassword] = useState(false);
-  const { changeUserStatus, deleteUser, resetUserPassword, editUser } =
-    useUserActions();
+  const {
+    changeUserStatus,
+    deleteUser,
+    resetUserPassword,
+    editUser,
+    unbanUser,
+  } = useUserActions();
   const { userDispatch } = useContext(UserContext);
   const {
     loading1: isResetPWLoading,
@@ -58,6 +66,7 @@ const UserModalContent = () => {
   useEffect(() => {
     if (userToEdit) {
       setIsActiveUser(userToEdit.is_active);
+      setIsBannedUser(userToEdit.is_banned);
       setHasPassword(userToEdit.has_password);
     }
   }, [userToEdit]);
@@ -223,6 +232,24 @@ const UserModalContent = () => {
                   setIsActiveUser(false);
                 });
                 setIsActivateLoading(false);
+              }}
+            />
+          )}
+          {isBannedUser && (
+            <WPQTIconButton
+              icon={<NoSymbolIcon className="wpqt-icon-green wpqt-size-5" />}
+              text={__("Unban user", "quicktasker")}
+              loading={isUnbanLoading}
+              onClick={async () => {
+                setIsUnbanLoading(true);
+                await unbanUser(userToEdit!.id, (userData) => {
+                  userDispatch({
+                    type: EDIT_USER,
+                    payload: { ...userData },
+                  });
+                  setIsBannedUser(false);
+                });
+                setIsUnbanLoading(false);
               }}
             />
           )}

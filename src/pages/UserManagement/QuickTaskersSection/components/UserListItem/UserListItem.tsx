@@ -1,4 +1,4 @@
-import { EyeIcon, PowerIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, NoSymbolIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../../components/Card/Card";
@@ -73,6 +73,15 @@ function UserListItem({ user }: Props) {
           />
         }
       />
+
+      {user.is_banned && (
+        <WPQTCardDataItem
+          label={__("Ban", "quicktasker")}
+          value={__("Banned (spam)", "quicktasker")}
+          valueClassName="wpqt-text-qtTextRed wpqt-font-bold"
+          icon={<NoSymbolIcon className="wpqt-size-5 wpqt-icon-red" />}
+        />
+      )}
     </WPQTCard>
   );
 }

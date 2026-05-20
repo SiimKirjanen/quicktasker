@@ -63,6 +63,7 @@ QuickTasker is an open source kanban-style task management plugin for WordPress.
 = 1.58.0 =
 * Improved log messages to be more readable.
 * Added more filtering options and a Board column to the Logs page.
+* Added spam protection for the tasks app that rate limits QuickTasker users and auto-bans repeat offenders.
 * Various security improvements across user sessions, file uploads, custom styles, exports and custom fields.
 
 = 1.57.0 =

@@ -39,6 +39,8 @@ const baseUser: User = {
   page_hash: "",
   assigned_tasks_count: "0",
   is_active: true,
+  is_banned: false,
+  banned_at: null,
   has_password: false,
 };
 const baseWPUser: WPUser = {

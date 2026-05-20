@@ -64,6 +64,7 @@ function QuickTaskerUserLogin() {
               value={password}
               onChange={setPassword}
               type={InputType.PASSWORD}
+              autoComplete="new-password"
               data-testid="password-input"
             />
           </WPQTField>

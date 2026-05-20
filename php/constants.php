@@ -60,7 +60,7 @@ DB constants
 */
 
 if (!defined('WP_QUICKTASKER_DB_VERSION')) {
-    define('WP_QUICKTASKER_DB_VERSION', '1.65.0');
+    define('WP_QUICKTASKER_DB_VERSION', '1.66.0');
 }
 
 if (!defined('TABLE_WP_QUICKTASKER_USERS')) {
@@ -372,6 +372,50 @@ Session constants
 
 if (!defined('WP_QUICKTASKER_SESSION_LENGHT')) {
     define('WP_QUICKTASKER_SESSION_LENGHT', DAY_IN_SECONDS);
+}
+
+/*
+==================================================================================================================================================================================================================
+Rate limit constants
+
+Single per-QuickTasker-user throttle covering every user-page write endpoint
+(comments, assignments, stage moves, done toggles, custom field updates, ...).
+Any write counts toward the same budget — no per-action sub-budgets.
+==================================================================================================================================================================================================================
+*/
+
+// Max user-page writes per QuickTasker user per window.
+if (!defined('WP_QUICKTASKER_RATE_LIMIT_WRITE_GLOBAL_LIMIT')) {
+    define('WP_QUICKTASKER_RATE_LIMIT_WRITE_GLOBAL_LIMIT', 30);
+}
+
+// Rate-limit window length in seconds.
+if (!defined('WP_QUICKTASKER_RATE_LIMIT_WRITE_GLOBAL_WINDOW')) {
+    define('WP_QUICKTASKER_RATE_LIMIT_WRITE_GLOBAL_WINDOW', 60);
+}
+
+/*
+==================================================================================================================================================================================================================
+Ban constants
+
+Auto-ban when a user hits the rate limit in N distinct windows inside the
+offense window. Admins can lift the ban from User Management.
+==================================================================================================================================================================================================================
+*/
+
+// Throttled rate-limit windows needed to trigger an auto-ban.
+if (!defined('WP_QUICKTASKER_BAN_OFFENSE_THRESHOLD')) {
+    define('WP_QUICKTASKER_BAN_OFFENSE_THRESHOLD', 3);
+}
+
+// Rolling window (seconds) in which offenses accumulate toward the ban.
+if (!defined('WP_QUICKTASKER_BAN_OFFENSE_WINDOW')) {
+    define('WP_QUICKTASKER_BAN_OFFENSE_WINDOW', 1800);
+}
+
+// Ban-reason label used in logs / admin UI to mark auto-bans.
+if (!defined('WP_QUICKTASKER_BAN_REASON_SPAM')) {
+    define('WP_QUICKTASKER_BAN_REASON_SPAM', 'spam');
 }
 
 /*

@@ -43,6 +43,8 @@ function createMockUser(overrides: Partial<User> = {}): User {
     assigned_tasks_count: "0",
     user_type: UserTypes.QUICKTASKER,
     is_active: true,
+    is_banned: false,
+    banned_at: null,
     has_password: true,
     ...overrides,
   };

@@ -200,22 +200,22 @@ class UserServiceTest extends TestCase
      * Methods requiring integration tests:
      * 
      * 1. createUser($args):
-     *    - Needs: TimeRepository (getCurrentUTCTime), HashService (generateUserPageHash), UserRepository (getUserById)
+     *    - Needs: TimeRepository (getCurrentUTCTime), HashService (generateUserPageHash), UserRepository (getQuicktaskerUserById)
      *    - Tests: successful user creation, user page creation, exception on insert failure
      *    - Validates: two-step process (user insert, then user page insert)
      * 
      * 2. editUser($userId, $args):
-     *    - Needs: TimeRepository (getCurrentUTCTime), UserRepository (getUserById)
+     *    - Needs: TimeRepository (getCurrentUTCTime), UserRepository (getQuicktaskerUserById)
      *    - Tests: successful update, exception on update failure
      *    - Validates: wp_parse_args for defaults, updated_at timestamp
      * 
      * 3. changeUserStatus($userId, $status):
-     *    - Needs: TimeRepository (getCurrentUTCTime), UserRepository (getUserById)
+     *    - Needs: TimeRepository (getCurrentUTCTime), UserRepository (getQuicktaskerUserById)
      *    - Tests: enable user (status = 1), disable user (status = 0), exception handling
      *    - Validates: is_active field update, updated_at timestamp
      * 
      * 4. deleteUser($userId):
-     *    - Needs: TimeRepository (getCurrentUTCTime), UserRepository (getUserById)
+     *    - Needs: TimeRepository (getCurrentUTCTime), UserRepository (getQuicktaskerUserById)
      *    - Tests: soft delete (sets deleted = 1), exception handling
      *    - Validates: deleted flag, updated_at timestamp
      * 
@@ -230,7 +230,7 @@ class UserServiceTest extends TestCase
      *    - Validates: task-user relationship deletion, default user type
      * 
      * 7. resetUserPassword($userId):
-     *    - Needs: TimeRepository (getCurrentUTCTime), UserRepository (getUserById)
+     *    - Needs: TimeRepository (getCurrentUTCTime), UserRepository (getQuicktaskerUserById)
      *    - Tests: successful reset (password to null), exception if no password set
      *    - Validates: password nullification, session deletion, checkIfUserHasPassword call
      */

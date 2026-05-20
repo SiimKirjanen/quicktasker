@@ -183,7 +183,7 @@ class UserRepositoryTest extends TestCase
         $this->assertSame($expectedUsers, $result);
     }
 
-    public function test_getUserById_returns_user_object()
+    public function test_getQuicktaskerUserById_returns_user_object()
     {
         $userId = 42;
         $expectedUser = (object)[
@@ -209,12 +209,12 @@ class UserRepositoryTest extends TestCase
             ->with($preparedSql)
             ->willReturn($expectedUser);
 
-        $result = $this->repository->getUserById($userId);
+        $result = $this->repository->getQuicktaskerUserById($userId);
 
         $this->assertSame($expectedUser, $result);
     }
 
-    public function test_getUserById_returns_null_when_not_found()
+    public function test_getQuicktaskerUserById_returns_null_when_not_found()
     {
         $userId = 999;
         $preparedSql = "PREPARED_SQL";
@@ -228,7 +228,7 @@ class UserRepositoryTest extends TestCase
             ->with($preparedSql)
             ->willReturn(null);
 
-        $result = $this->repository->getUserById($userId);
+        $result = $this->repository->getQuicktaskerUserById($userId);
 
         $this->assertNull($result);
     }

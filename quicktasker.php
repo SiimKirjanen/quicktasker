@@ -88,6 +88,7 @@ require('php/services/ApiTokenService.php');
 require('php/services/ResponseService.php');
 require('php/services/NotificationService.php');
 require('php/services/PublicTaskService.php');
+require('php/services/RateLimitService.php');
 
 ServiceLocator::register('AutomationRepository', new WPQT\Automation\AutomationRepository());
 ServiceLocator::register('CustomFieldRepository', new WPQT\Customfield\CustomFieldRepository());
@@ -141,6 +142,7 @@ ServiceLocator::register('NotificationRepository', new WPQT\Notification\Notific
 ServiceLocator::register('NotificationPreferencesRepository', new WPQT\Notification\NotificationPreferencesRepository());
 ServiceLocator::register('NotificationService', new WPQT\Notification\NotificationService());
 ServiceLocator::register('PublicTaskService', new WPQT\PublicTask\PublicTaskService());
+ServiceLocator::register('RateLimitService', new WPQT\RateLimit\RateLimitService());
 
 require('php/hooks.php');
 require('php/actions.php');

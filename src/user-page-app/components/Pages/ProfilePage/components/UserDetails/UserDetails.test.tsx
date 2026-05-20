@@ -29,6 +29,8 @@ function createMockUser(overrides: Partial<User> = {}): User {
     assigned_tasks_count: "0",
     // Add these required boolean properties
     is_active: true, // Required non-optional boolean
+    is_banned: false,
+    banned_at: null,
     has_password: false, // Required non-optional boolean
     ...overrides,
   };
