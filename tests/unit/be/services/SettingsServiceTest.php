@@ -36,98 +36,41 @@ class SettingsServiceTest extends TestCase {
 
     // ========================================
     // validateUserPageCustomStyles Tests
-    // CRITICAL BUG: Method uses undefined variable $css instead of $customStyles
     // ========================================
 
     public function test_validateUserPageCustomStyles_method_exists() {
         $this->assertTrue(method_exists(\WPQT\Settings\SettingsService::class, 'validateUserPageCustomStyles'));
-        
+
         $reflection = new ReflectionMethod(\WPQT\Settings\SettingsService::class, 'validateUserPageCustomStyles');
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         $this->assertEquals(1, $reflection->getNumberOfParameters());
-        
-        // Check parameter name
+
         $params = $reflection->getParameters();
         $this->assertEquals('customStyles', $params[0]->getName());
     }
 
-    /**
-     * Test revealing the critical bug in validateUserPageCustomStyles
-     * 
-     * BUG: The method signature has parameter $customStyles but the code checks $css
-     * This means the regex pattern is never actually executed, and the method always returns true
-     * because $css is undefined and preg_match on undefined variable returns 0 (falsy)
-     * 
-     * Expected behavior: Should detect HTML tags like <div>, </div>, <script>, etc.
-     * Actual behavior: Always returns true due to undefined variable $css
-     * 
-     * The regex pattern '#</?\w+#' is designed to match:
-     * - Opening tags: <div, <span, <script
-     * - Closing tags: </div>, </span>, </script>
-     * 
-     * Fix needed: Change line "if ( preg_match( '#</?\w+#', $css ) )" to use $customStyles instead
-     */
-    public function test_validateUserPageCustomStyles_has_undefined_variable_bug() {
-        // Due to the bug, this will NOT detect HTML tags and will return true
-        // The method uses undefined $css variable instead of $customStyles parameter
-        error_reporting(E_ALL);
-        
-        // This SHOULD return false but returns true due to bug
-        $result = @\WPQT\Settings\SettingsService::validateUserPageCustomStyles('<div>malicious</div>');
-        
-        // Document the bug: method always returns true
-        $this->assertTrue($result, 'Bug: Method returns true even with HTML tags because it checks undefined $css variable instead of $customStyles parameter');
+    public function test_validateUserPageCustomStyles_accepts_valid_css() {
+        $this->assertTrue(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('color: red;'));
+        $this->assertTrue(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('.class { background: blue; }'));
+        $this->assertTrue(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('@media screen { body { margin: 0; } }'));
+        $this->assertTrue(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('a:hover { color: blue; }'));
+        $this->assertTrue(\WPQT\Settings\SettingsService::validateUserPageCustomStyles(''));
     }
 
-    public function test_validateUserPageCustomStyles_always_returns_true_due_to_bug() {
-        // Test various inputs - all will return true due to the bug
-        // Using @ to suppress undefined variable warning
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles('color: red;'));
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles('<script>alert("xss")</script>'));
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles('</div>'));
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles('<style>body{}</style>'));
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles(''));
+    public function test_validateUserPageCustomStyles_rejects_html_tags() {
+        $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('<div>'));
+        $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('</div>'));
+        $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('<script>alert("xss")</script>'));
+        $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('color: red; <span>bad</span>'));
+        $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('<style>body{}</style>'));
     }
 
-    /**
-     * Test what the method SHOULD do when the bug is fixed
-     * 
-     * After fixing the bug (changing $css to $customStyles), these tests show expected behavior:
-     * 
-     * SHOULD RETURN TRUE (valid CSS):
-     * - Plain CSS rules: "color: red; background: blue;"
-     * - CSS selectors: ".class { color: red; }"
-     * - Media queries: "@media screen { ... }"
-     * - Pseudo-classes: "a:hover { color: blue; }"
-     * - Empty string
-     * 
-     * SHOULD RETURN FALSE (contains HTML tags):
-     * - Opening tags: "<div>", "<script>", "<span>"
-     * - Closing tags: "</div>", "</script>", "</span>"
-     * - Self-closing tags would also match: "<br/>", "<img/>"
-     * - Mixed content: "color: red; <div>test</div>"
-     * 
-     * The regex pattern '#</?\w+#' matches any opening or closing HTML tag
-     */
-    public function test_validateUserPageCustomStyles_expected_behavior_when_bug_fixed() {
-        // This test documents what SHOULD happen when bug is fixed
-        // Currently will pass but for wrong reasons (always returns true)
-        // Using @ to suppress undefined variable warning
-        
-        // These SHOULD return true (valid CSS, no HTML)
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles('color: red;'));
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles('.class { background: blue; }'));
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles('@media screen { body { margin: 0; } }'));
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles('a:hover { color: blue; }'));
-        $this->assertTrue(@\WPQT\Settings\SettingsService::validateUserPageCustomStyles(''));
-        
-        // Note: Due to bug, the below would currently return true but SHOULD return false
-        // Uncomment after fixing bug to verify correct behavior:
-        // $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('<div>'));
-        // $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('</div>'));
-        // $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('<script>alert("xss")</script>'));
-        // $this->assertFalse(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('color: red; <span>bad</span>'));
+    public function test_validateUserPageCustomStyles_allows_at_rules() {
+        // @import, expression(), etc. are intentionally allowed — modern browsers
+        // don't execute CSS, and the save endpoint is gated on the manage-settings cap.
+        $this->assertTrue(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('@import url("https://fonts.googleapis.com/css?family=Inter");'));
+        $this->assertTrue(\WPQT\Settings\SettingsService::validateUserPageCustomStyles('@keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }'));
     }
 
     // ========================================

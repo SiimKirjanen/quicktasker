@@ -54,7 +54,8 @@ if (!class_exists('WPQT\Export\ExportService')) {
                     'isPrivate'   => (bool) $comment->is_private,
                 ];
             }, $taskComments) : [];
-            $this->_fileName = strtolower($this->_pipeline->name) . '-tasks-export';
+            $sanitized = sanitize_file_name(strtolower($this->_pipeline->name));
+            $this->_fileName = ('' !== $sanitized ? $sanitized : 'board') . '-tasks-export';
         }
 
         protected function formatAssignedUsers($users)

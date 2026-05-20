@@ -53,6 +53,8 @@ if (!class_exists('WPQT\Session\SessionService')) {
         {
             global $wpdb;
 
+            $plaintextToken = $this->generateSessionToken();
+
             $result = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_USER_SESSIONS,
                 [
@@ -60,7 +62,7 @@ if (!class_exists('WPQT\Session\SessionService')) {
                     'page_hash'      => $userPageHash,
                     'created_at_utc' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                     'expires_at_utc' => $this->getNewTokenExpiryDate(),
-                    'session_token'  => $this->generateSessionToken()
+                    'session_token'  => SessionRepository::hashToken($plaintextToken),
                 ]
             );
 
@@ -68,7 +70,13 @@ if (!class_exists('WPQT\Session\SessionService')) {
                 throw new WPQTException('Failed to create new session');
             }
 
-            return ServiceLocator::get('SessionRepository')->getUserSessionById($wpdb->insert_id);
+            $session = ServiceLocator::get('SessionRepository')->getUserSessionById($wpdb->insert_id);
+
+            // Hand the plaintext token back to the caller (and only this once) so it
+            // can be delivered to the client. The DB row keeps only the hash.
+            $session->session_token = $plaintextToken;
+
+            return $session;
         }
 
         /**
@@ -91,7 +99,7 @@ if (!class_exists('WPQT\Session\SessionService')) {
                     'is_active' => 0
                 ],
                 [
-                    'session_token' => $sessionToken
+                    'session_token' => SessionRepository::hashToken($sessionToken)
                 ]
             );
 

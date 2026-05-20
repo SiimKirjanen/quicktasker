@@ -1062,9 +1062,13 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         if (!$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $data['entityId'], $requestData['userType'])) {
                             throw new WPQTException('Not allowed to edit task custom fields', true);
                         }
-                    } else {
-                        if ((int) $requestData['session']->user_id !== $data['entityId']) {
-                            throw new WPQTException('Entity ID and session user mismatch', true);
+                    } elseif ('quicktasker' === $data['entityType']) {
+                        if (!$requestData['isQuicktaskerUser'] || (int) $requestData['session']->user_id !== $data['entityId']) {
+                            throw new WPQTException('Not allowed to edit custom fields for this user', true);
+                        }
+                    } elseif ('wp-user' === $data['entityType']) {
+                        if (!$requestData['isWordPressUser'] || (int) $requestData['session']->user_id !== $data['entityId']) {
+                            throw new WPQTException('Not allowed to edit custom fields for this user', true);
                         }
                     }
                     $customFieldService = new CustomFieldService();
