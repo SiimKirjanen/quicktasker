@@ -1,23 +1,35 @@
 import { UserTypes } from "./user";
 
+enum NotificationEntityType {
+  TASK = "task",
+}
+
 type NotificationFromServer = {
   id: string;
   pipeline_id: string;
+  type: NotificationType | null;
+  entity_type: NotificationEntityType | null;
+  entity_id: string | null;
   user_id: string;
   user_type: UserTypes;
   date: string;
   text: string;
   mark_as_read: string;
+  entity_hash?: string | null;
 };
 
 type Notification = {
   id: string;
   pipeline_id: string;
+  type: NotificationType | null;
+  entity_type: NotificationEntityType | null;
+  entity_id: string | null;
   user_id: string;
   user_type: UserTypes;
   date: string;
   text: string;
   mark_as_read: boolean;
+  entity_hash: string | null;
 };
 
 function mapNotificationFromServer(
@@ -26,11 +38,15 @@ function mapNotificationFromServer(
   return {
     id: notification.id,
     pipeline_id: notification.pipeline_id,
+    type: notification.type ?? null,
+    entity_type: notification.entity_type ?? null,
+    entity_id: notification.entity_id ?? null,
     user_id: notification.user_id,
     user_type: notification.user_type,
     date: notification.date,
     text: notification.text,
     mark_as_read: "1" === String(notification.mark_as_read),
+    entity_hash: notification.entity_hash ?? null,
   };
 }
 
@@ -73,6 +89,7 @@ export {
   defaultNotificationTypePreferences,
   mapNotificationFromServer,
   NOTIFICATION_TYPE_VALUES,
+  NotificationEntityType,
   NotificationFilter,
   NotificationType,
 };

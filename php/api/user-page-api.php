@@ -492,16 +492,24 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
             'permission_callback' => '__return_true',
         ]);
 
-        register_rest_route('wpqt/v1', 'user-page/comments', [
+        register_rest_route('wpqt/v1', 'user-page/notifications', [
             'methods'  => 'GET',
             'callback' => function ($data) {
                 try {
                     $requestData = RequestValidation::validateUserPageApiRequest($data);
 
-                    $createdAfter = ServiceLocator::get('TimeRepository')->modifyUTCTime(-5, 'day');
-                    $comments = ServiceLocator::get('CommentRepository')->getCommentsRelatedToUser($requestData['session']->user_id, $requestData['userType'], $createdAfter);
+                    $maxAgeHours = $data->get_param('max_age_hours');
+                    if (null === $maxAgeHours || '' === $maxAgeHours) {
+                        $maxAgeHours = NotificationService::DEFAULT_MAX_AGE_HOURS;
+                    }
 
-                    return new WP_REST_Response((new ApiResponse(true, [], $comments))->toArray(), 200);
+                    $notifications = ServiceLocator::get('NotificationService')->getNotificationsForUserGlobalWithEntityHash(
+                        (int) $requestData['session']->user_id,
+                        $requestData['userType'],
+                        (int) $maxAgeHours
+                    );
+
+                    return new WP_REST_Response((new ApiResponse(true, [], $notifications))->toArray(), 200);
                 } catch (WPQTException $e) {
                     return new WP_REST_Response((new ApiResponse(false, [$e->getMessage()]))->toArray(), 400);
                 } catch (Throwable $e) {
@@ -509,6 +517,149 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                 }
             },
             'permission_callback' => '__return_true',
+            'args'                => [
+                'max_age_hours' => [
+                    'required'          => false,
+                    'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                    'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                ],
+            ],
+        ]);
+
+        register_rest_route('wpqt/v1', 'user-page/notifications/(?P<id>\d+)/read', [
+            'methods'  => 'POST',
+            'callback' => function ($data) {
+                try {
+                    $requestData = RequestValidation::validateUserPageApiRequest($data);
+
+                    $notification = ServiceLocator::get('NotificationService')->markAsRead(
+                        (int) $data['id'],
+                        (int) $requestData['session']->user_id,
+                        $requestData['userType']
+                    );
+
+                    return new WP_REST_Response((new ApiResponse(true, [], $notification))->toArray(), 200);
+                } catch (WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, [$e->getMessage()]))->toArray(), 400);
+                } catch (Throwable $e) {
+                    return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
+                }
+            },
+            'permission_callback' => '__return_true',
+            'args'                => [
+                'id' => [
+                    'required'          => true,
+                    'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                    'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                ],
+            ],
+        ]);
+
+        register_rest_route('wpqt/v1', 'user-page/notifications/preferences', [
+            'methods'  => 'GET',
+            'callback' => function ($data) {
+                try {
+                    $requestData = RequestValidation::validateUserPageApiRequest($data);
+
+                    $prefs = ServiceLocator::get('NotificationService')->getPreferences(
+                        (int) $requestData['session']->user_id,
+                        $requestData['userType']
+                    );
+
+                    return new WP_REST_Response((new ApiResponse(true, [], $prefs))->toArray(), 200);
+                } catch (WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, [$e->getMessage()]))->toArray(), 400);
+                } catch (Throwable $e) {
+                    return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
+                }
+            },
+            'permission_callback' => '__return_true',
+        ]);
+
+        register_rest_route('wpqt/v1', 'user-page/notifications/preferences', [
+            'methods'  => 'POST',
+            'callback' => function ($data) {
+                try {
+                    $requestData = RequestValidation::validateUserPageApiRequest($data);
+
+                    $filter = (string) $data->get_param('filter');
+                    $maxAgeHours = (int) $data->get_param('max_age_hours');
+
+                    $notificationService = ServiceLocator::get('NotificationService');
+
+                    $existing = $notificationService->getPreferences(
+                        (int) $requestData['session']->user_id,
+                        $requestData['userType']
+                    );
+
+                    $notificationService->savePreferences(
+                        (int) $requestData['session']->user_id,
+                        $requestData['userType'],
+                        $filter,
+                        $maxAgeHours,
+                        $existing['selected_pipeline_ids'] ?? null,
+                        $existing['notification_types'] ?? []
+                    );
+
+                    $prefs = $notificationService->getPreferences(
+                        (int) $requestData['session']->user_id,
+                        $requestData['userType']
+                    );
+
+                    return new WP_REST_Response((new ApiResponse(true, [], $prefs))->toArray(), 200);
+                } catch (WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, [$e->getMessage()]))->toArray(), 400);
+                } catch (Throwable $e) {
+                    return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
+                }
+            },
+            'permission_callback' => '__return_true',
+            'args'                => [
+                'filter' => [
+                    'required'          => true,
+                    'validate_callback' => ['WPQT\RequestValidation', 'validateStringParam'],
+                    'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+                ],
+                'max_age_hours' => [
+                    'required'          => true,
+                    'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                    'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                ],
+            ],
+        ]);
+
+        register_rest_route('wpqt/v1', 'user-page/notifications/read-all', [
+            'methods'  => 'POST',
+            'callback' => function ($data) {
+                try {
+                    $requestData = RequestValidation::validateUserPageApiRequest($data);
+
+                    $rawIds = $data->get_param('notification_ids');
+                    if (!is_array($rawIds)) {
+                        throw new WPQTException('notification_ids must be an array', true);
+                    }
+
+                    $notificationIds = array_values(array_filter(array_map('absint', $rawIds)));
+
+                    ServiceLocator::get('NotificationService')->markNotificationsAsReadForUserGlobal(
+                        (int) $requestData['session']->user_id,
+                        $requestData['userType'],
+                        $notificationIds
+                    );
+
+                    return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
+                } catch (WPQTException $e) {
+                    return new WP_REST_Response((new ApiResponse(false, [$e->getMessage()]))->toArray(), 400);
+                } catch (Throwable $e) {
+                    return ServiceLocator::get('ErrorHandlerService')->handlePublicApiError($e);
+                }
+            },
+            'permission_callback' => '__return_true',
+            'args'                => [
+                'notification_ids' => [
+                    'required' => true,
+                ],
+            ],
         ]);
 
         register_rest_route('wpqt/v1', 'user-page/user/comments', [

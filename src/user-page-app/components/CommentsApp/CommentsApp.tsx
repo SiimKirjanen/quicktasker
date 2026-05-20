@@ -1,24 +1,20 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
-import { useContext, useEffect, useRef, useState } from "@wordpress/element";
+import { useEffect, useRef, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { CommentBox } from "../../../components/CommentBox/CommentBox";
 import { WPQTIconButton } from "../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { WPQTTextarea } from "../../../components/common/TextArea/TextArea";
 import { WPQTComment } from "../../../types/comment";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { UserPageNotificationsContext } from "../../providers/UserPageNotificationsContextProvider";
 
 type Props = {
   comments: WPQTComment[];
   addComments: (comment: string) => Promise<void>;
 };
 function CommentsApp({ comments, addComments }: Props) {
-  const { checkNewComments } = useContext(UserPageNotificationsContext);
   const [comment, setComment] = useState("");
   const commentsContainerRef = useRef<HTMLDivElement>(null);
   const [addCommentLoading, setAddCommentLoading] = useState(false);
-  const { storeComments } = useLocalStorage();
 
   useEffect(() => {
     if (commentsContainerRef.current) {
@@ -26,12 +22,6 @@ function CommentsApp({ comments, addComments }: Props) {
         top: commentsContainerRef.current.scrollHeight,
         behavior: "smooth",
       });
-    }
-  }, [comments]);
-
-  useEffect(() => {
-    if (comments && comments.length > 0) {
-      storeSeenComments();
     }
   }, [comments]);
 
@@ -46,11 +36,6 @@ function CommentsApp({ comments, addComments }: Props) {
     setAddCommentLoading(false);
   };
 
-  const storeSeenComments = async () => {
-    await storeComments(comments);
-    await checkNewComments();
-  };
-
   return (
     <div className="wpqt-flex wpqt-flex-col wpqt-gap-7">
       <div
@@ -63,7 +48,7 @@ function CommentsApp({ comments, addComments }: Props) {
           </div>
         ) : (
           <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-gap-4">
-            {comments.map((comment) => {
+            {[...comments].reverse().map((comment) => {
               return (
                 <CommentBox
                   authorName={comment.author_name ?? ""}

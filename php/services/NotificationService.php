@@ -36,9 +36,12 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
          * Creates a new notification for the given recipient on a pipeline,
          * unless the recipient has disabled this notification type.
          *
+         * @param string|null $entityType Optional entity kind (e.g. NotificationRepository::ENTITY_TYPE_TASK)
+         *                                this notification relates to. Used for click-through linking.
+         * @param int|null $entityId Optional entity id within $entityType.
          * @return object|null The inserted notification row, or null if suppressed.
          */
-        public function createNotification($pipelineId, $userId, $userType, $text, $type)
+        public function createNotification($pipelineId, $userId, $userType, $text, $type, $entityType = null, $entityId = null)
         {
             if (!$this->isTypeEnabled((int) $userId, $userType, $type)) {
                 return null;
@@ -51,7 +54,10 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                 (int) $userId,
                 $userType,
                 $text,
-                $now
+                $now,
+                $type,
+                $entityType,
+                $entityId
             );
         }
 
@@ -80,7 +86,7 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                 }
 
                 try {
-                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message, $type);
+                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message, $type, NotificationRepository::ENTITY_TYPE_TASK, $taskId);
                 } catch (\Throwable $e) {
                     error_log('Failed to create task notification: ' . $e->getMessage());
                 }
@@ -91,7 +97,7 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                 }
 
                 try {
-                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message, $type);
+                    $this->createNotification($pipelineId, (int) $u->id, $u->user_type, $message, $type, NotificationRepository::ENTITY_TYPE_TASK, $taskId);
                 } catch (\Throwable $e) {
                     error_log('Failed to create task notification: ' . $e->getMessage());
                 }
@@ -145,6 +151,30 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
                 $userType,
                 $sinceUtc,
                 $pipelineIds
+            );
+        }
+
+        /**
+         * Like getNotificationsForUserGlobal but each row also carries an entity_hash
+         * (currently the task_hash, when entity_type='task'), so callers can link
+         * directly to the related entity view.
+         */
+        public function getNotificationsForUserGlobalWithEntityHash($userId, $userType, $maxAgeHours = self::DEFAULT_MAX_AGE_HOURS)
+        {
+            $maxAgeHours = (int) $maxAgeHours;
+            if ($maxAgeHours < 1) {
+                $maxAgeHours = self::DEFAULT_MAX_AGE_HOURS;
+            }
+            if ($maxAgeHours > self::MAX_MAX_AGE_HOURS) {
+                $maxAgeHours = self::MAX_MAX_AGE_HOURS;
+            }
+
+            $sinceUtc = ServiceLocator::get('TimeRepository')->modifyUTCTime(-$maxAgeHours, 'hour');
+
+            return ServiceLocator::get('NotificationRepository')->getNotificationsForUserWithEntityHash(
+                (int) $userId,
+                $userType,
+                $sinceUtc
             );
         }
 

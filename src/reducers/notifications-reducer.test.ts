@@ -22,11 +22,15 @@ const makeNotification = (
 ): Notification => ({
   id: "1",
   pipeline_id: "10",
+  type: null,
+  entity_type: null,
+  entity_id: null,
   user_id: "5",
   user_type: UserTypes.WP_USER,
   date: "2026-05-01 12:00:00",
   text: "Hello",
   mark_as_read: false,
+  entity_hash: null,
   ...overrides,
 });
 
@@ -45,6 +49,9 @@ describe("notifications reducer", () => {
       {
         id: "1",
         pipeline_id: "10",
+        type: null,
+        entity_type: null,
+        entity_id: null,
         user_id: "5",
         user_type: UserTypes.WP_USER,
         date: "2026-05-01 12:00:00",
@@ -54,6 +61,9 @@ describe("notifications reducer", () => {
       {
         id: "2",
         pipeline_id: "10",
+        type: null,
+        entity_type: null,
+        entity_id: null,
         user_id: "5",
         user_type: UserTypes.WP_USER,
         date: "2026-05-02 12:00:00",

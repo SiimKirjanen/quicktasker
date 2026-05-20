@@ -16,11 +16,11 @@ type Props = {
 };
 function NavigationBar({ loading, onRefresh = () => {} }: Props) {
   const navigate = useNavigate();
-  const { checkNewComments } = useContext(UserPageNotificationsContext);
+  const { refreshNotifications } = useContext(UserPageNotificationsContext);
 
   const refresh = () => {
     onRefresh();
-    checkNewComments();
+    refreshNotifications();
   };
 
   return (
@@ -54,12 +54,14 @@ function NavigationBar({ loading, onRefresh = () => {} }: Props) {
 function NotificationIcon() {
   const navigate = useNavigate();
   const {
-    state: { newComments },
+    state: { notifications },
   } = useContext(UserPageNotificationsContext);
+
+  const unreadCount = notifications.filter((n) => !n.mark_as_read).length;
 
   return (
     <>
-      {newComments.length > 0 ? (
+      {unreadCount > 0 ? (
         <BellAlertIcon
           className="wpqt-icon-red wpqt-size-7 wpqt-animate-bellShake wpqt-cursor-pointer"
           onClick={() => {

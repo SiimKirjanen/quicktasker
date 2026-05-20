@@ -1,18 +1,23 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Browser, APIRequestContext, Page } from '@playwright/test';
 import { navigateToBoardsPage } from './utils/navigation';
 import {
   createBoard,
   createStage,
   createTask,
   generateUniqueName,
+  getTaskCard,
 } from './utils/board-helpers';
+import { addComment } from './utils/comment-helpers';
 import {
   assignWordPressUserToTask,
   createQuickTaskerUser,
+  createWPUser,
   disableQuickTaskerUser,
   navigateToQuickTaskersTab,
   navigateToUserDetailPage,
+  uniqueLogin,
 } from './utils/user-helpers';
+import { loginToWordPressViaApi } from './utils/auth';
 import { ADMIN_USERNAME } from './constants';
 import { TIMEOUTS } from './utils/timeouts';
 import {
@@ -296,9 +301,109 @@ test.describe('Tasks App – User Comments', () => {
 });
 
 test.describe('Tasks App – Notifications', () => {
-  test('shows new comment count', async ({ page }) => {
+  async function assignerCreatesAndAssignsTask(
+    browser: Browser,
+    request: APIRequestContext,
+    boardName: string,
+    stageName: string,
+    taskName: string,
+    assigneeLogin: string,
+    options: { commentText?: string } = {},
+  ): Promise<void> {
+    const assignerLogin = uniqueLogin('tasksAppNotifAssigner');
+    await createWPUser(request, assignerLogin, `${assignerLogin}@example.com`, 'administrator');
+
+    const assignerContext = await loginToWordPressViaApi(browser, assignerLogin);
+    const assignerPage = await assignerContext.newPage();
+    await navigateToBoardsPage(assignerPage);
+    await assignerPage.getByTestId('pipeline-selection-dropdown').click();
+    await assignerPage.getByText(boardName).click();
+    await expect(assignerPage.getByText(stageName)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+    await createTask(assignerPage, stageName, taskName);
+    await assignWordPressUserToTask(assignerPage, taskName, assigneeLogin);
+
+    if (options.commentText) {
+      const taskCard = getTaskCard(assignerPage, taskName);
+      await taskCard.click();
+      await assignerPage.getByRole('tab', { name: 'Comments', exact: true }).click();
+      await assignerPage.getByRole('button', { name: 'Public' }).click();
+      const taskModal = assignerPage.getByTestId('task-modal');
+      await addComment(taskModal, options.commentText);
+      await expect(taskModal.getByText(options.commentText)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    }
+
+    await assignerContext.close();
+  }
+
+  test('shows empty state when the user has no notifications', async ({ page }) => {
     await navigateToNotifications(page);
-    await expect(page.getByText(/You have \d+ new comment/)).toBeVisible();
+    await expect(page.getByText(/You have \d+ unread notification/)).toBeVisible();
+  });
+
+  test('clicking a task-assignment notification marks it read and navigates to task detail', async ({
+    page,
+    browser,
+    request,
+  }) => {
+    const boardName = generateUniqueName('TA-NotifBoard');
+    const stageName = generateUniqueName('TA-NotifStage');
+    const taskName = generateUniqueName('TA-NotifTask');
+
+    await navigateToBoardsPage(page);
+    await createBoard(page, boardName);
+    await createStage(page, stageName);
+
+    await assignerCreatesAndAssignsTask(browser, request, boardName, stageName, taskName, ADMIN_USERNAME);
+
+    await navigateToNotifications(page);
+
+    const notificationCard = page.getByTestId('wpqt-card').filter({ hasText: taskName });
+    await expect(notificationCard).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+    await notificationCard.click();
+
+    // Assignment notifications route to the task detail page, not comments.
+    await expect(page.getByText('Unassign from task')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    expect(page.url()).toMatch(/#\/tasks\/[^/]+$/);
+  });
+
+  test('clicking a comment-added notification navigates to task comments', async ({
+    page,
+    browser,
+    request,
+  }) => {
+    const boardName = generateUniqueName('TA-NotifCommentBoard');
+    const stageName = generateUniqueName('TA-NotifCommentStage');
+    const taskName = generateUniqueName('TA-NotifCommentTask');
+
+    await navigateToBoardsPage(page);
+    await createBoard(page, boardName);
+    await createStage(page, stageName);
+
+    await assignerCreatesAndAssignsTask(
+      browser,
+      request,
+      boardName,
+      stageName,
+      taskName,
+      ADMIN_USERNAME,
+      { commentText: 'Hello from assigner' },
+    );
+
+    await navigateToNotifications(page);
+
+    // Find the comment-added notification specifically (vs. the assignment notification for the same task).
+    const commentCard = page
+      .getByTestId('wpqt-card')
+      .filter({ hasText: taskName })
+      .filter({ hasText: 'public comment was added' });
+    await expect(commentCard).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+    await commentCard.click();
+
+    await expect(page.getByText(`${taskName} comments`)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    expect(page.url()).toMatch(/#\/tasks\/[^/]+\/comments$/);
   });
 });
 

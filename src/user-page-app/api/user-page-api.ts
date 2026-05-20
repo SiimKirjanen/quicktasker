@@ -2,6 +2,7 @@ import apiFetch from "@wordpress/api-fetch";
 import { ExecutedAutomation } from "../../types/automation";
 import { WPQTComment } from "../../types/comment";
 import { CustomFieldEntityType } from "../../types/custom-field";
+import { NotificationFromServer } from "../../types/notification";
 import { WPQTResponse } from "../../types/response";
 import { TaskFromServer } from "../../types/task";
 import { getUserPageCodeParam } from "../../utils/url";
@@ -197,10 +198,61 @@ function addUserCommentRequest(
   });
 }
 
-function getUserPageCommentsRequest(): Promise<WPQTResponse<WPQTComment[]>> {
+function getUserPageNotificationsRequest(
+  maxAgeHours?: number,
+): Promise<WPQTResponse<NotificationFromServer[]>> {
+  const query =
+    typeof maxAgeHours === "number" ? `?max_age_hours=${maxAgeHours}` : "";
   return apiFetch({
     method: "GET",
-    path: `/wpqt/v1/user-page/comments`,
+    path: `/wpqt/v1/user-page/notifications${query}`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function markUserPageNotificationReadRequest(
+  id: number,
+): Promise<WPQTResponse<NotificationFromServer>> {
+  return apiFetch({
+    method: "POST",
+    path: `/wpqt/v1/user-page/notifications/${id}/read`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function markUserPageNotificationsReadAllRequest(
+  notificationIds: number[],
+): Promise<WPQTResponse> {
+  return apiFetch({
+    method: "POST",
+    path: `/wpqt/v1/user-page/notifications/read-all`,
+    data: { notification_ids: notificationIds },
+    headers: getCommonHeaders(),
+  });
+}
+
+type UserPageNotificationsPreferences = {
+  filter: string;
+  max_age_hours: number;
+};
+
+function getUserPageNotificationsPreferencesRequest(): Promise<
+  WPQTResponse<UserPageNotificationsPreferences>
+> {
+  return apiFetch({
+    method: "GET",
+    path: `/wpqt/v1/user-page/notifications/preferences`,
+    headers: getCommonHeaders(),
+  });
+}
+
+function saveUserPageNotificationsPreferencesRequest(
+  prefs: UserPageNotificationsPreferences,
+): Promise<WPQTResponse<UserPageNotificationsPreferences>> {
+  return apiFetch({
+    method: "POST",
+    path: `/wpqt/v1/user-page/notifications/preferences`,
+    data: prefs,
     headers: getCommonHeaders(),
   });
 }
@@ -250,11 +302,15 @@ export {
   getTaskCommentsRequest,
   getTaskDataRequest,
   getUserCommentsRequest,
-  getUserPageCommentsRequest,
+  getUserPageNotificationsPreferencesRequest,
+  getUserPageNotificationsRequest,
   getUserPageStatusRequest,
   getUserPageUserDataRequest,
   logInUserPageRequest,
   logoutUserPageRequest,
+  markUserPageNotificationReadRequest,
+  markUserPageNotificationsReadAllRequest,
+  saveUserPageNotificationsPreferencesRequest,
   setUpUserPageRequest,
   unAssignTaskFromUser,
   updateCustomFieldValueRequest,

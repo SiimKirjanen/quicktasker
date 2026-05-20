@@ -1,6 +1,9 @@
 import {
   CHANGE_USER_PAGE_NOTIFICATIONS_LOADING,
-  SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS,
+  MARK_USER_PAGE_NOTIFICATIONS_READ,
+  SET_USER_PAGE_NOTIFICATIONS,
+  SET_USER_PAGE_NOTIFICATIONS_FILTER,
+  SET_USER_PAGE_NOTIFICATIONS_MAX_AGE,
 } from "../constants";
 import {
   Action,
@@ -9,20 +12,37 @@ import {
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case SET_USER_PAGE_NOTIFICATIONS_NEW_COMMENTS: {
-      const newComments = action.payload;
-
+    case SET_USER_PAGE_NOTIFICATIONS: {
       return {
         ...state,
-        newComments,
+        notifications: action.payload,
+      };
+    }
+    case MARK_USER_PAGE_NOTIFICATIONS_READ: {
+      const ids = new Set(action.payload);
+      return {
+        ...state,
+        notifications: state.notifications.map((n) =>
+          ids.has(n.id) ? { ...n, mark_as_read: true } : n,
+        ),
       };
     }
     case CHANGE_USER_PAGE_NOTIFICATIONS_LOADING: {
-      const loading = action.payload;
-
       return {
         ...state,
-        loading,
+        loading: action.payload,
+      };
+    }
+    case SET_USER_PAGE_NOTIFICATIONS_FILTER: {
+      return {
+        ...state,
+        filter: action.payload,
+      };
+    }
+    case SET_USER_PAGE_NOTIFICATIONS_MAX_AGE: {
+      return {
+        ...state,
+        maxAgeHours: action.payload,
       };
     }
     default:
