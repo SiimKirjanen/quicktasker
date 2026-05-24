@@ -6,6 +6,7 @@ import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   CLOSE_API_TOKEN_LOGS_MODAL,
   CLOSE_AUTOMATION_LOGS_MODAL,
+  CLOSE_TASK_COMMENTS_MODAL,
   CLOSE_TASK_MODAL,
   CLOSE_WEBHOOKS_LOGS_MODAL,
   OPEN_API_TOKEN_LOGS_MODAL,
@@ -21,6 +22,7 @@ import {
   OPEN_PIPELINE_IMPORT_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
+  OPEN_TASK_COMMENTS_MODAL,
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_RESTORE_MODAL,
   OPEN_WEBHOOKS_LOGS_MODAL,
@@ -349,6 +351,19 @@ describe("modal reducer", () => {
     const closed = reducer(updated, { type: CLOSE_API_TOKEN_LOGS_MODAL });
     expect(closed.apiTokenLogsModalOpen).toBe(false);
     expect(closed.apiTokenLogsModalSettings.apiTokenId).toBe(null);
+  });
+
+  it("OPEN/CLOSE task comments modal", () => {
+    const opened = reducer(initialState, {
+      type: OPEN_TASK_COMMENTS_MODAL,
+      payload: { taskId: "task-42" },
+    });
+    expect(opened.taskCommentsModalOpen).toBe(true);
+    expect(opened.taskCommentsModalSettings.taskId).toBe("task-42");
+
+    const closed = reducer(opened, { type: CLOSE_TASK_COMMENTS_MODAL });
+    expect(closed.taskCommentsModalOpen).toBe(false);
+    expect(closed.taskCommentsModalSettings.taskId).toBe(null);
   });
 
   it("returns state for unknown action", () => {

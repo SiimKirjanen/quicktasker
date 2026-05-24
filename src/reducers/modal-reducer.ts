@@ -13,6 +13,7 @@ import {
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
   CLOSE_TASK_COLOR_MODAL,
+  CLOSE_TASK_COMMENTS_MODAL,
   CLOSE_TASK_EXPORT_MODAL,
   CLOSE_TASK_LOGS_MODAL,
   CLOSE_TASK_MODAL,
@@ -34,6 +35,7 @@ import {
   OPEN_PIPELINE_IMPORT_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
+  OPEN_TASK_COMMENTS_MODAL,
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_LOGS_MODAL,
   OPEN_TASK_RESTORE_MODAL,
@@ -427,6 +429,27 @@ const reducer = (state: State, action: Action): State => {
         taskLogsModalOpen: false,
         taskLogsModalSettings: {
           ...initialState.taskLogsModalSettings,
+        },
+      };
+    }
+    case OPEN_TASK_COMMENTS_MODAL: {
+      const { taskId }: { taskId: string } = action.payload;
+
+      return {
+        ...state,
+        taskCommentsModalOpen: true,
+        taskCommentsModalSettings: {
+          ...state.taskCommentsModalSettings,
+          taskId,
+        },
+      };
+    }
+    case CLOSE_TASK_COMMENTS_MODAL: {
+      return {
+        ...state,
+        taskCommentsModalOpen: false,
+        taskCommentsModalSettings: {
+          ...initialState.taskCommentsModalSettings,
         },
       };
     }

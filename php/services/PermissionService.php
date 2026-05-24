@@ -152,6 +152,31 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         }
 
         /**
+         * Check whether a WordPress user has a personal stake in a task (they
+         * created it, or are assigned to it). Used to authorize per-task access
+         * from the MyTasks endpoints.
+         *
+         * @param int $userId The WP user ID.
+         * @param object $task The task object (must include id, created_by_id, created_by_type).
+         * @return bool
+         */
+        public function checkIfWPUserCanAccessMyTasksTask($userId, $task)
+        {
+            $isCreator = (int) $task->created_by_id === (int) $userId
+                && WP_QT_WORDPRESS_USER_TYPE === $task->created_by_type;
+
+            if ($isCreator) {
+                return true;
+            }
+
+            return ServiceLocator::get('UserRepository')->checkIfUserHasAssignedToTask(
+                $userId,
+                $task->id,
+                WP_QT_WORDPRESS_USER_TYPE
+            );
+        }
+
+        /**
          * Checks if a user can be assigned to a specific task.
          *
          * This method verifies whether a user can be assigned to a task based on the task's

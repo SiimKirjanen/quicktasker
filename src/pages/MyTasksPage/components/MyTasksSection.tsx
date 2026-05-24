@@ -1,13 +1,20 @@
-import { CheckBadgeIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleLeftEllipsisIcon,
+  CheckBadgeIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
+import { useContext } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../components/Card/Card";
 import { WPQTTag } from "../../../components/common/Tag/Tag";
 import { DueDateInfo } from "../../../components/Icon/DueDateInfo/DueDateInfo";
 import {
+  OPEN_TASK_COMMENTS_MODAL,
   TASK_FOCUS_BORDER_STYLE,
   TASK_FOCUS_BORDER_WIDTH,
 } from "../../../constants";
 import { useTimezone } from "../../../hooks/useTimezone";
+import { ModalContext } from "../../../providers/ModalContextProvider";
 import { Task, TaskFromServer } from "../../../types/task";
 
 type SectionProps = {
@@ -19,6 +26,7 @@ type SectionProps = {
 
 function MyTasksSection({ title, tasks, emptyText, loading }: SectionProps) {
   const { convertToWPTimezone } = useTimezone();
+  const { modalDispatch } = useContext(ModalContext);
   return (
     <div className="wpqt-mt-6">
       <h2 className="wpqt-text-lg wpqt-font-semibold wpqt-mb-3">{title}</h2>
@@ -45,6 +53,22 @@ function MyTasksSection({ title, tasks, emptyText, loading }: SectionProps) {
                   : undefined
               }
             >
+              <div className="wpqt-flex wpqt-justify-end">
+                <button
+                  type="button"
+                  data-testid="task-comments-button"
+                  aria-label={__("View comments", "quicktasker")}
+                  onClick={() =>
+                    modalDispatch({
+                      type: OPEN_TASK_COMMENTS_MODAL,
+                      payload: { taskId: task.id },
+                    })
+                  }
+                  className="wpqt-bg-transparent wpqt-border-0 wpqt-p-1 wpqt-cursor-pointer wpqt-text-gray-500 hover:wpqt-text-qtBlueHover"
+                >
+                  <ChatBubbleLeftEllipsisIcon className="wpqt-size-5" />
+                </button>
+              </div>
               {task.pipeline_name && (
                 <div className="wpqt-text-xs wpqt-text-gray-500 wpqt-mt-2">
                   {__("Board", "quicktasker")}:{" "}
