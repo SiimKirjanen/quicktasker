@@ -2741,60 +2741,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $automationExecutionResults = [];
 
                         if (WP_QT_LOG_TYPE_TASK == $data['type']) {
-                            $automationTrigger = $data['isPrivate'] ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED;
                             $task = ServiceLocator::get('TaskRepository')->getTaskById($data['typeId']);
-
-                            /* Handle automations */
-                            $automationExecutionResults = ServiceLocator::get('AutomationService')->handleAutomations(
-                                $task->pipeline_id,
-                                $task->id,
-                                WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
-                                $automationTrigger,
-                                $newComemnt
-                            );
-                            /* End of handling automations */
-
-                            /* Handle webhooks */
-                            ServiceLocator::get('WebhookService')->handleWebhooks(
-                                $task->pipeline_id,
-                                [
-                                    [
-                                        'data' => [
-                                            'relatedObject' => $task,
-                                            'extraData'     => [
-                                                'text'        => $newComemnt->text,
-                                                'is_private'  => $newComemnt->is_private,
-                                                'author_id'   => $newComemnt->author_id,
-                                                'author_type' => $newComemnt->author_type,
-                                            ],
-                                        ],
-                                        'webhookData' => [
-                                            'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMMENT_ADDED,
-                                        ]
-                                    ]
-                                ]
-                            );
-                            /* End Handle webhooks */
-
-                            /* Notify assignees that a comment was added to their task */
-                            try {
-                                ServiceLocator::get('NotificationService')->notifyTaskAssignees(
-                                    $task->pipeline_id,
-                                    $task->id,
-                                    $data['isPrivate']
-                                        /* translators: %s = task name */
-                                        ? __('A private comment was added to task "%s"', 'quicktasker')
-                                        /* translators: %s = task name */
-                                        : __('A public comment was added to task "%s"', 'quicktasker'),
-                                    $task->name,
-                                    NotificationService::TYPE_COMMENT_ADDED,
-                                    $adminId
-                                );
-                            } catch (Throwable $notificationError) {
-                                error_log('Failed to create task comment notification: ' . $notificationError->getMessage());
-                            }
-                            /* End in-app notification */
+                            $automationExecutionResults = $commentService->handleTaskCommentCreated($task, $newComemnt, $adminId);
                         }
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
@@ -2828,6 +2776,99 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
+                    ],
+                ],
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'my-tasks/comments',
+            [
+                'methods'  => 'GET',
+                'callback' => function ($data) {
+                    try {
+                        $taskId = $data->get_param('taskId');
+                        $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+
+                        if (!$task) {
+                            return new WP_REST_Response((new ApiResponse(false, ['Task not found'], null))->toArray(), 404);
+                        }
+
+                        if (!ServiceLocator::get('PermissionService')->checkIfWPUserCanAccessMyTasksTask(get_current_user_id(), $task)) {
+                            return new WP_REST_Response((new ApiResponse(false, ['Forbidden'], null))->toArray(), 403);
+                        }
+
+                        $comments = ServiceLocator::get('CommentRepository')->getComments($taskId, WP_QT_LOG_TYPE_TASK, false);
+
+                        return new WP_REST_Response((new ApiResponse(true, [], $comments))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForMyTasks();
+                },
+                'args' => [
+                    'taskId' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                ],
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
+            'my-tasks/comments',
+            [
+                'methods'  => 'POST',
+                'callback' => function ($data) {
+                    try {
+                        $commentService = new CommentService();
+                        $authorId = get_current_user_id();
+                        $taskId = $data['taskId'];
+                        $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+
+                        if (!$task) {
+                            return new WP_REST_Response((new ApiResponse(false, ['Task not found'], null))->toArray(), 404);
+                        }
+
+                        if (!ServiceLocator::get('PermissionService')->checkIfWPUserCanAccessMyTasksTask($authorId, $task)) {
+                            return new WP_REST_Response((new ApiResponse(false, ['Forbidden'], null))->toArray(), 403);
+                        }
+
+                        $newComment = $commentService->createComment($taskId, WP_QT_LOG_TYPE_TASK, [
+                            'isPrivate'  => false,
+                            'text'       => $data['comment'],
+                            'authorId'   => $authorId,
+                            'authorType' => WP_QT_WORDPRESS_USER_TYPE,
+                        ]);
+
+                        $automationExecutionResults = $commentService->handleTaskCommentCreated($task, $newComment, $authorId);
+
+                        return new WP_REST_Response((new ApiResponse(true, [], (object) [
+                            'newComment'          => $newComment,
+                            'executedAutomations' => $automationExecutionResults,
+                        ]))->toArray(), 200);
+                    } catch (Throwable $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForMyTasks();
+                },
+                'args' => [
+                    'comment' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateStringParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeStringParam'],
+                    ],
+                    'taskId' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
                 ],
             ],

@@ -79,6 +79,10 @@ jest.mock("../../components/Loading/Loading", () => ({
   LoadingOval: () => <div data-testid="loading-oval" />,
 }));
 
+jest.mock("../../components/Modal/TaskCommentsModal/TaskCommentsModal", () => ({
+  TaskCommentsModal: () => null,
+}));
+
 import { MyTasksPage } from "./MyTasksPage";
 
 function makeTask(overrides: Partial<TaskFromServer> = {}): TaskFromServer {

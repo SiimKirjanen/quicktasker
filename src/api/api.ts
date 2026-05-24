@@ -354,6 +354,33 @@ function addCommentRequest(
   });
 }
 
+function getMyTasksCommentsRequest(
+  taskId: string,
+): Promise<WPQTResponse<WPQTComment[]>> {
+  const queryParams = new URLSearchParams({ taskId }).toString();
+  return apiFetch({
+    path: `/wpqt/v1/my-tasks/comments?${queryParams}`,
+    method: "GET",
+    headers: getCommonHeaders(),
+  });
+}
+
+function addMyTasksCommentRequest(
+  taskId: string,
+  comment: string,
+): Promise<
+  WPQTResponse<{
+    newComment: WPQTComment;
+  }>
+> {
+  return apiFetch({
+    path: `/wpqt/v1/my-tasks/comments`,
+    data: { comment, taskId },
+    method: "POST",
+    headers: getCommonHeaders(),
+  });
+}
+
 /*
   ==================================================================================================================================================================================================================
   Logs requests
@@ -1176,6 +1203,7 @@ function saveNotificationPreferencesRequest(args: {
 export {
   addCommentRequest,
   addCustomFieldRequest,
+  addMyTasksCommentRequest,
   archiveStageTasksRequest,
   archiveTaskRequest,
   assignLabelToTaskRequest,
@@ -1210,6 +1238,7 @@ export {
   getExtendedUserRequest,
   getGlobalLogsRequest,
   getLogsRequest,
+  getMyTasksCommentsRequest,
   getMyTasksRequest,
   getNotificationsRequest,
   getPipelineApiTokensRequest,

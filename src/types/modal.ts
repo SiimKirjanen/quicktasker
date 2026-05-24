@@ -29,6 +29,10 @@ type TaskLogsModalSettings = {
   taskId: string | null;
 };
 
+type TaskCommentsModalSettings = {
+  taskId: string | null;
+};
+
 type UserLogsModalSettings = {
   userId: string | null;
   userType: UserTypes | null;
@@ -37,6 +41,7 @@ type UserLogsModalSettings = {
 export type {
   ApiTokenLogsModalSettings,
   AutomationLogsModalSettings,
+  TaskCommentsModalSettings,
   TaskExportModalSettings,
   TaskLogsModalSettings,
   TaskModalSettings,

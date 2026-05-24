@@ -55,6 +55,7 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
             'initialWPUsers'                 => $wpUsers,
             'publicUserPageId'               => WP_QUICKTASKER_PUBLIC_USER_PAGE_ID,
             'timezone'                       => $timeRepository->getWPTimezone(),
+            'isPluginAdmin'                  => PermissionService::hasRequiredPermissionsForPrivateAPI() ? '1' : '0',
             'isUserAllowedToDelete'          => PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints() ? '1' : '0',
             'isUserAllowedToManageSettings'  => PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints() ? '1' : '0',
             'userPageCustomStyles'           => SettingRepository::getUserPageCustomStyles(),
