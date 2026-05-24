@@ -59,6 +59,72 @@ if (!class_exists('WPQT\Comment\CommentService')) {
         }
 
         /**
+         * Run the follow-up actions that should happen when a task comment is
+         * created: trigger matching automations, dispatch webhooks, and notify
+         * the task's assignees.
+         *
+         * @param object $task The task the comment was added to.
+         * @param object $newComment The freshly-created comment object.
+         * @param int $authorId The WP user ID of the comment author (used to skip self-notification).
+         * @return array Automation execution results, suitable for returning to the client.
+         */
+        public function handleTaskCommentCreated($task, $newComment, $authorId)
+        {
+            $isPrivate = (bool) $newComment->is_private;
+            $automationTrigger = $isPrivate
+                ? WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PRIVATE_COMMENT_ADDED
+                : WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_PUBLIC_COMMENT_ADDED;
+
+            $automationExecutionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                $task->pipeline_id,
+                $task->id,
+                WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                $automationTrigger,
+                $newComment
+            );
+
+            ServiceLocator::get('WebhookService')->handleWebhooks(
+                $task->pipeline_id,
+                [
+                    [
+                        'data' => [
+                            'relatedObject' => $task,
+                            'extraData'     => [
+                                'text'        => $newComment->text,
+                                'is_private'  => $newComment->is_private,
+                                'author_id'   => $newComment->author_id,
+                                'author_type' => $newComment->author_type,
+                            ],
+                        ],
+                        'webhookData' => [
+                            'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_COMMENT_ADDED,
+                        ]
+                    ]
+                ]
+            );
+
+            try {
+                ServiceLocator::get('NotificationService')->notifyTaskAssignees(
+                    $task->pipeline_id,
+                    $task->id,
+                    $isPrivate
+                        /* translators: %s = task name */
+                        ? __('A private comment was added to task "%s"', 'quicktasker')
+                        /* translators: %s = task name */
+                        : __('A public comment was added to task "%s"', 'quicktasker'),
+                    $task->name,
+                    \WPQT\Notification\NotificationService::TYPE_COMMENT_ADDED,
+                    $authorId
+                );
+            } catch (\Throwable $notificationError) {
+                error_log('Failed to create task comment notification: ' . $notificationError->getMessage());
+            }
+
+            return $automationExecutionResults;
+        }
+
+        /**
          * Deletes comments by type ID and type.
          *
          * @param int $typeId The ID of the type associated with the comments.

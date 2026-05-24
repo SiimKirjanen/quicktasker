@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { getMyTasksRequest } from "../../api/api";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
+import { TaskCommentsModal } from "../../components/Modal/TaskCommentsModal/TaskCommentsModal";
 import { usePipelines } from "../../hooks/usePipelines";
 import { TaskFromServer } from "../../types/task";
 import { Page } from "../Page/Page";
@@ -106,6 +107,8 @@ function MyTasksPage() {
           loading={loading}
         />
       )}
+
+      <TaskCommentsModal />
     </Page>
   );
 }

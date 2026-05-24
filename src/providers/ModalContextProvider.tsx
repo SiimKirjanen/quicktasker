@@ -14,6 +14,7 @@ import {
   CLOSE_PIPELINE_MODAL,
   CLOSE_STAGE_MODAL,
   CLOSE_TASK_COLOR_MODAL,
+  CLOSE_TASK_COMMENTS_MODAL,
   CLOSE_TASK_EXPORT_MODAL,
   CLOSE_TASK_LOGS_MODAL,
   CLOSE_TASK_MODAL,
@@ -35,6 +36,7 @@ import {
   OPEN_PIPELINE_IMPORT_MODAL,
   OPEN_STAGE_EDIT_MODAL,
   OPEN_TASK_COLOR_MODAL,
+  OPEN_TASK_COMMENTS_MODAL,
   OPEN_TASK_EXPORT_MODAL,
   OPEN_TASK_LOGS_MODAL,
   OPEN_TASK_RESTORE_MODAL,
@@ -51,6 +53,7 @@ import { reducer } from "../reducers/modal-reducer";
 import {
   ApiTokenLogsModalSettings,
   AutomationLogsModalSettings,
+  TaskCommentsModalSettings,
   TaskExportModalSettings,
   TaskLogsModalSettings,
   TaskModalSettings,
@@ -115,6 +118,10 @@ const initialState: State = {
   taskLogsModalSettings: {
     taskId: null,
   },
+  taskCommentsModalOpen: false,
+  taskCommentsModalSettings: {
+    taskId: null,
+  },
   userLogsModalOpen: false,
   userLogsModalSettings: {
     userId: null,
@@ -161,6 +168,8 @@ type State = {
   apiTokenLogsModalSettings: ApiTokenLogsModalSettings;
   taskLogsModalOpen: boolean;
   taskLogsModalSettings: TaskLogsModalSettings;
+  taskCommentsModalOpen: boolean;
+  taskCommentsModalSettings: TaskCommentsModalSettings;
   userLogsModalOpen: boolean;
   userLogsModalSettings: UserLogsModalSettings;
   notificationsModalOpen: boolean;
@@ -250,6 +259,11 @@ type Action =
       payload: { taskId: string };
     }
   | { type: typeof CLOSE_TASK_LOGS_MODAL }
+  | {
+      type: typeof OPEN_TASK_COMMENTS_MODAL;
+      payload: { taskId: string };
+    }
+  | { type: typeof CLOSE_TASK_COMMENTS_MODAL }
   | {
       type: typeof OPEN_USER_LOGS_MODAL;
       payload: { userId: string; userType: UserTypes };

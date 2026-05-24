@@ -21,6 +21,14 @@ export async function navigateToBoardsPage(page: Page) {
 }
 
 /**
+ * Navigate to My Tasks page
+ */
+export async function navigateToMyTasksPage(page: Page) {
+  await page.goto('/wp-admin/admin.php?page=wp-quicktasker-my-tasks');
+  await expect(page.getByRole('heading', { name: 'My Tasks' })).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+}
+
+/**
  * Navigate to User management page
  */
 export async function navigateToUserManagement(page: Page) {
