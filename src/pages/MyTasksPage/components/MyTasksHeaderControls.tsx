@@ -35,7 +35,7 @@ function MyTasksHeaderControls({
         selectedOptionValue={boardFilter}
         onSelectionChange={onBoardFilterChange}
         allSelectorLabel={__("All boards", "quicktasker")}
-        className="!wpqt-h-[30px] !wpqt-min-h-[30px] !wpqt-py-[0px] !wpqt-pl-2 !wpqt-pr-6 !wpqt-text-sm/6 !wpqt-leading-[28px] !wpqt-shadow-none"
+        className="!wpqt-shadow-none"
       />
       <WPQTInput
         value={searchValue}
