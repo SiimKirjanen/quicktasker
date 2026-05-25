@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { getUsersRequest } from "../api/api";
+import { getUsersRequest, getWPUsersRequest } from "../api/api";
 import {
   ADD_USER,
   CHANGE_USER_STATUS,
@@ -13,6 +13,7 @@ import {
   SET_WP_USERS,
 } from "../constants";
 import { reducer } from "../reducers/user-reducer";
+import { WPQTWpUserTypes } from "../types/enums";
 import { ServerUser, User, WPUser } from "../types/user";
 
 const initialState: State = {
@@ -46,12 +47,14 @@ type UserContextType = {
   state: State;
   userDispatch: Dispatch;
   updateUsers: () => Promise<void>;
+  updateWPUsers: () => Promise<void>;
 };
 
 const UserContext = createContext<UserContextType>({
   state: initialState,
   userDispatch: () => {},
   updateUsers: async () => {},
+  updateWPUsers: async () => {},
 });
 
 const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -78,8 +81,20 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const updateWPUsers = async () => {
+    try {
+      const response = await getWPUsersRequest(WPQTWpUserTypes.Other);
+      userDispatch({ type: SET_WP_USERS, payload: response.data });
+    } catch (error) {
+      console.error(error);
+      toast.error(__("Failed to fetch WordPress users", "quicktasker"));
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ state, userDispatch, updateUsers }}>
+    <UserContext.Provider
+      value={{ state, userDispatch, updateUsers, updateWPUsers }}
+    >
       {children}
     </UserContext.Provider>
   );

@@ -26,7 +26,12 @@ function makeUser(overrides: Partial<User> = {}): User {
 }
 
 function wrapper(state: State) {
-  const ctx = { state, userDispatch: jest.fn(), updateUsers: jest.fn() };
+  const ctx = {
+    state,
+    userDispatch: jest.fn(),
+    updateUsers: jest.fn(),
+    updateWPUsers: jest.fn(),
+  };
   const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <UserContext.Provider value={ctx}>{children}</UserContext.Provider>
   );

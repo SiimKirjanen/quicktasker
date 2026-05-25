@@ -99,6 +99,7 @@ function renderWithProviders(props: UserAssignementSelectionProps) {
           },
           userDispatch: jest.fn(),
           updateUsers: jest.fn(),
+          updateWPUsers: jest.fn(),
         }}
       >
         <UserAssignementSelection {...props} />
