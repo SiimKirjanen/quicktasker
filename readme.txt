@@ -3,8 +3,8 @@ Donate link: https://www.paypal.com/donate/?hosted_button_id=QEU9KGTX4NZHN
 Tags: task manager, task management, project management, task board, kanban board
 Requires at least: 5.3
 Requires PHP: 7.2.28
-Tested up to: 6.9.0
-Stable tag: 1.59.0
+Tested up to: 7.0
+Stable tag: 1.59.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,9 @@ QuickTasker is an open source kanban-style task management plugin for WordPress.
 
 
 == Changelog ==
+
+= 1.59.1 =
+* Updated third-party libraries to address security advisories.
 
 = 1.59.0 =
 * Read and post task comments directly from the My Tasks page.
