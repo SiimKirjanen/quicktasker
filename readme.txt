@@ -50,12 +50,14 @@ QuickTasker is an open source kanban-style task management plugin for WordPress.
 
 == Screenshots ==
 
-1. Board
-2. Overview
-3. Users
-4. Quicktasker user homepage
-5. Quicktasker user assigned tasks page
-6. Quicktasker user assigned task page
+1. Board with stages, labels, due dates and assigned users
+2. Task details with assigned users, labels, custom fields and file attachments
+3. Board overview with task statistics and charts
+4. Board automations
+5. Board webhooks
+6. Tasks app homepage
+7. Tasks app assigned tasks
+8. Tasks app task details
 
 
 == Changelog ==
