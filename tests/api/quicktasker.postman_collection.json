@@ -22,7 +22,9 @@
         "type": "text/javascript",
         "exec": [
           "pm.test('responds within 5s', () => pm.expect(pm.response.responseTime).to.be.below(5000));",
-          "pm.test('responds with JSON', () => pm.response.to.be.json);"
+          "if (pm.request.url.toString().includes('/wp-json/')) {",
+          "  pm.test('responds with JSON', () => pm.response.to.be.json);",
+          "}"
         ]
       }
     }
@@ -90,6 +92,70 @@
     },
     {
       "key": "publicTaskHash",
+      "value": ""
+    },
+    {
+      "key": "userApiNonce",
+      "value": ""
+    },
+    {
+      "key": "qtUserId",
+      "value": ""
+    },
+    {
+      "key": "qtPageHash",
+      "value": ""
+    },
+    {
+      "key": "qtUser2Id",
+      "value": ""
+    },
+    {
+      "key": "qtUser2PageHash",
+      "value": ""
+    },
+    {
+      "key": "qtSession",
+      "value": ""
+    },
+    {
+      "key": "qtCustomFieldId",
+      "value": ""
+    },
+    {
+      "key": "qtNotificationId",
+      "value": ""
+    },
+    {
+      "key": "upAssignedTaskId",
+      "value": ""
+    },
+    {
+      "key": "upAssignedTaskHash",
+      "value": ""
+    },
+    {
+      "key": "upFreeTaskId",
+      "value": ""
+    },
+    {
+      "key": "upFreeTaskHash",
+      "value": ""
+    },
+    {
+      "key": "upOtherTaskId",
+      "value": ""
+    },
+    {
+      "key": "upOtherTaskHash",
+      "value": ""
+    },
+    {
+      "key": "upPrivateTaskId",
+      "value": ""
+    },
+    {
+      "key": "upPrivateTaskHash",
       "value": ""
     }
   ],
@@ -3098,8 +3164,3426 @@
       ]
     },
     {
+      "name": "03 User page API",
+      "description": "Public QuickTasker user page app API, authenticated with X-WPQT-USER-PAGE-CODE, X-WPQT-USER-API-Nonce and the wpqt-session-token-{hash} cookie. Rate-limit requests use the qt-rate-limit-helper test plugin (wp-env only).",
+      "item": [
+        {
+          "name": "Setup",
+          "item": [
+            {
+              "name": "Fetch user app nonce",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/?page=wp-quicktasker-user",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "const match = pm.response.text().match(/\"userApiNonce\":\"([^\"]+)\"/);\npm.test('page contains the user API nonce', () => pm.expect(match).to.not.eql(null));\npm.collectionVariables.set('userApiNonce', match ? match[1] : '');"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Create QuickTasker user",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"API user {{runId}}\",\n  \"description\": \"Newman\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.collectionVariables.set('qtUserId', String(pm.response.json().data.id));",
+                      "pm.collectionVariables.set('qtPageHash', String(pm.response.json().data.page_hash));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Create second QuickTasker user",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"API user 2 {{runId}}\",\n  \"description\": \"Newman\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set('qtUser2Id', String(pm.response.json().data.id));",
+                      "pm.collectionVariables.set('qtUser2PageHash', String(pm.response.json().data.page_hash));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Create \"Assigned\" task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Assigned task {{runId}}\",\n  \"stageId\": \"{{stageA1Id}}\",\n  \"pipelineId\": \"{{boardAId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set('upAssignedTaskId', String(pm.response.json().data.newTask.id));",
+                      "pm.collectionVariables.set('upAssignedTaskHash', String(pm.response.json().data.newTask.task_hash));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Create \"Free\" task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Free task {{runId}}\",\n  \"stageId\": \"{{stageA1Id}}\",\n  \"pipelineId\": \"{{boardAId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set('upFreeTaskId', String(pm.response.json().data.newTask.id));",
+                      "pm.collectionVariables.set('upFreeTaskHash', String(pm.response.json().data.newTask.task_hash));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Create \"Other user's\" task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Other user's task {{runId}}\",\n  \"stageId\": \"{{stageA1Id}}\",\n  \"pipelineId\": \"{{boardAId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set('upOtherTaskId', String(pm.response.json().data.newTask.id));",
+                      "pm.collectionVariables.set('upOtherTaskHash', String(pm.response.json().data.newTask.task_hash));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Create \"Private\" task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Private task {{runId}}\",\n  \"stageId\": \"{{stageA1Id}}\",\n  \"pipelineId\": \"{{boardAId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set('upPrivateTaskId', String(pm.response.json().data.newTask.id));",
+                      "pm.collectionVariables.set('upPrivateTaskHash', String(pm.response.json().data.newTask.task_hash));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Make \"Free\" task assignable",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{upFreeTaskId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"free_for_all\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Assign user to \"Assigned\" task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/tasks/{{upAssignedTaskId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_type\": \"quicktasker\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Assign second user to \"Other user's\" task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUser2Id}}/tasks/{{upOtherTaskId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_type\": \"quicktasker\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Create custom field for the user",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityType\": \"quicktasker\",\n  \"entityId\": \"{{qtUserId}}\",\n  \"name\": \"Phone {{runId}}\",\n  \"description\": \"\",\n  \"type\": \"text\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set('qtCustomFieldId', String(pm.response.json().data.id));"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Account setup and login",
+          "item": [
+            {
+              "name": "Status reports setup not completed",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/status",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('quicktasker user without setup', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.isQuicktaskerUser).to.eql(true);\n  pm.expect(data.setupCompleted).to.eql(false);\n});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Status rejects unknown page code",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "doesnotexist123"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/status",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"User page does not exist\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('User page does not exist'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Setup requires nonce",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/setup",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"Newman-pass-1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Nonce not provided\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Nonce not provided'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Setup rejects invalid nonce",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "invalid0"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/setup",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"Newman-pass-1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Nonce verification failed\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Nonce verification failed'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Complete setup",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/setup",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"Newman-pass-1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Setup cannot be repeated",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/setup",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"Takeover-pass-2\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"already been completed\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('already been completed'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Status reports setup completed",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/status",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('setupCompleted is true', () => pm.expect(pm.response.json().data.setupCompleted).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Login rejects wrong password",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/login",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"wrong-password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Invalid password\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Invalid password'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/login",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"Newman-pass-1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('returns session token and expiry', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.sessionToken).to.be.a('string').and.not.empty;\n  pm.expect(data.expiresAtUTC).to.be.a('string');\n});",
+                      "pm.collectionVariables.set('qtSession', String(pm.response.json().data.sessionToken));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Requests without session cookie are rejected",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Forged session token is rejected",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}=forged-session-token"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Session cannot be used on another user's page",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtUser2PageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtUser2PageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"does not match the page hash\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('does not match the page hash'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Requests without nonce are rejected",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Nonce not provided\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Nonce not provided'));"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Tasks",
+          "item": [
+            {
+              "name": "Overview",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('counts assigned and assignable tasks', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.assignedTasksCount).to.eql(1);\n  pm.expect(data.assignableTaskCount).to.be.at.least(1);\n});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Assigned tasks list only the user's tasks",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/assigned-tasks",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('contains only the assigned task', () => {\n  const hashes = pm.response.json().data.map((t) => t.task_hash);\n  pm.expect(hashes).to.eql([pm.collectionVariables.get('upAssignedTaskHash')]);\n});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Assignable tasks list free unassigned tasks",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/assignable-tasks",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('contains the free task but not assigned or private ones', () => {\n  const hashes = pm.response.json().data.map((t) => t.task_hash);\n  pm.expect(hashes).to.include(pm.collectionVariables.get('upFreeTaskHash'));\n  pm.expect(hashes).to.not.include(pm.collectionVariables.get('upAssignedTaskHash'));\n  pm.expect(hashes).to.not.include(pm.collectionVariables.get('upPrivateTaskHash'));\n});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "View assigned task",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('returns the task with its board stages', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.task.task_hash).to.eql(pm.collectionVariables.get('upAssignedTaskHash'));\n  pm.expect(data.stages.map((s) => String(s.id))).to.include(pm.collectionVariables.get('stageA2Id'));\n});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "View assignable task",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upFreeTaskHash}}",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot view another user's task",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upOtherTaskHash}}",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to view\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to view'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot view an unassigned private task",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upPrivateTaskHash}}",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to view\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to view'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Unknown task hash fails",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/doesnotexist123",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Add comment to assigned task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/comments",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"comment\": \"Task comment {{runId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('returns comments including the new one', () => pm.expect(pm.response.json().data.map((c) => c.text)).to.include('Task comment ' + pm.collectionVariables.get('runId')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "List comments of assigned task",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/comments",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('contains the comment', () => pm.expect(pm.response.json().data.map((c) => c.text)).to.include('Task comment ' + pm.collectionVariables.get('runId')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Comment requires text",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/comments",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('error code is rest_missing_callback_param', () => pm.expect(pm.response.json().code).to.eql('rest_missing_callback_param'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot comment on another user's task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upOtherTaskHash}}/comments",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"comment\": \"Intruder\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to edit\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot read comments of a task the user is not assigned to",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upFreeTaskHash}}/comments",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to view the comments\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to view the comments'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Move assigned task to stage A2",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/stage",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stageId\": \"{{stageA2Id}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Task is in stage A2",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('stage_id is A2', () => pm.expect(String(pm.response.json().data.task.stage_id)).to.eql(pm.collectionVariables.get('stageA2Id')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot move task to a stage on another board",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/stage",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stageId\": \"{{stageB1Id}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Stage not found\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Stage not found'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot move another user's task",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upOtherTaskHash}}/stage",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stageId\": \"{{stageA2Id}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to edit\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Mark assigned task done",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/done",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"done\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Task is done",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('is_done is 1', () => pm.expect(Number(pm.response.json().data.task.is_done)).to.eql(1));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Mark done rejects non-boolean",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/done",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"done\": \"maybe\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('error code is rest_invalid_param', () => pm.expect(pm.response.json().code).to.eql('rest_invalid_param'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot mark another user's task done",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upOtherTaskHash}}/done",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"done\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to edit\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Self-assign to assignable task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upFreeTaskHash}}/users",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('user is among assignees', () => {\n  const users = pm.response.json().data.task.assigned_users.map((u) => String(u.id));\n  pm.expect(users).to.include(pm.collectionVariables.get('qtUserId'));\n});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Assigned task is no longer assignable",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/assignable-tasks",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('free task left the assignable list', () => pm.expect(pm.response.json().data.map((t) => t.task_hash)).to.not.include(pm.collectionVariables.get('upFreeTaskHash')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot self-assign to a task that already has an assignee",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upOtherTaskHash}}/users",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to assign\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to assign'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot self-assign to a non-assignable task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upPrivateTaskHash}}/users",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to assign\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to assign'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Self-unassign",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upFreeTaskHash}}/users",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Unassigned task is assignable again",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/assignable-tasks",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('free task is back in the assignable list', () => pm.expect(pm.response.json().data.map((t) => t.task_hash)).to.include(pm.collectionVariables.get('upFreeTaskHash')));"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Profile, comments and notifications",
+          "item": [
+            {
+              "name": "Get own user",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/user",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('returns the logged-in user', () => pm.expect(String(pm.response.json().data.user.id)).to.eql(pm.collectionVariables.get('qtUserId')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Add profile comment",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/user/comments",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"comment\": \"Profile comment {{runId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('returns comments including the new one', () => pm.expect(pm.response.json().data.map((c) => c.text)).to.include('Profile comment ' + pm.collectionVariables.get('runId')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "List profile comments",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/user/comments",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('contains the profile comment', () => pm.expect(pm.response.json().data.map((c) => c.text)).to.include('Profile comment ' + pm.collectionVariables.get('runId')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Update own custom field",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/custom-fields/{{qtCustomFieldId}}",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customFieldId\": \"{{qtCustomFieldId}}\",\n  \"entityId\": \"{{qtUserId}}\",\n  \"entityType\": \"quicktasker\",\n  \"value\": \"555-0100\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Custom field value is saved",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/user",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('custom field has the new value', () => pm.expect(JSON.stringify(pm.response.json().data.customFields)).to.include('555-0100'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot update another user's custom field",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/custom-fields/{{qtCustomFieldId}}",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customFieldId\": \"{{qtCustomFieldId}}\",\n  \"entityId\": \"{{qtUser2Id}}\",\n  \"entityType\": \"quicktasker\",\n  \"value\": \"hijacked\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to edit custom fields for this user\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit custom fields for this user'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot update custom fields of another user's task",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/custom-fields/{{qtCustomFieldId}}",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customFieldId\": \"{{qtCustomFieldId}}\",\n  \"entityId\": \"{{upOtherTaskId}}\",\n  \"entityType\": \"task\",\n  \"value\": \"hijacked\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to edit task custom fields\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit task custom fields'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Custom field rejects unknown entity type",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/custom-fields/{{qtCustomFieldId}}",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customFieldId\": \"{{qtCustomFieldId}}\",\n  \"entityId\": \"{{boardAId}}\",\n  \"entityType\": \"pipeline\",\n  \"value\": \"hijacked\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('error code is rest_invalid_param', () => pm.expect(pm.response.json().code).to.eql('rest_invalid_param'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Notifications include the assignment",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "const notifications = pm.response.json().data;\npm.test('has at least one notification', () => pm.expect(notifications).to.be.an('array').that.is.not.empty);\npm.collectionVariables.set('qtNotificationId', notifications.length ? String(notifications[0].id) : '0');"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Mark notification read",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications/{{qtNotificationId}}/read",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot mark a non-existent notification read",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications/999999999/read",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Mark all notifications read",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications/read-all",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \"notification_ids\": [{{qtNotificationId}}] }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Mark all read requires an array",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications/read-all",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"notification_ids\": \"1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"must be an array\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('must be an array'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get notification preferences",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications/preferences",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('has a filter', () => pm.expect(['all', 'unread', 'read']).to.include(pm.response.json().data.filter));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Save notification preferences",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications/preferences",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filter\": \"unread\",\n  \"max_age_hours\": 48\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('preferences are saved', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.filter).to.eql('unread');\n  pm.expect(Number(data.max_age_hours)).to.eql(48);\n});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Account state",
+          "item": [
+            {
+              "name": "Archive the assigned task",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardAId}}/tasks/{{upAssignedTaskId}}/archive",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Archived task cannot be viewed",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to view\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to view'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Deactivate user",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/status",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Inactive user is rejected",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"User is not active\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('User is not active'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Reactivate user",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/status",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Seed rate limit to the edge of a ban",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/qt-test/v1/seed-rate-limit",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"{{qtUserId}}\",\n  \"count\": 30,\n  \"offenses\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Write over the rate limit is throttled",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/user/comments",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"comment\": \"One too many\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Too many requests\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Too many requests'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Third offense bans the user",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"User is banned\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('User is banned'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Unban user",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/unban",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Clear rate limit state",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/qt-test/v1/clear-rate-limit",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"{{qtUserId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Unbanned user has access again",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/logout",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Session is unusable after logout",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/overview",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Session is not active\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Session is not active'));"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "99 Teardown",
       "item": [
+        {
+          "name": "Delete QuickTasker user",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminAppPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete second QuickTasker user",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUser2Id}}",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminAppPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete custom field",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields/{{qtCustomFieldId}}",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminAppPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "Delete board B",
           "request": {

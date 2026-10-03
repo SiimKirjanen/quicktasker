@@ -967,6 +967,13 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     if (!$permissionService->checkIfUserIsAllowedToEditTask($requestData['session']->user_id, $task->id, $requestData['userType'])) {
                         throw new WPQTException('Not allowed to edit the task', true);
                     }
+
+                    $targetStage = $stageRepository->getStageById($data['stageId']);
+
+                    if (!$targetStage || (int) $targetStage->pipeline_id !== (int) $task->pipeline_id) {
+                        throw new WPQTException('Stage not found', true);
+                    }
+
                     $moveInfo = $taskService->moveTask($task->id, $data['stageId'], 0);
                     $stage = $stageRepository->getStageById($moveInfo->newStageId);
                     $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($requestData['session']->user_id, $requestData['userType']);
