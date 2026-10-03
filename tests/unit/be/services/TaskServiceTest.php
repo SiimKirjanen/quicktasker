@@ -266,7 +266,7 @@ class TaskServiceTest extends TestCase {
      * 1. Should use wp_parse_args() with defaults: description=null, task_focus_color=null, due_date=null, is_archived=0, task_completed_at=null, is_done=0
      * 2. Should throw Exception 'createTask required fields are missing' if name is not set
      * 3. Should insert into TABLE_WP_QUICKTASKER_TASKS with name, description, pipeline_id, task_hash, created_at, updated_at, task_focus_color, due_date, is_archived, task_completed_at, is_done
-     * 4. Should generate task_hash using HashService->generateTaskHash($args['name'])
+     * 4. Should generate task_hash using HashService->generateTaskHash()
      * 5. Should throw Exception 'Failed to create a task' if insert fails (=== false)
      * 6. Should get insert_id after successful insert
      * 7. Should call getNextTaskOrder($stageId) if stageId is provided, else use 0

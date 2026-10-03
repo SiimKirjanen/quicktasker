@@ -39,7 +39,7 @@ if (!class_exists('WPQT\User\UserService')) {
             }
 
             $newUserId = $wpdb->insert_id;
-            $pageHash = ServiceLocator::get('HashService')->generateUserPageHash($args['name']);
+            $pageHash = ServiceLocator::get('HashService')->generateUserPageHash();
 
             $result2 = $wpdb->insert(
                 TABLE_WP_QUICKTASKER_USER_PAGES,
