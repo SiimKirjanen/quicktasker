@@ -68,7 +68,7 @@ if (!class_exists('WPQT\Task\TaskService')) {
                 'name'                 => $args['name'],
                 'description'          => $args['description'],
                 'pipeline_id'          => $args['pipelineId'],
-                'task_hash'            => ServiceLocator::get('HashService')->generateTaskHash($args['name']),
+                'task_hash'            => ServiceLocator::get('HashService')->generateTaskHash(),
                 'created_at'           => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'updated_at'           => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'task_focus_color'     => $args['task_focus_color'],

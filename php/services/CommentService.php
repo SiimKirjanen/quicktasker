@@ -179,7 +179,7 @@ if (!class_exists('WPQT\Comment\CommentService')) {
                 throw new WPQTException('Failed to delete task comments');
             }
 
-            return $results;
+            return $result;
         }
     }
 }

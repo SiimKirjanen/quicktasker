@@ -11,6 +11,7 @@ build
 # Playwright
 test-results/
 playwright-report/
+api-test-results/
 playwright/.cache/
 playwright/.auth/
 .playwright-mcp/

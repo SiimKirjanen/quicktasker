@@ -12,30 +12,32 @@ if (!class_exists('WPQT\Hash\HashService')) {
         /**
          * Generates a hash for a user page.
          *
-         * This function generates a 16-character hash using the MD5 algorithm.
-         * The hash is created by combining the current microtime with a provided salt.
+         * The hash identifies a QuickTasker user's page, so it must be unique
+         * and unguessable: it is 8 cryptographically secure random bytes.
          *
-         * @param string $salt A string used to salt the hash.
-         * @return string A 16-character hash.
+         * @return string A 16-character hexadecimal hash.
          */
-        public function generateUserPageHash($salt)
+        public function generateUserPageHash()
         {
-            return substr(md5(microtime() . $salt), 0, 16);
+            return $this->generateRandomHash();
         }
 
         /**
-         * Generates a hash for a given task.
+         * Generates a hash for a task.
          *
-         * This function creates a 16-character hash by concatenating the task ID,
-         * the current microtime, and a provided salt, then applying the MD5 hash
-         * function and taking the first 16 characters of the result.
+         * The hash is used in task URLs and public task status lookups, so it
+         * must be unique and unguessable: it is 8 cryptographically secure random bytes.
          *
-         * @param string $salt A salt value to add additional randomness to the hash.
-         * @return string A 16-character hash string.
+         * @return string A 16-character hexadecimal hash.
          */
-        public function generateTaskHash($salt)
+        public function generateTaskHash()
         {
-            return substr(md5(microtime() . $salt), 0, 16);
+            return $this->generateRandomHash();
+        }
+
+        private function generateRandomHash()
+        {
+            return bin2hex(random_bytes(8));
         }
     }
 }

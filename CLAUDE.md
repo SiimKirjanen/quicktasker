@@ -30,6 +30,12 @@ npm run test:e2e:ui           # Playwright UI mode
 npm run test:e2e -- --grep "test name"  # single test
 ```
 
+### API tests (Postman / Newman)
+```bash
+npm run test:api              # assumes wp-env already running
+npm run test:api:build        # regenerate the collection after editing tests
+```
+
 ### PHP
 ```bash
 composer test:unit:be                                     # all PHPUnit tests
@@ -81,6 +87,7 @@ Error handling is centralized in `ErrorHandlerService` — all API catch blocks 
 - **JS unit tests**: Jest + `@testing-library/react`, configured in `jest.config.js`. Test files colocated with source (`*.test.tsx`).
 - **PHP unit tests**: PHPUnit, tests in `tests/unit/be/`.
 - **E2E tests**: Playwright in `tests/e2e/`. Auth state stored in `playwright/.auth/` (gitignored). Shared helpers in `tests/e2e/utils/` — use `getStageContainer()`, `getTaskCard()`, `createBoard()`, `createStage()`, `createTask()` rather than raw locators. Fixture files for import tests in `tests/e2e/fixtures/`.
+- **API tests**: Newman in `tests/api/`. `quicktasker.postman_collection.json` is generated — edit `build-collection.js`, run `npm run test:api:build`, commit both. `admin-routes.js` lists every admin route with its required capability; the build fails if it drifts from `php/api/admin-api.php`. `run-api-tests.js` creates application passwords via wp-cli for `admin`, `qt-api-subscriber` and `qt-api-limited` (base QuickTasker cap only).
 
 ## Plugin page URLs (wp-env, port 8889)
 

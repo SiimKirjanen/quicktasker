@@ -198,16 +198,17 @@ class RequestValidationTest extends TestCase {
     // ========================================
 
     public function test_validateDateParam_with_valid_dates() {
-        $this->assertEquals(1, \WPQT\RequestValidation::validateDateParam('2024-01-01'));
-        $this->assertEquals(1, \WPQT\RequestValidation::validateDateParam('2024-12-31'));
-        $this->assertEquals(1, \WPQT\RequestValidation::validateDateParam('9999-99-99')); // Pattern matches, not semantic validation
+        $this->assertTrue(\WPQT\RequestValidation::validateDateParam('2024-01-01'));
+        $this->assertTrue(\WPQT\RequestValidation::validateDateParam('2024-12-31'));
+        $this->assertTrue(\WPQT\RequestValidation::validateDateParam('9999-99-99')); // Pattern matches, not semantic validation
     }
 
+    // Must be strictly false: WP REST only rejects a param when validate_callback returns false
     public function test_validateDateParam_with_invalid_format() {
-        $this->assertEquals(0, \WPQT\RequestValidation::validateDateParam('01-01-2024'));
-        $this->assertEquals(0, \WPQT\RequestValidation::validateDateParam('2024/01/01'));
-        $this->assertEquals(0, \WPQT\RequestValidation::validateDateParam('2024-1-1'));
-        $this->assertEquals(0, \WPQT\RequestValidation::validateDateParam('not a date'));
+        $this->assertFalse(\WPQT\RequestValidation::validateDateParam('01-01-2024'));
+        $this->assertFalse(\WPQT\RequestValidation::validateDateParam('2024/01/01'));
+        $this->assertFalse(\WPQT\RequestValidation::validateDateParam('2024-1-1'));
+        $this->assertFalse(\WPQT\RequestValidation::validateDateParam('not a date'));
     }
 
     // ========================================
@@ -433,17 +434,18 @@ class RequestValidationTest extends TestCase {
     // ========================================
 
     public function test_validateHexColor_with_valid_colors() {
-        $this->assertEquals(1, \WPQT\RequestValidation::validateHexColor('#000000'));
-        $this->assertEquals(1, \WPQT\RequestValidation::validateHexColor('#ffffff'));
-        $this->assertEquals(1, \WPQT\RequestValidation::validateHexColor('#FFFFFF'));
-        $this->assertEquals(1, \WPQT\RequestValidation::validateHexColor('#abc123'));
+        $this->assertTrue(\WPQT\RequestValidation::validateHexColor('#000000'));
+        $this->assertTrue(\WPQT\RequestValidation::validateHexColor('#ffffff'));
+        $this->assertTrue(\WPQT\RequestValidation::validateHexColor('#FFFFFF'));
+        $this->assertTrue(\WPQT\RequestValidation::validateHexColor('#abc123'));
     }
 
+    // Must be strictly false: WP REST only rejects a param when validate_callback returns false
     public function test_validateHexColor_with_invalid_colors() {
-        $this->assertEquals(0, \WPQT\RequestValidation::validateHexColor('000000')); // Missing #
-        $this->assertEquals(0, \WPQT\RequestValidation::validateHexColor('#fff')); // Too short
-        $this->assertEquals(0, \WPQT\RequestValidation::validateHexColor('#gggggg')); // Invalid characters
-        $this->assertEquals(0, \WPQT\RequestValidation::validateHexColor('#1234567')); // Too long
+        $this->assertFalse(\WPQT\RequestValidation::validateHexColor('000000')); // Missing #
+        $this->assertFalse(\WPQT\RequestValidation::validateHexColor('#fff')); // Too short
+        $this->assertFalse(\WPQT\RequestValidation::validateHexColor('#gggggg')); // Invalid characters
+        $this->assertFalse(\WPQT\RequestValidation::validateHexColor('#1234567')); // Too long
     }
 
     // ========================================

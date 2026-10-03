@@ -270,6 +270,14 @@ function wpqt_register_token_api_routes()
                     ]);
                 }
 
+                if (empty($stageData)) {
+                    $wpdb->query('ROLLBACK');
+
+                    return $responseService->createTokenApiResponse(false, 400, [
+                        'message' => 'Provide at least one of: name, description'
+                    ]);
+                }
+
                 $editedStage = ServiceLocator::get('StageService')->editStage($request->get_param('stage_id'), $stageData, $cachedDbToken->pipeline_id);
 
                 wpqtTokenLog(
@@ -428,6 +436,16 @@ function wpqt_register_token_api_routes()
                 $apiTokenRepository = ServiceLocator::get('ApiTokenRepository');
                 $automationService = ServiceLocator::get('AutomationService');
                 $webhookService = ServiceLocator::get('WebhookService');
+                $stage = ServiceLocator::get('StageRepository')->getStageById($request->get_param('stage_id'));
+
+                if (wpqtIsEntityUnauthorizedForPipeline($stage, $cachedDbToken->pipeline_id)) {
+                    $wpdb->query('ROLLBACK');
+
+                    return $responseService->createTokenApiResponse(false, 404, [
+                        'message' => 'Stage not found for the provided token'
+                    ]);
+                }
+
                 $taskData = array_merge(
                     ['pipelineId' => $cachedDbToken->pipeline_id],
                     wpqtBuildParamsFromRequest($request, ['name', 'description', 'task_focus_color'])

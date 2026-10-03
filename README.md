@@ -72,6 +72,14 @@ npm run test:e2e:headed        # visible browser
 npm run test:e2e:ui            # Playwright UI mode
 ```
 
+### API tests (Postman / Newman)
+Requires wp-env. The Postman collection is generated from `tests/api/build-collection.js`.
+
+```bash
+npm run test:api               # run all API tests
+npm run test:api:build         # regenerate the collection after editing the tests
+```
+
 ## Code quality
 
 ```bash

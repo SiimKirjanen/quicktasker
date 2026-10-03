@@ -80,22 +80,22 @@ if (!class_exists('WPQT\Stage\StageService')) {
          * Edit a stage.
          *
          * @param int $stageId The ID of the stage to edit.
-         * @param array $args The arguments to update the stage.
+         * @param array $args The fields to update. Only 'name' and 'description' keys that are present are updated.
          * @return void
          */
         public function editStage($stageId, $args)
         {
             global $wpdb;
 
-            if (!array_key_exists('name', $args) || !array_key_exists('description', $args)) {
+            $fields = array_intersect_key($args, array_flip(['name', 'description']));
+
+            if (empty($fields)) {
                 throw new \Exception('Required fields are missing');
             }
 
-            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, [
-                'name'        => $args['name'],
-                'description' => $args['description'],
-                'updated_at'  => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-            ], ['id' => $stageId]);
+            $fields['updated_at'] = ServiceLocator::get('TimeRepository')->getCurrentUTCTime();
+
+            $result = $wpdb->update(TABLE_WP_QUICKTASKER_PIPELINE_STAGES, $fields, ['id' => $stageId]);
 
             if (false === $result) {
                 throw new \Exception('Failed to update the stage');
