@@ -9,7 +9,17 @@
 const fs = require("fs");
 const path = require("path");
 
+const adminRoutes = require("./admin-routes");
+
 const OUTPUT = path.join(__dirname, "quicktasker.postman_collection.json");
+const ADMIN_API_FILE = path.join(
+  __dirname,
+  "..",
+  "..",
+  "php",
+  "api",
+  "admin-api.php",
+);
 const API = "{{baseUrl}}/wp-json/wpqt/v1";
 
 /* ------------------------------------------------------------------ */
@@ -59,13 +69,22 @@ function request({
   rawUrl,
   auth = adminAuth,
   body,
+  formData,
   headers = [],
   tests = [],
 }) {
   const header = [...headers];
   const req = { method, header, url: rawUrl ?? `${API}${url}`, auth };
 
-  if (body !== undefined) {
+  if (formData) {
+    // File paths are relative to the plugin root (Newman's --working-dir).
+    req.body = {
+      mode: "formdata",
+      formdata: formData.map(({ key, value, src }) =>
+        src ? { key, type: "file", src } : { key, type: "text", value },
+      ),
+    };
+  } else if (body !== undefined) {
     header.push({ key: "Content-Type", value: "application/json" });
     req.body = {
       mode: "raw",
@@ -1566,6 +1585,1418 @@ const userPageApi = folder(
 );
 
 /* ------------------------------------------------------------------ */
+/* 04 Admin API                                                         */
+/* ------------------------------------------------------------------ */
+
+const PERMISSION_CALLBACKS = {
+  hasRequiredPermissionsForPrivateAPI: "base",
+  hasRequiredPermissionsForPrivateAPISettingsEndpoints: "settings",
+  hasRequiredPermissionsForPrivateAPIDeleteEndpoints: "delete",
+  hasRequiredPermissionsForPrivateAPIArchiveEndpoints: "archive",
+  hasRequiredParmissionsForPrivateAPIUsersEndpoints: "users",
+  hasRequiredPermissionsForManagingQuickTaskerSessions: "sessions",
+  hasRequiredPermissionsForMyTasks: "myTasks",
+};
+
+const routeKey = ({ method, path: routePath }) => `${method} ${routePath}`;
+
+/**
+ * Fails the build when admin-routes.js no longer matches the routes and
+ * permission callbacks registered in admin-api.php.
+ */
+function assertAdminRoutesMatchSource() {
+  const source = fs.readFileSync(ADMIN_API_FILE, "utf8");
+  const registered = source
+    .split("register_rest_route(")
+    .slice(1)
+    .map((block) => {
+      const phpPath = block.match(/'wpqt\/v1',\s*'([^']+)'/)[1];
+      const callback = block.match(
+        /permission_callback'\s*=>\s*function\s*\([^)]*\)\s*\{\s*return\s+(?:PermissionService::|ServiceLocator::get\('PermissionService'\)->)(\w+)/,
+      );
+      return {
+        method: block.match(/'methods'\s*=>\s*'(\w+)'/)[1],
+        path: "/" + phpPath.replace(/\(\?P<(\w+)>[^)]+\)/g, "{$1}"),
+        permission: callback ? PERMISSION_CALLBACKS[callback[1]] : undefined,
+      };
+    });
+
+  const expected = new Map(adminRoutes.map((r) => [routeKey(r), r.permission]));
+  const problems = [];
+  registered.forEach((route) => {
+    const key = routeKey(route);
+    if (!expected.has(key)) {
+      problems.push(`${key} is missing from admin-routes.js`);
+    } else if (expected.get(key) !== route.permission) {
+      problems.push(
+        `${key} requires "${route.permission}" in admin-api.php but admin-routes.js expects "${expected.get(key)}"`,
+      );
+    }
+    expected.delete(key);
+  });
+  expected.forEach((_, key) =>
+    problems.push(
+      `${key} is in admin-routes.js but not registered in admin-api.php`,
+    ),
+  );
+
+  if (problems.length) {
+    throw new Error(
+      "admin-routes.js is out of date:\n  " + problems.join("\n  "),
+    );
+  }
+}
+
+assertAdminRoutesMatchSource();
+
+const DUMMY_ID = "999999";
+
+/** Builds a request that hits an admin route with dummy IDs and params. */
+function routeRequest(route, { name, auth, tests }) {
+  const routePath = route.path.replace(/\{\w+\}/g, DUMMY_ID);
+  const params = route.params ?? {};
+  const options = { name, method: route.method, auth, tests };
+
+  if (route.method === "GET") {
+    const query = new URLSearchParams(
+      Object.entries(params).map(([k, v]) => [k, String(v)]),
+    ).toString();
+    options.url = query ? `${routePath}?${query}` : routePath;
+  } else {
+    options.url = routePath;
+    if (Object.keys(params).length) {
+      options.body = params;
+    }
+  }
+  return request(options);
+}
+
+const basicAuth = (user, password) => ({
+  type: "basic",
+  basic: [
+    { key: "username", value: `{{${user}}}`, type: "string" },
+    { key: "password", value: `{{${password}}}`, type: "string" },
+  ],
+});
+const subscriberAuth = basicAuth("subscriberUser", "subscriberAppPassword");
+const limitedAuth = basicAuth("limitedUser", "limitedAppPassword");
+
+const adminPermissions = folder(
+  "Permissions",
+  [
+    folder(
+      "Anonymous visitor is rejected everywhere",
+      adminRoutes.map((route) =>
+        routeRequest(route, {
+          name: routeKey(route),
+          auth: noAuth,
+          tests: [status(401), wpErrorCode("rest_forbidden")],
+        }),
+      ),
+    ),
+    folder(
+      "Subscriber is rejected everywhere",
+      adminRoutes.map((route) =>
+        routeRequest(route, {
+          name: routeKey(route),
+          auth: subscriberAuth,
+          tests: [status(403), wpErrorCode("rest_forbidden")],
+        }),
+      ),
+    ),
+    folder("Limited admin (base capability only)", [
+      request({
+        name: "Can read boards",
+        url: "/pipelines",
+        auth: limitedAuth,
+        tests: [status(200), success(true)],
+      }),
+      ...adminRoutes
+        .filter((route) => route.permission !== "base")
+        .map((route) =>
+          routeRequest(route, {
+            name: `${routeKey(route)} needs "${route.permission}"`,
+            auth: limitedAuth,
+            tests: [status(403), wpErrorCode("rest_forbidden")],
+          }),
+        ),
+    ]),
+  ],
+  "Calls every admin route as an anonymous visitor, a subscriber and a user with only the base QuickTasker capability. Routes and expected permission levels come from admin-routes.js.",
+);
+
+const includesId = (description, listExpression, variable) =>
+  `pm.test('${description}', () => pm.expect(${listExpression}.map((x) => String(x.id))).to.include(pm.collectionVariables.get('${variable}')));`;
+
+const excludesId = (description, listExpression, variable) =>
+  `pm.test('${description}', () => pm.expect(${listExpression}.map((x) => String(x.id))).to.not.include(pm.collectionVariables.get('${variable}')));`;
+
+const adminBoards = folder("Boards", [
+  request({
+    name: "Create board requires name",
+    method: "POST",
+    url: "/pipelines",
+    body: { description: "No name" },
+    tests: [status(400), wpErrorCode("rest_missing_callback_param")],
+  }),
+  request({
+    name: "Create board C",
+    method: "POST",
+    url: "/pipelines",
+    body: { name: "API Board C {{runId}}", description: "Admin API board" },
+    tests: [
+      status(200),
+      success(true),
+      save("boardCId", "pm.response.json().data.id"),
+    ],
+  }),
+  request({
+    name: "List boards includes board C",
+    url: "/pipelines",
+    tests: [
+      status(200),
+      includesId("board C is listed", "pm.response.json().data", "boardCId"),
+    ],
+  }),
+  request({
+    name: "Get board C",
+    url: "/pipelines/{{boardCId}}",
+    tests: [
+      status(200),
+      `pm.test('returns the board with its settings', () => {
+  const data = pm.response.json().data;
+  pm.expect(String(data.pipeline.id)).to.eql(pm.collectionVariables.get('boardCId'));
+  pm.expect(data.pipeline.settings).to.be.an('object');
+});`,
+    ],
+  }),
+  request({
+    name: "Get missing board fails",
+    url: "/pipelines/999999999",
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Rename board C",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}",
+    body: { name: "API Board C {{runId}} renamed", description: "Renamed" },
+    tests: [
+      status(200),
+      `pm.test('name updated', () => pm.expect(pm.response.json().data.name).to.eql('API Board C ' + pm.collectionVariables.get('runId') + ' renamed'));`,
+    ],
+  }),
+  request({
+    name: "Board overview",
+    url: "/pipelines/{{boardCId}}/overview",
+    tests: [status(200), success(true)],
+  }),
+]);
+
+const adminStages = folder("Stages", [
+  ...["C1", "C2", "C3"].map((label) =>
+    request({
+      name: `Create stage ${label}`,
+      method: "POST",
+      url: "/pipelines/{{boardCId}}/stages",
+      body: { name: `Stage ${label}`, description: "" },
+      tests: [
+        status(200),
+        `pm.test('stage belongs to board C', () => pm.expect(String(pm.response.json().data.pipeline_id)).to.eql(pm.collectionVariables.get('boardCId')));`,
+        save(`stage${label}Id`, "pm.response.json().data.id"),
+      ],
+    }),
+  ),
+  request({
+    name: "Create stage on missing board fails",
+    method: "POST",
+    url: "/pipelines/999999999/stages",
+    body: { name: "Orphan", description: "" },
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Rename stage C1",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/stages/{{stageC1Id}}",
+    body: { name: "Stage C1 renamed", description: "First" },
+    tests: [
+      status(200),
+      `pm.test('stage renamed', () => pm.expect(pm.response.json().data.name).to.eql('Stage C1 renamed'));`,
+    ],
+  }),
+  request({
+    name: "Move stage C2 left",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/stages/{{stageC2Id}}/move",
+    body: { direction: "left" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Move stage C2 back right",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/stages/{{stageC2Id}}/move",
+    body: { direction: "right" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Delete empty stage C3",
+    method: "DELETE",
+    url: "/pipelines/{{boardCId}}/stages/{{stageC3Id}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Deleted stage is gone from board",
+    url: "/pipelines/{{boardCId}}",
+    tests: [
+      status(200),
+      excludesId(
+        "stage C3 is not listed",
+        "pm.response.json().data.pipeline.stages",
+        "stageC3Id",
+      ),
+    ],
+  }),
+]);
+
+const adminTasks = folder("Tasks", [
+  request({
+    name: "Create task in stage C1",
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Admin task {{runId}}",
+      stageId: "{{stageC1Id}}",
+      pipelineId: "{{boardCId}}",
+    },
+    tests: [
+      status(200),
+      success(true),
+      save("taskCId", "pm.response.json().data.newTask.id"),
+    ],
+  }),
+  request({
+    name: "Cannot create task with a stage from another board",
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Mismatched",
+      stageId: "{{stageA1Id}}",
+      pipelineId: "{{boardCId}}",
+    },
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Edit task",
+    method: "PATCH",
+    url: "/tasks/{{taskCId}}",
+    body: {
+      name: "Admin task {{runId}} edited",
+      description: "Edited description",
+      due_date: "2030-02-01 09:00:00",
+      free_for_all: true,
+    },
+    tests: [
+      status(200),
+      `pm.test('task fields updated', () => {
+  const task = pm.response.json().data;
+  pm.expect(task.name).to.eql('Admin task ' + pm.collectionVariables.get('runId') + ' edited');
+  pm.expect(task.description).to.eql('Edited description');
+  pm.expect(task.due_date).to.include('2030-02-01');
+  pm.expect(Number(task.free_for_all)).to.eql(1);
+});`,
+    ],
+  }),
+  request({
+    name: "Set focus colour",
+    method: "PATCH",
+    url: "/tasks/{{taskCId}}/focus-color",
+    body: { color: "#00ff00" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Focus colour rejects non-hex value",
+    method: "PATCH",
+    url: "/tasks/{{taskCId}}/focus-color",
+    body: { color: "green" },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "Mark task done",
+    method: "PATCH",
+    url: "/tasks/{{taskCId}}/done",
+    body: { done: true },
+    tests: [
+      status(200),
+      `pm.test('task is done', () => pm.expect(Number(pm.response.json().data.task.is_done)).to.eql(1));`,
+    ],
+  }),
+  request({
+    name: "Task logs record the changes",
+    url: "/tasks/{{taskCId}}/logs",
+    tests: [
+      status(200),
+      `pm.test('has log entries', () => pm.expect(pm.response.json().data).to.be.an('array').that.is.not.empty);`,
+    ],
+  }),
+  request({
+    name: "Archive task",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/tasks/{{taskCId}}/archive",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Archived task is listed in the archive",
+    url: "/tasks/archived?order=DESC&pipelineId={{boardCId}}",
+    tests: [
+      status(200),
+      includesId("task is archived", "pm.response.json().data", "taskCId"),
+    ],
+  }),
+  request({
+    name: "Restore task from archive",
+    method: "PATCH",
+    url: "/tasks/{{taskCId}}/archive-restore",
+    body: { boardId: "{{boardCId}}" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Restored task leaves the archive",
+    url: "/tasks/archived?order=DESC&pipelineId={{boardCId}}",
+    tests: [
+      status(200),
+      excludesId("task is not archived", "pm.response.json().data", "taskCId"),
+    ],
+  }),
+  request({
+    name: "Move task to stage C2",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/tasks/{{taskCId}}/move",
+    body: { stageId: "{{stageC2Id}}", order: 0 },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Task is in stage C2",
+    url: "/pipelines/{{boardCId}}",
+    tests: [
+      status(200),
+      `pm.test('stage C2 holds the task', () => {
+  const stage = pm.response.json().data.pipeline.stages.find((s) => String(s.id) === pm.collectionVariables.get('stageC2Id'));
+  pm.expect(stage.tasks.map((t) => String(t.id))).to.include(pm.collectionVariables.get('taskCId'));
+});`,
+    ],
+  }),
+  request({
+    name: "Create task to archive with its stage",
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Stage archive task",
+      stageId: "{{stageC1Id}}",
+      pipelineId: "{{boardCId}}",
+    },
+    tests: [
+      status(200),
+      save("taskC2Id", "pm.response.json().data.newTask.id"),
+    ],
+  }),
+  request({
+    name: "Archive all tasks in stage C1",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/stages/{{stageC1Id}}/archive-tasks",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Stage tasks are archived",
+    url: "/tasks/archived?order=DESC&pipelineId={{boardCId}}",
+    tests: [
+      status(200),
+      includesId(
+        "stage task is archived",
+        "pm.response.json().data",
+        "taskC2Id",
+      ),
+    ],
+  }),
+  request({
+    name: "Delete archived task",
+    method: "DELETE",
+    url: "/tasks/{{taskC2Id}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Delete stage that has tasks fails",
+    method: "DELETE",
+    url: "/pipelines/{{boardCId}}/stages/{{stageC2Id}}",
+    tests: [status(400), success(false)],
+  }),
+]);
+
+const adminLabels = folder("Labels", [
+  request({
+    name: "Create label",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/labels",
+    body: { name: "Urgent", color: "#ff0000" },
+    tests: [status(200), save("labelCId", "pm.response.json().data.label.id")],
+  }),
+  request({
+    name: "Create label rejects invalid colour",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/labels",
+    body: { name: "Bad", color: "red" },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "List labels",
+    url: "/pipelines/{{boardCId}}/labels",
+    tests: [
+      status(200),
+      includesId(
+        "label is listed",
+        "pm.response.json().data.labels",
+        "labelCId",
+      ),
+    ],
+  }),
+  request({
+    name: "Edit label",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/labels/{{labelCId}}",
+    body: { name: "Very urgent", color: "#aa0000" },
+    tests: [
+      status(200),
+      `pm.test('label updated', () => {
+  const label = pm.response.json().data.label;
+  pm.expect(label.name).to.eql('Very urgent');
+  pm.expect(label.color).to.eql('#aa0000');
+});`,
+    ],
+  }),
+  request({
+    name: "Assign label to task",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/tasks/{{taskCId}}/labels",
+    body: { labelId: "{{labelCId}}" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Task shows the label",
+    url: "/pipelines/{{boardCId}}",
+    tests: [
+      status(200),
+      `pm.test('task has the label', () => {
+  const tasks = pm.response.json().data.pipeline.stages.flatMap((s) => s.tasks || []);
+  const task = tasks.find((t) => String(t.id) === pm.collectionVariables.get('taskCId'));
+  pm.expect(task.assigned_labels.map((l) => String(l.id))).to.include(pm.collectionVariables.get('labelCId'));
+});`,
+    ],
+  }),
+  request({
+    name: "Unassign label from task",
+    method: "DELETE",
+    url: "/pipelines/{{boardCId}}/tasks/{{taskCId}}/labels/{{labelCId}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Delete label",
+    method: "DELETE",
+    url: "/pipelines/{{boardCId}}/labels/{{labelCId}}",
+    tests: [
+      status(200),
+      `pm.test('returns the deleted label', () => pm.expect(String(pm.response.json().data.deletedLabel.id)).to.eql(pm.collectionVariables.get('labelCId')));`,
+    ],
+  }),
+]);
+
+const adminComments = folder("Comments", [
+  request({
+    name: "Add private task comment",
+    method: "POST",
+    url: "/comments",
+    body: {
+      comment: "Private note {{runId}}",
+      typeId: "{{taskCId}}",
+      type: "task",
+      isPrivate: true,
+    },
+    tests: [
+      status(200),
+      success(true),
+      save("commentCId", "pm.response.json().data.newComment.id"),
+    ],
+  }),
+  request({
+    name: "Private comments include it",
+    url: "/comments?typeId={{taskCId}}&type=task&isPrivate=true",
+    tests: [
+      status(200),
+      includesId("comment is listed", "pm.response.json().data", "commentCId"),
+    ],
+  }),
+  request({
+    name: "Public comments do not include it",
+    url: "/comments?typeId={{taskCId}}&type=task&isPrivate=false",
+    tests: [
+      status(200),
+      excludesId(
+        "private comment is not public",
+        "pm.response.json().data",
+        "commentCId",
+      ),
+    ],
+  }),
+  request({
+    name: "Comment rejects unknown type",
+    method: "POST",
+    url: "/comments",
+    body: {
+      comment: "x",
+      typeId: "{{taskCId}}",
+      type: "pipeline",
+      isPrivate: false,
+    },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+]);
+
+const adminMyTasks = folder("My tasks", [
+  request({
+    name: "My tasks lists tasks the admin created",
+    url: "/my-tasks",
+    tests: [
+      status(200),
+      includesId(
+        "created task is listed",
+        "pm.response.json().data.created",
+        "taskCId",
+      ),
+    ],
+  }),
+  request({
+    name: "Comment on own task",
+    method: "POST",
+    url: "/my-tasks/comments",
+    body: { comment: "My task comment {{runId}}", taskId: "{{taskCId}}" },
+    tests: [
+      status(200),
+      save("myTaskCommentId", "pm.response.json().data.newComment.id"),
+    ],
+  }),
+  request({
+    name: "Own task comments include it",
+    url: "/my-tasks/comments?taskId={{taskCId}}",
+    tests: [
+      status(200),
+      includesId(
+        "comment is listed",
+        "pm.response.json().data",
+        "myTaskCommentId",
+      ),
+    ],
+  }),
+]);
+
+const adminCustomFields = folder("Custom fields", [
+  request({
+    name: "Create task custom field",
+    method: "POST",
+    url: "/custom-fields",
+    body: {
+      entityType: "task",
+      entityId: "{{taskCId}}",
+      name: "Budget",
+      description: "",
+      type: "text",
+    },
+    tests: [status(200), save("customFieldCId", "pm.response.json().data.id")],
+  }),
+  request({
+    name: "Create custom field rejects unknown type",
+    method: "POST",
+    url: "/custom-fields",
+    body: {
+      entityType: "task",
+      entityId: "{{taskCId}}",
+      name: "Bad",
+      type: "script",
+    },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "Set custom field value",
+    method: "PATCH",
+    url: "/custom-fields/{{customFieldCId}}/value",
+    body: { entityId: "{{taskCId}}", entityType: "task", value: "1500" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Set custom field default value",
+    method: "PATCH",
+    url: "/custom-fields/{{customFieldCId}}/default-value",
+    body: { value: "0" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Active custom fields include it with its value",
+    url: "/custom-fields?entityType=task&entityId={{taskCId}}&active=true",
+    tests: [
+      status(200),
+      `pm.test('field is listed with value', () => {
+  const field = pm.response.json().data.find((f) => String(f.id) === pm.collectionVariables.get('customFieldCId'));
+  pm.expect(field).to.be.an('object');
+  pm.expect(JSON.stringify(field)).to.include('1500');
+});`,
+    ],
+  }),
+  request({
+    name: "Delete custom field",
+    method: "DELETE",
+    url: "/custom-fields/{{customFieldCId}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Deleted custom field is no longer active",
+    url: "/custom-fields?entityType=task&entityId={{taskCId}}&active=true",
+    tests: [
+      status(200),
+      excludesId(
+        "field is not active",
+        "pm.response.json().data",
+        "customFieldCId",
+      ),
+    ],
+  }),
+  request({
+    name: "Restore custom field",
+    method: "PATCH",
+    url: "/custom-fields/{{customFieldCId}}/restore",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Restored custom field is active again",
+    url: "/custom-fields?entityType=task&entityId={{taskCId}}&active=true",
+    tests: [
+      status(200),
+      includesId(
+        "field is active",
+        "pm.response.json().data",
+        "customFieldCId",
+      ),
+    ],
+  }),
+]);
+
+const adminUsers = folder("Users", [
+  request({
+    name: "Create QuickTasker user",
+    method: "POST",
+    url: "/users",
+    body: {
+      name: "Admin API user {{runId}}",
+      description: "Managed by Newman",
+    },
+    tests: [
+      status(200),
+      save("admQtUserId", "pm.response.json().data.id"),
+      save("admQtPageHash", "pm.response.json().data.page_hash"),
+    ],
+  }),
+  request({
+    name: "List users includes the new user",
+    url: "/users",
+    tests: [
+      status(200),
+      includesId("user is listed", "pm.response.json().data", "admQtUserId"),
+    ],
+  }),
+  request({
+    name: "Get extended user",
+    url: "/users/{{admQtUserId}}/extended",
+    tests: [
+      status(200),
+      `pm.test('returns the user', () => pm.expect(String(pm.response.json().data.id)).to.eql(pm.collectionVariables.get('admQtUserId')));`,
+    ],
+  }),
+  request({
+    name: "Edit user",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}",
+    body: { name: "Admin API user {{runId}} edited", description: "Edited" },
+    tests: [
+      status(200),
+      `pm.test('name updated', () => pm.expect(pm.response.json().data.name).to.eql('Admin API user ' + pm.collectionVariables.get('runId') + ' edited'));`,
+    ],
+  }),
+  request({
+    name: "Assign user to task",
+    method: "POST",
+    url: "/users/{{admQtUserId}}/tasks/{{taskCId}}",
+    body: { user_type: "quicktasker" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "User tasks include the task",
+    url: "/users/{{admQtUserId}}/tasks",
+    tests: [
+      status(200),
+      includesId("task is assigned", "pm.response.json().data", "taskCId"),
+    ],
+  }),
+  request({
+    name: "Assign rejects unknown user type",
+    method: "POST",
+    url: "/users/{{admQtUserId}}/tasks/{{taskCId}}",
+    body: { user_type: "robot" },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "Unassign user from task",
+    method: "DELETE",
+    url: "/users/{{admQtUserId}}/tasks/{{taskCId}}",
+    body: { user_type: "quicktasker" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "User tasks no longer include the task",
+    url: "/users/{{admQtUserId}}/tasks",
+    tests: [
+      status(200),
+      excludesId("task is unassigned", "pm.response.json().data", "taskCId"),
+    ],
+  }),
+  request({
+    name: "Deactivate user",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/status",
+    body: { status: false },
+    tests: [
+      status(200),
+      `pm.test('user is inactive', () => pm.expect(Number(pm.response.json().data.is_active)).to.eql(0));`,
+    ],
+  }),
+  request({
+    name: "Reactivate user",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/status",
+    body: { status: true },
+    tests: [
+      status(200),
+      `pm.test('user is active', () => pm.expect(Number(pm.response.json().data.is_active)).to.eql(1));`,
+    ],
+  }),
+  request({
+    name: "Password reset fails before a password is set",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/password-reset",
+    tests: [status(400), success(false)],
+  }),
+  userPageRequest({
+    name: "User completes setup",
+    method: "POST",
+    url: "/user-page/setup",
+    headerOptions: { code: "{{admQtPageHash}}", session: null },
+    body: { password: "Admin-flow-pass-1" },
+    tests: [status(200), success(true)],
+  }),
+  userPageRequest({
+    name: "User logs in",
+    method: "POST",
+    url: "/user-page/login",
+    headerOptions: { code: "{{admQtPageHash}}", session: null },
+    body: { password: "Admin-flow-pass-1" },
+    tests: [
+      status(200),
+      save("admQtSession", "pm.response.json().data.sessionToken"),
+    ],
+  }),
+  request({
+    name: "Sessions list includes the user",
+    url: "/users/sessions",
+    tests: [
+      status(200),
+      `pm.test('user has a session', () => pm.expect(JSON.stringify(pm.response.json().data)).to.include('Admin API user ' + pm.collectionVariables.get('runId')));`,
+    ],
+  }),
+  request({
+    name: "Reset password",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/password-reset",
+    tests: [status(200), success(true)],
+  }),
+  userPageRequest({
+    name: "Password reset ends existing sessions",
+    url: "/user-page/overview",
+    headerOptions: { code: "{{admQtPageHash}}", session: "{{admQtSession}}" },
+    tests: [status(400), success(false)],
+  }),
+  userPageRequest({
+    name: "User must complete setup again",
+    url: "/user-page/status",
+    headerOptions: { code: "{{admQtPageHash}}", session: null },
+    tests: [
+      status(200),
+      `pm.test('setupCompleted is false', () => pm.expect(pm.response.json().data.setupCompleted).to.eql(false));`,
+    ],
+  }),
+  request({
+    name: "Delete user",
+    method: "DELETE",
+    url: "/users/{{admQtUserId}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Deleted user is not listed",
+    url: "/users",
+    tests: [
+      status(200),
+      excludesId("user is gone", "pm.response.json().data", "admQtUserId"),
+    ],
+  }),
+]);
+
+const adminWpUsers = folder("WordPress user capabilities", [
+  request({
+    name: "List WordPress users",
+    url: "/wp-users?type=all",
+    tests: [
+      status(200),
+      `const limited = pm.response.json().data.find((u) => u.name === pm.variables.get('limitedUser'));
+pm.test('limited user is listed', () => pm.expect(limited).to.be.an('object'));
+pm.collectionVariables.set('limitedWpUserId', limited ? String(limited.id) : '0');`,
+    ],
+  }),
+  request({
+    name: "Limited user cannot read board settings",
+    url: "/pipelines/{{boardCId}}/settings",
+    auth: limitedAuth,
+    tests: [status(403)],
+  }),
+  request({
+    name: "Grant limited user the settings capability",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/capabilities",
+    body: {
+      quicktasker_admin_role: true,
+      quicktasker_admin_role_allow_delete: false,
+      quicktasker_admin_role_manage_users: false,
+      quicktasker_admin_role_manage_settings: true,
+      quicktasker_admin_role_manage_archive: false,
+      quicktasker_access_user_page_app: false,
+      quicktasker_view_my_tasks: false,
+    },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Limited user can now read board settings",
+    url: "/pipelines/{{boardCId}}/settings",
+    auth: limitedAuth,
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Revoke the settings capability",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/capabilities",
+    body: {
+      quicktasker_admin_role: true,
+      quicktasker_admin_role_allow_delete: false,
+      quicktasker_admin_role_manage_users: false,
+      quicktasker_admin_role_manage_settings: false,
+      quicktasker_admin_role_manage_archive: false,
+      quicktasker_access_user_page_app: false,
+      quicktasker_view_my_tasks: false,
+    },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Limited user is blocked again",
+    url: "/pipelines/{{boardCId}}/settings",
+    auth: limitedAuth,
+    tests: [status(403)],
+  }),
+]);
+
+const adminSettings = folder("Settings", [
+  request({
+    name: "Update board settings",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/settings",
+    body: {
+      pipeline_refresh_interval: 45,
+      enable_automation_logs: true,
+      enable_webhook_logs: true,
+    },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Board settings are saved",
+    url: "/pipelines/{{boardCId}}/settings",
+    tests: [
+      status(200),
+      `pm.test('settings reflect the update', () => {
+  const settings = pm.response.json().data.settings;
+  pm.expect(Number(settings.pipeline_refresh_interval)).to.eql(45);
+  pm.expect(Number(settings.enable_automation_logs)).to.eql(1);
+});`,
+    ],
+  }),
+  request({
+    name: "User page custom styles strip markup",
+    method: "PATCH",
+    url: "/settings/user-page-custom-styles",
+    body: { styles: "body { color: red; }</style><script>alert(1)</script>" },
+    tests: [
+      status(200),
+      `pm.test('no tags survive', () => {
+  const styles = JSON.stringify(pm.response.json().data);
+  pm.expect(styles).to.not.include('<script');
+  pm.expect(styles).to.not.include('</style');
+});`,
+    ],
+  }),
+  request({
+    name: "Reset user page custom styles",
+    method: "PATCH",
+    url: "/settings/user-page-custom-styles",
+    body: { styles: "" },
+    tests: [status(200), success(true)],
+  }),
+]);
+
+const adminAutomations = folder("Automations", [
+  request({
+    name: "Create automation: archive tasks when done",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/automations",
+    body: {
+      automationTarget: "task",
+      automationTrigger: "task-done",
+      automationAction: "archive-task",
+    },
+    tests: [status(200), save("automationCId", "pm.response.json().data.id")],
+  }),
+  request({
+    name: "Automation rejects unknown trigger",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/automations",
+    body: {
+      automationTarget: "task",
+      automationTrigger: "moon-phase",
+      automationAction: "archive-task",
+    },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "List automations",
+    url: "/pipelines/{{boardCId}}/automations",
+    tests: [
+      status(200),
+      includesId(
+        "automation is listed",
+        "pm.response.json().data.automations",
+        "automationCId",
+      ),
+    ],
+  }),
+  request({
+    name: "Create task for the automation",
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Auto-archived {{runId}}",
+      stageId: "{{stageC1Id}}",
+      pipelineId: "{{boardCId}}",
+    },
+    tests: [
+      status(200),
+      save("autoTaskId", "pm.response.json().data.newTask.id"),
+    ],
+  }),
+  request({
+    name: "Marking the task done runs the automation",
+    method: "PATCH",
+    url: "/tasks/{{autoTaskId}}/done",
+    body: { done: true },
+    tests: [
+      status(200),
+      `pm.test('automation executed', () => pm.expect(pm.response.json().data.executedAutomations).to.be.an('array').that.is.not.empty);`,
+    ],
+  }),
+  request({
+    name: "Automation archived the task",
+    url: "/tasks/archived?order=DESC&pipelineId={{boardCId}}",
+    tests: [
+      status(200),
+      includesId("task was archived", "pm.response.json().data", "autoTaskId"),
+    ],
+  }),
+  request({
+    name: "Disable automation",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/automations/{{automationCId}}/active",
+    body: { active: false },
+    tests: [
+      status(200),
+      `pm.test('automation is inactive', () => pm.expect(Number(pm.response.json().data.automation.active)).to.eql(0));`,
+    ],
+  }),
+  request({
+    name: "Create task for the disabled automation",
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Not archived {{runId}}",
+      stageId: "{{stageC1Id}}",
+      pipelineId: "{{boardCId}}",
+    },
+    tests: [
+      status(200),
+      save("autoTask2Id", "pm.response.json().data.newTask.id"),
+    ],
+  }),
+  request({
+    name: "Disabled automation does not run",
+    method: "PATCH",
+    url: "/tasks/{{autoTask2Id}}/done",
+    body: { done: true },
+    tests: [
+      status(200),
+      `pm.test('no automation executed', () => pm.expect(pm.response.json().data.executedAutomations).to.be.empty);`,
+    ],
+  }),
+  request({
+    name: "Delete automation",
+    method: "DELETE",
+    url: "/pipelines/{{boardCId}}/automations/{{automationCId}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Deleted automation is not listed",
+    url: "/pipelines/{{boardCId}}/automations",
+    tests: [
+      status(200),
+      excludesId(
+        "automation is gone",
+        "pm.response.json().data.automations",
+        "automationCId",
+      ),
+    ],
+  }),
+]);
+
+const WEBHOOK_RECEIVER = "{{baseUrl}}/wp-json/qt-test/v1";
+
+const adminWebhooks = folder("Webhooks", [
+  request({
+    name: "Create webhook for task creation",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/webhooks",
+    body: {
+      target_type: "task",
+      target_action: "created",
+      webhook_url: `${WEBHOOK_RECEIVER}/capture/qt-api-{{runId}}`,
+      webhook_confirm: false,
+    },
+    tests: [
+      status(200),
+      save("webhookCId", "pm.response.json().data.webhook.id"),
+    ],
+  }),
+  request({
+    name: "Webhook rejects unknown action",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/webhooks",
+    body: {
+      target_type: "task",
+      target_action: "exploded",
+      webhook_url: "https://example.com",
+      webhook_confirm: false,
+    },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "List webhooks",
+    url: "/pipelines/{{boardCId}}/webhooks",
+    tests: [
+      status(200),
+      includesId(
+        "webhook is listed",
+        "pm.response.json().data.webhooks",
+        "webhookCId",
+      ),
+    ],
+  }),
+  request({
+    name: "Creating a task fires the webhook",
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Webhook task {{runId}}",
+      stageId: "{{stageC1Id}}",
+      pipelineId: "{{boardCId}}",
+    },
+    tests: [
+      status(200),
+      save("webhookTaskId", "pm.response.json().data.newTask.id"),
+    ],
+  }),
+  request({
+    name: "Receiver got the webhook",
+    rawUrl: `${WEBHOOK_RECEIVER}/captured/qt-api-{{runId}}`,
+    auth: noAuth,
+    tests: [
+      `// Delivery may be asynchronous: poll this request up to 20 times.
+const captured = pm.response.json();
+const attempts = Number(pm.collectionVariables.get('webhookPollAttempts') || 0);
+if ((!Array.isArray(captured) || captured.length === 0) && attempts < 20) {
+  pm.collectionVariables.set('webhookPollAttempts', String(attempts + 1));
+  setTimeout(() => {}, 250);
+  pm.execution.setNextRequest(pm.info.requestName);
+} else {
+  pm.collectionVariables.set('webhookPollAttempts', '0');
+  pm.test('webhook payload describes the new task', () => {
+    pm.expect(captured).to.be.an('array').that.is.not.empty;
+    pm.expect(JSON.stringify(captured[0].body)).to.include('Webhook task ' + pm.collectionVariables.get('runId'));
+  });
+}`,
+    ],
+  }),
+  request({
+    name: "Deactivate webhook",
+    method: "PATCH",
+    url: "/webhooks/{{webhookCId}}",
+    body: { active: false },
+    tests: [
+      status(200),
+      `pm.test('webhook is inactive', () => pm.expect(Number(pm.response.json().data.webhook.active)).to.eql(0));`,
+    ],
+  }),
+  request({
+    name: "Delete webhook",
+    method: "DELETE",
+    url: "/webhooks/{{webhookCId}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Clear captured webhooks",
+    method: "DELETE",
+    rawUrl: `${WEBHOOK_RECEIVER}/captured/qt-api-{{runId}}`,
+    auth: noAuth,
+    tests: [status(200)],
+  }),
+]);
+
+const uploadTo = (name, src, tests) =>
+  request({
+    name,
+    method: "POST",
+    url: "/uploads",
+    formData: [
+      { key: "entity_id", value: "{{taskCId}}" },
+      { key: "entity_type", value: "task" },
+      { key: "file_to_upload", src },
+    ],
+    tests,
+  });
+
+const adminUploads = folder("Uploads", [
+  uploadTo("Upload a text attachment", "tests/api/fixtures/attachment.txt", [
+    status(200),
+    success(true),
+    save("uploadCId", "pm.response.json().data.upload.id"),
+  ]),
+  uploadTo("PHP files are rejected", "tests/api/fixtures/not-allowed.php", [
+    status(400),
+    success(false),
+  ]),
+  uploadTo(
+    "Files whose content does not match the extension are rejected",
+    "tests/api/fixtures/fake-image.png",
+    [status(400), success(false)],
+  ),
+  request({
+    name: "List task uploads",
+    url: "/uploads?entity_id={{taskCId}}&entity_type=task",
+    tests: [
+      status(200),
+      includesId(
+        "upload is listed",
+        "pm.response.json().data.uploads",
+        "uploadCId",
+      ),
+    ],
+  }),
+  request({
+    name: "Delete upload",
+    method: "DELETE",
+    url: "/uploads/{{uploadCId}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Deleted upload is not listed",
+    url: "/uploads?entity_id={{taskCId}}&entity_type=task",
+    tests: [
+      status(200),
+      excludesId(
+        "upload is gone",
+        "pm.response.json().data.uploads",
+        "uploadCId",
+      ),
+    ],
+  }),
+]);
+
+const adminImport = folder("Import", [
+  request({
+    name: "Import a QuickTasker board",
+    method: "POST",
+    url: "/import",
+    body: {
+      source: "QUICKTASKER-IMPORT",
+      data: {
+        pipelineName: "Imported {{runId}}",
+        pipelineDescription: "Imported by Newman",
+        stages: [
+          { stageId: "s1", stageName: "Imported stage", stageDescription: "" },
+        ],
+        tasks: [
+          {
+            taskId: "t1",
+            taskName: "Imported task",
+            taskDescription: "",
+            stageId: "s1",
+            archived: false,
+            dueDate: null,
+            taskCompletedAt: null,
+            assignedLabels: [
+              { labelId: "l1", labelName: "Imported label", color: "#123456" },
+            ],
+            customFields: [],
+          },
+        ],
+        labels: [
+          { labelId: "l1", labelName: "Imported label", color: "#123456" },
+        ],
+        taskComments: [],
+      },
+    },
+    tests: [
+      status(200),
+      success(true),
+      save("importedBoardId", "pm.response.json().data.pipeline.id"),
+    ],
+  }),
+  request({
+    name: "Imported board has its stage and task",
+    url: "/pipelines/{{importedBoardId}}",
+    tests: [
+      status(200),
+      `pm.test('stage and task were imported', () => {
+  const stages = pm.response.json().data.pipeline.stages;
+  pm.expect(stages.map((s) => s.name)).to.include('Imported stage');
+  pm.expect(stages.flatMap((s) => s.tasks || []).map((t) => t.name)).to.include('Imported task');
+});`,
+    ],
+  }),
+  request({
+    name: "Import rejects malformed data",
+    method: "POST",
+    url: "/import",
+    body: { source: "QUICKTASKER-IMPORT", data: { pipelineName: "Broken" } },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "Delete imported board",
+    method: "DELETE",
+    url: "/pipelines/{{importedBoardId}}",
+    tests: [status(200), success(true)],
+  }),
+]);
+
+const adminLogsAndNotifications = folder("Logs and notifications", [
+  request({
+    name: "Board logs",
+    url: "/logs?type=pipeline&typeId={{boardCId}}",
+    tests: [
+      status(200),
+      `pm.test('board has log entries', () => pm.expect(pm.response.json().data).to.be.an('array').that.is.not.empty);`,
+    ],
+  }),
+  request({
+    name: "Global logs",
+    url: "/global-logs?order=DESC&numberOfLogs=5",
+    tests: [
+      status(200),
+      `pm.test('returns at most 5 logs', () => pm.expect(pm.response.json().data.length).to.be.at.most(5));`,
+    ],
+  }),
+  request({
+    name: "Notifications",
+    url: "/notifications",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Mark missing notification read fails",
+    method: "POST",
+    url: "/notifications/999999999/read",
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Mark all notifications read",
+    method: "POST",
+    url: "/notifications/read-all",
+    body: { notification_ids: [] },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Save notification preferences",
+    method: "POST",
+    url: "/notifications/preferences",
+    body: { filter: "all", max_age_hours: 24 },
+    tests: [
+      status(200),
+      `pm.test('preferences saved', () => pm.expect(pm.response.json().data.filter).to.eql('all'));`,
+    ],
+  }),
+]);
+
+const adminCleanup = folder("Cleanup", [
+  request({
+    name: "Delete board C",
+    method: "DELETE",
+    url: "/pipelines/{{boardCId}}",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Deleted board is gone",
+    url: "/pipelines/{{boardCId}}",
+    tests: [status(400), success(false)],
+  }),
+]);
+
+const adminApi = folder(
+  "04 Admin API",
+  [
+    adminPermissions,
+    adminBoards,
+    adminStages,
+    adminTasks,
+    adminLabels,
+    adminComments,
+    adminMyTasks,
+    adminCustomFields,
+    adminUsers,
+    adminWpUsers,
+    adminSettings,
+    adminAutomations,
+    adminWebhooks,
+    adminUploads,
+    adminImport,
+    adminLogsAndNotifications,
+    adminCleanup,
+  ],
+  "Private admin API, authenticated with WordPress application passwords.",
+);
+
+/* ------------------------------------------------------------------ */
 /* 99 Teardown                                                          */
 /* ------------------------------------------------------------------ */
 
@@ -1681,7 +3112,7 @@ const collection = {
     },
   ],
   variable: runtimeVariables.map((key) => ({ key, value: "" })),
-  item: [setup, tokenApi, publicApi, userPageApi, teardown],
+  item: [setup, tokenApi, publicApi, userPageApi, adminApi, teardown],
 };
 
 fs.writeFileSync(OUTPUT, JSON.stringify(collection, null, 2) + "\n");

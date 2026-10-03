@@ -3,9 +3,12 @@
 /**
  * Runs the QuickTasker Postman collection with Newman against wp-env.
  *
- * Creates a fresh WordPress application password for the admin user via
- * wp-cli unless ADMIN_APP_PASSWORD is already set (e.g. to target another site
- * together with API_BASE_URL / ADMIN_USER).
+ * Creates fresh WordPress application passwords via wp-cli for the admin user
+ * and for two low-privilege users used by the admin API permission tests:
+ * a subscriber and a "limited" user that only has the base QuickTasker admin
+ * capability. To target another site, set API_BASE_URL plus ADMIN_USER /
+ * ADMIN_APP_PASSWORD, SUBSCRIBER_USER / SUBSCRIBER_APP_PASSWORD and
+ * LIMITED_USER / LIMITED_APP_PASSWORD instead.
  */
 const { execSync, spawnSync } = require("child_process");
 const path = require("path");
@@ -14,6 +17,8 @@ const NEWMAN_VERSION = "6.2.2";
 const APP_PASSWORD_NAME = "newman";
 const isWindows = process.platform === "win32";
 const adminUser = process.env.ADMIN_USER || "admin";
+const subscriberUser = process.env.SUBSCRIBER_USER || "qt-api-subscriber";
+const limitedUser = process.env.LIMITED_USER || "qt-api-limited";
 
 function wpCli(command) {
   const output = execSync(`npx wp-env run cli wp ${command}`, {
@@ -26,26 +31,56 @@ function wpCli(command) {
     .filter(Boolean);
 }
 
-function createAppPassword() {
+function createAppPassword(user) {
   // Remove passwords left over from previous runs so they don't pile up.
   const oldUuids = wpCli(
-    `user application-password list ${adminUser} --name=${APP_PASSWORD_NAME} --field=uuid`,
+    `user application-password list ${user} --name=${APP_PASSWORD_NAME} --field=uuid`,
   );
   oldUuids.forEach((uuid) =>
-    wpCli(`user application-password delete ${adminUser} ${uuid}`),
+    wpCli(`user application-password delete ${user} ${uuid}`),
   );
 
   const lines = wpCli(
-    `user application-password create ${adminUser} ${APP_PASSWORD_NAME} --porcelain`,
+    `user application-password create ${user} ${APP_PASSWORD_NAME} --porcelain`,
   );
   return lines[lines.length - 1];
 }
 
-const adminAppPassword = process.env.ADMIN_APP_PASSWORD || createAppPassword();
+function ensureSubscriber(user, capabilities = []) {
+  try {
+    wpCli(`user get ${user} --field=ID`);
+  } catch {
+    wpCli(
+      `user create ${user} ${user}@example.com --role=subscriber --porcelain`,
+    );
+  }
+  capabilities.forEach((cap) => wpCli(`user add-cap ${user} ${cap}`));
+}
+
+function credentialsFromWpCli() {
+  ensureSubscriber(subscriberUser);
+  ensureSubscriber(limitedUser, ["quicktasker_admin_role"]);
+
+  return {
+    adminAppPassword: createAppPassword(adminUser),
+    subscriberAppPassword: createAppPassword(subscriberUser),
+    limitedAppPassword: createAppPassword(limitedUser),
+  };
+}
+
+const credentials = process.env.ADMIN_APP_PASSWORD
+  ? {
+      adminAppPassword: process.env.ADMIN_APP_PASSWORD,
+      subscriberAppPassword: process.env.SUBSCRIBER_APP_PASSWORD,
+      limitedAppPassword: process.env.LIMITED_APP_PASSWORD,
+    }
+  : credentialsFromWpCli();
 
 const envVar = [
   { key: "adminUser", value: adminUser },
-  { key: "adminAppPassword", value: adminAppPassword },
+  { key: "subscriberUser", value: subscriberUser },
+  { key: "limitedUser", value: limitedUser },
+  ...Object.entries(credentials).map(([key, value]) => ({ key, value })),
 ];
 if (process.env.API_BASE_URL) {
   envVar.push({ key: "baseUrl", value: process.env.API_BASE_URL });
@@ -63,6 +98,8 @@ const result = spawnSync(
     "--environment",
     path.join(__dirname, "wp-env.postman_environment.json"),
     ...envVar.flatMap(({ key, value }) => ["--env-var", `${key}=${value}`]),
+    "--working-dir",
+    path.join(__dirname, "..", ".."),
     "--reporters",
     "cli,junit",
     "--reporter-junit-export",
