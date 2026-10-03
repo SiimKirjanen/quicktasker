@@ -186,15 +186,14 @@ class StageServiceTest extends TestCase {
      * Requires WordPress environment with $wpdb and ServiceLocator.
      * 
      * Test scenarios:
-     * 1. Should check if 'name' key exists in $args using array_key_exists()
-     * 2. Should check if 'description' key exists in $args
-     * 3. Should throw Exception 'Required fields are missing' if either key is missing
-     * 4. Should update TABLE_WP_QUICKTASKER_PIPELINE_STAGES with name, description, updated_at
-     * 5. Should update WHERE id = $stageId
-     * 6. Should throw Exception 'Failed to update the stage' if update fails (=== false)
-     * 7. Should return updated stage from StageRepository->getStageById($stageId)
-     * 
-     * Note: Uses array_key_exists() which allows null values, different from empty() check
+     * 1. Should only update the 'name' and/or 'description' keys present in $args
+     * 2. Should throw Exception 'Required fields are missing' if neither key is present
+     * 3. Should update TABLE_WP_QUICKTASKER_PIPELINE_STAGES with the present fields and updated_at
+     * 4. Should update WHERE id = $stageId
+     * 5. Should throw Exception 'Failed to update the stage' if update fails (=== false)
+     * 6. Should return updated stage from StageRepository->getStageById($stageId)
+     *
+     * Note: Key presence is checked, so null values are still written
      * 
      * Dependencies:
      * - global $wpdb with update()

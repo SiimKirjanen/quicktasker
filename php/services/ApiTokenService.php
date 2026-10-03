@@ -37,11 +37,11 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
         /**
          * Generates a random token string of the specified length, prefixed with the pipeline ID.
          *
-         * @param int $length The length of the random part of the token (excluding the pipeline ID and separator). Defaults to 32.
+         * @param int $length The number of random bytes (the hex part of the token is twice as long).
          * @param int|string $pipelineId The ID of the pipeline to be included in the token.
          * @return string The generated token string in the format "{pipelineId}-{randomString}".
          */
-        public static function generateRandomToken($length = 32, $pipelineId)
+        public static function generateRandomToken($length, $pipelineId)
         {
             return $pipelineId . '-' . bin2hex(random_bytes($length));
         }
