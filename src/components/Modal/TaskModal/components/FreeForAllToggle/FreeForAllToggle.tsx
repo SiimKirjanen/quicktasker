@@ -38,7 +38,11 @@ function FreeForAllToggle({
 
   return (
     <div className="wpqt-flex wpqt-items-center wpqt-gap-2">
-      <Toggle checked={value} handleChange={handleChange} />
+      <Toggle
+        checked={value}
+        handleChange={handleChange}
+        dataTestId="free-for-all-toggle"
+      />
 
       {loading && <Loading ovalSize="20" />}
     </div>

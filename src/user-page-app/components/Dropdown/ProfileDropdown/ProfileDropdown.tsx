@@ -40,6 +40,7 @@ function ProfileDropdown() {
   return (
     <WPQTDropdown
       anchor="bottom end"
+      data-testid="profile-dropdown"
       menuBtn={({ active }) => (
         <div>
           {profilePictureUrl ? (
