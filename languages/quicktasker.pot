@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.58.0\n"
+"Project-Id-Version: QuickTasker 1.60.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-20T17:53:19+00:00\n"
+"POT-Creation-Date: 2026-10-04T12:00:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -90,7 +90,7 @@ msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:662
-#: php/api/user-page-api.php:1017
+#: php/api/user-page-api.php:1024
 #, php-format
 msgid "Stage was changed for task \"%s\""
 msgstr ""
@@ -121,14 +121,14 @@ msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:1300
-#: php/api/user-page-api.php:1125
+#: php/api/user-page-api.php:1132
 #, php-format
 msgid "Task \"%s\" was marked done"
 msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:1302
-#: php/api/user-page-api.php:1127
+#: php/api/user-page-api.php:1134
 #, php-format
 msgid "Task \"%s\" was marked not done"
 msgstr ""
@@ -145,21 +145,15 @@ msgstr ""
 msgid "%1$s unassigned you from task \"%2$s\""
 msgstr ""
 
-#. translators: %s = task name
-#: php/api/admin-api.php:2787
-#, php-format
-msgid "A private comment was added to task \"%s\""
+#: php/api/admin-api.php:3310
+msgid "No valid settings provided"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:2789
 #: php/api/user-page-api.php:437
+#: php/services/CommentService.php:115
 #, php-format
 msgid "A public comment was added to task \"%s\""
-msgstr ""
-
-#: php/api/admin-api.php:3265
-msgid "No valid settings provided"
 msgstr ""
 
 #. translators: %s = task name
@@ -200,6 +194,12 @@ msgstr ""
 
 #: php/filters.php:122
 msgid "Failed to generate JSON"
+msgstr ""
+
+#. translators: %s = task name
+#: php/services/CommentService.php:113
+#, php-format
+msgid "A private comment was added to task \"%s\""
 msgstr ""
 
 #: php/services/export/ExportService.php:64
@@ -1265,6 +1265,10 @@ msgid "Failed to fetch users"
 msgstr ""
 
 #: build/app.js:1
+msgid "Failed to fetch WordPress users"
+msgstr ""
+
+#: build/app.js:1
 msgid "Failed to assign user"
 msgstr ""
 
@@ -1700,7 +1704,15 @@ msgid "The logs page where you can see all logs and filter them."
 msgstr ""
 
 #: build/app.js:1
+msgid "Task comments"
+msgstr ""
+
+#: build/app.js:1
 msgid "Search tasks"
+msgstr ""
+
+#: build/app.js:1
+msgid "View comments"
 msgstr ""
 
 #: build/app.js:1
@@ -2415,11 +2427,15 @@ msgid "Role"
 msgstr ""
 
 #: build/app.js:1
+msgid "You cannot change your own permissions."
+msgstr ""
+
+#: build/app.js:1
 msgid "Access to plugin admin area"
 msgstr ""
 
 #: build/app.js:1
-msgid "Access to user management"
+msgid "Access to QuickTasker user management"
 msgstr ""
 
 #: build/app.js:1
@@ -2455,11 +2471,11 @@ msgid "No WordPress users without administrator privileges found"
 msgstr ""
 
 #: build/app.js:1
-msgid "WordPress users"
+msgid "QuickTaskers"
 msgstr ""
 
 #: build/app.js:1
-msgid "QuickTaskers"
+msgid "WordPress users"
 msgstr ""
 
 #: build/app.js:1
@@ -2467,6 +2483,10 @@ msgid ""
 "Manage access for users of this plugin.\n"
 " WordPress admins have full access by default. Other WordPress users have no access by default but can be granted permissions.\n"
 " QuickTaskers are plugin-managed users who access tasks through the tasks app and have no access to the WordPress admin area."
+msgstr ""
+
+#: build/app.js:1
+msgid "Manage QuickTaskers, the plugin-managed users who access tasks through the tasks app and have no access to the WordPress admin area."
 msgstr ""
 
 #: build/app.js:1
