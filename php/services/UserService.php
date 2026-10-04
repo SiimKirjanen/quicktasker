@@ -286,29 +286,63 @@ if (!class_exists('WPQT\User\UserService')) {
         /**
          * Deletes a user.
          *
+         * Soft-deletes and deactivates the user, revokes all their sessions and
+         * removes their task assignments so the deleted user loses all access.
+         *
          * @param int $userId The ID of the user to delete.
-         * @return bool True if the user was successfully deleted, false otherwise.
+         * @return object The user as it was before deletion.
          * @throws Exception If the user deletion fails.
          */
         public function deleteUser($userId)
         {
             global $wpdb;
 
+            // Fetch before deleting: the lookup excludes deleted users.
+            $user = ServiceLocator::get('UserRepository')->getQuicktaskerUserById($userId);
+
+            if (!$user) {
+                throw new \Exception('User not found');
+            }
+
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USERS,
                 [
                     'deleted'    => 1,
+                    'is_active'  => 0,
                     'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 ],
                 ['id' => $userId],
-                ['%d', '%s']
+                ['%d', '%d', '%s']
             );
 
             if (!$result) {
                 throw new \Exception('Failed to delete a user');
             }
 
-            return ServiceLocator::get('UserRepository')->getQuicktaskerUserById($userId);
+            $sessionsDeleted = $wpdb->delete(
+                TABLE_WP_QUICKTASKER_USER_SESSIONS,
+                ['user_id' => $userId],
+                ['%d']
+            );
+
+            if (false === $sessionsDeleted) {
+                throw new \Exception('Failed to delete user sessions');
+            }
+
+            $assignmentsDeleted = $wpdb->delete(
+                TABLE_WP_QUICKTASKER_USER_TASK,
+                [
+                    'user_id'   => $userId,
+                    'user_type' => WP_QT_QUICKTASKER_USER_TYPE,
+                ],
+                ['%d', '%s']
+            );
+
+            if (false === $assignmentsDeleted) {
+                throw new \Exception('Failed to delete user task assignments');
+            }
+
+            return $user;
         }
 
         /**

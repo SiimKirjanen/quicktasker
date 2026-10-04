@@ -9,6 +9,7 @@ import {
 } from './utils/board-helpers';
 import { addComment } from './utils/comment-helpers';
 import {
+  assignQuickTaskerToTask,
   assignWordPressUserToTask,
   createQuickTaskerUser,
   createWPUser,
@@ -32,6 +33,8 @@ import {
   getQuickTaskerUserPageUrl,
   openAnonymousPage,
   completeQuickTaskerSetup,
+  loginAsQuickTasker,
+  attemptQuickTaskerLoginViaApi,
 } from './utils/tasks-app-helpers';
 
 // ── Shared setup helpers ──────────────────────────────────────────────────────
@@ -458,5 +461,57 @@ test.describe('Tasks App – QuickTasker User First Login Flow', () => {
     ).toBeVisible();
     await expect(anonPage.getByText('Please complete the setup')).not.toBeVisible();
     await context.close();
+  });
+});
+
+test.describe('Tasks App – Deleted QuickTasker User', () => {
+  test('deleting an active user revokes their session and blocks logging in again', async ({ page, browser }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const userName = generateUniqueName('TA-DEL-User');
+    const boardName = generateUniqueName('TA-DEL-Board');
+    const stageName = generateUniqueName('TA-DEL-Stage');
+    const taskName = generateUniqueName('TA-DEL-Task');
+    const password = 'qt-pass-123';
+
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, userName);
+    await navigateToUserDetailPage(page, userName);
+    const userPageUrl = await getQuickTaskerUserPageUrl(page);
+
+    await setupBoardWithTask(page, boardName, stageName, taskName);
+    await assignQuickTaskerToTask(page, taskName, userName);
+
+    // The QuickTasker user logs in and sees their assigned task
+    const { context, page: userPage } = await openAnonymousPage(browser);
+    await completeQuickTaskerSetup(userPage, userPageUrl, password);
+    await loginAsQuickTasker(userPage, password);
+    await userPage.goto(`${userPageUrl}#/user-tasks`);
+    await expect(getTasksAppTaskCard(userPage, taskName)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+    // Admin deletes the user while they are still active and logged in
+    await navigateToQuickTaskersTab(page);
+    await navigateToUserDetailPage(page, userName);
+    await page.getByText('Delete user').click();
+    await expect(page).toHaveURL(/#\/user-management$/, { timeout: TIMEOUTS.NAVIGATION });
+
+    // The existing session no longer grants access. Reload: the page is
+    // already on this URL, so goto would only change the hash.
+    await userPage.reload();
+    await expect(userPage.getByRole('heading', { name: 'User is not active' })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(getTasksAppTaskCard(userPage, taskName)).not.toBeVisible();
+    await context.close();
+
+    // A fresh visit gets no login form, and the backend rejects the old password
+    const { context: freshContext, page: freshPage } = await openAnonymousPage(browser);
+    await freshPage.goto(userPageUrl);
+    await expect(freshPage.getByRole('heading', { name: 'User is not active' })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(freshPage.getByText('Please log in to continue')).not.toBeVisible();
+    const loginAttempt = await attemptQuickTaskerLoginViaApi(freshPage, userPageUrl, password);
+    expect(loginAttempt.success).toBe(false);
+    await freshContext.close();
   });
 });

@@ -67,6 +67,42 @@ export async function openAnonymousPage(
 }
 
 /**
+ * Log in as a QuickTasker user through the tasks app UI.
+ * Must already be on the LoginPage. Leaves the page on the homepage.
+ */
+export async function loginAsQuickTasker(page: Page, password: string): Promise<void> {
+  await page.getByTestId('password-input').fill(password);
+  await page.getByRole('button', { name: 'Login' }).click();
+  await expect(page.getByText(/Assigned tasks:/)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+}
+
+/**
+ * Call the QuickTasker login endpoint directly, bypassing the UI. Use when the
+ * UI hides the login form but the backend must still be shown to reject the
+ * login. Must already be on the tasks app page (it provides the API nonce).
+ */
+export async function attemptQuickTaskerLoginViaApi(
+  page: Page,
+  userPageUrl: string,
+  password: string,
+): Promise<{ success: boolean }> {
+  const pageHash = new URL(userPageUrl).searchParams.get('code');
+  if (!pageHash) throw new Error('User page URL is missing the code param');
+  const nonce = await page.evaluate(
+    () => (window as unknown as { wpqt_user: { userApiNonce: string } }).wpqt_user.userApiNonce,
+  );
+  const response = await page.request.post('/wp-json/wpqt/v1/user-page/login', {
+    headers: {
+      'X-WPQT-USER-PAGE-CODE': pageHash,
+      'X-WPQT-USER-API-Nonce': nonce,
+    },
+    data: { password },
+  });
+  const body = await response.json();
+  return { success: body.success === true };
+}
+
+/**
  * Walk through the QuickTasker user setup form (set + repeat password, submit).
  * Leaves the page on the LoginPage.
  */
