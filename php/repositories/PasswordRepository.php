@@ -19,7 +19,7 @@ if (!class_exists('WPQT\Password\PasswordRepository')) {
                     FROM ' . TABLE_WP_QUICKTASKER_USERS . ' AS a
                     INNER JOIN ' . TABLE_WP_QUICKTASKER_USER_PAGES . ' AS b
                     ON a.id = b.user_id
-                    WHERE b.page_hash = %s',
+                    WHERE b.page_hash = %s AND a.deleted = 0',
                     $hash
                 )
             );

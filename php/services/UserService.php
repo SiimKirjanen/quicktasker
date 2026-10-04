@@ -286,29 +286,73 @@ if (!class_exists('WPQT\User\UserService')) {
         /**
          * Deletes a user.
          *
+         * Soft-deletes and deactivates the user, revokes all their sessions and
+         * removes their task assignments so the deleted user loses all access.
+         * Unassigning from non-archived tasks runs the same logs, automations
+         * and webhooks as an admin unassigning the user by hand.
+         *
          * @param int $userId The ID of the user to delete.
-         * @return bool True if the user was successfully deleted, false otherwise.
+         * @return object The user as it was before deletion.
          * @throws Exception If the user deletion fails.
          */
         public function deleteUser($userId)
         {
             global $wpdb;
 
+            // Fetch before deleting: the lookup excludes deleted users.
+            $user = ServiceLocator::get('UserRepository')->getQuicktaskerUserById($userId);
+
+            if (!$user) {
+                throw new \Exception('User not found');
+            }
+
+            $assignedTasks = ServiceLocator::get('TaskRepository')->getTasksAssignedToUser($userId);
+
+            foreach ($assignedTasks as $assignedTask) {
+                $task = $this->removeTaskFromUser($userId, $assignedTask->id);
+                $this->handleTaskUnassignedByAdmin($task, $user, WP_QT_QUICKTASKER_USER_TYPE);
+            }
+
             $result = $wpdb->update(
                 TABLE_WP_QUICKTASKER_USERS,
                 [
                     'deleted'    => 1,
+                    'is_active'  => 0,
                     'updated_at' => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 ],
                 ['id' => $userId],
-                ['%d', '%s']
+                ['%d', '%d', '%s']
             );
 
             if (!$result) {
                 throw new \Exception('Failed to delete a user');
             }
 
-            return ServiceLocator::get('UserRepository')->getQuicktaskerUserById($userId);
+            $sessionsDeleted = $wpdb->delete(
+                TABLE_WP_QUICKTASKER_USER_SESSIONS,
+                ['user_id' => $userId],
+                ['%d']
+            );
+
+            if (false === $sessionsDeleted) {
+                throw new \Exception('Failed to delete user sessions');
+            }
+
+            // Only archived-task assignments remain at this point.
+            $assignmentsDeleted = $wpdb->delete(
+                TABLE_WP_QUICKTASKER_USER_TASK,
+                [
+                    'user_id'   => $userId,
+                    'user_type' => WP_QT_QUICKTASKER_USER_TYPE,
+                ],
+                ['%d', '%s']
+            );
+
+            if (false === $assignmentsDeleted) {
+                throw new \Exception('Failed to delete user task assignments');
+            }
+
+            return $user;
         }
 
         /**
@@ -406,6 +450,70 @@ if (!class_exists('WPQT\User\UserService')) {
             }
 
             return ServiceLocator::get('TaskRepository')->getTaskById($taskId);
+        }
+
+        /**
+         * Run the follow-up actions for an admin unassigning a user from a task:
+         * log it on the task and the user, trigger matching automations and
+         * dispatch webhooks.
+         *
+         * @param object $task The task the user was unassigned from.
+         * @param object $user The unassigned user.
+         * @param string $userType The type of the unassigned user. (quicktasker or wp-user)
+         * @return object Automation execution results.
+         */
+        public function handleTaskUnassignedByAdmin($task, $user, $userType)
+        {
+            $logService = ServiceLocator::get('LogService');
+            $adminUserId = get_current_user_id();
+
+            $logService->log('Task ' . $task->name . ' unassigned from ' . $user->name, [
+                'type'          => WP_QT_LOG_TYPE_TASK,
+                'type_id'       => $task->id,
+                'user_id'       => $adminUserId,
+                'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                'created_by_id' => $adminUserId,
+                'pipeline_id'   => $task->pipeline_id
+            ]);
+
+            $logService->log('User ' . $user->name . ' unassigned from ' . $task->name . ' task', [
+                'type'          => WP_QT_WORDPRESS_USER_TYPE === $userType ? WP_QT_LOG_TYPE_WP_USER : WP_QT_LOG_TYPE_QUICKTASKER_USER,
+                'type_id'       => $user->id,
+                'user_id'       => $adminUserId,
+                'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                'created_by_id' => $adminUserId,
+                'pipeline_id'   => $task->pipeline_id
+            ]);
+
+            $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
+                $task->pipeline_id,
+                $task->id,
+                WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
+                WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED,
+                $user
+            );
+
+            ServiceLocator::get('WebhookService')->handleWebhooks(
+                $task->pipeline_id,
+                [
+                    [
+                        'data' => [
+                            'relatedObject' => $task,
+                            'extraData'     => [
+                                'unassigned_user_id'   => $user->id,
+                                'unassigned_user_name' => $user->name,
+                                'unassigned_user_type' => $userType
+                            ]
+                        ],
+                        'webhookData' => [
+                            'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
+                            'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED,
+                        ]
+                    ]
+                ]
+            );
+
+            return $executionResults;
         }
 
         /**

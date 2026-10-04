@@ -256,7 +256,7 @@ if (!class_exists('WPQT\User\UserRepository')) {
 
             $result = $wpdb->get_var(
                 $wpdb->prepare(
-                    'SELECT COUNT(*) FROM ' . TABLE_WP_QUICKTASKER_USERS . ' WHERE id = %d AND is_active = 1',
+                    'SELECT COUNT(*) FROM ' . TABLE_WP_QUICKTASKER_USERS . ' WHERE id = %d AND is_active = 1 AND deleted = 0',
                     $userId
                 )
             );

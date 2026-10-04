@@ -49,7 +49,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                             throw new WPQTException('User page not found', true);
                         }
                         $hasSetupCompleted = ServiceLocator::get('UserPageService')->checkIfUserPageSetupCompleted($userPage->user_id);
-                        $isUserActive = (bool) $userPage->is_active;
+                        $isUserActive = ServiceLocator::get('UserRepository')->isUserActive($userPage->user_id);
                         $userId = $userPage->user_id;
                         $userName = $userPage->name;
                     } else {
@@ -99,6 +99,11 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     }
 
                     $userPage = $userPageRepository->getPageUserByHash($requestData['userPageHash']);
+
+                    if (!ServiceLocator::get('UserRepository')->isUserActive($userPage->user_id)) {
+                        throw new WPQTException('User is not active', true);
+                    }
+
                     $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage->user_id);
 
                     if ($hasSetupCompleted) {
@@ -147,13 +152,18 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         throw new WPQTException('Password is required');
                     }
 
+                    $userPage = $userPageRepository->getPageUserByHash($requestData['userPageHash']);
+
+                    if (!ServiceLocator::get('UserRepository')->isUserActive($userPage->user_id)) {
+                        throw new WPQTException('User is not active', true);
+                    }
+
                     $passwordMatch = $passwordService->verifyPassword($requestData['userPageHash'], $data['password']);
 
                     if (!$passwordMatch) {
                         throw new WPQTException('Invalid password', true);
                     }
 
-                    $userPage = $userPageRepository->getPageUserByHash($requestData['userPageHash']);
                     $userSession = $sessionService->createSession($userPage->user_id, $requestData['userPageHash']);
                     $logService->log('User logged in', [
                         'user_id'    => $userPage->user_id,
