@@ -253,38 +253,46 @@ const UserModalContent = () => {
               }}
             />
           )}
-          {isUserAllowedToDelete && (
-            <WPQTConfirmTooltip
-              confirmMessage={__(
-                "Are you sure you want to delete this user?",
-                "quicktasker",
-              )}
-              onConfirm={async () => {
-                setIsDeleteLoading(true);
-                await deleteUser(userToEdit!.id, (userId) => {
-                  userDispatch({
-                    type: DELETE_USER,
-                    payload: userId,
-                  });
-                  modalDispatch({
-                    type: CLOSE_USER_MODAL,
-                  });
+          <WPQTConfirmTooltip
+            confirmMessage={__(
+              "Are you sure you want to delete this user?",
+              "quicktasker",
+            )}
+            onConfirm={async () => {
+              setIsDeleteLoading(true);
+              await deleteUser(userToEdit!.id, (userId) => {
+                userDispatch({
+                  type: DELETE_USER,
+                  payload: userId,
                 });
-                setIsDeleteLoading(false);
-              }}
-              containerClassName="wpqt-flex"
-            >
-              {({ onClick }) => (
-                <WPQTIconButton
-                  icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-                  text={__("Delete user", "quicktasker")}
-                  loading={isDeleteLoading}
-                  onClick={onClick}
-                  className="wpqt-w-full"
-                />
-              )}
-            </WPQTConfirmTooltip>
-          )}
+                modalDispatch({
+                  type: CLOSE_USER_MODAL,
+                });
+              });
+              setIsDeleteLoading(false);
+            }}
+            containerClassName="wpqt-flex"
+          >
+            {({ onClick }) => (
+              <WPQTIconButton
+                icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+                text={__("Delete user", "quicktasker")}
+                loading={isDeleteLoading}
+                onClick={onClick}
+                disabled={!isUserAllowedToDelete}
+                tooltipId="user-modal-delete"
+                tooltipText={
+                  isUserAllowedToDelete
+                    ? undefined
+                    : __(
+                        "You don't have permission to delete users",
+                        "quicktasker",
+                      )
+                }
+                className="wpqt-w-full"
+              />
+            )}
+          </WPQTConfirmTooltip>
         </div>
       </div>
     </>

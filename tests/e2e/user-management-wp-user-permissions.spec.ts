@@ -268,6 +268,48 @@ test.describe('WP User Capabilities – Manage Users', () => {
     await context.close();
   });
 
+  test('Delete user is disabled without the delete permission', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const quickTaskerName = generateUniqueName('UM-Manager-NoDelete');
+    const confirmMessage = 'Are you sure you want to delete this user?';
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, quickTaskerName);
+
+    // Card dropdown: the item is shown struck through and clicking it does nothing.
+    await getQuickTaskerCard(page, quickTaskerName).getByTestId('dropdown-icon').click();
+    const dropdownDelete = page.getByRole('menuitem', { name: 'Delete user' });
+    await expect(dropdownDelete).toBeVisible();
+    await expect(dropdownDelete).toHaveClass(/wpqt-cursor-not-allowed/);
+    await dropdownDelete.click();
+    await expect(page.getByText(confirmMessage)).not.toBeVisible();
+    await page.keyboard.press('Escape');
+
+    // Edit modal
+    await getQuickTaskerCard(page, quickTaskerName).getByTestId('dropdown-icon').click();
+    await page.getByRole('menuitem', { name: 'Edit user' }).click();
+    const modal = page.getByTestId('user-modal');
+    await expect(modal).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    const modalDelete = modal.locator('[aria-disabled="true"]', { hasText: 'Delete user' });
+    await expect(modalDelete).toBeVisible();
+    await modalDelete.click();
+    await expect(page.getByText(confirmMessage)).not.toBeVisible();
+    await page.getByTestId('wpqt-modal-close-button').click();
+    await expect(modal).not.toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+    // Detail page
+    await navigateToUserDetailPage(page, quickTaskerName);
+    const detailDelete = page.locator('[aria-disabled="true"]', { hasText: 'Delete user' });
+    await expect(detailDelete).toBeVisible();
+    await detailDelete.hover();
+    await expect(page.getByText("You don't have permission to delete users")).toBeVisible();
+    await detailDelete.click();
+    await expect(page.getByRole('heading', { name: quickTaskerName })).toBeVisible();
+    await context.close();
+  });
+
   test("can reset a QuickTasker's password", async ({ browser, request }) => {
     const userLogin = uniqueLogin('wpusermgmt');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
