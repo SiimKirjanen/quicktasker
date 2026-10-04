@@ -6,12 +6,36 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use WPQT\Permission\PermissionService;
 use WPQT\Services\ServiceLocator;
 use WPQT\WPQTException;
 
 if (!class_exists('WPQT\User\UserService')) {
     class UserService
     {
+        /**
+         * Retrieves QuickTasker users for the current admin app viewer.
+         *
+         * A QuickTasker's page hash lets anyone set the password of a user who has
+         * none yet, so it is only included for users allowed to manage QuickTaskers.
+         *
+         * @return array List of QuickTasker users.
+         */
+        public function getUsersForCurrentViewer()
+        {
+            $users = ServiceLocator::get('UserRepository')->getUsers();
+
+            if (PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints()) {
+                return $users;
+            }
+
+            return array_map(function ($user) {
+                unset($user->page_hash);
+
+                return $user;
+            }, $users);
+        }
+
         /**
          * Creates a new quicktasker user.
          *

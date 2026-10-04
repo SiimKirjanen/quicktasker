@@ -5,7 +5,8 @@ type BaseUser = {
   name: string;
   description: string;
   created_at: string;
-  page_hash: string;
+  // Only sent to users who can manage QuickTaskers.
+  page_hash?: string;
   assigned_tasks_count: string;
   user_type: UserTypes.QUICKTASKER;
 };

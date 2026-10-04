@@ -2473,6 +2473,18 @@ pm.collectionVariables.set('limitedWpUserId', limited ? String(limited.id) : '0'
     tests: [status(403)],
   }),
   request({
+    name: "Limited user's QuickTasker list has no page hashes",
+    url: "/users",
+    auth: limitedAuth,
+    tests: [
+      status(200),
+      success(true),
+      `const users = pm.response.json().data;
+pm.test('QuickTaskers are listed', () => pm.expect(users).to.not.be.empty);
+pm.test('no page_hash is exposed', () => pm.expect(users.filter((u) => 'page_hash' in u)).to.be.empty);`,
+    ],
+  }),
+  request({
     name: "Grant limited user the settings capability",
     method: "PATCH",
     url: "/wp-users/{{limitedWpUserId}}/capabilities",
@@ -2542,6 +2554,16 @@ pm.collectionVariables.set('limitedWpUserId', limited ? String(limited.id) : '0'
       status(200),
       success(true),
       save("userManagerQuickTaskerId", "pm.response.json().data.id"),
+    ],
+  }),
+  request({
+    name: "User manager's QuickTasker list includes page hashes",
+    url: "/users",
+    auth: limitedAuth,
+    tests: [
+      status(200),
+      `const created = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('userManagerQuickTaskerId'));
+pm.test('created QuickTasker has a page_hash', () => pm.expect(created && created.page_hash).to.be.a('string').and.not.be.empty);`,
     ],
   }),
   request({

@@ -30,7 +30,7 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
 
         $activePipeline = $pipelineRepo->getActivePipeline();
         $pipelines = $pipelineRepo->getPipelines();
-        $users = $userRepo->getUsers();
+        $users = ServiceLocator::get('UserService')->getUsersForCurrentViewer();
         $wpUsers = $userRepo->getWPUsersWithCapabilities([WP_QUICKTASKER_ADMIN_ROLE]);
         $notificationPreferences = ServiceLocator::get('NotificationService')->getPreferences(
             get_current_user_id(),
