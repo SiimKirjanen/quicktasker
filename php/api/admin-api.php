@@ -2069,30 +2069,14 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                     try {
                         $wpdb->query('START TRANSACTION');
-                        $logService = ServiceLocator::get('LogService');
+                        $userService = ServiceLocator::get('UserService');
 
-                        $task = ServiceLocator::get('UserService')->removeTaskFromUser($data['id'], $data['task_id'], $data['user_type']);
+                        $task = $userService->removeTaskFromUser($data['id'], $data['task_id'], $data['user_type']);
                         $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($data['id'], $data['user_type']);
                         $currentUser = wp_get_current_user();
                         $userId = $currentUser->ID;
 
-                        $logService->log('Task ' . $task->name . ' unassigned from ' . $user->name, [
-                            'type'          => WP_QT_LOG_TYPE_TASK,
-                            'type_id'       => $data['task_id'],
-                            'user_id'       => $userId,
-                            'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
-                            'created_by_id' => $userId,
-                            'pipeline_id'   => $task->pipeline_id
-                        ]);
-
-                        $logService->log('User ' . $user->name . ' unassigned from ' . $task->name . ' task', [
-                            'type'          => WP_QT_WORDPRESS_USER_TYPE === $data['user_type'] ? WP_QT_LOG_TYPE_WP_USER : WP_QT_LOG_TYPE_QUICKTASKER_USER,
-                            'type_id'       => $user->id,
-                            'user_id'       => $userId,
-                            'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
-                            'created_by_id' => $userId,
-                            'pipeline_id'   => $task->pipeline_id
-                        ]);
+                        $executionResults = $userService->handleTaskUnassignedByAdmin($task, $user, $data['user_type']);
 
                         /* Create in-app notification for the unassigned user (skip self-unassignment) */
                         $isSelfUnassignment = 'wp-user' === $data['user_type'] && (int) $data['id'] === (int) $userId;
@@ -2117,38 +2101,6 @@ if (!function_exists('wpqt_register_api_routes')) {
                             }
                         }
                         /* End in-app notification */
-
-                        /* Handle automations */
-                        $executionResults = ServiceLocator::get('AutomationService')->handleAutomations(
-                            $task->pipeline_id,
-                            $task->id,
-                            WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK,
-                            WP_QUICKTASKER_AUTOMATION_TRIGGER_TASK_UNASSIGNED,
-                            $user
-                        );
-                        /* End of handling automations */
-
-                        /* Handle webhooks */
-                        ServiceLocator::get('WebhookService')->handleWebhooks(
-                            $task->pipeline_id,
-                            [
-                                [
-                                    'data' => [
-                                        'relatedObject' => $task,
-                                        'extraData'     => [
-                                            'unassigned_user_id'   => $user->id,
-                                            'unassigned_user_name' => $user->name,
-                                            'unassigned_user_type' => $data['user_type']
-                                        ]
-                                    ],
-                                    'webhookData' => [
-                                        'target_type'   => WP_QUICKTASKER_WEBHOOK_TARGET_TYPE_TASK,
-                                        'target_action' => WP_QUICKTASKER_WEBHOOK_TARGET_ACTION_UNASSIGNED,
-                                    ]
-                                ]
-                            ]
-                        );
-                        /* End Handle webhooks */
 
                         $wpdb->query('COMMIT');
 

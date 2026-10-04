@@ -99,6 +99,11 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     }
 
                     $userPage = $userPageRepository->getPageUserByHash($requestData['userPageHash']);
+
+                    if (!ServiceLocator::get('UserRepository')->isUserActive($userPage->user_id)) {
+                        throw new WPQTException('User is not active', true);
+                    }
+
                     $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage->user_id);
 
                     if ($hasSetupCompleted) {

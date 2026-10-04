@@ -34,7 +34,7 @@ import {
   openAnonymousPage,
   completeQuickTaskerSetup,
   loginAsQuickTasker,
-  attemptQuickTaskerLoginViaApi,
+  callQuickTaskerUserPageApi,
 } from './utils/tasks-app-helpers';
 
 // ── Shared setup helpers ──────────────────────────────────────────────────────
@@ -494,8 +494,17 @@ test.describe('Tasks App – Deleted QuickTasker User', () => {
     await page.getByText('Delete user').click();
     await expect(page).toHaveURL(/#\/user-management$/, { timeout: TIMEOUTS.NAVIGATION });
 
-    // The existing session no longer grants access. Reload: the page is
-    // already on this URL, so goto would only change the hash.
+    // The old session cookie is rejected as revoked. Checked before any reload
+    // so the app cannot have cleared the cookie; a deleted user with a live
+    // session would get 'User is not active' instead.
+    const cookies = await context.cookies();
+    expect(cookies.some((cookie) => cookie.name.startsWith('wpqt-session-token-'))).toBe(true);
+    const sessionRequest = await callQuickTaskerUserPageApi(userPage, userPageUrl, 'GET', 'assigned-tasks');
+    expect(sessionRequest.success).toBe(false);
+    expect(sessionRequest.messages).toContain('Invalid session token');
+
+    // The UI shows the user as not active. Reload: the page is already on this
+    // URL, so goto would only change the hash.
     await userPage.reload();
     await expect(userPage.getByRole('heading', { name: 'User is not active' })).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
@@ -510,8 +519,32 @@ test.describe('Tasks App – Deleted QuickTasker User', () => {
       timeout: TIMEOUTS.NAVIGATION,
     });
     await expect(freshPage.getByText('Please log in to continue')).not.toBeVisible();
-    const loginAttempt = await attemptQuickTaskerLoginViaApi(freshPage, userPageUrl, password);
+    const loginAttempt = await callQuickTaskerUserPageApi(freshPage, userPageUrl, 'POST', 'login', { password });
     expect(loginAttempt.success).toBe(false);
+    expect(loginAttempt.messages).toContain('User is not active');
     await freshContext.close();
+  });
+
+  test('deleting a user before setup blocks completing the setup', async ({ page, browser }) => {
+    const userName = generateUniqueName('TA-DEL-SetupUser');
+
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, userName);
+    await navigateToUserDetailPage(page, userName);
+    const userPageUrl = await getQuickTaskerUserPageUrl(page);
+    await page.getByText('Delete user').click();
+    await expect(page).toHaveURL(/#\/user-management$/, { timeout: TIMEOUTS.NAVIGATION });
+
+    const { context, page: anonPage } = await openAnonymousPage(browser);
+    await anonPage.goto(userPageUrl);
+    await expect(anonPage.getByRole('heading', { name: 'User is not active' })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    const setupAttempt = await callQuickTaskerUserPageApi(anonPage, userPageUrl, 'POST', 'setup', {
+      password: 'qt-pass-123',
+    });
+    expect(setupAttempt.success).toBe(false);
+    expect(setupAttempt.messages).toContain('User is not active');
+    await context.close();
   });
 });

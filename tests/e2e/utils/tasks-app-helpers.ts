@@ -77,29 +77,33 @@ export async function loginAsQuickTasker(page: Page, password: string): Promise<
 }
 
 /**
- * Call the QuickTasker login endpoint directly, bypassing the UI. Use when the
- * UI hides the login form but the backend must still be shown to reject the
- * login. Must already be on the tasks app page (it provides the API nonce).
+ * Call a QuickTasker user-page endpoint directly, bypassing the UI. Use when the
+ * UI hides a form but the backend must still be shown to reject the request.
+ * Must already be on the tasks app page (it provides the API nonce). Sends the
+ * page's cookies, so a QuickTasker session cookie goes along if one is set.
  */
-export async function attemptQuickTaskerLoginViaApi(
+export async function callQuickTaskerUserPageApi(
   page: Page,
   userPageUrl: string,
-  password: string,
-): Promise<{ success: boolean }> {
+  method: 'GET' | 'POST',
+  endpoint: string,
+  data?: Record<string, unknown>,
+): Promise<{ success: boolean; messages: string[] }> {
   const pageHash = new URL(userPageUrl).searchParams.get('code');
   if (!pageHash) throw new Error('User page URL is missing the code param');
   const nonce = await page.evaluate(
     () => (window as unknown as { wpqt_user: { userApiNonce: string } }).wpqt_user.userApiNonce,
   );
-  const response = await page.request.post('/wp-json/wpqt/v1/user-page/login', {
+  const response = await page.request.fetch(`/wp-json/wpqt/v1/user-page/${endpoint}`, {
+    method,
     headers: {
       'X-WPQT-USER-PAGE-CODE': pageHash,
       'X-WPQT-USER-API-Nonce': nonce,
     },
-    data: { password },
+    data,
   });
   const body = await response.json();
-  return { success: body.success === true };
+  return { success: body.success === true, messages: body.messages ?? [] };
 }
 
 /**
