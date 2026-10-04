@@ -17,9 +17,9 @@ import {
   RESET_PASSWORD,
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
+import { useDeleteUserPermission } from "../../../hooks/useDeleteUserPermission";
 import { useLoadingStates } from "../../../hooks/useLoadingStates";
 import { useNavigation } from "../../../hooks/useNavigation";
-import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
@@ -38,9 +38,8 @@ const UserModalContent = () => {
     state: { userToEdit },
     modalDispatch,
   } = useContext(ModalContext);
-  const {
-    state: { isUserAllowedToDelete },
-  } = useContext(AppContext);
+  const { isUserAllowedToDeleteUsers, deleteUserDisabledReason } =
+    useDeleteUserPermission();
   const [isActiveUser, setIsActiveUser] = useState(false);
   const [isBannedUser, setIsBannedUser] = useState(false);
   const [isUnbanLoading, setIsUnbanLoading] = useState(false);
@@ -253,38 +252,39 @@ const UserModalContent = () => {
               }}
             />
           )}
-          {isUserAllowedToDelete && (
-            <WPQTConfirmTooltip
-              confirmMessage={__(
-                "Are you sure you want to delete this user?",
-                "quicktasker",
-              )}
-              onConfirm={async () => {
-                setIsDeleteLoading(true);
-                await deleteUser(userToEdit!.id, (userId) => {
-                  userDispatch({
-                    type: DELETE_USER,
-                    payload: userId,
-                  });
-                  modalDispatch({
-                    type: CLOSE_USER_MODAL,
-                  });
+          <WPQTConfirmTooltip
+            confirmMessage={__(
+              "Are you sure you want to delete this user?",
+              "quicktasker",
+            )}
+            onConfirm={async () => {
+              setIsDeleteLoading(true);
+              await deleteUser(userToEdit!.id, (userId) => {
+                userDispatch({
+                  type: DELETE_USER,
+                  payload: userId,
                 });
-                setIsDeleteLoading(false);
-              }}
-              containerClassName="wpqt-flex"
-            >
-              {({ onClick }) => (
-                <WPQTIconButton
-                  icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
-                  text={__("Delete user", "quicktasker")}
-                  loading={isDeleteLoading}
-                  onClick={onClick}
-                  className="wpqt-w-full"
-                />
-              )}
-            </WPQTConfirmTooltip>
-          )}
+                modalDispatch({
+                  type: CLOSE_USER_MODAL,
+                });
+              });
+              setIsDeleteLoading(false);
+            }}
+            containerClassName="wpqt-flex"
+          >
+            {({ onClick }) => (
+              <WPQTIconButton
+                icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
+                text={__("Delete user", "quicktasker")}
+                loading={isDeleteLoading}
+                onClick={onClick}
+                disabled={!isUserAllowedToDeleteUsers}
+                tooltipId="user-modal-delete"
+                tooltipText={deleteUserDisabledReason}
+                className="wpqt-w-full"
+              />
+            )}
+          </WPQTConfirmTooltip>
         </div>
       </div>
     </>

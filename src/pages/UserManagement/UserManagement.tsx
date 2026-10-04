@@ -11,6 +11,7 @@ import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   SET_FULL_PAGE_LOADING,
 } from "../../constants";
+import { AppContext } from "../../providers/AppContextProvider";
 import { LoadingContext } from "../../providers/LoadingContextProvider";
 import { ModalContext } from "../../providers/ModalContextProvider";
 import { UserContext } from "../../providers/UserContextProvider";
@@ -19,30 +20,41 @@ import { QuickTaskersSection } from "./QuickTaskersSection/QuickTaskersSection";
 import { RegularWPUsersSection } from "./RegularWPUserSection/ReqularWPUsersSection";
 
 function UserManagement() {
+  const {
+    state: { isUserAllowedToManageWPUsers },
+  } = useContext(AppContext);
   const { updateUsers, updateWPUsers } = useContext(UserContext);
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
   const [refreshing, setRefreshing] = useState(false);
 
-  const tabDefinitions = [
-    {
-      name: __("WordPress users", "quicktasker"),
-      icon: <WordPressIcon />,
-    },
-    {
-      name: __("QuickTaskers", "quicktasker"),
-      icon: <QuickTaskerIcon />,
-    },
-  ];
-  const tabContent = [
-    <RegularWPUsersSection key={0} />,
-    <QuickTaskersSection key={1} />,
-  ];
+  const quickTaskersTab = {
+    name: __("QuickTaskers", "quicktasker"),
+    icon: <QuickTaskerIcon />,
+  };
+  const tabDefinitions = isUserAllowedToManageWPUsers
+    ? [
+        {
+          name: __("WordPress users", "quicktasker"),
+          icon: <WordPressIcon />,
+        },
+        quickTaskersTab,
+      ]
+    : [quickTaskersTab];
+  const tabContent = isUserAllowedToManageWPUsers
+    ? [<RegularWPUsersSection key={0} />, <QuickTaskersSection key={1} />]
+    : [<QuickTaskersSection key={1} />];
+
+  const fetchUsers = () =>
+    Promise.all([
+      updateUsers(),
+      ...(isUserAllowedToManageWPUsers ? [updateWPUsers()] : []),
+    ]);
 
   useEffect(() => {
     const updateUsersAsync = async () => {
       loadingDispatch({ type: SET_FULL_PAGE_LOADING, payload: true });
-      await Promise.all([updateUsers(), updateWPUsers()]);
+      await fetchUsers();
       loadingDispatch({ type: SET_FULL_PAGE_LOADING, payload: false });
     };
     updateUsersAsync();
@@ -50,14 +62,19 @@ function UserManagement() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await Promise.all([updateUsers(), updateWPUsers()]);
+    await fetchUsers();
     setRefreshing(false);
   };
 
-  const description = __(
-    "Manage access for users of this plugin.\n WordPress admins have full access by default. Other WordPress users have no access by default but can be granted permissions.\n QuickTaskers are plugin-managed users who access tasks through the tasks app and have no access to the WordPress admin area.",
-    "quicktasker",
-  );
+  const description = isUserAllowedToManageWPUsers
+    ? __(
+        "Manage access for users of this plugin.\n WordPress admins have full access by default. Other WordPress users have no access by default but can be granted permissions.\n QuickTaskers are plugin-managed users who access tasks through the tasks app and have no access to the WordPress admin area.",
+        "quicktasker",
+      )
+    : __(
+        "Manage QuickTaskers, the plugin-managed users who access tasks through the tasks app and have no access to the WordPress admin area.",
+        "quicktasker",
+      );
 
   return (
     <Page>

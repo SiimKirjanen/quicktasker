@@ -13,6 +13,8 @@
  * Permission levels (see php/services/PermissionService.php):
  * - base: quicktasker_admin_role
  * - settings / delete / users / archive / sessions: base + the matching capability
+ * - usersDelete: base + manage users + delete
+ * - wpAdmin: base + manage_options (WordPress administrators)
  * - myTasks: quicktasker_view_my_tasks
  */
 module.exports = [
@@ -124,11 +126,11 @@ module.exports = [
     permission: "settings",
   },
   { method: "GET", path: "/users", permission: "base" },
-  { method: "GET", path: "/users/{id}/extended", permission: "base" },
+  { method: "GET", path: "/users/{id}/extended", permission: "users" },
   {
     method: "POST",
     path: "/users",
-    permission: "base",
+    permission: "users",
     params: { name: "x", description: "x" },
   },
   { method: "GET", path: "/users/{id}/tasks", permission: "base" },
@@ -145,27 +147,27 @@ module.exports = [
     permission: "base",
     params: { user_type: "quicktasker" },
   },
-  { method: "PATCH", path: "/users/{id}", permission: "base" },
-  { method: "PATCH", path: "/users/{id}/password-reset", permission: "base" },
+  { method: "PATCH", path: "/users/{id}", permission: "users" },
+  { method: "PATCH", path: "/users/{id}/password-reset", permission: "users" },
   {
     method: "PATCH",
     path: "/users/{id}/status",
-    permission: "base",
+    permission: "users",
     params: { status: true },
   },
   { method: "PATCH", path: "/users/{id}/unban", permission: "users" },
-  { method: "DELETE", path: "/users/{id}", permission: "delete" },
+  { method: "DELETE", path: "/users/{id}", permission: "usersDelete" },
   { method: "GET", path: "/users/sessions", permission: "sessions" },
   {
     method: "GET",
     path: "/wp-users",
-    permission: "users",
+    permission: "wpAdmin",
     params: { type: "x" },
   },
   {
     method: "PATCH",
     path: "/wp-users/{id}/capabilities",
-    permission: "users",
+    permission: "wpAdmin",
     params: {
       quicktasker_admin_role: false,
       quicktasker_admin_role_allow_delete: false,

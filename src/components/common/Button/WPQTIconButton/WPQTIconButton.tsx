@@ -34,34 +34,37 @@ function WPQTIconButton({
     : {};
 
   return (
-    <div
-      {...tooltipAttributes}
-      data-testid={dataTestId}
-      className={`wpqt-main-border wpqt-relative wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${disabled ? "wpqt-opacity-50" : ""} ${className}`}
-      onClick={disabled || loading ? undefined : onClick}
-      aria-disabled={disabled}
-    >
-      {icon}
-      {text || loading ? (
-        <div className="wpqt-flex wpqt-gap-2 wpqt-items-center wpqt-relative">
-          {text && (
-            <span
-              className={`wpqt-whitespace-nowrap ${loading ? "wpqt-invisible" : ""}`}
-            >
-              {text}
-            </span>
-          )}
-          {loading && (
-            <LoadingOval
-              width="20"
-              height="20"
-              className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
-            />
-          )}
-        </div>
-      ) : null}
+    <>
+      <div
+        {...tooltipAttributes}
+        data-testid={dataTestId}
+        className={`wpqt-main-border wpqt-relative wpqt-inline-flex wpqt-cursor-pointer wpqt-items-center wpqt-justify-center wpqt-gap-2 wpqt-bg-gray-100 wpqt-p-2 hover:wpqt-bg-white ${disabled ? "wpqt-opacity-50" : ""} ${className}`}
+        onClick={disabled || loading ? undefined : onClick}
+        aria-disabled={disabled}
+      >
+        {icon}
+        {text || loading ? (
+          <div className="wpqt-flex wpqt-gap-2 wpqt-items-center wpqt-relative">
+            {text && (
+              <span
+                className={`wpqt-whitespace-nowrap ${loading ? "wpqt-invisible" : ""}`}
+              >
+                {text}
+              </span>
+            )}
+            {loading && (
+              <LoadingOval
+                width="20"
+                height="20"
+                className="wpqt-absolute wpqt-top-1/2 wpqt-left-1/2 wpqt-transform-center"
+              />
+            )}
+          </div>
+        ) : null}
+      </div>
+      {/* Rendered outside the button so the disabled opacity doesn't fade the tooltip. */}
       {showTooltip && <WPQTTooltip id={tooltipId} />}
-    </div>
+    </>
   );
 }
 

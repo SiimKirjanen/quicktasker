@@ -5,6 +5,7 @@ import { AutomationsPage } from "../pages/AutomationsPage/AutomationsPage";
 import { GuidePage } from "../pages/GuidePage/GuidePage";
 import { LogsPage } from "../pages/LogsPage/LogsPage";
 import { MyTasksPage } from "../pages/MyTasksPage/MyTasksPage";
+import { NoAccessPage } from "../pages/NoAccessPage/NoAccessPage";
 import { OverviewPage } from "../pages/OverviewPage/OverviewPage";
 import { PipelinePage } from "../pages/PipelinePage/PipelinePage";
 import { UserAppPage } from "../pages/UserAppPage/UserAppPage";
@@ -13,6 +14,8 @@ import { UserPage } from "../pages/UserPage/UserPage";
 import { UserSessionsPage } from "../pages/UserSessionsPage/UserSessionsPage";
 import { UserTasksPage } from "../pages/UserTasksPage/UserTasksPage";
 import { WebhooksPage } from "../pages/WebhooksPage/WebhooksPage";
+
+const USER_MANAGEMENT_ROUTE = /^#\/user-management(\/\d+)?(\/tasks)?$/;
 
 const useCurrentPage = () => {
   const [currentPage, setCurrentPage] = useState(getPageFromUrl());
@@ -45,6 +48,14 @@ const getPageFromUrl = () => {
   }
 
   if (page === "wp-quicktasker") {
+    // Read from window.wpqt: this hook runs outside AppContextProvider.
+    if (
+      USER_MANAGEMENT_ROUTE.test(hash) &&
+      window.wpqt.isUserAllowedToManageUsers !== "1"
+    ) {
+      return <NoAccessPage />;
+    }
+
     const userTasksMatch = hash.match(/^#\/user-management\/(\d+)\/tasks$/);
     if (userTasksMatch) {
       const userId = userTasksMatch[1];
@@ -139,7 +150,7 @@ const setSubMenuItemActive = () => {
 
     if (hashMap[hash] !== undefined) {
       targetHash = hashMap[hash];
-    } else if (/^#\/user-management(\/\d+)?(\/tasks)?$/.test(hash)) {
+    } else if (USER_MANAGEMENT_ROUTE.test(hash)) {
       targetHash = "#/user-management";
     }
 

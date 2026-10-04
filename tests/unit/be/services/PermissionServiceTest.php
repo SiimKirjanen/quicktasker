@@ -32,6 +32,13 @@ if (!defined('WP_QT_QUICKTASKER_USER_TYPE')) {
     define('WP_QT_QUICKTASKER_USER_TYPE', 'quicktasker_user');
 }
 
+// Grants exactly the capabilities listed in $GLOBALS['wpqt_test_current_user_caps'].
+if (!function_exists('current_user_can')) {
+    function current_user_can($capability) {
+        return in_array($capability, $GLOBALS['wpqt_test_current_user_caps'] ?? [], true);
+    }
+}
+
 require_once __DIR__ . '/../../../../php/services/PermissionService.php';
 
 class PermissionServiceTest extends TestCase {
@@ -129,6 +136,24 @@ class PermissionServiceTest extends TestCase {
         $this->assertTrue(method_exists(\WPQT\Permission\PermissionService::class, 'hasRequiredParmissionsForPrivateAPIUsersEndpoints'));
         
         $reflection = new ReflectionMethod(\WPQT\Permission\PermissionService::class, 'hasRequiredParmissionsForPrivateAPIUsersEndpoints');
+        $this->assertTrue($reflection->isStatic());
+        $this->assertTrue($reflection->isPublic());
+        $this->assertEquals(0, $reflection->getNumberOfParameters());
+    }
+
+    public function test_hasRequiredPermissionsForDeletingQuickTaskerUsers_method_exists() {
+        $this->assertTrue(method_exists(\WPQT\Permission\PermissionService::class, 'hasRequiredPermissionsForDeletingQuickTaskerUsers'));
+
+        $reflection = new ReflectionMethod(\WPQT\Permission\PermissionService::class, 'hasRequiredPermissionsForDeletingQuickTaskerUsers');
+        $this->assertTrue($reflection->isStatic());
+        $this->assertTrue($reflection->isPublic());
+        $this->assertEquals(0, $reflection->getNumberOfParameters());
+    }
+
+    public function test_hasRequiredPermissionsForManagingWPUserCapabilities_method_exists() {
+        $this->assertTrue(method_exists(\WPQT\Permission\PermissionService::class, 'hasRequiredPermissionsForManagingWPUserCapabilities'));
+
+        $reflection = new ReflectionMethod(\WPQT\Permission\PermissionService::class, 'hasRequiredPermissionsForManagingWPUserCapabilities');
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         $this->assertEquals(0, $reflection->getNumberOfParameters());
@@ -270,6 +295,48 @@ class PermissionServiceTest extends TestCase {
      */
     public function test_hasRequiredParmissionsForPrivateAPIUsersEndpoints_integration() {
         $this->markTestIncomplete('Requires WordPress environment with current_user_can() and user setup');
+    }
+
+    public static function deletingQuickTaskerUsersProvider() {
+        return [
+            'base, manage users and delete' => [[WP_QUICKTASKER_ADMIN_ROLE, WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS, WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE], true],
+            'base and delete, no manage users' => [[WP_QUICKTASKER_ADMIN_ROLE, WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE], false],
+            'base and manage users, no delete' => [[WP_QUICKTASKER_ADMIN_ROLE, WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS], false],
+            'manage users and delete, no base' => [[WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS, WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE], false],
+            'no capabilities' => [[], false],
+        ];
+    }
+
+    /**
+     * @dataProvider deletingQuickTaskerUsersProvider
+     */
+    public function test_hasRequiredPermissionsForDeletingQuickTaskerUsers($caps, $expected) {
+        $GLOBALS['wpqt_test_current_user_caps'] = $caps;
+
+        $this->assertSame($expected, \WPQT\Permission\PermissionService::hasRequiredPermissionsForDeletingQuickTaskerUsers());
+    }
+
+    public static function managingWPUserCapabilitiesProvider() {
+        return [
+            'manage_options and base' => [['manage_options', WP_QUICKTASKER_ADMIN_ROLE], true],
+            'base and manage users, no manage_options' => [[WP_QUICKTASKER_ADMIN_ROLE, WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS], false],
+            'manage_options, no base' => [['manage_options'], false],
+            'no capabilities' => [[], false],
+        ];
+    }
+
+    /**
+     * @dataProvider managingWPUserCapabilitiesProvider
+     */
+    public function test_hasRequiredPermissionsForManagingWPUserCapabilities($caps, $expected) {
+        $GLOBALS['wpqt_test_current_user_caps'] = $caps;
+
+        $this->assertSame($expected, \WPQT\Permission\PermissionService::hasRequiredPermissionsForManagingWPUserCapabilities());
+    }
+
+    protected function tearDown(): void {
+        unset($GLOBALS['wpqt_test_current_user_caps']);
+        parent::tearDown();
     }
 
     /**

@@ -48,6 +48,31 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         }
 
         /**
+         * Checks if the current user can delete QuickTasker users.
+         *
+         * Requires both the manage users and the delete capability.
+         *
+         * @return bool True if the user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredPermissionsForDeletingQuickTaskerUsers()
+        {
+            return self::hasRequiredParmissionsForPrivateAPIUsersEndpoints() && self::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+        }
+
+        /**
+         * Checks if the current user can view and change the QuickTasker permissions of WordPress users.
+         *
+         * Granting plugin permissions is limited to WordPress administrators so that
+         * non-admin users cannot hand out (or raise their own) QuickTasker access.
+         *
+         * @return bool True if the user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredPermissionsForManagingWPUserCapabilities()
+        {
+            return current_user_can('manage_options') && self::hasRequiredPermissionsForPrivateAPI();
+        }
+
+        /**
          * Checks if the current user has the required permissions to manage private API settings endpoints.
          *
          * This function verifies if the current user has the capability defined by the constant

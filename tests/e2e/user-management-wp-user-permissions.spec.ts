@@ -1,5 +1,21 @@
 import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
-import { createWPUser, grantWPUserCaps, uniqueLogin } from './utils/user-helpers';
+import {
+  createQuickTaskerUser,
+  createWPUser,
+  disableQuickTaskerUser,
+  getQuickTaskerCard,
+  grantWPUserCaps,
+  navigateToQuickTaskersTab,
+  navigateToUserDetailPage,
+  uniqueLogin,
+} from './utils/user-helpers';
+import {
+  completeQuickTaskerSetup,
+  getQuickTaskerUserPageUrl,
+  openAnonymousPage,
+} from './utils/tasks-app-helpers';
+import { generateUniqueName } from './utils/board-helpers';
+import { navigateToUserManagement } from './utils/navigation';
 import { loginToWordPress } from './utils/auth';
 import { TIMEOUTS } from './utils/timeouts';
 
@@ -84,6 +100,19 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await expect(
       page.locator('#adminmenu').getByRole('link', { name: 'User management' }),
     ).not.toBeVisible();
+    await context.close();
+  });
+
+  test('accessing user management directly shows no access, even with the delete permission', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_allow_delete']);
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker#/user-management');
+    await expect(page.getByRole('heading', { name: 'No access' })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(page.getByText('Add QuickTasker')).not.toBeVisible();
     await context.close();
   });
 
@@ -188,6 +217,133 @@ test.describe('WP User Capabilities – Manage Users', () => {
     await expect(page.getByRole('heading', { name: 'User management' })).toBeVisible({
       timeout: TIMEOUTS.NAVIGATION,
     });
+    await context.close();
+  });
+
+  test('sees only the QuickTaskers tab, not the WordPress users tab', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await navigateToUserManagement(page);
+    await expect(page.getByRole('tab', { name: 'QuickTaskers' })).toBeVisible();
+    await expect(page.getByText('Add QuickTasker')).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'WordPress users' })).not.toBeVisible();
+    await context.close();
+  });
+
+  test('can create a QuickTasker', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const quickTaskerName = generateUniqueName('UM-Manager-QuickTasker');
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, quickTaskerName);
+    await expect(getQuickTaskerCard(page, quickTaskerName)).toBeVisible();
+    await context.close();
+  });
+
+  test('can edit a QuickTasker', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const quickTaskerName = generateUniqueName('UM-Manager-Edit');
+    const newName = generateUniqueName('UM-Manager-Renamed');
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, quickTaskerName);
+    await getQuickTaskerCard(page, quickTaskerName).getByTestId('dropdown-icon').click();
+    await page.getByRole('menuitem', { name: 'Edit user' }).click();
+    const modal = page.getByTestId('user-modal');
+    await expect(modal).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await modal.locator('input[type="text"]').first().fill(newName);
+    // Wait for the auto-save to reach the card before closing; closing cancels a pending save.
+    await expect(getQuickTaskerCard(page, newName)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await page.getByTestId('wpqt-modal-close-button').click();
+    await expect(modal).not.toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(getQuickTaskerCard(page, newName)).toBeVisible();
+    await context.close();
+  });
+
+  test('can disable a QuickTasker', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const quickTaskerName = generateUniqueName('UM-Manager-Disable');
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, quickTaskerName);
+    await disableQuickTaskerUser(page, quickTaskerName);
+    await context.close();
+  });
+
+  test('Delete user is disabled without the delete permission', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const quickTaskerName = generateUniqueName('UM-Manager-NoDelete');
+    const confirmMessage = 'Are you sure you want to delete this user?';
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, quickTaskerName);
+
+    // Card dropdown: the item is shown struck through and is a disabled menu item.
+    await getQuickTaskerCard(page, quickTaskerName).getByTestId('dropdown-icon').click();
+    const dropdownDelete = page.getByRole('menuitem', { name: 'Delete user' });
+    await expect(dropdownDelete).toBeVisible();
+    await expect(dropdownDelete).toHaveClass(/wpqt-cursor-not-allowed/);
+    await expect(dropdownDelete).toBeDisabled();
+    await page.keyboard.press('Escape');
+
+    // Edit modal
+    await getQuickTaskerCard(page, quickTaskerName).getByTestId('dropdown-icon').click();
+    await page.getByRole('menuitem', { name: 'Edit user' }).click();
+    const modal = page.getByTestId('user-modal');
+    await expect(modal).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    const modalDelete = modal.locator('[aria-disabled="true"]', { hasText: 'Delete user' });
+    await expect(modalDelete).toBeVisible();
+    await modalDelete.click();
+    await expect(page.getByText(confirmMessage)).not.toBeVisible();
+    await page.getByTestId('wpqt-modal-close-button').click();
+    await expect(modal).not.toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+    // Detail page
+    await navigateToUserDetailPage(page, quickTaskerName);
+    const detailDelete = page.locator('[aria-disabled="true"]', { hasText: 'Delete user' });
+    await expect(detailDelete).toBeVisible();
+    await detailDelete.hover();
+    await expect(page.getByText("You don't have permission to delete users")).toBeVisible();
+    await detailDelete.click();
+    await expect(page.getByRole('heading', { name: quickTaskerName })).toBeVisible();
+    await context.close();
+  });
+
+  test("can reset a QuickTasker's password", async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpusermgmt');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const quickTaskerName = generateUniqueName('UM-Manager-Reset');
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, quickTaskerName);
+    await navigateToUserDetailPage(page, quickTaskerName);
+    const userPageUrl = await getQuickTaskerUserPageUrl(page);
+
+    // The QuickTasker sets a password, so the manager gets a "Reset password" control.
+    const quickTasker = await openAnonymousPage(browser);
+    await completeQuickTaskerSetup(quickTasker.page, userPageUrl, 'quicktasker-pass-1');
+    await quickTasker.context.close();
+
+    await page.reload();
+    await expect(page.getByRole('heading', { name: quickTaskerName })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await page.getByText('Reset password').click();
+    await expect(page.getByText('User password reset successfully')).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(page.getByText('Reset password')).not.toBeVisible();
     await context.close();
   });
 });

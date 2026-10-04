@@ -71,7 +71,7 @@
 		<p>Provides access to admin areas.</p>
 
 		<strong>quicktasker_admin_role_manage_users</strong>
-		<p>Provides access to manage users.</p>
+		<p>Provides access to manage QuickTaskers (create, edit, disable, reset password, unban). Changing WordPress users' permissions is only available to WordPress admins.</p>
 
 		<strong>quicktasker_admin_role_manage_settings</strong>
 		<p>Provides access to manage settings (boards, stages, automations, webhooks).</p>
@@ -166,11 +166,11 @@
 		<img src="assets/images/user.png" alt="User" class="screenshot" />
 		<figcaption class="text-center">Manage users page</figcaption> <br>
 
-		<p><strong>Creating QuickTasker:</strong> WordPress admins (or users with required permissions) can create new QuickTasker users, providing them with the necessary credentials to access the system. This allows for effective delegation and collaboration within your team.</p>
+		<p><strong>Creating QuickTasker:</strong> WordPress admins (or users with the quicktasker_admin_role_manage_users permission) can create new QuickTasker users, providing them with the necessary credentials to access the system. This allows for effective delegation and collaboration within your team.</p>
 		<p><strong>Editing QuickTasker:</strong> Similar to tasks, QuickTasker details can be edited to keep information up-to-date.</p>
 		<p><strong>Custom Fields:</strong> You can add custom fields to QuickTasker profiles to capture additional information specific to your workflow. This flexibility allows you to tailor user profiles to meet your project's unique requirements.</p>
 		<p><strong>Comments and Logs:</strong> Each QuickTasker profile supports both private and public comments, enabling team members to communicate and collaborate effectively. Additionally, you can view logs related to the user to track changes and updates over time.</p>
-		<p><strong>WordPress users:</strong> Ability to add or remove different permissions.</p>
+		<p><strong>WordPress users:</strong> Ability to add or remove different permissions. Only WordPress admins see this tab, and nobody can change their own permissions.</p>
 
 		<p><strong>Spam protection (rate limit and ban):</strong> Every QuickTasker user is throttled on write actions (comments, assignments, stage moves, done toggles, custom field updates). If they exceed the allowed rate within the window they receive a "Too many requests" error. Repeatedly hitting that limit accumulates "offenses" — a single throttled window counts as one offense, retries inside the same window do not stack. Once a user crosses the offense threshold within the rolling offense window, they are automatically banned and locked out of all write endpoints.</p>
 		<p>Banned users appear with a red <em>Banned (spam)</em> badge on their card in User Management, and an entry is written to the Logs page. An admin can lift the ban by opening the user's card dropdown and clicking <em>Unban user</em>; this clears the ban and resets the offense counter so the user starts with a clean slate. If they spam again, they get auto-banned again.</p>

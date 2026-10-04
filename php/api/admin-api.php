@@ -1781,7 +1781,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
                 },
                 'args' => [
                     'id' => [
@@ -1829,7 +1829,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
                 },
                 'args' => [
                     'name' => [
@@ -2230,7 +2230,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
                 },
                 'args' => [
                     'id' => [
@@ -2286,7 +2286,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
                 },
                 'args' => [
                     'id' => [
@@ -2332,7 +2332,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
                 },
                 'args' => [
                     'id' => [
@@ -2427,7 +2427,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                    return PermissionService::hasRequiredPermissionsForDeletingQuickTaskerUsers();
                 },
                 'args' => [
                     'id' => [
@@ -2488,7 +2488,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
+                    return PermissionService::hasRequiredPermissionsForManagingWPUserCapabilities();
                 },
                 'args' => [
                     'type' => [
@@ -2507,6 +2507,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
                     try {
+                        if ((int) $data['id'] === get_current_user_id()) {
+                            throw new WPQTException('You cannot change your own permissions', true);
+                        }
+
                         $capabilityService = new CapabilityService();
                         $capabilities = (object) [
                             WP_QUICKTASKER_ADMIN_ROLE                 => $data[WP_QUICKTASKER_ADMIN_ROLE],
@@ -2526,7 +2530,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
+                    return PermissionService::hasRequiredPermissionsForManagingWPUserCapabilities();
                 },
                 'args' => [
                     WP_QUICKTASKER_ADMIN_ROLE => [
