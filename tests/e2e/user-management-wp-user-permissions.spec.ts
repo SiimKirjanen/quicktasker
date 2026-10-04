@@ -2,6 +2,7 @@ import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
 import {
   createQuickTaskerUser,
   createWPUser,
+  disableQuickTaskerUser,
   getQuickTaskerCard,
   grantWPUserCaps,
   navigateToQuickTaskersTab,
@@ -99,6 +100,19 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     await expect(
       page.locator('#adminmenu').getByRole('link', { name: 'User management' }),
     ).not.toBeVisible();
+    await context.close();
+  });
+
+  test('accessing user management directly shows no access, even with the delete permission', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('wpadmin');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_allow_delete']);
+    const { context, page } = await loginAsWPUser(browser, userLogin);
+    await page.goto('/wp-admin/admin.php?page=wp-quicktasker#/user-management');
+    await expect(page.getByRole('heading', { name: 'No access' })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await expect(page.getByText('Add QuickTasker')).not.toBeVisible();
     await context.close();
   });
 
@@ -260,11 +274,7 @@ test.describe('WP User Capabilities – Manage Users', () => {
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await navigateToQuickTaskersTab(page);
     await createQuickTaskerUser(page, quickTaskerName);
-    await getQuickTaskerCard(page, quickTaskerName).getByTestId('dropdown-icon').click();
-    await page.getByRole('menuitem', { name: 'Disable user' }).click();
-    await expect(getQuickTaskerCard(page, quickTaskerName).getByText('Disabled')).toBeVisible({
-      timeout: TIMEOUTS.NAVIGATION,
-    });
+    await disableQuickTaskerUser(page, quickTaskerName);
     await context.close();
   });
 
@@ -278,13 +288,12 @@ test.describe('WP User Capabilities – Manage Users', () => {
     await navigateToQuickTaskersTab(page);
     await createQuickTaskerUser(page, quickTaskerName);
 
-    // Card dropdown: the item is shown struck through and clicking it does nothing.
+    // Card dropdown: the item is shown struck through and is a disabled menu item.
     await getQuickTaskerCard(page, quickTaskerName).getByTestId('dropdown-icon').click();
     const dropdownDelete = page.getByRole('menuitem', { name: 'Delete user' });
     await expect(dropdownDelete).toBeVisible();
     await expect(dropdownDelete).toHaveClass(/wpqt-cursor-not-allowed/);
-    await dropdownDelete.click();
-    await expect(page.getByText(confirmMessage)).not.toBeVisible();
+    await expect(dropdownDelete).toBeDisabled();
     await page.keyboard.press('Escape');
 
     // Edit modal

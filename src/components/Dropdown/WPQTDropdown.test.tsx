@@ -29,8 +29,16 @@ jest.mock("@headlessui/react", () => ({
       {typeof children === "function" ? children({ active: false }) : children}
     </div>
   ),
-  MenuItem: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
+  MenuItem: ({
+    children,
+    disabled,
+  }: {
+    children: React.ReactNode;
+    disabled?: boolean;
+  }) => (
+    <div data-testid="menu-item" data-disabled={disabled}>
+      {children}
+    </div>
   ),
   MenuItems: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
@@ -178,6 +186,22 @@ describe("WPQTDropdownItem", () => {
     const itemDiv = container.querySelector(".wpqt-cursor-not-allowed");
     expect(itemDiv).toBeInTheDocument();
     expect(itemDiv).toHaveClass("wpqt-line-through");
+  });
+
+  it("passes disabled to the MenuItem so it is skipped by keyboard navigation", () => {
+    render(<WPQTDropdownItem text="Action" icon={icon} disabled />);
+    expect(screen.getByTestId("menu-item")).toHaveAttribute(
+      "data-disabled",
+      "true",
+    );
+  });
+
+  it("does not disable the MenuItem by default", () => {
+    render(<WPQTDropdownItem text="Action" icon={icon} />);
+    expect(screen.getByTestId("menu-item")).toHaveAttribute(
+      "data-disabled",
+      "false",
+    );
   });
 
   it("shows loading state: text invisible and loading oval visible", () => {

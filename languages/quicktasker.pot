@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-04T12:27:53+00:00\n"
+"POT-Creation-Date: 2026-10-04T12:49:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -1758,6 +1758,14 @@ msgid "No tasks assigned to you."
 msgstr ""
 
 #: build/app.js:1
+msgid "You don't have permission to access this page."
+msgstr ""
+
+#: build/app.js:1
+msgid "No access"
+msgstr ""
+
+#: build/app.js:1
 msgid "Pie"
 msgstr ""
 
@@ -2346,6 +2354,10 @@ msgid "Failed to unban user. Please try again"
 msgstr ""
 
 #: build/app.js:1
+msgid "You don't have permission to delete users"
+msgstr ""
+
+#: build/app.js:1
 #: build/userApp.js:1
 msgid "User details"
 msgstr ""
@@ -2376,10 +2388,6 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Delete user"
-msgstr ""
-
-#: build/app.js:1
-msgid "You don't have permission to delete users"
 msgstr ""
 
 #: build/app.js:1

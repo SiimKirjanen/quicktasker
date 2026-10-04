@@ -9,8 +9,8 @@ import { __ } from "@wordpress/i18n";
 import { WPQTIconButton } from "../../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { DELETE_USER, EDIT_USER } from "../../../../constants";
 import { useUserActions } from "../../../../hooks/actions/useUserActions";
+import { useDeleteUserPermission } from "../../../../hooks/useDeleteUserPermission";
 import { useLoadingStates } from "../../../../hooks/useLoadingStates";
-import { AppContext } from "../../../../providers/AppContextProvider";
 import { UserContext } from "../../../../providers/UserContextProvider";
 import { ExtendedUser } from "../../../../types/user";
 
@@ -27,9 +27,8 @@ function UserControls({
   changePasswordStatus,
 }: Props) {
   const { changeUserStatus, deleteUser, resetUserPassword } = useUserActions();
-  const {
-    state: { isUserAllowedToDelete },
-  } = useContext(AppContext);
+  const { isUserAllowedToDeleteUsers, deleteUserDisabledReason } =
+    useDeleteUserPermission();
   const { userDispatch } = useContext(UserContext);
   const {
     loading1: isResetPWLoading,
@@ -107,13 +106,9 @@ function UserControls({
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
         loading={isDeleteLoading}
         text={__("Delete user", "quicktasker")}
-        disabled={!isUserAllowedToDelete}
+        disabled={!isUserAllowedToDeleteUsers}
         tooltipId="user-controls-delete"
-        tooltipText={
-          isUserAllowedToDelete
-            ? undefined
-            : __("You don't have permission to delete users", "quicktasker")
-        }
+        tooltipText={deleteUserDisabledReason}
         onClick={async () => {
           setIsDeleteLoading(true);
           await deleteUser(data.id, (userId) => {

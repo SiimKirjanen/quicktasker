@@ -1,8 +1,4 @@
-import {
-  INIT_APP_STATE,
-  SET_CUSTOM_USER_PAGE_STYLES,
-  SET_SITE_URL,
-} from "../constants";
+import { SET_CUSTOM_USER_PAGE_STYLES, SET_SITE_URL } from "../constants";
 import { Action, State } from "../providers/AppContextProvider";
 
 const reducer = (state: State, action: Action): State => {
@@ -13,32 +9,6 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         siteURL,
-      };
-    }
-    case INIT_APP_STATE: {
-      const {
-        siteURL,
-        publicUserPageId,
-        timezone,
-        currentUserId,
-        isUserAllowedToDelete,
-        isUserAllowedToManageSettings,
-        userPageCustomStyles,
-        pluginURL,
-        taskUploadsURL,
-      } = action.payload;
-
-      return {
-        ...state,
-        siteURL,
-        publicUserPageId,
-        timezone,
-        currentUserId,
-        isUserAllowedToDelete,
-        isUserAllowedToManageSettings,
-        userPageCustomStyles,
-        pluginURL,
-        taskUploadsURL,
       };
     }
     case SET_CUSTOM_USER_PAGE_STYLES: {

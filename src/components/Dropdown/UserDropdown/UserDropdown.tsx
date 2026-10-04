@@ -20,7 +20,7 @@ import {
   RESET_PASSWORD,
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
-import { AppContext } from "../../../providers/AppContextProvider";
+import { useDeleteUserPermission } from "../../../hooks/useDeleteUserPermission";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { User, UserTypes } from "../../../types/user";
@@ -35,9 +35,8 @@ type Props = {
   user: User;
 };
 function UserDropdown({ user }: Props) {
-  const {
-    state: { isUserAllowedToDelete },
-  } = useContext(AppContext);
+  const { isUserAllowedToDeleteUsers, deleteUserDisabledReason } =
+    useDeleteUserPermission();
   const { modalDispatch } = useContext(ModalContext);
   const { userDispatch } = useContext(UserContext);
   const { changeUserStatus, deleteUser, resetUserPassword, unbanUser } =
@@ -208,13 +207,9 @@ function UserDropdown({ user }: Props) {
             loading={isDeleting}
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
             onClick={onClick}
-            disabled={!isUserAllowedToDelete}
+            disabled={!isUserAllowedToDeleteUsers}
             id={`user-dropdown-${user.id}-delete`}
-            tooltipText={
-              isUserAllowedToDelete
-                ? undefined
-                : __("You don't have permission to delete users", "quicktasker")
-            }
+            tooltipText={deleteUserDisabledReason}
           />
         )}
       </WPQTConfirmTooltip>

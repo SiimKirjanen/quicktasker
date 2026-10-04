@@ -59,6 +59,8 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
             'isPluginAdmin'                  => PermissionService::hasRequiredPermissionsForPrivateAPI() ? '1' : '0',
             'isUserAllowedToDelete'          => PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints() ? '1' : '0',
             'isUserAllowedToManageSettings'  => PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints() ? '1' : '0',
+            'isUserAllowedToManageUsers'     => PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints() ? '1' : '0',
+            'isUserAllowedToDeleteUsers'     => PermissionService::hasRequiredPermissionsForDeletingQuickTaskerUsers() ? '1' : '0',
             'isUserAllowedToManageWPUsers'   => PermissionService::hasRequiredPermissionsForManagingWPUserCapabilities() ? '1' : '0',
             'userPageCustomStyles'           => SettingRepository::getUserPageCustomStyles(),
             'taskUploadsURL'                 => WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL,

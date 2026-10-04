@@ -115,6 +115,9 @@ describe("PipelineHeader", () => {
       userPageCustomStyles: "",
       taskUploadsURL: "",
       currentUserId: "",
+      isUserAllowedToManageUsers: false,
+      isUserAllowedToDeleteUsers: false,
+      isUserAllowedToManageWPUsers: false,
       ...appOverrides,
     };
     jest.spyOn(useAppModule, "useApp").mockReturnValue({

@@ -1,8 +1,4 @@
-import {
-  INIT_APP_STATE,
-  SET_CUSTOM_USER_PAGE_STYLES,
-  SET_SITE_URL,
-} from "../constants";
+import { SET_CUSTOM_USER_PAGE_STYLES, SET_SITE_URL } from "../constants";
 import { Action, initialState, State } from "../providers/AppContextProvider";
 import { reducer } from "./app-reducer";
 
@@ -14,22 +10,6 @@ describe("app reducer", () => {
     });
     expect(next.siteURL).toBe("https://example.com");
     expect(initialState.siteURL).toBe("");
-  });
-
-  it("handles INIT_APP_STATE", () => {
-    const payload = {
-      siteURL: "https://site",
-      publicUserPageId: "5",
-      timezone: "UTC",
-      currentUserId: "7",
-      isUserAllowedToDelete: true,
-      isUserAllowedToManageSettings: false,
-      userPageCustomStyles: ".x{}",
-      pluginURL: "https://plugin",
-      taskUploadsURL: "https://uploads",
-    };
-    const next = reducer(initialState, { type: INIT_APP_STATE, payload });
-    expect(next).toEqual({ ...initialState, ...payload });
   });
 
   it("handles SET_CUSTOM_USER_PAGE_STYLES", () => {

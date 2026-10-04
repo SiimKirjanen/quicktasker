@@ -100,7 +100,7 @@ function WPQTDropdownItem({
       }
     : {};
   return (
-    <MenuItem>
+    <MenuItem disabled={disabled}>
       <div
         {...tooltipAttributes}
         className={`wpqt-mb-3 wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-relative ${

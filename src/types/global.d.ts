@@ -18,6 +18,8 @@ declare global {
       isPluginAdmin: "1" | "0";
       isUserAllowedToDelete: "1" | "0";
       isUserAllowedToManageSettings: "1" | "0";
+      isUserAllowedToManageUsers: "1" | "0";
+      isUserAllowedToDeleteUsers: "1" | "0";
       isUserAllowedToManageWPUsers: "1" | "0";
       userPageCustomStyles: string;
       taskUploadsURL: string;

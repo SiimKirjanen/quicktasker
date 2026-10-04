@@ -4,6 +4,7 @@ import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   SET_FULL_PAGE_LOADING,
 } from "../../constants";
+import { AppContext, initialState } from "../../providers/AppContextProvider";
 import { LoadingContext } from "../../providers/LoadingContextProvider";
 import { ModalContext } from "../../providers/ModalContextProvider";
 import { UserContext } from "../../providers/UserContextProvider";
@@ -73,27 +74,30 @@ function renderPage({
   loadingDispatch = jest.fn(),
   isUserAllowedToManageWPUsers = true,
 }: CtxOverrides = {}) {
-  window.wpqt = {
-    isUserAllowedToManageWPUsers: isUserAllowedToManageWPUsers ? "1" : "0",
-  } as Window["wpqt"];
-
   const result = render(
-    <LoadingContext.Provider
-      value={{ state: { fullPageLoading: false }, loadingDispatch }}
+    <AppContext.Provider
+      value={{
+        state: { ...initialState, isUserAllowedToManageWPUsers },
+        appDispatch: jest.fn(),
+      }}
     >
-      <ModalContext.Provider value={{ state: {} as never, modalDispatch }}>
-        <UserContext.Provider
-          value={{
-            state: { users: [], wpUsers: [], usersSearchValue: "" },
-            userDispatch: jest.fn(),
-            updateUsers,
-            updateWPUsers,
-          }}
-        >
-          <UserManagement />
-        </UserContext.Provider>
-      </ModalContext.Provider>
-    </LoadingContext.Provider>,
+      <LoadingContext.Provider
+        value={{ state: { fullPageLoading: false }, loadingDispatch }}
+      >
+        <ModalContext.Provider value={{ state: {} as never, modalDispatch }}>
+          <UserContext.Provider
+            value={{
+              state: { users: [], wpUsers: [], usersSearchValue: "" },
+              userDispatch: jest.fn(),
+              updateUsers,
+              updateWPUsers,
+            }}
+          >
+            <UserManagement />
+          </UserContext.Provider>
+        </ModalContext.Provider>
+      </LoadingContext.Provider>
+    </AppContext.Provider>,
   );
   return {
     ...result,

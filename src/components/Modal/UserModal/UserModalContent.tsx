@@ -17,9 +17,9 @@ import {
   RESET_PASSWORD,
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
+import { useDeleteUserPermission } from "../../../hooks/useDeleteUserPermission";
 import { useLoadingStates } from "../../../hooks/useLoadingStates";
 import { useNavigation } from "../../../hooks/useNavigation";
-import { AppContext } from "../../../providers/AppContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { CustomFieldEntityType } from "../../../types/custom-field";
@@ -38,9 +38,8 @@ const UserModalContent = () => {
     state: { userToEdit },
     modalDispatch,
   } = useContext(ModalContext);
-  const {
-    state: { isUserAllowedToDelete },
-  } = useContext(AppContext);
+  const { isUserAllowedToDeleteUsers, deleteUserDisabledReason } =
+    useDeleteUserPermission();
   const [isActiveUser, setIsActiveUser] = useState(false);
   const [isBannedUser, setIsBannedUser] = useState(false);
   const [isUnbanLoading, setIsUnbanLoading] = useState(false);
@@ -279,16 +278,9 @@ const UserModalContent = () => {
                 text={__("Delete user", "quicktasker")}
                 loading={isDeleteLoading}
                 onClick={onClick}
-                disabled={!isUserAllowedToDelete}
+                disabled={!isUserAllowedToDeleteUsers}
                 tooltipId="user-modal-delete"
-                tooltipText={
-                  isUserAllowedToDelete
-                    ? undefined
-                    : __(
-                        "You don't have permission to delete users",
-                        "quicktasker",
-                      )
-                }
+                tooltipText={deleteUserDisabledReason}
                 className="wpqt-w-full"
               />
             )}

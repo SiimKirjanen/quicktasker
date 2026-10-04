@@ -34,6 +34,8 @@ function WPUserItem({ user }: Props) {
     });
   const [updating, setUpdating] = useState(false);
   const { updateWPUserCapabilities } = useCapabilityActions();
+  const adminSubTogglesDisabled =
+    isOwnUser || !capabilitySettings.quicktasker_admin_role;
 
   const onToggleChange = async (checked: boolean, capability: string) => {
     if (updating || isOwnUser) {
@@ -92,7 +94,7 @@ function WPUserItem({ user }: Props) {
             </div>
             <Toggle
               checked={capabilitySettings.quicktasker_admin_role_manage_users}
-              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
+              disabled={adminSubTogglesDisabled}
               handleChange={(checked: boolean) => {
                 onToggleChange(checked, "quicktasker_admin_role_manage_users");
               }}
@@ -110,7 +112,7 @@ function WPUserItem({ user }: Props) {
               checked={
                 capabilitySettings.quicktasker_admin_role_manage_settings
               }
-              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
+              disabled={adminSubTogglesDisabled}
               handleChange={(checked: boolean) => {
                 onToggleChange(
                   checked,
@@ -126,7 +128,7 @@ function WPUserItem({ user }: Props) {
             </div>
             <Toggle
               checked={capabilitySettings.quicktasker_admin_role_manage_archive}
-              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
+              disabled={adminSubTogglesDisabled}
               handleChange={(checked: boolean) => {
                 onToggleChange(
                   checked,
@@ -142,7 +144,7 @@ function WPUserItem({ user }: Props) {
             </div>
             <Toggle
               checked={capabilitySettings.quicktasker_access_user_page_app}
-              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
+              disabled={adminSubTogglesDisabled}
               handleChange={(checked: boolean) => {
                 onToggleChange(checked, "quicktasker_access_user_page_app");
               }}
@@ -155,7 +157,7 @@ function WPUserItem({ user }: Props) {
             </div>
             <Toggle
               checked={capabilitySettings.quicktasker_admin_role_allow_delete}
-              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
+              disabled={adminSubTogglesDisabled}
               handleChange={(checked: boolean) => {
                 onToggleChange(checked, "quicktasker_admin_role_allow_delete");
               }}

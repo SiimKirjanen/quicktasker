@@ -11,6 +11,7 @@ import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   SET_FULL_PAGE_LOADING,
 } from "../../constants";
+import { AppContext } from "../../providers/AppContextProvider";
 import { LoadingContext } from "../../providers/LoadingContextProvider";
 import { ModalContext } from "../../providers/ModalContextProvider";
 import { UserContext } from "../../providers/UserContextProvider";
@@ -19,10 +20,9 @@ import { QuickTaskersSection } from "./QuickTaskersSection/QuickTaskersSection";
 import { RegularWPUsersSection } from "./RegularWPUserSection/ReqularWPUsersSection";
 
 function UserManagement() {
-  // Read from window.wpqt rather than AppContext: AppContext is filled in an
-  // effect that runs after this page's mount effect.
-  const isUserAllowedToManageWPUsers =
-    window.wpqt.isUserAllowedToManageWPUsers === "1";
+  const {
+    state: { isUserAllowedToManageWPUsers },
+  } = useContext(AppContext);
   const { updateUsers, updateWPUsers } = useContext(UserContext);
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
