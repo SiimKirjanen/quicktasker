@@ -1743,8 +1743,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                     try {
-                        $userRepo = new UserRepository();
-                        $users = $userRepo->getUsers();
+                        $userService = new UserService();
+                        $users = $userService->getUsersForCurrentViewer();
 
                         return new WP_REST_Response((new ApiResponse(true, [], $users))->toArray(), 200);
                     } catch (Throwable $e) {

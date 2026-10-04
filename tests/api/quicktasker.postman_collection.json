@@ -17059,6 +17059,42 @@
               ]
             },
             {
+              "name": "Limited user's QuickTasker list has no page hashes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "const users = pm.response.json().data;\npm.test('QuickTaskers are listed', () => pm.expect(users).to.not.be.empty);\npm.test('no page_hash is exposed', () => pm.expect(users.filter((u) => 'page_hash' in u)).to.be.empty);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
               "name": "Grant limited user the settings capability",
               "request": {
                 "method": "PATCH",
@@ -17319,6 +17355,41 @@
                       "pm.test('status is 200', () => pm.response.to.have.status(200));",
                       "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
                       "pm.collectionVariables.set('userManagerQuickTaskerId', String(pm.response.json().data.id));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "User manager's QuickTasker list includes page hashes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "const created = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('userManagerQuickTaskerId'));\npm.test('created QuickTasker has a page_hash', () => pm.expect(created && created.page_hash).to.be.a('string').and.not.be.empty);"
                     ]
                   }
                 }
