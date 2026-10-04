@@ -378,44 +378,6 @@ class UserRepositoryTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function test_isUserActive_returns_true_when_active()
-    {
-        $userId = 15;
-        $preparedSql = "PREPARED_SQL";
-
-        $this->wpdbMock->expects($this->once())
-            ->method('prepare')
-            ->willReturn($preparedSql);
-
-        $this->wpdbMock->expects($this->once())
-            ->method('get_var')
-            ->with($preparedSql)
-            ->willReturn(1);
-
-        $result = $this->repository->isUserActive($userId);
-
-        $this->assertTrue($result);
-    }
-
-    public function test_isUserActive_returns_false_when_inactive()
-    {
-        $userId = 15;
-        $preparedSql = "PREPARED_SQL";
-
-        $this->wpdbMock->expects($this->once())
-            ->method('prepare')
-            ->willReturn($preparedSql);
-
-        $this->wpdbMock->expects($this->once())
-            ->method('get_var')
-            ->with($preparedSql)
-            ->willReturn(0);
-
-        $result = $this->repository->isUserActive($userId);
-
-        $this->assertFalse($result);
-    }
-
     public function test_getAssignedWPUsersByTaskIds_returns_empty_array_for_empty_input()
     {
         $this->wpdbMock->expects($this->never())

@@ -10,7 +10,6 @@ use WPQT\Nonce\NonceService;
 use WPQT\Services\ServiceLocator;
 use WPQT\Session\SessionService;
 use WPQT\User\UserRepository;
-use WPQT\UserPage\UserPageService;
 
 if (!class_exists('WPQT\RequestValidation')) {
     class RequestValidation
@@ -51,11 +50,12 @@ if (!class_exists('WPQT\RequestValidation')) {
                 // We are dealing with QuickTasker user type
 
                 if (true === $args['hash']) {
-                    $userPageService = new UserPageService();
+                    $pageUser = ServiceLocator::get('UserPageRepository')->getPageUserByHash($userPageHash);
 
-                    if (!$userPageService->checkIfUserPageHashExists($userPageHash)) {
+                    if (null === $pageUser) {
                         throw new WPQTException('User page does not exist', true);
                     }
+                    $requestData['pageUser'] = $pageUser;
                 }
 
                 if (true === $args['session']) {
@@ -64,13 +64,15 @@ if (!class_exists('WPQT\RequestValidation')) {
                     $requestData['session'] = $session;
                 }
 
+                // Every request resolved from the page hash is refused once the
+                // user is disabled or deleted, with or without a session.
+                if (true === $args['userActive'] && isset($requestData['pageUser'])
+                    && !ServiceLocator::get('UserPageService')->isPageUserActive($requestData['pageUser'])) {
+                    throw new WPQTException('User is not active', true);
+                }
+
                 if (true === $args['userActive'] && isset($requestData['session'])) {
                     $userRepo = new UserRepository();
-                    $isActive = $userRepo->isUserActive($requestData['session']->user_id);
-
-                    if (!$isActive) {
-                        throw new WPQTException('User is not active', true);
-                    }
 
                     if ($userRepo->isQuicktaskerUserBanned($requestData['session']->user_id)) {
                         throw new WPQTException('User is banned. Please contact an administrator.', true);

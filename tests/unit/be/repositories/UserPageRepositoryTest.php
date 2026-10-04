@@ -46,91 +46,10 @@ class UserPageRepositoryTest extends TestCase
         $GLOBALS['wpdb'] = $this->wpdbBackup;
     }
 
-    public function test_getUserPageByHash_returns_user_page_when_found()
-    {
-        $pageHash = 'abc123hash';
-        $expectedSql = "SELECT * FROM " . TABLE_WP_QUICKTASKER_USER_PAGES . " WHERE page_hash = %s";
-        $preparedSql = "PREPARED_SQL";
-
-        $expectedUserPage = (object)[
-            'id' => 1,
-            'user_id' => 10,
-            'page_hash' => 'abc123hash',
-            'created_at' => '2024-01-01 12:00:00',
-            'updated_at' => '2024-01-02 12:00:00'
-        ];
-
-        $this->wpdbMock->expects($this->once())
-            ->method('prepare')
-            ->with($this->anything(), $pageHash)
-            ->willReturn($preparedSql);
-
-        $this->wpdbMock->expects($this->once())
-            ->method('get_row')
-            ->with($this->anything())
-            ->willReturn($expectedUserPage);
-
-        $result = $this->repository->getUserPageByHash($pageHash);
-
-        $this->assertSame($expectedUserPage, $result);
-    }
-
-    public function test_getUserPageByHash_returns_null_when_not_found()
-    {
-        $pageHash = 'nonexistent';
-        $expectedSql = "SELECT * FROM " . TABLE_WP_QUICKTASKER_USER_PAGES . " WHERE page_hash = %s";
-        $preparedSql = "PREPARED_SQL";
-
-        $this->wpdbMock->expects($this->once())
-            ->method('prepare')
-            ->with($this->anything(), $pageHash)
-            ->willReturn($preparedSql);
-
-        $this->wpdbMock->expects($this->once())
-            ->method('get_row')
-            ->with($this->anything())
-            ->willReturn(null);
-
-        $result = $this->repository->getUserPageByHash($pageHash);
-
-        $this->assertNull($result);
-    }
-
-    public function test_getUserPageByHash_with_different_hash()
-    {
-        $pageHash = 'xyz789different';
-        $expectedSql = "SELECT * FROM " . TABLE_WP_QUICKTASKER_USER_PAGES . " WHERE page_hash = %s";
-        $preparedSql = "PREPARED_SQL";
-
-        $expectedUserPage = (object)[
-            'id' => 5,
-            'user_id' => 50,
-            'page_hash' => 'xyz789different',
-            'created_at' => '2024-03-01 10:00:00',
-            'updated_at' => '2024-03-05 15:30:00'
-        ];
-
-        $this->wpdbMock->expects($this->once())
-            ->method('prepare')
-            ->with($this->anything(), $pageHash)
-            ->willReturn($preparedSql);
-
-        $this->wpdbMock->expects($this->once())
-            ->method('get_row')
-            ->with($this->anything())
-            ->willReturn($expectedUserPage);
-
-        $result = $this->repository->getUserPageByHash($pageHash);
-
-        $this->assertSame($expectedUserPage, $result);
-        $this->assertEquals('xyz789different', $result->page_hash);
-        $this->assertEquals(50, $result->user_id);
-    }
-
     public function test_getPageUserByHash_returns_user_with_page_info_when_found()
     {
         $pageHash = 'user123hash';
-        $expectedSql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, b.user_id FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a 
+        $expectedSql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, a.deleted, b.page_hash, b.user_id FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a 
                     LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b
                     ON a.id = b.user_id 
                     WHERE b.page_hash = %s";
@@ -165,7 +84,7 @@ class UserPageRepositoryTest extends TestCase
     public function test_getPageUserByHash_returns_null_when_not_found()
     {
         $pageHash = 'invalidhash';
-        $expectedSql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, b.user_id FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a 
+        $expectedSql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, a.deleted, b.page_hash, b.user_id FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a 
                     LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b
                     ON a.id = b.user_id 
                     WHERE b.page_hash = %s";
@@ -189,7 +108,7 @@ class UserPageRepositoryTest extends TestCase
     public function test_getPageUserByHash_with_different_user_data()
     {
         $pageHash = 'another456hash';
-        $expectedSql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, b.user_id FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a 
+        $expectedSql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, a.deleted, b.page_hash, b.user_id FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a 
                     LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b
                     ON a.id = b.user_id 
                     WHERE b.page_hash = %s";
@@ -227,7 +146,7 @@ class UserPageRepositoryTest extends TestCase
     public function test_getPageUserByHash_includes_all_user_fields()
     {
         $pageHash = 'fulldata';
-        $expectedSql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, b.page_hash, b.user_id FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a 
+        $expectedSql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, a.deleted, b.page_hash, b.user_id FROM " . TABLE_WP_QUICKTASKER_USERS . " AS a 
                     LEFT JOIN " . TABLE_WP_QUICKTASKER_USER_PAGES . " AS b
                     ON a.id = b.user_id 
                     WHERE b.page_hash = %s";

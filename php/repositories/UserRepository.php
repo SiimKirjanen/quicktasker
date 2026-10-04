@@ -243,32 +243,6 @@ if (!class_exists('WPQT\User\UserRepository')) {
         }
 
         /**
-         * Checks if a user is active.
-         *
-         * This function queries the database to determine if a user with the given ID is marked as active.
-         *
-         * @param int $userId The ID of the user to check.
-         * @return bool True if the user is active, false otherwise.
-         */
-        public function isUserActive($userId)
-        {
-            global $wpdb;
-
-            $result = $wpdb->get_var(
-                $wpdb->prepare(
-                    'SELECT COUNT(*) FROM ' . TABLE_WP_QUICKTASKER_USERS . ' WHERE id = %d AND is_active = 1 AND deleted = 0',
-                    $userId
-                )
-            );
-
-            if ($result > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        /**
          * Checks whether the QuickTasker user is currently banned.
          *
          * @param int $userId The ID of the QuickTasker user.

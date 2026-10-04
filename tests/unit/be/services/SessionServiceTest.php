@@ -140,6 +140,52 @@ class SessionServiceTest extends TestCase {
         $this->assertEquals('sessionToken', $params[0]->getName());
     }
 
+    public function test_deleteUserSessions_deletes_all_sessions_of_the_user() {
+        $wpdbBackup = $GLOBALS['wpdb'] ?? null;
+        $wpdbMock = $this->getMockBuilder(stdClass::class)->addMethods(['delete'])->getMock();
+        $wpdbMock->expects($this->once())
+            ->method('delete')
+            ->with(TABLE_WP_QUICKTASKER_USER_SESSIONS, ['user_id' => 7], ['%d'])
+            ->willReturn(2);
+        $GLOBALS['wpdb'] = $wpdbMock;
+
+        try {
+            (new \WPQT\Session\SessionService())->deleteUserSessions(7);
+        } finally {
+            $GLOBALS['wpdb'] = $wpdbBackup;
+        }
+    }
+
+    public function test_deleteUserSessions_succeeds_when_user_has_no_sessions() {
+        $wpdbBackup = $GLOBALS['wpdb'] ?? null;
+        $wpdbMock = $this->getMockBuilder(stdClass::class)->addMethods(['delete'])->getMock();
+        $wpdbMock->method('delete')->willReturn(0);
+        $GLOBALS['wpdb'] = $wpdbMock;
+
+        try {
+            (new \WPQT\Session\SessionService())->deleteUserSessions(7);
+            $this->addToAssertionCount(1);
+        } finally {
+            $GLOBALS['wpdb'] = $wpdbBackup;
+        }
+    }
+
+    public function test_deleteUserSessions_throws_when_delete_fails() {
+        $wpdbBackup = $GLOBALS['wpdb'] ?? null;
+        $wpdbMock = $this->getMockBuilder(stdClass::class)->addMethods(['delete'])->getMock();
+        $wpdbMock->method('delete')->willReturn(false);
+        $GLOBALS['wpdb'] = $wpdbMock;
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Failed to delete user sessions');
+
+        try {
+            (new \WPQT\Session\SessionService())->deleteUserSessions(7);
+        } finally {
+            $GLOBALS['wpdb'] = $wpdbBackup;
+        }
+    }
+
 public function test_logOutCurrentWPUser_method_exists() {
         $this->assertTrue(method_exists(\WPQT\Session\SessionService::class, 'logOutCurrentWPUser'));
         

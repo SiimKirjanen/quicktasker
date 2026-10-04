@@ -122,6 +122,7 @@ ServiceLocator::register('DBMigrateService', new WPQT\DB\DBMigrateService());
 ServiceLocator::register('PasswordRepository', new WPQT\Password\PasswordRepository());
 ServiceLocator::register('SettingService', new WPQT\Settings\SettingsService());
 ServiceLocator::register('SessionRepository', new WPQT\Session\SessionRepository());
+ServiceLocator::register('SessionService', new WPQT\Session\SessionService());
 ServiceLocator::register('HashService', new WPQT\Hash\HashService());
 ServiceLocator::register('UserPageRepository', new WPQT\UserPage\UserPageRepository());
 ServiceLocator::register('StageService', new WPQT\Stage\StageService());

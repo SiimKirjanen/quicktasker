@@ -9,10 +9,12 @@ import { waitForModalToClose } from './modal-helpers';
 /**
  * Generate a unique name with timestamp to avoid substring conflicts
  * @param prefix - Base name prefix (e.g., 'BM-CR-Board' where BM=describe group, CR=test action)
- * @returns Unique name with timestamp
+ * @returns Unique name with timestamp and a random suffix, so parallel tests
+ *          sharing a prefix in the same millisecond still get different names
  */
 export function generateUniqueName(prefix: string): string {
-  return `${prefix}_${Date.now()}`;
+  const suffix = Math.random().toString(36).slice(2, 6).padEnd(4, '0');
+  return `${prefix}_${Date.now()}${suffix}`;
 }
 
 /**

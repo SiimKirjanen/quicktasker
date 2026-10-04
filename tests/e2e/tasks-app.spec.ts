@@ -75,14 +75,18 @@ test.describe('Tasks App – Homepage', () => {
   test('View assigned tasks button navigates to assigned tasks page', async ({ page }) => {
     await navigateToTasksApp(page);
     await page.getByText('View assigned tasks').click();
-    await expect(page.getByText('Assigned tasks')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByRole('heading', { name: 'Assigned tasks', exact: true })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
     expect(page.url()).toContain('#/user-tasks');
   });
 
   test('View assignable tasks button navigates to assignable tasks page', async ({ page }) => {
     await navigateToTasksApp(page);
     await page.getByText('View assignable tasks').click();
-    await expect(page.getByText('Assignable tasks')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByRole('heading', { name: 'Assignable tasks', exact: true })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
     expect(page.url()).toContain('#/assignable-tasks');
   });
 
@@ -98,7 +102,7 @@ test.describe('Tasks App – Homepage', () => {
 test.describe('Tasks App – Assigned Tasks', () => {
   test('shows page structure with heading, description and filter', async ({ page }) => {
     await navigateToAssignedTasks(page);
-    await expect(page.getByText('Assigned tasks')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Assigned tasks', exact: true })).toBeVisible();
     await expect(page.getByText('Tasks that are assigned to you')).toBeVisible();
     await expect(page.getByText('Filter tasks')).toBeVisible();
     await expect(page.getByRole('textbox')).toBeVisible();
@@ -464,7 +468,7 @@ test.describe('Tasks App – QuickTasker User First Login Flow', () => {
   });
 });
 
-test.describe('Tasks App – Deleted QuickTasker User', () => {
+test.describe('Tasks App – Revoked QuickTasker Access', () => {
   test('deleting an active user revokes their session and blocks logging in again', async ({ page, browser }) => {
     test.setTimeout(TIMEOUTS.LONG_TEST);
     const userName = generateUniqueName('TA-DEL-User');
@@ -545,6 +549,66 @@ test.describe('Tasks App – Deleted QuickTasker User', () => {
     });
     expect(setupAttempt.success).toBe(false);
     expect(setupAttempt.messages).toContain('User is not active');
+    await context.close();
+  });
+
+  test('disabling a logged-in user blocks requests made with their still-valid session', async ({ page, browser }) => {
+    const userName = generateUniqueName('TA-DIS-User');
+    const password = 'qt-pass-123';
+
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, userName);
+    await navigateToUserDetailPage(page, userName);
+    const userPageUrl = await getQuickTaskerUserPageUrl(page);
+
+    const { context, page: userPage } = await openAnonymousPage(browser);
+    await completeQuickTaskerSetup(userPage, userPageUrl, password);
+    await loginAsQuickTasker(userPage, password);
+
+    await navigateToQuickTaskersTab(page);
+    await disableQuickTaskerUser(page, userName);
+
+    // Disabling keeps the session, so only the active-user check stops this.
+    const sessionRequest = await callQuickTaskerUserPageApi(userPage, userPageUrl, 'GET', 'assigned-tasks');
+    expect(sessionRequest.success).toBe(false);
+    expect(sessionRequest.messages).toContain('User is not active');
+
+    // Reload: the page is already on this URL, so goto would only change the hash.
+    await userPage.reload();
+    await expect(userPage.getByRole('heading', { name: 'User is not active' })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await context.close();
+  });
+
+  test('resetting a password logs the user out and sends them back to setup', async ({ page, browser }) => {
+    const userName = generateUniqueName('TA-RST-User');
+    const password = 'qt-pass-123';
+
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, userName);
+    await navigateToUserDetailPage(page, userName);
+    const userPageUrl = await getQuickTaskerUserPageUrl(page);
+
+    const { context, page: userPage } = await openAnonymousPage(browser);
+    await completeQuickTaskerSetup(userPage, userPageUrl, password);
+    await loginAsQuickTasker(userPage, password);
+
+    // Reset password only shows once the user has a password, so load the page now.
+    await page.reload();
+    await expect(page.getByRole('heading', { name: userName })).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await page.getByText('Reset password').click();
+    await expect(page.getByText('User password reset successfully')).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+
+    const sessionRequest = await callQuickTaskerUserPageApi(userPage, userPageUrl, 'GET', 'assigned-tasks');
+    expect(sessionRequest.success).toBe(false);
+    expect(sessionRequest.messages).toContain('Invalid session token');
+
+    // Reload: the page is already on this URL, so goto would only change the hash.
+    await userPage.reload();
+    await expect(userPage.getByText('Please complete the setup')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
     await context.close();
   });
 });
