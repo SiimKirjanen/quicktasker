@@ -12,6 +12,7 @@ type State = {
   publicUserPageId: string;
   is_customFields: boolean;
   timezone: string;
+  currentUserId: string;
   isUserAllowedToDelete: boolean;
   isUserAllowedToManageSettings: boolean;
   userPageCustomStyles: string;
@@ -24,6 +25,7 @@ const initialState: State = {
   publicUserPageId: "",
   is_customFields: true,
   timezone: "",
+  currentUserId: "",
   isUserAllowedToDelete: false,
   isUserAllowedToManageSettings: false,
   userPageCustomStyles: "",
@@ -37,6 +39,7 @@ type Action =
         siteURL: string;
         publicUserPageId: string;
         timezone: string;
+        currentUserId: string;
         isUserAllowedToDelete: boolean;
         isUserAllowedToManageSettings: boolean;
         userPageCustomStyles: string;
@@ -66,6 +69,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     const siteURL = window.wpqt.siteURL;
     const publicUserPageId = window.wpqt.publicUserPageId;
     const timezone = window.wpqt.timezone;
+    const currentUserId = window.wpqt.currentUserId;
     const isUserAllowedToDelete = window.wpqt.isUserAllowedToDelete === "1";
     const isUserAllowedToManageSettings =
       window.wpqt.isUserAllowedToManageSettings === "1";
@@ -79,6 +83,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         siteURL,
         publicUserPageId,
         timezone,
+        currentUserId,
         isUserAllowedToDelete,
         isUserAllowedToManageSettings,
         userPageCustomStyles,

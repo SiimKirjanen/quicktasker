@@ -1,10 +1,11 @@
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../components/Card/Card";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { Toggle } from "../../../../components/common/Toggle/Toggle";
 import { Loading } from "../../../../components/Loading/Loading";
 import { useCapabilityActions } from "../../../../hooks/actions/useCapabilityActions";
+import { AppContext } from "../../../../providers/AppContextProvider";
 import { WPUserCapabilities } from "../../../../types/capabilities";
 import { WPUser } from "../../../../types/user";
 
@@ -12,6 +13,10 @@ type Props = {
   user: WPUser;
 };
 function WPUserItem({ user }: Props) {
+  const {
+    state: { currentUserId },
+  } = useContext(AppContext);
+  const isOwnUser = user.id === currentUserId;
   const [capabilitySettings, setCapabilitySettings] =
     useState<WPUserCapabilities>({
       quicktasker_admin_role: "quicktasker_admin_role" in user.allcaps,
@@ -31,7 +36,7 @@ function WPUserItem({ user }: Props) {
   const { updateWPUserCapabilities } = useCapabilityActions();
 
   const onToggleChange = async (checked: boolean, capability: string) => {
-    if (updating) {
+    if (updating || isOwnUser) {
       return;
     }
 
@@ -60,12 +65,21 @@ function WPUserItem({ user }: Props) {
         label={__("Role", "quicktasker")}
         value={Array.isArray(user.roles) ? user.roles.join(", ") : ""}
       />
+      {isOwnUser && (
+        <div
+          className="wpqt-mb-2 wpqt-text-sm wpqt-text-gray-500"
+          data-testid="wp-user-own-permissions-notice"
+        >
+          {__("You cannot change your own permissions.", "quicktasker")}
+        </div>
+      )}
       <div className="wpqt-mb-2">
         <div className="wpqt-mb-2">
           {__("Access to plugin admin area", "quicktasker")}
         </div>
         <Toggle
           checked={capabilitySettings.quicktasker_admin_role}
+          disabled={isOwnUser}
           handleChange={(checked: boolean) => {
             onToggleChange(checked, "quicktasker_admin_role");
           }}
@@ -74,11 +88,11 @@ function WPUserItem({ user }: Props) {
         <div className="wpqt-mt-3 wpqt-pl-4 wpqt-border-l-2 wpqt-border-gray-200">
           <div className="wpqt-mb-2">
             <div className="wpqt-mb-2">
-              {__("Access to user management", "quicktasker")}
+              {__("Access to QuickTasker user management", "quicktasker")}
             </div>
             <Toggle
               checked={capabilitySettings.quicktasker_admin_role_manage_users}
-              disabled={!capabilitySettings.quicktasker_admin_role}
+              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
               handleChange={(checked: boolean) => {
                 onToggleChange(checked, "quicktasker_admin_role_manage_users");
               }}
@@ -96,7 +110,7 @@ function WPUserItem({ user }: Props) {
               checked={
                 capabilitySettings.quicktasker_admin_role_manage_settings
               }
-              disabled={!capabilitySettings.quicktasker_admin_role}
+              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
               handleChange={(checked: boolean) => {
                 onToggleChange(
                   checked,
@@ -112,7 +126,7 @@ function WPUserItem({ user }: Props) {
             </div>
             <Toggle
               checked={capabilitySettings.quicktasker_admin_role_manage_archive}
-              disabled={!capabilitySettings.quicktasker_admin_role}
+              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
               handleChange={(checked: boolean) => {
                 onToggleChange(
                   checked,
@@ -128,7 +142,7 @@ function WPUserItem({ user }: Props) {
             </div>
             <Toggle
               checked={capabilitySettings.quicktasker_access_user_page_app}
-              disabled={!capabilitySettings.quicktasker_admin_role}
+              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
               handleChange={(checked: boolean) => {
                 onToggleChange(checked, "quicktasker_access_user_page_app");
               }}
@@ -141,7 +155,7 @@ function WPUserItem({ user }: Props) {
             </div>
             <Toggle
               checked={capabilitySettings.quicktasker_admin_role_allow_delete}
-              disabled={!capabilitySettings.quicktasker_admin_role}
+              disabled={isOwnUser || !capabilitySettings.quicktasker_admin_role}
               handleChange={(checked: boolean) => {
                 onToggleChange(checked, "quicktasker_admin_role_allow_delete");
               }}
@@ -156,6 +170,7 @@ function WPUserItem({ user }: Props) {
         </div>
         <Toggle
           checked={capabilitySettings.quicktasker_view_my_tasks}
+          disabled={isOwnUser}
           handleChange={(checked: boolean) => {
             onToggleChange(checked, "quicktasker_view_my_tasks");
           }}

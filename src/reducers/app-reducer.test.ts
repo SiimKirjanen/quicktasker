@@ -21,6 +21,7 @@ describe("app reducer", () => {
       siteURL: "https://site",
       publicUserPageId: "5",
       timezone: "UTC",
+      currentUserId: "7",
       isUserAllowedToDelete: true,
       isUserAllowedToManageSettings: false,
       userPageCustomStyles: ".x{}",

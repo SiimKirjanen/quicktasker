@@ -14,9 +14,11 @@ declare global {
       pluginURL: string;
       publicUserPageId: string;
       timezone: string;
+      currentUserId: string;
       isPluginAdmin: "1" | "0";
       isUserAllowedToDelete: "1" | "0";
       isUserAllowedToManageSettings: "1" | "0";
+      isUserAllowedToManageWPUsers: "1" | "0";
       userPageCustomStyles: string;
       taskUploadsURL: string;
       initialNotificationPreferences: {

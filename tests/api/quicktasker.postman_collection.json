@@ -12529,6 +12529,90 @@
                   ]
                 },
                 {
+                  "name": "GET /users/{id}/extended needs \"users\"",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/999999/extended",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{limitedUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{limitedAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /users needs \"users\"",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{limitedUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{limitedAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"x\",\n  \"description\": \"x\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "GET /my-tasks needs \"myTasks\"",
                   "request": {
                     "method": "GET",
@@ -12548,6 +12632,125 @@
                           "type": "string"
                         }
                       ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /users/{id} needs \"users\"",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/999999",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{limitedUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{limitedAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /users/{id}/password-reset needs \"users\"",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/999999/password-reset",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{limitedUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{limitedAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /users/{id}/status needs \"users\"",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/999999/status",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{limitedUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{limitedAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"status\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     }
                   },
                   "event": [
@@ -12599,7 +12802,7 @@
                   ]
                 },
                 {
-                  "name": "DELETE /users/{id} needs \"delete\"",
+                  "name": "DELETE /users/{id} needs \"usersDelete\"",
                   "request": {
                     "method": "DELETE",
                     "header": [],
@@ -12669,7 +12872,7 @@
                   ]
                 },
                 {
-                  "name": "GET /wp-users needs \"users\"",
+                  "name": "GET /wp-users needs \"wpAdmin\"",
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -12704,7 +12907,7 @@
                   ]
                 },
                 {
-                  "name": "PATCH /wp-users/{id}/capabilities needs \"users\"",
+                  "name": "PATCH /wp-users/{id}/capabilities needs \"wpAdmin\"",
                   "request": {
                     "method": "PATCH",
                     "header": [
@@ -17017,6 +17220,473 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('status is 403', () => pm.response.to.have.status(403));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Grant limited user the manage users capability",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/capabilities",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quicktasker_admin_role\": true,\n  \"quicktasker_admin_role_allow_delete\": false,\n  \"quicktasker_admin_role_manage_users\": true,\n  \"quicktasker_admin_role_manage_settings\": false,\n  \"quicktasker_admin_role_manage_archive\": false,\n  \"quicktasker_access_user_page_app\": false,\n  \"quicktasker_view_my_tasks\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "User manager can create a QuickTasker",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"API user manager QuickTasker {{runId}}\",\n  \"description\": \"Created by a non-admin user manager\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.collectionVariables.set('userManagerQuickTaskerId', String(pm.response.json().data.id));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "User manager can edit a QuickTasker",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{userManagerQuickTaskerId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"API user manager QuickTasker {{runId}} edited\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "User manager without delete cannot delete a QuickTasker",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{userManagerQuickTaskerId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 403', () => pm.response.to.have.status(403));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "User manager cannot list WordPress users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users?type=all",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 403', () => pm.response.to.have.status(403));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "User manager cannot change their own WordPress user permissions",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/capabilities",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quicktasker_admin_role\": true,\n  \"quicktasker_admin_role_allow_delete\": true,\n  \"quicktasker_admin_role_manage_users\": true,\n  \"quicktasker_admin_role_manage_settings\": true,\n  \"quicktasker_admin_role_manage_archive\": true,\n  \"quicktasker_access_user_page_app\": true,\n  \"quicktasker_view_my_tasks\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 403', () => pm.response.to.have.status(403));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "User manager still cannot read board settings",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardCId}}/settings",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 403', () => pm.response.to.have.status(403));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Delete the user manager's QuickTasker",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{userManagerQuickTaskerId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get the admin's own WordPress user ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wp/v2/users/me",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set('adminWpUserId', String(pm.response.json().id));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Admin cannot change their own permissions",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{adminWpUserId}}/capabilities",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quicktasker_admin_role\": false,\n  \"quicktasker_admin_role_allow_delete\": false,\n  \"quicktasker_admin_role_manage_users\": false,\n  \"quicktasker_admin_role_manage_settings\": false,\n  \"quicktasker_admin_role_manage_archive\": false,\n  \"quicktasker_access_user_page_app\": false,\n  \"quicktasker_view_my_tasks\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"You cannot change your own permissions\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('You cannot change your own permissions'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Revoke the manage users capability",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/capabilities",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quicktasker_admin_role\": true,\n  \"quicktasker_admin_role_allow_delete\": false,\n  \"quicktasker_admin_role_manage_users\": false,\n  \"quicktasker_admin_role_manage_settings\": false,\n  \"quicktasker_admin_role_manage_archive\": false,\n  \"quicktasker_access_user_page_app\": false,\n  \"quicktasker_view_my_tasks\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
                     ]
                   }
                 }

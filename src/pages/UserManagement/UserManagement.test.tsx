@@ -28,7 +28,13 @@ jest.mock("../../components/common/Header/Header", () => ({
 }));
 
 jest.mock("../../components/Tab/WPQTTabs", () => ({
-  WPQTTabs: () => <div data-testid="tabs" />,
+  WPQTTabs: ({ tabs }: { tabs: { name: string }[] }) => (
+    <div data-testid="tabs">
+      {tabs.map((tab) => (
+        <span key={tab.name}>{tab.name}</span>
+      ))}
+    </div>
+  ),
 }));
 
 jest.mock(
@@ -57,6 +63,7 @@ type CtxOverrides = {
   updateWPUsers?: jest.Mock;
   modalDispatch?: jest.Mock;
   loadingDispatch?: jest.Mock;
+  isUserAllowedToManageWPUsers?: boolean;
 };
 
 function renderPage({
@@ -64,7 +71,12 @@ function renderPage({
   updateWPUsers = jest.fn().mockResolvedValue(undefined),
   modalDispatch = jest.fn(),
   loadingDispatch = jest.fn(),
+  isUserAllowedToManageWPUsers = true,
 }: CtxOverrides = {}) {
+  window.wpqt = {
+    isUserAllowedToManageWPUsers: isUserAllowedToManageWPUsers ? "1" : "0",
+  } as Window["wpqt"];
+
   const result = render(
     <LoadingContext.Provider
       value={{ state: { fullPageLoading: false }, loadingDispatch }}
@@ -174,6 +186,43 @@ describe("UserManagement", () => {
     expect(modalDispatch).toHaveBeenCalledWith({
       type: CHANGE_USER_SETTINGS_MODAL_OPEN,
       payload: true,
+    });
+  });
+
+  it("shows the WordPress users and QuickTaskers tabs to WordPress admins", async () => {
+    await act(async () => {
+      renderPage();
+    });
+
+    expect(screen.getByText("WordPress users")).toBeInTheDocument();
+    expect(screen.getByText("QuickTaskers")).toBeInTheDocument();
+  });
+
+  describe("without permission to manage WordPress users", () => {
+    it("shows only the QuickTaskers tab", async () => {
+      await act(async () => {
+        renderPage({ isUserAllowedToManageWPUsers: false });
+      });
+
+      expect(screen.queryByText("WordPress users")).not.toBeInTheDocument();
+      expect(screen.getByText("QuickTaskers")).toBeInTheDocument();
+    });
+
+    it("never fetches WordPress users, on mount or on refresh", async () => {
+      let updateUsers!: jest.Mock;
+      let updateWPUsers!: jest.Mock;
+      await act(async () => {
+        ({ updateUsers, updateWPUsers } = renderPage({
+          isUserAllowedToManageWPUsers: false,
+        }));
+      });
+
+      await act(async () => {
+        fireEvent.click(screen.getByTestId("refresh-icon"));
+      });
+
+      expect(updateUsers).toHaveBeenCalledTimes(2);
+      expect(updateWPUsers).not.toHaveBeenCalled();
     });
   });
 });

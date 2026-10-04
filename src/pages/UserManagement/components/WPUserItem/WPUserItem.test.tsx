@@ -37,13 +37,16 @@ jest.mock("../../../../components/common/Toggle/Toggle", () => ({
   Toggle: ({
     checked,
     handleChange,
+    disabled,
   }: {
     checked: boolean;
     handleChange: (v: boolean) => void;
+    disabled?: boolean;
   }) => (
     <input
       type="checkbox"
       checked={checked}
+      disabled={disabled}
       onChange={(e) => handleChange(e.target.checked)}
     />
   ),
@@ -52,6 +55,10 @@ jest.mock("../../../../components/Loading/Loading", () => ({
   Loading: () => <div data-testid="loading-spinner" />,
 }));
 
+import {
+  AppContext,
+  initialState,
+} from "../../../../providers/AppContextProvider";
 import { UserTypes, WPUser } from "../../../../types/user";
 import { WPUserItem } from "./WPUserItem";
 
@@ -67,6 +74,19 @@ function makeWPUser(allcaps: Record<string, boolean> = {}): WPUser {
     user_type: UserTypes.WP_USER,
     profile_picture: "",
   };
+}
+
+function renderAsCurrentUser(user: WPUser, currentUserId: string) {
+  return render(
+    <AppContext.Provider
+      value={{
+        state: { ...initialState, currentUserId },
+        appDispatch: () => {},
+      }}
+    >
+      <WPUserItem user={user} />
+    </AppContext.Provider>,
+  );
 }
 
 beforeEach(() => {
@@ -195,5 +215,41 @@ describe("WPUserItem", () => {
     });
 
     expect(screen.queryByTestId("loading-spinner")).toBeNull();
+  });
+
+  describe("own user card", () => {
+    it("disables every toggle and shows a notice on the current user's card", () => {
+      renderAsCurrentUser(
+        makeWPUser({
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_manage_users: true,
+        }),
+        "wp1",
+      );
+
+      screen
+        .getAllByRole("checkbox")
+        .forEach((cb) => expect(cb).toBeDisabled());
+      expect(
+        screen.getByTestId("wp-user-own-permissions-notice"),
+      ).toBeInTheDocument();
+    });
+
+    it("does not send an update when a toggle on the own card changes", async () => {
+      renderAsCurrentUser(makeWPUser(), "wp1");
+
+      await act(async () => {
+        fireEvent.click(screen.getAllByRole("checkbox")[0]);
+      });
+
+      expect(mockUpdateWPUserCapabilities).not.toHaveBeenCalled();
+    });
+
+    it("keeps toggles enabled and hides the notice on other users' cards", () => {
+      renderAsCurrentUser(makeWPUser({ quicktasker_admin_role: true }), "wp2");
+
+      screen.getAllByRole("checkbox").forEach((cb) => expect(cb).toBeEnabled());
+      expect(screen.queryByTestId("wp-user-own-permissions-notice")).toBeNull();
+    });
   });
 });
