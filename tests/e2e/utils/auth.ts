@@ -1,4 +1,4 @@
-import { Browser, BrowserContext, Page, expect } from '@playwright/test';
+import { APIRequestContext, Browser, BrowserContext, Page, expect } from '@playwright/test';
 import { TIMEOUTS } from './timeouts';
 
 /**
@@ -95,4 +95,16 @@ export async function isLoggedIn(page: Page): Promise<boolean> {
   await page.goto('/wp-admin');
   const url = page.url();
   return url.includes('/wp-admin/') && !url.includes('wp-login.php');
+}
+
+/**
+ * Read the WP REST nonce from an admin page, for REST calls made with the
+ * admin's cookies (send it as the X-WP-Nonce header).
+ */
+export async function getAdminNonce(request: APIRequestContext): Promise<string> {
+  const response = await request.get('/wp-admin/');
+  const html = await response.text();
+  const match = html.match(/"nonce":"([^"]+)"/);
+  if (!match) throw new Error('Could not find WP REST nonce in admin page response');
+  return match[1];
 }

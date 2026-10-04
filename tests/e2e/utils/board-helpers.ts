@@ -1,4 +1,5 @@
-import { Page, expect } from '@playwright/test';
+import { APIRequestContext, Page, expect } from '@playwright/test';
+import { getAdminNonce } from './auth';
 import { waitForModalToClose } from './modal-helpers';
 
 /**
@@ -15,6 +16,20 @@ import { waitForModalToClose } from './modal-helpers';
 export function generateUniqueName(prefix: string): string {
   const suffix = Math.random().toString(36).slice(2, 6).padEnd(4, '0');
   return `${prefix}_${Date.now()}${suffix}`;
+}
+
+/**
+ * Delete a board and its tasks by name via the admin REST API. For test
+ * cleanup: does nothing if no board has that name.
+ */
+export async function deleteBoardViaApi(request: APIRequestContext, boardName: string): Promise<void> {
+  const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
+  const list = await request.get('/wp-json/wpqt/v1/pipelines', { headers });
+  if (!list.ok()) throw new Error(`Failed to list boards: ${await list.text()}`);
+  const board = (await list.json()).data.find((b: { name: string }) => b.name === boardName);
+  if (!board) return;
+  const response = await request.delete(`/wp-json/wpqt/v1/pipelines/${board.id}`, { headers });
+  if (!response.ok()) throw new Error(`Failed to delete board: ${await response.text()}`);
 }
 
 /**
