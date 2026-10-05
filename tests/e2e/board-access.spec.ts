@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { navigateToBoardsPage } from './utils/navigation';
 import {
+  createBoard,
   createBoardViaApi,
   createTask,
   createTaskViaApi,
@@ -25,6 +26,7 @@ import {
   navigateToAssignedTasks,
 } from './utils/tasks-app-helpers';
 import { TIMEOUTS } from './utils/timeouts';
+import { runWpCli } from './utils/wp-cli';
 
 /**
  * WordPress users who are not administrators can only be assigned to tasks on
@@ -152,6 +154,107 @@ test.describe('Board access', () => {
       await context.close();
       await deleteBoardViaApi(request, boardAName);
       await deleteBoardViaApi(request, boardBName);
+    }
+  });
+
+  test('the board dropdown only lists the boards a user has been added to or created', async ({ browser, request }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const addedBoardName = generateUniqueName('BA-Added');
+    const otherBoardName = generateUniqueName('BA-Other');
+    const createdBoardName = generateUniqueName('BA-Created');
+    await createBoardViaApi(request, addedBoardName);
+    await createBoardViaApi(request, otherBoardName);
+    const userLogin = uniqueLogin('wpdropdown');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    await addWPUserToBoards(request, userId, [addedBoardName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const userPage = await context.newPage();
+      const boardItems = userPage.getByTestId('pipeline-selection-item');
+      await navigateToBoardsPage(userPage);
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(addedBoardName);
+
+      await createBoard(userPage, createdBoardName);
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(createdBoardName);
+
+      // The created board is still listed after a reload, so the user was added to it.
+      await navigateToBoardsPage(userPage);
+      await userPage.getByTestId('pipeline-selection-dropdown').click();
+      await expect(boardItems.filter({ hasText: addedBoardName })).toBeVisible();
+      await expect(boardItems.filter({ hasText: createdBoardName })).toBeVisible();
+      await expect(boardItems.filter({ hasText: otherBoardName })).toHaveCount(0);
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, addedBoardName);
+      await deleteBoardViaApi(request, otherBoardName);
+      await deleteBoardViaApi(request, createdBoardName);
+    }
+  });
+
+  test('a link to a board the user has not been added to says so', async ({ browser, request }) => {
+    const addedBoardName = generateUniqueName('BA-Link-Added');
+    const otherBoardName = generateUniqueName('BA-Link-Other');
+    await createBoardViaApi(request, addedBoardName);
+    const otherBoard = await createBoardViaApi(request, otherBoardName);
+    const userLogin = uniqueLogin('wplink');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    await addWPUserToBoards(request, userId, [addedBoardName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const userPage = await context.newPage();
+      await userPage.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${otherBoard.boardId}`);
+      await expect(
+        userPage.getByText('You have not been added to this board. Ask a WordPress administrator to add you to it.'),
+      ).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+      await expect(userPage.getByText('Unable to load the board', { exact: false })).toHaveCount(0);
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveCount(0);
+
+      await userPage.getByTestId('open-primary-board').click();
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(addedBoardName);
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, addedBoardName);
+      await deleteBoardViaApi(request, otherBoardName);
+    }
+  });
+});
+
+test.describe('Board access notice after updating', () => {
+  test('administrators see the notice until one of them dismisses it', async ({ page, browser, request }) => {
+    const userLogin = uniqueLogin('wpnotice');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    // Set by the update from a version without board access.
+    runWpCli('option update quicktasker_show_board_access_notice 1');
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const notice = page.getByTestId('wpqt-board-access-notice');
+      await page.goto('/wp-admin/');
+      await expect(notice).toBeVisible();
+      await expect(notice.getByRole('link', { name: 'Add users to boards' })).toHaveAttribute(
+        'href',
+        /page=wp-quicktasker#\/user-management$/,
+      );
+
+      const userPage = await context.newPage();
+      await userPage.goto('/wp-admin/');
+      await expect(userPage.locator('#wpbody')).toBeVisible();
+      await expect(userPage.getByTestId('wpqt-board-access-notice')).toHaveCount(0);
+
+      await notice.getByRole('link', { name: 'Dismiss' }).click();
+      await expect(notice).toHaveCount(0);
+      await expect(page).not.toHaveURL(/wpqt_dismiss_board_access_notice/);
+      await page.reload();
+      await expect(page.locator('#wpbody')).toBeVisible();
+      await expect(notice).toHaveCount(0);
+    } finally {
+      await context.close();
+      runWpCli('option delete quicktasker_show_board_access_notice');
     }
   });
 });

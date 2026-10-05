@@ -26,6 +26,7 @@ import useTabVisibility from "../../../hooks/useTabVisibility";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { NotificationsContext } from "../../../providers/NotificationsContextProvider";
+import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { AddStage } from "./AddStage";
 import { Stage } from "./Stage";
@@ -39,7 +40,10 @@ const Pipeline = () => {
   const { isTabVisible } = useTabVisibility();
   const { modalDispatch } = useContext(ModalContext);
   const { fetchNotifications } = useContext(NotificationsContext);
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
+  const {
+    state: { pipelines },
+  } = useContext(PipelinesContext);
   const {
     state: { isUserAllowedToManageSettings, isUserAllowedToManageWPUsers },
   } = useApp();
@@ -49,14 +53,25 @@ const Pipeline = () => {
       activePipeline?.settings?.pipeline_refresh_interval ||
       REFETCH_ACTIVE_PIPELINE_INTERVAL;
     const refetchDataInterval = setInterval(() => {
-      if (activePipeline && isTabVisible && !pipelineMissing) {
+      if (
+        activePipeline &&
+        isTabVisible &&
+        !pipelineMissing &&
+        !pipelineNoAccess
+      ) {
         fetchAndSetPipelineData(activePipeline.id);
         fetchNotifications();
       }
     }, refreshInterval * 1000);
 
     return () => clearInterval(refetchDataInterval);
-  }, [activePipeline, isTabVisible, pipelineMissing, fetchNotifications]);
+  }, [
+    activePipeline,
+    isTabVisible,
+    pipelineMissing,
+    pipelineNoAccess,
+    fetchNotifications,
+  ]);
 
   const dispatchMove = (
     source: DraggableLocation,
@@ -121,6 +136,34 @@ const Pipeline = () => {
           "quicktasker",
         )}
       />
+    );
+  }
+
+  if (pipelineNoAccess) {
+    const primaryPipeline =
+      pipelines.find((pipeline) => pipeline.is_primary) ?? pipelines[0];
+
+    return (
+      <Info
+        infoDescription={__(
+          "You have not been added to this board. Ask a WordPress administrator to add you to it.",
+          "quicktasker",
+        )}
+      >
+        {primaryPipeline && (
+          <div
+            className="wpqt-blue-text wpqt-blue-text-hover wpqt-cursor-pointer"
+            data-testid="open-primary-board"
+            onClick={() => {
+              // Changing the address clears the no access state.
+              window.location.hash = `#/board/${primaryPipeline.id}`;
+              fetchAndSetPipelineData(primaryPipeline.id);
+            }}
+          >
+            {__("Open your primary board", "quicktasker")}
+          </div>
+        )}
+      </Info>
     );
   }
 

@@ -3,11 +3,11 @@ import { MissingContentContext } from "../providers/MissingContentProvider";
 
 function useMissingContent() {
   const {
-    state: { pipelineMissing },
+    state: { pipelineMissing, pipelineNoAccess },
     dispatch,
   } = useContext(MissingContentContext);
 
-  return { pipelineMissing, dispatch };
+  return { pipelineMissing, pipelineNoAccess, dispatch };
 }
 
 export { useMissingContent };

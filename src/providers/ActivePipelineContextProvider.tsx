@@ -139,7 +139,8 @@ const ActivePipelineContextProvider = ({
 }) => {
   const [state, dispatch] = useReducer(activePipelineReducer, initialState);
   const { loadingDispatch } = useContext(LoadingContext);
-  const { detectMissingResources } = useMissingResourceDetection();
+  const { detectMissingResources, detectPipelineNoAccess } =
+    useMissingResourceDetection();
 
   useEffect(() => {
     const pipelineIdToLoad =
@@ -175,6 +176,9 @@ const ActivePipelineContextProvider = ({
       dispatch({ type: PIPELINE_SET_PIPELINE, payload: pipeline });
     } catch (e) {
       console.error(e);
+      if (detectPipelineNoAccess(e)) {
+        return;
+      }
       toast.error(
         __(
           "Unable to load the board. Please try again. If the problem persists, reload the page.",

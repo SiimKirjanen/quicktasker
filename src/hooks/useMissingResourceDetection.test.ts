@@ -12,6 +12,7 @@ jest.mock("./useMissingContent", () => ({
 import { toast } from "react-toastify";
 import {
   SET_PIPELINE_MISSING,
+  SET_PIPELINE_NO_ACCESS,
   SET_STAGE_MISSING,
   SET_TASK_MISSING,
   WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND,
@@ -23,6 +24,34 @@ import { useMissingResourceDetection } from "./useMissingResourceDetection";
 beforeEach(() => jest.clearAllMocks());
 
 describe("useMissingResourceDetection", () => {
+  describe("detectPipelineNoAccess", () => {
+    it("dispatches SET_PIPELINE_NO_ACCESS for a refused request", () => {
+      const { result } = renderHook(() => useMissingResourceDetection());
+
+      expect(
+        result.current.detectPipelineNoAccess({
+          code: "rest_forbidden",
+          data: { status: 403 },
+        }),
+      ).toBe(true);
+      expect(mockDispatch).toHaveBeenCalledWith({
+        type: SET_PIPELINE_NO_ACCESS,
+        payload: true,
+      });
+    });
+
+    it.each([
+      ["another status", { data: { status: 400 } }],
+      ["an error without a status", new Error("Network error")],
+      ["no error", null],
+    ])("ignores %s", (_label, error) => {
+      const { result } = renderHook(() => useMissingResourceDetection());
+
+      expect(result.current.detectPipelineNoAccess(error)).toBe(false);
+      expect(mockDispatch).not.toHaveBeenCalled();
+    });
+  });
+
   describe("detectMissingResources", () => {
     it("detects nothing for a non-matching error", () => {
       const { result } = renderHook(() => useMissingResourceDetection());

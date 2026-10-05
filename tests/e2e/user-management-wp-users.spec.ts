@@ -1,8 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { navigateToBoardsPage, navigateToUserManagement } from './utils/navigation';
-import { createBoardViaApi, deleteBoardViaApi, generateUniqueName } from './utils/board-helpers';
+import {
+  createBoardViaApi,
+  createTaskViaApi,
+  deleteBoardViaApi,
+  generateUniqueName,
+} from './utils/board-helpers';
 import { loginToWordPressViaApi } from './utils/auth';
 import {
+  addWPUserToBoards,
+  assignWPUserToTaskViaApi,
   createWPUser,
   grantWPUserCaps,
   navigateToWPUsersTab,
@@ -118,6 +125,37 @@ test.describe('WordPress Users Tab – Boards', () => {
     } finally {
       await deleteBoardViaApi(request, boardAName);
       await deleteBoardViaApi(request, boardBName);
+    }
+  });
+
+  test('removing a user from a board warns about their tasks there', async ({ page, request }) => {
+    const boardName = generateUniqueName('WUB-Tasks-Board');
+    const board = await createBoardViaApi(request, boardName, generateUniqueName('WUB-Tasks-Stage'));
+    const task = await createTaskViaApi(request, board.boardId, board.stageId!, generateUniqueName('WUB-Task'));
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await addWPUserToBoards(request, userId, [boardName]);
+    await assignWPUserToTaskViaApi(request, userId, task.id);
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      await expect(card.getByTestId('wp-user-boards-summary')).toHaveText(boardName, {
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: boardName }).click();
+      await page.keyboard.press('Escape');
+
+      await expect(
+        page.getByText(
+          `${userLogin} is still assigned to 1 task on ${boardName}, but can't see it until added back to the board.`,
+        ),
+      ).toBeVisible();
+      await expect(card.getByTestId('wp-user-boards-summary')).toHaveText('No boards');
+    } finally {
+      await deleteBoardViaApi(request, boardName);
     }
   });
 });

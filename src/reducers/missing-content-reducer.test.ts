@@ -1,6 +1,7 @@
 import {
   RESET_MISSING_CONTENT,
   SET_PIPELINE_MISSING,
+  SET_PIPELINE_NO_ACCESS,
   SET_STAGE_MISSING,
   SET_TASK_MISSING,
 } from "../constants";
@@ -14,6 +15,14 @@ describe("missing-content reducer", () => {
       payload: true,
     });
     expect(next.pipelineMissing).toBe(true);
+  });
+
+  it("SET_PIPELINE_NO_ACCESS", () => {
+    const next = reducer(initialState, {
+      type: SET_PIPELINE_NO_ACCESS,
+      payload: true,
+    });
+    expect(next.pipelineNoAccess).toBe(true);
   });
 
   it("SET_STAGE_MISSING", () => {
@@ -35,6 +44,7 @@ describe("missing-content reducer", () => {
   it("RESET_MISSING_CONTENT returns initial state", () => {
     const dirty = {
       pipelineMissing: true,
+      pipelineNoAccess: true,
       stageMissing: true,
       taskMissing: true,
     };
