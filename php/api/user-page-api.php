@@ -35,7 +35,8 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
             'methods'  => 'GET',
             'callback' => function ($data) {
                 try {
-                    $requestData = RequestValidation::validateUserPageApiRequest($data, ['session' => false]);
+                    // Reports an inactive user instead of rejecting the request.
+                    $requestData = RequestValidation::validateUserPageApiRequest($data, ['session' => false, 'userActive' => false]);
                     $hasSetupCompleted = true;
                     $isUserActive = true;
                     $userId = null;
@@ -43,13 +44,9 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $profilePictureUrl = null;
 
                     if ($requestData['isQuicktaskerUser']) {
-                        $userPage = ServiceLocator::get('UserPageRepository')->getPageUserByHash($requestData['userPageHash']);
-
-                        if (null === $userPage) {
-                            throw new WPQTException('User page not found', true);
-                        }
+                        $userPage = $requestData['pageUser'];
                         $hasSetupCompleted = ServiceLocator::get('UserPageService')->checkIfUserPageSetupCompleted($userPage->user_id);
-                        $isUserActive = ServiceLocator::get('UserRepository')->isUserActive($userPage->user_id);
+                        $isUserActive = ServiceLocator::get('UserPageService')->isPageUserActive($userPage);
                         $userId = $userPage->user_id;
                         $userName = $userPage->name;
                     } else {
@@ -89,7 +86,6 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
             'callback' => function ($data) {
                 try {
                     $requestData = RequestValidation::validateUserPageApiRequest($data, ['session' => false]);
-                    $userPageRepository = new UserPageRepository();
                     $userPageService = new UserPageService();
                     $passwordService = new PasswordService();
                     $logService = new LogService();
@@ -98,12 +94,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         throw new WPQTException('Setup not available for WordPress users');
                     }
 
-                    $userPage = $userPageRepository->getPageUserByHash($requestData['userPageHash']);
-
-                    if (!ServiceLocator::get('UserRepository')->isUserActive($userPage->user_id)) {
-                        throw new WPQTException('User is not active', true);
-                    }
-
+                    $userPage = $requestData['pageUser'];
                     $hasSetupCompleted = $userPageService->checkIfUserPageSetupCompleted($userPage->user_id);
 
                     if ($hasSetupCompleted) {
@@ -141,7 +132,6 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $requestData = RequestValidation::validateUserPageApiRequest($data, ['session' => false]);
                     $passwordService = new PasswordService();
                     $sessionService = new SessionService();
-                    $userPageRepository = new UserPageRepository();
                     $logService = new LogService();
 
                     if (!$requestData['isQuicktaskerUser']) {
@@ -152,12 +142,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         throw new WPQTException('Password is required');
                     }
 
-                    $userPage = $userPageRepository->getPageUserByHash($requestData['userPageHash']);
-
-                    if (!ServiceLocator::get('UserRepository')->isUserActive($userPage->user_id)) {
-                        throw new WPQTException('User is not active', true);
-                    }
-
+                    $userPage = $requestData['pageUser'];
                     $passwordMatch = $passwordService->verifyPassword($requestData['userPageHash'], $data['password']);
 
                     if (!$passwordMatch) {

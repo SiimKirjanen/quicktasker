@@ -1,4 +1,5 @@
-import { Page, expect } from '@playwright/test';
+import { APIRequestContext, Page, expect } from '@playwright/test';
+import { getAdminNonce } from './auth';
 import { waitForModalToClose } from './modal-helpers';
 
 /**
@@ -9,10 +10,26 @@ import { waitForModalToClose } from './modal-helpers';
 /**
  * Generate a unique name with timestamp to avoid substring conflicts
  * @param prefix - Base name prefix (e.g., 'BM-CR-Board' where BM=describe group, CR=test action)
- * @returns Unique name with timestamp
+ * @returns Unique name with timestamp and a random suffix, so parallel tests
+ *          sharing a prefix in the same millisecond still get different names
  */
 export function generateUniqueName(prefix: string): string {
-  return `${prefix}_${Date.now()}`;
+  const suffix = Math.random().toString(36).slice(2, 6).padEnd(4, '0');
+  return `${prefix}_${Date.now()}${suffix}`;
+}
+
+/**
+ * Delete a board and its tasks by name via the admin REST API. For test
+ * cleanup: does nothing if no board has that name.
+ */
+export async function deleteBoardViaApi(request: APIRequestContext, boardName: string): Promise<void> {
+  const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
+  const list = await request.get('/wp-json/wpqt/v1/pipelines', { headers });
+  if (!list.ok()) throw new Error(`Failed to list boards: ${await list.text()}`);
+  const board = (await list.json()).data.find((b: { name: string }) => b.name === boardName);
+  if (!board) return;
+  const response = await request.delete(`/wp-json/wpqt/v1/pipelines/${board.id}`, { headers });
+  if (!response.ok()) throw new Error(`Failed to delete board: ${await response.text()}`);
 }
 
 /**

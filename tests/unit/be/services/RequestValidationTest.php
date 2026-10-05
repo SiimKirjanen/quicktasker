@@ -581,9 +581,9 @@ class RequestValidationTest extends TestCase {
      * 
      * For QuickTasker users (userPageHash exists):
      * 8. If nonce=true, should verify nonce from X-WPQT-USER-API-Nonce header via NonceService::verifyNonce()
-     * 9. If hash=true, should check UserPageService->checkIfUserPageHashExists(), throws 'User page does not exist'
+     * 9. If hash=true, should load the page user via UserPageRepository->getPageUserByHash(), throws 'User page does not exist', adds pageUser to requestData
      * 10. If session=true, should verify session via SessionService->verifySessionToken(), add to requestData
-     * 11. If userActive=true and session exists, should check UserRepository->isUserActive(), throws 'User is not active'
+     * 11. If userActive=true and pageUser exists, should check UserPageService->isPageUserActive() (also rejects deleted users), throws 'User is not active'
      * 
      * For WordPress users (no userPageHash):
      * 12. If session=true and loggedInWPUserId=0, throws 'User is not logged in'
@@ -598,9 +598,10 @@ class RequestValidationTest extends TestCase {
      * - get_current_user_id()
      * - wp_parse_args()
      * - NonceService::verifyNonce($nonce, WPQT_USER_API_NONCE)
-     * - new UserPageService()->checkIfUserPageHashExists($userPageHash)
+     * - ServiceLocator::get('UserPageRepository')->getPageUserByHash($userPageHash)
      * - new SessionService()->verifySessionToken($userPageHash)
-     * - new UserRepository()->isUserActive($userId)
+     * - ServiceLocator::get('UserPageService')->isPageUserActive($pageUser)
+     * - new UserRepository()->isQuicktaskerUserBanned($userId)
      * - ServiceLocator::get('PermissionService')->hasRequiredPermissionsForUserPageApp($loggedInWPUserId)
      * - WPQTException with shouldSendToFrontEnd=true
      */

@@ -6,12 +6,20 @@ import {
   getQuickTaskerCard,
 } from './utils/user-helpers';
 import { TIMEOUTS } from './utils/timeouts';
+import { waitForToastsToClose } from './utils/interaction';
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 
 async function openDropdown(page: Page, userName: string): Promise<void> {
-  const card = getQuickTaskerCard(page, userName);
-  await card.getByTestId('dropdown-icon').click();
+  const menuButton = getQuickTaskerCard(page, userName).locator('[aria-expanded]', {
+    has: page.getByTestId('dropdown-icon'),
+  });
+  // Disable/Activate keep the menu open, and clicking the button of an open
+  // menu starts closing it, so only click when it is closed.
+  if ((await menuButton.getAttribute('aria-expanded')) !== 'true') {
+    await menuButton.click();
+  }
+  await expect(menuButton).toHaveAttribute('aria-expanded', 'true');
 }
 
 async function openEditModal(page: Page, userName: string): Promise<void> {
@@ -188,6 +196,8 @@ test.describe('User Management – User Dropdown', () => {
     await openDropdown(page, userName);
     await page.getByRole('menuitem', { name: 'Disable user' }).click();
     await expect(getQuickTaskerCard(page, userName).getByText('Disabled')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    // With many users the card can sit under the toast, which then covers the confirm button.
+    await waitForToastsToClose(page);
     await openDropdown(page, userName);
     await page.getByRole('menuitem', { name: 'Delete user' }).click();
     await expect(page.getByText('Are you sure you want to delete this user?')).toBeVisible();

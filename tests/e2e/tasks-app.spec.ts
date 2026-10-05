@@ -1,9 +1,10 @@
-import { test, expect, Browser, APIRequestContext, Page } from '@playwright/test';
+import { test, expect, Browser, BrowserContext, APIRequestContext, Page } from '@playwright/test';
 import { navigateToBoardsPage } from './utils/navigation';
 import {
   createBoard,
   createStage,
   createTask,
+  deleteBoardViaApi,
   generateUniqueName,
   getTaskCard,
 } from './utils/board-helpers';
@@ -55,6 +56,36 @@ async function setupBoardWithTask(
   await createTask(page, stageName, taskName);
 }
 
+async function makeTaskFreeForAll(page: Page, taskName: string): Promise<void> {
+  await getTaskCard(page, taskName).click();
+  const modal = page.getByTestId('task-modal');
+  await expect(modal).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+  const toggle = modal.getByTestId('free-for-all-toggle');
+  await toggle.locator('xpath=..').locator('.react-switch-bg').click();
+  await expect(page.getByText('Free for all updated')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+  await expect(toggle).toBeChecked();
+  await page.getByTestId('wpqt-modal-close-button').click();
+  await expect(modal).not.toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+}
+
+/** Create a QuickTasker user, finish their setup and log them in. Returns their tasks app page. */
+async function createLoggedInQuickTasker(
+  page: Page,
+  browser: Browser,
+  userName: string,
+  password: string,
+): Promise<{ context: BrowserContext; userPage: Page; userPageUrl: string }> {
+  await navigateToQuickTaskersTab(page);
+  await createQuickTaskerUser(page, userName);
+  await navigateToUserDetailPage(page, userName);
+  const userPageUrl = await getQuickTaskerUserPageUrl(page);
+
+  const { context, page: userPage } = await openAnonymousPage(browser);
+  await completeQuickTaskerSetup(userPage, userPageUrl, password);
+  await loginAsQuickTasker(userPage, password);
+  return { context, userPage, userPageUrl };
+}
+
 async function openTaskDetail(page: Page, taskName: string): Promise<void> {
   await navigateToAssignedTasks(page);
   const card = getTasksAppTaskCard(page, taskName);
@@ -75,14 +106,18 @@ test.describe('Tasks App – Homepage', () => {
   test('View assigned tasks button navigates to assigned tasks page', async ({ page }) => {
     await navigateToTasksApp(page);
     await page.getByText('View assigned tasks').click();
-    await expect(page.getByText('Assigned tasks')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByRole('heading', { name: 'Assigned tasks', exact: true })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
     expect(page.url()).toContain('#/user-tasks');
   });
 
   test('View assignable tasks button navigates to assignable tasks page', async ({ page }) => {
     await navigateToTasksApp(page);
     await page.getByText('View assignable tasks').click();
-    await expect(page.getByText('Assignable tasks')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(page.getByRole('heading', { name: 'Assignable tasks', exact: true })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
     expect(page.url()).toContain('#/assignable-tasks');
   });
 
@@ -98,7 +133,7 @@ test.describe('Tasks App – Homepage', () => {
 test.describe('Tasks App – Assigned Tasks', () => {
   test('shows page structure with heading, description and filter', async ({ page }) => {
     await navigateToAssignedTasks(page);
-    await expect(page.getByText('Assigned tasks')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Assigned tasks', exact: true })).toBeVisible();
     await expect(page.getByText('Tasks that are assigned to you')).toBeVisible();
     await expect(page.getByText('Filter tasks')).toBeVisible();
     await expect(page.getByRole('textbox')).toBeVisible();
@@ -151,6 +186,10 @@ test.describe('Tasks App – Assigned Tasks', () => {
 });
 
 test.describe('Tasks App – Assignable Tasks', () => {
+  // The assignable list is global, so run these in order: the empty-state
+  // check must never see the free-for-all task the self-assign test creates.
+  test.describe.configure({ mode: 'serial' });
+
   test('shows empty state when no assignable tasks', async ({ page }) => {
     await navigateToAssignableTasks(page);
     await expect(page.getByText('No tasks assignable to you')).toBeVisible();
@@ -160,6 +199,45 @@ test.describe('Tasks App – Assignable Tasks', () => {
     await navigateToAssignableTasks(page);
     await page.getByRole('textbox').fill('XXXTHISSHOULDNOTMATCHXXX');
     await expect(page.getByText('No tasks match your search filter')).toBeVisible();
+  });
+
+  test('a QuickTasker self-assigns a free-for-all task', async ({ page, browser, request }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const boardName = generateUniqueName('TA-SA-Board');
+    const stageName = generateUniqueName('TA-SA-Stage');
+    const taskName = generateUniqueName('TA-SA-Task');
+
+    const { context, userPage, userPageUrl } = await createLoggedInQuickTasker(
+      page,
+      browser,
+      generateUniqueName('TA-SA-User'),
+      'qt-pass-123',
+    );
+    try {
+      await setupBoardWithTask(page, boardName, stageName, taskName);
+      await makeTaskFreeForAll(page, taskName);
+
+      await userPage.goto(`${userPageUrl}#/assignable-tasks`);
+      const assignableCard = getTasksAppTaskCard(userPage, taskName);
+      await expect(assignableCard).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+      await assignableCard.click();
+      await userPage.getByText('Assign to task').click();
+      await expect(userPage.getByText('Unassign from task')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+      // The task moves from the assignable list to the user's own tasks.
+      await userPage.goto(`${userPageUrl}#/user-tasks`);
+      await expect(getTasksAppTaskCard(userPage, taskName)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+      await userPage.goto(`${userPageUrl}#/assignable-tasks`);
+      await expect(userPage.getByRole('heading', { name: 'Assignable tasks', exact: true })).toBeVisible({
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+      await expect(getTasksAppTaskCard(userPage, taskName)).not.toBeVisible();
+    } finally {
+      // A failure can leave the task free-for-all and unassigned, which would
+      // break the empty-state test above on every later run.
+      await deleteBoardViaApi(request, boardName);
+      await context.close();
+    }
   });
 });
 
@@ -464,7 +542,7 @@ test.describe('Tasks App – QuickTasker User First Login Flow', () => {
   });
 });
 
-test.describe('Tasks App – Deleted QuickTasker User', () => {
+test.describe('Tasks App – Revoked QuickTasker Access', () => {
   test('deleting an active user revokes their session and blocks logging in again', async ({ page, browser }) => {
     test.setTimeout(TIMEOUTS.LONG_TEST);
     const userName = generateUniqueName('TA-DEL-User');
@@ -473,18 +551,11 @@ test.describe('Tasks App – Deleted QuickTasker User', () => {
     const taskName = generateUniqueName('TA-DEL-Task');
     const password = 'qt-pass-123';
 
-    await navigateToQuickTaskersTab(page);
-    await createQuickTaskerUser(page, userName);
-    await navigateToUserDetailPage(page, userName);
-    const userPageUrl = await getQuickTaskerUserPageUrl(page);
-
+    const { context, userPage, userPageUrl } = await createLoggedInQuickTasker(page, browser, userName, password);
     await setupBoardWithTask(page, boardName, stageName, taskName);
     await assignQuickTaskerToTask(page, taskName, userName);
 
-    // The QuickTasker user logs in and sees their assigned task
-    const { context, page: userPage } = await openAnonymousPage(browser);
-    await completeQuickTaskerSetup(userPage, userPageUrl, password);
-    await loginAsQuickTasker(userPage, password);
+    // The logged-in QuickTasker user sees their assigned task
     await userPage.goto(`${userPageUrl}#/user-tasks`);
     await expect(getTasksAppTaskCard(userPage, taskName)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
 
@@ -545,6 +616,97 @@ test.describe('Tasks App – Deleted QuickTasker User', () => {
     });
     expect(setupAttempt.success).toBe(false);
     expect(setupAttempt.messages).toContain('User is not active');
+    await context.close();
+  });
+
+  test('disabling a logged-in user blocks requests made with their still-valid session', async ({ page, browser }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const userName = generateUniqueName('TA-DIS-User');
+
+    const { context, userPage, userPageUrl } = await createLoggedInQuickTasker(page, browser, userName, 'qt-pass-123');
+
+    await navigateToQuickTaskersTab(page);
+    await disableQuickTaskerUser(page, userName);
+
+    // Disabling keeps the session, so only the active-user check stops this.
+    const sessionRequest = await callQuickTaskerUserPageApi(userPage, userPageUrl, 'GET', 'assigned-tasks');
+    expect(sessionRequest.success).toBe(false);
+    expect(sessionRequest.messages).toContain('User is not active');
+
+    // Reload: the page is already on this URL, so goto would only change the hash.
+    await userPage.reload();
+    await expect(userPage.getByRole('heading', { name: 'User is not active' })).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+    await context.close();
+  });
+
+  test('resetting a password logs the user out and sends them back to setup', async ({ page, browser }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const userName = generateUniqueName('TA-RST-User');
+
+    // Leaves the admin on the user's detail page.
+    const { context, userPage, userPageUrl } = await createLoggedInQuickTasker(page, browser, userName, 'qt-pass-123');
+
+    // Reset password only shows once the user has a password, so reload the page now.
+    await page.reload();
+    await expect(page.getByRole('heading', { name: userName })).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await page.getByText('Reset password').click();
+    await expect(page.getByText('User password reset successfully')).toBeVisible({
+      timeout: TIMEOUTS.NAVIGATION,
+    });
+
+    const sessionRequest = await callQuickTaskerUserPageApi(userPage, userPageUrl, 'GET', 'assigned-tasks');
+    expect(sessionRequest.success).toBe(false);
+    expect(sessionRequest.messages).toContain('Invalid session token');
+
+    // Reload: the page is already on this URL, so goto would only change the hash.
+    await userPage.reload();
+    await expect(userPage.getByText('Please complete the setup')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await context.close();
+  });
+});
+
+test.describe('Tasks App – QuickTasker Login and Logout', () => {
+  test('a wrong password shows an error and keeps the login form', async ({ page, browser }) => {
+    const userName = generateUniqueName('TA-PW-User');
+    const password = 'qt-pass-123';
+
+    await navigateToQuickTaskersTab(page);
+    await createQuickTaskerUser(page, userName);
+    await navigateToUserDetailPage(page, userName);
+    const userPageUrl = await getQuickTaskerUserPageUrl(page);
+
+    const { context, page: userPage } = await openAnonymousPage(browser);
+    await completeQuickTaskerSetup(userPage, userPageUrl, password);
+    await userPage.getByTestId('password-input').fill('wrong-password');
+    await userPage.getByRole('button', { name: 'Login' }).click();
+    await expect(userPage.getByText('Invalid password')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+    await expect(userPage.getByText('Please log in to continue')).toBeVisible();
+    await expect(userPage.getByText(/Assigned tasks:/)).not.toBeVisible();
+
+    // The form still works with the right password.
+    await loginAsQuickTasker(userPage, password);
+    await context.close();
+  });
+
+  test('logging out from the profile menu returns to the login form', async ({ page, browser }) => {
+    const { context, userPage } = await createLoggedInQuickTasker(
+      page,
+      browser,
+      generateUniqueName('TA-LO-User'),
+      'qt-pass-123',
+    );
+
+    await userPage.getByTestId('profile-dropdown').click();
+    await userPage.getByRole('menuitem', { name: 'Log out' }).click();
+    await expect(userPage.getByText('Please log in to continue')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+    // The session cookie is gone, so the user stays logged out after a reload.
+    const cookies = await context.cookies();
+    expect(cookies.some((cookie) => cookie.name.startsWith('wpqt-session-token-'))).toBe(false);
+    await userPage.reload();
+    await expect(userPage.getByText('Please log in to continue')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
     await context.close();
   });
 });

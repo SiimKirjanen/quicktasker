@@ -111,6 +111,28 @@ if (!class_exists('WPQT\Session\SessionService')) {
         }
 
         /**
+         * Deletes all sessions of a QuickTasker user, logging them out everywhere.
+         *
+         * @param int $userId The ID of the user.
+         * @return void
+         * @throws \Exception If the sessions could not be deleted.
+         */
+        public function deleteUserSessions($userId)
+        {
+            global $wpdb;
+
+            $result = $wpdb->delete(
+                TABLE_WP_QUICKTASKER_USER_SESSIONS,
+                ['user_id' => $userId],
+                ['%d']
+            );
+
+            if (false === $result) {
+                throw new \Exception('Failed to delete user sessions');
+            }
+        }
+
+        /**
          * Logs out the current WordPress user by clearing the authentication cookie.
          *
          * This function is used to log out the current user from the WordPress session.

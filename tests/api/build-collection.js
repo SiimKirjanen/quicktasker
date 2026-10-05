@@ -2439,6 +2439,43 @@ const adminUsers = folder("Users", [
       `pm.test('setupCompleted is false', () => pm.expect(pm.response.json().data.setupCompleted).to.eql(false));`,
     ],
   }),
+  userPageRequest({
+    name: "User completes setup again",
+    method: "POST",
+    url: "/user-page/setup",
+    headerOptions: { code: "{{admQtPageHash}}", session: null },
+    body: { password: "Admin-flow-pass-2" },
+    tests: [status(200), success(true)],
+  }),
+  userPageRequest({
+    name: "User logs in again",
+    method: "POST",
+    url: "/user-page/login",
+    headerOptions: { code: "{{admQtPageHash}}", session: null },
+    body: { password: "Admin-flow-pass-2" },
+    tests: [
+      status(200),
+      save("admQtSession", "pm.response.json().data.sessionToken"),
+    ],
+  }),
+  request({
+    name: "Assign user to task before deletion",
+    method: "POST",
+    url: "/users/{{admQtUserId}}/tasks/{{taskCId}}",
+    body: { user_type: "quicktasker" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Count task unassign logs before deletion",
+    url: "/tasks/{{taskCId}}/logs",
+    tests: [
+      status(200),
+      save(
+        "admQtUnassignLogs",
+        "pm.response.json().data.filter((log) => log.text.includes(' unassigned from Admin API user ')).length",
+      ),
+    ],
+  }),
   request({
     name: "Delete user",
     method: "DELETE",
@@ -2451,6 +2488,48 @@ const adminUsers = folder("Users", [
     tests: [
       status(200),
       excludesId("user is gone", "pm.response.json().data", "admQtUserId"),
+    ],
+  }),
+  request({
+    name: "Deleting the user logs the task unassignment",
+    url: "/tasks/{{taskCId}}/logs",
+    tests: [
+      status(200),
+      `pm.test('one more unassign log', () => {
+  const count = pm.response.json().data.filter((log) => log.text.includes(' unassigned from Admin API user ')).length;
+  pm.expect(count).to.eql(Number(pm.collectionVariables.get('admQtUnassignLogs')) + 1);
+});`,
+    ],
+  }),
+  userPageRequest({
+    name: "Deleting the user ends their sessions",
+    url: "/user-page/overview",
+    headerOptions: { code: "{{admQtPageHash}}", session: "{{admQtSession}}" },
+    tests: failsWith("Invalid session token"),
+  }),
+  userPageRequest({
+    name: "Deleted user cannot log in",
+    method: "POST",
+    url: "/user-page/login",
+    headerOptions: { code: "{{admQtPageHash}}", session: null },
+    body: { password: "Admin-flow-pass-2" },
+    tests: failsWith("User is not active"),
+  }),
+  userPageRequest({
+    name: "Deleted user cannot set a new password",
+    method: "POST",
+    url: "/user-page/setup",
+    headerOptions: { code: "{{admQtPageHash}}", session: null },
+    body: { password: "Takeover-pass-3" },
+    tests: failsWith("User is not active"),
+  }),
+  userPageRequest({
+    name: "Status reports the deleted user as not active",
+    url: "/user-page/status",
+    headerOptions: { code: "{{admQtPageHash}}", session: null },
+    tests: [
+      status(200),
+      `pm.test('isActiveUser is false', () => pm.expect(pm.response.json().data.isActiveUser).to.eql(false));`,
     ],
   }),
 ]);

@@ -1,6 +1,7 @@
 import { APIRequestContext, Locator, Page, expect } from '@playwright/test';
 import { navigateToUserManagement } from './navigation';
 import { getTaskCard } from './board-helpers';
+import { getAdminNonce } from './auth';
 import { TIMEOUTS } from './timeouts';
 
 export function uniqueLogin(prefix: string): string {
@@ -17,13 +18,6 @@ const ALL_CAPS = [
   'quicktasker_view_my_tasks',
 ] as const;
 
-async function getAdminNonce(request: APIRequestContext): Promise<string> {
-  const response = await request.get('/wp-admin/');
-  const html = await response.text();
-  const match = html.match(/"nonce":"([^"]+)"/);
-  if (!match) throw new Error('Could not find WP REST nonce in admin page response');
-  return match[1];
-}
 
 /**
  * Create a WordPress user via the WP REST API.

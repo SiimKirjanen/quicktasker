@@ -78,7 +78,7 @@ function TaskControls({ task }: Props) {
         <WPQTIconButton
           loading={loading}
           icon={<UserPlusIcon className="wpqt-icon-green wpqt-size-5" />}
-          text={__("Assing to task", "quicktasker")}
+          text={__("Assign to task", "quicktasker")}
           onClick={onAssignToTask}
         />
       )}

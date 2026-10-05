@@ -328,15 +328,7 @@ if (!class_exists('WPQT\User\UserService')) {
                 throw new \Exception('Failed to delete a user');
             }
 
-            $sessionsDeleted = $wpdb->delete(
-                TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                ['user_id' => $userId],
-                ['%d']
-            );
-
-            if (false === $sessionsDeleted) {
-                throw new \Exception('Failed to delete user sessions');
-            }
+            ServiceLocator::get('SessionService')->deleteUserSessions($userId);
 
             // Only archived-task assignments remain at this point.
             $assignmentsDeleted = $wpdb->delete(
@@ -553,14 +545,7 @@ if (!class_exists('WPQT\User\UserService')) {
                 throw new \Exception('Failed to reset a user password');
             }
 
-            $result2 = $wpdb->delete(
-                TABLE_WP_QUICKTASKER_USER_SESSIONS,
-                ['user_id' => $userId]
-            );
-
-            if (false === $result2) {
-                throw new \Exception('Failed to reset a user sessions');
-            }
+            ServiceLocator::get('SessionService')->deleteUserSessions($userId);
 
             return ServiceLocator::get('UserRepository')->getQuicktaskerUserById($userId);
         }

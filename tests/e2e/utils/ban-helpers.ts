@@ -1,14 +1,7 @@
 import { APIRequestContext, Page, expect } from '@playwright/test';
 import { TIMEOUTS } from './timeouts';
 import { getQuickTaskerCard } from './user-helpers';
-
-async function getAdminNonce(request: APIRequestContext): Promise<string> {
-  const response = await request.get('/wp-admin/');
-  const html = await response.text();
-  const match = html.match(/"nonce":"([^"]+)"/);
-  if (!match) throw new Error('Could not find WP REST nonce in admin page response');
-  return match[1];
-}
+import { getAdminNonce } from './auth';
 
 /**
  * Look up a QuickTasker user's numeric ID by name via the admin REST API.

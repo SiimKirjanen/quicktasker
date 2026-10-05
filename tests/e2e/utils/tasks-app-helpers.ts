@@ -10,12 +10,16 @@ export async function navigateToTasksApp(page: Page): Promise<void> {
 
 export async function navigateToAssignedTasks(page: Page): Promise<void> {
   await page.goto(`${TASKS_APP_BASE_URL}#/user-tasks`);
-  await expect(page.getByText('Assigned tasks')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+  await expect(page.getByRole('heading', { name: 'Assigned tasks', exact: true })).toBeVisible({
+    timeout: TIMEOUTS.NAVIGATION,
+  });
 }
 
 export async function navigateToAssignableTasks(page: Page): Promise<void> {
   await page.goto(`${TASKS_APP_BASE_URL}#/assignable-tasks`);
-  await expect(page.getByText('Assignable tasks')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+  await expect(page.getByRole('heading', { name: 'Assignable tasks', exact: true })).toBeVisible({
+    timeout: TIMEOUTS.NAVIGATION,
+  });
 }
 
 export async function navigateToUserProfile(page: Page): Promise<void> {
