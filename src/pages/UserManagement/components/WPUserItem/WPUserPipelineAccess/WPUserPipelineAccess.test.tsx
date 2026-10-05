@@ -18,17 +18,36 @@ jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
     options,
     selectedValues,
     onSelectionChange,
+    autoOpen,
+    onClose,
+    loadingValues,
   }: {
     id: string;
     options: { value: string; label: string }[];
     selectedValues: string[];
     onSelectionChange: (v: string[]) => void;
+    autoOpen?: boolean;
+    onClose: () => void;
+    loadingValues: string[];
   }) => (
-    <div data-testid={id}>
+    <div
+      data-testid={id}
+      data-auto-open={String(autoOpen)}
+      data-loading={loadingValues.join(",")}
+    >
       <span data-testid="options">{options.map((o) => o.label).join(",")}</span>
       <span data-testid="selected">{selectedValues.join(",")}</span>
       <button type="button" onClick={() => onSelectionChange(["2"])}>
         only board 2
+      </button>
+      <button type="button" onClick={() => onSelectionChange(["1", "2"])}>
+        boards 1 and 2
+      </button>
+      <button type="button" onClick={() => onSelectionChange([])}>
+        no boards
+      </button>
+      <button type="button" onClick={onClose}>
+        close
       </button>
     </div>
   ),
@@ -50,6 +69,12 @@ const pipelines = [
   { id: "2", name: "Board 2", is_primary: false },
 ] as Pipeline[];
 
+const manyPipelines = Array.from({ length: 7 }, (_, i) => ({
+  id: String(i + 1),
+  name: `Board ${i + 1}`,
+  is_primary: false,
+})) as Pipeline[];
+
 function makeWPUser(pipelineIds?: number[]): WPUser {
   return {
     id: "wp1",
@@ -67,10 +92,10 @@ function makeWPUser(pipelineIds?: number[]): WPUser {
 
 const mockUserDispatch = jest.fn();
 
-function renderAccess(user: WPUser) {
+function renderAccess(user: WPUser, boards: Pipeline[] = pipelines) {
   return render(
     <PipelinesContext.Provider
-      value={{ state: { pipelines }, pipelinesDispatch: jest.fn() }}
+      value={{ state: { pipelines: boards }, pipelinesDispatch: jest.fn() }}
     >
       <UserContext.Provider
         value={{
@@ -96,11 +121,92 @@ function respondWith(update: WPUserPipelinesUpdate) {
   );
 }
 
+// Holds each save until release() is called, then saves what was sent.
+function holdSaves(
+  removed: WPUserPipelinesUpdate["removed_pipelines_with_assigned_tasks"] = [],
+) {
+  const releases: (() => void)[] = [];
+  mockUpdateWPUserPipelines.mockImplementation(
+    (
+      _userId: string,
+      pipelineIds: string[],
+      callback: (u: WPUserPipelinesUpdate) => void,
+    ) =>
+      new Promise<void>((resolve) => {
+        releases.push(() => {
+          callback({
+            pipeline_ids: pipelineIds.map(Number),
+            removed_pipelines_with_assigned_tasks: removed,
+          });
+          resolve();
+        });
+      }),
+  );
+
+  return async () => {
+    await act(async () => {
+      releases.shift()!();
+    });
+  };
+}
+
+function openSelector() {
+  fireEvent.click(screen.getByTestId("wp-user-boards-change"));
+}
+
 beforeEach(() => jest.clearAllMocks());
 
 describe("WPUserPipelineAccess", () => {
+  it("lists the user's boards without creating the selector", () => {
+    renderAccess(makeWPUser([2, 1]));
+
+    expect(screen.getByTestId("wp-user-boards-summary")).toHaveTextContent(
+      "Board 1, Board 2",
+    );
+    expect(screen.queryByTestId("wp-user-boards-wp1")).toBeNull();
+  });
+
+  it("shows a warning when the user has no boards", () => {
+    renderAccess(makeWPUser());
+
+    const summary = screen.getByTestId("wp-user-boards-summary");
+    expect(summary).toHaveTextContent("No boards");
+    expect(summary).toHaveClass("wpqt-text-yellow-700");
+  });
+
+  it("lists five boards and counts the rest", () => {
+    renderAccess(makeWPUser([1, 2, 3, 4, 5, 6, 7]), manyPipelines);
+
+    const summary = screen.getByTestId("wp-user-boards-summary");
+    expect(summary).toHaveTextContent(
+      "Board 1, Board 2, Board 3, Board 4, Board 5 +2 more",
+    );
+    expect(summary).toHaveAttribute(
+      "title",
+      manyPipelines.map((p) => p.name).join(", "),
+    );
+  });
+
+  it("opens the selector from Change and keeps the list of boards", () => {
+    renderAccess(makeWPUser([1]));
+
+    openSelector();
+    expect(screen.getByTestId("wp-user-boards-wp1")).toHaveAttribute(
+      "data-auto-open",
+      "true",
+    );
+    expect(screen.getByTestId("wp-user-boards-summary")).toHaveTextContent(
+      "Board 1",
+    );
+
+    fireEvent.click(screen.getByText("close"));
+    expect(screen.queryByTestId("wp-user-boards-wp1")).toBeNull();
+    expect(screen.getByTestId("wp-user-boards-change")).toHaveFocus();
+  });
+
   it("offers every board and selects the user's boards", () => {
     renderAccess(makeWPUser([1]));
+    openSelector();
 
     expect(screen.getByTestId("options")).toHaveTextContent("Board 1,Board 2");
     expect(screen.getByTestId("selected")).toHaveTextContent("1");
@@ -108,6 +214,7 @@ describe("WPUserPipelineAccess", () => {
 
   it("selects nothing when the user has no boards", () => {
     renderAccess(makeWPUser());
+    openSelector();
 
     expect(screen.getByTestId("selected")).toBeEmptyDOMElement();
   });
@@ -118,6 +225,7 @@ describe("WPUserPipelineAccess", () => {
       removed_pipelines_with_assigned_tasks: [],
     });
     renderAccess(makeWPUser([1]));
+    openSelector();
 
     await act(async () => {
       fireEvent.click(screen.getByText("only board 2"));
@@ -145,6 +253,7 @@ describe("WPUserPipelineAccess", () => {
       ],
     });
     renderAccess(makeWPUser([1]));
+    openSelector();
 
     await act(async () => {
       fireEvent.click(screen.getByText("only board 2"));
@@ -165,6 +274,7 @@ describe("WPUserPipelineAccess", () => {
       ) => onFailure(new Error("x")),
     );
     renderAccess(makeWPUser([1]));
+    openSelector();
 
     await act(async () => {
       fireEvent.click(screen.getByText("only board 2"));
@@ -173,5 +283,68 @@ describe("WPUserPipelineAccess", () => {
     expect(screen.getByTestId("selected")).toHaveTextContent("1");
     expect(toast.error).toHaveBeenCalled();
     expect(mockUserDispatch).not.toHaveBeenCalled();
+  });
+
+  it("shows a spinner on the changed boards, and next to Change once it closes", async () => {
+    const release = holdSaves();
+    renderAccess(makeWPUser([1]));
+    openSelector();
+    const select = screen.getByTestId("wp-user-boards-wp1");
+    expect(select).toHaveAttribute("data-loading", "");
+
+    fireEvent.click(screen.getByText("only board 2"));
+    // Board 2 was added and board 1 removed.
+    expect(select).toHaveAttribute("data-loading", "2,1");
+    expect(screen.queryByTestId("wp-user-boards-saving")).toBeNull();
+
+    fireEvent.click(screen.getByText("close"));
+    expect(screen.getByTestId("wp-user-boards-saving")).toBeInTheDocument();
+
+    await release();
+    expect(screen.queryByTestId("wp-user-boards-saving")).toBeNull();
+  });
+
+  it("saves the newest selection made during a save after it", async () => {
+    const release = holdSaves();
+    renderAccess(makeWPUser([1]));
+    openSelector();
+
+    fireEvent.click(screen.getByText("only board 2"));
+    fireEvent.click(screen.getByText("boards 1 and 2"));
+    fireEvent.click(screen.getByText("no boards"));
+    expect(screen.getByTestId("selected")).toBeEmptyDOMElement();
+
+    await release();
+    // The first save finishing does not undo the newer selection.
+    expect(screen.getByTestId("selected")).toBeEmptyDOMElement();
+    // Board 2 was saved by the first save and is removed by the next one.
+    expect(screen.getByTestId("wp-user-boards-wp1")).toHaveAttribute(
+      "data-loading",
+      "2",
+    );
+
+    await release();
+    expect(mockUpdateWPUserPipelines.mock.calls.map((c) => c[1])).toEqual([
+      ["2"],
+      [],
+    ]);
+    expect(screen.getByTestId("selected")).toBeEmptyDOMElement();
+    expect(screen.getByTestId("wp-user-boards-wp1")).toHaveAttribute(
+      "data-loading",
+      "",
+    );
+  });
+
+  it("does not warn about a board that a waiting selection adds back", async () => {
+    const release = holdSaves([{ pipeline_id: 1, task_count: 3 }]);
+    renderAccess(makeWPUser([1]));
+    openSelector();
+
+    fireEvent.click(screen.getByText("only board 2"));
+    fireEvent.click(screen.getByText("boards 1 and 2"));
+    await release();
+
+    expect(toast.warning).not.toHaveBeenCalled();
+    await release();
   });
 });

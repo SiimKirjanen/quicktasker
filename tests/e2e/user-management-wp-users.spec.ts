@@ -66,18 +66,19 @@ test.describe('WordPress Users Tab – Boards', () => {
 
     await navigateToWPUsersTab(page);
     const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
-    const boardsSelect = card.getByLabel('Boards');
-    await expect(boardsSelect).toHaveText('No boards', { timeout: TIMEOUTS.NAVIGATION });
+    const boardsSummary = card.getByTestId('wp-user-boards-summary');
+    await expect(boardsSummary).toHaveText('No boards', { timeout: TIMEOUTS.NAVIGATION });
 
-    await boardsSelect.click();
+    await card.getByTestId('wp-user-boards-change').click();
     await page.getByRole('option', { name: boardName }).click();
     await page.keyboard.press('Escape');
-    await expect(boardsSelect).toHaveText(boardName);
+    await expect(boardsSummary).toHaveText(boardName);
+    await expect(card.getByTestId('wp-user-boards-change')).toBeFocused();
 
     // The selection is saved in the background, so reload until it is shown.
     await expect(async () => {
       await navigateToWPUsersTab(page);
-      await expect(boardsSelect).toHaveText(boardName, { timeout: 1000 });
+      await expect(boardsSummary).toHaveText(boardName, { timeout: 1000 });
     }).toPass({ timeout: TIMEOUTS.NAVIGATION });
 
     const userContext = await loginToWordPressViaApi(browser, userLogin);
@@ -88,6 +89,35 @@ test.describe('WordPress Users Tab – Boards', () => {
     } finally {
       await userContext.close();
       await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test('boards ticked one after another are all saved', async ({ page, request }) => {
+    const boardAName = generateUniqueName('WUB-Board-A');
+    const boardBName = generateUniqueName('WUB-Board-B');
+    await createBoardViaApi(request, boardAName);
+    await createBoardViaApi(request, boardBName);
+    const userLogin = uniqueLogin('wpboards');
+    await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText('No boards', { timeout: TIMEOUTS.NAVIGATION });
+
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: boardAName }).click();
+      await page.getByRole('option', { name: boardBName }).click();
+      await page.keyboard.press('Escape');
+      await expect(card.getByTestId('wp-user-boards-saving')).toHaveCount(0);
+
+      await navigateToWPUsersTab(page);
+      await expect(boardsSummary).toContainText(boardAName, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(boardsSummary).toContainText(boardBName);
+    } finally {
+      await deleteBoardViaApi(request, boardAName);
+      await deleteBoardViaApi(request, boardBName);
     }
   });
 });
