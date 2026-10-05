@@ -46,7 +46,9 @@ if (!class_exists('WPQT\Pipeline\PipelineRepository')) {
         }
 
         /**
-         * Retrieves the active pipeline from the database.
+         * Retrieves the site-wide primary pipeline from the database.
+         *
+         * This is the default primary board for WordPress users who have not chosen their own.
          *
          * @return object|null The active pipeline object if found, null otherwise.
          */
@@ -56,6 +58,50 @@ if (!class_exists('WPQT\Pipeline\PipelineRepository')) {
 
             return $wpdb->get_row(
                 'SELECT * FROM ' . TABLE_WP_QUICKTASKER_PIPELINES . ' WHERE is_primary = 1'
+            );
+        }
+
+        /**
+         * Retrieves the board a WordPress user has chosen as their primary board.
+         *
+         * @param int $userId The WordPress user ID.
+         * @return int|null The chosen board ID, or null if the user has not chosen one.
+         */
+        public function getUserPrimaryPipelineId($userId)
+        {
+            $pipelineId = get_user_option(WP_QUICKTASKER_USER_PRIMARY_PIPELINE_OPTION, $userId);
+
+            return $pipelineId ? (int) $pipelineId : null;
+        }
+
+        /**
+         * Stores the board a WordPress user has chosen as their primary board.
+         *
+         * @param int $userId The WordPress user ID.
+         * @param int $pipelineId The board ID.
+         * @return void
+         */
+        public function setUserPrimaryPipelineId($userId, $pipelineId)
+        {
+            update_user_option($userId, WP_QUICKTASKER_USER_PRIMARY_PIPELINE_OPTION, (string) $pipelineId);
+        }
+
+        /**
+         * Removes the primary board choice of every WordPress user who picked the given board.
+         *
+         * @param int $pipelineId The board ID.
+         * @return void
+         */
+        public function deleteUserPrimaryPipelineReferences($pipelineId)
+        {
+            global $wpdb;
+
+            delete_metadata(
+                'user',
+                0,
+                $wpdb->get_blog_prefix() . WP_QUICKTASKER_USER_PRIMARY_PIPELINE_OPTION,
+                (string) $pipelineId,
+                true
             );
         }
 
