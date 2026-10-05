@@ -381,6 +381,7 @@ if (!class_exists('WPQT\User\UserService')) {
          * @param int $taskId The ID of the task being assigned to the user.
          * @param string $userType The type of user being assigned the task. (quicktasker or wp-user)
          * @return mixed The task details retrieved from the task repository.
+         * @throws WPQTException If a WordPress user has not been added to the task's board.
          * @throws \Exception If the task assignment fails.
          */
         public function assignTaskToUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE)
@@ -391,6 +392,11 @@ if (!class_exists('WPQT\User\UserService')) {
 
             if (!$user) {
                 throw new \Exception('Assignable user not found');
+            }
+
+            if (WP_QT_WORDPRESS_USER_TYPE === $userType
+                && !ServiceLocator::get('PipelineAccessService')->canAccessEntity($userId, 'task', $taskId)) {
+                throw new WPQTException('The user has not been added to the board of this task', true);
             }
 
             $result = $wpdb->insert(

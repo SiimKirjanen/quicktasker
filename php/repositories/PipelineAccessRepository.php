@@ -76,6 +76,66 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
         }
 
         /**
+         * Retrieves the ID of the board an entity belongs to.
+         *
+         * @param string $entityType One of 'stage', 'task', 'label', 'automation', 'webhook' or 'api_token'.
+         * @param int $entityId The entity ID.
+         * @return int|null The board ID, or null if the entity does not exist or has no board.
+         * @throws \InvalidArgumentException If the entity type is unknown.
+         */
+        public function getPipelineIdOfEntity($entityType, $entityId)
+        {
+            global $wpdb;
+
+            $tables = [
+                'stage'      => TABLE_WP_QUICKTASKER_PIPELINE_STAGES,
+                'task'       => TABLE_WP_QUICKTASKER_TASKS,
+                'label'      => TABLE_WP_QUICKTASKER_LABELS,
+                'automation' => TABLE_WP_QUICKTASKER_AUTOMATIONS,
+                'webhook'    => TABLE_WP_QUICKTASKER_WEBHOOKS,
+                'api_token'  => TABLE_WP_QUICKTASKER_API_TOKENS,
+            ];
+
+            if (!isset($tables[$entityType])) {
+                throw new \InvalidArgumentException('Unknown entity type ' . $entityType);
+            }
+
+            $pipelineId = $wpdb->get_var($wpdb->prepare(
+                'SELECT pipeline_id FROM ' . $tables[$entityType] . ' WHERE id = %d',
+                $entityId
+            ));
+
+            return null === $pipelineId ? null : (int) $pipelineId;
+        }
+
+        /**
+         * Retrieves the entity a custom field or an upload belongs to.
+         *
+         * @param string $ownerType Either 'custom_field' or 'upload'.
+         * @param int $ownerId The custom field or upload ID.
+         * @return object|null Object with entity_type and entity_id, or null if it does not exist.
+         * @throws \InvalidArgumentException If the owner type is unknown.
+         */
+        public function getEntityOf($ownerType, $ownerId)
+        {
+            global $wpdb;
+
+            $tables = [
+                'custom_field' => TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
+                'upload'       => TABLE_WP_QUICKTASKER_UPLOADS,
+            ];
+
+            if (!isset($tables[$ownerType])) {
+                throw new \InvalidArgumentException('Unknown owner type ' . $ownerType);
+            }
+
+            return $wpdb->get_row($wpdb->prepare(
+                'SELECT entity_type, entity_id FROM ' . $tables[$ownerType] . ' WHERE id = %d',
+                $ownerId
+            ));
+        }
+
+        /**
          * Adds a WordPress user to a board. Does nothing if the user is already added.
          *
          * @param int $wpUserId The WordPress user ID.

@@ -1614,7 +1614,7 @@ function assertAdminRoutesMatchSource() {
     .map((block) => {
       const phpPath = block.match(/'wpqt\/v1',\s*'([^']+)'/)[1];
       const callback = block.match(
-        /permission_callback'\s*=>\s*function\s*\([^)]*\)\s*\{\s*return\s+(?:PermissionService::|ServiceLocator::get\('PermissionService'\)->)(\w+)/,
+        /permission_callback'\s*=>\s*function\s*\([^)]*\)\s*\{[\s\S]*?return\s+(?:PermissionService::|ServiceLocator::get\('PermissionService'\)->)(\w+)/,
       );
       return {
         method: block.match(/'methods'\s*=>\s*'(\w+)'/)[1],
@@ -1642,6 +1642,26 @@ function assertAdminRoutesMatchSource() {
     ),
   );
 
+  adminRoutes.forEach((route) => {
+    const { board } = route;
+    if (board === "none" || board === "filtered") {
+      return;
+    }
+    if (typeof board !== "object" || board === null) {
+      problems.push(
+        `${routeKey(route)} needs a board scope: an object, "filtered" or "none"`,
+      );
+      return;
+    }
+    Object.keys(board.path ?? {}).forEach((placeholder) => {
+      if (!route.path.includes(`{${placeholder}}`)) {
+        problems.push(
+          `${routeKey(route)} has no {${placeholder}} placeholder for its board scope`,
+        );
+      }
+    });
+  });
+
   if (problems.length) {
     throw new Error(
       "admin-routes.js is out of date:\n  " + problems.join("\n  "),
@@ -1653,17 +1673,25 @@ assertAdminRoutesMatchSource();
 
 const DUMMY_ID = "999999";
 
-/** Builds a request that hits an admin route with dummy IDs and params. */
-function routeRequest(route, { name, auth, tests }) {
-  const routePath = route.path.replace(/\{\w+\}/g, DUMMY_ID);
-  const params = route.params ?? {};
+/**
+ * Builds a request that hits an admin route with dummy IDs and params, or with
+ * the real IDs of its board scope when `useBoardScope` is set.
+ */
+function routeRequest(route, { name, auth, tests, useBoardScope = false }) {
+  const scope = useBoardScope ? route.board : {};
+  const routePath = route.path.replace(/\{(\w+)\}/g, (_, placeholder) =>
+    scope.path?.[placeholder] ? `{{${scope.path[placeholder]}}}` : DUMMY_ID,
+  );
+  const params = { ...(route.params ?? {}), ...(scope.params ?? {}) };
   const options = { name, method: route.method, auth, tests };
 
   if (route.method === "GET") {
     const query = new URLSearchParams(
       Object.entries(params).map(([k, v]) => [k, String(v)]),
     ).toString();
-    options.url = query ? `${routePath}?${query}` : routePath;
+    // Keep {{variables}} unencoded so Postman substitutes them.
+    const url = query ? `${routePath}?${query}` : routePath;
+    options.url = url.replace(/%7B%7B(\w+)%7D%7D/g, "{{$1}}");
   } else {
     options.url = routePath;
     if (Object.keys(params).length) {
@@ -1829,7 +1857,7 @@ const adminBoards = folder("Boards", [
     method: "PATCH",
     url: "/pipelines/{{boardDId}}/set-primary",
     auth: limitedAuth,
-    tests: [status(400), success(false)],
+    tests: [status(403), wpErrorCode("rest_forbidden")],
   }),
   request({
     name: "Limited admin without boards has no primary board",
@@ -2759,6 +2787,13 @@ pm.test('no page_hash is exposed', () => pm.expect(users.filter((u) => 'page_has
     ],
   }),
   request({
+    name: "Add limited user back to board C",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/pipelines",
+    body: { pipeline_ids: ["{{boardCId}}"] },
+    tests: [status(200), success(true)],
+  }),
+  request({
     name: "Grant limited user the settings capability",
     method: "PATCH",
     url: "/wp-users/{{limitedWpUserId}}/capabilities",
@@ -3374,6 +3409,362 @@ const adminLogsAndNotifications = folder("Logs and notifications", [
   }),
 ]);
 
+const outsiderAuth = basicAuth("outsiderUser", "outsiderAppPassword");
+
+const excludesBoardE = (description, listExpression) =>
+  `pm.test('${description}', () => pm.expect(${listExpression}.filter((x) => String(x.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.be.empty);`;
+
+const adminBoardAccess = folder(
+  "Board access",
+  [
+    folder("Set up board E", [
+      request({
+        name: "Create board E",
+        method: "POST",
+        url: "/pipelines",
+        body: { name: "API Board E {{runId}}", description: "Board access" },
+        tests: [status(200), save("boardEId", "pm.response.json().data.id")],
+      }),
+      request({
+        name: "Create stage E1",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/stages",
+        body: { name: "Stage E1", description: "" },
+        tests: [status(200), save("stageE1Id", "pm.response.json().data.id")],
+      }),
+      ...["E1", "E2"].map((label) =>
+        request({
+          name: `Create task ${label}`,
+          method: "POST",
+          url: "/tasks",
+          body: {
+            name: `Board access task ${label} {{runId}}`,
+            stageId: "{{stageE1Id}}",
+            pipelineId: "{{boardEId}}",
+          },
+          tests: [
+            status(200),
+            save(`task${label}Id`, "pm.response.json().data.newTask.id"),
+          ],
+        }),
+      ),
+      request({
+        name: "Archive task E2",
+        method: "PATCH",
+        url: "/pipelines/{{boardEId}}/tasks/{{taskE2Id}}/archive",
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "Create label E1",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/labels",
+        body: { name: "Board access", color: "#00ff00" },
+        tests: [
+          status(200),
+          save("labelE1Id", "pm.response.json().data.label.id"),
+        ],
+      }),
+      request({
+        name: "Create automation E1",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/automations",
+        body: {
+          automationTarget: "task",
+          automationTrigger: "task-done",
+          automationAction: "archive-task",
+        },
+        tests: [
+          status(200),
+          save("automationE1Id", "pm.response.json().data.id"),
+        ],
+      }),
+      request({
+        name: "Create webhook E1",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        body: {
+          target_type: "task",
+          target_action: "created",
+          webhook_url: `${WEBHOOK_RECEIVER}/capture/qt-api-board-e-{{runId}}`,
+          webhook_confirm: false,
+        },
+        tests: [
+          status(200),
+          save("webhookE1Id", "pm.response.json().data.webhook.id"),
+        ],
+      }),
+      request({
+        name: "Create API token E1",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        body: { name: "Board access {{runId}}", ...tokenPermissions() },
+        tests: [status(200), save("tokenE1Id", "pm.response.json().data.id")],
+      }),
+      request({
+        name: "Create custom field E1",
+        method: "POST",
+        url: "/custom-fields",
+        body: {
+          entityType: "task",
+          entityId: "{{taskE1Id}}",
+          name: "Board access",
+          description: "",
+          type: "text",
+        },
+        tests: [
+          status(200),
+          save("customFieldE1Id", "pm.response.json().data.id"),
+        ],
+      }),
+      request({
+        name: "Upload E1",
+        method: "POST",
+        url: "/uploads",
+        formData: [
+          { key: "entity_id", value: "{{taskE1Id}}" },
+          { key: "entity_type", value: "task" },
+          { key: "file_to_upload", src: "tests/api/fixtures/attachment.txt" },
+        ],
+        tests: [
+          status(200),
+          save("uploadE1Id", "pm.response.json().data.upload.id"),
+        ],
+      }),
+      request({
+        name: "Assign QuickTasker to task E1",
+        method: "POST",
+        url: "/users/{{qtUserId}}/tasks/{{taskE1Id}}",
+        body: { user_type: "quicktasker" },
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "Find the outsider WordPress user",
+        url: "/wp-users?type=all",
+        tests: [
+          status(200),
+          `const outsider = pm.response.json().data.find((u) => u.name === pm.variables.get('outsiderUser'));
+pm.test('outsider is listed', () => pm.expect(outsider).to.be.an('object'));
+pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : '0');`,
+        ],
+      }),
+    ]),
+    folder("Assigning a WordPress user needs board access", [
+      request({
+        name: "Outsider cannot be assigned before being added to board E",
+        method: "POST",
+        url: "/users/{{outsiderWpUserId}}/tasks/{{taskE1Id}}",
+        body: { user_type: "wp-user" },
+        tests: [
+          status(400),
+          success(false),
+          `pm.test('message explains why', () => pm.expect(pm.response.json().messages.join(' ')).to.include('not been added to the board'));`,
+        ],
+      }),
+      request({
+        name: "Add outsider to board E",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/pipelines",
+        body: { pipeline_ids: ["{{boardEId}}"] },
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "Outsider can be assigned after being added to board E",
+        method: "POST",
+        url: "/users/{{outsiderWpUserId}}/tasks/{{taskE1Id}}",
+        body: { user_type: "wp-user" },
+        tests: [status(200), success(true)],
+      }),
+    ]),
+    folder("A user added to board E can use it", [
+      request({
+        name: "Outsider can open board E",
+        url: "/pipelines/{{boardEId}}",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('board list has only board E', () => pm.expect(pm.response.json().data.pipelines.map((p) => String(p.id))).to.eql([pm.collectionVariables.get('boardEId')]));`,
+        ],
+      }),
+      request({
+        name: "Outsider sees the logs of task E1",
+        url: "/logs?type=task&typeId={{taskE1Id}}",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('task logs are listed', () => pm.expect(pm.response.json().data).to.not.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Outsider sees task E1 in My tasks",
+        url: "/my-tasks",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('task E1 is assigned', () => pm.expect(pm.response.json().data.assigned.map((t) => String(t.id))).to.include(pm.collectionVariables.get('taskE1Id')));`,
+        ],
+      }),
+      request({
+        name: "Outsider is notified about the assignment on board E",
+        url: "/notifications?max_age_hours=24",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('board E notification is listed', () => pm.expect(pm.response.json().data.filter((n) => String(n.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Remove outsider from board E",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/pipelines",
+        body: { pipeline_ids: [] },
+        tests: [status(200), success(true)],
+      }),
+    ]),
+    folder(
+      "A user not added to board E is rejected",
+      adminRoutes
+        .filter((route) => typeof route.board === "object")
+        .map((route) =>
+          routeRequest(route, {
+            name: routeKey(route),
+            auth: outsiderAuth,
+            useBoardScope: true,
+            tests: [status(403), wpErrorCode("rest_forbidden")],
+          }),
+        ),
+    ),
+    folder("Lists leave out board E for a user not added to it", [
+      request({
+        name: "Board list",
+        url: "/pipelines",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('board E is not listed', () => pm.expect(pm.response.json().data.map((p) => String(p.id))).to.not.include(pm.collectionVariables.get('boardEId')));`,
+        ],
+      }),
+      request({
+        name: "Admin sees archived task E2",
+        url: "/tasks/archived?order=DESC",
+        tests: [
+          status(200),
+          `pm.test('task E2 is listed', () => pm.expect(pm.response.json().data.map((t) => String(t.id))).to.include(pm.collectionVariables.get('taskE2Id')));`,
+        ],
+      }),
+      request({
+        name: "Archived tasks",
+        url: "/tasks/archived?order=DESC",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          excludesBoardE(
+            "board E tasks are not listed",
+            "pm.response.json().data",
+          ),
+        ],
+      }),
+      request({
+        name: "Task logs",
+        url: "/logs?type=task&typeId={{taskE1Id}}",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('task logs are not listed', () => pm.expect(pm.response.json().data).to.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Logs about the outsider",
+        url: "/logs?type=wp_user&typeId={{outsiderWpUserId}}",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('board E assignment log is not listed', () => pm.expect(pm.response.json().data.filter((l) => l.text.includes('Board access task E1'))).to.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Admin sees board E in the global logs",
+        url: "/global-logs?order=DESC&numberOfLogs=200",
+        tests: [
+          status(200),
+          `pm.test('board E logs are listed', () => pm.expect(pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Global logs",
+        url: "/global-logs?order=DESC&numberOfLogs=200",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          excludesBoardE(
+            "board E logs are not listed",
+            "pm.response.json().data",
+          ),
+        ],
+      }),
+      request({
+        name: "My tasks",
+        url: "/my-tasks",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          excludesBoardE(
+            "board E tasks are not listed as assigned",
+            "pm.response.json().data.assigned",
+          ),
+        ],
+      }),
+      request({
+        name: "Tasks of a QuickTasker",
+        url: "/users/{{qtUserId}}/tasks",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          excludesBoardE(
+            "board E tasks are not listed",
+            "pm.response.json().data",
+          ),
+        ],
+      }),
+      request({
+        name: "Admin sees board E tasks of the QuickTasker",
+        url: "/users/{{qtUserId}}/tasks",
+        tests: [
+          status(200),
+          `pm.test('task E1 is listed', () => pm.expect(pm.response.json().data.map((t) => String(t.id))).to.include(pm.collectionVariables.get('taskE1Id')));`,
+        ],
+      }),
+      request({
+        name: "Notifications",
+        url: "/notifications?max_age_hours=24",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          excludesBoardE(
+            "board E notifications are not listed",
+            "pm.response.json().data",
+          ),
+        ],
+      }),
+      request({
+        name: "Notifications filtered to board E",
+        url: "/notifications?max_age_hours=24&pipeline_ids[]={{boardEId}}",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('nothing is listed', () => pm.expect(pm.response.json().data).to.be.empty);`,
+        ],
+      }),
+    ]),
+    request({
+      name: "Delete board E",
+      method: "DELETE",
+      url: "/pipelines/{{boardEId}}",
+      tests: [status(200), success(true)],
+    }),
+  ],
+  "WordPress users who are not administrators can only use the boards they have been added to. Board E's entities are created for these requests, so that rejections are not caused by missing entities.",
+);
+
 const adminCleanup = folder("Cleanup", [
   request({
     name: "Delete board C",
@@ -3425,6 +3816,7 @@ const adminApi = folder(
     adminUploads,
     adminImport,
     adminLogsAndNotifications,
+    adminBoardAccess,
     adminCleanup,
   ],
   "Private admin API, authenticated with WordPress application passwords.",

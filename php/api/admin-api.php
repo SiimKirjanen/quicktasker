@@ -62,7 +62,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'pipeline'  => $pipeline,
-                            'pipelines' => $pipelines,
+                            'pipelines' => ServiceLocator::get('PipelineAccessService')->filterAccessiblePipelines(get_current_user_id(), $pipelines),
                         ]))->toArray(), 200);
                     } catch (PipelineMissingException $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
@@ -70,8 +70,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, 'Failed to get pipeline');
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -94,6 +97,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $pipelineService = ServiceLocator::get('PipelineService');
                         $pipelines = $pipelineRepo->getPipelines();
                         $pipelineService->markPrimaryPipeline($pipelines, $pipelineService->getPrimaryPipelineForUser(get_current_user_id(), $pipelines));
+                        $pipelines = ServiceLocator::get('PipelineAccessService')->filterAccessiblePipelines(get_current_user_id(), $pipelines);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $pipelines))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -208,8 +212,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -248,8 +255,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -296,8 +306,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -332,8 +345,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -385,8 +401,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -488,8 +507,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                            ['api_token', $request['token_id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -525,11 +548,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $status = $data['status'] ?? null;
 
                         $archivedTasks = ServiceLocator::get('TaskRepository')->getArchivedTasks(true, true, [
-                            'limit'      => $limit,
-                            'search'     => $search,
-                            'pipelineId' => $pipelineId,
-                            'status'     => $status,
-                            'order'      => $data['order'] ?? 'DESC',
+                            'limit'       => $limit,
+                            'search'      => $search,
+                            'pipelineId'  => $pipelineId,
+                            'pipelineIds' => ServiceLocator::get('PipelineAccessService')->getAccessiblePipelineIds(get_current_user_id()),
+                            'status'      => $status,
+                            'order'       => $data['order'] ?? 'DESC',
                         ]);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $archivedTasks))->toArray(), 200);
@@ -584,8 +608,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -689,8 +716,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['pipelineId']],
+                            ['task', $request['id']],
+                            ['stage', $request['stageId']],
+                        ]);
                 },
                 'args' => [
                     'pipelineId' => [
@@ -801,8 +833,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['pipelineId']],
+                            ['stage', $request['stageId']],
+                        ]);
                 },
                 'args' => [
                     'stageId' => [
@@ -909,8 +945,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -1029,8 +1068,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -1118,8 +1160,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['pipelineId']],
+                            ['task', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'pipelineId' => [
@@ -1203,8 +1249,15 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIArchiveEndpoints();
+                'permission_callback' => function ($request) {
+                    $entities = [['task', $request['id']]];
+
+                    if (null !== $request['boardId']) {
+                        $entities[] = ['pipeline', $request['boardId']];
+                    }
+
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIArchiveEndpoints()
+                        && PermissionService::canAccessBoardEntities($entities);
                 },
                 'args' => [
                     'id' => [
@@ -1319,8 +1372,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -1367,8 +1423,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -1436,8 +1495,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['pipelineId']],
+                        ]);
                 },
                 'args' => [
                     'pipelineId' => [
@@ -1505,8 +1567,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['pipelineId']],
+                            ['stage', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'pipelineId' => [
@@ -1578,8 +1644,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['pipelineId']],
+                            ['stage', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'pipelineId' => [
@@ -1643,8 +1713,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['pipelineId']],
+                            ['stage', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'pipelineId' => [
@@ -1707,8 +1781,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['pipelineId']],
+                            ['stage', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -1847,7 +1925,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                     try {
-                        $userTasks = ServiceLocator::get('TaskRepository')->getTasksAssignedToUser($data['id'], true);
+                        $userTasks = ServiceLocator::get('PipelineAccessService')->filterItemsOnAccessiblePipelines(
+                            get_current_user_id(),
+                            ServiceLocator::get('TaskRepository')->getTasksAssignedToUser($data['id'], true)
+                        );
 
                         return new WP_REST_Response((new ApiResponse(true, [], $userTasks))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -1883,6 +1964,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                             ? $taskRepo->getTasksAssignedToUser($userId, false, WP_QT_WORDPRESS_USER_TYPE)
                             : null;
 
+                        $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                        $created = $pipelineAccessService->filterItemsOnAccessiblePipelines($userId, $created);
+                        $assigned = null === $assigned ? null : $pipelineAccessService->filterItemsOnAccessiblePipelines($userId, $assigned);
                         $allTasks = array_merge($created, $assigned ?: []);
                         $taskIds = array_map(function ($t) {
                             return $t->id;
@@ -2030,8 +2114,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['task_id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -2108,8 +2195,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['task_id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -2599,7 +2689,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'callback' => function ($data) {
                     try {
                         $logRepo = new LogRepository();
-                        $logs = $logRepo->getLogs($data['typeId'], $data['type']);
+                        $logs = $logRepo->getLogs(
+                            $data['typeId'],
+                            $data['type'],
+                            ServiceLocator::get('PipelineAccessService')->getAccessiblePipelineIds(get_current_user_id())
+                        );
 
                         return new WP_REST_Response((new ApiResponse(true, [], $logs))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -2641,7 +2735,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $logStatus = $data['status'] ?? null;
                         $logSearch = $data['search'] ?? null;
 
-                        $logs = $logRepo->getGlobalLogs($type, $typeId, $createdBy, $numberOfLogs, $data['order'], $logStatus, $logSearch, $createdById);
+                        $accessiblePipelineIds = ServiceLocator::get('PipelineAccessService')->getAccessiblePipelineIds(get_current_user_id());
+                        $logs = $logRepo->getGlobalLogs($type, $typeId, $createdBy, $numberOfLogs, $data['order'], $logStatus, $logSearch, $createdById, $accessiblePipelineIds);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $logs))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -2716,8 +2811,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            [$request['type'], $request['typeId']],
+                        ]);
                 },
                 'args' => [
                     'typeId' => [
@@ -2770,8 +2868,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            [$request['type'], $request['typeId']],
+                        ]);
                 },
                 'args' => [
                     'comment' => [
@@ -2823,8 +2924,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForMyTasks();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForMyTasks()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['taskId']],
+                        ]);
                 },
                 'args' => [
                     'taskId' => [
@@ -2873,8 +2977,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForMyTasks();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForMyTasks()
+                        && PermissionService::canAccessBoardEntities([
+                            ['task', $request['taskId']],
+                        ]);
                 },
                 'args' => [
                     'comment' => [
@@ -2912,8 +3019,15 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    $entities = [[$request['entityType'], $request['entityId']]];
+
+                    if (null !== $request['pipelineId']) {
+                        $entities[] = ['pipeline', $request['pipelineId']];
+                    }
+
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities($entities);
                 },
                 'args' => [
                     'entityType' => [
@@ -2974,8 +3088,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            [$request['entityType'], $request['entityId']],
+                        ]);
                 },
                 'args' => [
                     'entityType' => [
@@ -3043,8 +3160,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['custom_field', $request['custom_field_id']],
+                        ]);
                 },
                 'args' => [
                     'custom_field_id' => [
@@ -3091,8 +3211,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['custom_field', $request['custom_field_id']],
+                            [$request['entityType'], $request['entityId']],
+                        ]);
                 },
                 'args' => [
                     'custom_field_id' => [
@@ -3154,8 +3278,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['custom_field', $request['custom_field_id']],
+                        ]);
                 },
                 'args' => [
                     'custom_field_id' => [
@@ -3205,8 +3332,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['custom_field', $request['custom_field_id']],
+                        ]);
                 },
                 'args' => [
                     'custom_field_id' => [
@@ -3268,8 +3398,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3330,8 +3463,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3454,8 +3590,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3497,8 +3636,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3534,8 +3676,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3604,8 +3749,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                            ['automation', $request['automation_id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3658,8 +3807,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                            ['automation', $request['automation_id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3683,8 +3836,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'GET',
                 'callback' => function ($data) {
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['automation', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3727,8 +3883,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3782,8 +3941,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3863,8 +4025,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['webhook', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3921,8 +4086,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['webhook', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -3956,8 +4124,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -4001,8 +4172,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -4080,8 +4254,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                            ['task', $request['task_id']],
+                            ['label', $request['labelId']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -4156,8 +4335,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                            ['task', $request['task_id']],
+                            ['label', $request['label_id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -4211,8 +4395,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                            ['label', $request['label_id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -4271,8 +4459,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['pipeline', $request['id']],
+                            ['label', $request['label_id']],
+                        ]);
                 },
                 'args' => [
                     'id' => [
@@ -4310,8 +4502,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            [$request['entity_type'], $request['entity_id']],
+                        ]);
                 },
                 'args' => [
                     'entity_id' => [
@@ -4398,8 +4593,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPI();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPI()
+                        && PermissionService::canAccessBoardEntities([
+                            [$request['entity_type'], $request['entity_id']],
+                        ]);
                 },
                 'args' => [
                     'entity_id' => [
@@ -4486,8 +4684,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints()
+                        && PermissionService::canAccessBoardEntities([
+                            ['upload', $request['upload_id']],
+                        ]);
                 },
                 'args' => [
                     'upload_id' => [
@@ -4583,6 +4784,19 @@ if (!function_exists('wpqt_register_api_routes')) {
                             : [];
 
                         $currentUserId = get_current_user_id();
+                        $accessiblePipelineIds = ServiceLocator::get('PipelineAccessService')->getAccessiblePipelineIds($currentUserId);
+
+                        // An empty board filter means every board, so it is narrowed to the accessible boards.
+                        if (null !== $accessiblePipelineIds) {
+                            $pipelineIds = empty($pipelineIds)
+                                ? $accessiblePipelineIds
+                                : array_values(array_intersect($pipelineIds, $accessiblePipelineIds));
+
+                            if (empty($pipelineIds)) {
+                                return new WP_REST_Response((new ApiResponse(true, [], []))->toArray(), 200);
+                            }
+                        }
+
                         $notifications = ServiceLocator::get('NotificationService')->getNotificationsForUserGlobal(
                             (int) $currentUserId,
                             WP_QT_WORDPRESS_USER_TYPE,

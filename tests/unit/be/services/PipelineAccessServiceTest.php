@@ -26,10 +26,31 @@ class PipelineAccessServiceTest extends TestCase
     /** @var array<int, int[]> Board IDs per WordPress user ID that the user has been added to. */
     private $userBoardIds;
 
+    /** @var array<string, int|null> Board ID per "entity type:entity ID". */
+    private $entityBoards;
+
+    /** @var array<string, object> Owning entity per "custom_field:ID" or "upload:ID". */
+    private $attachedEntities;
+
+    /** @var int Number of entity lookups made through the repository. */
+    private $entityLookups;
+
     protected function setUp(): void
     {
         $this->existingBoardIds = [1, 2, 3];
         $this->userBoardIds = [];
+        $this->entityLookups = 0;
+        $this->entityBoards = [
+            'task:10'  => 1,
+            'task:20'  => 2,
+            'task:30'  => null,
+            'stage:11' => 1,
+        ];
+        $this->attachedEntities = [
+            'custom_field:5' => (object) ['entity_type' => 'task', 'entity_id' => '10'],
+            'custom_field:6' => (object) ['entity_type' => 'quicktasker', 'entity_id' => '3'],
+            'upload:7'       => (object) ['entity_type' => 'task', 'entity_id' => '20'],
+        ];
 
         $pipelineRepoMock = $this->getMockBuilder(stdClass::class)
             ->addMethods(['checkIfPipelineExists'])
@@ -39,8 +60,18 @@ class PipelineAccessServiceTest extends TestCase
         });
 
         $pipelineAccessRepoMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['canAccessAllPipelines', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline'])
+            ->addMethods(['canAccessAllPipelines', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf'])
             ->getMock();
+        $pipelineAccessRepoMock->method('getPipelineIdOfEntity')->willReturnCallback(function ($entityType, $entityId) {
+            $this->entityLookups++;
+
+            return $this->entityBoards[$entityType . ':' . $entityId] ?? null;
+        });
+        $pipelineAccessRepoMock->method('getEntityOf')->willReturnCallback(function ($ownerType, $ownerId) {
+            $this->entityLookups++;
+
+            return $this->attachedEntities[$ownerType . ':' . $ownerId] ?? null;
+        });
         $pipelineAccessRepoMock->method('canAccessAllPipelines')->willReturnCallback(function ($userId) {
             return self::ADMIN_USER_ID === $userId;
         });
@@ -149,5 +180,77 @@ class PipelineAccessServiceTest extends TestCase
         }
 
         $this->assertSame([1], $this->service->getAccessiblePipelineIds(self::LIMITED_USER_ID));
+    }
+
+    public function test_administrator_can_access_any_entity_without_lookups()
+    {
+        $this->assertTrue($this->service->canAccessEntity(self::ADMIN_USER_ID, 'task', 30));
+        $this->assertTrue($this->service->canAccessEntity(self::ADMIN_USER_ID, 'upload', 999));
+        $this->assertSame(0, $this->entityLookups);
+    }
+
+    public function test_user_entities_are_not_limited_by_boards()
+    {
+        $this->assertTrue($this->service->canAccessEntity(self::LIMITED_USER_ID, 'quicktasker', 3));
+        $this->assertTrue($this->service->canAccessEntity(self::LIMITED_USER_ID, 'wp-user', 4));
+        $this->assertTrue($this->service->canAccessEntity(self::LIMITED_USER_ID, 'users', null));
+    }
+
+    public function test_limited_user_can_access_entities_on_their_boards_only()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+
+        $this->assertTrue($this->service->canAccessEntity(self::LIMITED_USER_ID, 'pipeline', 1));
+        $this->assertTrue($this->service->canAccessEntity(self::LIMITED_USER_ID, 'task', 10));
+        $this->assertTrue($this->service->canAccessEntity(self::LIMITED_USER_ID, 'stage', 11));
+        $this->assertFalse($this->service->canAccessEntity(self::LIMITED_USER_ID, 'pipeline', 2));
+        $this->assertFalse($this->service->canAccessEntity(self::LIMITED_USER_ID, 'task', 20));
+    }
+
+    public function test_limited_user_cannot_access_missing_entities_or_entities_without_a_board()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1, 2];
+
+        $this->assertFalse($this->service->canAccessEntity(self::LIMITED_USER_ID, 'task', 999));
+        $this->assertFalse($this->service->canAccessEntity(self::LIMITED_USER_ID, 'task', 30));
+        $this->assertFalse($this->service->canAccessEntity(self::LIMITED_USER_ID, 'pipeline', null));
+    }
+
+    public function test_custom_fields_and_uploads_follow_the_entity_they_belong_to()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+
+        $this->assertTrue($this->service->canAccessEntity(self::LIMITED_USER_ID, 'custom_field', 5));
+        $this->assertTrue($this->service->canAccessEntity(self::LIMITED_USER_ID, 'custom_field', 6));
+        $this->assertFalse($this->service->canAccessEntity(self::LIMITED_USER_ID, 'upload', 7));
+        $this->assertFalse($this->service->canAccessEntity(self::LIMITED_USER_ID, 'custom_field', 999));
+    }
+
+    public function test_unknown_entity_types_are_denied()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+
+        $this->assertFalse($this->service->canAccessEntity(self::LIMITED_USER_ID, 'comment', 1));
+    }
+
+    public function test_administrator_keeps_every_item_including_items_without_a_board()
+    {
+        $items = [(object) ['pipeline_id' => '1'], (object) ['pipeline_id' => null]];
+
+        $this->assertSame($items, $this->service->filterItemsOnAccessiblePipelines(self::ADMIN_USER_ID, $items));
+    }
+
+    public function test_limited_user_keeps_only_items_on_their_boards()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [2];
+        $items = [
+            (object) ['id' => 'a', 'pipeline_id' => '1'],
+            (object) ['id' => 'b', 'pipeline_id' => '2'],
+            (object) ['id' => 'c', 'pipeline_id' => null],
+        ];
+
+        $filtered = $this->service->filterItemsOnAccessiblePipelines(self::LIMITED_USER_ID, $items);
+
+        $this->assertSame(['b'], array_column($filtered, 'id'));
     }
 }

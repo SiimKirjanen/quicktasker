@@ -8,6 +8,38 @@ if (!defined('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES')) {
     define('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES', 'wp_quicktasker_wp_user_pipelines');
 }
 
+if (!defined('TABLE_WP_QUICKTASKER_PIPELINE_STAGES')) {
+    define('TABLE_WP_QUICKTASKER_PIPELINE_STAGES', 'wp_quicktasker_pipeline_stages');
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_TASKS')) {
+    define('TABLE_WP_QUICKTASKER_TASKS', 'wp_quicktasker_tasks');
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_LABELS')) {
+    define('TABLE_WP_QUICKTASKER_LABELS', 'wp_quicktasker_labels');
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_AUTOMATIONS')) {
+    define('TABLE_WP_QUICKTASKER_AUTOMATIONS', 'wp_quicktasker_automations');
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_WEBHOOKS')) {
+    define('TABLE_WP_QUICKTASKER_WEBHOOKS', 'wp_quicktasker_webhooks');
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_API_TOKENS')) {
+    define('TABLE_WP_QUICKTASKER_API_TOKENS', 'wp_quicktasker_api_tokens');
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS')) {
+    define('TABLE_WP_QUICKTASKER_CUSTOM_FIELDS', 'wp_quicktasker_custom_fields');
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_UPLOADS')) {
+    define('TABLE_WP_QUICKTASKER_UPLOADS', 'wp_quicktasker_uploads');
+}
+
 if (!function_exists('user_can')) {
     function user_can($userId, $capability)
     {
@@ -34,7 +66,7 @@ class PipelineAccessRepositoryTest extends TestCase
         $this->wpdbBackup = $wpdb ?? null;
 
         $this->wpdbMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['prepare', 'get_col', 'get_results', 'query', 'delete'])
+            ->addMethods(['prepare', 'get_col', 'get_results', 'get_var', 'get_row', 'query', 'delete'])
             ->getMock();
         $this->wpdbMock->method('prepare')->willReturnCallback(function ($query, ...$args) {
             if (1 === count($args) && is_array($args[0])) {
@@ -159,5 +191,47 @@ class PipelineAccessRepositoryTest extends TestCase
             ->with('wp_quicktasker_wp_user_pipelines', ['wp_user_id' => 7], ['%d']);
 
         $this->repository->deleteWPUserAccess(7);
+    }
+
+    public function test_getPipelineIdOfEntity_reads_the_board_of_the_entity()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('get_var')
+            ->with('SELECT pipeline_id FROM wp_quicktasker_tasks WHERE id = 12')
+            ->willReturn('4');
+
+        $this->assertSame(4, $this->repository->getPipelineIdOfEntity('task', 12));
+    }
+
+    public function test_getPipelineIdOfEntity_returns_null_for_a_missing_entity()
+    {
+        $this->wpdbMock->method('get_var')->willReturn(null);
+
+        $this->assertNull($this->repository->getPipelineIdOfEntity('webhook', 12));
+    }
+
+    public function test_getPipelineIdOfEntity_rejects_unknown_entity_types()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->repository->getPipelineIdOfEntity('comment', 12);
+    }
+
+    public function test_getEntityOf_reads_the_entity_an_upload_belongs_to()
+    {
+        $entity = (object) ['entity_type' => 'task', 'entity_id' => '9'];
+        $this->wpdbMock->expects($this->once())
+            ->method('get_row')
+            ->with('SELECT entity_type, entity_id FROM wp_quicktasker_uploads WHERE id = 3')
+            ->willReturn($entity);
+
+        $this->assertSame($entity, $this->repository->getEntityOf('upload', 3));
+    }
+
+    public function test_getEntityOf_rejects_unknown_owner_types()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->repository->getEntityOf('task', 3);
     }
 }

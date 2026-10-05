@@ -64,7 +64,8 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
          *
          * @param bool $addAssignedUsers. Whether to include assigned users for each task. Default false.
          * @param bool $addAssignedLabels Whether to include assigned labels for each task. Default false.
-         * @param array $args Optional. An array of arguments to modify the query.
+         * @param array $args Optional. An array of arguments to modify the query. 'pipelineIds' limits the tasks
+         *                    to these boards, which also leaves out tasks without a board.
          *
          * @return array An array of archived tasks. Each task may include assigned users if $addAssignedUsers is true.
          */
@@ -73,11 +74,12 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
             global $wpdb;
 
             $defaults = [
-                'limit'      => null,
-                'search'     => null,
-                'pipelineId' => null,
-                'status'     => null,
-                'order'      => 'DESC',
+                'limit'       => null,
+                'search'      => null,
+                'pipelineId'  => null,
+                'pipelineIds' => null,
+                'status'      => null,
+                'order'       => 'DESC',
             ];
             $args = wp_parse_args($args, $defaults);
             $query_args = [];
@@ -98,6 +100,15 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
             if (null !== $args['pipelineId']) {
                 $sql .= ' AND a.pipeline_id = %d';
                 $query_args[] = $args['pipelineId'];
+            }
+
+            if (null !== $args['pipelineIds']) {
+                if (empty($args['pipelineIds'])) {
+                    $sql .= ' AND 1 = 0';
+                } else {
+                    $sql .= ' AND a.pipeline_id IN (' . implode(', ', array_fill(0, count($args['pipelineIds']), '%d')) . ')';
+                    $query_args = array_merge($query_args, array_map('intval', $args['pipelineIds']));
+                }
             }
 
             if (null !== $args['status']) {

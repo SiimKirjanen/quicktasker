@@ -135,6 +135,28 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         }
 
         /**
+         * Checks if the current WordPress user can access every given entity through the board it belongs to.
+         *
+         * WordPress administrators can access every board. Other users only the boards they have been added to.
+         *
+         * @param array $entities Pairs of [entity type, entity ID]. See PipelineAccessService::canAccessEntity().
+         * @return bool True if the user can access all of the entities.
+         */
+        public static function canAccessBoardEntities($entities)
+        {
+            $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+            $userId = get_current_user_id();
+
+            foreach ($entities as $entity) {
+                if (!$pipelineAccessService->canAccessEntity($userId, $entity[0], $entity[1])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /**
          * Checks if a user is allowed to view a task.
          *
          * @param int $userId The ID of the user.

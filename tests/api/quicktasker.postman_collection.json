@@ -14213,8 +14213,8 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
-                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                      "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                      "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
                     ]
                   }
                 }
@@ -18520,6 +18520,55 @@
               ]
             },
             {
+              "name": "Add limited user back to board C",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": [\n    \"{{boardCId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
               "name": "Grant limited user the settings capability",
               "request": {
                 "method": "PATCH",
@@ -20866,6 +20915,3642 @@
                     "exec": [
                       "pm.test('status is 200', () => pm.response.to.have.status(200));",
                       "pm.test('preferences saved', () => pm.expect(pm.response.json().data.filter).to.eql('all'));"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Board access",
+          "description": "WordPress users who are not administrators can only use the boards they have been added to. Board E's entities are created for these requests, so that rejections are not caused by missing entities.",
+          "item": [
+            {
+              "name": "Set up board E",
+              "item": [
+                {
+                  "name": "Create board E",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"API Board E {{runId}}\",\n  \"description\": \"Board access\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('boardEId', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create stage E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/stages",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Stage E1\",\n  \"description\": \"\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('stageE1Id', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create task E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Board access task E1 {{runId}}\",\n  \"stageId\": \"{{stageE1Id}}\",\n  \"pipelineId\": \"{{boardEId}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('taskE1Id', String(pm.response.json().data.newTask.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create task E2",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Board access task E2 {{runId}}\",\n  \"stageId\": \"{{stageE1Id}}\",\n  \"pipelineId\": \"{{boardEId}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('taskE2Id', String(pm.response.json().data.newTask.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Archive task E2",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/tasks/{{taskE2Id}}/archive",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create label E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/labels",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Board access\",\n  \"color\": \"#00ff00\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('labelE1Id', String(pm.response.json().data.label.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create automation E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"automationTarget\": \"task\",\n  \"automationTrigger\": \"task-done\",\n  \"automationAction\": \"archive-task\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('automationE1Id', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create webhook E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/webhooks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"target_type\": \"task\",\n  \"target_action\": \"created\",\n  \"webhook_url\": \"{{baseUrl}}/wp-json/qt-test/v1/capture/qt-api-board-e-{{runId}}\",\n  \"webhook_confirm\": false\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('webhookE1Id', String(pm.response.json().data.webhook.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create API token E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Board access {{runId}}\",\n  \"get_pipeline\": false,\n  \"patch_pipeline\": false,\n  \"get_pipeline_stages\": false,\n  \"post_pipeline_stages\": false,\n  \"patch_pipeline_stages\": false,\n  \"delete_pipeline_stages\": false,\n  \"get_pipeline_tasks\": false,\n  \"post_pipeline_tasks\": false,\n  \"patch_pipeline_tasks\": false,\n  \"delete_pipeline_tasks\": false\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('tokenE1Id', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create custom field E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"entityType\": \"task\",\n  \"entityId\": \"{{taskE1Id}}\",\n  \"name\": \"Board access\",\n  \"description\": \"\",\n  \"type\": \"text\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('customFieldE1Id', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Upload E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/uploads",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "entity_id",
+                          "type": "text",
+                          "value": "{{taskE1Id}}"
+                        },
+                        {
+                          "key": "entity_type",
+                          "type": "text",
+                          "value": "task"
+                        },
+                        {
+                          "key": "file_to_upload",
+                          "type": "file",
+                          "src": "tests/api/fixtures/attachment.txt"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('uploadE1Id', String(pm.response.json().data.upload.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Assign QuickTasker to task E1",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/tasks/{{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"user_type\": \"quicktasker\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Find the outsider WordPress user",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users?type=all",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const outsider = pm.response.json().data.find((u) => u.name === pm.variables.get('outsiderUser'));\npm.test('outsider is listed', () => pm.expect(outsider).to.be.an('object'));\npm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : '0');"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Assigning a WordPress user needs board access",
+              "item": [
+                {
+                  "name": "Outsider cannot be assigned before being added to board E",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{outsiderWpUserId}}/tasks/{{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"user_type\": \"wp-user\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                          "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                          "pm.test('message explains why', () => pm.expect(pm.response.json().messages.join(' ')).to.include('not been added to the board'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Add outsider to board E",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/pipelines",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"pipeline_ids\": [\n    \"{{boardEId}}\"\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Outsider can be assigned after being added to board E",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{outsiderWpUserId}}/tasks/{{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"user_type\": \"wp-user\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "A user added to board E can use it",
+              "item": [
+                {
+                  "name": "Outsider can open board E",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board list has only board E', () => pm.expect(pm.response.json().data.pipelines.map((p) => String(p.id))).to.eql([pm.collectionVariables.get('boardEId')]));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Outsider sees the logs of task E1",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/logs?type=task&typeId={{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('task logs are listed', () => pm.expect(pm.response.json().data).to.not.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Outsider sees task E1 in My tasks",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/my-tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('task E1 is assigned', () => pm.expect(pm.response.json().data.assigned.map((t) => String(t.id))).to.include(pm.collectionVariables.get('taskE1Id')));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Outsider is notified about the assignment on board E",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/notifications?max_age_hours=24",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E notification is listed', () => pm.expect(pm.response.json().data.filter((n) => String(n.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Remove outsider from board E",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/pipelines",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"pipeline_ids\": []\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "A user not added to board E is rejected",
+              "item": [
+                {
+                  "name": "GET /pipelines/{id}",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{id}",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{id}/set-primary",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/set-primary",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /pipelines/{id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /pipelines/{id}/api-tokens",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /pipelines/{id}/api-tokens",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"x\",\n  \"get_pipeline\": true,\n  \"patch_pipeline\": true,\n  \"get_pipeline_stages\": true,\n  \"post_pipeline_stages\": true,\n  \"patch_pipeline_stages\": true,\n  \"delete_pipeline_stages\": true,\n  \"get_pipeline_tasks\": true,\n  \"post_pipeline_tasks\": true,\n  \"patch_pipeline_tasks\": true,\n  \"delete_pipeline_tasks\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /pipelines/{id}/api-tokens/{token_id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens/{{tokenE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /tasks/{id}/logs",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{taskE1Id}}/logs",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{pipelineId}/tasks/{id}/move",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/tasks/{{taskE1Id}}/move",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"stageId\": \"{{stageE1Id}}\",\n  \"order\": 999999\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /tasks",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"stageId\": \"{{stageE1Id}}\",\n  \"name\": \"x\",\n  \"pipelineId\": \"{{boardEId}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /tasks/{id}",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /tasks/{id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{pipelineId}/tasks/{id}/archive",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/tasks/{{taskE1Id}}/archive",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /tasks/{id}/archive-restore",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{taskE1Id}}/archive-restore",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"boardId\": \"{{boardEId}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /tasks/{id}/done",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{taskE1Id}}/done",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"done\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /tasks/{id}/focus-color",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{taskE1Id}}/focus-color",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"color\": \"#000000\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /pipelines/{pipelineId}/stages",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/stages",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"x\",\n  \"description\": \"x\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{pipelineId}/stages/{id}",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/stages/{{stageE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"x\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{pipelineId}/stages/{id}/move",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/stages/{{stageE1Id}}/move",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"direction\": \"left\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /pipelines/{pipelineId}/stages/{id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/stages/{{stageE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{pipelineId}/stages/{id}/archive-tasks",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/stages/{{stageE1Id}}/archive-tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /users/{id}/tasks/{task_id}",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/999999/tasks/{{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"user_type\": \"quicktasker\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /users/{id}/tasks/{task_id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/999999/tasks/{{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"user_type\": \"quicktasker\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /comments",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/comments?typeId={{taskE1Id}}&type=task&isPrivate=true",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /comments",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/comments",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"comment\": \"x\",\n  \"typeId\": \"{{taskE1Id}}\",\n  \"type\": \"task\",\n  \"isPrivate\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /my-tasks/comments",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/my-tasks/comments?taskId={{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /my-tasks/comments",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/my-tasks/comments",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"comment\": \"x\",\n  \"taskId\": \"{{taskE1Id}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /custom-fields",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields?entityType=task&active=true&entityId={{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /custom-fields",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"entityType\": \"task\",\n  \"entityId\": \"{{taskE1Id}}\",\n  \"name\": \"x\",\n  \"type\": \"text\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /custom-fields/{custom_field_id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields/{{customFieldE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /custom-fields/{custom_field_id}/value",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields/{{customFieldE1Id}}/value",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"entityId\": \"{{taskE1Id}}\",\n  \"entityType\": \"task\",\n  \"value\": \"x\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /custom-fields/{custom_field_id}/default-value",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields/{{customFieldE1Id}}/default-value",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"value\": \"x\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /custom-fields/{custom_field_id}/restore",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/custom-fields/{{customFieldE1Id}}/restore",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /pipelines/{id}/settings",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/settings",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{id}/settings",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/settings",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /pipelines/{id}/overview",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/overview",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /pipelines/{id}/automations",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /pipelines/{id}/automations",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"automationTarget\": \"task\",\n  \"automationTrigger\": \"task-created\",\n  \"automationAction\": \"archive-task\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{id}/automations/{automation_id}/active",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations/{{automationE1Id}}/active",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"active\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /pipelines/{id}/automations/{automation_id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations/{{automationE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /automations/{id}/logs",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/automations/{{automationE1Id}}/logs",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /pipelines/{id}/webhooks",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/webhooks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /pipelines/{id}/webhooks",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/webhooks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"target_type\": \"task\",\n  \"target_action\": \"created\",\n  \"webhook_url\": \"x\",\n  \"webhook_confirm\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /webhooks/{id}",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/webhooks/{{webhookE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /webhooks/{id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/webhooks/{{webhookE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /pipelines/{id}/labels",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/labels",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /pipelines/{id}/labels",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/labels",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"x\",\n  \"color\": \"#000000\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /pipelines/{id}/tasks/{task_id}/labels",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/tasks/{{taskE1Id}}/labels",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"labelId\": \"{{labelE1Id}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /pipelines/{id}/tasks/{task_id}/labels/{label_id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/tasks/{{taskE1Id}}/labels/{{labelE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /pipelines/{id}/labels/{label_id}",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/labels/{{labelE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /pipelines/{id}/labels/{label_id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/labels/{{labelE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "GET /uploads",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/uploads?entity_id={{taskE1Id}}&entity_type=task",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "POST /uploads",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/uploads",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"entity_id\": \"{{taskE1Id}}\",\n  \"entity_type\": \"task\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /uploads/{upload_id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/uploads/{{uploadE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Lists leave out board E for a user not added to it",
+              "item": [
+                {
+                  "name": "Board list",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E is not listed', () => pm.expect(pm.response.json().data.map((p) => String(p.id))).to.not.include(pm.collectionVariables.get('boardEId')));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Admin sees archived task E2",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/archived?order=DESC",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('task E2 is listed', () => pm.expect(pm.response.json().data.map((t) => String(t.id))).to.include(pm.collectionVariables.get('taskE2Id')));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Archived tasks",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/archived?order=DESC",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E tasks are not listed', () => pm.expect(pm.response.json().data.filter((x) => String(x.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Task logs",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/logs?type=task&typeId={{taskE1Id}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('task logs are not listed', () => pm.expect(pm.response.json().data).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Logs about the outsider",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/logs?type=wp_user&typeId={{outsiderWpUserId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E assignment log is not listed', () => pm.expect(pm.response.json().data.filter((l) => l.text.includes('Board access task E1'))).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Admin sees board E in the global logs",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/global-logs?order=DESC&numberOfLogs=200",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E logs are listed', () => pm.expect(pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Global logs",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/global-logs?order=DESC&numberOfLogs=200",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E logs are not listed', () => pm.expect(pm.response.json().data.filter((x) => String(x.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "My tasks",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/my-tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E tasks are not listed as assigned', () => pm.expect(pm.response.json().data.assigned.filter((x) => String(x.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Tasks of a QuickTasker",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E tasks are not listed', () => pm.expect(pm.response.json().data.filter((x) => String(x.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Admin sees board E tasks of the QuickTasker",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('task E1 is listed', () => pm.expect(pm.response.json().data.map((t) => String(t.id))).to.include(pm.collectionVariables.get('taskE1Id')));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Notifications",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/notifications?max_age_hours=24",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board E notifications are not listed', () => pm.expect(pm.response.json().data.filter((x) => String(x.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Notifications filtered to board E",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/notifications?max_age_hours=24&pipeline_ids[]={{boardEId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('nothing is listed', () => pm.expect(pm.response.json().data).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Delete board E",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
                     ]
                   }
                 }

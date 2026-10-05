@@ -4,11 +4,13 @@
  * Runs the QuickTasker Postman collection with Newman against wp-env.
  *
  * Creates fresh WordPress application passwords via wp-cli for the admin user
- * and for two low-privilege users used by the admin API permission tests:
- * a subscriber and a "limited" user that only has the base QuickTasker admin
- * capability. To target another site, set API_BASE_URL plus ADMIN_USER /
- * ADMIN_APP_PASSWORD, SUBSCRIBER_USER / SUBSCRIBER_APP_PASSWORD and
- * LIMITED_USER / LIMITED_APP_PASSWORD instead.
+ * and for three non-administrator users used by the admin API permission tests:
+ * a subscriber, a "limited" user that only has the base QuickTasker admin
+ * capability, and an "outsider" that has every QuickTasker capability but is
+ * only added to boards by the tests. To target another site, set API_BASE_URL
+ * plus ADMIN_USER / ADMIN_APP_PASSWORD, SUBSCRIBER_USER /
+ * SUBSCRIBER_APP_PASSWORD, LIMITED_USER / LIMITED_APP_PASSWORD and
+ * OUTSIDER_USER / OUTSIDER_APP_PASSWORD instead.
  */
 const { execSync, spawnSync } = require("child_process");
 const path = require("path");
@@ -19,6 +21,7 @@ const isWindows = process.platform === "win32";
 const adminUser = process.env.ADMIN_USER || "admin";
 const subscriberUser = process.env.SUBSCRIBER_USER || "qt-api-subscriber";
 const limitedUser = process.env.LIMITED_USER || "qt-api-limited";
+const outsiderUser = process.env.OUTSIDER_USER || "qt-api-outsider";
 
 function wpCli(command) {
   const output = execSync(`npx wp-env run cli wp ${command}`, {
@@ -60,11 +63,19 @@ function ensureSubscriber(user, capabilities = []) {
 function credentialsFromWpCli() {
   ensureSubscriber(subscriberUser);
   ensureSubscriber(limitedUser, ["quicktasker_admin_role"]);
+  ensureSubscriber(outsiderUser, [
+    "quicktasker_admin_role",
+    "quicktasker_admin_role_allow_delete",
+    "quicktasker_admin_role_manage_settings",
+    "quicktasker_admin_role_manage_archive",
+    "quicktasker_view_my_tasks",
+  ]);
 
   return {
     adminAppPassword: createAppPassword(adminUser),
     subscriberAppPassword: createAppPassword(subscriberUser),
     limitedAppPassword: createAppPassword(limitedUser),
+    outsiderAppPassword: createAppPassword(outsiderUser),
   };
 }
 
@@ -73,6 +84,7 @@ const credentials = process.env.ADMIN_APP_PASSWORD
       adminAppPassword: process.env.ADMIN_APP_PASSWORD,
       subscriberAppPassword: process.env.SUBSCRIBER_APP_PASSWORD,
       limitedAppPassword: process.env.LIMITED_APP_PASSWORD,
+      outsiderAppPassword: process.env.OUTSIDER_APP_PASSWORD,
     }
   : credentialsFromWpCli();
 
@@ -80,6 +92,7 @@ const envVar = [
   { key: "adminUser", value: adminUser },
   { key: "subscriberUser", value: subscriberUser },
   { key: "limitedUser", value: limitedUser },
+  { key: "outsiderUser", value: outsiderUser },
   ...Object.entries(credentials).map(([key, value]) => ({ key, value })),
 ];
 if (process.env.API_BASE_URL) {

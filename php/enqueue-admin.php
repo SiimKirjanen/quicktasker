@@ -32,6 +32,7 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
         $pipelines = $pipelineRepo->getPipelines();
         $activePipeline = $pipelineService->getPrimaryPipelineForUser(get_current_user_id(), $pipelines);
         $pipelineService->markPrimaryPipeline($pipelines, $activePipeline);
+        $pipelines = ServiceLocator::get('PipelineAccessService')->filterAccessiblePipelines(get_current_user_id(), $pipelines);
         $users = ServiceLocator::get('UserService')->getUsersForCurrentViewer();
         $wpUsers = $userRepo->getWPUsersWithCapabilities([WP_QUICKTASKER_ADMIN_ROLE]);
         $notificationPreferences = ServiceLocator::get('NotificationService')->getPreferences(

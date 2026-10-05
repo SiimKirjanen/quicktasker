@@ -18,6 +18,59 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
      */
     class PipelineAccessService
     {
+        /** Entity types that belong to a board through their own pipeline_id column. */
+        private const BOARD_ENTITY_TYPES = ['stage', 'task', 'label', 'automation', 'webhook', 'api_token'];
+
+        /** Entity types that do not belong to a board. Only capabilities decide access to them. */
+        private const USER_ENTITY_TYPES = ['quicktasker', 'wp-user', 'users'];
+
+        /** Entity types that belong to whatever entity they are attached to. */
+        private const ATTACHED_ENTITY_TYPES = ['custom_field', 'upload'];
+
+        /**
+         * Checks if a WordPress user can access an entity through the board it belongs to.
+         *
+         * Entities without a board, like tasks archived from a deleted board, can only be
+         * accessed by users who can access every board.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param string $entityType 'pipeline', a board entity type ('stage', 'task', 'label', 'automation',
+         *                           'webhook', 'api_token'), an attached entity type ('custom_field', 'upload')
+         *                           or a user entity type ('quicktasker', 'wp-user', 'users').
+         * @param int|null $entityId The entity ID.
+         * @return bool True if the user can access the entity.
+         */
+        public function canAccessEntity($wpUserId, $entityType, $entityId)
+        {
+            $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
+
+            if ($pipelineAccessRepo->canAccessAllPipelines($wpUserId)) {
+                return true;
+            }
+
+            if (in_array($entityType, self::USER_ENTITY_TYPES, true)) {
+                return true;
+            }
+
+            if ('pipeline' === $entityType) {
+                return $this->canAccessPipeline($wpUserId, $entityId);
+            }
+
+            if (in_array($entityType, self::ATTACHED_ENTITY_TYPES, true)) {
+                $entity = $pipelineAccessRepo->getEntityOf($entityType, $entityId);
+
+                return null !== $entity && $this->canAccessEntity($wpUserId, $entity->entity_type, $entity->entity_id);
+            }
+
+            if (!in_array($entityType, self::BOARD_ENTITY_TYPES, true)) {
+                return false;
+            }
+
+            $pipelineId = $pipelineAccessRepo->getPipelineIdOfEntity($entityType, $entityId);
+
+            return null !== $pipelineId && $this->canAccessPipeline($wpUserId, $pipelineId);
+        }
+
         /**
          * Retrieves the IDs of the boards a WordPress user can access.
          *
@@ -66,6 +119,28 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
 
             return array_values(array_filter($pipelines, function ($pipeline) use ($accessiblePipelineIds) {
                 return in_array((int) $pipeline->id, $accessiblePipelineIds, true);
+            }));
+        }
+
+        /**
+         * Keeps only the items, like tasks, that belong to a board the WordPress user can access.
+         *
+         * Items without a board are kept only for users who can access every board.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param array $items Objects with a pipeline_id property.
+         * @return array The accessible items, re-indexed.
+         */
+        public function filterItemsOnAccessiblePipelines($wpUserId, $items)
+        {
+            $accessiblePipelineIds = $this->getAccessiblePipelineIds($wpUserId);
+
+            if (null === $accessiblePipelineIds) {
+                return array_values($items);
+            }
+
+            return array_values(array_filter($items, function ($item) use ($accessiblePipelineIds) {
+                return null !== $item->pipeline_id && in_array((int) $item->pipeline_id, $accessiblePipelineIds, true);
             }));
         }
 

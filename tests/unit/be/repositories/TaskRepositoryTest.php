@@ -569,6 +569,27 @@ class TaskRepositoryTest extends TestCase
         $this->assertSame($expectedTasks, $result);
     }
 
+    public function test_getArchivedTasks_keeps_only_tasks_of_the_given_boards()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->stringContains('AND a.pipeline_id IN (%d, %d)'), [3, 5, 10])
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getArchivedTasks(false, false, ['pipelineIds' => ['3', 5], 'limit' => 10]);
+    }
+
+    public function test_getArchivedTasks_returns_nothing_without_accessible_boards()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with($this->stringContains('AND 1 = 0'))
+            ->willReturn([]);
+
+        $this->assertSame([], $this->repository->getArchivedTasks(false, false, ['pipelineIds' => []]));
+    }
+
     public function test_getArchivedTasks_includes_assigned_users_when_requested()
     {
         $expectedTasks = [
