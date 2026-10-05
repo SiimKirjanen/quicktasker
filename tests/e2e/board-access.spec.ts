@@ -3,6 +3,7 @@ import { navigateToBoardsPage } from './utils/navigation';
 import {
   createBoardViaApi,
   createTask,
+  createTaskViaApi,
   deleteBoardViaApi,
   generateUniqueName,
   getTaskCard,
@@ -12,11 +13,17 @@ import { loginToWordPressViaApi } from './utils/auth';
 import {
   addWPUserToBoards,
   assignWordPressUserToTask,
+  assignWPUserToTaskViaApi,
   createWPUser,
   grantWPUserCaps,
   openUserAssignmentDropdown,
   uniqueLogin,
 } from './utils/user-helpers';
+import {
+  getTasksAppTaskCard,
+  navigateToAssignableTasks,
+  navigateToAssignedTasks,
+} from './utils/tasks-app-helpers';
 import { TIMEOUTS } from './utils/timeouts';
 
 /**
@@ -84,6 +91,67 @@ test.describe('Board access', () => {
       await expect(userPage.getByText('Create a new board')).toHaveCount(0);
     } finally {
       await context.close();
+    }
+  });
+
+  test('a WordPress user only sees tasks of their boards in the tasks app', async ({ browser, request }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const boardAName = generateUniqueName('BA-App-BoardA');
+    const boardBName = generateUniqueName('BA-App-BoardB');
+    const boardA = await createBoardViaApi(request, boardAName, generateUniqueName('BA-App-StageA'));
+    const boardB = await createBoardViaApi(request, boardBName, generateUniqueName('BA-App-StageB'));
+    const assignedAName = generateUniqueName('BA-App-AssignedA');
+    const assignedBName = generateUniqueName('BA-App-AssignedB');
+    const freeAName = generateUniqueName('BA-App-FreeA');
+    const freeBName = generateUniqueName('BA-App-FreeB');
+    const assignedA = await createTaskViaApi(request, boardA.boardId, boardA.stageId!, assignedAName);
+    const assignedB = await createTaskViaApi(request, boardB.boardId, boardB.stageId!, assignedBName);
+    await createTaskViaApi(request, boardA.boardId, boardA.stageId!, freeAName, { freeForAll: true });
+    await createTaskViaApi(request, boardB.boardId, boardB.stageId!, freeBName, { freeForAll: true });
+
+    const userLogin = uniqueLogin('wpapp');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_access_user_page_app']);
+    // Assigned while on both boards, then removed from board B.
+    await addWPUserToBoards(request, userId, [boardAName, boardBName]);
+    await assignWPUserToTaskViaApi(request, userId, assignedA.id);
+    await assignWPUserToTaskViaApi(request, userId, assignedB.id);
+    await addWPUserToBoards(request, userId, [boardAName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const userPage = await context.newPage();
+
+      await navigateToAssignedTasks(userPage);
+      await expect(getTasksAppTaskCard(userPage, assignedAName)).toBeVisible();
+      await expect(getTasksAppTaskCard(userPage, assignedBName)).toHaveCount(0);
+
+      await navigateToAssignableTasks(userPage);
+      await expect(getTasksAppTaskCard(userPage, freeAName)).toBeVisible();
+      await expect(getTasksAppTaskCard(userPage, freeBName)).toHaveCount(0);
+
+      // Opening the board B task directly is refused too.
+      const openTask = (taskHash: string) =>
+        userPage.evaluate(async (hash) => {
+          const { wp, wpqt_user } = window as unknown as {
+            wp: { apiFetch: (options: object) => Promise<{ success: boolean }> };
+            wpqt_user: { userApiNonce: string };
+          };
+          try {
+            return await wp.apiFetch({
+              path: `/wpqt/v1/user-page/tasks/${hash}`,
+              headers: { 'X-WPQT-USER-API-Nonce': wpqt_user.userApiNonce },
+            });
+          } catch (error) {
+            return error as { success: boolean };
+          }
+        }, taskHash);
+      expect((await openTask(assignedA.taskHash)).success).toBe(true);
+      expect((await openTask(assignedB.taskHash)).success).toBe(false);
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, boardAName);
+      await deleteBoardViaApi(request, boardBName);
     }
   });
 });

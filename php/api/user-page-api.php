@@ -216,8 +216,18 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $requestData = RequestValidation::validateUserPageApiRequest($data);
                     $taskRepository = new TaskRepository();
 
-                    $assignedTasks = $taskRepository->getTasksAssignedToUser($requestData['session']->user_id, false, $requestData['userType']);
-                    $assignableTasks = $taskRepository->getTasksAssignableToUser();
+                    $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                    $userId = $requestData['session']->user_id;
+                    $assignedTasks = $pipelineAccessService->filterItemsForUser(
+                        $userId,
+                        $requestData['userType'],
+                        $taskRepository->getTasksAssignedToUser($userId, false, $requestData['userType'])
+                    );
+                    $assignableTasks = $pipelineAccessService->filterItemsForUser(
+                        $userId,
+                        $requestData['userType'],
+                        $taskRepository->getTasksAssignableToUser()
+                    );
 
                     $overviewData = (object) [
                         'assignedTasksCount'  => count($assignedTasks),
@@ -241,7 +251,11 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     $requestData = RequestValidation::validateUserPageApiRequest($data);
                     $taskRepository = new TaskRepository();
 
-                    $assignedTasks = $taskRepository->getTasksAssignedToUser($requestData['session']->user_id, false, $requestData['userType']);
+                    $assignedTasks = ServiceLocator::get('PipelineAccessService')->filterItemsForUser(
+                        $requestData['session']->user_id,
+                        $requestData['userType'],
+                        $taskRepository->getTasksAssignedToUser($requestData['session']->user_id, false, $requestData['userType'])
+                    );
 
                     return new WP_REST_Response((new ApiResponse(true, [], $assignedTasks))->toArray(), 200);
                 } catch (WPQTException $e) {
@@ -257,9 +271,13 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
             'methods'  => 'GET',
             'callback' => function ($data) {
                 try {
-                    RequestValidation::validateUserPageApiRequest($data);
+                    $requestData = RequestValidation::validateUserPageApiRequest($data);
                     $taskRepository = new TaskRepository();
-                    $assignableTasks = $taskRepository->getTasksAssignableToUser();
+                    $assignableTasks = ServiceLocator::get('PipelineAccessService')->filterItemsForUser(
+                        $requestData['session']->user_id,
+                        $requestData['userType'],
+                        $taskRepository->getTasksAssignableToUser()
+                    );
 
                     return new WP_REST_Response((new ApiResponse(true, [], $assignableTasks))->toArray(), 200);
                 } catch (WPQTException $e) {
@@ -502,6 +520,11 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         (int) $requestData['session']->user_id,
                         $requestData['userType'],
                         (int) $maxAgeHours
+                    );
+                    $notifications = ServiceLocator::get('PipelineAccessService')->filterItemsForUser(
+                        $requestData['session']->user_id,
+                        $requestData['userType'],
+                        $notifications
                     );
 
                     return new WP_REST_Response((new ApiResponse(true, [], $notifications))->toArray(), 200);

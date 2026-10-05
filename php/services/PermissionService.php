@@ -159,6 +159,8 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         /**
          * Checks if a user is allowed to view a task.
          *
+         * WordPress users must also have been added to the task's board.
+         *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
          * @param string $userType The type of user (default is WP_QT_QUICKTASKER_USER_TYPE).
@@ -167,6 +169,10 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         public function checkIfUserIsAllowedToViewTask($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE)
         {
             global $wpdb;
+
+            if (!ServiceLocator::get('PipelineAccessService')->canUserAccessEntity($userId, $userType, 'task', $taskId)) {
+                return false;
+            }
 
             $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
 
@@ -256,6 +262,8 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         /**
          * Check if a user page user is allowed to edit a task.
          *
+         * WordPress users must also have been added to the task's board.
+         *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
          * @param string $userType The type of user (default is WP_QT_QUICKTASKER_USER_TYPE).
@@ -264,6 +272,10 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         public function checkIfUserIsAllowedToEditTask($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE)
         {
             global $wpdb;
+
+            if (!ServiceLocator::get('PipelineAccessService')->canUserAccessEntity($userId, $userType, 'task', $taskId)) {
+                return false;
+            }
 
             $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
 

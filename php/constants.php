@@ -514,6 +514,14 @@ if (!defined('WP_QUICKTASKER_USER_PRIMARY_PIPELINE_OPTION')) {
     define('WP_QUICKTASKER_USER_PRIMARY_PIPELINE_OPTION', 'quicktasker_primary_pipeline_id'); // Per-site user option holding the WordPress user's own primary board
 }
 
+if (!defined('WP_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION')) {
+    define('WP_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION', 'quicktasker_show_board_access_notice'); // Set when updating to board access, until an administrator dismisses the notice
+}
+
+if (!defined('WP_QUICKTASKER_BOARD_ACCESS_DB_VERSION')) {
+    define('WP_QUICKTASKER_BOARD_ACCESS_DB_VERSION', '1.70.0'); // DB version that introduced board access for WordPress users
+}
+
 /*
 ==================================================================================================================================================================================================================
 Label constants

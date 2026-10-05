@@ -4,6 +4,13 @@ if (!defined('ABSPATH')) {
     define('ABSPATH', '/fake/path/');
 }
 
+if (!defined('WP_QT_QUICKTASKER_USER_TYPE')) {
+    define('WP_QT_QUICKTASKER_USER_TYPE', 'quicktasker');
+}
+if (!defined('WP_QT_WORDPRESS_USER_TYPE')) {
+    define('WP_QT_WORDPRESS_USER_TYPE', 'wp-user');
+}
+
 require_once __DIR__ . '/../../../../php/exeptions/WPQTExeption.php';
 require_once __DIR__ . '/../../../../php/services/ServiceLocator.php';
 require_once __DIR__ . '/../../../../php/services/PipelineAccessService.php';
@@ -266,5 +273,23 @@ class PipelineAccessServiceTest extends TestCase
 
         $this->assertSame([true, false, false], array_column($users, 'can_access_all_pipelines'));
         $this->assertSame([[], [2, 3], []], array_column($users, 'pipeline_ids'));
+    }
+
+    public function test_tasks_app_users_are_limited_by_boards_only_for_wordpress_users()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+
+        $this->assertTrue($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_WORDPRESS_USER_TYPE, 'task', 10));
+        $this->assertFalse($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_WORDPRESS_USER_TYPE, 'task', 20));
+        $this->assertTrue($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'task', 20));
+    }
+
+    public function test_tasks_app_lists_are_filtered_only_for_wordpress_users()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+        $items = [(object) ['id' => 'a', 'pipeline_id' => '1'], (object) ['id' => 'b', 'pipeline_id' => '2']];
+
+        $this->assertSame(['a'], array_column($this->service->filterItemsForUser(self::LIMITED_USER_ID, WP_QT_WORDPRESS_USER_TYPE, $items), 'id'));
+        $this->assertSame(['a', 'b'], array_column($this->service->filterItemsForUser(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, $items), 'id'));
     }
 }

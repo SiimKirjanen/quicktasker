@@ -145,6 +145,37 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
+         * Checks if a user of either type can access an entity. QuickTasker users are not limited by boards.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @param string $entityType See canAccessEntity().
+         * @param int|null $entityId The entity ID.
+         * @return bool True if the user can access the entity.
+         */
+        public function canUserAccessEntity($userId, $userType, $entityType, $entityId)
+        {
+            return WP_QT_WORDPRESS_USER_TYPE !== $userType || $this->canAccessEntity($userId, $entityType, $entityId);
+        }
+
+        /**
+         * Keeps only the items a user of either type can access. QuickTasker users are not limited by boards.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @param array $items Objects with a pipeline_id property.
+         * @return array The accessible items, re-indexed.
+         */
+        public function filterItemsForUser($userId, $userType, $items)
+        {
+            if (WP_QT_WORDPRESS_USER_TYPE !== $userType) {
+                return array_values($items);
+            }
+
+            return $this->filterItemsOnAccessiblePipelines($userId, $items);
+        }
+
+        /**
          * Adds each WordPress user's board access to the user objects.
          *
          * Sets can_access_all_pipelines, and pipeline_ids with the boards the user has been added to.

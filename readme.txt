@@ -65,6 +65,7 @@ QuickTasker is an open source kanban-style task management plugin for WordPress.
 = 1.60.0 =
 * Only administrators can change WordPress users' permissions. User management permission now covers QuickTaskers only.
 * The primary board is now set per user, so choosing one no longer changes it for everyone.
+* Board access: WordPress users who are not administrators only see the boards they have been added to. After updating, add them to boards in User management, as they will see no boards until then.
 * Security improvements and bug fixes.
 
 = 1.59.1 =

@@ -87,6 +87,21 @@ export async function addWPUserToBoards(
 
 
 /**
+ * Assign a WordPress user to a task via the plugin REST API, as the admin.
+ */
+export async function assignWPUserToTaskViaApi(
+  request: APIRequestContext,
+  userId: number,
+  taskId: string,
+): Promise<void> {
+  const response = await request.post(`/wp-json/wpqt/v1/users/${userId}/tasks/${taskId}`, {
+    headers: { 'X-WP-Nonce': await getAdminNonce(request) },
+    data: { user_type: 'wp-user' },
+  });
+  if (!response.ok()) throw new Error(`Failed to assign WP user: ${await response.text()}`);
+}
+
+/**
  * Navigate to the WordPress users tab in User Management (the default tab).
  * Waits for the tab content to finish loading.
  */
