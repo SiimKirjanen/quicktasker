@@ -3,6 +3,7 @@ import { navigateToBoardsPage } from './utils/navigation';
 import {
   createBoard,
   createBoardViaApi,
+  createStage,
   createTask,
   createTaskViaApi,
   deleteBoardViaApi,
@@ -13,8 +14,10 @@ import {
 import { loginToWordPressViaApi } from './utils/auth';
 import {
   addWPUserToBoards,
+  assignQuickTaskerToTaskViaApi,
   assignWordPressUserToTask,
   assignWPUserToTaskViaApi,
+  createQuickTaskerUserViaApi,
   createWPUser,
   grantWPUserCaps,
   openUserAssignmentDropdown,
@@ -190,6 +193,75 @@ test.describe('Board access', () => {
       await deleteBoardViaApi(request, addedBoardName);
       await deleteBoardViaApi(request, otherBoardName);
       await deleteBoardViaApi(request, createdBoardName);
+    }
+  });
+
+  test('a user can assign themselves to tasks on a board they created', async ({ browser, request }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const startBoardName = generateUniqueName('BA-Own-Start');
+    const ownBoardName = generateUniqueName('BA-Own');
+    const stageName = generateUniqueName('BA-Own-Stage');
+    const taskName = generateUniqueName('BA-Own-Task');
+    await createBoardViaApi(request, startBoardName);
+    const userLogin = uniqueLogin('wpcreator');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    await addWPUserToBoards(request, userId, [startBoardName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const userPage = await context.newPage();
+      await navigateToBoardsPage(userPage);
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(startBoardName);
+      await createBoard(userPage, ownBoardName);
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(ownBoardName);
+      await createStage(userPage, stageName);
+      await createTask(userPage, stageName, taskName);
+
+      // Without reloading, the creator is known to be on the new board.
+      await openUserAssignmentDropdown(userPage, taskName);
+      const assignmentList = userPage.getByTestId('user-assignment-list');
+      await expect(assignmentList.getByTestId('user-assignment-row').filter({ hasText: userLogin })).toBeVisible();
+      await expect(
+        assignmentList.getByTestId('user-assignment-row-no-board-access').filter({ hasText: userLogin }),
+      ).toHaveCount(0);
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, startBoardName);
+      await deleteBoardViaApi(request, ownBoardName);
+    }
+  });
+
+  test("a QuickTasker's assigned task count only includes the viewer's boards", async ({ page, browser, request }) => {
+    const addedBoardName = generateUniqueName('BA-Count-Added');
+    const otherBoardName = generateUniqueName('BA-Count-Other');
+    const addedBoard = await createBoardViaApi(request, addedBoardName, generateUniqueName('BA-Count-StageA'));
+    const otherBoard = await createBoardViaApi(request, otherBoardName, generateUniqueName('BA-Count-StageB'));
+    const addedTask = await createTaskViaApi(request, addedBoard.boardId, addedBoard.stageId!, generateUniqueName('BA-Count-TaskA'));
+    const otherTask = await createTaskViaApi(request, otherBoard.boardId, otherBoard.stageId!, generateUniqueName('BA-Count-TaskB'));
+    const quickTaskerId = await createQuickTaskerUserViaApi(request, generateUniqueName('BA-Count-QT'));
+    await assignQuickTaskerToTaskViaApi(request, quickTaskerId, addedTask.id);
+    await assignQuickTaskerToTaskViaApi(request, quickTaskerId, otherTask.id);
+    const userLogin = uniqueLogin('wpcount');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    await addWPUserToBoards(request, userId, [addedBoardName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+    const countOf = (viewerPage: Page) => viewerPage.getByText('Assigned tasks count:').locator('xpath=..');
+    const userDetailsUrl = `/wp-admin/admin.php?page=wp-quicktasker#/user-management/${quickTaskerId}`;
+
+    try {
+      const userPage = await context.newPage();
+      await userPage.goto(userDetailsUrl);
+      await expect(countOf(userPage)).toHaveText(/Assigned tasks count:\s*1$/, { timeout: TIMEOUTS.NAVIGATION });
+
+      // Administrators can access every board, so they see both tasks.
+      await page.goto(userDetailsUrl);
+      await expect(countOf(page)).toHaveText(/Assigned tasks count:\s*2$/, { timeout: TIMEOUTS.NAVIGATION });
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, addedBoardName);
+      await deleteBoardViaApi(request, otherBoardName);
     }
   });
 

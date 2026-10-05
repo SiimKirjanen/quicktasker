@@ -43,14 +43,15 @@ if (!class_exists('WPQT\User\UserRepository')) {
          *
          * @global wpdb $wpdb WordPress database abstraction object.
          *
+         * @param int[]|null $pipelineIds Only count tasks on these boards, or null to count tasks on every board.
          * @return array|object|null List of users with their details, or null on failure.
          */
-        public function getUsers()
+        public function getUsers($pipelineIds = null)
         {
             global $wpdb;
 
-            return $wpdb->get_results(
-                "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, a.is_banned, a.banned_at, 'quicktasker' AS user_type,
+            [$boardCondition, $boardParams] = $this->getAssignedTasksBoardCondition($pipelineIds);
+            $sql = "SELECT a.id, a.name, a.description, a.created_at, a.updated_at, a.is_active, a.is_banned, a.banned_at, 'quicktasker' AS user_type,
                         CASE
                             WHEN a.password IS NULL THEN 0
                             ELSE 1
@@ -59,11 +60,12 @@ if (!class_exists('WPQT\User\UserRepository')) {
                         FROM " . TABLE_WP_QUICKTASKER_USER_TASK . ' AS c
                         JOIN ' . TABLE_WP_QUICKTASKER_TASKS . " AS d
                         ON c.task_id = d.id
-                        WHERE c.user_id = a.id AND d.is_archived = 0 AND c.user_type = 'quicktasker') AS assigned_tasks_count
-                FROM " . TABLE_WP_QUICKTASKER_USERS . ' AS a
+                        WHERE c.user_id = a.id AND d.is_archived = 0 AND c.user_type = 'quicktasker'" . $boardCondition . ') AS assigned_tasks_count
+                FROM ' . TABLE_WP_QUICKTASKER_USERS . ' AS a
                 LEFT JOIN ' . TABLE_WP_QUICKTASKER_USER_PAGES . ' AS b ON a.id = b.user_id
-                WHERE a.deleted = 0'
-            );
+                WHERE a.deleted = 0';
+
+            return $wpdb->get_results(empty($boardParams) ? $sql : $wpdb->prepare($sql, $boardParams));
         }
 
         /**
@@ -74,11 +76,14 @@ if (!class_exists('WPQT\User\UserRepository')) {
          * that are not archived.
          *
          * @param int $id The ID of the user to retrieve.
+         * @param int[]|null $pipelineIds Only count tasks on these boards, or null to count tasks on every board.
          * @return object|null The user object containing user details and assigned tasks count, or null if the user is not found.
          */
-        public function getQuicktaskerUserById($id)
+        public function getQuicktaskerUserById($id, $pipelineIds = null)
         {
             global $wpdb;
+
+            [$boardCondition, $boardParams] = $this->getAssignedTasksBoardCondition($pipelineIds);
 
             return $wpdb->get_row(
                 $wpdb->prepare(
@@ -87,14 +92,35 @@ if (!class_exists('WPQT\User\UserRepository')) {
                             FROM " . TABLE_WP_QUICKTASKER_USER_TASK . ' AS c
                             JOIN ' . TABLE_WP_QUICKTASKER_TASKS . " AS d
                             ON c.task_id = d.id
-                            WHERE c.user_id = a.id AND d.is_archived = 0 AND c.user_type = 'quicktasker') AS assigned_tasks_count
-                    FROM " . TABLE_WP_QUICKTASKER_USERS . ' AS a
+                            WHERE c.user_id = a.id AND d.is_archived = 0 AND c.user_type = 'quicktasker'" . $boardCondition . ') AS assigned_tasks_count
+                    FROM ' . TABLE_WP_QUICKTASKER_USERS . ' AS a
                     LEFT JOIN ' . TABLE_WP_QUICKTASKER_USER_PAGES . ' AS b
                     ON a.id = b.user_id
                     WHERE a.id = %d AND a.deleted = 0',
-                    $id
+                    array_merge($boardParams, [$id])
                 )
             );
+        }
+
+        /**
+         * Builds the condition that limits an assigned tasks count to some boards.
+         *
+         * @param int[]|null $pipelineIds The board IDs, or null for every board.
+         * @return array The SQL condition, for the tasks aliased d, and its query parameters.
+         */
+        private function getAssignedTasksBoardCondition($pipelineIds)
+        {
+            if (null === $pipelineIds) {
+                return ['', []];
+            }
+
+            if (empty($pipelineIds)) {
+                return [' AND 1 = 0', []];
+            }
+
+            $placeholders = implode(', ', array_fill(0, count($pipelineIds), '%d'));
+
+            return [" AND d.pipeline_id IN ($placeholders)", array_map('intval', $pipelineIds)];
         }
 
         /**

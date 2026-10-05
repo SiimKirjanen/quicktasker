@@ -1,5 +1,6 @@
 import {
   ADD_USER,
+  ADD_WP_USER_PIPELINE_ID,
   CHANGE_USER_STATUS,
   DELETE_USER,
   EDIT_USER,
@@ -49,6 +50,28 @@ describe("user reducer", () => {
       payload: [wpUser],
     });
     expect(next.wpUsers[0].id).toBe("42");
+  });
+
+  it("ADD_WP_USER_PIPELINE_ID adds a board to only that user, once", () => {
+    const state: State = {
+      ...baseState,
+      wpUsers: [
+        { id: "1", name: "a", pipeline_ids: [1] },
+        { id: "2", name: "b" },
+      ] as unknown as WPUser[],
+    };
+    const add = (userId: string, pipelineId: number) =>
+      reducer(state, {
+        type: ADD_WP_USER_PIPELINE_ID,
+        payload: { userId, pipelineId },
+      });
+
+    expect(add("1", 5).wpUsers.map((u) => u.pipeline_ids)).toEqual([
+      [1, 5],
+      undefined,
+    ]);
+    expect(add("2", 5).wpUsers[1].pipeline_ids).toEqual([5]);
+    expect(add("1", 1).wpUsers[0].pipeline_ids).toEqual([1]);
   });
 
   it("SET_WP_USER_PIPELINE_IDS updates only that user's boards", () => {

@@ -1,5 +1,6 @@
 import {
   ADD_USER,
+  ADD_WP_USER_PIPELINE_ID,
   CHANGE_USER_STATUS,
   DELETE_USER,
   EDIT_USER,
@@ -43,6 +44,22 @@ const reducer = (state: State, action: Action): State => {
         wpUsers: state.wpUsers.map((wpUser) =>
           wpUser.id === userId
             ? { ...wpUser, pipeline_ids: pipelineIds }
+            : wpUser,
+        ),
+      };
+    }
+    case ADD_WP_USER_PIPELINE_ID: {
+      const { userId, pipelineId } = action.payload;
+
+      return {
+        ...state,
+        wpUsers: state.wpUsers.map((wpUser) =>
+          wpUser.id === userId &&
+          !(wpUser.pipeline_ids ?? []).includes(pipelineId)
+            ? {
+                ...wpUser,
+                pipeline_ids: [...(wpUser.pipeline_ids ?? []), pipelineId],
+              }
             : wpUser,
         ),
       };

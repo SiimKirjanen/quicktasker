@@ -87,6 +87,37 @@ export async function addWPUserToBoards(
 
 
 /**
+ * Create a QuickTasker user via the plugin REST API, as the admin.
+ * Returns the new user's ID.
+ */
+export async function createQuickTaskerUserViaApi(
+  request: APIRequestContext,
+  name: string,
+): Promise<string> {
+  const response = await request.post('/wp-json/wpqt/v1/users', {
+    headers: { 'X-WP-Nonce': await getAdminNonce(request) },
+    data: { name, description: '' },
+  });
+  if (!response.ok()) throw new Error(`Failed to create QuickTasker: ${await response.text()}`);
+  return String((await response.json()).data.id);
+}
+
+/**
+ * Assign a QuickTasker user to a task via the plugin REST API, as the admin.
+ */
+export async function assignQuickTaskerToTaskViaApi(
+  request: APIRequestContext,
+  userId: string,
+  taskId: string,
+): Promise<void> {
+  const response = await request.post(`/wp-json/wpqt/v1/users/${userId}/tasks/${taskId}`, {
+    headers: { 'X-WP-Nonce': await getAdminNonce(request) },
+    data: { user_type: 'quicktasker' },
+  });
+  if (!response.ok()) throw new Error(`Failed to assign QuickTasker: ${await response.text()}`);
+}
+
+/**
  * Assign a WordPress user to a task via the plugin REST API, as the admin.
  */
 export async function assignWPUserToTaskViaApi(

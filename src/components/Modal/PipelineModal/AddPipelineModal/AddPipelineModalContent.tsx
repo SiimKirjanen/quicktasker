@@ -5,6 +5,7 @@ import {
   PIPELINE_ADD_PIPELINE,
 } from "../../../../constants";
 import { usePipelineActions } from "../../../../hooks/actions/usePipelineActions";
+import { useWPUserPipelineActions } from "../../../../hooks/actions/useWPUserPipelineActions";
 import { ActivePipelineContext } from "../../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
@@ -21,6 +22,7 @@ const PipelineModalContent = () => {
   const { fetchAndSetPipelineData } = useContext(ActivePipelineContext);
   const { pipelinesDispatch } = useContext(PipelinesContext);
   const { addPipeline } = usePipelineActions();
+  const { addCurrentUserToPipeline } = useWPUserPipelineActions();
   const [pipelineName, setPipelineName] = useState("");
   const [pipelineDescription, setPipelineDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -35,6 +37,7 @@ const PipelineModalContent = () => {
         pipelineDescription,
         (pipeline) => {
           pipelinesDispatch({ type: PIPELINE_ADD_PIPELINE, payload: pipeline });
+          addCurrentUserToPipeline(pipeline.id);
           fetchAndSetPipelineData(pipeline.id);
           closeModal();
         },

@@ -23,7 +23,10 @@ if (!class_exists('WPQT\User\UserService')) {
          */
         public function getUsersForCurrentViewer()
         {
-            $users = ServiceLocator::get('UserRepository')->getUsers();
+            // Assigned tasks are only counted on boards the viewer can access.
+            $users = ServiceLocator::get('UserRepository')->getUsers(
+                ServiceLocator::get('PipelineAccessService')->getAccessiblePipelineIds(get_current_user_id())
+            );
 
             if (PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints()) {
                 return $users;

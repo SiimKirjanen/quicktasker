@@ -1,10 +1,17 @@
 import { renderHook } from "@testing-library/react";
+import React from "react";
 
 jest.mock("../../api/api", () => ({
   updateWPUserPipelinesRequest: jest.fn(),
 }));
 
 import * as api from "../../api/api";
+import { ADD_WP_USER_PIPELINE_ID } from "../../constants";
+import {
+  AppContext,
+  initialState as appInitialState,
+} from "../../providers/AppContextProvider";
+import { UserContext } from "../../providers/UserContextProvider";
 import { useWPUserPipelineActions } from "./useWPUserPipelineActions";
 
 const mockedApi = api as jest.Mocked<typeof api>;
@@ -46,5 +53,38 @@ describe("useWPUserPipelineActions", () => {
 
     expect(failure).toHaveBeenCalledWith(err);
     expect(success).not.toHaveBeenCalled();
+  });
+
+  it("adds the current user to a board they created or imported", () => {
+    const userDispatch = jest.fn();
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <AppContext.Provider
+        value={{
+          state: { ...appInitialState, currentUserId: "7" },
+          appDispatch: jest.fn(),
+        }}
+      >
+        <UserContext.Provider
+          value={{
+            state: { users: [], wpUsers: [], usersSearchValue: "" },
+            userDispatch,
+            updateUsers: jest.fn(),
+            updateWPUsers: jest.fn(),
+          }}
+        >
+          {children}
+        </UserContext.Provider>
+      </AppContext.Provider>
+    );
+    const { result } = renderHook(() => useWPUserPipelineActions(), {
+      wrapper,
+    });
+
+    result.current.addCurrentUserToPipeline("12");
+
+    expect(userDispatch).toHaveBeenCalledWith({
+      type: ADD_WP_USER_PIPELINE_ID,
+      payload: { userId: "7", pipelineId: 12 },
+    });
   });
 });

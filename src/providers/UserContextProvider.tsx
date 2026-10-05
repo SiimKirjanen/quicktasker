@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { getUsersRequest, getWPUsersRequest } from "../api/api";
 import {
   ADD_USER,
+  ADD_WP_USER_PIPELINE_ID,
   CHANGE_USER_STATUS,
   DELETE_USER,
   EDIT_USER,
@@ -35,6 +36,10 @@ type Action =
   | {
       type: typeof SET_WP_USER_PIPELINE_IDS;
       payload: { userId: string; pipelineIds: number[] };
+    }
+  | {
+      type: typeof ADD_WP_USER_PIPELINE_ID;
+      payload: { userId: string; pipelineId: number };
     }
   | { type: typeof ADD_USER; payload: ServerUser }
   | { type: typeof EDIT_USER; payload: ServerUser }

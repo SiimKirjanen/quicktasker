@@ -1839,7 +1839,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $userRepo = new UserRepository();
                         $userService = new UserService();
                         $userPageService = new UserPageService();
-                        $user = $userRepo->getQuicktaskerUserById($data['id']);
+                        // Assigned tasks are only counted on boards the viewer can access.
+                        $user = $userRepo->getQuicktaskerUserById(
+                            $data['id'],
+                            ServiceLocator::get('PipelineAccessService')->getAccessiblePipelineIds(get_current_user_id())
+                        );
 
                         if (!$user) {
                             throw new WPQTException('Failed to get user data', true);
