@@ -92,7 +92,10 @@ function PipelineSelectionDropdown({
 
         return (
           <MenuItem key={existingPipeline.id}>
-            <div className="wpqt-mb-3 wpqt-flex wpqt-gap-2">
+            <div
+              className="wpqt-mb-3 wpqt-flex wpqt-gap-2"
+              data-testid="pipeline-selection-item"
+            >
               <div
                 className={clsx(
                   "wpqt-flex-1 wpqt-cursor-pointer hover:wpqt-underline",

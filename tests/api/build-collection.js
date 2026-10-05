@@ -1733,6 +1733,9 @@ const includesId = (description, listExpression, variable) =>
 const excludesId = (description, listExpression, variable) =>
   `pm.test('${description}', () => pm.expect(${listExpression}.map((x) => String(x.id))).to.not.include(pm.collectionVariables.get('${variable}')));`;
 
+const onlyPrimaryBoard = (listExpression, variable) =>
+  `pm.test('only board ${variable} is primary', () => pm.expect(${listExpression}.filter((x) => x.is_primary === '1').map((x) => String(x.id))).to.eql([pm.collectionVariables.get('${variable}')]));`;
+
 const adminBoards = folder("Boards", [
   request({
     name: "Create board requires name",
@@ -1791,6 +1794,62 @@ const adminBoards = folder("Boards", [
     name: "Board overview",
     url: "/pipelines/{{boardCId}}/overview",
     tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Create board D",
+    method: "POST",
+    url: "/pipelines",
+    body: { name: "API Board D {{runId}}", description: "Primary board" },
+    tests: [
+      status(200),
+      success(true),
+      save("boardDId", "pm.response.json().data.id"),
+    ],
+  }),
+  request({
+    name: "Admin sets board C as primary",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/set-primary",
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Limited admin sets board D as primary",
+    method: "PATCH",
+    url: "/pipelines/{{boardDId}}/set-primary",
+    auth: limitedAuth,
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Admin's primary board is still board C",
+    url: "/pipelines",
+    tests: [
+      status(200),
+      onlyPrimaryBoard("pm.response.json().data", "boardCId"),
+    ],
+  }),
+  request({
+    name: "Limited admin's primary board is board D",
+    url: "/pipelines",
+    auth: limitedAuth,
+    tests: [
+      status(200),
+      onlyPrimaryBoard("pm.response.json().data", "boardDId"),
+    ],
+  }),
+  request({
+    name: "Getting a board marks the admin's primary board",
+    url: "/pipelines/{{boardDId}}",
+    tests: [
+      status(200),
+      `pm.test('board D is not primary for admin', () => pm.expect(pm.response.json().data.pipeline.is_primary).to.eql('0'));`,
+      onlyPrimaryBoard("pm.response.json().data.pipelines", "boardCId"),
+    ],
+  }),
+  request({
+    name: "Setting a missing board as primary fails",
+    method: "PATCH",
+    url: "/pipelines/999999999/set-primary",
+    tests: [status(400), success(false)],
   }),
 ]);
 
@@ -3184,6 +3243,24 @@ const adminCleanup = folder("Cleanup", [
     name: "Delete board C",
     method: "DELETE",
     url: "/pipelines/{{boardCId}}",
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('does not load the deleted primary board', () => pm.expect(String(pm.response.json().data.pipelineIdToLoad)).to.not.eql(pm.collectionVariables.get('boardCId')));`,
+    ],
+  }),
+  request({
+    name: "Admin falls back to the site-wide primary board",
+    url: "/pipelines",
+    tests: [
+      status(200),
+      `pm.test('exactly one board is primary', () => pm.expect(pm.response.json().data.filter((x) => x.is_primary === '1')).to.have.lengthOf(1));`,
+    ],
+  }),
+  request({
+    name: "Delete board D",
+    method: "DELETE",
+    url: "/pipelines/{{boardDId}}",
     tests: [status(200), success(true)],
   }),
   request({

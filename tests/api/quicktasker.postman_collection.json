@@ -13963,6 +13963,267 @@
                   }
                 }
               ]
+            },
+            {
+              "name": "Create board D",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"API Board D {{runId}}\",\n  \"description\": \"Primary board\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.collectionVariables.set('boardDId', String(pm.response.json().data.id));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Admin sets board C as primary",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardCId}}/set-primary",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Limited admin sets board D as primary",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardDId}}/set-primary",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Admin's primary board is still board C",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('only board boardCId is primary', () => pm.expect(pm.response.json().data.filter((x) => x.is_primary === '1').map((x) => String(x.id))).to.eql([pm.collectionVariables.get('boardCId')]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Limited admin's primary board is board D",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('only board boardDId is primary', () => pm.expect(pm.response.json().data.filter((x) => x.is_primary === '1').map((x) => String(x.id))).to.eql([pm.collectionVariables.get('boardDId')]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Getting a board marks the admin's primary board",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardDId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('board D is not primary for admin', () => pm.expect(pm.response.json().data.pipeline.is_primary).to.eql('0'));",
+                      "pm.test('only board boardCId is primary', () => pm.expect(pm.response.json().data.pipelines.filter((x) => x.is_primary === '1').map((x) => String(x.id))).to.eql([pm.collectionVariables.get('boardCId')]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Setting a missing board as primary fails",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/999999999/set-primary",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         },
@@ -19827,6 +20088,77 @@
                 "method": "DELETE",
                 "header": [],
                 "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardCId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('does not load the deleted primary board', () => pm.expect(String(pm.response.json().data.pipelineIdToLoad)).to.not.eql(pm.collectionVariables.get('boardCId')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Admin falls back to the site-wide primary board",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('exactly one board is primary', () => pm.expect(pm.response.json().data.filter((x) => x.is_primary === '1')).to.have.lengthOf(1));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Delete board D",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardDId}}",
                 "auth": {
                   "type": "basic",
                   "basic": [

@@ -502,6 +502,10 @@ if (!defined('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES')) {
     define('WP_QUICKTASKER_USER_PAGE_CUSTOM_STYLES', 'quicktasker_user_page_custom_styles');
 }
 
+if (!defined('WP_QUICKTASKER_USER_PRIMARY_PIPELINE_OPTION')) {
+    define('WP_QUICKTASKER_USER_PRIMARY_PIPELINE_OPTION', 'quicktasker_primary_pipeline_id'); // Per-site user option holding the WordPress user's own primary board
+}
+
 /*
 ==================================================================================================================================================================================================================
 Label constants

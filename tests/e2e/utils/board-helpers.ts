@@ -139,6 +139,19 @@ export async function selectBoard(page: Page, boardName: string): Promise<void> 
 }
 
 /**
+ * Mark a board as the current user's primary board from the pipeline selection dropdown.
+ */
+export async function setPrimaryBoard(page: Page, boardName: string): Promise<void> {
+  await page.getByTestId('pipeline-selection-dropdown').click();
+  await page
+    .getByTestId('pipeline-selection-item')
+    .filter({ hasText: boardName })
+    .getByTestId('set-primary-pipeline-icon')
+    .click();
+  await expect(page.getByText('Primary board has been set successfully.')).toBeVisible();
+}
+
+/**
  * Create a new label from within a task's label dropdown
  * @param page - Playwright page object
  * @param taskCard - Locator for the task card

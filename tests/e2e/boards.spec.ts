@@ -1,7 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { navigateToBoardsPage } from './utils/navigation';
-import { createBoard, createStage, generateUniqueName, generateUniqueDescription } from './utils/board-helpers';
+import {
+  createBoard,
+  createStage,
+  deleteBoardViaApi,
+  generateUniqueName,
+  generateUniqueDescription,
+  setPrimaryBoard,
+} from './utils/board-helpers';
 import { waitForModalToClose } from './utils/modal-helpers';
+import { loginToWordPressViaApi } from './utils/auth';
+import { createWPUser, grantWPUserCaps, uniqueLogin } from './utils/user-helpers';
 
 test.describe('Board Management', () => {
   test.beforeEach(async ({ page }) => {
@@ -121,31 +130,57 @@ test.describe('Board Operations', () => {
     await expect(progressTaskCard.getByTestId('task-done-icon-uncompleted')).not.toBeVisible();
     await expect(completedTaskCard.getByTestId('task-done-icon-uncompleted')).toBeVisible();
   });
+});
 
-  test.skip('should set board as primary and persist after page refresh', async ({ page }) => {
-    const boardName = `Primary Board ${Date.now()}`;
-    const boardDescription = 'Testing primary board functionality';
-    await createBoard(page, boardName, boardDescription);
-
-    await page.getByTestId('pipeline-selection-dropdown').click();
-
-    const boardMenuItem = page.locator('.wpqt-mb-3').filter({ hasText: boardName });
-    await boardMenuItem.getByTestId('set-primary-pipeline-icon').click();
-
-    await expect(page.getByText('Primary board has been set successfully.')).toBeVisible();
-    await page.waitForTimeout(500);
-
-    await page.reload();
-
-    await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible();
-
-    await expect(page.getByText(boardName).first()).toBeVisible();
-    await expect(page.getByText(boardDescription)).toBeVisible();
+test.describe('Primary board', () => {
+  // The primary board is a per-user preference, so each test uses its own
+  // WordPress users instead of the shared admin. Changing the admin's primary
+  // board would change the board other parallel tests open on page load.
+  async function expectPrimaryBoardOnLoad(page: Page, boardName: string) {
+    await navigateToBoardsPage(page);
+    await expect(page.getByTestId('active-pipeline-name')).toHaveText(boardName);
 
     await page.getByTestId('pipeline-selection-dropdown').click();
+    const boardItem = page.getByTestId('pipeline-selection-item').filter({ hasText: boardName });
+    await expect(boardItem.getByTestId('primary-pipeline-icon')).toBeVisible();
+  }
 
-    const primaryBoardItem = page.locator('.wpqt-mb-3').filter({ hasText: boardName });
-    await expect(primaryBoardItem.getByTestId('primary-pipeline-icon')).toBeVisible();
+  test('each user keeps their own primary board after a page refresh', async ({ page, browser, request }) => {
+    const firstBoardName = generateUniqueName('PB-First');
+    const secondBoardName = generateUniqueName('PB-Second');
+    await navigateToBoardsPage(page);
+    await createBoard(page, firstBoardName, generateUniqueDescription('First primary board'));
+    await createBoard(page, secondBoardName, generateUniqueDescription('Second primary board'));
+
+    const firstLogin = uniqueLogin('wpprimary');
+    const secondLogin = uniqueLogin('wpprimary');
+    for (const login of [firstLogin, secondLogin]) {
+      const userId = await createWPUser(request, login, `${login}@example.com`);
+      await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    }
+
+    const firstContext = await loginToWordPressViaApi(browser, firstLogin);
+    const secondContext = await loginToWordPressViaApi(browser, secondLogin);
+
+    try {
+      const firstPage = await firstContext.newPage();
+      const secondPage = await secondContext.newPage();
+
+      await navigateToBoardsPage(firstPage);
+      await setPrimaryBoard(firstPage, firstBoardName);
+
+      await navigateToBoardsPage(secondPage);
+      await setPrimaryBoard(secondPage, secondBoardName);
+
+      // The second user's choice must not replace the first user's.
+      await expectPrimaryBoardOnLoad(firstPage, firstBoardName);
+      await expectPrimaryBoardOnLoad(secondPage, secondBoardName);
+    } finally {
+      await firstContext.close();
+      await secondContext.close();
+      await deleteBoardViaApi(request, firstBoardName);
+      await deleteBoardViaApi(request, secondBoardName);
+    }
   });
 });
 

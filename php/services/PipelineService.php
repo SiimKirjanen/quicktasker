@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use WPQT\PipelineMissingException;
 use WPQT\Services\ServiceLocator;
 
 if (!class_exists('WPQT\Pipeline\PipelineService')) {
@@ -82,10 +83,12 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
         }
 
         /**
-         * Marks a pipeline as the primary pipeline.
+         * Marks a pipeline as the site-wide primary pipeline.
          *
          * This method updates the is_primary field of the pipeline table to mark the specified pipeline
          * as the primary pipeline. The updated_at field is set to the current UTC time.
+         * The site-wide primary pipeline is the default for WordPress users who have not chosen their own
+         * (see setPrimaryPipelineForUser).
          *
          * @param int $pipelineId The ID of the pipeline to mark as primary.
          * @return mixed The updated pipeline object.
@@ -114,6 +117,69 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
             }
 
             return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);
+        }
+
+        /**
+         * Resolves the primary board of a WordPress user.
+         *
+         * The user's own choice wins while that board exists. Otherwise the
+         * site-wide primary board is used.
+         *
+         * @param int $userId The WordPress user ID.
+         * @return object|null The primary board, or null if there are no boards.
+         */
+        public function getPrimaryPipelineForUser($userId)
+        {
+            $pipelineRepo = ServiceLocator::get('PipelineRepository');
+            $chosenPipelineId = $pipelineRepo->getUserPrimaryPipelineId($userId);
+
+            if (null !== $chosenPipelineId) {
+                $chosenPipeline = $pipelineRepo->getPipelineById($chosenPipelineId);
+
+                if ($chosenPipeline) {
+                    return $chosenPipeline;
+                }
+            }
+
+            return $pipelineRepo->getActivePipeline();
+        }
+
+        /**
+         * Sets the primary board of a WordPress user without affecting other users.
+         *
+         * @param int $userId The WordPress user ID.
+         * @param int $pipelineId The ID of the board to make primary.
+         * @return void
+         * @throws PipelineMissingException If the board does not exist.
+         */
+        public function setPrimaryPipelineForUser($userId, $pipelineId)
+        {
+            $pipelineRepo = ServiceLocator::get('PipelineRepository');
+
+            if (!$pipelineRepo->checkIfPipelineExists($pipelineId)) {
+                throw new PipelineMissingException('No pipeline found with id ' . $pipelineId);
+            }
+
+            $pipelineRepo->setUserPrimaryPipelineId($userId, $pipelineId);
+        }
+
+        /**
+         * Sets the is_primary flag of the given boards from the point of view of a WordPress user.
+         *
+         * @param array $pipelines The boards to mark.
+         * @param int $userId The WordPress user ID.
+         * @return array The same boards with is_primary set to '1' for the user's primary board and '0' for the rest.
+         */
+        public function markPrimaryPipelineForUser($pipelines, $userId)
+        {
+            $primaryPipeline = $this->getPrimaryPipelineForUser($userId);
+            $primaryPipelineId = $primaryPipeline ? (int) $primaryPipeline->id : null;
+
+            foreach ($pipelines as $pipeline) {
+                $pipeline->is_primary = (int) $pipeline->id === $primaryPipelineId ? '1' : '0';
+            }
+
+            return $pipelines;
         }
 
         /**
@@ -159,22 +225,21 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
 
             ServiceLocator::get('TaskService')->deleteTasksByTaskIds($tasksToDelteIds);
             ServiceLocator::get('CommentService')->deleteTasksComments($tasksToDelteIds);
+            ServiceLocator::get('PipelineRepository')->deleteUserPrimaryPipelineReferences($pipelineId);
 
-            // If the pipeline was the primary pipeline, mark another pipeline as primary
+            // If the pipeline was the site-wide primary pipeline, mark another pipeline as primary
             if ($pipeline->is_primary) {
                 $newActivePipeline = $wpdb->get_row('SELECT * FROM ' . TABLE_WP_QUICKTASKER_PIPELINES . ' WHERE is_primary = 0 ORDER BY id ASC LIMIT 1');
 
                 if ($newActivePipeline) {
                     $this->markPipelineAsPrimary($newActivePipeline->id);
-                    $pipelineIdToLoadAfterDelete = $newActivePipeline->id;
                 }
-            } else {
-                $currentActivePipeline = ServiceLocator::get('PipelineRepository')->getActivePipeline();
+            }
 
-                if (null === $currentActivePipeline) {
-                    throw new \Exception('Failed to get active board');
-                }
-                $pipelineIdToLoadAfterDelete = $currentActivePipeline->id;
+            $primaryPipelineAfterDelete = $this->getPrimaryPipelineForUser(get_current_user_id());
+
+            if ($primaryPipelineAfterDelete) {
+                $pipelineIdToLoadAfterDelete = $primaryPipelineAfterDelete->id;
             }
 
             return (object) [

@@ -50,9 +50,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'callback' => function ($data) {
                     try {
                         $pipelineRepo = ServiceLocator::get('PipelineRepository');
+                        $pipelineService = ServiceLocator::get('PipelineService');
 
                         $pipeline = $pipelineRepo->getFullPipeline($data['id']);
-                        $pipelines = $pipelineRepo->getPipelines();
+                        $pipelines = $pipelineService->markPrimaryPipelineForUser($pipelineRepo->getPipelines(), get_current_user_id());
+                        $pipelineService->markPrimaryPipelineForUser([$pipeline], get_current_user_id());
                         $pipelineSettings = ServiceLocator::get('SettingRepository')->getPipelineSettings($data['id']);
                         $pipeline->settings = $pipelineSettings;
 
@@ -87,7 +89,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'callback' => function ($data) {
                     try {
                         $pipelineRepo = new PipelineRepository();
-                        $pipelines = $pipelineRepo->getPipelines();
+                        $pipelines = ServiceLocator::get('PipelineService')->markPrimaryPipelineForUser($pipelineRepo->getPipelines(), get_current_user_id());
 
                         return new WP_REST_Response((new ApiResponse(true, [], $pipelines))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -180,6 +182,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $pipeline = $pipelineService->editPipeline($data['id'], $args);
                         $userId = get_current_user_id();
+                        $pipelineService->markPrimaryPipelineForUser([$pipeline], $userId);
 
                         $logService->log('Board ' . $pipeline->name . ' edited', [
                             'type'          => WP_QT_LOG_TYPE_PIPELINE,
@@ -228,29 +231,14 @@ if (!function_exists('wpqt_register_api_routes')) {
             [
                 'methods'  => 'PATCH',
                 'callback' => function ($data) {
-                    global $wpdb;
-
                     try {
-                        $wpdb->query('START TRANSACTION');
-
-                        $pipelineService = new PipelineService();
-                        $logService = new LogService();
-                        $pipeline = $pipelineService->markPipelineAsPrimary($data['id']);
-                        $logService->log('Board ' . $pipeline->name . ' marked as primary', [
-                            'type'          => WP_QT_LOG_TYPE_PIPELINE,
-                            'type_id'       => $pipeline->id,
-                            'user_id'       => get_current_user_id(),
-                            'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
-                            'created_by_id' => get_current_user_id(),
-                            'pipeline_id'   => $pipeline->id
-                        ]);
-
-                        $wpdb->query('COMMIT');
+                        // The primary board is a personal preference: it only changes the current user's default board.
+                        ServiceLocator::get('PipelineService')->setPrimaryPipelineForUser(get_current_user_id(), $data['id']);
 
                         return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
                     } catch (Throwable $e) {
-                        $wpdb->query('ROLLBACK');
-
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
