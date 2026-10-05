@@ -11,8 +11,13 @@ jest.mock("./useMissingContent", () => ({
 
 // The user's boards, as the server sent them.
 let mockPipelines = [{ id: "1", name: "Board 1" }];
+// The user's boards when they are reloaded from the server.
+const mockRefreshPipelines = jest.fn();
 jest.mock("./usePipelines", () => ({
-  usePipelines: () => ({ pipelines: mockPipelines }),
+  usePipelines: () => ({
+    pipelines: mockPipelines,
+    refreshPipelines: mockRefreshPipelines,
+  }),
 }));
 
 import { toast } from "react-toastify";
@@ -30,37 +35,40 @@ import { useMissingResourceDetection } from "./useMissingResourceDetection";
 beforeEach(() => {
   jest.clearAllMocks();
   mockPipelines = [{ id: "1", name: "Board 1" }];
+  mockRefreshPipelines.mockResolvedValue(["1"]);
 });
 
 describe("useMissingResourceDetection", () => {
   describe("detectPipelineNoAccess", () => {
-    it("dispatches SET_PIPELINE_NO_ACCESS when a board the user is not on is refused", () => {
+    const refused = { code: "rest_forbidden", data: { status: 403 } };
+
+    it("dispatches SET_PIPELINE_NO_ACCESS when a board the user is not on is refused", async () => {
       const { result } = renderHook(() => useMissingResourceDetection());
 
-      expect(
-        result.current.detectPipelineNoAccess(
-          { code: "rest_forbidden", data: { status: 403 } },
-          "2",
-        ),
-      ).toBe(true);
+      await expect(
+        result.current.detectPipelineNoAccess(refused, "2"),
+      ).resolves.toBe(true);
       expect(mockDispatch).toHaveBeenCalledWith({
         type: SET_PIPELINE_NO_ACCESS,
         payload: true,
       });
+      expect(mockRefreshPipelines).not.toHaveBeenCalled();
     });
 
     it.each([
       ["another status", { data: { status: 400 } }],
       ["an error without a status", new Error("Network error")],
       ["no error", null],
-    ])("ignores %s", (_label, error) => {
+    ])("ignores %s", async (_label, error) => {
       const { result } = renderHook(() => useMissingResourceDetection());
 
-      expect(result.current.detectPipelineNoAccess(error, "2")).toBe(false);
+      await expect(
+        result.current.detectPipelineNoAccess(error, "2"),
+      ).resolves.toBe(false);
       expect(mockDispatch).not.toHaveBeenCalled();
     });
 
-    it("checks the boards loaded by the time the request fails", () => {
+    it("checks the boards loaded by the time the request fails", async () => {
       // Requests start on the first render, before the boards are loaded.
       mockPipelines = [];
       const { result, rerender } = renderHook(() =>
@@ -71,16 +79,40 @@ describe("useMissingResourceDetection", () => {
       mockPipelines = [{ id: "1", name: "Board 1" }];
       rerender();
 
-      expect(detectStartedEarly({ data: { status: 403 } }, "1")).toBe(false);
+      await expect(detectStartedEarly(refused, "1")).resolves.toBe(false);
       expect(mockDispatch).not.toHaveBeenCalled();
     });
 
-    it("ignores a refused request for one of the user's boards, as a capability is missing", () => {
+    it("ignores a refused request for one of the user's boards, as a capability is missing", async () => {
       const { result } = renderHook(() => useMissingResourceDetection());
 
-      expect(
-        result.current.detectPipelineNoAccess({ data: { status: 403 } }, "1"),
-      ).toBe(false);
+      await expect(
+        result.current.detectPipelineNoAccess(refused, "1"),
+      ).resolves.toBe(false);
+      expect(mockRefreshPipelines).toHaveBeenCalledTimes(1);
+      expect(mockDispatch).not.toHaveBeenCalled();
+    });
+
+    it("detects a board the user was removed from after the page loaded", async () => {
+      mockRefreshPipelines.mockResolvedValue([]);
+      const { result } = renderHook(() => useMissingResourceDetection());
+
+      await expect(
+        result.current.detectPipelineNoAccess(refused, "1"),
+      ).resolves.toBe(true);
+      expect(mockDispatch).toHaveBeenCalledWith({
+        type: SET_PIPELINE_NO_ACCESS,
+        payload: true,
+      });
+    });
+
+    it("does not decide when the boards cannot be reloaded", async () => {
+      mockRefreshPipelines.mockResolvedValue(null);
+      const { result } = renderHook(() => useMissingResourceDetection());
+
+      await expect(
+        result.current.detectPipelineNoAccess(refused, "1"),
+      ).resolves.toBe(false);
       expect(mockDispatch).not.toHaveBeenCalled();
     });
   });

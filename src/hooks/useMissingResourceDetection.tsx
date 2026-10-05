@@ -15,7 +15,7 @@ import { usePipelines } from "./usePipelines";
 
 function useMissingResourceDetection() {
   const { dispatch } = useMissingContent();
-  const { pipelines } = usePipelines();
+  const { pipelines, refreshPipelines } = usePipelines();
   // Requests start before the boards are loaded into state, so the check reads
   // the boards when the request fails, not when it started.
   const pipelinesRef = useRef(pipelines);
@@ -44,8 +44,13 @@ function useMissingResourceDetection() {
   }
 
   // A refused request can also mean a missing capability, so it only counts as
-  // missing board access when the board is not among the user's boards.
-  function detectPipelineNoAccess(e: unknown, pipelineId: string): boolean {
+  // missing board access when the board is not among the user's boards. A board
+  // that is still listed may have been taken away since the page loaded, so the
+  // boards are then reloaded to check.
+  async function detectPipelineNoAccess(
+    e: unknown,
+    pipelineId: string,
+  ): Promise<boolean> {
     const refused =
       typeof e === "object" &&
       e !== null &&
@@ -54,15 +59,22 @@ function useMissingResourceDetection() {
       e.data !== null &&
       "status" in e.data &&
       e.data.status === 403;
-    const noAccess =
-      refused &&
-      !pipelinesRef.current.some((pipeline) => pipeline.id === pipelineId);
 
-    if (noAccess) {
-      dispatch({ type: SET_PIPELINE_NO_ACCESS, payload: true });
+    if (!refused) {
+      return false;
     }
 
-    return noAccess;
+    if (pipelinesRef.current.some((pipeline) => pipeline.id === pipelineId)) {
+      const pipelineIds = await refreshPipelines();
+
+      if (pipelineIds === null || pipelineIds.includes(pipelineId)) {
+        return false;
+      }
+    }
+
+    dispatch({ type: SET_PIPELINE_NO_ACCESS, payload: true });
+
+    return true;
   }
 
   function detectMissingResources(e: unknown): {

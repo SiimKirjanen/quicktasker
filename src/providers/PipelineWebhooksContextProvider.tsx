@@ -96,7 +96,7 @@ const PipelineWebhooksContextProvider = ({
       });
     } catch (error) {
       console.error(error);
-      if (detectPipelineNoAccess(error, pipelineId)) {
+      if (await detectPipelineNoAccess(error, pipelineId)) {
         return;
       }
       toast.error(__("Failed to load board webhooks", "quicktasker"));

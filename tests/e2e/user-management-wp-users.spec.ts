@@ -158,4 +158,34 @@ test.describe('WordPress Users Tab – Boards', () => {
       await deleteBoardViaApi(request, boardName);
     }
   });
+
+  test("a board deleted elsewhere does not stop changing a user's boards", async ({ page, request }) => {
+    const deletedBoardName = generateUniqueName('WUB-Deleted');
+    const keptBoardName = generateUniqueName('WUB-Kept');
+    await createBoardViaApi(request, deletedBoardName);
+    await createBoardViaApi(request, keptBoardName);
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await addWPUserToBoards(request, userId, [deletedBoardName]);
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText(deletedBoardName, { timeout: TIMEOUTS.NAVIGATION });
+
+      // Another administrator deletes the board after this page loaded.
+      await deleteBoardViaApi(request, deletedBoardName);
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: keptBoardName }).click();
+      await page.keyboard.press('Escape');
+      await expect(boardsSummary).toHaveText(keptBoardName);
+      await expect(page.getByText("Failed to update the user's boards")).toHaveCount(0);
+
+      await navigateToWPUsersTab(page);
+      await expect(boardsSummary).toHaveText(keptBoardName, { timeout: TIMEOUTS.NAVIGATION });
+    } finally {
+      await deleteBoardViaApi(request, keptBoardName);
+    }
+  });
 });

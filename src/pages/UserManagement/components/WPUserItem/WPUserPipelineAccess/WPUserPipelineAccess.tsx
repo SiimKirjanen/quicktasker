@@ -5,7 +5,8 @@ import { WPQTMultiSelect } from "../../../../../components/common/Select/WPQTMul
 import { LoadingOval } from "../../../../../components/Loading/Loading";
 import { SET_WP_USER_PIPELINE_IDS } from "../../../../../constants";
 import { useWPUserPipelineActions } from "../../../../../hooks/actions/useWPUserPipelineActions";
-import { PipelinesContext } from "../../../../../providers/PipelinesContextProvider";
+import { useMissingResourceDetection } from "../../../../../hooks/useMissingResourceDetection";
+import { usePipelines } from "../../../../../hooks/usePipelines";
 import { UserContext } from "../../../../../providers/UserContextProvider";
 import { WPUser, WPUserPipelinesUpdate } from "../../../../../types/user";
 
@@ -16,9 +17,8 @@ type Props = {
 };
 
 function WPUserPipelineAccess({ user }: Props) {
-  const {
-    state: { pipelines },
-  } = useContext(PipelinesContext);
+  const { pipelines, refreshPipelines } = usePipelines();
+  const { detectMissingPipelineResponse } = useMissingResourceDetection();
   const { userDispatch } = useContext(UserContext);
   const [selectedPipelineIds, setSelectedPipelineIds] = useState<string[]>(
     (user.pipeline_ids ?? []).map(String),
@@ -89,10 +89,12 @@ function WPUserPipelineAccess({ user }: Props) {
   const savePendingSelections = async () => {
     saving.current = true;
     setUpdating(true);
+    let retried = false;
 
     while (pendingPipelineIds.current) {
       const pipelineIds = pendingPipelineIds.current;
       pendingPipelineIds.current = null;
+      const result: { error: unknown } = { error: null };
 
       await updateWPUserPipelines(
         user.id,
@@ -109,19 +111,45 @@ function WPUserPipelineAccess({ user }: Props) {
             setSelectedPipelineIds(savedPipelineIds.current);
           }
         },
-        () => {
-          pendingPipelineIds.current = null;
-          setSelectedPipelineIds(savedPipelineIds.current);
-          toast.error(__("Failed to update the user's boards", "quicktasker"));
+        (error) => {
+          result.error = error ?? new Error("Failed to update the boards");
         },
       );
+
+      if (result.error === null) {
+        continue;
+      }
+
+      // A board was deleted since the boards were loaded, for example by another
+      // administrator. It is left out and the selection saved again, once.
+      if (!retried && detectMissingPipelineResponse(result.error)) {
+        retried = true;
+        const existingPipelineIds = await refreshPipelines();
+
+        if (existingPipelineIds !== null) {
+          const retryPipelineIds = (
+            pendingPipelineIds.current ?? pipelineIds
+          ).filter((id) => existingPipelineIds.includes(id));
+          pendingPipelineIds.current = retryPipelineIds;
+          setSelectedPipelineIds(retryPipelineIds);
+          continue;
+        }
+      }
+
+      pendingPipelineIds.current = null;
+      setSelectedPipelineIds(savedPipelineIds.current);
+      toast.error(__("Failed to update the user's boards", "quicktasker"));
     }
 
     saving.current = false;
     setUpdating(false);
   };
 
-  const onSelectionChange = (pipelineIds: string[]) => {
+  const onSelectionChange = (selectedIds: string[]) => {
+    // Boards deleted since the user's boards were loaded are left out.
+    const pipelineIds = selectedIds.filter((id) =>
+      pipelines.some((pipeline) => pipeline.id === id),
+    );
     setSelectedPipelineIds(pipelineIds);
     pendingPipelineIds.current = pipelineIds;
     if (!saving.current) {

@@ -176,7 +176,7 @@ const ActivePipelineContextProvider = ({
       dispatch({ type: PIPELINE_SET_PIPELINE, payload: pipeline });
     } catch (e) {
       console.error(e);
-      if (detectPipelineNoAccess(e, pipelineId)) {
+      if (await detectPipelineNoAccess(e, pipelineId)) {
         return;
       }
       toast.error(

@@ -42,7 +42,7 @@ function OverviewPage({ pipelineId }: Props) {
       setPipelineOverviewData(response.data);
     } catch (error) {
       console.error(error);
-      if (detectPipelineNoAccess(error, pipelineId)) {
+      if (await detectPipelineNoAccess(error, pipelineId)) {
         return;
       }
       detectMissingResources(error);

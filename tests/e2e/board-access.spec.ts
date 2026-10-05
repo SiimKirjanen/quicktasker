@@ -278,6 +278,43 @@ test.describe('Board access', () => {
     }
   });
 
+  test('a user removed from the board they are viewing is told so', async ({ browser, request }) => {
+    const viewedBoardName = generateUniqueName('BA-Viewed');
+    const otherBoardName = generateUniqueName('BA-Viewed-Other');
+    const viewedBoard = await createBoardViaApi(request, viewedBoardName);
+    await createBoardViaApi(request, otherBoardName);
+    const userLogin = uniqueLogin('wpviewing');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    await addWPUserToBoards(request, userId, [viewedBoardName, otherBoardName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const userPage = await context.newPage();
+      await userPage.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${viewedBoard.boardId}`);
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(viewedBoardName, {
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+
+      // An administrator removes the user while the board is open. The board
+      // refreshes itself every 30 seconds; the refresh button does the same now.
+      await addWPUserToBoards(request, userId, [otherBoardName]);
+      await userPage.getByTestId('refresh-icon').click();
+
+      await expect(
+        userPage.getByText('You have not been added to this board. Ask a WordPress administrator to add you to it.'),
+      ).toBeVisible();
+      await expect(userPage.getByText('Unable to load the board', { exact: false })).toHaveCount(0);
+
+      await userPage.getByTestId('open-primary-board').click();
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(otherBoardName);
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, viewedBoardName);
+      await deleteBoardViaApi(request, otherBoardName);
+    }
+  });
+
   test('a board page the user lacks the permission for is not mistaken for missing board access', async ({ browser, request }) => {
     const boardName = generateUniqueName('BA-NoPerm');
     const board = await createBoardViaApi(request, boardName);

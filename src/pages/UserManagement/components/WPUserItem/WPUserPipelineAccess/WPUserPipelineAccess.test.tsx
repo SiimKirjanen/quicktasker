@@ -8,6 +8,11 @@ jest.mock("../../../../../hooks/actions/useWPUserPipelineActions", () => ({
   }),
 }));
 
+const mockGetPipelinesRequest = jest.fn();
+jest.mock("../../../../../api/api", () => ({
+  getPipelinesRequest: () => mockGetPipelinesRequest(),
+}));
+
 jest.mock("react-toastify", () => ({
   toast: { error: jest.fn(), warning: jest.fn() },
 }));
@@ -46,6 +51,9 @@ jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
       <button type="button" onClick={() => onSelectionChange([])}>
         no boards
       </button>
+      <button type="button" onClick={() => onSelectionChange(["2", "9"])}>
+        board 2 and deleted board 9
+      </button>
       <button type="button" onClick={onClose}>
         close
       </button>
@@ -53,7 +61,10 @@ jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
   ),
 }));
 
-import { SET_WP_USER_PIPELINE_IDS } from "../../../../../constants";
+import {
+  SET_WP_USER_PIPELINE_IDS,
+  WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND,
+} from "../../../../../constants";
 import { PipelinesContext } from "../../../../../providers/PipelinesContextProvider";
 import { UserContext } from "../../../../../providers/UserContextProvider";
 import { Pipeline } from "../../../../../types/pipeline";
@@ -346,5 +357,85 @@ describe("WPUserPipelineAccess", () => {
 
     expect(toast.warning).not.toHaveBeenCalled();
     await release();
+  });
+
+  describe("deleted boards", () => {
+    const boardMissing = {
+      messages: [WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND],
+    };
+
+    function failThenSave(failures: number) {
+      let calls = 0;
+      mockUpdateWPUserPipelines.mockImplementation(
+        async (
+          _userId: string,
+          pipelineIds: string[],
+          callback: (u: WPUserPipelinesUpdate) => void,
+          onFailure: (e: unknown) => void,
+        ) => {
+          calls += 1;
+          if (calls <= failures) {
+            onFailure(boardMissing);
+            return;
+          }
+          callback({
+            pipeline_ids: pipelineIds.map(Number),
+            removed_pipelines_with_assigned_tasks: [],
+          });
+        },
+      );
+    }
+
+    it("leaves out a board deleted since the boards were loaded", async () => {
+      respondWith({
+        pipeline_ids: [2],
+        removed_pipelines_with_assigned_tasks: [],
+      });
+      renderAccess(makeWPUser([9]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("board 2 and deleted board 9"));
+      });
+
+      expect(mockUpdateWPUserPipelines.mock.calls.map((c) => c[1])).toEqual([
+        ["2"],
+      ]);
+      expect(toast.error).not.toHaveBeenCalled();
+    });
+
+    it("saves again without a board another administrator deleted", async () => {
+      // Board 1 was deleted elsewhere, so the server no longer lists it.
+      mockGetPipelinesRequest.mockResolvedValue({ data: [pipelines[1]] });
+      failThenSave(1);
+      renderAccess(makeWPUser([1]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("boards 1 and 2"));
+      });
+
+      expect(mockUpdateWPUserPipelines.mock.calls.map((c) => c[1])).toEqual([
+        ["1", "2"],
+        ["2"],
+      ]);
+      expect(screen.getByTestId("selected")).toHaveTextContent("2");
+      expect(toast.error).not.toHaveBeenCalled();
+    });
+
+    it("gives up after saving again once", async () => {
+      mockGetPipelinesRequest.mockResolvedValue({ data: pipelines });
+      failThenSave(2);
+      renderAccess(makeWPUser([1]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("boards 1 and 2"));
+      });
+
+      expect(mockUpdateWPUserPipelines).toHaveBeenCalledTimes(2);
+      expect(screen.getByTestId("selected")).toHaveTextContent("1");
+      expect(toast.error).toHaveBeenCalledTimes(1);
+    });
   });
 });

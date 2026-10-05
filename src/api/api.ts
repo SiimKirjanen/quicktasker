@@ -67,6 +67,13 @@ function getCommonHeaders() {
   ==================================================================================================================================================================================================================
 */
 
+function getPipelinesRequest(): Promise<WPQTResponse<PipelineFromServer[]>> {
+  return apiFetch({
+    path: `/wpqt/v1/pipelines`,
+    headers: getCommonHeaders(),
+  });
+}
+
 function getPipelineData(
   pipelineId: string,
 ): Promise<WPQTResponse<FullPipelineDataFromServer>> {
@@ -1260,6 +1267,7 @@ export {
   getPipelineLabelsRequest,
   getPipelineOverviewData,
   getPipelineSettingsRequest,
+  getPipelinesRequest,
   getPipelineWebhookssRequest,
   getTaskLogs,
   getUploadsRequest,

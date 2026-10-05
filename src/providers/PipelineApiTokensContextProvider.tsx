@@ -91,7 +91,7 @@ const PipelineApiTokensContextProvider = ({
       });
     } catch (error) {
       console.error(error);
-      if (detectPipelineNoAccess(error, pipelineId)) {
+      if (await detectPipelineNoAccess(error, pipelineId)) {
         return;
       }
       toast.error(__("Failed to fetch board API tokens.", "quicktasker"));
