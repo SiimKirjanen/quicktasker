@@ -8,6 +8,7 @@ import { useCapabilityActions } from "../../../../hooks/actions/useCapabilityAct
 import { AppContext } from "../../../../providers/AppContextProvider";
 import { WPUserCapabilities } from "../../../../types/capabilities";
 import { WPUser } from "../../../../types/user";
+import { WPUserPipelineAccess } from "./WPUserPipelineAccess/WPUserPipelineAccess";
 
 type Props = {
   user: WPUser;
@@ -178,6 +179,8 @@ function WPUserItem({ user }: Props) {
           }}
         />
       </div>
+
+      <WPUserPipelineAccess user={user} />
 
       {updating && <Loading ovalSize="24" />}
     </WPQTCard>

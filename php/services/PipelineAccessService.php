@@ -87,7 +87,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          *
          * @param int $wpUserId The WordPress user ID.
          * @param int[] $pipelineIds The board IDs.
-         * @return void
+         * @return int[] The IDs of the boards the user was removed from.
          * @throws PipelineMissingException If one of the boards does not exist. No changes are made.
          * @throws \Exception If the boards could not be saved.
          */
@@ -104,14 +104,17 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
             }
 
             $currentPipelineIds = $pipelineAccessRepo->getPipelineIdsByWPUserId($wpUserId);
+            $removedPipelineIds = array_values(array_diff($currentPipelineIds, $pipelineIds));
 
-            foreach (array_diff($currentPipelineIds, $pipelineIds) as $pipelineId) {
+            foreach ($removedPipelineIds as $pipelineId) {
                 $pipelineAccessRepo->removeWPUserFromPipeline($wpUserId, $pipelineId);
             }
 
             foreach (array_diff($pipelineIds, $currentPipelineIds) as $pipelineId) {
                 $pipelineAccessRepo->addWPUserToPipeline($wpUserId, $pipelineId);
             }
+
+            return $removedPipelineIds;
         }
     }
 }

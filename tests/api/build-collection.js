@@ -2675,6 +2675,72 @@ const adminUsers = folder("Users", [
 const adminWpUsers = folder("WordPress user capabilities", [
   findLimitedWpUser,
   request({
+    name: "Add limited user to boards C and D",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/pipelines",
+    body: { pipeline_ids: ["{{boardDId}}", "{{boardCId}}"] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('boards are saved in ID order', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));`,
+      `pm.test('no tasks are reported without removed boards', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([]));`,
+    ],
+  }),
+  request({
+    name: "WordPress user list shows the limited user's boards",
+    url: "/wp-users?type=all",
+    tests: [
+      status(200),
+      `const limited = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('limitedWpUserId'));
+pm.test('limited user has boards C and D', () => pm.expect(limited.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));`,
+    ],
+  }),
+  request({
+    name: "Create board access task in stage C1",
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Board access task {{runId}}",
+      stageId: "{{stageC1Id}}",
+      pipelineId: "{{boardCId}}",
+    },
+    tests: [
+      status(200),
+      success(true),
+      save("boardAccessTaskId", "pm.response.json().data.newTask.id"),
+    ],
+  }),
+  request({
+    name: "Assign limited user to the board access task",
+    method: "POST",
+    url: "/users/{{limitedWpUserId}}/tasks/{{boardAccessTaskId}}",
+    body: { user_type: "wp-user" },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "Removing limited user from board C reports their task there",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/pipelines",
+    body: { pipeline_ids: ["{{boardDId}}"] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('one assigned task on board C is reported', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardCId')), task_count: 1 }]));`,
+    ],
+  }),
+  request({
+    name: "Removing limited user from a board without their tasks reports nothing",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/pipelines",
+    body: { pipeline_ids: [] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('limited user has no boards', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([]));`,
+      `pm.test('no tasks are reported', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([]));`,
+    ],
+  }),
+  request({
     name: "Limited user cannot read board settings",
     url: "/pipelines/{{boardCId}}/settings",
     auth: limitedAuth,

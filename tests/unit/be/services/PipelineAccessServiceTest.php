@@ -122,9 +122,10 @@ class PipelineAccessServiceTest extends TestCase
     {
         $this->userBoardIds[self::LIMITED_USER_ID] = [1, 2];
 
-        $this->service->setWPUserPipelines(self::LIMITED_USER_ID, [2, '3', 3]);
+        $removedPipelineIds = $this->service->setWPUserPipelines(self::LIMITED_USER_ID, [2, '3', 3]);
 
         $this->assertSame([2, 3], $this->service->getAccessiblePipelineIds(self::LIMITED_USER_ID));
+        $this->assertSame([1], $removedPipelineIds);
     }
 
     public function test_setting_no_boards_removes_every_board()

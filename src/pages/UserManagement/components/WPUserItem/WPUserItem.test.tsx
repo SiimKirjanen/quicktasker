@@ -54,6 +54,9 @@ jest.mock("../../../../components/common/Toggle/Toggle", () => ({
 jest.mock("../../../../components/Loading/Loading", () => ({
   Loading: () => <div data-testid="loading-spinner" />,
 }));
+jest.mock("./WPUserPipelineAccess/WPUserPipelineAccess", () => ({
+  WPUserPipelineAccess: () => <div data-testid="wp-user-boards" />,
+}));
 
 import {
   AppContext,

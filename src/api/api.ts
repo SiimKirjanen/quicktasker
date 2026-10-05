@@ -44,6 +44,7 @@ import {
   UserEditData,
   UserTypes,
   WPUser,
+  WPUserPipelinesUpdate,
 } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
 import {
@@ -665,6 +666,18 @@ function updateWPUserPermissionsRequest(
     headers: getCommonHeaders(),
   });
 }
+
+function updateWPUserPipelinesRequest(
+  userId: string,
+  pipelineIds: string[],
+): Promise<WPQTResponse<WPUserPipelinesUpdate>> {
+  return apiFetch({
+    path: `/wpqt/v1/wp-users/${userId}/pipelines`,
+    method: "PATCH",
+    data: { pipeline_ids: pipelineIds },
+    headers: getCommonHeaders(),
+  });
+}
 /*
   ==================================================================================================================================================================================================================
   User session requests
@@ -1278,5 +1291,6 @@ export {
   updateLabelRequest,
   updateTaskFocusColorRequest,
   updateWPUserPermissionsRequest,
+  updateWPUserPipelinesRequest,
   uploadFileRequest,
 };

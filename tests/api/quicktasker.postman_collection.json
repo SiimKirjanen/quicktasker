@@ -18164,6 +18164,292 @@
               ]
             },
             {
+              "name": "Add limited user to boards C and D",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": [\n    \"{{boardDId}}\",\n    \"{{boardCId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('boards are saved in ID order', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));",
+                      "pm.test('no tasks are reported without removed boards', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "WordPress user list shows the limited user's boards",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users?type=all",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "const limited = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('limitedWpUserId'));\npm.test('limited user has boards C and D', () => pm.expect(limited.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Create board access task in stage C1",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Board access task {{runId}}\",\n  \"stageId\": \"{{stageC1Id}}\",\n  \"pipelineId\": \"{{boardCId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.collectionVariables.set('boardAccessTaskId', String(pm.response.json().data.newTask.id));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Assign limited user to the board access task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{limitedWpUserId}}/tasks/{{boardAccessTaskId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_type\": \"wp-user\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Removing limited user from board C reports their task there",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": [\n    \"{{boardDId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('one assigned task on board C is reported', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardCId')), task_count: 1 }]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Removing limited user from a board without their tasks reports nothing",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('limited user has no boards', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([]));",
+                      "pm.test('no tasks are reported', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
               "name": "Limited user cannot read board settings",
               "request": {
                 "method": "GET",

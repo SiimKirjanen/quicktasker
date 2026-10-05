@@ -45,6 +45,37 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
         }
 
         /**
+         * Retrieves the IDs of the boards each of the given WordPress users has been added to.
+         *
+         * @param int[] $wpUserIds The WordPress user IDs.
+         * @return array<int, int[]> Board IDs in ascending order, keyed by WordPress user ID.
+         *                           Users without boards are left out.
+         */
+        public function getPipelineIdsByWPUserIds($wpUserIds)
+        {
+            global $wpdb;
+
+            if (empty($wpUserIds)) {
+                return [];
+            }
+
+            $placeholders = implode(',', array_fill(0, count($wpUserIds), '%d'));
+            $rows = $wpdb->get_results($wpdb->prepare(
+                'SELECT wp_user_id, pipeline_id FROM ' . TABLE_WP_QUICKTASKER_WP_USER_PIPELINES . "
+                WHERE wp_user_id IN ($placeholders)
+                ORDER BY pipeline_id ASC",
+                $wpUserIds
+            ));
+            $pipelineIdsByWPUserId = [];
+
+            foreach ($rows as $row) {
+                $pipelineIdsByWPUserId[(int) $row->wp_user_id][] = (int) $row->pipeline_id;
+            }
+
+            return $pipelineIdsByWPUserId;
+        }
+
+        /**
          * Adds a WordPress user to a board. Does nothing if the user is already added.
          *
          * @param int $wpUserId The WordPress user ID.

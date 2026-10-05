@@ -746,4 +746,31 @@ class TaskRepositoryTest extends TestCase
 
         $this->assertSame($expectedTasks, $result);
     }
+
+    public function test_countTasksAssignedToWPUserByPipeline_returns_counts_keyed_by_board()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->logicalAnd(
+                    $this->stringContains("a.user_type = 'wp-user'"),
+                    $this->stringContains('b.is_archived = 0'),
+                    $this->stringContains('b.pipeline_id IN (%d,%d)')
+                ),
+                [7, 3, 5]
+            )
+            ->willReturn('PREPARED');
+        $this->wpdbMock->method('get_results')->willReturn([
+            (object) ['pipeline_id' => '3', 'task_count' => '2'],
+        ]);
+
+        $this->assertSame([3 => 2], $this->repository->countTasksAssignedToWPUserByPipeline(7, [3, 5]));
+    }
+
+    public function test_countTasksAssignedToWPUserByPipeline_skips_the_query_without_boards()
+    {
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $this->assertSame([], $this->repository->countTasksAssignedToWPUserByPipeline(7, []));
+    }
 }

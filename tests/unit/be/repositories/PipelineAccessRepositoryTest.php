@@ -34,9 +34,13 @@ class PipelineAccessRepositoryTest extends TestCase
         $this->wpdbBackup = $wpdb ?? null;
 
         $this->wpdbMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['prepare', 'get_col', 'query', 'delete'])
+            ->addMethods(['prepare', 'get_col', 'get_results', 'query', 'delete'])
             ->getMock();
         $this->wpdbMock->method('prepare')->willReturnCallback(function ($query, ...$args) {
+            if (1 === count($args) && is_array($args[0])) {
+                $args = $args[0];
+            }
+
             return vsprintf(str_replace(['%s', '%d'], ["'%s'", '%s'], $query), $args);
         });
 
@@ -75,6 +79,27 @@ class PipelineAccessRepositoryTest extends TestCase
             ->willReturn(['2', '5']);
 
         $this->assertSame([2, 5], $this->repository->getPipelineIdsByWPUserId(7));
+    }
+
+    public function test_getPipelineIdsByWPUserIds_groups_board_ids_by_user()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with($this->stringContains('WHERE wp_user_id IN (7,8,9)'))
+            ->willReturn([
+                (object) ['wp_user_id' => '7', 'pipeline_id' => '2'],
+                (object) ['wp_user_id' => '9', 'pipeline_id' => '2'],
+                (object) ['wp_user_id' => '7', 'pipeline_id' => '4'],
+            ]);
+
+        $this->assertSame([7 => [2, 4], 9 => [2]], $this->repository->getPipelineIdsByWPUserIds([7, 8, 9]));
+    }
+
+    public function test_getPipelineIdsByWPUserIds_skips_the_query_without_users()
+    {
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $this->assertSame([], $this->repository->getPipelineIdsByWPUserIds([]));
     }
 
     public function test_addWPUserToPipeline_ignores_an_existing_row()

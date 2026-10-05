@@ -2427,6 +2427,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                     try {
                         $userRepo = new UserRepository();
                         $users = $userRepo->getWPNonAdminUsers();
+                        $pipelineIdsByWPUserId = ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserIds(
+                            array_map('intval', array_column($users, 'id'))
+                        );
+
+                        foreach ($users as $user) {
+                            $user->pipeline_ids = $pipelineIdsByWPUserId[(int) $user->id] ?? [];
+                        }
 
                         return new WP_REST_Response((new ApiResponse(true, [], $users))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -2532,11 +2539,23 @@ if (!function_exists('wpqt_register_api_routes')) {
                         }
 
                         $wpdb->query('START TRANSACTION');
-                        ServiceLocator::get('PipelineAccessService')->setWPUserPipelines($data['id'], $data['pipeline_ids']);
+                        $removedPipelineIds = ServiceLocator::get('PipelineAccessService')->setWPUserPipelines($data['id'], $data['pipeline_ids']);
                         $wpdb->query('COMMIT');
 
+                        // Tasks on removed boards stay assigned, so the admin is told about them.
+                        $assignedTaskCounts = ServiceLocator::get('TaskRepository')->countTasksAssignedToWPUserByPipeline($data['id'], $removedPipelineIds);
+                        $removedPipelinesWithAssignedTasks = [];
+
+                        foreach ($assignedTaskCounts as $pipelineId => $taskCount) {
+                            $removedPipelinesWithAssignedTasks[] = [
+                                'pipeline_id' => $pipelineId,
+                                'task_count'  => $taskCount,
+                            ];
+                        }
+
                         return new WP_REST_Response((new ApiResponse(true, [], [
-                            'pipeline_ids' => ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($data['id']),
+                            'pipeline_ids'                          => ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($data['id']),
+                            'removed_pipelines_with_assigned_tasks' => $removedPipelinesWithAssignedTasks,
                         ]))->toArray(), 200);
                     } catch (PipelineMissingException $e) {
                         $wpdb->query('ROLLBACK');

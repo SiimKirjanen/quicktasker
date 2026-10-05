@@ -367,6 +367,41 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
         }
 
         /**
+         * Counts the tasks assigned to a WordPress user on each of the given boards. Archived tasks are not counted.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[] $pipelineIds The board IDs.
+         * @return array<int, int> Task counts keyed by board ID. Boards without assigned tasks are left out.
+         */
+        public function countTasksAssignedToWPUserByPipeline($wpUserId, $pipelineIds)
+        {
+            global $wpdb;
+
+            if (empty($pipelineIds)) {
+                return [];
+            }
+
+            $placeholders = implode(',', array_fill(0, count($pipelineIds), '%d'));
+            $rows = $wpdb->get_results($wpdb->prepare(
+                'SELECT b.pipeline_id, COUNT(*) AS task_count FROM ' . TABLE_WP_QUICKTASKER_USER_TASK . ' AS a
+                INNER JOIN ' . TABLE_WP_QUICKTASKER_TASKS . " AS b ON a.task_id = b.id
+                WHERE a.user_id = %d
+                AND a.user_type = 'wp-user'
+                AND b.is_archived = 0
+                AND b.pipeline_id IN ($placeholders)
+                GROUP BY b.pipeline_id",
+                array_merge([$wpUserId], array_values($pipelineIds))
+            ));
+            $taskCounts = [];
+
+            foreach ($rows as $row) {
+                $taskCounts[(int) $row->pipeline_id] = (int) $row->task_count;
+            }
+
+            return $taskCounts;
+        }
+
+        /**
          * Retrieves tasks created by a specific user.
          *
          * @param int $userId The ID of the user.
