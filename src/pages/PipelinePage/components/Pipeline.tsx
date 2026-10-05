@@ -41,7 +41,7 @@ const Pipeline = () => {
   const { fetchNotifications } = useContext(NotificationsContext);
   const { pipelineMissing } = useMissingContent();
   const {
-    state: { isUserAllowedToManageSettings },
+    state: { isUserAllowedToManageSettings, isUserAllowedToManageWPUsers },
   } = useApp();
 
   useEffect(() => {
@@ -125,13 +125,23 @@ const Pipeline = () => {
   }
 
   if (!activePipeline) {
-    return (
-      <Info
-        infoDescription={__(
+    // WordPress administrators see every board, so for them no board means there are none.
+    const noBoardsText = isUserAllowedToManageWPUsers
+      ? __(
           "No boards found. Start by creating a board to organize and manage your tasks effectively.",
           "quicktasker",
-        )}
-      >
+        )
+      : __(
+          "You have not been added to any boards yet. Ask a WordPress administrator to add you to a board.",
+          "quicktasker",
+        );
+
+    if (!isUserAllowedToManageSettings) {
+      return <Info infoDescription={noBoardsText} />;
+    }
+
+    return (
+      <Info infoDescription={noBoardsText}>
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-center">
           <WPQTIconButton
             text={__("Create a new board", "quicktasker")}

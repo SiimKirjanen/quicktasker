@@ -145,6 +145,29 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
+         * Adds each WordPress user's board access to the user objects.
+         *
+         * Sets can_access_all_pipelines, and pipeline_ids with the boards the user has been added to.
+         *
+         * @param array $wpUsers WordPress user objects with an id property.
+         * @return array The same user objects.
+         */
+        public function addPipelineAccessToWPUsers($wpUsers)
+        {
+            $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
+            $pipelineIdsByWPUserId = $pipelineAccessRepo->getPipelineIdsByWPUserIds(
+                array_map('intval', array_column($wpUsers, 'id'))
+            );
+
+            foreach ($wpUsers as $wpUser) {
+                $wpUser->can_access_all_pipelines = $pipelineAccessRepo->canAccessAllPipelines((int) $wpUser->id);
+                $wpUser->pipeline_ids = $pipelineIdsByWPUserId[(int) $wpUser->id] ?? [];
+            }
+
+            return $wpUsers;
+        }
+
+        /**
          * Adds a WordPress user to a board.
          *
          * @param int $wpUserId The WordPress user ID.

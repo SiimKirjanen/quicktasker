@@ -60,12 +60,15 @@ class PipelineAccessServiceTest extends TestCase
         });
 
         $pipelineAccessRepoMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['canAccessAllPipelines', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf'])
+            ->addMethods(['canAccessAllPipelines', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds'])
             ->getMock();
         $pipelineAccessRepoMock->method('getPipelineIdOfEntity')->willReturnCallback(function ($entityType, $entityId) {
             $this->entityLookups++;
 
             return $this->entityBoards[$entityType . ':' . $entityId] ?? null;
+        });
+        $pipelineAccessRepoMock->method('getPipelineIdsByWPUserIds')->willReturnCallback(function ($userIds) {
+            return array_intersect_key($this->userBoardIds, array_flip($userIds));
         });
         $pipelineAccessRepoMock->method('getEntityOf')->willReturnCallback(function ($ownerType, $ownerId) {
             $this->entityLookups++;
@@ -252,5 +255,16 @@ class PipelineAccessServiceTest extends TestCase
         $filtered = $this->service->filterItemsOnAccessiblePipelines(self::LIMITED_USER_ID, $items);
 
         $this->assertSame(['b'], array_column($filtered, 'id'));
+    }
+
+    public function test_adds_board_access_to_wp_users()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [2, 3];
+        $users = [(object) ['id' => (string) self::ADMIN_USER_ID], (object) ['id' => (string) self::LIMITED_USER_ID], (object) ['id' => '9']];
+
+        $users = $this->service->addPipelineAccessToWPUsers($users);
+
+        $this->assertSame([true, false, false], array_column($users, 'can_access_all_pipelines'));
+        $this->assertSame([[], [2, 3], []], array_column($users, 'pipeline_ids'));
     }
 }

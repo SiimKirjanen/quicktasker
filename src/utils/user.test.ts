@@ -6,6 +6,7 @@ import {
   WPUser,
 } from "../types/user";
 import {
+  canWPUserAccessPipeline,
   convertExtendedUserFromServer,
   convertUserFromServer,
   convertUserPageUserFromServer,
@@ -261,5 +262,45 @@ describe("user utilities", () => {
 
       expect(result.is_active).toBe(false); // Only "1" should be true
     });
+  });
+});
+
+describe("canWPUserAccessPipeline", () => {
+  const wpUser = (overrides: Partial<WPUser> = {}): WPUser => ({
+    id: "1",
+    name: "Bob",
+    description: "",
+    user_type: UserTypes.WP_USER,
+    roles: [],
+    created_at: "",
+    caps: [],
+    allcaps: [],
+    profile_picture: "",
+    ...overrides,
+  });
+
+  it("allows boards the user has been added to", () => {
+    expect(canWPUserAccessPipeline(wpUser({ pipeline_ids: [3, 5] }), "5")).toBe(
+      true,
+    );
+  });
+
+  it("denies other boards", () => {
+    expect(canWPUserAccessPipeline(wpUser({ pipeline_ids: [3] }), "5")).toBe(
+      false,
+    );
+  });
+
+  it("denies every board when the user's boards are unknown", () => {
+    expect(canWPUserAccessPipeline(wpUser(), "5")).toBe(false);
+  });
+
+  it("allows every board for administrators", () => {
+    expect(
+      canWPUserAccessPipeline(
+        wpUser({ pipeline_ids: [], can_access_all_pipelines: true }),
+        "5",
+      ),
+    ).toBe(true);
   });
 });

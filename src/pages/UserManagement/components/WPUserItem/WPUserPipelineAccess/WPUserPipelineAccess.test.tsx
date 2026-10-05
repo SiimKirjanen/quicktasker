@@ -34,7 +34,9 @@ jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
   ),
 }));
 
+import { SET_WP_USER_PIPELINE_IDS } from "../../../../../constants";
 import { PipelinesContext } from "../../../../../providers/PipelinesContextProvider";
+import { UserContext } from "../../../../../providers/UserContextProvider";
 import { Pipeline } from "../../../../../types/pipeline";
 import {
   UserTypes,
@@ -63,12 +65,23 @@ function makeWPUser(pipelineIds?: number[]): WPUser {
   };
 }
 
+const mockUserDispatch = jest.fn();
+
 function renderAccess(user: WPUser) {
   return render(
     <PipelinesContext.Provider
       value={{ state: { pipelines }, pipelinesDispatch: jest.fn() }}
     >
-      <WPUserPipelineAccess user={user} />
+      <UserContext.Provider
+        value={{
+          state: { users: [], wpUsers: [user], usersSearchValue: "" },
+          userDispatch: mockUserDispatch,
+          updateUsers: jest.fn(),
+          updateWPUsers: jest.fn(),
+        }}
+      >
+        <WPUserPipelineAccess user={user} />
+      </UserContext.Provider>
     </PipelinesContext.Provider>,
   );
 }
@@ -117,6 +130,10 @@ describe("WPUserPipelineAccess", () => {
       expect.any(Function),
     );
     expect(screen.getByTestId("selected")).toHaveTextContent("2");
+    expect(mockUserDispatch).toHaveBeenCalledWith({
+      type: SET_WP_USER_PIPELINE_IDS,
+      payload: { userId: "wp1", pipelineIds: [2] },
+    });
     expect(toast.warning).not.toHaveBeenCalled();
   });
 
@@ -155,5 +172,6 @@ describe("WPUserPipelineAccess", () => {
 
     expect(screen.getByTestId("selected")).toHaveTextContent("1");
     expect(toast.error).toHaveBeenCalled();
+    expect(mockUserDispatch).not.toHaveBeenCalled();
   });
 });

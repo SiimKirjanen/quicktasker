@@ -1,4 +1,8 @@
-import { CheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  CheckIcon,
+  ExclamationTriangleIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
@@ -16,6 +20,7 @@ import { ActivePipelineContext } from "../../../../../providers/ActivePipelineCo
 import { UserContext } from "../../../../../providers/UserContextProvider";
 import { Task } from "../../../../../types/task";
 import { User, UserTypes, WPUser } from "../../../../../types/user";
+import { canWPUserAccessPipeline } from "../../../../../utils/user";
 import { QuickTaskerIcon } from "../../../../Icon/QuickTaskerIcon/QuickTaskerIcon";
 import { WordPressIcon } from "../../../../Icon/WordPressIcon/WordPressIcon";
 import { LoadingOval } from "../../../../Loading/Loading";
@@ -60,13 +65,17 @@ function UserAssignementSelection({
     return (task.assigned_users ?? []).some((u) => u.id === user.id);
   };
 
+  const hasBoardAccess = (user: User | WPUser) =>
+    !isWPUser(user) || canWPUserAccessPipeline(user, task.pipeline_id);
+
   const combinedUsers: (User | WPUser)[] = [...wpUsers, ...users];
   const filteredUsers = combinedUsers
     .filter(matchesTypeFilter)
     .filter(matchesSearch);
   const sortedUsers = [
     ...filteredUsers.filter(isAssigned),
-    ...filteredUsers.filter((u) => !isAssigned(u)),
+    ...filteredUsers.filter((u) => !isAssigned(u) && hasBoardAccess(u)),
+    ...filteredUsers.filter((u) => !isAssigned(u) && !hasBoardAccess(u)),
   ];
 
   const assignUser = async (user: User | WPUser) => {
@@ -127,7 +136,7 @@ function UserAssignementSelection({
     if (loadingKey) return;
     if (isAssigned(user)) {
       removeUser(user);
-    } else {
+    } else if (hasBoardAccess(user)) {
       assignUser(user);
     }
   };
@@ -156,7 +165,7 @@ function UserAssignementSelection({
         <div className="wpqt-text-lg">{__("Assign users", "quicktasker")}</div>
         <div className="wpqt-max-w-sm">
           {__(
-            'WordPress users need the "Access to plugin admin area" permission to be assignable.',
+            'WordPress users need the "Access to plugin admin area" permission and must be added to the board to be assignable.',
             "quicktasker",
           )}
         </div>
@@ -199,15 +208,18 @@ function UserAssignementSelection({
       <div data-testid="user-assignment-list">
         {sortedUsers.map((user) => {
           const assigned = isAssigned(user);
+          const boardAccess = hasBoardAccess(user);
           const rowLoading = loadingKey === rowKey(user);
-          const disabled = loadingKey !== null;
+          const disabled = loadingKey !== null || (!assigned && !boardAccess);
           return (
             <div
               key={rowKey(user)}
               data-testid={
                 assigned
                   ? "user-assignment-row-assigned"
-                  : "user-assignment-row"
+                  : boardAccess
+                    ? "user-assignment-row"
+                    : "user-assignment-row-no-board-access"
               }
               onClick={(e) => {
                 e.stopPropagation();
@@ -233,6 +245,16 @@ function UserAssignementSelection({
                 )}
                 {isWPUser(user) && user.roles?.length > 0 && (
                   <div>{user.roles.join(",")}</div>
+                )}
+                {!boardAccess && (
+                  <div className="wpqt-flex wpqt-items-center wpqt-gap-1 wpqt-text-yellow-700">
+                    {assigned && (
+                      <ExclamationTriangleIcon className="wpqt-size-4" />
+                    )}
+                    {assigned
+                      ? __("No access to this board", "quicktasker")
+                      : __("Not added to this board", "quicktasker")}
+                  </div>
                 )}
               </div>
               <span className="wpqt-ml-auto wpqt-flex wpqt-size-5 wpqt-items-center wpqt-justify-center">

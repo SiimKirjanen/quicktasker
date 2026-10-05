@@ -7,6 +7,7 @@ import {
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
   SET_WP_USERS,
+  SET_WP_USER_PIPELINE_IDS,
 } from "../constants";
 import { Action, State } from "../providers/UserContextProvider";
 import { ServerUser, User, WPUser } from "../types/user";
@@ -48,6 +49,21 @@ describe("user reducer", () => {
       payload: [wpUser],
     });
     expect(next.wpUsers[0].id).toBe("42");
+  });
+
+  it("SET_WP_USER_PIPELINE_IDS updates only that user's boards", () => {
+    const state: State = {
+      ...baseState,
+      wpUsers: [
+        { id: "1", name: "a", pipeline_ids: [1] },
+        { id: "2", name: "b", pipeline_ids: [1] },
+      ] as unknown as WPUser[],
+    };
+    const next = reducer(state, {
+      type: SET_WP_USER_PIPELINE_IDS,
+      payload: { userId: "2", pipelineIds: [3, 4] },
+    });
+    expect(next.wpUsers.map((u) => u.pipeline_ids)).toEqual([[1], [3, 4]]);
   });
 
   it("ADD_USER appends converted user", () => {

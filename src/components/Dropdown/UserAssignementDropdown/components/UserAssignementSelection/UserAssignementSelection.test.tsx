@@ -219,3 +219,108 @@ describe("UserAssignementSelection", () => {
     );
   });
 });
+
+describe("UserAssignementSelection board access", () => {
+  const unassignedTask: Task = {
+    ...task,
+    assigned_users: [],
+    assigned_wp_users: [],
+  };
+  const addedWPUser: WPUser = {
+    ...baseWPUser,
+    id: "10",
+    name: "Added",
+    pipeline_ids: [1],
+  };
+  const notAddedWPUser: WPUser = {
+    ...baseWPUser,
+    id: "11",
+    name: "Not added",
+    pipeline_ids: [2],
+  };
+  const adminWPUser: WPUser = {
+    ...baseWPUser,
+    id: "12",
+    name: "Admin",
+    pipeline_ids: [],
+    can_access_all_pipelines: true,
+  };
+
+  function renderWithWPUsers(wpUsers: WPUser[], taskToRender: Task) {
+    return render(
+      <ActivePipelineContext.Provider
+        value={{
+          state: {
+            loading: false,
+            view: PipelineView.PIPELINE,
+            activePipeline: null,
+          },
+          dispatch: mockDispatch,
+          fetchAndSetPipelineData: jest.fn(),
+        }}
+      >
+        <UserContext.Provider
+          value={{
+            state: { users: [], wpUsers, usersSearchValue: "" },
+            userDispatch: jest.fn(),
+            updateUsers: jest.fn(),
+            updateWPUsers: jest.fn(),
+          }}
+        >
+          <UserAssignementSelection
+            task={{ ...taskToRender, pipeline_id: "1" }}
+            onUserAdd={jest.fn()}
+            onUserDelete={jest.fn()}
+          />
+        </UserContext.Provider>
+      </ActivePipelineContext.Provider>,
+    );
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("shows WordPress users not added to the board as not assignable, last", () => {
+    renderWithWPUsers(
+      [notAddedWPUser, addedWPUser, adminWPUser],
+      unassignedTask,
+    );
+
+    const rows = screen.getByTestId("user-assignment-list").children;
+    expect(rows[0]).toHaveTextContent("Added");
+    expect(rows[1]).toHaveTextContent("Admin");
+    expect(rows[2]).toHaveTextContent("Not added");
+    expect(rows[2]).toHaveTextContent("Not added to this board");
+    expect(rows[2]).toHaveAttribute(
+      "data-testid",
+      "user-assignment-row-no-board-access",
+    );
+  });
+
+  it("does not assign a WordPress user not added to the board", () => {
+    renderWithWPUsers([notAddedWPUser], unassignedTask);
+
+    fireEvent.click(screen.getByText("Not added to this board"));
+
+    expect(api.assignTaskToUserRequest).not.toHaveBeenCalled();
+  });
+
+  it("lets an assigned WordPress user without board access be removed", async () => {
+    renderWithWPUsers([notAddedWPUser], {
+      ...unassignedTask,
+      assigned_wp_users: [notAddedWPUser],
+    });
+
+    expect(screen.getByText("No access to this board")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("No access to this board"));
+
+    await waitFor(() =>
+      expect(api.removeTaskFromUserRequest).toHaveBeenCalledWith(
+        "11",
+        "t1",
+        UserTypes.WP_USER,
+      ),
+    );
+  });
+});

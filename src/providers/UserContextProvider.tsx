@@ -11,6 +11,7 @@ import {
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
   SET_WP_USERS,
+  SET_WP_USER_PIPELINE_IDS,
 } from "../constants";
 import { reducer } from "../reducers/user-reducer";
 import { WPQTWpUserTypes } from "../types/enums";
@@ -31,6 +32,10 @@ type State = {
 type Action =
   | { type: typeof SET_USERS; payload: ServerUser[] }
   | { type: typeof SET_WP_USERS; payload: WPUser[] }
+  | {
+      type: typeof SET_WP_USER_PIPELINE_IDS;
+      payload: { userId: string; pipelineIds: number[] };
+    }
   | { type: typeof ADD_USER; payload: ServerUser }
   | { type: typeof EDIT_USER; payload: ServerUser }
   | {

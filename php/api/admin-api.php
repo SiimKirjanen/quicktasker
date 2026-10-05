@@ -2516,14 +2516,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'callback' => function ($data) {
                     try {
                         $userRepo = new UserRepository();
-                        $users = $userRepo->getWPNonAdminUsers();
-                        $pipelineIdsByWPUserId = ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserIds(
-                            array_map('intval', array_column($users, 'id'))
-                        );
-
-                        foreach ($users as $user) {
-                            $user->pipeline_ids = $pipelineIdsByWPUserId[(int) $user->id] ?? [];
-                        }
+                        $users = ServiceLocator::get('PipelineAccessService')->addPipelineAccessToWPUsers($userRepo->getWPNonAdminUsers());
 
                         return new WP_REST_Response((new ApiResponse(true, [], $users))->toArray(), 200);
                     } catch (Throwable $e) {

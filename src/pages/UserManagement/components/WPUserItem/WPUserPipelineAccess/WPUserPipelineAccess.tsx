@@ -2,8 +2,10 @@ import { useContext, useState } from "@wordpress/element";
 import { __, _n, sprintf } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { WPQTMultiSelect } from "../../../../../components/common/Select/WPQTMultiSelect";
+import { SET_WP_USER_PIPELINE_IDS } from "../../../../../constants";
 import { useWPUserPipelineActions } from "../../../../../hooks/actions/useWPUserPipelineActions";
 import { PipelinesContext } from "../../../../../providers/PipelinesContextProvider";
+import { UserContext } from "../../../../../providers/UserContextProvider";
 import { WPUser } from "../../../../../types/user";
 
 type Props = {
@@ -14,6 +16,7 @@ function WPUserPipelineAccess({ user }: Props) {
   const {
     state: { pipelines },
   } = useContext(PipelinesContext);
+  const { userDispatch } = useContext(UserContext);
   const [selectedPipelineIds, setSelectedPipelineIds] = useState<string[]>(
     (user.pipeline_ids ?? []).map(String),
   );
@@ -40,6 +43,10 @@ function WPUserPipelineAccess({ user }: Props) {
       pipelineIds,
       (update) => {
         setSelectedPipelineIds(update.pipeline_ids.map(String));
+        userDispatch({
+          type: SET_WP_USER_PIPELINE_IDS,
+          payload: { userId: user.id, pipelineIds: update.pipeline_ids },
+        });
         update.removed_pipelines_with_assigned_tasks.forEach(
           ({ pipeline_id, task_count }) => {
             const pipeline = pipelines.find(

@@ -7,6 +7,7 @@ import {
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
   SET_WP_USERS,
+  SET_WP_USER_PIPELINE_IDS,
 } from "../constants";
 import { Action, State } from "../providers/UserContextProvider";
 import { ServerUser, User, WPUser } from "../types/user";
@@ -32,6 +33,18 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         wpUsers,
+      };
+    }
+    case SET_WP_USER_PIPELINE_IDS: {
+      const { userId, pipelineIds } = action.payload;
+
+      return {
+        ...state,
+        wpUsers: state.wpUsers.map((wpUser) =>
+          wpUser.id === userId
+            ? { ...wpUser, pipeline_ids: pipelineIds }
+            : wpUser,
+        ),
       };
     }
     case ADD_USER: {

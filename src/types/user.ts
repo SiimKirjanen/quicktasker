@@ -54,6 +54,7 @@ type WPUser = {
   user_type: UserTypes.WP_USER;
   profile_picture: string;
   pipeline_ids?: number[];
+  can_access_all_pipelines?: boolean;
 };
 
 type WPUserPipelinesUpdate = {
