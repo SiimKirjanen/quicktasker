@@ -70,7 +70,7 @@ if (!function_exists('wpqt_board_access_notice')) {
         $dismissUrl = wp_nonce_url(add_query_arg('wpqt_dismiss_board_access_notice', '1'), 'wpqt_dismiss_board_access_notice');
 
         echo '<div class="notice notice-warning" data-testid="wpqt-board-access-notice"><p><strong>QuickTasker:</strong> '
-            . esc_html__('WordPress users who are not administrators now only see the boards they have been added to. Until you add them to boards, they see no boards.', 'quicktasker')
+            . esc_html__('WordPress users who are not administrators now only see the boards they have been added to. Until you add them to boards, they see no boards, and automations that assign them to tasks do nothing.', 'quicktasker')
             . '</p><p><a href="' . esc_url($userManagementUrl) . '">' . esc_html__('Add users to boards', 'quicktasker') . '</a> | '
             . '<a href="' . esc_url($dismissUrl) . '">' . esc_html__('Dismiss', 'quicktasker') . '</a></p></div>';
     }

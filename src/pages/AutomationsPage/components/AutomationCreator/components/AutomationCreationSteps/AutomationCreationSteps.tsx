@@ -14,6 +14,7 @@ import { AutomationTargetSelection } from "../AutomationTargetSelection/Automati
 import { AutomationTriggerSelection } from "../AutomationTriggerSelection/AutomationTriggerSelection";
 
 type Props = {
+  pipelineId: string;
   automation: AutomationCreationState;
   automationDispatch: React.Dispatch<Action>;
   createAutomation: () => Promise<void>;
@@ -38,6 +39,7 @@ function isAutomationReady(automation: AutomationCreationState) {
 }
 
 function AutomationCreationSteps({
+  pipelineId,
   automation,
   automationDispatch,
   createAutomation,
@@ -78,6 +80,7 @@ function AutomationCreationSteps({
   ) {
     stepComponent = (
       <AutomationActionTargetSelection
+        pipelineId={pipelineId}
         automationDispatch={automationDispatch}
         automation={automation}
       />

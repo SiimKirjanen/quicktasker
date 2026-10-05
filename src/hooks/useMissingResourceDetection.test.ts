@@ -9,6 +9,12 @@ jest.mock("./useMissingContent", () => ({
   useMissingContent: () => ({ pipelineMissing: false, dispatch: mockDispatch }),
 }));
 
+// The user's boards, as the server sent them.
+let mockPipelines = [{ id: "1", name: "Board 1" }];
+jest.mock("./usePipelines", () => ({
+  usePipelines: () => ({ pipelines: mockPipelines }),
+}));
+
 import { toast } from "react-toastify";
 import {
   SET_PIPELINE_MISSING,
@@ -21,18 +27,21 @@ import {
 } from "../constants";
 import { useMissingResourceDetection } from "./useMissingResourceDetection";
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockPipelines = [{ id: "1", name: "Board 1" }];
+});
 
 describe("useMissingResourceDetection", () => {
   describe("detectPipelineNoAccess", () => {
-    it("dispatches SET_PIPELINE_NO_ACCESS for a refused request", () => {
+    it("dispatches SET_PIPELINE_NO_ACCESS when a board the user is not on is refused", () => {
       const { result } = renderHook(() => useMissingResourceDetection());
 
       expect(
-        result.current.detectPipelineNoAccess({
-          code: "rest_forbidden",
-          data: { status: 403 },
-        }),
+        result.current.detectPipelineNoAccess(
+          { code: "rest_forbidden", data: { status: 403 } },
+          "2",
+        ),
       ).toBe(true);
       expect(mockDispatch).toHaveBeenCalledWith({
         type: SET_PIPELINE_NO_ACCESS,
@@ -47,7 +56,31 @@ describe("useMissingResourceDetection", () => {
     ])("ignores %s", (_label, error) => {
       const { result } = renderHook(() => useMissingResourceDetection());
 
-      expect(result.current.detectPipelineNoAccess(error)).toBe(false);
+      expect(result.current.detectPipelineNoAccess(error, "2")).toBe(false);
+      expect(mockDispatch).not.toHaveBeenCalled();
+    });
+
+    it("checks the boards loaded by the time the request fails", () => {
+      // Requests start on the first render, before the boards are loaded.
+      mockPipelines = [];
+      const { result, rerender } = renderHook(() =>
+        useMissingResourceDetection(),
+      );
+      const detectStartedEarly = result.current.detectPipelineNoAccess;
+
+      mockPipelines = [{ id: "1", name: "Board 1" }];
+      rerender();
+
+      expect(detectStartedEarly({ data: { status: 403 } }, "1")).toBe(false);
+      expect(mockDispatch).not.toHaveBeenCalled();
+    });
+
+    it("ignores a refused request for one of the user's boards, as a capability is missing", () => {
+      const { result } = renderHook(() => useMissingResourceDetection());
+
+      expect(
+        result.current.detectPipelineNoAccess({ data: { status: 403 } }, "1"),
+      ).toBe(false);
       expect(mockDispatch).not.toHaveBeenCalled();
     });
   });

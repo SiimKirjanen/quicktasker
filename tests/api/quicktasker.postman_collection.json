@@ -21600,6 +21600,56 @@
                   ]
                 },
                 {
+                  "name": "Outsider cannot be the target of an assign automation before being added to board E",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"automationTarget\": \"task\",\n  \"automationTrigger\": \"task-created\",\n  \"automationAction\": \"assign-user\",\n  \"automationActionTargetId\": \"{{outsiderWpUserId}}\",\n  \"automationActionTargetType\": \"wp-user\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                          "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                          "pm.test('message explains why', () => pm.expect(pm.response.json().messages.join(' ')).to.include('not been added to this board'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "Add outsider to board E",
                   "request": {
                     "method": "PATCH",
@@ -21682,6 +21732,91 @@
                           "language": "json"
                         }
                       }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Outsider can be the target of an assign automation after being added to board E",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"automationTarget\": \"task\",\n  \"automationTrigger\": \"task-created\",\n  \"automationAction\": \"assign-user\",\n  \"automationActionTargetId\": \"{{outsiderWpUserId}}\",\n  \"automationActionTargetType\": \"wp-user\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                          "pm.collectionVariables.set('automationAssignOutsiderId', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Delete the assign automation so later tasks on board E are not assigned",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations/{{automationAssignOutsiderId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "event": [

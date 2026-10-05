@@ -6,6 +6,7 @@ import { WPQTPageHeader } from "../../components/common/Header/Header";
 
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
+import { NoBoardAccessInfo } from "../../components/Info/NoBoardAccessInfo";
 import { LoadingOval } from "../../components/Loading/Loading";
 import { AutomationLogsModal } from "../../components/Modal/AutomationLogsModal/AutomationLogsModal";
 import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
@@ -25,8 +26,12 @@ type Props = {
 };
 
 function AutomationsPageContent({ pipelineId }: Props) {
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
   const { automations } = useAutomations();
+
+  if (pipelineNoAccess) {
+    return <NoBoardAccessInfo />;
+  }
 
   if (pipelineMissing) {
     return (
@@ -84,14 +89,14 @@ function AutomationsPageContent({ pipelineId }: Props) {
 function AutomationsPage({ pipelineId }: Props) {
   const { pipelines } = usePipelines();
   const { navigatePageWithoutHistory } = useNavigation();
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
   const activePipeline =
     pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
   return (
     <PipelineAutomationsContextProvider pipelineId={pipelineId}>
       <Page>
-        {!pipelineMissing && (
+        {!pipelineMissing && !pipelineNoAccess && (
           <WPQTPageHeader
             description={__(
               "Set up automated processes to help manage your board.",

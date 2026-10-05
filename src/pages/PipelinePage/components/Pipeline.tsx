@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { moveTaskRequest } from "../../../api/api";
 import { WPQTIconButton } from "../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { Info } from "../../../components/Info/Info";
+import { NoBoardAccessInfo } from "../../../components/Info/NoBoardAccessInfo";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { TaskColorModal } from "../../../components/Modal/TaskColorModal/TaskColorModal";
 import { TaskLogsModal } from "../../../components/Modal/TaskLogsModal/TaskLogsModal";
@@ -26,7 +27,6 @@ import useTabVisibility from "../../../hooks/useTabVisibility";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { NotificationsContext } from "../../../providers/NotificationsContextProvider";
-import { PipelinesContext } from "../../../providers/PipelinesContextProvider";
 import { Pipeline } from "../../../types/pipeline";
 import { AddStage } from "./AddStage";
 import { Stage } from "./Stage";
@@ -41,9 +41,6 @@ const Pipeline = () => {
   const { modalDispatch } = useContext(ModalContext);
   const { fetchNotifications } = useContext(NotificationsContext);
   const { pipelineMissing, pipelineNoAccess } = useMissingContent();
-  const {
-    state: { pipelines },
-  } = useContext(PipelinesContext);
   const {
     state: { isUserAllowedToManageSettings, isUserAllowedToManageWPUsers },
   } = useApp();
@@ -140,30 +137,10 @@ const Pipeline = () => {
   }
 
   if (pipelineNoAccess) {
-    const primaryPipeline =
-      pipelines.find((pipeline) => pipeline.is_primary) ?? pipelines[0];
-
     return (
-      <Info
-        infoDescription={__(
-          "You have not been added to this board. Ask a WordPress administrator to add you to it.",
-          "quicktasker",
-        )}
-      >
-        {primaryPipeline && (
-          <div
-            className="wpqt-blue-text wpqt-blue-text-hover wpqt-cursor-pointer"
-            data-testid="open-primary-board"
-            onClick={() => {
-              // Changing the address clears the no access state.
-              window.location.hash = `#/board/${primaryPipeline.id}`;
-              fetchAndSetPipelineData(primaryPipeline.id);
-            }}
-          >
-            {__("Open your primary board", "quicktasker")}
-          </div>
-        )}
-      </Info>
+      <NoBoardAccessInfo
+        onOpenBoard={(pipelineId) => fetchAndSetPipelineData(pipelineId)}
+      />
     );
   }
 

@@ -3652,6 +3652,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'POST',
                 'callback' => function ($data) {
                     try {
+                        // The automation could never assign a WordPress user who has not been added to the board.
+                        if (WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER === $data['automationActionTargetType']
+                            && null !== $data['automationActionTargetId']
+                            && !ServiceLocator::get('PipelineAccessService')->canAccessPipeline((int) $data['automationActionTargetId'], $data['id'])) {
+                            throw new WPQTException('The user has not been added to this board', true);
+                        }
+
                         $automationService = ServiceLocator::get('AutomationService');
                         $automation = $automationService->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata']);
 

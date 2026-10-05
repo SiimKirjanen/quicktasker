@@ -1,3 +1,4 @@
+import { useRef } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
@@ -10,9 +11,15 @@ import {
   WP_QUICKTASKER_EXCEPTION_TASK_NOT_FOUND,
 } from "../constants";
 import { useMissingContent } from "./useMissingContent";
+import { usePipelines } from "./usePipelines";
 
 function useMissingResourceDetection() {
   const { dispatch } = useMissingContent();
+  const { pipelines } = usePipelines();
+  // Requests start before the boards are loaded into state, so the check reads
+  // the boards when the request fails, not when it started.
+  const pipelinesRef = useRef(pipelines);
+  pipelinesRef.current = pipelines;
 
   function hasExceptionCode(e: unknown, exceptionCode: string): boolean {
     return (
@@ -36,10 +43,10 @@ function useMissingResourceDetection() {
     return hasExceptionCode(e, WP_QUICKTASKER_EXCEPTION_TASK_NOT_FOUND);
   }
 
-  // Only for loading a board: a refused request elsewhere can also mean a
-  // missing capability, not a missing board access.
-  function detectPipelineNoAccess(e: unknown): boolean {
-    const noAccess =
+  // A refused request can also mean a missing capability, so it only counts as
+  // missing board access when the board is not among the user's boards.
+  function detectPipelineNoAccess(e: unknown, pipelineId: string): boolean {
+    const refused =
       typeof e === "object" &&
       e !== null &&
       "data" in e &&
@@ -47,6 +54,9 @@ function useMissingResourceDetection() {
       e.data !== null &&
       "status" in e.data &&
       e.data.status === 403;
+    const noAccess =
+      refused &&
+      !pipelinesRef.current.some((pipeline) => pipeline.id === pipelineId);
 
     if (noAccess) {
       dispatch({ type: SET_PIPELINE_NO_ACCESS, payload: true });

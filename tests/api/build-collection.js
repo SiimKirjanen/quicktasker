@@ -3561,6 +3561,23 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
         ],
       }),
       request({
+        name: "Outsider cannot be the target of an assign automation before being added to board E",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/automations",
+        body: {
+          automationTarget: "task",
+          automationTrigger: "task-created",
+          automationAction: "assign-user",
+          automationActionTargetId: "{{outsiderWpUserId}}",
+          automationActionTargetType: "wp-user",
+        },
+        tests: [
+          status(400),
+          success(false),
+          `pm.test('message explains why', () => pm.expect(pm.response.json().messages.join(' ')).to.include('not been added to this board'));`,
+        ],
+      }),
+      request({
         name: "Add outsider to board E",
         method: "PATCH",
         url: "/wp-users/{{outsiderWpUserId}}/pipelines",
@@ -3572,6 +3589,29 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
         method: "POST",
         url: "/users/{{outsiderWpUserId}}/tasks/{{taskE1Id}}",
         body: { user_type: "wp-user" },
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "Outsider can be the target of an assign automation after being added to board E",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/automations",
+        body: {
+          automationTarget: "task",
+          automationTrigger: "task-created",
+          automationAction: "assign-user",
+          automationActionTargetId: "{{outsiderWpUserId}}",
+          automationActionTargetType: "wp-user",
+        },
+        tests: [
+          status(200),
+          success(true),
+          save("automationAssignOutsiderId", "pm.response.json().data.id"),
+        ],
+      }),
+      request({
+        name: "Delete the assign automation so later tasks on board E are not assigned",
+        method: "DELETE",
+        url: "/pipelines/{{boardEId}}/automations/{{automationAssignOutsiderId}}",
         tests: [status(200), success(true)],
       }),
     ]),

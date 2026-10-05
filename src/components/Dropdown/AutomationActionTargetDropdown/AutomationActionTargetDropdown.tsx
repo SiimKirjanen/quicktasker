@@ -7,6 +7,8 @@ import { AutomationActionTargetUserSelection } from "./components/AutomationActi
 
 type Props = {
   automationAction: AutomationAction;
+  // WordPress users who have not been added to this board cannot be picked.
+  pipelineId?: string;
   onUserAdd?: (target: User | WPUser) => void;
   quickTaskerUserTargets?: User[];
   wpUserTargets?: WPUser[];
@@ -15,6 +17,7 @@ type Props = {
 
 function AutomationActionTargetDropdown({
   automationAction,
+  pipelineId,
   onUserAdd = () => {},
   quickTaskerUserTargets = [],
   wpUserTargets = [],
@@ -42,6 +45,7 @@ function AutomationActionTargetDropdown({
         <AutomationActionTargetUserSelection
           quickTaskerUsers={quickTaskerUserTargets}
           wpUsers={wpUserTargets}
+          pipelineId={pipelineId}
           assignUser={onUserAdd}
         />
       )}

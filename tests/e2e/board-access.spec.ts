@@ -238,31 +238,113 @@ test.describe('Board access', () => {
   });
 
   test('a link to a board the user has not been added to says so', async ({ browser, request }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
     const addedBoardName = generateUniqueName('BA-Link-Added');
     const otherBoardName = generateUniqueName('BA-Link-Other');
     await createBoardViaApi(request, addedBoardName);
     const otherBoard = await createBoardViaApi(request, otherBoardName);
     const userLogin = uniqueLogin('wplink');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
-    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
     await addWPUserToBoards(request, userId, [addedBoardName]);
     const context = await loginToWordPressViaApi(browser, userLogin);
+    const noAccessText = 'You have not been added to this board. Ask a WordPress administrator to add you to it.';
 
     try {
       const userPage = await context.newPage();
       await userPage.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${otherBoard.boardId}`);
-      await expect(
-        userPage.getByText('You have not been added to this board. Ask a WordPress administrator to add you to it.'),
-      ).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+      await expect(userPage.getByText(noAccessText)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
       await expect(userPage.getByText('Unable to load the board', { exact: false })).toHaveCount(0);
       await expect(userPage.getByTestId('active-pipeline-name')).toHaveCount(0);
 
       await userPage.getByTestId('open-primary-board').click();
       await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(addedBoardName);
+
+      // The board's other pages say the same, in place of an error.
+      for (const subPage of ['overview', 'automations', 'webhooks', 'api-tokens']) {
+        const subPageTab = await context.newPage();
+        await subPageTab.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${otherBoard.boardId}/${subPage}`);
+        await expect(subPageTab.getByText(noAccessText), subPage).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+        await expect(subPageTab.locator('.Toastify__toast'), subPage).toHaveCount(0);
+
+        await subPageTab.getByTestId('open-primary-board').click();
+        await expect(subPageTab.getByTestId('active-pipeline-name'), subPage).toHaveText(addedBoardName);
+        await subPageTab.close();
+      }
     } finally {
       await context.close();
       await deleteBoardViaApi(request, addedBoardName);
       await deleteBoardViaApi(request, otherBoardName);
+    }
+  });
+
+  test('a board page the user lacks the permission for is not mistaken for missing board access', async ({ browser, request }) => {
+    const boardName = generateUniqueName('BA-NoPerm');
+    const board = await createBoardViaApi(request, boardName);
+    const userLogin = uniqueLogin('wpnoperm');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    // On the board, but without the permission to manage automations.
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    await addWPUserToBoards(request, userId, [boardName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const userPage = await context.newPage();
+      await userPage.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/automations`);
+      await expect(userPage.getByText('Failed to load board automations').first()).toBeVisible({
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+      await expect(userPage.getByText('You have not been added to this board', { exact: false })).toHaveCount(0);
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test('automations can only assign WordPress users added to the board', async ({ page, request }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const boardName = generateUniqueName('BA-Auto-Board');
+    const board = await createBoardViaApi(request, boardName, generateUniqueName('BA-Auto-Stage'));
+    const memberLogin = uniqueLogin('wpautomember');
+    const outsiderLogin = uniqueLogin('wpautooutsider');
+    const memberId = await createWPUser(request, memberLogin, `${memberLogin}@example.com`, 'editor');
+    const outsiderId = await createWPUser(request, outsiderLogin, `${outsiderLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, memberId, ['quicktasker_admin_role']);
+    await grantWPUserCaps(request, outsiderId, ['quicktasker_admin_role']);
+    await addWPUserToBoards(request, memberId, [boardName]);
+
+    try {
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/automations`);
+      await expect(page.getByRole('heading', { name: 'Create a new automation' })).toBeVisible({
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+      const wizard = page.getByTestId('automation-creation-steps');
+      await wizard.getByText('Task', { exact: true }).click();
+      await wizard.getByText('Task created', { exact: true }).click();
+      await wizard.getByText('Assign user', { exact: true }).click();
+      await page.getByTestId('automation-action-target-btn').click();
+
+      const menu = page.getByRole('menu');
+      const outsiderRow = menu.getByTestId('automation-target-row-no-board-access').filter({ hasText: outsiderLogin });
+      await expect(outsiderRow).toContainText('Not added to this board');
+      await expect(outsiderRow).toHaveAttribute('aria-disabled', 'true');
+      await outsiderRow.click();
+      await expect(menu).toBeVisible();
+
+      await menu.getByTestId('automation-target-row').filter({ hasText: memberLogin }).click();
+      await page.getByText('Create automation').click();
+      await expect(page.getByText('Step 1. Select a target', { exact: true })).toBeVisible();
+
+      // Removing the user from the board marks the automation.
+      const automation = page.getByTestId('pipeline-automation').filter({ hasText: memberLogin });
+      await expect(automation.getByTestId('automation-target-no-board-access')).toHaveCount(0);
+      await addWPUserToBoards(request, memberId, []);
+      await page.reload();
+      await expect(automation.getByTestId('automation-target-no-board-access')).toBeVisible({
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+    } finally {
+      await deleteBoardViaApi(request, boardName);
     }
   });
 });

@@ -25,8 +25,9 @@ type Props = {
 function OverviewPage({ pipelineId }: Props) {
   const { pipelines } = usePipelines();
   const { navigatePageWithoutHistory } = useNavigation();
-  const { pipelineMissing } = useMissingContent();
-  const { detectMissingResources } = useMissingResourceDetection();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
+  const { detectMissingResources, detectPipelineNoAccess } =
+    useMissingResourceDetection();
   const activePipeline =
     pipelines.find((pipeline) => pipeline.id === pipelineId) || null;
 
@@ -41,6 +42,9 @@ function OverviewPage({ pipelineId }: Props) {
       setPipelineOverviewData(response.data);
     } catch (error) {
       console.error(error);
+      if (detectPipelineNoAccess(error, pipelineId)) {
+        return;
+      }
       detectMissingResources(error);
     } finally {
       setLoading(false);
@@ -53,7 +57,7 @@ function OverviewPage({ pipelineId }: Props) {
 
   return (
     <Page>
-      {!pipelineMissing && (
+      {!pipelineMissing && !pipelineNoAccess && (
         <WPQTPageHeader
           description={__("Get overview of the board.", "quicktasker")}
           rightSideContent={

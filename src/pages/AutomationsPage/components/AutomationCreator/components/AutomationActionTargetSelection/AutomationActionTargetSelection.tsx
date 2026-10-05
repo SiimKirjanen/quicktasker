@@ -15,6 +15,7 @@ import {
 import { AutomationSelection } from "../AutomationSelection/AutomationSelection";
 
 type Props = {
+  pipelineId: string;
   automationDispatch: React.Dispatch<Action>;
   automation: AutomationCreationState;
 };
@@ -22,6 +23,7 @@ type Props = {
 const userAssignementActions = [AutomationAction.ASSIGN_USER];
 
 function AutomationActionTargetSelection({
+  pipelineId,
   automationDispatch,
   automation,
 }: Props) {
@@ -40,6 +42,7 @@ function AutomationActionTargetSelection({
       {showUserAssignment && (
         <AutomationActionTargetDropdown
           automationAction={automationActionId}
+          pipelineId={pipelineId}
           quickTaskerUserTargets={users}
           wpUserTargets={wpUsers}
           onUserAdd={(user) => {
