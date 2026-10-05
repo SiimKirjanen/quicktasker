@@ -7595,6 +7595,43 @@
                   ]
                 },
                 {
+                  "name": "PATCH /wp-users/{id}/pipelines",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/999999/pipelines",
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"pipeline_ids\": []\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 401', () => pm.response.to.have.status(401));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "GET /logs",
                   "request": {
                     "method": "GET",
@@ -10305,6 +10342,55 @@
                   ]
                 },
                 {
+                  "name": "PATCH /wp-users/{id}/pipelines",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/999999/pipelines",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{subscriberUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{subscriberAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"pipeline_ids\": []\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "GET /logs",
                   "request": {
                     "method": "GET",
@@ -12956,6 +13042,55 @@
                   ]
                 },
                 {
+                  "name": "PATCH /wp-users/{id}/pipelines needs \"wpAdmin\"",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/999999/pipelines",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{limitedUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{limitedAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"pipeline_ids\": []\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "GET /my-tasks/comments needs \"myTasks\"",
                   "request": {
                     "method": "GET",
@@ -14051,6 +14186,196 @@
               ]
             },
             {
+              "name": "Limited admin cannot set a board they are not added to as primary",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardDId}}/set-primary",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Limited admin without boards has no primary board",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('no board is primary', () => pm.expect(pm.response.json().data.filter((x) => x.is_primary === '1')).to.be.empty);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "List WordPress users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users?type=all",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "const limited = pm.response.json().data.find((u) => u.name === pm.variables.get('limitedUser'));\npm.test('limited user is listed', () => pm.expect(limited).to.be.an('object'));\npm.collectionVariables.set('limitedWpUserId', limited ? String(limited.id) : '0');"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Add limited admin to board D",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": [\n    \"{{boardDId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('limited admin is added to board D only', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardDId'))]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Limited admin's primary board falls back to their only board",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('only board boardDId is primary', () => pm.expect(pm.response.json().data.filter((x) => x.is_primary === '1').map((x) => String(x.id))).to.eql([pm.collectionVariables.get('boardDId')]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
               "name": "Limited admin sets board D as primary",
               "request": {
                 "method": "PATCH",
@@ -14221,6 +14546,188 @@
                     "exec": [
                       "pm.test('status is 400', () => pm.response.to.have.status(400));",
                       "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Adding a user to a missing board fails",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": [\n    \"{{boardDId}}\",\n    999999999\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Board IDs must be numeric",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": [\n    \"x\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('error code is rest_invalid_param', () => pm.expect(pm.response.json().code).to.eql('rest_invalid_param'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Adding a missing user to boards fails",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/999999999/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Failed changes keep the limited admin's boards",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{limitedUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{limitedAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('only board boardDId is primary', () => pm.expect(pm.response.json().data.filter((x) => x.is_primary === '1').map((x) => String(x.id))).to.eql([pm.collectionVariables.get('boardDId')]));"
                     ]
                   }
                 }

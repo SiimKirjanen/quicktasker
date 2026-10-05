@@ -19,6 +19,30 @@ export function generateUniqueName(prefix: string): string {
 }
 
 /**
+ * Create a board via the admin REST API, optionally with one stage.
+ * For tests that need a board but don't test creating one.
+ */
+export async function createBoardViaApi(
+  request: APIRequestContext,
+  boardName: string,
+  stageName?: string,
+): Promise<void> {
+  const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
+  const board = await request.post('/wp-json/wpqt/v1/pipelines', {
+    headers,
+    data: { name: boardName, description: '' },
+  });
+  if (!board.ok()) throw new Error(`Failed to create board: ${await board.text()}`);
+  if (!stageName) return;
+  const boardId = (await board.json()).data.id;
+  const stage = await request.post(`/wp-json/wpqt/v1/pipelines/${boardId}/stages`, {
+    headers,
+    data: { name: stageName, description: '' },
+  });
+  if (!stage.ok()) throw new Error(`Failed to create stage: ${await stage.text()}`);
+}
+
+/**
  * Delete a board and its tasks by name via the admin REST API. For test
  * cleanup: does nothing if no board has that name.
  */

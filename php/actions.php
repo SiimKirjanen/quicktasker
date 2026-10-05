@@ -38,6 +38,20 @@ if (!function_exists('wpqt_db_migrations')) {
     }
 }
 
+/**
+ * Removes a deleted WordPress user from every board.
+ *
+ * @param int $userId The ID of the deleted WordPress user.
+ * @return void
+ */
+add_action('deleted_user', 'wpqt_delete_wp_user_pipeline_access');
+if (!function_exists('wpqt_delete_wp_user_pipeline_access')) {
+    function wpqt_delete_wp_user_pipeline_access($userId)
+    {
+        ServiceLocator::get('PipelineAccessRepository')->deleteWPUserAccess($userId);
+    }
+}
+
 add_action('template_redirect', 'wpqt_custom_http_status_code');
 if (!function_exists('wpqt_custom_http_status_code')) {
     function wpqt_custom_http_status_code()

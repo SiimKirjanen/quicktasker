@@ -60,6 +60,31 @@ export async function grantWPUserCaps(
   if (!response.ok()) throw new Error(`Failed to grant WP user caps: ${await response.text()}`);
 }
 
+/**
+ * Add a WordPress user to boards via the plugin REST API.
+ * Replaces the boards the user was added to before.
+ */
+export async function addWPUserToBoards(
+  request: APIRequestContext,
+  userId: number,
+  boardNames: string[],
+): Promise<void> {
+  const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
+  const list = await request.get('/wp-json/wpqt/v1/pipelines', { headers });
+  if (!list.ok()) throw new Error(`Failed to list boards: ${await list.text()}`);
+  const boards: { id: string; name: string }[] = (await list.json()).data;
+  const boardIds = boardNames.map((name) => {
+    const board = boards.find((b) => b.name === name);
+    if (!board) throw new Error(`Board not found: ${name}`);
+    return board.id;
+  });
+  const response = await request.patch(`/wp-json/wpqt/v1/wp-users/${userId}/pipelines`, {
+    headers,
+    data: { pipeline_ids: boardIds },
+  });
+  if (!response.ok()) throw new Error(`Failed to add WP user to boards: ${await response.text()}`);
+}
+
 
 /**
  * Navigate to the WordPress users tab in User Management (the default tab).

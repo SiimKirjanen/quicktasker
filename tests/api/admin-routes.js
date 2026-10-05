@@ -179,6 +179,12 @@ module.exports = [
     },
   },
   {
+    method: "PATCH",
+    path: "/wp-users/{id}/pipelines",
+    permission: "wpAdmin",
+    params: { pipeline_ids: [] },
+  },
+  {
     method: "GET",
     path: "/logs",
     permission: "base",

@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { navigateToBoardsPage } from './utils/navigation';
 import {
   createBoard,
+  createBoardViaApi,
   createStage,
   deleteBoardViaApi,
   generateUniqueName,
@@ -10,7 +11,8 @@ import {
 } from './utils/board-helpers';
 import { waitForModalToClose } from './utils/modal-helpers';
 import { loginToWordPressViaApi } from './utils/auth';
-import { createWPUser, grantWPUserCaps, uniqueLogin } from './utils/user-helpers';
+import { addWPUserToBoards, createWPUser, grantWPUserCaps, uniqueLogin } from './utils/user-helpers';
+import { TIMEOUTS } from './utils/timeouts';
 
 test.describe('Board Management', () => {
   test.beforeEach(async ({ page }) => {
@@ -145,18 +147,25 @@ test.describe('Primary board', () => {
     await expect(boardItem.getByTestId('primary-pipeline-icon')).toBeVisible();
   }
 
-  test('each user keeps their own primary board after a page refresh', async ({ page, browser, request }) => {
+  test('each user keeps their own primary board after a page refresh', async ({ browser, request }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    // Until a user chooses, their primary board is the board with the lowest ID
+    // they were added to. The fallback board is created first so that both
+    // users have to choose their primary board.
+    const fallbackBoardName = generateUniqueName('PB-Fallback');
     const firstBoardName = generateUniqueName('PB-First');
     const secondBoardName = generateUniqueName('PB-Second');
-    await navigateToBoardsPage(page);
-    await createBoard(page, firstBoardName, generateUniqueDescription('First primary board'));
-    await createBoard(page, secondBoardName, generateUniqueDescription('Second primary board'));
+    const boardNames = [fallbackBoardName, firstBoardName, secondBoardName];
+    for (const boardName of boardNames) {
+      await createBoardViaApi(request, boardName);
+    }
 
     const firstLogin = uniqueLogin('wpprimary');
     const secondLogin = uniqueLogin('wpprimary');
     for (const login of [firstLogin, secondLogin]) {
       const userId = await createWPUser(request, login, `${login}@example.com`);
       await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+      await addWPUserToBoards(request, userId, boardNames);
     }
 
     const firstContext = await loginToWordPressViaApi(browser, firstLogin);
@@ -167,6 +176,7 @@ test.describe('Primary board', () => {
       const secondPage = await secondContext.newPage();
 
       await navigateToBoardsPage(firstPage);
+      await expect(firstPage.getByTestId('active-pipeline-name')).toHaveText(fallbackBoardName);
       await setPrimaryBoard(firstPage, firstBoardName);
 
       await navigateToBoardsPage(secondPage);
@@ -178,8 +188,9 @@ test.describe('Primary board', () => {
     } finally {
       await firstContext.close();
       await secondContext.close();
-      await deleteBoardViaApi(request, firstBoardName);
-      await deleteBoardViaApi(request, secondBoardName);
+      for (const boardName of boardNames) {
+        await deleteBoardViaApi(request, boardName);
+      }
     }
   });
 });

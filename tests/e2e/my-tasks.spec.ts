@@ -9,6 +9,7 @@ import { ADMIN_USERNAME } from "./constants";
 import { loginToWordPress } from "./utils/auth";
 import {
   createBoard,
+  createBoardViaApi,
   createStage,
   createTask,
   generateUniqueDescription,
@@ -21,6 +22,7 @@ import {
   navigateToMyTasksPage,
 } from "./utils/navigation";
 import {
+  addWPUserToBoards,
   assignWordPressUserToTask,
   closeUserAssignmentDropdown,
   createWPUser,
@@ -196,6 +198,11 @@ test.describe("My Tasks page", () => {
         "quicktasker_admin_role_manage_settings",
         "quicktasker_view_my_tasks",
       ]);
+      // Non-administrators only see boards they have been added to, so the
+      // board dropdown needs one board before the user can create their own.
+      const startBoardName = generateUniqueName("MTC-Start-Board");
+      await createBoardViaApi(request, startBoardName);
+      await addWPUserToBoards(request, userId, [startBoardName]);
 
       const { context, page } = await loginAsWPUser(browser, userLogin);
 

@@ -2518,6 +2518,54 @@ if (!function_exists('wpqt_register_api_routes')) {
             ],
         );
 
+        register_rest_route(
+            'wpqt/v1',
+            'wp-users/(?P<id>\d+)/pipelines',
+            [
+                'methods'  => 'PATCH',
+                'callback' => function ($data) {
+                    global $wpdb;
+
+                    try {
+                        if (!get_user_by('id', $data['id'])) {
+                            throw new WPQTException('User not found', true);
+                        }
+
+                        $wpdb->query('START TRANSACTION');
+                        ServiceLocator::get('PipelineAccessService')->setWPUserPipelines($data['id'], $data['pipeline_ids']);
+                        $wpdb->query('COMMIT');
+
+                        return new WP_REST_Response((new ApiResponse(true, [], [
+                            'pipeline_ids' => ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($data['id']),
+                        ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForManagingWPUserCapabilities();
+                },
+                'args' => [
+                    'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    'pipeline_ids' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericArray'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsintArray'],
+                    ],
+                ],
+            ],
+        );
+
         /*
         ==================================================================================================================================================================================================================
         Logs endpoints

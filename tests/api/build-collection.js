@@ -1736,6 +1736,17 @@ const excludesId = (description, listExpression, variable) =>
 const onlyPrimaryBoard = (listExpression, variable) =>
   `pm.test('only board ${variable} is primary', () => pm.expect(${listExpression}.filter((x) => x.is_primary === '1').map((x) => String(x.id))).to.eql([pm.collectionVariables.get('${variable}')]));`;
 
+const findLimitedWpUser = request({
+  name: "List WordPress users",
+  url: "/wp-users?type=all",
+  tests: [
+    status(200),
+    `const limited = pm.response.json().data.find((u) => u.name === pm.variables.get('limitedUser'));
+pm.test('limited user is listed', () => pm.expect(limited).to.be.an('object'));
+pm.collectionVariables.set('limitedWpUserId', limited ? String(limited.id) : '0');`,
+  ],
+});
+
 const adminBoards = folder("Boards", [
   request({
     name: "Create board requires name",
@@ -1814,6 +1825,43 @@ const adminBoards = folder("Boards", [
     tests: [status(200), success(true)],
   }),
   request({
+    name: "Limited admin cannot set a board they are not added to as primary",
+    method: "PATCH",
+    url: "/pipelines/{{boardDId}}/set-primary",
+    auth: limitedAuth,
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Limited admin without boards has no primary board",
+    url: "/pipelines",
+    auth: limitedAuth,
+    tests: [
+      status(200),
+      `pm.test('no board is primary', () => pm.expect(pm.response.json().data.filter((x) => x.is_primary === '1')).to.be.empty);`,
+    ],
+  }),
+  findLimitedWpUser,
+  request({
+    name: "Add limited admin to board D",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/pipelines",
+    body: { pipeline_ids: ["{{boardDId}}"] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('limited admin is added to board D only', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardDId'))]));`,
+    ],
+  }),
+  request({
+    name: "Limited admin's primary board falls back to their only board",
+    url: "/pipelines",
+    auth: limitedAuth,
+    tests: [
+      status(200),
+      onlyPrimaryBoard("pm.response.json().data", "boardDId"),
+    ],
+  }),
+  request({
     name: "Limited admin sets board D as primary",
     method: "PATCH",
     url: "/pipelines/{{boardDId}}/set-primary",
@@ -1851,6 +1899,36 @@ const adminBoards = folder("Boards", [
     method: "PATCH",
     url: "/pipelines/999999999/set-primary",
     tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Adding a user to a missing board fails",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/pipelines",
+    body: { pipeline_ids: ["{{boardDId}}", 999999999] },
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Board IDs must be numeric",
+    method: "PATCH",
+    url: "/wp-users/{{limitedWpUserId}}/pipelines",
+    body: { pipeline_ids: ["x"] },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "Adding a missing user to boards fails",
+    method: "PATCH",
+    url: "/wp-users/999999999/pipelines",
+    body: { pipeline_ids: [] },
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Failed changes keep the limited admin's boards",
+    url: "/pipelines",
+    auth: limitedAuth,
+    tests: [
+      status(200),
+      onlyPrimaryBoard("pm.response.json().data", "boardDId"),
+    ],
   }),
 ]);
 
@@ -2595,16 +2673,7 @@ const adminUsers = folder("Users", [
 ]);
 
 const adminWpUsers = folder("WordPress user capabilities", [
-  request({
-    name: "List WordPress users",
-    url: "/wp-users?type=all",
-    tests: [
-      status(200),
-      `const limited = pm.response.json().data.find((u) => u.name === pm.variables.get('limitedUser'));
-pm.test('limited user is listed', () => pm.expect(limited).to.be.an('object'));
-pm.collectionVariables.set('limitedWpUserId', limited ? String(limited.id) : '0');`,
-    ],
-  }),
+  findLimitedWpUser,
   request({
     name: "Limited user cannot read board settings",
     url: "/pipelines/{{boardCId}}/settings",

@@ -411,6 +411,18 @@ if (!function_exists('wpqt_set_up_db')) {
 
             dbDelta($sql22);
 
+            $sql23 = 'CREATE TABLE ' . TABLE_WP_QUICKTASKER_WP_USER_PIPELINES . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				wp_user_id bigint(20) unsigned NOT NULL,
+				pipeline_id int(11) NOT NULL,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id),
+				UNIQUE KEY wp_user_pipeline (wp_user_id, pipeline_id),
+				INDEX pipeline_id (pipeline_id)
+			) $charset_collate;";
+
+            dbDelta($sql23);
+
             update_option('wp_quicktasker_db_current_version', WP_QUICKTASKER_DB_VERSION);
         }
     }

@@ -60,7 +60,7 @@ DB constants
 */
 
 if (!defined('WP_QUICKTASKER_DB_VERSION')) {
-    define('WP_QUICKTASKER_DB_VERSION', '1.69.0');
+    define('WP_QUICKTASKER_DB_VERSION', '1.70.0');
 }
 
 if (!defined('TABLE_WP_QUICKTASKER_USERS')) {
@@ -149,6 +149,10 @@ if (!defined('TABLE_WP_QUICKTASKER_NOTIFICATIONS')) {
 
 if (!defined('TABLE_WP_QUICKTASKER_USER_NOTIFICATION_PREFERENCES')) {
     define('TABLE_WP_QUICKTASKER_USER_NOTIFICATION_PREFERENCES', $wpdb->prefix . 'quicktasker_user_notification_preferences');
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES')) {
+    define('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES', $wpdb->prefix . 'quicktasker_wp_user_pipelines'); // Boards a WordPress user has been added to
 }
 
 /*
