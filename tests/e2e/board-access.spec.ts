@@ -193,6 +193,50 @@ test.describe('Board access', () => {
     }
   });
 
+  test('a WordPress user can only export the boards they have been added to', async ({ browser, request }) => {
+    const addedBoardName = generateUniqueName('BA-Export-Added');
+    const otherBoardName = generateUniqueName('BA-Export-Other');
+    const addedBoard = await createBoardViaApi(request, addedBoardName, generateUniqueName('BA-Export-StageA'));
+    const otherBoard = await createBoardViaApi(request, otherBoardName, generateUniqueName('BA-Export-StageB'));
+    const addedTaskName = generateUniqueName('BA-Export-TaskA');
+    const otherTaskName = generateUniqueName('BA-Export-TaskB');
+    await createTaskViaApi(request, addedBoard.boardId, addedBoard.stageId!, addedTaskName);
+    await createTaskViaApi(request, otherBoard.boardId, otherBoard.stageId!, otherTaskName);
+    const userLogin = uniqueLogin('wpexport');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    await addWPUserToBoards(request, userId, [addedBoardName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const exportTasks = (query: string) => context.request.get(`/?wpqt-page=json-export${query}`);
+
+      const ownBoard = await exportTasks(`&pipeline_id=${addedBoard.boardId}`);
+      expect(ownBoard.status()).toBe(200);
+      expect(await ownBoard.text()).toContain(addedTaskName);
+
+      // Changing the board in the address does not get around board access.
+      const otherBoardExport = await exportTasks(`&pipeline_id=${otherBoard.boardId}`);
+      expect(otherBoardExport.status()).toBe(403);
+      expect(await otherBoardExport.text()).not.toContain(otherTaskName);
+
+      // Without a board every board would be exported.
+      const everyBoard = await exportTasks('');
+      expect(everyBoard.status()).toBe(403);
+      expect(await everyBoard.text()).not.toContain(otherTaskName);
+      expect((await context.request.get('/?wpqt-page=pdf-export')).status()).toBe(403);
+
+      // Administrators can still export any board.
+      const adminExport = await request.get(`/?wpqt-page=json-export&pipeline_id=${otherBoard.boardId}`);
+      expect(adminExport.status()).toBe(200);
+      expect(await adminExport.text()).toContain(otherTaskName);
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, addedBoardName);
+      await deleteBoardViaApi(request, otherBoardName);
+    }
+  });
+
   test('a link to a board the user has not been added to says so', async ({ browser, request }) => {
     const addedBoardName = generateUniqueName('BA-Link-Added');
     const otherBoardName = generateUniqueName('BA-Link-Other');

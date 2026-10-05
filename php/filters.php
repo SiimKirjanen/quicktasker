@@ -95,6 +95,15 @@ if (!function_exists('quicktasker_custom_pages')) {
             $includeArchive = WPQT\RequestValidation::sanitizeBooleanParam($includeArchive);
             $includePipelineCustomFields = WPQT\RequestValidation::sanitizeBooleanParam($includePipelineCustomFields);
 
+            // Without a board every board is exported, so only users who can access every board may do that.
+            $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+            if ($pipelineId && !$pipelineAccessService->canAccessPipeline(get_current_user_id(), $pipelineId)) {
+                wp_die(esc_html__('You have not been added to this board.', 'quicktasker'), 403);
+            }
+            if (!$pipelineId && null !== $pipelineAccessService->getAccessiblePipelineIds(get_current_user_id())) {
+                wp_die(esc_html__('Only WordPress administrators can export tasks from every board.', 'quicktasker'), 403);
+            }
+
             if ($pipelineId && null === ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId)) {
                 wp_die(esc_html__('Board not found', 'quicktasker'), 404);
             }
