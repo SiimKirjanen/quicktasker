@@ -126,12 +126,31 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
          * site-wide primary board is used.
          *
          * @param int $userId The WordPress user ID.
+         * @param array|null $allPipelines Every board as stored, when the caller has already loaded them.
+         *                                 The primary board is then looked up in this list instead of the database,
+         *                                 so it must still hold the site-wide is_primary values.
          * @return object|null The primary board, or null if there are no boards.
          */
-        public function getPrimaryPipelineForUser($userId)
+        public function getPrimaryPipelineForUser($userId, $allPipelines = null)
         {
             $pipelineRepo = ServiceLocator::get('PipelineRepository');
             $chosenPipelineId = $pipelineRepo->getUserPrimaryPipelineId($userId);
+
+            if (null !== $allPipelines) {
+                $sitePrimaryPipeline = null;
+
+                foreach ($allPipelines as $pipeline) {
+                    if ((int) $pipeline->id === $chosenPipelineId) {
+                        return $pipeline;
+                    }
+
+                    if ('1' === (string) $pipeline->is_primary) {
+                        $sitePrimaryPipeline = $pipeline;
+                    }
+                }
+
+                return $sitePrimaryPipeline;
+            }
 
             if (null !== $chosenPipelineId) {
                 $chosenPipeline = $pipelineRepo->getPipelineById($chosenPipelineId);
@@ -164,18 +183,21 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
         }
 
         /**
-         * Sets the is_primary flag of the given boards from the point of view of a WordPress user.
+         * Sets the is_primary flag of the given boards to match a user's primary board.
          *
          * @param array $pipelines The boards to mark.
-         * @param int $userId The WordPress user ID.
-         * @return array The same boards with is_primary set to '1' for the user's primary board and '0' for the rest.
+         * @param object|null $primaryPipeline The user's primary board, from getPrimaryPipelineForUser().
+         * @return array The same boards with is_primary set to '1' for the primary board and '0' for the rest.
          */
-        public function markPrimaryPipelineForUser($pipelines, $userId)
+        public function markPrimaryPipeline($pipelines, $primaryPipeline)
         {
-            $primaryPipeline = $this->getPrimaryPipelineForUser($userId);
             $primaryPipelineId = $primaryPipeline ? (int) $primaryPipeline->id : null;
 
             foreach ($pipelines as $pipeline) {
+                if (!$pipeline) {
+                    continue;
+                }
+
                 $pipeline->is_primary = (int) $pipeline->id === $primaryPipelineId ? '1' : '0';
             }
 

@@ -1803,6 +1803,7 @@ const adminBoards = folder("Boards", [
     tests: [
       status(200),
       success(true),
+      `pm.test('new board is not the admin\\'s primary board', () => pm.expect(pm.response.json().data.is_primary).to.eql('0'));`,
       save("boardDId", "pm.response.json().data.id"),
     ],
   }),

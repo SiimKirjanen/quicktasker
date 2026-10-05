@@ -26,8 +26,12 @@ class PipelineServicePrimaryBoardTest extends TestCase
     /** @var int|null ID of the site-wide primary board. */
     private $sitePrimaryId;
 
+    /** @var int Number of board queries made through the repository. */
+    private $boardQueries;
+
     protected function setUp(): void
     {
+        $this->boardQueries = 0;
         $this->boards = [
             1 => (object) ['id' => '1', 'name' => 'Board 1', 'is_primary' => '1'],
             2 => (object) ['id' => '2', 'name' => 'Board 2', 'is_primary' => '0'],
@@ -46,9 +50,13 @@ class PipelineServicePrimaryBoardTest extends TestCase
             $this->userChoices[$userId] = (int) $pipelineId;
         });
         $pipelineRepoMock->method('getPipelineById')->willReturnCallback(function ($id) {
+            $this->boardQueries++;
+
             return $this->boards[(int) $id] ?? null;
         });
         $pipelineRepoMock->method('getActivePipeline')->willReturnCallback(function () {
+            $this->boardQueries++;
+
             return null === $this->sitePrimaryId ? null : ($this->boards[$this->sitePrimaryId] ?? null);
         });
         $pipelineRepoMock->method('checkIfPipelineExists')->willReturnCallback(function ($id) {
@@ -118,28 +126,54 @@ class PipelineServicePrimaryBoardTest extends TestCase
         $this->assertSame('3', $this->service->getPrimaryPipelineForUser(10)->id);
     }
 
-    public function test_markPrimaryPipelineForUser_flags_only_the_users_primary_board()
+    public function test_resolving_from_a_loaded_list_uses_the_users_choice_without_querying_boards()
     {
         $this->service->setPrimaryPipelineForUser(10, 3);
+        $this->boardQueries = 0;
 
-        $pipelines = $this->service->markPrimaryPipelineForUser(array_values($this->boards), 10);
+        $primaryPipeline = $this->service->getPrimaryPipelineForUser(10, array_values($this->boards));
+
+        $this->assertSame('3', $primaryPipeline->id);
+        $this->assertSame(0, $this->boardQueries);
+    }
+
+    public function test_resolving_from_a_loaded_list_falls_back_to_the_site_wide_primary_board()
+    {
+        $this->service->setPrimaryPipelineForUser(10, 2);
+        unset($this->boards[2]);
+
+        $primaryPipeline = $this->service->getPrimaryPipelineForUser(10, array_values($this->boards));
+
+        $this->assertSame('1', $primaryPipeline->id);
+        $this->assertSame(0, $this->boardQueries);
+    }
+
+    public function test_resolving_from_a_loaded_list_returns_null_without_a_primary_board()
+    {
+        $this->boards[1]->is_primary = '0';
+
+        $this->assertNull($this->service->getPrimaryPipelineForUser(10, array_values($this->boards)));
+    }
+
+    public function test_markPrimaryPipeline_flags_only_the_given_board()
+    {
+        $pipelines = $this->service->markPrimaryPipeline(array_values($this->boards), $this->boards[3]);
 
         $this->assertSame(['0', '0', '1'], array_column($pipelines, 'is_primary'));
     }
 
-    public function test_markPrimaryPipelineForUser_uses_the_site_wide_primary_board_without_a_choice()
+    public function test_markPrimaryPipeline_flags_nothing_without_a_primary_board()
     {
-        $pipelines = $this->service->markPrimaryPipelineForUser(array_values($this->boards), 10);
-
-        $this->assertSame(['1', '0', '0'], array_column($pipelines, 'is_primary'));
-    }
-
-    public function test_markPrimaryPipelineForUser_flags_nothing_when_there_is_no_primary_board()
-    {
-        $this->sitePrimaryId = null;
-
-        $pipelines = $this->service->markPrimaryPipelineForUser(array_values($this->boards), 10);
+        $pipelines = $this->service->markPrimaryPipeline(array_values($this->boards), null);
 
         $this->assertSame(['0', '0', '0'], array_column($pipelines, 'is_primary'));
+    }
+
+    public function test_markPrimaryPipeline_skips_missing_boards()
+    {
+        $pipelines = $this->service->markPrimaryPipeline([null, $this->boards[2]], $this->boards[2]);
+
+        $this->assertNull($pipelines[0]);
+        $this->assertSame('1', $pipelines[1]->is_primary);
     }
 }

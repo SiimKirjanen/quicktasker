@@ -53,8 +53,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $pipelineService = ServiceLocator::get('PipelineService');
 
                         $pipeline = $pipelineRepo->getFullPipeline($data['id']);
-                        $pipelines = $pipelineService->markPrimaryPipelineForUser($pipelineRepo->getPipelines(), get_current_user_id());
-                        $pipelineService->markPrimaryPipelineForUser([$pipeline], get_current_user_id());
+                        $pipelines = $pipelineRepo->getPipelines();
+                        $primaryPipeline = $pipelineService->getPrimaryPipelineForUser(get_current_user_id(), $pipelines);
+                        $pipelineService->markPrimaryPipeline($pipelines, $primaryPipeline);
+                        $pipelineService->markPrimaryPipeline([$pipeline], $primaryPipeline);
                         $pipelineSettings = ServiceLocator::get('SettingRepository')->getPipelineSettings($data['id']);
                         $pipeline->settings = $pipelineSettings;
 
@@ -89,7 +91,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'callback' => function ($data) {
                     try {
                         $pipelineRepo = new PipelineRepository();
-                        $pipelines = ServiceLocator::get('PipelineService')->markPrimaryPipelineForUser($pipelineRepo->getPipelines(), get_current_user_id());
+                        $pipelineService = ServiceLocator::get('PipelineService');
+                        $pipelines = $pipelineRepo->getPipelines();
+                        $pipelineService->markPrimaryPipeline($pipelines, $pipelineService->getPrimaryPipelineForUser(get_current_user_id(), $pipelines));
 
                         return new WP_REST_Response((new ApiResponse(true, [], $pipelines))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -130,6 +134,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         ]);
 
                         $wpdb->query('COMMIT');
+
+                        $pipelineService->markPrimaryPipeline([$newPipeline], $pipelineService->getPrimaryPipelineForUser($userId));
 
                         return new WP_REST_Response((new ApiResponse(true, [], $newPipeline))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -182,7 +188,7 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $pipeline = $pipelineService->editPipeline($data['id'], $args);
                         $userId = get_current_user_id();
-                        $pipelineService->markPrimaryPipelineForUser([$pipeline], $userId);
+                        $pipelineService->markPrimaryPipeline([$pipeline], $pipelineService->getPrimaryPipelineForUser($userId));
 
                         $logService->log('Board ' . $pipeline->name . ' edited', [
                             'type'          => WP_QT_LOG_TYPE_PIPELINE,
@@ -4448,6 +4454,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $pipeline = $pipelineRepo->getPipelineById($pipelineId);
 
                         $wpdb->query('COMMIT');
+
+                        $pipelineService = ServiceLocator::get('PipelineService');
+                        $pipelineService->markPrimaryPipeline([$pipeline], $pipelineService->getPrimaryPipelineForUser(get_current_user_id()));
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'pipeline' => $pipeline,
