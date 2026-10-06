@@ -2566,9 +2566,26 @@ if (!function_exists('wpqt_register_api_routes')) {
                             WP_QUICKTASKER_VIEW_MY_TASKS              => $data[WP_QUICKTASKER_VIEW_MY_TASKS],
                         ];
 
+                        $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
+                        $couldManageIntegrations = $pipelineAccessRepo->canManageIntegrations($data['id']);
+
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
 
-                        return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
+                        // API tokens and webhooks only work while their creator can manage integrations, so the admin
+                        // is told about the ones on the user's boards that stopped working.
+                        $stoppedIntegrations = [];
+
+                        if ($couldManageIntegrations && !$pipelineAccessRepo->canManageIntegrations($data['id'])) {
+                            $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                            $stoppedIntegrations = $pipelineAccessService->countIntegrationsCreatedByWPUser(
+                                $data['id'],
+                                $pipelineAccessService->getAccessiblePipelineIds($data['id'])
+                            );
+                        }
+
+                        return new WP_REST_Response((new ApiResponse(true, [], [
+                            'stopped_integrations' => $stoppedIntegrations,
+                        ]))->toArray(), 200);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }

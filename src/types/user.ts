@@ -74,6 +74,11 @@ type WPUserPipelinesUpdate = {
   stopped_integrations: PipelineIntegrationCount[];
 };
 
+type WPUserCapabilitiesUpdate = {
+  // API tokens and webhooks the user created, which stopped working because they can no longer manage settings.
+  stopped_integrations: PipelineIntegrationCount[];
+};
+
 type UserEditData = {
   name?: string;
   description?: string;
@@ -94,5 +99,6 @@ export type {
   UserEditData,
   UserFilter,
   WPUser,
+  WPUserCapabilitiesUpdate,
   WPUserPipelinesUpdate,
 };

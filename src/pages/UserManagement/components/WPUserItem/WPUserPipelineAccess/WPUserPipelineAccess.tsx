@@ -8,45 +8,15 @@ import { useWPUserPipelineActions } from "../../../../../hooks/actions/useWPUser
 import { useMissingResourceDetection } from "../../../../../hooks/useMissingResourceDetection";
 import { usePipelines } from "../../../../../hooks/usePipelines";
 import { UserContext } from "../../../../../providers/UserContextProvider";
+import { WPUser, WPUserPipelinesUpdate } from "../../../../../types/user";
 import {
-  PipelineIntegrationCount,
-  WPUser,
-  WPUserPipelinesUpdate,
-} from "../../../../../types/user";
+  formatIntegrationCount,
+  showStoppedIntegrationsWarning,
+} from "../StoppedIntegrationsWarning/StoppedIntegrationsWarning";
 
 const SUMMARY_BOARD_COUNT = 5;
 // More added or removed boards than this are counted instead of named.
 const CHANGED_BOARD_NAME_COUNT = 3;
-
-/**
- * Describes a number of API tokens and webhooks, like "2 API tokens and 1 webhook".
- */
-function formatIntegrationCount({
-  api_token_count,
-  webhook_count,
-}: PipelineIntegrationCount) {
-  const tokens = sprintf(
-    // translators: %d: number of API tokens
-    _n("%d API token", "%d API tokens", api_token_count, "quicktasker"),
-    api_token_count,
-  );
-  const webhooks = sprintf(
-    // translators: %d: number of webhooks
-    _n("%d webhook", "%d webhooks", webhook_count, "quicktasker"),
-    webhook_count,
-  );
-
-  if (api_token_count > 0 && webhook_count > 0) {
-    return sprintf(
-      // translators: 1: number of API tokens, 2: number of webhooks
-      __("%1$s and %2$s", "quicktasker"),
-      tokens,
-      webhooks,
-    );
-  }
-
-  return api_token_count > 0 ? tokens : webhooks;
-}
 
 type Props = {
   user: WPUser;
@@ -198,40 +168,28 @@ function WPUserPipelineAccess({ user }: Props) {
 
   const warnAboutStoppedIntegrations = (update: WPUserPipelinesUpdate) => {
     update.stopped_integrations.forEach((integration) => {
-      const { pipeline_id, api_token_count, webhook_count } = integration;
       // The board is added back by a selection that is still waiting to be saved.
-      if (pendingPipelineIds.current?.includes(String(pipeline_id))) {
+      if (
+        pendingPipelineIds.current?.includes(String(integration.pipeline_id))
+      ) {
         return;
       }
-      const pipeline = pipelines.find((p) => p.id === String(pipeline_id));
+      const pipeline = pipelines.find(
+        (p) => p.id === String(integration.pipeline_id),
+      );
 
-      toast.warning(
-        <div data-testid="stopped-integrations-warning">
-          {sprintf(
-            // translators: 1: user name, 2: number of API tokens and webhooks, 3: board name
-            __(
-              "%1$s created %2$s on %3$s, which stopped working. They work again if %1$s is added back to the board.",
-              "quicktasker",
-            ),
-            user.name,
-            formatIntegrationCount(integration),
-            pipeline ? pipeline.name : "",
-          )}
-          <div className="wpqt-mt-1 wpqt-flex wpqt-gap-3">
-            {api_token_count > 0 && (
-              <a href={`#/board/${pipeline_id}/api-tokens`}>
-                {__("Open API tokens", "quicktasker")}
-              </a>
-            )}
-            {webhook_count > 0 && (
-              <a href={`#/board/${pipeline_id}/webhooks`}>
-                {__("Open webhooks", "quicktasker")}
-              </a>
-            )}
-          </div>
-        </div>,
-        // Stays until closed, so the admin has time to act on it.
-        { autoClose: false },
+      showStoppedIntegrationsWarning(
+        integration,
+        sprintf(
+          // translators: 1: user name, 2: number of API tokens and webhooks, 3: board name
+          __(
+            "%1$s created %2$s on %3$s, which stopped working. They work again if %1$s is added back to the board.",
+            "quicktasker",
+          ),
+          user.name,
+          formatIntegrationCount(integration),
+          pipeline ? pipeline.name : "",
+        ),
       );
     });
   };

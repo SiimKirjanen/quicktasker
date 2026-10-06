@@ -403,9 +403,19 @@ test.describe('WordPress Users Tab – Boards', () => {
       await expect(page.getByTestId('api-token-not-working')).toHaveCount(0);
 
       // The user stays on the board and keeps QuickTasker, but can no longer manage settings.
-      await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const manageSettingsToggle = card.getByTestId('wp-user-manage-settings-toggle');
+      await expect(manageSettingsToggle).toBeChecked({ timeout: TIMEOUTS.NAVIGATION });
+      await manageSettingsToggle.locator('xpath=..').locator('.react-switch-bg').click();
 
-      await page.reload();
+      const warning = page.getByTestId('stopped-integrations-warning');
+      await expect(warning).toContainText(
+        `${userLogin} created 1 API token and 1 webhook on ${boardName}, which stopped working. They work again if ${userLogin} can manage settings again.`,
+      );
+      await expect(manageSettingsToggle).not.toBeChecked();
+
+      await warning.getByRole('link', { name: 'Open API tokens' }).click();
       await expect(page.getByTestId('api-token-not-working')).toHaveText(
         "This token doesn't work: its creator lost access to this board or the permission to manage settings.",
         { timeout: TIMEOUTS.NAVIGATION },

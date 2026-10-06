@@ -3744,7 +3744,11 @@ pm.test('the creator is named', () => pm.expect(webhook && webhook.created_by_na
           quicktasker_access_user_page_app: false,
           quicktasker_view_my_tasks: true,
         },
-        tests: [status(200), success(true)],
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
       }),
       request({
         name: "The outsider's API token stops working without QuickTasker access",
@@ -3811,7 +3815,11 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
           quicktasker_access_user_page_app: false,
           quicktasker_view_my_tasks: true,
         },
-        tests: [status(200), success(true)],
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+        ],
       }),
       request({
         name: "The outsider's API token works again with QuickTasker access",
@@ -3832,7 +3840,11 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
           quicktasker_access_user_page_app: false,
           quicktasker_view_my_tasks: true,
         },
-        tests: [status(200), success(true)],
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
       }),
       request({
         name: "The outsider's API token stops working without the permission to manage settings",
@@ -3871,7 +3883,11 @@ pm.test('the webhook creator lost access', () => pm.expect(webhook && webhook.cr
           quicktasker_access_user_page_app: false,
           quicktasker_view_my_tasks: true,
         },
-        tests: [status(200), success(true)],
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+        ],
       }),
       request({
         name: "The outsider's API token works again with the permission to manage settings",

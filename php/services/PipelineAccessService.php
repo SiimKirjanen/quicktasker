@@ -290,7 +290,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          * Counts the API tokens and webhooks a WordPress user created on each of the given boards.
          *
          * @param int $wpUserId The WordPress user ID.
-         * @param int[] $pipelineIds The board IDs.
+         * @param int[]|null $pipelineIds The board IDs, or null for every board.
          * @return array Arrays with pipeline_id, api_token_count and webhook_count, for the boards that have any.
          */
         public function countIntegrationsCreatedByWPUser($wpUserId, $pipelineIds)
