@@ -49,6 +49,8 @@ describe("PipelineWebhooksInfo", () => {
           webhook_url: "https://example.com/webhook1",
           active: true,
           created_at: "2024-01-01",
+          created_by: null,
+          created_by_name: null,
           webhook_confirm: false,
         },
         {
@@ -60,6 +62,8 @@ describe("PipelineWebhooksInfo", () => {
           webhook_url: "https://example.com/webhook2",
           active: true,
           created_at: "2024-01-01",
+          created_by: null,
+          created_by_name: null,
           webhook_confirm: false,
         },
       ],

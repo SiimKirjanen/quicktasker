@@ -22,6 +22,7 @@ describe("useWPUserPipelineActions", () => {
   it("passes the saved boards to the callback on success", async () => {
     const update = {
       pipeline_ids: [2],
+      stopped_integrations: [],
       removed_pipelines_with_assigned_tasks: [],
     };
     mockedApi.updateWPUserPipelinesRequest.mockResolvedValue({

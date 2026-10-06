@@ -10,6 +10,7 @@ import {
   convertExtendedUserFromServer,
   convertUserFromServer,
   convertUserPageUserFromServer,
+  getCreatorName,
   mapActionTargetTypeToUserType,
   userTypeStrings,
 } from "./user";
@@ -302,5 +303,19 @@ describe("canWPUserAccessPipeline", () => {
         "5",
       ),
     ).toBe(true);
+  });
+});
+
+describe("getCreatorName", () => {
+  it("is the creator's name", () => {
+    expect(getCreatorName("3", "Anna")).toBe("Anna");
+  });
+
+  it("says the creator was deleted when only the ID is left", () => {
+    expect(getCreatorName("3", null)).toBe("Deleted user");
+  });
+
+  it("is null when the creator is unknown", () => {
+    expect(getCreatorName(null, null)).toBeNull();
   });
 });

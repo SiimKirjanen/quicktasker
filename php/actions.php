@@ -39,16 +39,26 @@ if (!function_exists('wpqt_db_migrations')) {
 }
 
 /**
- * Removes a deleted WordPress user from every board.
+ * Removes a deleted WordPress user from every board, and deletes the API tokens and webhooks they created.
  *
  * @param int $userId The ID of the deleted WordPress user.
+ * @param int|null $reassign The ID of the user the content was given to, if any.
+ * @param WP_User|null $user The deleted user. Passed since WordPress 5.5.
  * @return void
  */
-add_action('deleted_user', 'wpqt_delete_wp_user_pipeline_access');
+add_action('deleted_user', 'wpqt_delete_wp_user_pipeline_access', 10, 3);
 if (!function_exists('wpqt_delete_wp_user_pipeline_access')) {
-    function wpqt_delete_wp_user_pipeline_access($userId)
+    function wpqt_delete_wp_user_pipeline_access($userId, $reassign = null, $user = null)
     {
         ServiceLocator::get('PipelineAccessRepository')->deleteWPUserAccess($userId);
+
+        $userName = $user instanceof WP_User ? $user->display_name : 'WordPress user ' . $userId;
+
+        try {
+            ServiceLocator::get('PipelineAccessService')->deleteIntegrationsCreatedByWPUser($userId, null, $userName . ' was deleted');
+        } catch (Throwable $e) {
+            error_log('QuickTasker failed to delete the API tokens and webhooks of a deleted user: ' . $e->getMessage());
+        }
     }
 }
 

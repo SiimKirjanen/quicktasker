@@ -210,6 +210,7 @@ const setup = folder(
         status(200),
         success(true),
         `pm.test('plain token is returned once', () => pm.expect(pm.response.json().data.token).to.match(/^\\d+-[a-f0-9]{64}$/));`,
+        `pm.test('the creator is saved', () => pm.expect(pm.response.json().data.created_by).to.not.be.null);`,
         save("tokenFull", "pm.response.json().data.token"),
       ],
     }),
@@ -3023,7 +3024,11 @@ const adminAutomations = folder("Automations", [
       automationTrigger: "task-done",
       automationAction: "archive-task",
     },
-    tests: [status(200), save("automationCId", "pm.response.json().data.id")],
+    tests: [
+      status(200),
+      `pm.test('the creator is saved', () => pm.expect(pm.response.json().data.created_by).to.not.be.null);`,
+      save("automationCId", "pm.response.json().data.id"),
+    ],
   }),
   request({
     name: "Automation rejects unknown trigger",
@@ -3046,6 +3051,8 @@ const adminAutomations = folder("Automations", [
         "pm.response.json().data.automations",
         "automationCId",
       ),
+      `const automation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('automationCId'));
+pm.test('the creator is named', () => pm.expect(automation && automation.created_by_name).to.be.a('string').and.not.be.empty);`,
     ],
   }),
   request({
@@ -3654,11 +3661,360 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
         ],
       }),
       request({
+        name: "Outsider creates an API token on board E",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        body: { name: "Outsider {{runId}}", ...allTokenPermissions },
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('the outsider is saved as the creator', () => pm.expect(String(pm.response.json().data.created_by)).to.eql(pm.collectionVariables.get('outsiderWpUserId')));`,
+          save("outsiderTokenId", "pm.response.json().data.id"),
+          save("outsiderToken", "pm.response.json().data.token"),
+        ],
+      }),
+      request({
+        name: "Outsider creates a webhook on board E",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        body: {
+          target_type: "task",
+          target_action: "deleted",
+          webhook_url: `${WEBHOOK_RECEIVER}/capture/qt-outsider-{{runId}}`,
+          webhook_confirm: false,
+        },
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('the outsider is saved as the creator', () => pm.expect(String(pm.response.json().data.webhook.created_by)).to.eql(pm.collectionVariables.get('outsiderWpUserId')));`,
+        ],
+      }),
+      request({
+        name: "Outsider creates an automation on board E",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/automations",
+        body: {
+          automationTarget: "task",
+          automationTrigger: "task-done",
+          automationAction: "archive-task",
+        },
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('the outsider can access the board', () => pm.expect(pm.response.json().data.created_by_has_board_access).to.eql(true));`,
+          save("outsiderAutomationId", "pm.response.json().data.id"),
+        ],
+      }),
+      request({
+        name: "Board E API tokens show who created them",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        tests: [
+          status(200),
+          `const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));
+pm.test('the outsider is the creator', () => pm.expect(String(token && token.created_by)).to.eql(pm.collectionVariables.get('outsiderWpUserId')));
+pm.test('the creator is named', () => pm.expect(token && token.created_by_name).to.be.a('string').and.not.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Board E webhooks show who created them",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        tests: [
+          status(200),
+          `const webhook = pm.response.json().data.webhooks.find((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'));
+pm.test('the outsider created a webhook', () => pm.expect(webhook).to.be.an('object'));
+pm.test('the creator is named', () => pm.expect(webhook && webhook.created_by_name).to.be.a('string').and.not.be.empty);`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token works while they are on board E",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(200)],
+      }),
+      request({
+        name: "Turn off the outsider's QuickTasker access",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: false,
+          quicktasker_admin_role_allow_delete: true,
+          quicktasker_admin_role_manage_users: false,
+          quicktasker_admin_role_manage_settings: true,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token stops working without QuickTasker access",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(403), wpErrorCode("token_creator_no_access")],
+      }),
+      request({
+        name: "Board E marks the outsider's API token and webhook as created by someone without access",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        tests: [
+          status(200),
+          `const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));
+pm.test('the token creator has no access', () => pm.expect(token && token.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "Board E marks the outsider's webhook as created by someone without access",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        tests: [
+          status(200),
+          `const webhook = pm.response.json().data.webhooks.find((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'));
+pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "Create a task on board E to delete while the outsider has no access",
+        method: "POST",
+        url: "/tasks",
+        body: {
+          name: "Skipped webhook task {{runId}}",
+          stageId: "{{stageE1Id}}",
+          pipelineId: "{{boardEId}}",
+        },
+        tests: [
+          status(200),
+          save("skippedWebhookTaskId", "pm.response.json().data.newTask.id"),
+        ],
+      }),
+      request({
+        name: "Delete the task, which would trigger the outsider's webhook",
+        method: "DELETE",
+        url: "/tasks/{{skippedWebhookTaskId}}",
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "The outsider's webhook is skipped and the skip is logged",
+        url: "/global-logs?order=DESC&numberOfLogs=200&search=its%20creator%20lost%20access",
+        tests: [
+          status(200),
+          `pm.test('the skipped webhook is logged on board E', () => pm.expect(pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Turn the outsider's QuickTasker access back on",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: true,
+          quicktasker_admin_role_manage_users: false,
+          quicktasker_admin_role_manage_settings: true,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token works again with QuickTasker access",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(200)],
+      }),
+      request({
+        name: "Turn off only the outsider's permission to manage settings",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: true,
+          quicktasker_admin_role_manage_users: false,
+          quicktasker_admin_role_manage_settings: false,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token stops working without the permission to manage settings",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(403), wpErrorCode("token_creator_no_access")],
+      }),
+      request({
+        name: "Board E marks the outsider's API token while they cannot manage settings",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        tests: [
+          status(200),
+          `const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));
+pm.test('the token creator lost access', () => pm.expect(token && token.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "Board E marks the outsider's webhook while they cannot manage settings",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        tests: [
+          status(200),
+          `const webhook = pm.response.json().data.webhooks.find((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'));
+pm.test('the webhook creator lost access', () => pm.expect(webhook && webhook.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "Turn the outsider's permission to manage settings back on",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: true,
+          quicktasker_admin_role_manage_users: false,
+          quicktasker_admin_role_manage_settings: true,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token works again with the permission to manage settings",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(200)],
+      }),
+      request({
+        name: "Create a task on board E to delete while the outsider has access",
+        method: "POST",
+        url: "/tasks",
+        body: {
+          name: "Sent webhook task {{runId}}",
+          stageId: "{{stageE1Id}}",
+          pipelineId: "{{boardEId}}",
+        },
+        tests: [
+          status(200),
+          save("sentWebhookTaskId", "pm.response.json().data.newTask.id"),
+        ],
+      }),
+      request({
+        name: "Delete the task, which triggers the outsider's webhook",
+        method: "DELETE",
+        url: "/tasks/{{sentWebhookTaskId}}",
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "The outsider's webhook sends again",
+        rawUrl: `${WEBHOOK_RECEIVER}/captured/qt-outsider-{{runId}}`,
+        auth: noAuth,
+        tests: [
+          `// Delivery may be asynchronous: poll this request up to 20 times.
+const captured = pm.response.json();
+const attempts = Number(pm.collectionVariables.get('webhookPollAttempts') || 0);
+if ((!Array.isArray(captured) || captured.length === 0) && attempts < 20) {
+  pm.collectionVariables.set('webhookPollAttempts', String(attempts + 1));
+  setTimeout(() => {}, 250);
+  pm.execution.setNextRequest(pm.info.requestName);
+} else {
+  pm.collectionVariables.set('webhookPollAttempts', '0');
+  pm.test('only the task deleted with access was sent', () => {
+    pm.expect(captured).to.be.an('array').with.lengthOf(1);
+    pm.expect(JSON.stringify(captured[0].body)).to.include('Sent webhook task ' + pm.collectionVariables.get('runId'));
+  });
+}`,
+        ],
+      }),
+      request({
+        name: "Clear the outsider's captured webhooks",
+        method: "DELETE",
+        rawUrl: `${WEBHOOK_RECEIVER}/captured/qt-outsider-{{runId}}`,
+        auth: noAuth,
+        tests: [status(200)],
+      }),
+      request({
         name: "Remove outsider from board E",
         method: "PATCH",
         url: "/wp-users/{{outsiderWpUserId}}/pipelines",
         body: { pipeline_ids: [] },
-        tests: [status(200), success(true)],
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
+      }),
+      request({
+        name: "The outsider's automation is kept and marked as created by someone without access",
+        url: "/pipelines/{{boardEId}}/automations",
+        tests: [
+          status(200),
+          `const automation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('outsiderAutomationId'));
+pm.test('the automation is kept', () => pm.expect(automation).to.be.an('object'));
+pm.test('the creator has no access to the board', () => pm.expect(automation && automation.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token stops working after the removal",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(403), wpErrorCode("token_creator_no_access")],
+      }),
+      request({
+        name: "Board E keeps the outsider's API token, marked as created by someone without access",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        tests: [
+          status(200),
+          `const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));
+pm.test('the token is kept', () => pm.expect(token).to.be.an('object'));
+pm.test('the token creator has no access', () => pm.expect(token && token.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "Board E keeps the outsider's webhook, marked as created by someone without access",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        tests: [
+          status(200),
+          `const webhook = pm.response.json().data.webhooks.find((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'));
+pm.test('the webhook is kept', () => pm.expect(webhook).to.be.an('object'));
+pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "Add the outsider back to board E",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/pipelines",
+        body: { pipeline_ids: ["{{boardEId}}"] },
+        tests: [
+          status(200),
+          `pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token works again once they are added back",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(200)],
+      }),
+      request({
+        name: "Remove outsider from board E again",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/pipelines",
+        body: { pipeline_ids: [] },
+        tests: [
+          status(200),
+          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
       }),
     ]),
     folder(

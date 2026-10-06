@@ -1,16 +1,20 @@
 import { updateWPUserPermissionsRequest } from "../../api/api";
 import { WPUserCapabilities } from "../../types/capabilities";
+import { WPUserCapabilitiesUpdate } from "../../types/user";
 
 function useCapabilityActions() {
   const updateWPUserCapabilities = async (
     userId: string,
     capabilities: WPUserCapabilities,
-    callback?: () => void,
+    callback?: (update: WPUserCapabilitiesUpdate) => void,
     onFailueCallback?: (error: unknown) => void,
   ) => {
     try {
-      await updateWPUserPermissionsRequest(userId, capabilities);
-      if (callback) callback();
+      const response = await updateWPUserPermissionsRequest(
+        userId,
+        capabilities,
+      );
+      if (callback) callback(response.data);
     } catch (e) {
       if (onFailueCallback) onFailueCallback(e);
     }

@@ -963,10 +963,11 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
          * @param int|null $automationActionTargetId The ID of the target for the action, can be null.
          * @param string|null $automationActionTargetType The type of the target for the action, can be null.
          * @param string|null $metadata Additional metadata for the automation, can be null.
+         * @param int|null $createdBy The ID of the WordPress user who created the automation, can be null.
          * @return array The created automation data.
          * @throws \Exception If the automation creation fails.
          */
-        public function createAutomation($pipelineId, $targetId, $targetType, $trigger, $action, $automationActionTargetId = null, $automationActionTargetType = null, $metadata = null)
+        public function createAutomation($pipelineId, $targetId, $targetType, $trigger, $action, $automationActionTargetId = null, $automationActionTargetType = null, $metadata = null, $createdBy = null)
         {
             global $wpdb;
 
@@ -981,6 +982,7 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
                 'automation_action_target_id'   => $automationActionTargetId,
                 'automation_action_target_type' => $automationActionTargetType,
                 'metadata'                      => $encryptMeta ? ServiceLocator::get('SecretsService')->encrypt($metadata) : $metadata,
+                'created_by'                    => $createdBy,
                 'created_at'                    => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'updated_at'                    => ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
             ];

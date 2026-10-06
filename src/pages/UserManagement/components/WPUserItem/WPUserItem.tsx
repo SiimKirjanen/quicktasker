@@ -1,13 +1,18 @@
 import { useContext, useState } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../components/Card/Card";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { Toggle } from "../../../../components/common/Toggle/Toggle";
 import { Loading } from "../../../../components/Loading/Loading";
 import { useCapabilityActions } from "../../../../hooks/actions/useCapabilityActions";
+import { usePipelines } from "../../../../hooks/usePipelines";
 import { AppContext } from "../../../../providers/AppContextProvider";
 import { WPUserCapabilities } from "../../../../types/capabilities";
-import { WPUser } from "../../../../types/user";
+import { WPUser, WPUserCapabilitiesUpdate } from "../../../../types/user";
+import {
+  formatIntegrationCount,
+  showStoppedIntegrationsWarning,
+} from "./StoppedIntegrationsWarning/StoppedIntegrationsWarning";
 import { WPUserPipelineAccess } from "./WPUserPipelineAccess/WPUserPipelineAccess";
 
 type Props = {
@@ -35,8 +40,31 @@ function WPUserItem({ user }: Props) {
     });
   const [updating, setUpdating] = useState(false);
   const { updateWPUserCapabilities } = useCapabilityActions();
+  const { pipelines } = usePipelines();
   const adminSubTogglesDisabled =
     isOwnUser || !capabilitySettings.quicktasker_admin_role;
+
+  const warnAboutStoppedIntegrations = (update: WPUserCapabilitiesUpdate) => {
+    update.stopped_integrations.forEach((integration) => {
+      const pipeline = pipelines.find(
+        (p) => p.id === String(integration.pipeline_id),
+      );
+
+      showStoppedIntegrationsWarning(
+        integration,
+        sprintf(
+          // translators: 1: user name, 2: number of API tokens and webhooks, 3: board name
+          __(
+            "%2$s by %1$s on %3$s won't work without access to manage settings.",
+            "quicktasker",
+          ),
+          user.name,
+          formatIntegrationCount(integration),
+          pipeline ? pipeline.name : "",
+        ),
+      );
+    });
+  };
 
   const onToggleChange = async (checked: boolean, capability: string) => {
     if (updating || isOwnUser) {
@@ -54,7 +82,7 @@ function WPUserItem({ user }: Props) {
     await updateWPUserCapabilities(
       user.id,
       updatedCapabilitySettings,
-      () => {},
+      warnAboutStoppedIntegrations,
       () => {
         setCapabilitySettings(oldCapabilities);
       },
@@ -114,6 +142,7 @@ function WPUserItem({ user }: Props) {
                 capabilitySettings.quicktasker_admin_role_manage_settings
               }
               disabled={adminSubTogglesDisabled}
+              dataTestId="wp-user-manage-settings-toggle"
               handleChange={(checked: boolean) => {
                 onToggleChange(
                   checked,

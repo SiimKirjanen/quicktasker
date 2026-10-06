@@ -28,6 +28,13 @@ test.describe('Task Automations', () => {
     await expect(page.getByText('Task marked as done').first()).not.toBeVisible();
   });
 
+  test('should show who created an automation', async ({ page }) => {
+    await setupBoardForAutomations(page, 'AT-Creator');
+    await createTaskAutomation(page, 'Task marked as done', 'Archive task');
+
+    await expect(page.getByTestId('automation-created-by')).toHaveText('admin');
+  });
+
   test('should open automation logs modal', async ({ page }) => {
     await setupBoardForAutomations(page, 'AT-Logs');
     await createTaskAutomation(page, 'Task marked as done', 'Archive task');

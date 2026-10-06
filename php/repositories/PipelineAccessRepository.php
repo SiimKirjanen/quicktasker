@@ -25,6 +25,17 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
         }
 
         /**
+         * Checks if a WordPress user can manage API tokens, webhooks and automations.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @return bool True if the user exists and has the base QuickTasker and the manage settings capabilities.
+         */
+        public function canManageIntegrations($wpUserId)
+        {
+            return user_can($wpUserId, WP_QUICKTASKER_ADMIN_ROLE) && user_can($wpUserId, WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS);
+        }
+
+        /**
          * Retrieves the IDs of the boards a WordPress user has been added to.
          *
          * @param int $wpUserId The WordPress user ID.

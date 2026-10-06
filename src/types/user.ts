@@ -57,12 +57,26 @@ type WPUser = {
   can_access_all_pipelines?: boolean;
 };
 
+// API tokens and webhooks a WordPress user created on a board.
+type PipelineIntegrationCount = {
+  pipeline_id: number;
+  api_token_count: number;
+  webhook_count: number;
+};
+
 type WPUserPipelinesUpdate = {
   pipeline_ids: number[];
   removed_pipelines_with_assigned_tasks: {
     pipeline_id: number;
     task_count: number;
   }[];
+  // API tokens and webhooks the user created on the removed boards, which don't work without access to them.
+  stopped_integrations: PipelineIntegrationCount[];
+};
+
+type WPUserCapabilitiesUpdate = {
+  // API tokens and webhooks the user created, which don't work now that they can no longer manage settings.
+  stopped_integrations: PipelineIntegrationCount[];
 };
 
 type UserEditData = {
@@ -78,11 +92,13 @@ enum UserTypes {
 export { UserTypes };
 export type {
   ExtendedUser,
+  PipelineIntegrationCount,
   ServerExtendedUser,
   ServerUser,
   User,
   UserEditData,
   UserFilter,
   WPUser,
+  WPUserCapabilitiesUpdate,
   WPUserPipelinesUpdate,
 };

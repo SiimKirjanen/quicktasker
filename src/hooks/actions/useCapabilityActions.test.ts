@@ -12,8 +12,15 @@ const mockedApi = api as jest.Mocked<typeof api>;
 beforeEach(() => jest.clearAllMocks());
 
 describe("useCapabilityActions", () => {
-  it("invokes callback on success", async () => {
-    mockedApi.updateWPUserPermissionsRequest.mockResolvedValue({} as never);
+  it("invokes callback on success with the update", async () => {
+    const update = {
+      stopped_integrations: [
+        { pipeline_id: 1, api_token_count: 1, webhook_count: 0 },
+      ],
+    };
+    mockedApi.updateWPUserPermissionsRequest.mockResolvedValue({
+      data: update,
+    } as never);
     const success = jest.fn();
     const failure = jest.fn();
     const { result } = renderHook(() => useCapabilityActions());
@@ -29,7 +36,7 @@ describe("useCapabilityActions", () => {
       "u1",
       {},
     );
-    expect(success).toHaveBeenCalled();
+    expect(success).toHaveBeenCalledWith(update);
     expect(failure).not.toHaveBeenCalled();
   });
 

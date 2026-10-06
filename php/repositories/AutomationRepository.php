@@ -96,7 +96,7 @@ if (!class_exists('WPQT\Automation\AutomationRepository')) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                'SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at, active FROM ' . TABLE_WP_QUICKTASKER_AUTOMATIONS . ' WHERE id = %d',
+                $this->getAutomationWithCreatorQuery() . ' WHERE a.id = %d',
                 $automationID
             );
 
@@ -118,13 +118,27 @@ if (!class_exists('WPQT\Automation\AutomationRepository')) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                'SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, created_at, metadata, updated_at, active FROM ' . TABLE_WP_QUICKTASKER_AUTOMATIONS . ' WHERE pipeline_id = %d',
+                $this->getAutomationWithCreatorQuery() . ' WHERE a.pipeline_id = %d',
                 $pipelineId
             );
 
             $results = $wpdb->get_results($query);
 
             return $this->decryptSensitiveMetadata($results);
+        }
+
+        /**
+         * Builds the query that selects automations with the name of the WordPress user who created each one.
+         *
+         * @return string The SELECT and FROM clauses, with the automations table aliased a.
+         */
+        private function getAutomationWithCreatorQuery()
+        {
+            global $wpdb;
+
+            return 'SELECT a.id, a.pipeline_id, a.target_id, a.target_type, a.automation_trigger, a.automation_action, a.automation_action_target_id, a.automation_action_target_type, a.metadata, a.created_at, a.updated_at, a.active, a.created_by, u.display_name AS created_by_name
+                FROM ' . TABLE_WP_QUICKTASKER_AUTOMATIONS . ' AS a
+                LEFT JOIN ' . $wpdb->users . ' AS u ON u.ID = a.created_by';
         }
 
         /**

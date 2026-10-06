@@ -113,6 +113,11 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                 return new WP_Error('invalid_token', 'Invalid authorization token: associated pipeline not found.', ['status' => 401]);
             }
 
+            // The token stops working when its creator loses access to the board or the permission to manage settings.
+            if (!ServiceLocator::get('PipelineAccessService')->canCreatorUseBoard($savedToken->created_by ?? null, $savedToken->pipeline_id)) {
+                return new WP_Error('token_creator_no_access', 'The user who created this token lost access to the board or the permission to manage settings.', ['status' => 403]);
+            }
+
             if (!empty($requiredPermissions) && !self::checkTokenPermissions($savedToken, $requiredPermissions)) {
                 return new WP_Error('insufficient_permissions', 'The token does not have the required permissions.', ['status' => 403]);
             }
@@ -184,6 +189,7 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                 'name'                   => null,
                 'pipeline_id'            => null,
                 'description'            => '',
+                'created_by'             => null,
                 'get_pipeline'           => true,
                 'patch_pipeline'         => false,
                 'get_pipeline_stages'    => false,
@@ -215,6 +221,7 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                     'pipeline_id'            => intval($args['pipeline_id']),
                     'description'            => sanitize_textarea_field($args['description']),
                     'token'                  => $hashedToken,
+                    'created_by'             => $args['created_by'],
                     'created_at'             => $timeRepository->getCurrentUTCTime(),
                     'updated_at'             => $timeRepository->getCurrentUTCTime(),
                     'get_pipeline'           => $args['get_pipeline'],
@@ -233,6 +240,7 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                     '%d', // pipeline_id
                     '%s', // description
                     '%s', // token
+                    '%d', // created_by
                     '%s', // created_at
                     '%s', // updated_at
                     '%d', // get_pipeline

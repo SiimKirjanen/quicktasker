@@ -20,7 +20,7 @@ if (!class_exists('WPQT\Webhooks\WebhookRepository')) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at FROM ' . TABLE_WP_QUICKTASKER_WEBHOOKS . ' WHERE pipeline_id = %d',
+                $this->getWebhookQuery() . ' WHERE w.pipeline_id = %d',
                 $pipelineId
             );
 
@@ -38,11 +38,51 @@ if (!class_exists('WPQT\Webhooks\WebhookRepository')) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at FROM ' . TABLE_WP_QUICKTASKER_WEBHOOKS . ' WHERE id = %d',
+                $this->getWebhookQuery() . ' WHERE w.id = %d',
                 $id
             );
 
             return $wpdb->get_row($query);
+        }
+
+        /**
+         * Retrieves the webhooks a WordPress user created, active or not.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[]|null $pipelineIds Only webhooks on these boards, or null for webhooks on every board.
+         * @return array Webhook objects.
+         */
+        public function getWebhooksCreatedByWPUser($wpUserId, $pipelineIds = null)
+        {
+            global $wpdb;
+
+            if (null !== $pipelineIds && empty($pipelineIds)) {
+                return [];
+            }
+
+            $sql = $this->getWebhookQuery() . ' WHERE w.created_by = %d';
+            $params = [$wpUserId];
+
+            if (null !== $pipelineIds) {
+                $sql .= ' AND w.pipeline_id IN (' . implode(',', array_fill(0, count($pipelineIds), '%d')) . ')';
+                $params = array_merge($params, array_values($pipelineIds));
+            }
+
+            return $wpdb->get_results($wpdb->prepare($sql . ' ORDER BY w.id ASC', $params));
+        }
+
+        /**
+         * Builds the query that selects webhooks with the name of the WordPress user who created each one.
+         *
+         * @return string The SELECT and FROM clauses, with the webhooks table aliased w.
+         */
+        private function getWebhookQuery()
+        {
+            global $wpdb;
+
+            return 'SELECT w.id, w.pipeline_id, w.target_type, w.target_id, w.target_action, w.webhook_url, w.webhook_confirm, w.active, w.created_at, w.created_by, u.display_name AS created_by_name
+                FROM ' . TABLE_WP_QUICKTASKER_WEBHOOKS . ' AS w
+                LEFT JOIN ' . $wpdb->users . ' AS u ON u.ID = w.created_by';
         }
 
         /**
@@ -64,13 +104,13 @@ if (!class_exists('WPQT\Webhooks\WebhookRepository')) {
             $args = wp_parse_args($args, $defaults);
 
             if (null === $pipelineId) {
-                $sql = 'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at
+                $sql = 'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at, created_by
                          FROM ' . TABLE_WP_QUICKTASKER_WEBHOOKS . '
                          WHERE pipeline_id IS NULL AND target_type = %s AND target_action = %s';
                 $prepArgs = [$args['target_type'], $args['target_action']];
             } else {
                 // Match specific pipeline
-                $sql = 'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at
+                $sql = 'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at, created_by
                          FROM ' . TABLE_WP_QUICKTASKER_WEBHOOKS . '
                          WHERE pipeline_id = %d AND target_type = %s AND target_action = %s';
                 $prepArgs = [(int) $pipelineId, $args['target_type'], $args['target_action']];

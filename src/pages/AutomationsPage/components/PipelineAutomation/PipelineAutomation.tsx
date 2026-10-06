@@ -9,6 +9,7 @@ import { __ } from "@wordpress/i18n";
 import { TbLogs } from "react-icons/tb";
 
 import { WPQTCard } from "../../../../components/Card/Card";
+import { CreatedByDataItem } from "../../../../components/Card/CreatedByDataItem/CreatedByDataItem";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { WPQTConfirmTooltip } from "../../../../components/Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
@@ -124,6 +125,12 @@ function PipelineAutomation({ automation }: Props) {
       <WPQTCardDataItem
         label={__("Created", "quicktasker")}
         value={convertToTimezone(automation.created_at, timezone)}
+      />
+      <CreatedByDataItem
+        createdBy={automation.created_by}
+        createdByName={automation.created_by_name}
+        hasBoardAccess={automation.created_by_has_board_access}
+        testId="automation"
       />
     </WPQTCard>
   );

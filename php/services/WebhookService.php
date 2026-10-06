@@ -27,7 +27,8 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
             $defaults = [
                 'created_at'      => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'target_id'       => null,
-                'webhook_confirm' => false
+                'webhook_confirm' => false,
+                'created_by'      => null,
             ];
             $args = wp_parse_args($args, $defaults);
 
@@ -39,6 +40,7 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
                 'webhook_url'     => $args['webhook_url'],
                 'created_at'      => $args['created_at'],
                 'webhook_confirm' => $args['webhook_confirm'],
+                'created_by'      => $args['created_by'],
             ]);
 
             if (false === $result) {
@@ -128,6 +130,17 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
                     if (!$webhook->active) {
                         if ($shouldLog) {
                             $logService->log('Webhook ' . $webHookName . ' skipped (inactive)', $baseLog);
+                        }
+
+                        continue;
+                    }
+
+                    // The webhook stops sending board data when its creator loses access to the board or the permission to manage settings.
+                    if (!ServiceLocator::get('PipelineAccessService')->canCreatorUseBoard($webhook->created_by ?? null, $webhook->pipeline_id)) {
+                        if ($shouldLog) {
+                            $logService->log('Webhook ' . $webHookName . ' skipped (its creator lost access to the board or the permission to manage settings)', array_merge($baseLog, [
+                              'log_status' => WP_QT_LOG_STATUS_ERROR
+                            ]));
                         }
 
                         continue;

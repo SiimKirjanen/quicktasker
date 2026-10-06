@@ -44,6 +44,7 @@ import {
   UserEditData,
   UserTypes,
   WPUser,
+  WPUserCapabilitiesUpdate,
   WPUserPipelinesUpdate,
 } from "../types/user";
 import { ServerUserSession } from "../types/user-session";
@@ -652,7 +653,7 @@ function getWPUsersRequest(type: string): Promise<WPQTResponse<WPUser[]>> {
 function updateWPUserPermissionsRequest(
   userId: string,
   capabilities: WPUserCapabilities,
-) {
+): Promise<WPQTResponse<WPUserCapabilitiesUpdate>> {
   return apiFetch({
     path: `/wpqt/v1/wp-users/${userId}/capabilities`,
     method: "PATCH",

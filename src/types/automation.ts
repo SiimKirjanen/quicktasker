@@ -81,6 +81,12 @@ type BaseAutomation = {
   created_at: string;
   updated_at: string;
   metadata: string | null;
+  // The WordPress user who created the automation. Unknown for automations created before it was saved.
+  created_by: string | null;
+  // Null when the user has been deleted.
+  created_by_name: string | null;
+  // Whether the creator can still access the board and manage settings. False when they have been deleted, null when unknown.
+  created_by_has_board_access?: boolean | null;
 };
 
 type Automation = BaseAutomation & {

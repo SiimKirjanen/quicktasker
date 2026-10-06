@@ -1,5 +1,10 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
+import { toast } from "react-toastify";
+
+jest.mock("react-toastify", () => ({
+  toast: { warning: jest.fn() },
+}));
 
 const mockUpdateWPUserCapabilities = jest.fn();
 jest.mock("../../../../hooks/actions/useCapabilityActions", () => ({
@@ -62,7 +67,13 @@ import {
   AppContext,
   initialState,
 } from "../../../../providers/AppContextProvider";
-import { UserTypes, WPUser } from "../../../../types/user";
+import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
+import { Pipeline } from "../../../../types/pipeline";
+import {
+  UserTypes,
+  WPUser,
+  WPUserCapabilitiesUpdate,
+} from "../../../../types/user";
 import { WPUserItem } from "./WPUserItem";
 
 function makeWPUser(allcaps: Record<string, boolean> = {}): WPUser {
@@ -218,6 +229,81 @@ describe("WPUserItem", () => {
     });
 
     expect(screen.queryByTestId("loading-spinner")).toBeNull();
+  });
+
+  describe("API tokens and webhooks that stop working", () => {
+    function respondWithStopped(
+      stopped: WPUserCapabilitiesUpdate["stopped_integrations"],
+    ) {
+      mockUpdateWPUserCapabilities.mockImplementation(
+        async (
+          _id: string,
+          _settings: unknown,
+          onSuccess: (update: WPUserCapabilitiesUpdate) => void,
+        ) => onSuccess({ stopped_integrations: stopped }),
+      );
+    }
+
+    function renderWithBoards(user: WPUser) {
+      return render(
+        <PipelinesContext.Provider
+          value={{
+            state: {
+              pipelines: [{ id: "1", name: "Board 1" }] as Pipeline[],
+            },
+            pipelinesDispatch: jest.fn(),
+          }}
+        >
+          <WPUserItem user={user} />
+        </PipelinesContext.Provider>,
+      );
+    }
+
+    it("warns when turning off a permission stops them", async () => {
+      respondWithStopped([
+        { pipeline_id: 1, api_token_count: 1, webhook_count: 2 },
+      ]);
+      renderWithBoards(
+        makeWPUser({
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_manage_settings: true,
+        }),
+      );
+
+      await act(async () => {
+        fireEvent.click(screen.getAllByRole("checkbox")[2]);
+      });
+
+      expect(toast.warning).toHaveBeenCalledWith(expect.anything(), {
+        autoClose: false,
+      });
+      render((toast.warning as jest.Mock).mock.calls[0][0]);
+      expect(
+        screen.getByTestId("stopped-integrations-warning"),
+      ).toHaveTextContent(
+        "1 API token and 2 webhooks by Bob on Board 1 won't work without access to manage settings.",
+      );
+      expect(screen.getByText("Open API tokens")).toHaveAttribute(
+        "href",
+        "#/board/1/api-tokens",
+      );
+      expect(screen.getByText("Open webhooks")).toHaveAttribute(
+        "href",
+        "#/board/1/webhooks",
+      );
+    });
+
+    it("does not warn when nothing stopped working", async () => {
+      respondWithStopped([]);
+      renderWithBoards(makeWPUser({ quicktasker_admin_role: true }));
+
+      await act(async () => {
+        fireEvent.click(screen.getAllByRole("checkbox")[3]);
+      });
+
+      expect(mockUpdateWPUserCapabilities).toHaveBeenCalledTimes(1);
+      expect(toast.warning).not.toHaveBeenCalled();
+    });
   });
 
   describe("own user card", () => {

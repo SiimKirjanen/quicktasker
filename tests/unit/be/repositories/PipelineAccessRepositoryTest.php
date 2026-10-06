@@ -44,6 +44,14 @@ if (!defined('TABLE_WP_QUICKTASKER_UPLOADS')) {
     define('TABLE_WP_QUICKTASKER_UPLOADS', 'wp_quicktasker_uploads');
 }
 
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE', 'quicktasker_admin_role');
+}
+
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS', 'quicktasker_admin_role_manage_settings');
+}
+
 if (!function_exists('user_can')) {
     function user_can($userId, $capability)
     {
@@ -84,6 +92,8 @@ class PipelineAccessRepositoryTest extends TestCase
         $GLOBALS['wpqt_test_user_caps'] = [
             1 => ['manage_options'],
             2 => ['quicktasker_admin_role'],
+            3 => ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings'],
+            4 => ['quicktasker_admin_role_manage_settings'],
         ];
 
         $timeRepo = $this->getMockBuilder(stdClass::class)
@@ -105,6 +115,14 @@ class PipelineAccessRepositoryTest extends TestCase
     {
         $this->assertTrue($this->repository->canAccessAllPipelines(1));
         $this->assertFalse($this->repository->canAccessAllPipelines(2));
+    }
+
+    public function test_only_users_with_quicktasker_and_manage_settings_can_manage_integrations()
+    {
+        $this->assertTrue($this->repository->canManageIntegrations(3));
+        $this->assertFalse($this->repository->canManageIntegrations(2));
+        $this->assertFalse($this->repository->canManageIntegrations(4));
+        $this->assertFalse($this->repository->canManageIntegrations(99));
     }
 
     public function test_getPipelineIdsByWPUserId_returns_integer_ids_of_the_user()

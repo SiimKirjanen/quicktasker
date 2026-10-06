@@ -40,6 +40,14 @@ test.describe('Board Webhooks', () => {
     await expect(page.getByRole('button', { name: 'Create Webhook' })).toBeDisabled();
   });
 
+  test('should show who created a webhook', async ({ page }) => {
+    await setupBoardForWebhooks(page, 'WH-Creator');
+
+    await createWebhook(page);
+
+    await expect(page.getByTestId('webhook-created-by')).toHaveText('admin');
+  });
+
   test('should create multiple webhooks for the same board', async ({ page }) => {
     await setupBoardForWebhooks(page, 'WH-Create-Multiple');
 

@@ -2,6 +2,7 @@ import { CheckIcon, ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../components/Card/Card";
+import { CreatedByDataItem } from "../../../../components/Card/CreatedByDataItem/CreatedByDataItem";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { Alert } from "../../../../components/common/Alert/Alert";
 import { ApiTokenDropdown } from "../../../../components/Dropdown/ApiTokenDropdown/ApiTokenDropdown";
@@ -52,6 +53,17 @@ function PipelineApiToken({ apiToken }: Props) {
       dataTestId="pipeline-api-token"
       className="wpqt-w-full"
     >
+      {apiToken.created_by_has_board_access === false && (
+        <div className="wpqt-mb-3" data-testid="api-token-not-working">
+          <Alert type="warning" className="!wpqt-flex wpqt-w-full">
+            {__(
+              "This token doesn't work: its creator lost access to this board or the permission to manage settings.",
+              "quicktasker",
+            )}
+          </Alert>
+        </div>
+      )}
+
       {apiToken.description && (
         <WPQTCardDataItem
           label={__("Description", "quicktasker")}
@@ -84,6 +96,13 @@ function PipelineApiToken({ apiToken }: Props) {
       <WPQTCardDataItem
         label={__("Created", "quicktasker")}
         value={convertToWPTimezone(apiToken.created_at)}
+      />
+
+      <CreatedByDataItem
+        createdBy={apiToken.created_by}
+        createdByName={apiToken.created_by_name}
+        hasBoardAccess={apiToken.created_by_has_board_access}
+        testId="api-token"
       />
 
       <WPQTCardDataItem

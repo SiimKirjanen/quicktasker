@@ -5,6 +5,12 @@ type BaseApiToken = {
   description: string;
   created_at: string;
   updated_at: string;
+  // The WordPress user who created the token. Unknown for tokens created before it was saved.
+  created_by: string | null;
+  // Null when the user has been deleted.
+  created_by_name: string | null;
+  // Whether the creator can still access the board and manage settings. The token only works while they can.
+  created_by_has_board_access?: boolean | null;
   token?: string;
 };
 
@@ -34,6 +40,14 @@ type ApiTokenFromServer = BaseApiToken & {
   delete_pipeline_tasks: string;
 };
 
-type NewApiToken = Omit<ApiToken, "id" | "created_at" | "updated_at">;
+type NewApiToken = Omit<
+  ApiToken,
+  | "id"
+  | "created_at"
+  | "updated_at"
+  | "created_by"
+  | "created_by_name"
+  | "created_by_has_board_access"
+>;
 
 export type { ApiToken, ApiTokenFromServer, NewApiToken };

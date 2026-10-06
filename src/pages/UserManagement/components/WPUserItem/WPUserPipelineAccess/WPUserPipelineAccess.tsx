@@ -9,8 +9,14 @@ import { useMissingResourceDetection } from "../../../../../hooks/useMissingReso
 import { usePipelines } from "../../../../../hooks/usePipelines";
 import { UserContext } from "../../../../../providers/UserContextProvider";
 import { WPUser, WPUserPipelinesUpdate } from "../../../../../types/user";
+import {
+  formatIntegrationCount,
+  showStoppedIntegrationsWarning,
+} from "../StoppedIntegrationsWarning/StoppedIntegrationsWarning";
 
 const SUMMARY_BOARD_COUNT = 5;
+// More added or removed boards than this are counted instead of named.
+const CHANGED_BOARD_NAME_COUNT = 3;
 
 type Props = {
   user: WPUser;
@@ -93,9 +99,99 @@ function WPUserPipelineAccess({ user }: Props) {
             task_count,
             pipeline ? pipeline.name : "",
           ),
+          // Stays until closed, so the admin has time to act on it.
+          { autoClose: false },
         );
       },
     );
+  };
+
+  const getPipelineNames = (pipelineIds: string[]) =>
+    pipelineIds.map(
+      (id) => pipelines.find((pipeline) => pipeline.id === id)?.name ?? "",
+    );
+
+  const reportChangedPipelines = (
+    addedPipelineIds: string[],
+    removedPipelineIds: string[],
+  ) => {
+    if (addedPipelineIds.length > 0) {
+      const addedNames = getPipelineNames(addedPipelineIds);
+
+      toast.success(
+        addedNames.length > CHANGED_BOARD_NAME_COUNT
+          ? sprintf(
+              // translators: 1: user name, 2: number of boards
+              _n(
+                "%1$s was added to %2$d board.",
+                "%1$s was added to %2$d boards.",
+                addedNames.length,
+                "quicktasker",
+              ),
+              user.name,
+              addedNames.length,
+            )
+          : sprintf(
+              // translators: 1: user name, 2: comma separated board names
+              __("%1$s was added to %2$s.", "quicktasker"),
+              user.name,
+              addedNames.join(", "),
+            ),
+      );
+    }
+
+    if (removedPipelineIds.length > 0) {
+      const removedNames = getPipelineNames(removedPipelineIds);
+
+      toast.success(
+        removedNames.length > CHANGED_BOARD_NAME_COUNT
+          ? sprintf(
+              // translators: 1: user name, 2: number of boards
+              _n(
+                "%1$s was removed from %2$d board.",
+                "%1$s was removed from %2$d boards.",
+                removedNames.length,
+                "quicktasker",
+              ),
+              user.name,
+              removedNames.length,
+            )
+          : sprintf(
+              // translators: 1: user name, 2: comma separated board names
+              __("%1$s was removed from %2$s.", "quicktasker"),
+              user.name,
+              removedNames.join(", "),
+            ),
+      );
+    }
+  };
+
+  const warnAboutStoppedIntegrations = (update: WPUserPipelinesUpdate) => {
+    update.stopped_integrations.forEach((integration) => {
+      // The board is added back by a selection that is still waiting to be saved.
+      if (
+        pendingPipelineIds.current?.includes(String(integration.pipeline_id))
+      ) {
+        return;
+      }
+      const pipeline = pipelines.find(
+        (p) => p.id === String(integration.pipeline_id),
+      );
+
+      showStoppedIntegrationsWarning(
+        integration,
+        sprintf(
+          // translators: 1: user name, 2: number of API tokens and webhooks, 3: board name
+          __(
+            "%2$s by %1$s on %3$s won't work without board access.",
+            "quicktasker",
+          ),
+          user.name,
+          formatIntegrationCount(integration),
+          pipeline ? pipeline.name : "",
+        ),
+      );
+    });
   };
 
   // Saves one selection at a time. A selection made during a save is saved
@@ -114,13 +210,23 @@ function WPUserPipelineAccess({ user }: Props) {
         user.id,
         pipelineIds,
         (update) => {
+          const previousPipelineIds = savedPipelineIds.current;
           savedPipelineIds.current = update.pipeline_ids.map(String);
+          reportChangedPipelines(
+            savedPipelineIds.current.filter(
+              (id) => !previousPipelineIds.includes(id),
+            ),
+            previousPipelineIds.filter(
+              (id) => !savedPipelineIds.current.includes(id),
+            ),
+          );
           setSavedIds(savedPipelineIds.current);
           userDispatch({
             type: SET_WP_USER_PIPELINE_IDS,
             payload: { userId: user.id, pipelineIds: update.pipeline_ids },
           });
           warnAboutAssignedTasks(update);
+          warnAboutStoppedIntegrations(update);
           if (!pendingPipelineIds.current) {
             setSelectedPipelineIds(savedPipelineIds.current);
           }
@@ -129,14 +235,15 @@ function WPUserPipelineAccess({ user }: Props) {
           result.error = error ?? new Error("Failed to update the boards");
         },
       );
+      const error = result.error;
 
-      if (result.error === null) {
+      if (error === null) {
         continue;
       }
 
       // A board was deleted since the boards were loaded, for example by another
       // administrator. It is left out and the selection saved again, once.
-      if (!retried && detectMissingPipelineResponse(result.error)) {
+      if (!retried && detectMissingPipelineResponse(error)) {
         retried = true;
         const existingPipelineIds = await refreshPipelines();
 

@@ -336,7 +336,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                             throw new PipelineMissingException('No pipeline found with id ' . $data['id']);
                         }
 
-                        $tokens = $tokenRepo->getPipelineTokensForFrontend($data['id']);
+                        $tokens = ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess(
+                            $tokenRepo->getPipelineTokensForFrontend($data['id'])
+                        );
 
                         return new WP_REST_Response((new ApiResponse(true, [], $tokens))->toArray(), 200);
                     } catch (PipelineMissingException $e) {
@@ -372,6 +374,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'name'                   => $data['name'],
                             'description'            => $data['description'],
                             'pipeline_id'            => $data['id'],
+                            'created_by'             => get_current_user_id(),
                             'get_pipeline'           => $data['get_pipeline'],
                             'patch_pipeline'         => $data['patch_pipeline'],
                             'get_pipeline_stages'    => $data['get_pipeline_stages'],
@@ -384,6 +387,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'delete_pipeline_tasks'  => $data['delete_pipeline_tasks'],
                         ]);
 
+                        ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess([$apiTokenData['db_token']]);
                         $dbToken = (array) $apiTokenData['db_token'];
                         $dbToken['token'] = $apiTokenData['token'];
 
@@ -2562,9 +2566,26 @@ if (!function_exists('wpqt_register_api_routes')) {
                             WP_QUICKTASKER_VIEW_MY_TASKS              => $data[WP_QUICKTASKER_VIEW_MY_TASKS],
                         ];
 
+                        $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
+                        $couldManageIntegrations = $pipelineAccessRepo->canManageIntegrations($data['id']);
+
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
 
-                        return new WP_REST_Response((new ApiResponse(true, []))->toArray(), 200);
+                        // API tokens and webhooks only work while their creator can manage integrations, so the admin
+                        // is told about the ones on the user's boards that stopped working.
+                        $stoppedIntegrations = [];
+
+                        if ($couldManageIntegrations && !$pipelineAccessRepo->canManageIntegrations($data['id'])) {
+                            $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                            $stoppedIntegrations = $pipelineAccessService->countIntegrationsCreatedByWPUser(
+                                $data['id'],
+                                $pipelineAccessService->getAccessiblePipelineIds($data['id'])
+                            );
+                        }
+
+                        return new WP_REST_Response((new ApiResponse(true, [], [
+                            'stopped_integrations' => $stoppedIntegrations,
+                        ]))->toArray(), 200);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
@@ -2621,16 +2642,28 @@ if (!function_exists('wpqt_register_api_routes')) {
                     global $wpdb;
 
                     try {
-                        if (!get_user_by('id', $data['id'])) {
+                        $wpUser = get_user_by('id', $data['id']);
+
+                        if (!$wpUser) {
                             throw new WPQTException('User not found', true);
                         }
 
+                        $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+
                         $wpdb->query('START TRANSACTION');
-                        $removedPipelineIds = ServiceLocator::get('PipelineAccessService')->setWPUserPipelines($data['id'], $data['pipeline_ids']);
+                        $removedPipelineIds = $pipelineAccessService->setWPUserPipelines($data['id'], $data['pipeline_ids']);
                         $wpdb->query('COMMIT');
 
-                        // Tasks on removed boards stay assigned, so the admin is told about them.
-                        $assignedTaskCounts = ServiceLocator::get('TaskRepository')->countTasksAssignedToWPUserByPipeline($data['id'], $removedPipelineIds);
+                        // Users who can access every board, like administrators, keep access to boards they are removed
+                        // from, so their API tokens and webhooks keep working and their tasks stay visible to them.
+                        $keepsAccess = ServiceLocator::get('PipelineAccessRepository')->canAccessAllPipelines($data['id']);
+
+                        // API tokens and webhooks the user created on removed boards stop working until the user is added back,
+                        // so the admin is told about them.
+                        $stoppedIntegrations = $keepsAccess ? [] : $pipelineAccessService->countIntegrationsCreatedByWPUser($data['id'], $removedPipelineIds);
+
+                        // Tasks on removed boards stay assigned but are hidden from the user, so the admin is told about them.
+                        $assignedTaskCounts = $keepsAccess ? [] : ServiceLocator::get('TaskRepository')->countTasksAssignedToWPUserByPipeline($data['id'], $removedPipelineIds);
                         $removedPipelinesWithAssignedTasks = [];
 
                         foreach ($assignedTaskCounts as $pipelineId => $taskCount) {
@@ -2643,6 +2676,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return new WP_REST_Response((new ApiResponse(true, [], [
                             'pipeline_ids'                          => ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($data['id']),
                             'removed_pipelines_with_assigned_tasks' => $removedPipelinesWithAssignedTasks,
+                            'stopped_integrations'                  => $stoppedIntegrations,
                         ]))->toArray(), 200);
                     } catch (PipelineMissingException $e) {
                         $wpdb->query('ROLLBACK');
@@ -3622,7 +3656,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                         if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
                             throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
                         }
-                        $pipelineAutomations = $automationRepo->getPipelineAutomations($data['id']);
+                        $pipelineAutomations = ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess(
+                            $automationRepo->getPipelineAutomations($data['id'])
+                        );
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'automations' => $pipelineAutomations,
@@ -3664,7 +3700,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         }
 
                         $automationService = ServiceLocator::get('AutomationService');
-                        $automation = $automationService->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata']);
+                        $automation = $automationService->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata'], get_current_user_id());
 
                         ServiceLocator::get('LogService')->log('Automation created: ' . $automationService->getAutomationDescription($automation), [
                             'type'          => WP_QT_LOG_TYPE_AUTOMATION,
@@ -3674,6 +3710,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'created_by_id' => get_current_user_id(),
                             'pipeline_id'   => $automation->pipeline_id,
                         ]);
+
+                        ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess([$automation]);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $automation))->toArray(), 200);
                     } catch (Throwable $e) {
@@ -3876,7 +3914,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                             throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
                         }
 
-                        $pipelineWebhooks = $webhookRepo->getPipelineWebhooks($data['id']);
+                        $pipelineWebhooks = ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess(
+                            $webhookRepo->getPipelineWebhooks($data['id'])
+                        );
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'webhooks' => $pipelineWebhooks,
@@ -3921,6 +3961,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 'target_action'   => $data['target_action'],
                                 'webhook_url'     => $data['webhook_url'],
                                 'webhook_confirm' => $data['webhook_confirm'],
+                                'created_by'      => get_current_user_id(),
                             ]
                         );
                         $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);
@@ -3935,6 +3976,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         ]);
 
                         $wpdb->query('COMMIT');
+
+                        ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess([$webhook]);
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'webhook' => $webhook,
@@ -4019,6 +4062,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         ]);
 
                         $wpdb->query('COMMIT');
+
+                        ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess([$webhook]);
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'webhook' => $webhook,

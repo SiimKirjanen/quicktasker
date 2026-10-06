@@ -14,7 +14,12 @@ jest.mock("../../../../../api/api", () => ({
 }));
 
 jest.mock("react-toastify", () => ({
-  toast: { error: jest.fn(), warning: jest.fn() },
+  toast: {
+    error: jest.fn(),
+    warning: jest.fn(),
+    info: jest.fn(),
+    success: jest.fn(),
+  },
 }));
 
 jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
@@ -50,6 +55,12 @@ jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
       </button>
       <button type="button" onClick={() => onSelectionChange([])}>
         no boards
+      </button>
+      <button
+        type="button"
+        onClick={() => onSelectionChange(["3", "4", "5", "6"])}
+      >
+        boards 3 to 6
       </button>
       <button type="button" onClick={() => onSelectionChange(["2", "9"])}>
         board 2 and deleted board 9
@@ -155,6 +166,7 @@ function holdSaves(
         releases.push(() => {
           callback({
             pipeline_ids: pipelineIds.map(Number),
+            stopped_integrations: [],
             removed_pipelines_with_assigned_tasks: removed,
           });
           resolve();
@@ -241,6 +253,7 @@ describe("WPUserPipelineAccess", () => {
   it("saves the new selection and shows the saved boards", async () => {
     respondWith({
       pipeline_ids: [2],
+      stopped_integrations: [],
       removed_pipelines_with_assigned_tasks: [],
     });
     renderAccess(makeWPUser([1]));
@@ -267,6 +280,7 @@ describe("WPUserPipelineAccess", () => {
   it("warns about tasks still assigned on removed boards", async () => {
     respondWith({
       pipeline_ids: [2],
+      stopped_integrations: [],
       removed_pipelines_with_assigned_tasks: [
         { pipeline_id: 1, task_count: 3 },
       ],
@@ -280,7 +294,192 @@ describe("WPUserPipelineAccess", () => {
 
     expect(toast.warning).toHaveBeenCalledWith(
       expect.stringContaining("Bob is still assigned to 3 tasks on Board 1"),
+      { autoClose: false },
     );
+  });
+
+  describe("API tokens and webhooks the user created", () => {
+    function respondWithStopped(
+      stopped: WPUserPipelinesUpdate["stopped_integrations"],
+    ) {
+      mockUpdateWPUserPipelines.mockImplementation(
+        async (
+          _userId: string,
+          pipelineIds: string[],
+          callback: (u: WPUserPipelinesUpdate) => void,
+        ) =>
+          callback({
+            pipeline_ids: pipelineIds.map(Number),
+            stopped_integrations: stopped,
+            removed_pipelines_with_assigned_tasks: [],
+          }),
+      );
+    }
+
+    it("warns that they don't work without board access", async () => {
+      respondWithStopped([
+        { pipeline_id: 1, api_token_count: 2, webhook_count: 1 },
+      ]);
+      renderAccess(makeWPUser([1]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("only board 2"));
+      });
+
+      expect(mockUpdateWPUserPipelines).toHaveBeenCalledTimes(1);
+      expect(toast.warning).toHaveBeenCalledWith(expect.anything(), {
+        autoClose: false,
+      });
+      render((toast.warning as jest.Mock).mock.calls[0][0]);
+      expect(
+        screen.getByTestId("stopped-integrations-warning"),
+      ).toHaveTextContent(
+        "2 API tokens and 1 webhook by Bob on Board 1 won't work without board access.",
+      );
+      expect(screen.getByText("Open API tokens")).toHaveAttribute(
+        "href",
+        "#/board/1/api-tokens",
+      );
+      expect(screen.getByText("Open webhooks")).toHaveAttribute(
+        "href",
+        "#/board/1/webhooks",
+      );
+    });
+
+    it("only links to the kind of integration the user created", async () => {
+      respondWithStopped([
+        { pipeline_id: 1, api_token_count: 0, webhook_count: 1 },
+      ]);
+      renderAccess(makeWPUser([1]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("only board 2"));
+      });
+
+      render((toast.warning as jest.Mock).mock.calls[0][0]);
+      expect(
+        screen.getByTestId("stopped-integrations-warning"),
+      ).toHaveTextContent("1 webhook by Bob on Board 1 won't work");
+      expect(screen.queryByText("Open API tokens")).toBeNull();
+      expect(screen.getByText("Open webhooks")).toBeInTheDocument();
+    });
+
+    it("does not warn when nothing stopped working", async () => {
+      respondWithStopped([]);
+      renderAccess(makeWPUser([1]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("only board 2"));
+      });
+
+      expect(toast.warning).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("added and removed boards", () => {
+    beforeEach(() => {
+      mockUpdateWPUserPipelines.mockImplementation(
+        async (
+          _userId: string,
+          pipelineIds: string[],
+          callback: (u: WPUserPipelinesUpdate) => void,
+        ) =>
+          callback({
+            pipeline_ids: pipelineIds.map(Number),
+            stopped_integrations: [],
+            removed_pipelines_with_assigned_tasks: [],
+          }),
+      );
+    });
+
+    it("tells the admin which boards the user was added to", async () => {
+      renderAccess(makeWPUser([]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("boards 1 and 2"));
+      });
+
+      expect(toast.success).toHaveBeenCalledWith(
+        "Bob was added to Board 1, Board 2.",
+      );
+    });
+
+    it("only names the boards that were added", async () => {
+      renderAccess(makeWPUser([1]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("boards 1 and 2"));
+      });
+
+      expect(toast.success).toHaveBeenCalledWith("Bob was added to Board 2.");
+    });
+
+    it("counts the boards when many are added at once", async () => {
+      const boards = Array.from({ length: 4 }, (_, i) => ({
+        id: String(i + 3),
+        name: `Board ${i + 3}`,
+        is_primary: false,
+      })) as Pipeline[];
+      renderAccess(makeWPUser([]), boards);
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("boards 3 to 6"));
+      });
+
+      expect(toast.success).toHaveBeenCalledWith("Bob was added to 4 boards.");
+    });
+
+    it("tells the admin which boards the user was removed from", async () => {
+      renderAccess(makeWPUser([1, 2]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("only board 2"));
+      });
+
+      expect(toast.success).toHaveBeenCalledTimes(1);
+      expect(toast.success).toHaveBeenCalledWith(
+        "Bob was removed from Board 1.",
+      );
+    });
+
+    it("reports both when boards are added and removed in one save", async () => {
+      renderAccess(makeWPUser([1]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("only board 2"));
+      });
+
+      expect((toast.success as jest.Mock).mock.calls).toEqual([
+        ["Bob was added to Board 2."],
+        ["Bob was removed from Board 1."],
+      ]);
+    });
+
+    it("counts the boards when many are removed at once", async () => {
+      const boards = Array.from({ length: 4 }, (_, i) => ({
+        id: String(i + 3),
+        name: `Board ${i + 3}`,
+        is_primary: false,
+      })) as Pipeline[];
+      renderAccess(makeWPUser([3, 4, 5, 6]), boards);
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("no boards"));
+      });
+
+      expect(toast.success).toHaveBeenCalledWith(
+        "Bob was removed from 4 boards.",
+      );
+    });
   });
 
   it("restores the previous selection when saving fails", async () => {
@@ -423,6 +622,7 @@ describe("WPUserPipelineAccess", () => {
           }
           callback({
             pipeline_ids: pipelineIds.map(Number),
+            stopped_integrations: [],
             removed_pipelines_with_assigned_tasks: [],
           });
         },
@@ -432,6 +632,7 @@ describe("WPUserPipelineAccess", () => {
     it("keeps a board missing from the board list, as it may have been created since", async () => {
       respondWith({
         pipeline_ids: [2, 9],
+        stopped_integrations: [],
         removed_pipelines_with_assigned_tasks: [],
       });
       renderAccess(makeWPUser([9]));
