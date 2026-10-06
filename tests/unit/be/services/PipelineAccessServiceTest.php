@@ -292,4 +292,20 @@ class PipelineAccessServiceTest extends TestCase
         $this->assertSame(['a'], array_column($this->service->filterItemsForUser(self::LIMITED_USER_ID, WP_QT_WORDPRESS_USER_TYPE, $items), 'id'));
         $this->assertSame(['a', 'b'], array_column($this->service->filterItemsForUser(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, $items), 'id'));
     }
+
+    public function test_adds_whether_each_creator_can_still_access_the_board()
+    {
+        $this->userBoardIds = [self::LIMITED_USER_ID => [1]];
+        $items = [
+            (object) ['pipeline_id' => '3', 'created_by' => (string) self::ADMIN_USER_ID, 'created_by_name' => 'Admin'],
+            (object) ['pipeline_id' => '1', 'created_by' => (string) self::LIMITED_USER_ID, 'created_by_name' => 'Anna'],
+            (object) ['pipeline_id' => '2', 'created_by' => (string) self::LIMITED_USER_ID, 'created_by_name' => 'Anna'],
+            (object) ['pipeline_id' => '2', 'created_by' => null, 'created_by_name' => null],
+            (object) ['pipeline_id' => '2', 'created_by' => '9', 'created_by_name' => null],
+        ];
+
+        $this->service->addCreatorBoardAccess($items);
+
+        $this->assertSame([true, true, false, null, null], array_column($items, 'created_by_has_board_access'));
+    }
 }

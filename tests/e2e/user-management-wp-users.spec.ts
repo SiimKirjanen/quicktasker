@@ -313,6 +313,41 @@ test.describe('WordPress Users Tab – Boards', () => {
     }
   });
 
+  test("an automation shows when its creator has been removed from the board", async ({ page, browser, request }) => {
+    const boardName = generateUniqueName('WUB-Automation-Creator');
+    const board = await createBoardViaApi(request, boardName);
+    const userLogin = uniqueLogin('wpautomation');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    await addWPUserToBoards(request, userId, [boardName]);
+
+    const userContext = await loginToWordPressViaApi(browser, userLogin);
+    try {
+      const nonceResponse = await userContext.request.get('/wp-admin/admin-ajax.php?action=rest-nonce');
+      const response = await userContext.request.post(`/wp-json/wpqt/v1/pipelines/${board.boardId}/automations`, {
+        headers: { 'X-WP-Nonce': await nonceResponse.text() },
+        data: { automationTarget: 'task', automationTrigger: 'task-done', automationAction: 'archive-task' },
+      });
+      expect(response.ok()).toBe(true);
+    } finally {
+      await userContext.close();
+    }
+
+    try {
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/automations`);
+      await expect(page.getByTestId('automation-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('automation-creator-no-board-access')).toHaveCount(0);
+
+      await addWPUserToBoards(request, userId, []);
+      await page.reload();
+
+      await expect(page.getByTestId('automation-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('automation-creator-no-board-access')).toHaveText('No access to this board');
+    } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
   test('deleting a WordPress user deletes the API tokens and webhooks they created', async ({ browser, request }) => {
     const boardName = generateUniqueName('WUB-Deleted-User');
     const board = await createBoardViaApi(request, boardName);

@@ -3650,7 +3650,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                         if (false === $pipelineRepo->checkIfPipelineExists($data['id'])) {
                             throw new PipelineMissingException("Pipeline with ID {$data['id']} not found.");
                         }
-                        $pipelineAutomations = $automationRepo->getPipelineAutomations($data['id']);
+                        $pipelineAutomations = ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess(
+                            $automationRepo->getPipelineAutomations($data['id'])
+                        );
 
                         return new WP_REST_Response((new ApiResponse(true, [], (object) [
                             'automations' => $pipelineAutomations,
@@ -3702,6 +3704,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'created_by_id' => get_current_user_id(),
                             'pipeline_id'   => $automation->pipeline_id,
                         ]);
+
+                        ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess([$automation]);
 
                         return new WP_REST_Response((new ApiResponse(true, [], $automation))->toArray(), 200);
                     } catch (Throwable $e) {

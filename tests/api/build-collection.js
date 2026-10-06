@@ -3690,6 +3690,22 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
         ],
       }),
       request({
+        name: "Outsider creates an automation on board E",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/automations",
+        body: {
+          automationTarget: "task",
+          automationTrigger: "task-done",
+          automationAction: "archive-task",
+        },
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('the outsider can access the board', () => pm.expect(pm.response.json().data.created_by_has_board_access).to.eql(true));`,
+          save("outsiderAutomationId", "pm.response.json().data.id"),
+        ],
+      }),
+      request({
         name: "Board E API tokens show who created them",
         url: "/pipelines/{{boardEId}}/api-tokens",
         tests: [
@@ -3742,6 +3758,16 @@ pm.test('the API token and webhook are counted', () => pm.expect(pm.response.jso
           status(200),
           success(true),
           `pm.test('the deleted API token and webhook are reported', () => pm.expect(pm.response.json().data.deleted_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
+      }),
+      request({
+        name: "The outsider's automation is kept and marked as created by someone without access",
+        url: "/pipelines/{{boardEId}}/automations",
+        tests: [
+          status(200),
+          `const automation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('outsiderAutomationId'));
+pm.test('the automation is kept', () => pm.expect(automation).to.be.an('object'));
+pm.test('the creator has no access to the board', () => pm.expect(automation && automation.created_by_has_board_access).to.eql(false));`,
         ],
       }),
       request({

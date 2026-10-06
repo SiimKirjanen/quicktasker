@@ -1,5 +1,6 @@
 import {
   EllipsisHorizontalIcon,
+  ExclamationTriangleIcon,
   PauseCircleIcon,
   PlayCircleIcon,
   TrashIcon,
@@ -133,7 +134,23 @@ function PipelineAutomation({ automation }: Props) {
       {creatorName && (
         <WPQTCardDataItem
           label={__("Created by", "quicktasker")}
-          value={<span data-testid="automation-created-by">{creatorName}</span>}
+          value={
+            <span className="wpqt-inline-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1">
+              <span data-testid="automation-created-by">{creatorName}</span>
+              {automation.created_by_has_board_access === false && (
+                <span
+                  className="wpqt-inline-flex wpqt-items-center wpqt-gap-0.5 wpqt-text-yellow-700"
+                  data-testid="automation-creator-no-board-access"
+                >
+                  <ExclamationTriangleIcon
+                    className="wpqt-size-4"
+                    aria-hidden="true"
+                  />
+                  {__("No access to this board", "quicktasker")}
+                </span>
+              )}
+            </span>
+          }
         />
       )}
     </WPQTCard>

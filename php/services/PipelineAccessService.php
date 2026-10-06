@@ -224,6 +224,39 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
+         * Adds whether each item's creator can still access the item's board.
+         *
+         * Sets created_by_has_board_access to true or false, or to null when the creator is unknown
+         * or their WordPress user has been deleted.
+         *
+         * @param array $items Objects with pipeline_id, created_by and created_by_name properties.
+         * @return array The same objects.
+         */
+        public function addCreatorBoardAccess($items)
+        {
+            $accessiblePipelineIdsByUserId = [];
+
+            foreach ($items as $item) {
+                if (empty($item->created_by) || null === $item->created_by_name) {
+                    $item->created_by_has_board_access = null;
+                    continue;
+                }
+
+                $creatorId = (int) $item->created_by;
+
+                if (!array_key_exists($creatorId, $accessiblePipelineIdsByUserId)) {
+                    $accessiblePipelineIdsByUserId[$creatorId] = $this->getAccessiblePipelineIds($creatorId);
+                }
+
+                $accessiblePipelineIds = $accessiblePipelineIdsByUserId[$creatorId];
+                $item->created_by_has_board_access = null === $accessiblePipelineIds
+                    || in_array((int) $item->pipeline_id, $accessiblePipelineIds, true);
+            }
+
+            return $items;
+        }
+
+        /**
          * Retrieves the boards a WordPress user would be removed from if their boards were set to the given ones.
          *
          * @param int $wpUserId The WordPress user ID.
