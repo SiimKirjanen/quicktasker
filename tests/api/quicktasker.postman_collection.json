@@ -24480,6 +24480,76 @@
                   ]
                 },
                 {
+                  "name": "Admin sees the QuickTasker self-assign log with its board",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/global-logs?order=DESC&numberOfLogs=200&search=Self-assigned",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const selfAssignLog = pm.response.json().data.find((l) => l.text === 'Self-assigned to task Free task ' + pm.collectionVariables.get('runId'));\npm.test('self-assign log is listed', () => pm.expect(selfAssignLog).to.be.an('object'));\npm.test('self-assign log belongs to board A', () => pm.expect(String(selfAssignLog && selfAssignLog.pipeline_id)).to.eql(pm.collectionVariables.get('boardAId')));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Outsider does not see the self-assign log of a board A task",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/global-logs?order=DESC&numberOfLogs=200&search=Self-assigned",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('board A task name is not listed', () => pm.expect(pm.response.json().data.filter((l) => l.text.includes('Free task ' + pm.collectionVariables.get('runId')))).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "My tasks",
                   "request": {
                     "method": "GET",

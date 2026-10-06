@@ -3742,6 +3742,25 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
         ],
       }),
       request({
+        name: "Admin sees the QuickTasker self-assign log with its board",
+        url: "/global-logs?order=DESC&numberOfLogs=200&search=Self-assigned",
+        tests: [
+          status(200),
+          `const selfAssignLog = pm.response.json().data.find((l) => l.text === 'Self-assigned to task Free task ' + pm.collectionVariables.get('runId'));
+pm.test('self-assign log is listed', () => pm.expect(selfAssignLog).to.be.an('object'));
+pm.test('self-assign log belongs to board A', () => pm.expect(String(selfAssignLog && selfAssignLog.pipeline_id)).to.eql(pm.collectionVariables.get('boardAId')));`,
+        ],
+      }),
+      request({
+        name: "Outsider does not see the self-assign log of a board A task",
+        url: "/global-logs?order=DESC&numberOfLogs=200&search=Self-assigned",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('board A task name is not listed', () => pm.expect(pm.response.json().data.filter((l) => l.text.includes('Free task ' + pm.collectionVariables.get('runId')))).to.be.empty);`,
+        ],
+      }),
+      request({
         name: "My tasks",
         url: "/my-tasks",
         auth: outsiderAuth,

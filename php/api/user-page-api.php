@@ -763,11 +763,13 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
 
                     $userService->assignTaskToUser($requestData['session']->user_id, $taskId, $requestData['userType']);
 
+                    // The board is saved so the entry is only shown to users who can access it.
                     $logService->log('Self-assigned to task ' . $task->name, [
-                        'type'       => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
-                        'type_id'    => $requestData['session']->user_id,
-                        'created_by' => $createdBy,
-                        'user_id'    => $requestData['session']->user_id
+                        'type'        => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_TYPE_QUICKTASKER_USER : WP_QT_LOG_TYPE_WP_USER,
+                        'type_id'     => $requestData['session']->user_id,
+                        'created_by'  => $createdBy,
+                        'user_id'     => $requestData['session']->user_id,
+                        'pipeline_id' => $task->pipeline_id
                     ]);
 
                     $logService->log($user->name . ' self-assigned to task ' . $task->name, [
