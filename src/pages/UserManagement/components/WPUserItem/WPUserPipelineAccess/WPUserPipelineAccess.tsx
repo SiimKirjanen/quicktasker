@@ -183,7 +183,7 @@ function WPUserPipelineAccess({ user }: Props) {
         sprintf(
           // translators: 1: user name, 2: number of API tokens and webhooks, 3: board name
           __(
-            "%1$s created %2$s on %3$s, which stopped working. They work again if %1$s is added back to the board.",
+            "%2$s by %1$s on %3$s won't work without board access.",
             "quicktasker",
           ),
           user.name,

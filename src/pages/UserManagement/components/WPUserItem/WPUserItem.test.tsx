@@ -259,7 +259,7 @@ describe("WPUserItem", () => {
       );
     }
 
-    it("warns when turning off a permission stops them, until it is turned back on", async () => {
+    it("warns when turning off a permission stops them", async () => {
       respondWithStopped([
         { pipeline_id: 1, api_token_count: 1, webhook_count: 2 },
       ]);
@@ -281,7 +281,7 @@ describe("WPUserItem", () => {
       expect(
         screen.getByTestId("stopped-integrations-warning"),
       ).toHaveTextContent(
-        "Bob created 1 API token and 2 webhooks on Board 1, which stopped working. They work again if Bob can manage settings again.",
+        "1 API token and 2 webhooks by Bob on Board 1 won't work without access to manage settings.",
       );
       expect(screen.getByText("Open API tokens")).toHaveAttribute(
         "href",

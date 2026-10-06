@@ -294,7 +294,7 @@ test.describe('WordPress Users Tab – Boards', () => {
 
       const warning = page.getByTestId('stopped-integrations-warning');
       await expect(warning).toContainText(
-        `${userLogin} created 1 API token and 1 webhook on ${boardName}, which stopped working. They work again if ${userLogin} is added back to the board.`,
+        `1 API token and 1 webhook by ${userLogin} on ${boardName} won't work without board access.`,
       );
       await expect(boardsSummary).toHaveText('No boards');
       expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
@@ -411,7 +411,7 @@ test.describe('WordPress Users Tab – Boards', () => {
 
       const warning = page.getByTestId('stopped-integrations-warning');
       await expect(warning).toContainText(
-        `${userLogin} created 1 API token and 1 webhook on ${boardName}, which stopped working. They work again if ${userLogin} can manage settings again.`,
+        `1 API token and 1 webhook by ${userLogin} on ${boardName} won't work without access to manage settings.`,
       );
       await expect(manageSettingsToggle).not.toBeChecked();
 

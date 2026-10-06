@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-06T18:53:19+00:00\n"
+"POT-Creation-Date: 2026-10-06T19:02:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -2550,7 +2550,7 @@ msgstr ""
 
 #: build/app.js:1
 #, js-format
-msgid "%1$s created %2$s on %3$s, which stopped working. They work again if %1$s is added back to the board."
+msgid "%2$s by %1$s on %3$s won't work without board access."
 msgstr ""
 
 #: build/app.js:1
@@ -2589,7 +2589,7 @@ msgstr ""
 
 #: build/app.js:1
 #, js-format
-msgid "%1$s created %2$s on %3$s, which stopped working. They work again if %1$s can manage settings again."
+msgid "%2$s by %1$s on %3$s won't work without access to manage settings."
 msgstr ""
 
 #: build/app.js:1

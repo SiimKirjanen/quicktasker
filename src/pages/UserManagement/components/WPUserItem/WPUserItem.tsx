@@ -55,7 +55,7 @@ function WPUserItem({ user }: Props) {
         sprintf(
           // translators: 1: user name, 2: number of API tokens and webhooks, 3: board name
           __(
-            "%1$s created %2$s on %3$s, which stopped working. They work again if %1$s can manage settings again.",
+            "%2$s by %1$s on %3$s won't work without access to manage settings.",
             "quicktasker",
           ),
           user.name,

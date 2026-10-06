@@ -70,12 +70,12 @@ type WPUserPipelinesUpdate = {
     pipeline_id: number;
     task_count: number;
   }[];
-  // API tokens and webhooks the user created on the removed boards, which stopped working.
+  // API tokens and webhooks the user created on the removed boards, which don't work without access to them.
   stopped_integrations: PipelineIntegrationCount[];
 };
 
 type WPUserCapabilitiesUpdate = {
-  // API tokens and webhooks the user created, which stopped working because they can no longer manage settings.
+  // API tokens and webhooks the user created, which don't work now that they can no longer manage settings.
   stopped_integrations: PipelineIntegrationCount[];
 };
 

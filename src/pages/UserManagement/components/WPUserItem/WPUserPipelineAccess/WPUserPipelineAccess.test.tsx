@@ -316,7 +316,7 @@ describe("WPUserPipelineAccess", () => {
       );
     }
 
-    it("warns that they stopped working, until the user is added back", async () => {
+    it("warns that they don't work without board access", async () => {
       respondWithStopped([
         { pipeline_id: 1, api_token_count: 2, webhook_count: 1 },
       ]);
@@ -335,7 +335,7 @@ describe("WPUserPipelineAccess", () => {
       expect(
         screen.getByTestId("stopped-integrations-warning"),
       ).toHaveTextContent(
-        "Bob created 2 API tokens and 1 webhook on Board 1, which stopped working. They work again if Bob is added back to the board.",
+        "2 API tokens and 1 webhook by Bob on Board 1 won't work without board access.",
       );
       expect(screen.getByText("Open API tokens")).toHaveAttribute(
         "href",
@@ -361,7 +361,7 @@ describe("WPUserPipelineAccess", () => {
       render((toast.warning as jest.Mock).mock.calls[0][0]);
       expect(
         screen.getByTestId("stopped-integrations-warning"),
-      ).toHaveTextContent("Bob created 1 webhook on Board 1, which stopped");
+      ).toHaveTextContent("1 webhook by Bob on Board 1 won't work");
       expect(screen.queryByText("Open API tokens")).toBeNull();
       expect(screen.getByText("Open webhooks")).toBeInTheDocument();
     });
