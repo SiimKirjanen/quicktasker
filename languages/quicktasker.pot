@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-05T21:33:48+00:00\n"
+"POT-Creation-Date: 2026-10-06T14:16:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -39,15 +39,15 @@ msgstr ""
 msgid "https://github.com/SiimKirjanen"
 msgstr ""
 
-#: php/actions.php:73
+#: php/actions.php:83
 msgid "WordPress users who are not administrators now only see the boards they have been added to. Until you add them to boards, they see no boards, and automations that assign them to tasks do nothing."
 msgstr ""
 
-#: php/actions.php:74
+#: php/actions.php:84
 msgid "Add users to boards"
 msgstr ""
 
-#: php/actions.php:75
+#: php/actions.php:85
 msgid "Dismiss"
 msgstr ""
 
@@ -101,63 +101,63 @@ msgid "About"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:683
-#: php/api/user-page-api.php:1042
+#: php/api/admin-api.php:684
+#: php/api/user-page-api.php:1044
 #, php-format
 msgid "Stage was changed for task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:930
+#: php/api/admin-api.php:931
 #, php-format
 msgid "Due date for task \"%s\" changed"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1045
+#: php/api/admin-api.php:1046
 #, php-format
 msgid "Task \"%s\" was deleted"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1138
+#: php/api/admin-api.php:1139
 #, php-format
 msgid "Task \"%s\" was archived"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1235
+#: php/api/admin-api.php:1236
 #, php-format
 msgid "Task \"%s\" was restored from the archive"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1347
-#: php/api/user-page-api.php:1150
+#: php/api/admin-api.php:1348
+#: php/api/user-page-api.php:1152
 #, php-format
 msgid "Task \"%s\" was marked done"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/admin-api.php:1349
-#: php/api/user-page-api.php:1152
+#: php/api/admin-api.php:1350
+#: php/api/user-page-api.php:1154
 #, php-format
 msgid "Task \"%s\" was marked not done"
 msgstr ""
 
 #. translators: %1$s = assigner name, %2$s = task name
-#: php/api/admin-api.php:2059
+#: php/api/admin-api.php:2064
 #, php-format
 msgid "%1$s assigned you to task \"%2$s\""
 msgstr ""
 
 #. translators: %1$s = unassigner name, %2$s = task name
-#: php/api/admin-api.php:2172
+#: php/api/admin-api.php:2177
 #, php-format
 msgid "%1$s unassigned you from task \"%2$s\""
 msgstr ""
 
-#: php/api/admin-api.php:3449
+#: php/api/admin-api.php:3481
 msgid "No valid settings provided"
 msgstr ""
 
@@ -169,13 +169,13 @@ msgid "A public comment was added to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:817
+#: php/api/user-page-api.php:819
 #, php-format
 msgid "A user was assigned to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:930
+#: php/api/user-page-api.php:932
 #, php-format
 msgid "A user was unassigned from task \"%s\""
 msgstr ""
@@ -192,27 +192,27 @@ msgstr ""
 msgid "Thanks! Your task has been submitted."
 msgstr ""
 
-#: php/filters.php:72
+#: php/filters.php:74
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: php/filters.php:101
+#: php/filters.php:103
 msgid "You have not been added to this board."
 msgstr ""
 
-#: php/filters.php:104
+#: php/filters.php:106
 msgid "Only WordPress administrators can export tasks from every board."
 msgstr ""
 
-#: php/filters.php:108
+#: php/filters.php:110
 msgid "Board not found"
 msgstr ""
 
-#: php/filters.php:119
+#: php/filters.php:121
 msgid "Failed to generate PDF"
 msgstr ""
 
-#: php/filters.php:131
+#: php/filters.php:133
 msgid "Failed to generate JSON"
 msgstr ""
 
@@ -316,6 +316,10 @@ msgstr ""
 #: build/app.js:1
 #: build/userApp.js:1
 msgid "Something went wrong. Please refresh the page."
+msgstr ""
+
+#: build/app.js:1
+msgid "Deleted user"
 msgstr ""
 
 #: build/app.js:1
@@ -2480,10 +2484,75 @@ msgstr ""
 
 #: build/app.js:1
 #, js-format
+msgid "%d API token"
+msgid_plural "%d API tokens"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/app.js:1
+#, js-format
+msgid "%d webhook"
+msgid_plural "%d webhooks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/app.js:1
+#, js-format
+msgid "%1$s and %2$s"
+msgstr ""
+
+#: build/app.js:1
+msgid "Delete API tokens and webhooks?"
+msgstr ""
+
+#: build/app.js:1
+#, js-format
+msgid "%s created API tokens or webhooks on the boards they are being removed from. They will be deleted, and integrations that use them will stop working."
+msgstr ""
+
+#: build/app.js:1
+msgid "This can't be undone."
+msgstr ""
+
+#: build/app.js:1
+msgid "Remove and delete"
+msgstr ""
+
+#: build/app.js:1
+#, js-format
+msgid "%1$s was added to %2$d board."
+msgid_plural "%1$s was added to %2$d boards."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/app.js:1
+#, js-format
+msgid "%1$s was added to %2$s."
+msgstr ""
+
+#: build/app.js:1
+#, js-format
+msgid "%1$s was removed from %2$d board."
+msgid_plural "%1$s was removed from %2$d boards."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/app.js:1
+#, js-format
+msgid "%1$s was removed from %2$s."
+msgstr ""
+
+#: build/app.js:1
+#, js-format
 msgid "%1$s is still assigned to %2$d task on %3$s, but can't see it until added back to the board."
 msgid_plural "%1$s is still assigned to %2$d tasks on %3$s, but can't see them until added back to the board."
 msgstr[0] ""
 msgstr[1] ""
+
+#: build/app.js:1
+#, js-format
+msgid "Deleted %1$s that %2$s created on %3$s."
+msgstr ""
 
 #: build/app.js:1
 msgid "Failed to update the user's boards"

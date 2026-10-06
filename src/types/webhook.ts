@@ -28,6 +28,10 @@ type BaseWebhook = {
   target_action: WebhookTargetAction;
   webhook_url: string;
   created_at: string;
+  // The WordPress user who created the webhook. Unknown for webhooks created before it was saved.
+  created_by: string | null;
+  // Null when the user has been deleted.
+  created_by_name: string | null;
 };
 
 type Webhook = BaseWebhook & {

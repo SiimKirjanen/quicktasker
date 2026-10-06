@@ -22,6 +22,7 @@ describe("useWPUserPipelineActions", () => {
   it("passes the saved boards to the callback on success", async () => {
     const update = {
       pipeline_ids: [2],
+      deleted_integrations: [],
       removed_pipelines_with_assigned_tasks: [],
     };
     mockedApi.updateWPUserPipelinesRequest.mockResolvedValue({
@@ -35,11 +36,40 @@ describe("useWPUserPipelineActions", () => {
 
     await result.current.updateWPUserPipelines("u1", ["2"], success, failure);
 
-    expect(mockedApi.updateWPUserPipelinesRequest).toHaveBeenCalledWith("u1", [
-      "2",
-    ]);
+    expect(mockedApi.updateWPUserPipelinesRequest).toHaveBeenCalledWith(
+      "u1",
+      ["2"],
+      false,
+    );
     expect(success).toHaveBeenCalledWith(update);
     expect(failure).not.toHaveBeenCalled();
+  });
+
+  it("passes on the confirmation to delete the user's API tokens and webhooks", async () => {
+    mockedApi.updateWPUserPipelinesRequest.mockResolvedValue({
+      success: true,
+      messages: [],
+      data: {
+        pipeline_ids: [],
+        deleted_integrations: [],
+        removed_pipelines_with_assigned_tasks: [],
+      },
+    });
+    const { result } = renderHook(() => useWPUserPipelineActions());
+
+    await result.current.updateWPUserPipelines(
+      "u1",
+      [],
+      jest.fn(),
+      jest.fn(),
+      true,
+    );
+
+    expect(mockedApi.updateWPUserPipelinesRequest).toHaveBeenCalledWith(
+      "u1",
+      [],
+      true,
+    );
   });
 
   it("invokes the failure callback on error", async () => {

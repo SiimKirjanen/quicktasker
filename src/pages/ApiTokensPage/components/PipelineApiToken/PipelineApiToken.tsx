@@ -7,6 +7,7 @@ import { Alert } from "../../../../components/common/Alert/Alert";
 import { ApiTokenDropdown } from "../../../../components/Dropdown/ApiTokenDropdown/ApiTokenDropdown";
 import { useTimezone } from "../../../../hooks/useTimezone";
 import { ApiToken } from "../../../../types/api-token";
+import { getCreatorName } from "../../../../utils/user";
 
 type Props = {
   apiToken: ApiToken;
@@ -23,6 +24,10 @@ const methodChipClasses: Record<Method, string> = {
 
 function PipelineApiToken({ apiToken }: Props) {
   const { convertToWPTimezone } = useTimezone();
+  const creatorName = getCreatorName(
+    apiToken.created_by,
+    apiToken.created_by_name,
+  );
 
   const boardMethods: Method[] = [];
   if (apiToken.get_pipeline) boardMethods.push("GET");
@@ -85,6 +90,13 @@ function PipelineApiToken({ apiToken }: Props) {
         label={__("Created", "quicktasker")}
         value={convertToWPTimezone(apiToken.created_at)}
       />
+
+      {creatorName && (
+        <WPQTCardDataItem
+          label={__("Created by", "quicktasker")}
+          value={<span data-testid="api-token-created-by">{creatorName}</span>}
+        />
+      )}
 
       <WPQTCardDataItem
         label={__("Permissions", "quicktasker")}

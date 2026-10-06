@@ -16,9 +16,14 @@ function useWPUserPipelineActions() {
     pipelineIds: string[],
     callback?: (update: WPUserPipelinesUpdate) => void,
     onFailureCallback?: (error: unknown) => void,
+    removeIntegrations = false,
   ) => {
     try {
-      const response = await updateWPUserPipelinesRequest(userId, pipelineIds);
+      const response = await updateWPUserPipelinesRequest(
+        userId,
+        pipelineIds,
+        removeIntegrations,
+      );
       if (callback) callback(response.data);
     } catch (e) {
       if (onFailureCallback) onFailureCallback(e);

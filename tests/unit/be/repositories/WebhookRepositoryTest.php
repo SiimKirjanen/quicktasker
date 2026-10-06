@@ -48,6 +48,7 @@ class WebhookRepositoryTest extends TestCase
         $this->wpdbMock = $this->getMockBuilder(stdClass::class)
             ->addMethods(['prepare', 'get_row', 'get_results'])
             ->getMock();
+        $this->wpdbMock->users = 'wp_users';
         // Set the global $wpdb to our mock
         $GLOBALS['wpdb'] = $this->wpdbMock;
 
@@ -374,5 +375,55 @@ class WebhookRepositoryTest extends TestCase
 
         $expected = 'Webhook (type: comment, action: updated, URL: https://api.example.com/hooks/123)';
         $this->assertSame($expected, $result);
+    }
+
+    public function test_getPipelineWebhooks_includes_the_creator()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->logicalAnd(
+                $this->stringContains('w.created_by, u.display_name AS created_by_name'),
+                $this->stringContains('LEFT JOIN wp_users AS u ON u.ID = w.created_by'),
+                $this->stringContains('WHERE w.pipeline_id = %d')
+            ), 4)
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getPipelineWebhooks(4);
+    }
+
+    public function test_getWebhooksCreatedByWPUser_includes_inactive_webhooks_on_some_boards()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->logicalAnd(
+                    $this->stringContains('WHERE w.created_by = %d AND w.pipeline_id IN (%d,%d) ORDER BY w.id ASC'),
+                    $this->logicalNot($this->stringContains('active = 1'))
+                ),
+                [7, 2, 3]
+            )
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->assertSame([], $this->repository->getWebhooksCreatedByWPUser(7, [2, 3]));
+    }
+
+    public function test_getWebhooksCreatedByWPUser_on_every_board()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->stringEndsWith('WHERE w.created_by = %d ORDER BY w.id ASC'), [7])
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getWebhooksCreatedByWPUser(7);
+    }
+
+    public function test_getWebhooksCreatedByWPUser_skips_the_query_for_no_boards()
+    {
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $this->assertSame([], $this->repository->getWebhooksCreatedByWPUser(7, []));
     }
 }

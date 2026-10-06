@@ -210,6 +210,7 @@ const setup = folder(
         status(200),
         success(true),
         `pm.test('plain token is returned once', () => pm.expect(pm.response.json().data.token).to.match(/^\\d+-[a-f0-9]{64}$/));`,
+        `pm.test('the creator is saved', () => pm.expect(pm.response.json().data.created_by).to.not.be.null);`,
         save("tokenFull", "pm.response.json().data.token"),
       ],
     }),
@@ -3654,11 +3655,112 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
         ],
       }),
       request({
-        name: "Remove outsider from board E",
+        name: "Outsider creates an API token on board E",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        body: { name: "Outsider {{runId}}", ...allTokenPermissions },
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('the outsider is saved as the creator', () => pm.expect(String(pm.response.json().data.created_by)).to.eql(pm.collectionVariables.get('outsiderWpUserId')));`,
+          save("outsiderTokenId", "pm.response.json().data.id"),
+          save("outsiderToken", "pm.response.json().data.token"),
+        ],
+      }),
+      request({
+        name: "Outsider creates a webhook on board E",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        body: {
+          target_type: "task",
+          target_action: "deleted",
+          webhook_url: `${WEBHOOK_RECEIVER}/capture/qt-outsider-{{runId}}`,
+          webhook_confirm: false,
+        },
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('the outsider is saved as the creator', () => pm.expect(String(pm.response.json().data.webhook.created_by)).to.eql(pm.collectionVariables.get('outsiderWpUserId')));`,
+        ],
+      }),
+      request({
+        name: "Board E API tokens show who created them",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        tests: [
+          status(200),
+          `const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));
+pm.test('the outsider is the creator', () => pm.expect(String(token && token.created_by)).to.eql(pm.collectionVariables.get('outsiderWpUserId')));
+pm.test('the creator is named', () => pm.expect(token && token.created_by_name).to.be.a('string').and.not.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Board E webhooks show who created them",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        tests: [
+          status(200),
+          `const webhook = pm.response.json().data.webhooks.find((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'));
+pm.test('the outsider created a webhook', () => pm.expect(webhook).to.be.an('object'));
+pm.test('the creator is named', () => pm.expect(webhook && webhook.created_by_name).to.be.a('string').and.not.be.empty);`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token works while they are on board E",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(200)],
+      }),
+      request({
+        name: "Removing the outsider from board E needs confirmation to delete their API token and webhook",
         method: "PATCH",
         url: "/wp-users/{{outsiderWpUserId}}/pipelines",
         body: { pipeline_ids: [] },
-        tests: [status(200), success(true)],
+        tests: [
+          status(409),
+          success(false),
+          `pm.test('confirmation is asked for', () => pm.expect(pm.response.json().messages).to.include('INTEGRATIONS_REMOVAL_NOT_CONFIRMED'));
+pm.test('the API token and webhook are counted', () => pm.expect(pm.response.json().data.pipelines_with_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
+      }),
+      request({
+        name: "The outsider stays on board E without the confirmation",
+        url: "/pipelines/{{boardEId}}",
+        auth: outsiderAuth,
+        tests: [status(200)],
+      }),
+      request({
+        name: "Remove outsider from board E, deleting their API token and webhook",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/pipelines",
+        body: { pipeline_ids: [], remove_integrations: true },
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('the deleted API token and webhook are reported', () => pm.expect(pm.response.json().data.deleted_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token no longer works",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(401), wpErrorCode("invalid_token")],
+      }),
+      request({
+        name: "Board E no longer has the outsider's webhook",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        tests: [
+          status(200),
+          `pm.test('no webhook of the outsider is left', () => pm.expect(pm.response.json().data.webhooks.filter((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'))).to.be.empty);`,
+        ],
+      }),
+      request({
+        name: "The deleted API token and webhook are logged on board E",
+        url: "/global-logs?order=DESC&numberOfLogs=200&search=was%20removed%20from%20the%20board",
+        tests: [
+          status(200),
+          `const boardELogs = pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'));
+pm.test('the API token deletion is logged', () => pm.expect(boardELogs.some((l) => l.text.startsWith('API token Outsider ' + pm.collectionVariables.get('runId') + ' deleted because ') && l.text.endsWith(' was removed from the board'))).to.be.true);
+pm.test('the webhook deletion is logged', () => pm.expect(boardELogs.some((l) => l.text.startsWith('Webhook ') && l.text.includes(' deleted because '))).to.be.true);`,
+        ],
       }),
     ]),
     folder(

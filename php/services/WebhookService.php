@@ -27,7 +27,8 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
             $defaults = [
                 'created_at'      => ServiceLocator::get('TimeRepository')->getCurrentUTCTime(),
                 'target_id'       => null,
-                'webhook_confirm' => false
+                'webhook_confirm' => false,
+                'created_by'      => null,
             ];
             $args = wp_parse_args($args, $defaults);
 
@@ -39,6 +40,7 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
                 'webhook_url'     => $args['webhook_url'],
                 'created_at'      => $args['created_at'],
                 'webhook_confirm' => $args['webhook_confirm'],
+                'created_by'      => $args['created_by'],
             ]);
 
             if (false === $result) {

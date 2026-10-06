@@ -224,6 +224,109 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
+         * Retrieves the boards a WordPress user would be removed from if their boards were set to the given ones.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[] $pipelineIds The board IDs the user would have.
+         * @return int[] The IDs of the boards the user would be removed from.
+         */
+        public function getRemovedPipelineIds($wpUserId, $pipelineIds)
+        {
+            $currentPipelineIds = ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($wpUserId);
+
+            return array_values(array_diff($currentPipelineIds, array_map('intval', $pipelineIds)));
+        }
+
+        /**
+         * Counts the API tokens and webhooks a WordPress user created on each of the given boards.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[] $pipelineIds The board IDs.
+         * @return array Arrays with pipeline_id, api_token_count and webhook_count, for the boards that have any.
+         */
+        public function countIntegrationsCreatedByWPUser($wpUserId, $pipelineIds)
+        {
+            return $this->countIntegrationsByPipeline(
+                ServiceLocator::get('ApiTokenRepository')->getTokensCreatedByWPUser($wpUserId, $pipelineIds),
+                ServiceLocator::get('WebhookRepository')->getWebhooksCreatedByWPUser($wpUserId, $pipelineIds)
+            );
+        }
+
+        /**
+         * Deletes the API tokens and webhooks a WordPress user created, and logs each deletion.
+         *
+         * Only the creator saw a token, and the creator chose where a webhook sends board data,
+         * so they would keep working for the user after the user loses access.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[]|null $pipelineIds Only on these boards, or null for every board.
+         * @param string $reason Ends the log entries, like "Anna was removed from the board".
+         * @return array The deleted API tokens and webhooks, counted as in countIntegrationsCreatedByWPUser().
+         * @throws \Exception If an API token or webhook could not be deleted.
+         */
+        public function deleteIntegrationsCreatedByWPUser($wpUserId, $pipelineIds, $reason)
+        {
+            $tokens = ServiceLocator::get('ApiTokenRepository')->getTokensCreatedByWPUser($wpUserId, $pipelineIds);
+            $webhooks = ServiceLocator::get('WebhookRepository')->getWebhooksCreatedByWPUser($wpUserId, $pipelineIds);
+            $logService = ServiceLocator::get('LogService');
+            $currentUserId = get_current_user_id();
+
+            foreach ($tokens as $token) {
+                ServiceLocator::get('ApiTokenService')->deleteApiToken($token->pipeline_id, $token->id);
+                $logService->log('API token ' . $token->name . ' deleted because ' . $reason, [
+                    'type'          => WP_QT_LOG_TYPE_API_TOKEN,
+                    'type_id'       => $token->id,
+                    'user_id'       => $currentUserId,
+                    'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                    'created_by_id' => $currentUserId,
+                    'pipeline_id'   => $token->pipeline_id,
+                ]);
+            }
+
+            foreach ($webhooks as $webhook) {
+                ServiceLocator::get('WebhookService')->deleteWebhook($webhook->id);
+                $logService->log('Webhook ' . ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook) . ' deleted because ' . $reason, [
+                    'type'          => WP_QT_LOG_TYPE_WEBHOOK,
+                    'type_id'       => $webhook->id,
+                    'user_id'       => $currentUserId,
+                    'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                    'created_by_id' => $currentUserId,
+                    'pipeline_id'   => $webhook->pipeline_id,
+                ]);
+            }
+
+            return $this->countIntegrationsByPipeline($tokens, $webhooks);
+        }
+
+        /**
+         * Counts API tokens and webhooks per board.
+         *
+         * @param array $tokens Objects with a pipeline_id property.
+         * @param array $webhooks Objects with a pipeline_id property.
+         * @return array Arrays with pipeline_id, api_token_count and webhook_count, ordered by board ID.
+         */
+        private function countIntegrationsByPipeline($tokens, $webhooks)
+        {
+            $counts = [];
+
+            foreach (['api_token_count' => $tokens, 'webhook_count' => $webhooks] as $countKey => $items) {
+                foreach ($items as $item) {
+                    $pipelineId = (int) $item->pipeline_id;
+                    $counts[$pipelineId] = $counts[$pipelineId] ?? [
+                        'pipeline_id'     => $pipelineId,
+                        'api_token_count' => 0,
+                        'webhook_count'   => 0,
+                    ];
+                    ++$counts[$pipelineId][$countKey];
+                }
+            }
+
+            ksort($counts);
+
+            return array_values($counts);
+        }
+
+        /**
          * Sets the boards a WordPress user has been added to, replacing the previous ones.
          *
          * @param int $wpUserId The WordPress user ID.

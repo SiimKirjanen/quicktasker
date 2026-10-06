@@ -29,6 +29,7 @@ import { AppContext } from "../../../../providers/AppContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { Webhook, WebhookTargetAction } from "../../../../types/webhook";
 import { convertToTimezone } from "../../../../utils/timezone";
+import { getCreatorName } from "../../../../utils/user";
 
 type Props = {
   webhook: Webhook;
@@ -59,6 +60,10 @@ function PipelineWebhook({ webhook }: Props) {
   const { editWebhook } = useWebhookActions();
   const { pipelineWebhooksDispatch } = useWebhooks();
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const creatorName = getCreatorName(
+    webhook.created_by,
+    webhook.created_by_name,
+  );
 
   const handleConfirmChange = async (newValue: boolean) => {
     setConfirmLoading(true);
@@ -163,6 +168,12 @@ function PipelineWebhook({ webhook }: Props) {
         label={__("Created", "quicktasker")}
         value={convertToTimezone(webhook.created_at, timezone)}
       />
+      {creatorName && (
+        <WPQTCardDataItem
+          label={__("Created by", "quicktasker")}
+          value={<span data-testid="webhook-created-by">{creatorName}</span>}
+        />
+      )}
     </WPQTCard>
   );
 }

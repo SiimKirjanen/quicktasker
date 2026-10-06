@@ -30,6 +30,7 @@ class ApiTokenRepositoryTest extends TestCase
         $this->wpdbMock = $this->getMockBuilder(stdClass::class)
             ->addMethods(['prepare', 'get_row', 'get_results'])
             ->getMock();
+        $this->wpdbMock->users = 'wp_users';
 
         // Set the global $wpdb to our mock
         $GLOBALS['wpdb'] = $this->wpdbMock;
@@ -520,5 +521,54 @@ class ApiTokenRepositoryTest extends TestCase
         foreach ($expectedProperties as $property) {
             $this->assertObjectHasProperty($property, $result, "Token should have $property property");
         }
+    }
+
+    public function test_getPipelineTokensForFrontend_includes_the_creator()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->logicalAnd(
+                $this->stringContains('t.created_by,'),
+                $this->stringContains('u.display_name AS created_by_name'),
+                $this->stringContains('LEFT JOIN wp_users AS u ON u.ID = t.created_by'),
+                $this->stringContains('WHERE t.pipeline_id = %d')
+            ), 4)
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getPipelineTokensForFrontend(4);
+    }
+
+    public function test_getTokensCreatedByWPUser_on_some_boards()
+    {
+        $tokens = [(object) ['id' => '4', 'pipeline_id' => '2', 'name' => 'Zapier']];
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                'SELECT id, pipeline_id, name FROM wp_quicktasker_api_tokens WHERE created_by = %d AND pipeline_id IN (%d,%d) ORDER BY id ASC',
+                [7, 2, 3]
+            )
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->with('PREPARED_SQL')->willReturn($tokens);
+
+        $this->assertSame($tokens, $this->repository->getTokensCreatedByWPUser(7, [2, 3]));
+    }
+
+    public function test_getTokensCreatedByWPUser_on_every_board()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with('SELECT id, pipeline_id, name FROM wp_quicktasker_api_tokens WHERE created_by = %d ORDER BY id ASC', [7])
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->assertSame([], $this->repository->getTokensCreatedByWPUser(7));
+    }
+
+    public function test_getTokensCreatedByWPUser_skips_the_query_for_no_boards()
+    {
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $this->assertSame([], $this->repository->getTokensCreatedByWPUser(7, []));
     }
 }

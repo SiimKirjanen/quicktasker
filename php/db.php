@@ -339,6 +339,7 @@ if (!function_exists('wpqt_set_up_db')) {
 				webhook_url varchar(255) NOT NULL,
 				webhook_confirm tinyint(1) DEFAULT 0,
 				active tinyint(1) DEFAULT 1,
+				created_by bigint(20) unsigned DEFAULT NULL COMMENT 'WordPress user ID',
 				created_at datetime NOT NULL COMMENT 'UTC',
 				PRIMARY KEY  (id)
 			) $charset_collate;";
@@ -351,6 +352,7 @@ if (!function_exists('wpqt_set_up_db')) {
 				name varchar(255) NOT NULL,
 				description text,
 				token varchar(255) NOT NULL,
+				created_by bigint(20) unsigned DEFAULT NULL COMMENT 'WordPress user ID',
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
 				get_pipeline tinyint(1) DEFAULT 0,

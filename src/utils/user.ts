@@ -1,3 +1,4 @@
+import { __ } from "@wordpress/i18n";
 import { ActionTargetType } from "../types/automation";
 import {
   ExtendedUser,
@@ -52,6 +53,21 @@ const canWPUserAccessPipeline = (user: WPUser, pipelineId: string) =>
   Boolean(user.can_access_all_pipelines) ||
   (user.pipeline_ids ?? []).includes(Number(pipelineId));
 
+/**
+ * The name of the WordPress user who created something, like an API token or a
+ * webhook. Null when it was created before the creator was saved.
+ */
+const getCreatorName = (
+  createdBy: string | null,
+  createdByName: string | null,
+) => {
+  if (!createdBy) {
+    return null;
+  }
+
+  return createdByName ?? __("Deleted user", "quicktasker");
+};
+
 const userTypeStrings = {
   [UserTypes.QUICKTASKER]: "Quicktasker",
   [UserTypes.WP_USER]: "WordPress User",
@@ -62,6 +78,7 @@ export {
   convertExtendedUserFromServer,
   convertUserFromServer,
   convertUserPageUserFromServer,
+  getCreatorName,
   mapActionTargetTypeToUserType,
   userTypeStrings,
 };

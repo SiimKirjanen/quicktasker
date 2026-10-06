@@ -48,6 +48,14 @@ test.describe('Board API Tokens', () => {
     await expect(page.getByRole('switch', { name: 'GET tasks' })).not.toBeChecked();
   });
 
+  test('should show who created a token', async ({ page }) => {
+    await setupBoardForApiTokens(page, 'AT-Creator');
+
+    await createApiToken(page, { name: 'Token With Creator' });
+
+    await expect(page.getByTestId('api-token-created-by')).toHaveText('admin');
+  });
+
   test('should create a token with a description', async ({ page }) => {
     await setupBoardForApiTokens(page, 'AT-Create-Desc');
 

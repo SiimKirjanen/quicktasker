@@ -372,6 +372,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'name'                   => $data['name'],
                             'description'            => $data['description'],
                             'pipeline_id'            => $data['id'],
+                            'created_by'             => get_current_user_id(),
                             'get_pipeline'           => $data['get_pipeline'],
                             'patch_pipeline'         => $data['patch_pipeline'],
                             'get_pipeline_stages'    => $data['get_pipeline_stages'],
@@ -2621,12 +2622,32 @@ if (!function_exists('wpqt_register_api_routes')) {
                     global $wpdb;
 
                     try {
-                        if (!get_user_by('id', $data['id'])) {
+                        $wpUser = get_user_by('id', $data['id']);
+
+                        if (!$wpUser) {
                             throw new WPQTException('User not found', true);
                         }
 
+                        // API tokens and webhooks the user created on removed boards are deleted, so the admin confirms first.
+                        $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                        $integrationsToDelete = $pipelineAccessService->countIntegrationsCreatedByWPUser(
+                            $data['id'],
+                            $pipelineAccessService->getRemovedPipelineIds($data['id'], $data['pipeline_ids'])
+                        );
+
+                        if (!empty($integrationsToDelete) && !$data['remove_integrations']) {
+                            return new WP_REST_Response((new ApiResponse(false, [WP_QUICKTASKER_EXCEPTION_INTEGRATIONS_REMOVAL_NOT_CONFIRMED], [
+                                'pipelines_with_integrations' => $integrationsToDelete,
+                            ]))->toArray(), 409);
+                        }
+
                         $wpdb->query('START TRANSACTION');
-                        $removedPipelineIds = ServiceLocator::get('PipelineAccessService')->setWPUserPipelines($data['id'], $data['pipeline_ids']);
+                        $removedPipelineIds = $pipelineAccessService->setWPUserPipelines($data['id'], $data['pipeline_ids']);
+                        $deletedIntegrations = $pipelineAccessService->deleteIntegrationsCreatedByWPUser(
+                            $data['id'],
+                            $removedPipelineIds,
+                            $wpUser->display_name . ' was removed from the board'
+                        );
                         $wpdb->query('COMMIT');
 
                         // Tasks on removed boards stay assigned, so the admin is told about them.
@@ -2643,6 +2664,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return new WP_REST_Response((new ApiResponse(true, [], [
                             'pipeline_ids'                          => ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($data['id']),
                             'removed_pipelines_with_assigned_tasks' => $removedPipelinesWithAssignedTasks,
+                            'deleted_integrations'                  => $deletedIntegrations,
                         ]))->toArray(), 200);
                     } catch (PipelineMissingException $e) {
                         $wpdb->query('ROLLBACK');
@@ -2667,6 +2689,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'required'          => true,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericArray'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsintArray'],
+                    ],
+                    'remove_integrations' => [
+                        'required'          => false,
+                        'default'           => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateBooleanParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeBooleanParam'],
                     ],
                 ],
             ],
@@ -3921,6 +3949,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                                 'target_action'   => $data['target_action'],
                                 'webhook_url'     => $data['webhook_url'],
                                 'webhook_confirm' => $data['webhook_confirm'],
+                                'created_by'      => get_current_user_id(),
                             ]
                         );
                         $webhookName = ServiceLocator::get('WebhookRepository')->generateWebhookName($webhook);

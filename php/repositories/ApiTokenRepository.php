@@ -63,24 +63,7 @@ if (!class_exists('WPQT\Token\ApiTokenRepository')) {
 
             $result = $wpdb->get_row(
                 $wpdb->prepare(
-                    'SELECT 
-                        id,
-                        pipeline_id,
-                        name,
-                        description,
-                        created_at,
-                        updated_at,
-                        get_pipeline,
-                        patch_pipeline,
-                        get_pipeline_stages,
-                        post_pipeline_stages,
-                        patch_pipeline_stages,
-                        delete_pipeline_stages,
-                        get_pipeline_tasks,
-                        post_pipeline_tasks,
-                        patch_pipeline_tasks,
-                        delete_pipeline_tasks
-                    FROM ' . TABLE_WP_QUICKTASKER_API_TOKENS . ' WHERE id = %d',
+                    $this->getFrontendTokenQuery() . ' WHERE t.id = %d',
                     $tokenId
                 )
             );
@@ -104,29 +87,71 @@ if (!class_exists('WPQT\Token\ApiTokenRepository')) {
 
             $tokens = $wpdb->get_results(
                 $wpdb->prepare(
-                    'SELECT 
-                        id,
-                        pipeline_id,
-                        name,
-                        description,
-                        created_at,
-                        updated_at,
-                        get_pipeline,
-                        patch_pipeline,
-                        get_pipeline_stages,
-                        post_pipeline_stages,
-                        patch_pipeline_stages,
-                        delete_pipeline_stages,
-                        get_pipeline_tasks,
-                        post_pipeline_tasks,
-                        patch_pipeline_tasks,
-                        delete_pipeline_tasks
-                    FROM ' . TABLE_WP_QUICKTASKER_API_TOKENS . ' WHERE pipeline_id = %d',
+                    $this->getFrontendTokenQuery() . ' WHERE t.pipeline_id = %d',
                     $pipelineId
                 )
             );
 
             return $tokens ? $tokens : [];
+        }
+
+        /**
+         * Retrieves the API tokens a WordPress user created.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[]|null $pipelineIds Only tokens on these boards, or null for tokens on every board.
+         * @return array Token objects with id, pipeline_id and name.
+         */
+        public function getTokensCreatedByWPUser($wpUserId, $pipelineIds = null)
+        {
+            global $wpdb;
+
+            if (null !== $pipelineIds && empty($pipelineIds)) {
+                return [];
+            }
+
+            $sql = 'SELECT id, pipeline_id, name FROM ' . TABLE_WP_QUICKTASKER_API_TOKENS . ' WHERE created_by = %d';
+            $params = [$wpUserId];
+
+            if (null !== $pipelineIds) {
+                $sql .= ' AND pipeline_id IN (' . implode(',', array_fill(0, count($pipelineIds), '%d')) . ')';
+                $params = array_merge($params, array_values($pipelineIds));
+            }
+
+            return $wpdb->get_results($wpdb->prepare($sql . ' ORDER BY id ASC', $params));
+        }
+
+        /**
+         * Builds the query that selects tokens for frontend display, without the hashed token value
+         * and with the name of the WordPress user who created each token.
+         *
+         * @return string The SELECT and FROM clauses, with the tokens table aliased t.
+         */
+        private function getFrontendTokenQuery()
+        {
+            global $wpdb;
+
+            return 'SELECT
+                        t.id,
+                        t.pipeline_id,
+                        t.name,
+                        t.description,
+                        t.created_at,
+                        t.updated_at,
+                        t.created_by,
+                        u.display_name AS created_by_name,
+                        t.get_pipeline,
+                        t.patch_pipeline,
+                        t.get_pipeline_stages,
+                        t.post_pipeline_stages,
+                        t.patch_pipeline_stages,
+                        t.delete_pipeline_stages,
+                        t.get_pipeline_tasks,
+                        t.post_pipeline_tasks,
+                        t.patch_pipeline_tasks,
+                        t.delete_pipeline_tasks
+                    FROM ' . TABLE_WP_QUICKTASKER_API_TOKENS . ' AS t
+                    LEFT JOIN ' . $wpdb->users . ' AS u ON u.ID = t.created_by';
         }
 
         /**

@@ -184,6 +184,7 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                 'name'                   => null,
                 'pipeline_id'            => null,
                 'description'            => '',
+                'created_by'             => null,
                 'get_pipeline'           => true,
                 'patch_pipeline'         => false,
                 'get_pipeline_stages'    => false,
@@ -215,6 +216,7 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                     'pipeline_id'            => intval($args['pipeline_id']),
                     'description'            => sanitize_textarea_field($args['description']),
                     'token'                  => $hashedToken,
+                    'created_by'             => $args['created_by'],
                     'created_at'             => $timeRepository->getCurrentUTCTime(),
                     'updated_at'             => $timeRepository->getCurrentUTCTime(),
                     'get_pipeline'           => $args['get_pipeline'],
@@ -233,6 +235,7 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                     '%d', // pipeline_id
                     '%s', // description
                     '%s', // token
+                    '%d', // created_by
                     '%s', // created_at
                     '%s', // updated_at
                     '%d', // get_pipeline
