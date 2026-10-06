@@ -2628,9 +2628,13 @@ if (!function_exists('wpqt_register_api_routes')) {
                             throw new WPQTException('User not found', true);
                         }
 
-                        // API tokens and webhooks the user created on removed boards are deleted, so the admin confirms first.
+                        // Users who can access every board, like administrators, keep access to boards they are removed
+                        // from, so their API tokens and webhooks are kept and their tasks stay visible to them.
                         $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
-                        $integrationsToDelete = $pipelineAccessService->countIntegrationsCreatedByWPUser(
+                        $keepsAccess = ServiceLocator::get('PipelineAccessRepository')->canAccessAllPipelines($data['id']);
+
+                        // API tokens and webhooks the user created on removed boards are deleted, so the admin confirms first.
+                        $integrationsToDelete = $keepsAccess ? [] : $pipelineAccessService->countIntegrationsCreatedByWPUser(
                             $data['id'],
                             $pipelineAccessService->getRemovedPipelineIds($data['id'], $data['pipeline_ids'])
                         );
@@ -2643,15 +2647,15 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $wpdb->query('START TRANSACTION');
                         $removedPipelineIds = $pipelineAccessService->setWPUserPipelines($data['id'], $data['pipeline_ids']);
-                        $deletedIntegrations = $pipelineAccessService->deleteIntegrationsCreatedByWPUser(
+                        $deletedIntegrations = $keepsAccess ? [] : $pipelineAccessService->deleteIntegrationsCreatedByWPUser(
                             $data['id'],
                             $removedPipelineIds,
                             $wpUser->display_name . ' was removed from the board'
                         );
                         $wpdb->query('COMMIT');
 
-                        // Tasks on removed boards stay assigned, so the admin is told about them.
-                        $assignedTaskCounts = ServiceLocator::get('TaskRepository')->countTasksAssignedToWPUserByPipeline($data['id'], $removedPipelineIds);
+                        // Tasks on removed boards stay assigned but are hidden from the user, so the admin is told about them.
+                        $assignedTaskCounts = $keepsAccess ? [] : ServiceLocator::get('TaskRepository')->countTasksAssignedToWPUserByPipeline($data['id'], $removedPipelineIds);
                         $removedPipelinesWithAssignedTasks = [];
 
                         foreach ($assignedTaskCounts as $pipelineId => $taskCount) {

@@ -16,6 +16,7 @@ import {
   uniqueLogin,
 } from './utils/user-helpers';
 import { TIMEOUTS } from './utils/timeouts';
+import { runWpCli } from './utils/wp-cli';
 
 /**
  * Logs in as the user and creates an API token and a webhook on the board.
@@ -343,6 +344,42 @@ test.describe('WordPress Users Tab – Boards', () => {
 
       await expect(page.getByTestId('automation-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
       await expect(page.getByTestId('automation-creator-no-board-access')).toHaveText('No access to this board');
+    } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test('a user who can manage options keeps their API tokens and webhooks when removed from a board', async ({ page, browser, request }) => {
+    // A custom role with manage_options can access every board, but is listed with the users who are not administrators.
+    try {
+      runWpCli('role create qt_e2e_site_manager "Site Manager" --clone=editor');
+    } catch {
+      // The role was created by an earlier run.
+    }
+    runWpCli('cap add qt_e2e_site_manager manage_options');
+
+    const boardName = generateUniqueName('WUB-Site-Manager');
+    const board = await createBoardViaApi(request, boardName);
+    const userLogin = uniqueLogin('wpsitemanager');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'qt_e2e_site_manager');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    await addWPUserToBoards(request, userId, [boardName]);
+    await createIntegrationsAsUser(browser, userLogin, board.boardId);
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText(boardName, { timeout: TIMEOUTS.NAVIGATION });
+
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: boardName }).click();
+      await page.keyboard.press('Escape');
+
+      await expect(page.getByText(`${userLogin} was removed from ${boardName}.`)).toBeVisible();
+      await expect(boardsSummary).toHaveText('No boards');
+      await expect(page.getByTestId('remove-integrations-confirm')).toHaveCount(0);
+      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
     } finally {
       await deleteBoardViaApi(request, boardName);
     }
