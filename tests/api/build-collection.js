@@ -3024,7 +3024,11 @@ const adminAutomations = folder("Automations", [
       automationTrigger: "task-done",
       automationAction: "archive-task",
     },
-    tests: [status(200), save("automationCId", "pm.response.json().data.id")],
+    tests: [
+      status(200),
+      `pm.test('the creator is saved', () => pm.expect(pm.response.json().data.created_by).to.not.be.null);`,
+      save("automationCId", "pm.response.json().data.id"),
+    ],
   }),
   request({
     name: "Automation rejects unknown trigger",
@@ -3047,6 +3051,8 @@ const adminAutomations = folder("Automations", [
         "pm.response.json().data.automations",
         "automationCId",
       ),
+      `const automation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('automationCId'));
+pm.test('the creator is named', () => pm.expect(automation && automation.created_by_name).to.be.a('string').and.not.be.empty);`,
     ],
   }),
   request({

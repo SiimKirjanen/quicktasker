@@ -40,6 +40,7 @@ class AutomationRepositoryTest extends TestCase
         $this->wpdbMock = $this->getMockBuilder(stdClass::class)
             ->addMethods(['prepare', 'get_row', 'get_results'])
             ->getMock();
+        $this->wpdbMock->users = 'wp_users';
 
         // Set the global $wpdb to our mock
         $GLOBALS['wpdb'] = $this->wpdbMock;
@@ -488,5 +489,20 @@ class AutomationRepositoryTest extends TestCase
             'Methods using decryptSensitiveMetadata require integration testing with ' .
             'ServiceLocator and SecretsService properly configured.'
         );
+    }
+
+    public function test_getPipelineAutomations_includes_the_creator()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->logicalAnd(
+                $this->stringContains('a.created_by, u.display_name AS created_by_name'),
+                $this->stringContains('LEFT JOIN wp_users AS u ON u.ID = a.created_by'),
+                $this->stringContains('WHERE a.pipeline_id = %d')
+            ), 4)
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getPipelineAutomations(4);
     }
 }

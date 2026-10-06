@@ -81,6 +81,10 @@ type BaseAutomation = {
   created_at: string;
   updated_at: string;
   metadata: string | null;
+  // The WordPress user who created the automation. Unknown for automations created before it was saved.
+  created_by: string | null;
+  // Null when the user has been deleted.
+  created_by_name: string | null;
 };
 
 type Automation = BaseAutomation & {

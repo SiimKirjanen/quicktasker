@@ -273,6 +273,7 @@ if (!function_exists('wpqt_set_up_db')) {
 				automation_action_target_id int(11) DEFAULT NULL,
 				automation_action_target_type ENUM('stage', 'task', 'quicktasker', 'pipeline', 'wp-user') DEFAULT NULL,
 				metadata TEXT DEFAULT NULL,
+				created_by bigint(20) unsigned DEFAULT NULL COMMENT 'WordPress user ID',
 				created_at datetime NOT NULL COMMENT 'UTC',
 				updated_at datetime NOT NULL COMMENT 'UTC',
 				active tinyint(1) DEFAULT 1,

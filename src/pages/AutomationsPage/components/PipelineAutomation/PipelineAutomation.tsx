@@ -32,6 +32,7 @@ import {
   automationTriggerStrings,
 } from "../../../../utils/automations";
 import { convertToTimezone } from "../../../../utils/timezone";
+import { getCreatorName } from "../../../../utils/user";
 import { AutomationActionTarget } from "../AutomationActionTarget/AutomationActionTarget";
 
 type Props = {
@@ -49,6 +50,10 @@ function PipelineAutomation({ automation }: Props) {
     automation.automation_action_target_id !== null &&
     automation.automation_action_target_type !== null;
   const hasMeta = automation.metadata !== null;
+  const creatorName = getCreatorName(
+    automation.created_by,
+    automation.created_by_name,
+  );
 
   const triggerLabel = automationTriggerStrings[automation.automation_trigger];
   const actionLabel = automationActionStrings[automation.automation_action];
@@ -125,6 +130,12 @@ function PipelineAutomation({ automation }: Props) {
         label={__("Created", "quicktasker")}
         value={convertToTimezone(automation.created_at, timezone)}
       />
+      {creatorName && (
+        <WPQTCardDataItem
+          label={__("Created by", "quicktasker")}
+          value={<span data-testid="automation-created-by">{creatorName}</span>}
+        />
+      )}
     </WPQTCard>
   );
 }

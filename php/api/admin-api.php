@@ -3692,7 +3692,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         }
 
                         $automationService = ServiceLocator::get('AutomationService');
-                        $automation = $automationService->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata']);
+                        $automation = $automationService->createAutomation($data['id'], null, $data['automationTarget'], $data['automationTrigger'], $data['automationAction'], $data['automationActionTargetId'], $data['automationActionTargetType'], $data['automationMetadata'], get_current_user_id());
 
                         ServiceLocator::get('LogService')->log('Automation created: ' . $automationService->getAutomationDescription($automation), [
                             'type'          => WP_QT_LOG_TYPE_AUTOMATION,
