@@ -2,12 +2,12 @@ import { CheckIcon, ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { WPQTCard } from "../../../../components/Card/Card";
+import { CreatedByDataItem } from "../../../../components/Card/CreatedByDataItem/CreatedByDataItem";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { Alert } from "../../../../components/common/Alert/Alert";
 import { ApiTokenDropdown } from "../../../../components/Dropdown/ApiTokenDropdown/ApiTokenDropdown";
 import { useTimezone } from "../../../../hooks/useTimezone";
 import { ApiToken } from "../../../../types/api-token";
-import { getCreatorName } from "../../../../utils/user";
 
 type Props = {
   apiToken: ApiToken;
@@ -24,10 +24,6 @@ const methodChipClasses: Record<Method, string> = {
 
 function PipelineApiToken({ apiToken }: Props) {
   const { convertToWPTimezone } = useTimezone();
-  const creatorName = getCreatorName(
-    apiToken.created_by,
-    apiToken.created_by_name,
-  );
 
   const boardMethods: Method[] = [];
   if (apiToken.get_pipeline) boardMethods.push("GET");
@@ -57,6 +53,17 @@ function PipelineApiToken({ apiToken }: Props) {
       dataTestId="pipeline-api-token"
       className="wpqt-w-full"
     >
+      {apiToken.created_by_has_board_access === false && (
+        <div className="wpqt-mb-3" data-testid="api-token-not-working">
+          <Alert type="warning" className="!wpqt-flex wpqt-w-full">
+            {__(
+              "This token doesn't work: its creator has no access to this board.",
+              "quicktasker",
+            )}
+          </Alert>
+        </div>
+      )}
+
       {apiToken.description && (
         <WPQTCardDataItem
           label={__("Description", "quicktasker")}
@@ -91,12 +98,12 @@ function PipelineApiToken({ apiToken }: Props) {
         value={convertToWPTimezone(apiToken.created_at)}
       />
 
-      {creatorName && (
-        <WPQTCardDataItem
-          label={__("Created by", "quicktasker")}
-          value={<span data-testid="api-token-created-by">{creatorName}</span>}
-        />
-      )}
+      <CreatedByDataItem
+        createdBy={apiToken.created_by}
+        createdByName={apiToken.created_by_name}
+        hasBoardAccess={apiToken.created_by_has_board_access}
+        testId="api-token"
+      />
 
       <WPQTCardDataItem
         label={__("Permissions", "quicktasker")}

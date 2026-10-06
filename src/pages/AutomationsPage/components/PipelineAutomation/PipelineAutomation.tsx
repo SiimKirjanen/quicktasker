@@ -1,6 +1,5 @@
 import {
   EllipsisHorizontalIcon,
-  ExclamationTriangleIcon,
   PauseCircleIcon,
   PlayCircleIcon,
   TrashIcon,
@@ -10,6 +9,7 @@ import { __ } from "@wordpress/i18n";
 import { TbLogs } from "react-icons/tb";
 
 import { WPQTCard } from "../../../../components/Card/Card";
+import { CreatedByDataItem } from "../../../../components/Card/CreatedByDataItem/CreatedByDataItem";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { WPQTConfirmTooltip } from "../../../../components/Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
@@ -33,7 +33,6 @@ import {
   automationTriggerStrings,
 } from "../../../../utils/automations";
 import { convertToTimezone } from "../../../../utils/timezone";
-import { getCreatorName } from "../../../../utils/user";
 import { AutomationActionTarget } from "../AutomationActionTarget/AutomationActionTarget";
 
 type Props = {
@@ -51,10 +50,6 @@ function PipelineAutomation({ automation }: Props) {
     automation.automation_action_target_id !== null &&
     automation.automation_action_target_type !== null;
   const hasMeta = automation.metadata !== null;
-  const creatorName = getCreatorName(
-    automation.created_by,
-    automation.created_by_name,
-  );
 
   const triggerLabel = automationTriggerStrings[automation.automation_trigger];
   const actionLabel = automationActionStrings[automation.automation_action];
@@ -131,28 +126,12 @@ function PipelineAutomation({ automation }: Props) {
         label={__("Created", "quicktasker")}
         value={convertToTimezone(automation.created_at, timezone)}
       />
-      {creatorName && (
-        <WPQTCardDataItem
-          label={__("Created by", "quicktasker")}
-          value={
-            <span className="wpqt-inline-flex wpqt-flex-wrap wpqt-items-center wpqt-gap-1">
-              <span data-testid="automation-created-by">{creatorName}</span>
-              {automation.created_by_has_board_access === false && (
-                <span
-                  className="wpqt-inline-flex wpqt-items-center wpqt-gap-0.5 wpqt-text-yellow-700"
-                  data-testid="automation-creator-no-board-access"
-                >
-                  <ExclamationTriangleIcon
-                    className="wpqt-size-4"
-                    aria-hidden="true"
-                  />
-                  {__("No access to this board", "quicktasker")}
-                </span>
-              )}
-            </span>
-          }
-        />
-      )}
+      <CreatedByDataItem
+        createdBy={automation.created_by}
+        createdByName={automation.created_by_name}
+        hasBoardAccess={automation.created_by_has_board_access}
+        testId="automation"
+      />
     </WPQTCard>
   );
 }

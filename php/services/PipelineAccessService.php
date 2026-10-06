@@ -224,7 +224,38 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
-         * Adds whether each item's creator can still access the item's board.
+         * Checks if the creator of an API token, webhook or automation can still use its board.
+         *
+         * API tokens and webhooks only work while this is true, so they stop when the creator loses access
+         * in any way, like being removed from the board, losing the QuickTasker capability or a role change.
+         * Items created before creators were recorded have no creator and are allowed.
+         *
+         * @param int|null $createdBy The ID of the WordPress user who created the item.
+         * @param int|null $pipelineId The ID of the item's board.
+         * @return bool True if the creator is unknown, or can use QuickTasker and access the board.
+         */
+        public function canCreatorUseBoard($createdBy, $pipelineId)
+        {
+            if (empty($createdBy)) {
+                return true;
+            }
+
+            $creatorId = (int) $createdBy;
+            $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
+
+            if (!$pipelineAccessRepo->canUseQuickTasker($creatorId)) {
+                return false;
+            }
+
+            if (null === $pipelineId) {
+                return $pipelineAccessRepo->canAccessAllPipelines($creatorId);
+            }
+
+            return $this->canAccessPipeline($creatorId, $pipelineId);
+        }
+
+        /**
+         * Adds whether each item's creator can still use the item's board. See canCreatorUseBoard().
          *
          * Sets created_by_has_board_access to true or false, or to null when the creator is unknown
          * or their WordPress user has been deleted.
@@ -234,7 +265,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          */
         public function addCreatorBoardAccess($items)
         {
-            $accessiblePipelineIdsByUserId = [];
+            $accessByCreatorAndPipeline = [];
 
             foreach ($items as $item) {
                 if (empty($item->created_by) || null === $item->created_by_name) {
@@ -242,32 +273,16 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
                     continue;
                 }
 
-                $creatorId = (int) $item->created_by;
+                $key = $item->created_by . ':' . $item->pipeline_id;
 
-                if (!array_key_exists($creatorId, $accessiblePipelineIdsByUserId)) {
-                    $accessiblePipelineIdsByUserId[$creatorId] = $this->getAccessiblePipelineIds($creatorId);
+                if (!array_key_exists($key, $accessByCreatorAndPipeline)) {
+                    $accessByCreatorAndPipeline[$key] = $this->canCreatorUseBoard($item->created_by, $item->pipeline_id);
                 }
 
-                $accessiblePipelineIds = $accessiblePipelineIdsByUserId[$creatorId];
-                $item->created_by_has_board_access = null === $accessiblePipelineIds
-                    || in_array((int) $item->pipeline_id, $accessiblePipelineIds, true);
+                $item->created_by_has_board_access = $accessByCreatorAndPipeline[$key];
             }
 
             return $items;
-        }
-
-        /**
-         * Retrieves the boards a WordPress user would be removed from if their boards were set to the given ones.
-         *
-         * @param int $wpUserId The WordPress user ID.
-         * @param int[] $pipelineIds The board IDs the user would have.
-         * @return int[] The IDs of the boards the user would be removed from.
-         */
-        public function getRemovedPipelineIds($wpUserId, $pipelineIds)
-        {
-            $currentPipelineIds = ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($wpUserId);
-
-            return array_values(array_diff($currentPipelineIds, array_map('intval', $pipelineIds)));
         }
 
         /**
@@ -288,8 +303,8 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         /**
          * Deletes the API tokens and webhooks a WordPress user created, and logs each deletion.
          *
-         * Only the creator saw a token, and the creator chose where a webhook sends board data,
-         * so they would keep working for the user after the user loses access.
+         * Used when the user is deleted, as they can never get access back. While a user only lacks access,
+         * their API tokens and webhooks are kept but stop working, see canCreatorUseBoard().
          *
          * @param int $wpUserId The WordPress user ID.
          * @param int[]|null $pipelineIds Only on these boards, or null for every board.

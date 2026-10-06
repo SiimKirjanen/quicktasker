@@ -10,6 +10,7 @@ import { TbLogs } from "react-icons/tb";
 import { toast } from "react-toastify";
 
 import { WPQTCard } from "../../../../components/Card/Card";
+import { CreatedByDataItem } from "../../../../components/Card/CreatedByDataItem/CreatedByDataItem";
 import { WPQTCardDataItem } from "../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { WPQTConfirmTooltip } from "../../../../components/Dialog/ConfirmTooltip/ConfirmTooltip";
 import {
@@ -29,7 +30,6 @@ import { AppContext } from "../../../../providers/AppContextProvider";
 import { ModalContext } from "../../../../providers/ModalContextProvider";
 import { Webhook, WebhookTargetAction } from "../../../../types/webhook";
 import { convertToTimezone } from "../../../../utils/timezone";
-import { getCreatorName } from "../../../../utils/user";
 
 type Props = {
   webhook: Webhook;
@@ -60,10 +60,6 @@ function PipelineWebhook({ webhook }: Props) {
   const { editWebhook } = useWebhookActions();
   const { pipelineWebhooksDispatch } = useWebhooks();
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const creatorName = getCreatorName(
-    webhook.created_by,
-    webhook.created_by_name,
-  );
 
   const handleConfirmChange = async (newValue: boolean) => {
     setConfirmLoading(true);
@@ -120,7 +116,18 @@ function PipelineWebhook({ webhook }: Props) {
       <WPQTCardDataItem
         label={__("Status", "quicktasker")}
         value={
-          webhook.active ? (
+          webhook.active && webhook.created_by_has_board_access === false ? (
+            <span
+              className="wpqt-inline-flex wpqt-items-center wpqt-gap-1 wpqt-text-yellow-700"
+              data-testid="webhook-not-sending"
+            >
+              <span className="wpqt-h-2 wpqt-w-2 wpqt-rounded-full wpqt-bg-yellow-500" />
+              {__(
+                "Not sending: its creator has no access to this board",
+                "quicktasker",
+              )}
+            </span>
+          ) : webhook.active ? (
             <span className="wpqt-inline-flex wpqt-items-center wpqt-gap-1 wpqt-text-green-700">
               <span className="wpqt-h-2 wpqt-w-2 wpqt-rounded-full wpqt-bg-green-500" />
               {__("Active", "quicktasker")}
@@ -168,12 +175,12 @@ function PipelineWebhook({ webhook }: Props) {
         label={__("Created", "quicktasker")}
         value={convertToTimezone(webhook.created_at, timezone)}
       />
-      {creatorName && (
-        <WPQTCardDataItem
-          label={__("Created by", "quicktasker")}
-          value={<span data-testid="webhook-created-by">{creatorName}</span>}
-        />
-      )}
+      <CreatedByDataItem
+        createdBy={webhook.created_by}
+        createdByName={webhook.created_by_name}
+        hasBoardAccess={webhook.created_by_has_board_access}
+        testId="webhook"
+      />
     </WPQTCard>
   );
 }

@@ -674,20 +674,14 @@ function updateWPUserPermissionsRequest(
   });
 }
 
-// Removing the user from boards deletes the API tokens and webhooks they created
-// there, so the request is refused unless removeIntegrations confirms it.
 function updateWPUserPipelinesRequest(
   userId: string,
   pipelineIds: string[],
-  removeIntegrations = false,
 ): Promise<WPQTResponse<WPUserPipelinesUpdate>> {
   return apiFetch({
     path: `/wpqt/v1/wp-users/${userId}/pipelines`,
     method: "PATCH",
-    data: {
-      pipeline_ids: pipelineIds,
-      remove_integrations: removeIntegrations,
-    },
+    data: { pipeline_ids: pipelineIds },
     headers: getCommonHeaders(),
   });
 }

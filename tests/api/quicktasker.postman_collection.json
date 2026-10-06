@@ -22230,7 +22230,481 @@
                   ]
                 },
                 {
-                  "name": "Removing the outsider from board E needs confirmation to delete their API token and webhook",
+                  "name": "Turn off the outsider's QuickTasker access",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/capabilities",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"quicktasker_admin_role\": false,\n  \"quicktasker_admin_role_allow_delete\": true,\n  \"quicktasker_admin_role_manage_users\": false,\n  \"quicktasker_admin_role_manage_settings\": true,\n  \"quicktasker_admin_role_manage_archive\": true,\n  \"quicktasker_access_user_page_app\": false,\n  \"quicktasker_view_my_tasks\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider's API token stops working without QuickTasker access",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/token/board",
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{outsiderToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is token_creator_no_access', () => pm.expect(pm.response.json().code).to.eql('token_creator_no_access'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Board E marks the outsider's API token and webhook as created by someone without access",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));\npm.test('the token creator has no access', () => pm.expect(token && token.created_by_has_board_access).to.eql(false));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Board E marks the outsider's webhook as created by someone without access",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/webhooks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const webhook = pm.response.json().data.webhooks.find((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'));\npm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.created_by_has_board_access).to.eql(false));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create a task on board E to delete while the outsider has no access",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Skipped webhook task {{runId}}\",\n  \"stageId\": \"{{stageE1Id}}\",\n  \"pipelineId\": \"{{boardEId}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('skippedWebhookTaskId', String(pm.response.json().data.newTask.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Delete the task, which would trigger the outsider's webhook",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{skippedWebhookTaskId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider's webhook is skipped and the skip is logged",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/global-logs?order=DESC&numberOfLogs=200&search=its%20creator%20has%20no%20access",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('the skipped webhook is logged on board E', () => pm.expect(pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Turn the outsider's QuickTasker access back on",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/capabilities",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"quicktasker_admin_role\": true,\n  \"quicktasker_admin_role_allow_delete\": true,\n  \"quicktasker_admin_role_manage_users\": false,\n  \"quicktasker_admin_role_manage_settings\": true,\n  \"quicktasker_admin_role_manage_archive\": true,\n  \"quicktasker_access_user_page_app\": false,\n  \"quicktasker_view_my_tasks\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider's API token works again with QuickTasker access",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/token/board",
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{outsiderToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create a task on board E to delete while the outsider has access",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Sent webhook task {{runId}}\",\n  \"stageId\": \"{{stageE1Id}}\",\n  \"pipelineId\": \"{{boardEId}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('sentWebhookTaskId', String(pm.response.json().data.newTask.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Delete the task, which triggers the outsider's webhook",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{sentWebhookTaskId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider's webhook sends again",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/qt-test/v1/captured/qt-outsider-{{runId}}",
+                    "auth": {
+                      "type": "noauth"
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "// Delivery may be asynchronous: poll this request up to 20 times.\nconst captured = pm.response.json();\nconst attempts = Number(pm.collectionVariables.get('webhookPollAttempts') || 0);\nif ((!Array.isArray(captured) || captured.length === 0) && attempts < 20) {\n  pm.collectionVariables.set('webhookPollAttempts', String(attempts + 1));\n  setTimeout(() => {}, 250);\n  pm.execution.setNextRequest(pm.info.requestName);\n} else {\n  pm.collectionVariables.set('webhookPollAttempts', '0');\n  pm.test('only the task deleted with access was sent', () => {\n    pm.expect(captured).to.be.an('array').with.lengthOf(1);\n    pm.expect(JSON.stringify(captured[0].body)).to.include('Sent webhook task ' + pm.collectionVariables.get('runId'));\n  });\n}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Clear the outsider's captured webhooks",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/qt-test/v1/captured/qt-outsider-{{runId}}",
+                    "auth": {
+                      "type": "noauth"
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Remove outsider from board E",
                   "request": {
                     "method": "PATCH",
                     "header": [
@@ -22271,93 +22745,9 @@
                       "script": {
                         "type": "text/javascript",
                         "exec": [
-                          "pm.test('status is 409', () => pm.response.to.have.status(409));",
-                          "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
-                          "pm.test('confirmation is asked for', () => pm.expect(pm.response.json().messages).to.include('INTEGRATIONS_REMOVAL_NOT_CONFIRMED'));\npm.test('the API token and webhook are counted', () => pm.expect(pm.response.json().data.pipelines_with_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "name": "The outsider stays on board E without the confirmation",
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}",
-                    "auth": {
-                      "type": "basic",
-                      "basic": [
-                        {
-                          "key": "username",
-                          "value": "{{outsiderUser}}",
-                          "type": "string"
-                        },
-                        {
-                          "key": "password",
-                          "value": "{{outsiderAppPassword}}",
-                          "type": "string"
-                        }
-                      ]
-                    }
-                  },
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "type": "text/javascript",
-                        "exec": [
-                          "pm.test('status is 200', () => pm.response.to.have.status(200));"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "name": "Remove outsider from board E, deleting their API token and webhook",
-                  "request": {
-                    "method": "PATCH",
-                    "header": [
-                      {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                      }
-                    ],
-                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/pipelines",
-                    "auth": {
-                      "type": "basic",
-                      "basic": [
-                        {
-                          "key": "username",
-                          "value": "{{adminUser}}",
-                          "type": "string"
-                        },
-                        {
-                          "key": "password",
-                          "value": "{{adminAppPassword}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"pipeline_ids\": [],\n  \"remove_integrations\": true\n}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    }
-                  },
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "type": "text/javascript",
-                        "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
                           "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
-                          "pm.test('the deleted API token and webhook are reported', () => pm.expect(pm.response.json().data.deleted_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));"
+                          "pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));"
                         ]
                       }
                     }
@@ -22399,7 +22789,7 @@
                   ]
                 },
                 {
-                  "name": "The outsider's API token no longer works",
+                  "name": "The outsider's API token stops working after the removal",
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -22421,15 +22811,50 @@
                       "script": {
                         "type": "text/javascript",
                         "exec": [
-                          "pm.test('status is 401', () => pm.response.to.have.status(401));",
-                          "pm.test('error code is invalid_token', () => pm.expect(pm.response.json().code).to.eql('invalid_token'));"
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is token_creator_no_access', () => pm.expect(pm.response.json().code).to.eql('token_creator_no_access'));"
                         ]
                       }
                     }
                   ]
                 },
                 {
-                  "name": "Board E no longer has the outsider's webhook",
+                  "name": "Board E keeps the outsider's API token, marked as created by someone without access",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));\npm.test('the token is kept', () => pm.expect(token).to.be.an('object'));\npm.test('the token creator has no access', () => pm.expect(token && token.created_by_has_board_access).to.eql(false));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Board E keeps the outsider's webhook, marked as created by someone without access",
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -22457,18 +22882,23 @@
                         "type": "text/javascript",
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                          "pm.test('no webhook of the outsider is left', () => pm.expect(pm.response.json().data.webhooks.filter((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'))).to.be.empty);"
+                          "const webhook = pm.response.json().data.webhooks.find((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'));\npm.test('the webhook is kept', () => pm.expect(webhook).to.be.an('object'));\npm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.created_by_has_board_access).to.eql(false));"
                         ]
                       }
                     }
                   ]
                 },
                 {
-                  "name": "The deleted API token and webhook are logged on board E",
+                  "name": "Add the outsider back to board E",
                   "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": "{{baseUrl}}/wp-json/wpqt/v1/global-logs?order=DESC&numberOfLogs=200&search=was%20removed%20from%20the%20board",
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/pipelines",
                     "auth": {
                       "type": "basic",
                       "basic": [
@@ -22483,6 +22913,15 @@
                           "type": "string"
                         }
                       ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"pipeline_ids\": [\n    \"{{boardEId}}\"\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     }
                   },
                   "event": [
@@ -22492,7 +22931,85 @@
                         "type": "text/javascript",
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                          "const boardELogs = pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'));\npm.test('the API token deletion is logged', () => pm.expect(boardELogs.some((l) => l.text.startsWith('API token Outsider ' + pm.collectionVariables.get('runId') + ' deleted because ') && l.text.endsWith(' was removed from the board'))).to.be.true);\npm.test('the webhook deletion is logged', () => pm.expect(boardELogs.some((l) => l.text.startsWith('Webhook ') && l.text.includes(' deleted because '))).to.be.true);"
+                          "pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider's API token works again once they are added back",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/token/board",
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{outsiderToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Remove outsider from board E again",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/pipelines",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"pipeline_ids\": []\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));"
                         ]
                       }
                     }

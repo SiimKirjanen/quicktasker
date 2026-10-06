@@ -42,11 +42,15 @@ class PipelineAccessServiceTest extends TestCase
     /** @var int Number of entity lookups made through the repository. */
     private $entityLookups;
 
+    /** @var int[] IDs of the WordPress users without the base QuickTasker capability. */
+    private $usersWithoutQuickTasker;
+
     protected function setUp(): void
     {
         $this->existingBoardIds = [1, 2, 3];
         $this->userBoardIds = [];
         $this->entityLookups = 0;
+        $this->usersWithoutQuickTasker = [];
         $this->entityBoards = [
             'task:10'  => 1,
             'task:20'  => 2,
@@ -67,7 +71,7 @@ class PipelineAccessServiceTest extends TestCase
         });
 
         $pipelineAccessRepoMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['canAccessAllPipelines', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds'])
+            ->addMethods(['canAccessAllPipelines', 'canUseQuickTasker', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds'])
             ->getMock();
         $pipelineAccessRepoMock->method('getPipelineIdOfEntity')->willReturnCallback(function ($entityType, $entityId) {
             $this->entityLookups++;
@@ -81,6 +85,9 @@ class PipelineAccessServiceTest extends TestCase
             $this->entityLookups++;
 
             return $this->attachedEntities[$ownerType . ':' . $ownerId] ?? null;
+        });
+        $pipelineAccessRepoMock->method('canUseQuickTasker')->willReturnCallback(function ($userId) {
+            return !in_array($userId, $this->usersWithoutQuickTasker, true);
         });
         $pipelineAccessRepoMock->method('canAccessAllPipelines')->willReturnCallback(function ($userId) {
             return self::ADMIN_USER_ID === $userId;
@@ -293,19 +300,51 @@ class PipelineAccessServiceTest extends TestCase
         $this->assertSame(['a', 'b'], array_column($this->service->filterItemsForUser(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, $items), 'id'));
     }
 
-    public function test_adds_whether_each_creator_can_still_access_the_board()
+    public function test_a_creator_can_use_a_board_they_can_access()
     {
         $this->userBoardIds = [self::LIMITED_USER_ID => [1]];
+
+        $this->assertTrue($this->service->canCreatorUseBoard((string) self::ADMIN_USER_ID, '3'));
+        $this->assertTrue($this->service->canCreatorUseBoard((string) self::LIMITED_USER_ID, '1'));
+        $this->assertFalse($this->service->canCreatorUseBoard((string) self::LIMITED_USER_ID, '2'));
+    }
+
+    public function test_a_creator_without_quicktasker_access_cannot_use_any_board()
+    {
+        $this->userBoardIds = [self::LIMITED_USER_ID => [1]];
+        $this->usersWithoutQuickTasker = [self::LIMITED_USER_ID];
+
+        $this->assertFalse($this->service->canCreatorUseBoard((string) self::LIMITED_USER_ID, '1'));
+    }
+
+    public function test_an_unknown_creator_is_allowed()
+    {
+        $this->assertTrue($this->service->canCreatorUseBoard(null, '2'));
+    }
+
+    public function test_only_creators_who_can_access_every_board_can_use_items_without_a_board()
+    {
+        $this->userBoardIds = [self::LIMITED_USER_ID => [1]];
+
+        $this->assertTrue($this->service->canCreatorUseBoard((string) self::ADMIN_USER_ID, null));
+        $this->assertFalse($this->service->canCreatorUseBoard((string) self::LIMITED_USER_ID, null));
+    }
+
+    public function test_adds_whether_each_creator_can_still_access_the_board()
+    {
+        $this->userBoardIds = [self::LIMITED_USER_ID => [1], 4 => [2]];
+        $this->usersWithoutQuickTasker = [4];
         $items = [
             (object) ['pipeline_id' => '3', 'created_by' => (string) self::ADMIN_USER_ID, 'created_by_name' => 'Admin'],
             (object) ['pipeline_id' => '1', 'created_by' => (string) self::LIMITED_USER_ID, 'created_by_name' => 'Anna'],
             (object) ['pipeline_id' => '2', 'created_by' => (string) self::LIMITED_USER_ID, 'created_by_name' => 'Anna'],
             (object) ['pipeline_id' => '2', 'created_by' => null, 'created_by_name' => null],
             (object) ['pipeline_id' => '2', 'created_by' => '9', 'created_by_name' => null],
+            (object) ['pipeline_id' => '2', 'created_by' => '4', 'created_by_name' => 'Mark'],
         ];
 
         $this->service->addCreatorBoardAccess($items);
 
-        $this->assertSame([true, true, false, null, null], array_column($items, 'created_by_has_board_access'));
+        $this->assertSame([true, true, false, null, null, false], array_column($items, 'created_by_has_board_access'));
     }
 }

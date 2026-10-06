@@ -27,6 +27,7 @@ if (!class_exists('WPQT\Token\ApiTokenRepository')) {
                         name,
                         description,
                         token,
+                        created_by,
                         created_at,
                         updated_at,
                         get_pipeline,

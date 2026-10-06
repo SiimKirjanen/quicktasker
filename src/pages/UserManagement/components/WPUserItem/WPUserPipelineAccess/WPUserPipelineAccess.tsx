@@ -3,10 +3,7 @@ import { __, _n, sprintf } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import { WPQTMultiSelect } from "../../../../../components/common/Select/WPQTMultiSelect";
 import { LoadingOval } from "../../../../../components/Loading/Loading";
-import {
-  SET_WP_USER_PIPELINE_IDS,
-  WP_QUICKTASKER_EXCEPTION_INTEGRATIONS_REMOVAL_NOT_CONFIRMED,
-} from "../../../../../constants";
+import { SET_WP_USER_PIPELINE_IDS } from "../../../../../constants";
 import { useWPUserPipelineActions } from "../../../../../hooks/actions/useWPUserPipelineActions";
 import { useMissingResourceDetection } from "../../../../../hooks/useMissingResourceDetection";
 import { usePipelines } from "../../../../../hooks/usePipelines";
@@ -16,39 +13,39 @@ import {
   WPUser,
   WPUserPipelinesUpdate,
 } from "../../../../../types/user";
-import {
-  formatIntegrationCount,
-  RemoveIntegrationsConfirmModal,
-} from "./RemoveIntegrationsConfirmModal";
 
 const SUMMARY_BOARD_COUNT = 5;
 // More added or removed boards than this are counted instead of named.
 const CHANGED_BOARD_NAME_COUNT = 3;
 
 /**
- * The API tokens and webhooks a refused save would delete, if it was refused
- * because the admin has not confirmed deleting them.
+ * Describes a number of API tokens and webhooks, like "2 API tokens and 1 webhook".
  */
-function getIntegrationsToConfirm(
-  error: unknown,
-): PipelineIntegrationCount[] | null {
-  if (
-    typeof error !== "object" ||
-    error === null ||
-    !("messages" in error) ||
-    !Array.isArray(error.messages) ||
-    !error.messages.includes(
-      WP_QUICKTASKER_EXCEPTION_INTEGRATIONS_REMOVAL_NOT_CONFIRMED,
-    ) ||
-    !("data" in error)
-  ) {
-    return null;
-  }
-  const data = error.data as {
-    pipelines_with_integrations?: PipelineIntegrationCount[];
-  } | null;
+function formatIntegrationCount({
+  api_token_count,
+  webhook_count,
+}: PipelineIntegrationCount) {
+  const tokens = sprintf(
+    // translators: %d: number of API tokens
+    _n("%d API token", "%d API tokens", api_token_count, "quicktasker"),
+    api_token_count,
+  );
+  const webhooks = sprintf(
+    // translators: %d: number of webhooks
+    _n("%d webhook", "%d webhooks", webhook_count, "quicktasker"),
+    webhook_count,
+  );
 
-  return data?.pipelines_with_integrations ?? null;
+  if (api_token_count > 0 && webhook_count > 0) {
+    return sprintf(
+      // translators: 1: number of API tokens, 2: number of webhooks
+      __("%1$s and %2$s", "quicktasker"),
+      tokens,
+      webhooks,
+    );
+  }
+
+  return api_token_count > 0 ? tokens : webhooks;
 }
 
 type Props = {
@@ -72,12 +69,6 @@ function WPUserPipelineAccess({ user }: Props) {
   const changeButtonRef = useRef<HTMLButtonElement>(null);
   const wasEditing = useRef(false);
   const { updateWPUserPipelines } = useWPUserPipelineActions();
-  const [integrationsToConfirm, setIntegrationsToConfirm] = useState<
-    PipelineIntegrationCount[] | null
-  >(null);
-  const resolveConfirmation = useRef<((confirmed: boolean) => void) | null>(
-    null,
-  );
   const selectId = `wp-user-boards-${user.id}`;
   const userPipelineIdsKey = (user.pipeline_ids ?? []).join(",");
 
@@ -205,79 +196,44 @@ function WPUserPipelineAccess({ user }: Props) {
     }
   };
 
-  const reportDeletedIntegrations = (update: WPUserPipelinesUpdate) => {
-    update.deleted_integrations.forEach((integration) => {
-      const pipeline = pipelines.find(
-        (p) => p.id === String(integration.pipeline_id),
-      );
+  const warnAboutStoppedIntegrations = (update: WPUserPipelinesUpdate) => {
+    update.stopped_integrations.forEach((integration) => {
+      const { pipeline_id, api_token_count, webhook_count } = integration;
+      // The board is added back by a selection that is still waiting to be saved.
+      if (pendingPipelineIds.current?.includes(String(pipeline_id))) {
+        return;
+      }
+      const pipeline = pipelines.find((p) => p.id === String(pipeline_id));
 
-      toast.info(
-        sprintf(
-          // translators: 1: number of API tokens and webhooks, 2: user name, 3: board name
-          __("Deleted %1$s that %2$s created on %3$s.", "quicktasker"),
-          formatIntegrationCount(integration),
-          user.name,
-          pipeline ? pipeline.name : "",
-        ),
-        // Stays until closed, so the admin notices what was deleted.
+      toast.warning(
+        <div data-testid="stopped-integrations-warning">
+          {sprintf(
+            // translators: 1: user name, 2: number of API tokens and webhooks, 3: board name
+            __(
+              "%1$s created %2$s on %3$s, which stopped working. They work again if %1$s is added back to the board.",
+              "quicktasker",
+            ),
+            user.name,
+            formatIntegrationCount(integration),
+            pipeline ? pipeline.name : "",
+          )}
+          <div className="wpqt-mt-1 wpqt-flex wpqt-gap-3">
+            {api_token_count > 0 && (
+              <a href={`#/board/${pipeline_id}/api-tokens`}>
+                {__("Open API tokens", "quicktasker")}
+              </a>
+            )}
+            {webhook_count > 0 && (
+              <a href={`#/board/${pipeline_id}/webhooks`}>
+                {__("Open webhooks", "quicktasker")}
+              </a>
+            )}
+          </div>
+        </div>,
+        // Stays until closed, so the admin has time to act on it.
         { autoClose: false },
       );
     });
-  };
-
-  // Shows the confirmation and waits for the admin's answer.
-  const confirmIntegrationRemoval = (
-    integrations: PipelineIntegrationCount[],
-  ) =>
-    new Promise<boolean>((resolve) => {
-      resolveConfirmation.current = resolve;
-      setIntegrationsToConfirm(integrations);
-    });
-
-  const answerConfirmation = (confirmed: boolean) => {
-    resolveConfirmation.current?.(confirmed);
-    resolveConfirmation.current = null;
-    setIntegrationsToConfirm(null);
-  };
-
-  const savePipelineIds = async (
-    pipelineIds: string[],
-    removeIntegrations: boolean,
-  ) => {
-    const result: { error: unknown } = { error: null };
-
-    await updateWPUserPipelines(
-      user.id,
-      pipelineIds,
-      (update) => {
-        const previousPipelineIds = savedPipelineIds.current;
-        savedPipelineIds.current = update.pipeline_ids.map(String);
-        reportChangedPipelines(
-          savedPipelineIds.current.filter(
-            (id) => !previousPipelineIds.includes(id),
-          ),
-          previousPipelineIds.filter(
-            (id) => !savedPipelineIds.current.includes(id),
-          ),
-        );
-        setSavedIds(savedPipelineIds.current);
-        userDispatch({
-          type: SET_WP_USER_PIPELINE_IDS,
-          payload: { userId: user.id, pipelineIds: update.pipeline_ids },
-        });
-        warnAboutAssignedTasks(update);
-        reportDeletedIntegrations(update);
-        if (!pendingPipelineIds.current) {
-          setSelectedPipelineIds(savedPipelineIds.current);
-        }
-      },
-      (error) => {
-        result.error = error ?? new Error("Failed to update the boards");
-      },
-      removeIntegrations,
-    );
-
-    return result.error;
   };
 
   // Saves one selection at a time. A selection made during a save is saved
@@ -290,20 +246,38 @@ function WPUserPipelineAccess({ user }: Props) {
     while (pendingPipelineIds.current) {
       const pipelineIds = pendingPipelineIds.current;
       pendingPipelineIds.current = null;
-      let error = await savePipelineIds(pipelineIds, false);
+      const result: { error: unknown } = { error: null };
 
-      // The removal would delete API tokens or webhooks the user created, so
-      // the admin confirms it first. Cancelling keeps the saved boards.
-      const integrationsToConfirm = getIntegrationsToConfirm(error);
-
-      if (integrationsToConfirm) {
-        if (!(await confirmIntegrationRemoval(integrationsToConfirm))) {
-          pendingPipelineIds.current = null;
-          setSelectedPipelineIds(savedPipelineIds.current);
-          continue;
-        }
-        error = await savePipelineIds(pipelineIds, true);
-      }
+      await updateWPUserPipelines(
+        user.id,
+        pipelineIds,
+        (update) => {
+          const previousPipelineIds = savedPipelineIds.current;
+          savedPipelineIds.current = update.pipeline_ids.map(String);
+          reportChangedPipelines(
+            savedPipelineIds.current.filter(
+              (id) => !previousPipelineIds.includes(id),
+            ),
+            previousPipelineIds.filter(
+              (id) => !savedPipelineIds.current.includes(id),
+            ),
+          );
+          setSavedIds(savedPipelineIds.current);
+          userDispatch({
+            type: SET_WP_USER_PIPELINE_IDS,
+            payload: { userId: user.id, pipelineIds: update.pipeline_ids },
+          });
+          warnAboutAssignedTasks(update);
+          warnAboutStoppedIntegrations(update);
+          if (!pendingPipelineIds.current) {
+            setSelectedPipelineIds(savedPipelineIds.current);
+          }
+        },
+        (error) => {
+          result.error = error ?? new Error("Failed to update the boards");
+        },
+      );
+      const error = result.error;
 
       if (error === null) {
         continue;
@@ -432,12 +406,6 @@ function WPUserPipelineAccess({ user }: Props) {
           </span>
         )}
       </div>
-      <RemoveIntegrationsConfirmModal
-        userName={user.name}
-        integrations={integrationsToConfirm}
-        pipelines={pipelines}
-        onAnswer={answerConfirmation}
-      />
     </div>
   );
 }

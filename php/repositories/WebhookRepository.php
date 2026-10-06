@@ -104,13 +104,13 @@ if (!class_exists('WPQT\Webhooks\WebhookRepository')) {
             $args = wp_parse_args($args, $defaults);
 
             if (null === $pipelineId) {
-                $sql = 'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at
+                $sql = 'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at, created_by
                          FROM ' . TABLE_WP_QUICKTASKER_WEBHOOKS . '
                          WHERE pipeline_id IS NULL AND target_type = %s AND target_action = %s';
                 $prepArgs = [$args['target_type'], $args['target_action']];
             } else {
                 // Match specific pipeline
-                $sql = 'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at
+                $sql = 'SELECT id, pipeline_id, target_type, target_id, target_action, webhook_url, webhook_confirm, active, created_at, created_by
                          FROM ' . TABLE_WP_QUICKTASKER_WEBHOOKS . '
                          WHERE pipeline_id = %d AND target_type = %s AND target_action = %s';
                 $prepArgs = [(int) $pipelineId, $args['target_type'], $args['target_action']];

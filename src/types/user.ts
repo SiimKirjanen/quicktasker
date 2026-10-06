@@ -70,8 +70,8 @@ type WPUserPipelinesUpdate = {
     pipeline_id: number;
     task_count: number;
   }[];
-  // API tokens and webhooks the user created on the removed boards, which were deleted.
-  deleted_integrations: PipelineIntegrationCount[];
+  // API tokens and webhooks the user created on the removed boards, which stopped working.
+  stopped_integrations: PipelineIntegrationCount[];
 };
 
 type UserEditData = {

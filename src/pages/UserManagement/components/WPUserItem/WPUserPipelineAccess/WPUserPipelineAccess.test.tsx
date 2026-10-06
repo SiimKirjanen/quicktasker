@@ -74,7 +74,6 @@ jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
 
 import {
   SET_WP_USER_PIPELINE_IDS,
-  WP_QUICKTASKER_EXCEPTION_INTEGRATIONS_REMOVAL_NOT_CONFIRMED,
   WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND,
 } from "../../../../../constants";
 import { PipelinesContext } from "../../../../../providers/PipelinesContextProvider";
@@ -167,7 +166,7 @@ function holdSaves(
         releases.push(() => {
           callback({
             pipeline_ids: pipelineIds.map(Number),
-            deleted_integrations: [],
+            stopped_integrations: [],
             removed_pipelines_with_assigned_tasks: removed,
           });
           resolve();
@@ -254,7 +253,7 @@ describe("WPUserPipelineAccess", () => {
   it("saves the new selection and shows the saved boards", async () => {
     respondWith({
       pipeline_ids: [2],
-      deleted_integrations: [],
+      stopped_integrations: [],
       removed_pipelines_with_assigned_tasks: [],
     });
     renderAccess(makeWPUser([1]));
@@ -269,7 +268,6 @@ describe("WPUserPipelineAccess", () => {
       ["2"],
       expect.any(Function),
       expect.any(Function),
-      false,
     );
     expect(screen.getByTestId("selected")).toHaveTextContent("2");
     expect(mockUserDispatch).toHaveBeenCalledWith({
@@ -282,7 +280,7 @@ describe("WPUserPipelineAccess", () => {
   it("warns about tasks still assigned on removed boards", async () => {
     respondWith({
       pipeline_ids: [2],
-      deleted_integrations: [],
+      stopped_integrations: [],
       removed_pipelines_with_assigned_tasks: [
         { pipeline_id: 1, task_count: 3 },
       ],
@@ -301,41 +299,27 @@ describe("WPUserPipelineAccess", () => {
   });
 
   describe("API tokens and webhooks the user created", () => {
-    const integrations = [
-      { pipeline_id: 1, api_token_count: 2, webhook_count: 1 },
-    ];
-
-    // The first save is refused until the admin confirms deleting them.
-    function refuseUntilConfirmed() {
+    function respondWithStopped(
+      stopped: WPUserPipelinesUpdate["stopped_integrations"],
+    ) {
       mockUpdateWPUserPipelines.mockImplementation(
         async (
           _userId: string,
           pipelineIds: string[],
           callback: (u: WPUserPipelinesUpdate) => void,
-          onFailure: (e: unknown) => void,
-          removeIntegrations?: boolean,
-        ) => {
-          if (!removeIntegrations) {
-            onFailure({
-              success: false,
-              messages: [
-                WP_QUICKTASKER_EXCEPTION_INTEGRATIONS_REMOVAL_NOT_CONFIRMED,
-              ],
-              data: { pipelines_with_integrations: integrations },
-            });
-            return;
-          }
+        ) =>
           callback({
             pipeline_ids: pipelineIds.map(Number),
-            deleted_integrations: integrations,
+            stopped_integrations: stopped,
             removed_pipelines_with_assigned_tasks: [],
-          });
-        },
+          }),
       );
     }
 
-    it("asks before deleting them and deletes them when confirmed", async () => {
-      refuseUntilConfirmed();
+    it("warns that they stopped working, until the user is added back", async () => {
+      respondWithStopped([
+        { pipeline_id: 1, api_token_count: 2, webhook_count: 1 },
+      ]);
       renderAccess(makeWPUser([1]));
       openSelector();
 
@@ -343,50 +327,55 @@ describe("WPUserPipelineAccess", () => {
         fireEvent.click(screen.getByText("only board 2"));
       });
 
-      const dialog = screen.getByTestId("remove-integrations-confirm");
-      expect(dialog).toHaveTextContent(
-        "Bob created API tokens or webhooks on the boards they are being removed from.",
-      );
-      expect(dialog).toHaveTextContent("Board 1: 2 API tokens and 1 webhook");
       expect(mockUpdateWPUserPipelines).toHaveBeenCalledTimes(1);
-
-      await act(async () => {
-        fireEvent.click(
-          screen.getByRole("button", { name: "Remove and delete" }),
-        );
+      expect(toast.warning).toHaveBeenCalledWith(expect.anything(), {
+        autoClose: false,
       });
-
+      render((toast.warning as jest.Mock).mock.calls[0][0]);
       expect(
-        mockUpdateWPUserPipelines.mock.calls.map((c) => [c[1], c[4]]),
-      ).toEqual([
-        [["2"], false],
-        [["2"], true],
-      ]);
-      expect(toast.info).toHaveBeenCalledWith(
-        "Deleted 2 API tokens and 1 webhook that Bob created on Board 1.",
-        { autoClose: false },
+        screen.getByTestId("stopped-integrations-warning"),
+      ).toHaveTextContent(
+        "Bob created 2 API tokens and 1 webhook on Board 1, which stopped working. They work again if Bob is added back to the board.",
       );
-      expect(screen.getByTestId("wp-user-boards-summary")).toHaveTextContent(
-        "Board 2",
+      expect(screen.getByText("Open API tokens")).toHaveAttribute(
+        "href",
+        "#/board/1/api-tokens",
+      );
+      expect(screen.getByText("Open webhooks")).toHaveAttribute(
+        "href",
+        "#/board/1/webhooks",
       );
     });
 
-    it("keeps the user's boards when the admin cancels", async () => {
-      refuseUntilConfirmed();
+    it("only links to the kind of integration the user created", async () => {
+      respondWithStopped([
+        { pipeline_id: 1, api_token_count: 0, webhook_count: 1 },
+      ]);
       renderAccess(makeWPUser([1]));
       openSelector();
 
       await act(async () => {
         fireEvent.click(screen.getByText("only board 2"));
       });
+
+      render((toast.warning as jest.Mock).mock.calls[0][0]);
+      expect(
+        screen.getByTestId("stopped-integrations-warning"),
+      ).toHaveTextContent("Bob created 1 webhook on Board 1, which stopped");
+      expect(screen.queryByText("Open API tokens")).toBeNull();
+      expect(screen.getByText("Open webhooks")).toBeInTheDocument();
+    });
+
+    it("does not warn when nothing stopped working", async () => {
+      respondWithStopped([]);
+      renderAccess(makeWPUser([1]));
+      openSelector();
+
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+        fireEvent.click(screen.getByText("only board 2"));
       });
 
-      expect(mockUpdateWPUserPipelines).toHaveBeenCalledTimes(1);
-      expect(screen.getByTestId("selected")).toHaveTextContent(/^1$/);
-      expect(toast.info).not.toHaveBeenCalled();
-      expect(toast.error).not.toHaveBeenCalled();
+      expect(toast.warning).not.toHaveBeenCalled();
     });
   });
 
@@ -400,7 +389,7 @@ describe("WPUserPipelineAccess", () => {
         ) =>
           callback({
             pipeline_ids: pipelineIds.map(Number),
-            deleted_integrations: [],
+            stopped_integrations: [],
             removed_pipelines_with_assigned_tasks: [],
           }),
       );
@@ -633,7 +622,7 @@ describe("WPUserPipelineAccess", () => {
           }
           callback({
             pipeline_ids: pipelineIds.map(Number),
-            deleted_integrations: [],
+            stopped_integrations: [],
             removed_pipelines_with_assigned_tasks: [],
           });
         },
@@ -643,7 +632,7 @@ describe("WPUserPipelineAccess", () => {
     it("keeps a board missing from the board list, as it may have been created since", async () => {
       respondWith({
         pipeline_ids: [2, 9],
-        deleted_integrations: [],
+        stopped_integrations: [],
         removed_pipelines_with_assigned_tasks: [],
       });
       renderAccess(makeWPUser([9]));

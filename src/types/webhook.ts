@@ -32,6 +32,8 @@ type BaseWebhook = {
   created_by: string | null;
   // Null when the user has been deleted.
   created_by_name: string | null;
+  // Whether the creator can still use the board. The webhook only sends while they can.
+  created_by_has_board_access?: boolean | null;
 };
 
 type Webhook = BaseWebhook & {

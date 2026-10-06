@@ -273,7 +273,7 @@ test.describe('WordPress Users Tab – Boards', () => {
     }
   });
 
-  test('removing a user from a board asks before deleting the API tokens and webhooks they created there', async ({ page, browser, request }) => {
+  test('removing a user from a board stops the API tokens and webhooks they created there until they are added back', async ({ page, browser, request }) => {
     const boardName = generateUniqueName('WUB-Integrations');
     const board = await createBoardViaApi(request, boardName);
     const userLogin = uniqueLogin('wpintegrations');
@@ -287,28 +287,31 @@ test.describe('WordPress Users Tab – Boards', () => {
       const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
       const boardsSummary = card.getByTestId('wp-user-boards-summary');
       await expect(boardsSummary).toHaveText(boardName, { timeout: TIMEOUTS.NAVIGATION });
-      const dialog = page.getByTestId('remove-integrations-confirm');
 
-      // Cancelling keeps the user on the board.
       await card.getByTestId('wp-user-boards-change').click();
       await page.getByRole('option', { name: boardName }).click();
       await page.keyboard.press('Escape');
-      await expect(dialog).toContainText(`${boardName}: 1 API token and 1 webhook`);
-      await dialog.getByRole('button', { name: 'Cancel' }).click();
-      await expect(dialog).toHaveCount(0);
-      await expect(boardsSummary).toHaveText(boardName);
+
+      const warning = page.getByTestId('stopped-integrations-warning');
+      await expect(warning).toContainText(
+        `${userLogin} created 1 API token and 1 webhook on ${boardName}, which stopped working. They work again if ${userLogin} is added back to the board.`,
+      );
+      await expect(boardsSummary).toHaveText('No boards');
       expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
 
-      // Confirming removes the user and deletes the API token and webhook.
-      await card.getByTestId('wp-user-boards-change').click();
-      await page.getByRole('option', { name: boardName }).click();
-      await page.keyboard.press('Escape');
-      await dialog.getByRole('button', { name: 'Remove and delete' }).click();
-      await expect(
-        page.getByText(`Deleted 1 API token and 1 webhook that ${userLogin} created on ${boardName}.`),
-      ).toBeVisible();
-      await expect(boardsSummary).toHaveText('No boards');
-      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 0, webhooks: 0 });
+      await warning.getByRole('link', { name: 'Open API tokens' }).click();
+      await expect(page.getByTestId('api-token-not-working')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/webhooks`);
+      await expect(page.getByTestId('webhook-not-sending')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+
+      // Adding the user back makes them work again.
+      await addWPUserToBoards(request, userId, [boardName]);
+      await page.reload();
+      await expect(page.getByTestId('webhook-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('webhook-not-sending')).toHaveCount(0);
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
+      await expect(page.getByTestId('api-token-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('api-token-not-working')).toHaveCount(0);
     } finally {
       await deleteBoardViaApi(request, boardName);
     }
@@ -378,8 +381,43 @@ test.describe('WordPress Users Tab – Boards', () => {
 
       await expect(page.getByText(`${userLogin} was removed from ${boardName}.`)).toBeVisible();
       await expect(boardsSummary).toHaveText('No boards');
-      await expect(page.getByTestId('remove-integrations-confirm')).toHaveCount(0);
+      await expect(page.getByTestId('stopped-integrations-warning')).toHaveCount(0);
       expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
+    } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test('API tokens and webhooks show when their creator has lost QuickTasker access', async ({ page, browser, request }) => {
+    const boardName = generateUniqueName('WUB-Revoked-Creator');
+    const board = await createBoardViaApi(request, boardName);
+    const userLogin = uniqueLogin('wprevoked');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    await addWPUserToBoards(request, userId, [boardName]);
+    await createIntegrationsAsUser(browser, userLogin, board.boardId);
+
+    try {
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
+      await expect(page.getByTestId('api-token-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('api-token-not-working')).toHaveCount(0);
+
+      // The user stays on the board but can no longer use QuickTasker.
+      await grantWPUserCaps(request, userId, []);
+
+      await page.reload();
+      await expect(page.getByTestId('api-token-not-working')).toHaveText(
+        "This token doesn't work: its creator has no access to this board.",
+        { timeout: TIMEOUTS.NAVIGATION },
+      );
+      await expect(page.getByTestId('api-token-creator-no-board-access')).toHaveText('No access to this board');
+
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/webhooks`);
+      await expect(page.getByTestId('webhook-not-sending')).toHaveText(
+        'Not sending: its creator has no access to this board',
+        { timeout: TIMEOUTS.NAVIGATION },
+      );
+      await expect(page.getByTestId('webhook-creator-no-board-access')).toHaveText('No access to this board');
     } finally {
       await deleteBoardViaApi(request, boardName);
     }
