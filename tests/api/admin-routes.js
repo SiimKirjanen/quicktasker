@@ -26,6 +26,7 @@
  * - settings / delete / users / archive / sessions: base + the matching capability
  * - usersDelete: base + manage users + delete
  * - wpAdmin: base + manage_options (WordPress administrators)
+ * - archiveCleanup: archive + manage_options
  * - myTasks: quicktasker_view_my_tasks
  */
 module.exports = [
@@ -402,7 +403,7 @@ module.exports = [
   {
     method: "PATCH",
     path: "/archive/settings/task-cleanup",
-    permission: "archive",
+    permission: "archiveCleanup",
     board: "none",
   },
   {

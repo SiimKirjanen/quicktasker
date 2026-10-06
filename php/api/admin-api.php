@@ -3553,7 +3553,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                     }
                 },
                 'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForPrivateAPIArchiveEndpoints();
+                    return PermissionService::hasRequiredPermissionsForArchiveCleanup();
                 },
             ],
         );

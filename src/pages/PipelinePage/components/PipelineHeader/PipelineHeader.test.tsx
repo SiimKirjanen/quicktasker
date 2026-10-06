@@ -118,6 +118,7 @@ describe("PipelineHeader", () => {
       isUserAllowedToManageUsers: false,
       isUserAllowedToDeleteUsers: false,
       isUserAllowedToManageWPUsers: false,
+      isUserAllowedToCleanArchive: false,
       ...appOverrides,
     };
     jest.spyOn(useAppModule, "useApp").mockReturnValue({

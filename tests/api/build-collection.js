@@ -1596,6 +1596,7 @@ const PERMISSION_CALLBACKS = {
   hasRequiredParmissionsForPrivateAPIUsersEndpoints: "users",
   hasRequiredPermissionsForDeletingQuickTaskerUsers: "usersDelete",
   hasRequiredPermissionsForManagingWPUserCapabilities: "wpAdmin",
+  hasRequiredPermissionsForArchiveCleanup: "archiveCleanup",
   hasRequiredPermissionsForManagingQuickTaskerSessions: "sessions",
   hasRequiredPermissionsForMyTasks: "myTasks",
 };
@@ -3826,6 +3827,26 @@ pm.test('self-assign log belongs to board A', () => pm.expect(String(selfAssignL
 
 const adminCleanup = folder("Cleanup", [
   request({
+    name: "Create task to leave in the archive of board C",
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Orphaned archive task",
+      stageId: "{{stageC1Id}}",
+      pipelineId: "{{boardCId}}",
+    },
+    tests: [
+      status(200),
+      save("orphanTaskId", "pm.response.json().data.newTask.id"),
+    ],
+  }),
+  request({
+    name: "Archive the task on board C",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/tasks/{{orphanTaskId}}/archive",
+    tests: [status(200), success(true)],
+  }),
+  request({
     name: "Delete board C",
     method: "DELETE",
     url: "/pipelines/{{boardCId}}",
@@ -3853,6 +3874,35 @@ const adminCleanup = folder("Cleanup", [
     name: "Deleted board is gone",
     url: "/pipelines/{{boardCId}}",
     tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Archive cleanup is refused to a user who is not a WordPress administrator",
+    method: "PATCH",
+    url: "/archive/settings/task-cleanup",
+    auth: outsiderAuth,
+    tests: [status(403), wpErrorCode("rest_forbidden")],
+  }),
+  request({
+    name: "Refused archive cleanup leaves the task of the deleted board",
+    url: "/tasks/archived?order=DESC&pipelineId={{boardCId}}",
+    tests: [
+      status(200),
+      includesId(
+        "task of the deleted board is archived",
+        "pm.response.json().data",
+        "orphanTaskId",
+      ),
+    ],
+  }),
+  request({
+    name: "Admin removes archived tasks of deleted boards",
+    method: "PATCH",
+    url: "/archive/settings/task-cleanup",
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('task of the deleted board is removed', () => pm.expect(pm.response.json().data.deletedTaskIds.map(String)).to.include(pm.collectionVariables.get('orphanTaskId')));`,
+    ],
   }),
 ]);
 

@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { navigateToArchivePage, navigateToBoardsPage } from './utils/navigation';
 import { createBoard, createStage, createTask, generateUniqueName, getTaskCard, selectBoard } from './utils/board-helpers';
 import { TIMEOUTS } from './utils/timeouts';
+import { loginToWordPressViaApi } from './utils/auth';
+import { createWPUser, grantWPUserCaps, uniqueLogin } from './utils/user-helpers';
 
 async function archiveTask(page: any, taskName: string): Promise<void> {
   const taskCard = getTaskCard(page, taskName);
@@ -36,6 +38,22 @@ test.describe('Archive – Page Structure', () => {
     await expect(page.getByText('Archive cleanup')).toBeVisible();
     await expect(page.getByText('Remove tasks from archive that have no parent board.')).toBeVisible();
     await expect(page.getByText('Clean', { exact: true })).toBeVisible();
+  });
+
+  test('hides archive settings from users who are not WordPress administrators', async ({ browser, request }) => {
+    const userLogin = uniqueLogin('archiveeditor');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_archive']);
+
+    const userContext = await loginToWordPressViaApi(browser, userLogin);
+    try {
+      const userPage = await userContext.newPage();
+      await navigateToArchivePage(userPage);
+      await expect(userPage.getByText('Archive filtering')).toBeVisible();
+      await expect(userPage.getByTestId('archive-settings-button')).toHaveCount(0);
+    } finally {
+      await userContext.close();
+    }
   });
 });
 

@@ -13329,7 +13329,7 @@
                   ]
                 },
                 {
-                  "name": "PATCH /archive/settings/task-cleanup needs \"archive\"",
+                  "name": "PATCH /archive/settings/task-cleanup needs \"archiveCleanup\"",
                   "request": {
                     "method": "PATCH",
                     "header": [],
@@ -24767,6 +24767,90 @@
           "name": "Cleanup",
           "item": [
             {
+              "name": "Create task to leave in the archive of board C",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Orphaned archive task\",\n  \"stageId\": \"{{stageC1Id}}\",\n  \"pipelineId\": \"{{boardCId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.collectionVariables.set('orphanTaskId', String(pm.response.json().data.newTask.id));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Archive the task on board C",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardCId}}/tasks/{{orphanTaskId}}/archive",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
               "name": "Delete board C",
               "request": {
                 "method": "DELETE",
@@ -24902,6 +24986,112 @@
                     "exec": [
                       "pm.test('status is 400', () => pm.response.to.have.status(400));",
                       "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Archive cleanup is refused to a user who is not a WordPress administrator",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/archive/settings/task-cleanup",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{outsiderUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{outsiderAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                      "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Refused archive cleanup leaves the task of the deleted board",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/archived?order=DESC&pipelineId={{boardCId}}",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('task of the deleted board is archived', () => pm.expect(pm.response.json().data.map((x) => String(x.id))).to.include(pm.collectionVariables.get('orphanTaskId')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Admin removes archived tasks of deleted boards",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/archive/settings/task-cleanup",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('task of the deleted board is removed', () => pm.expect(pm.response.json().data.deletedTaskIds.map(String)).to.include(pm.collectionVariables.get('orphanTaskId')));"
                     ]
                   }
                 }

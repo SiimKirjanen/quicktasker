@@ -334,6 +334,25 @@ class PermissionServiceTest extends TestCase {
         $this->assertSame($expected, \WPQT\Permission\PermissionService::hasRequiredPermissionsForManagingWPUserCapabilities());
     }
 
+    public static function archiveCleanupProvider() {
+        return [
+            'manage_options, base and manage archive' => [['manage_options', WP_QUICKTASKER_ADMIN_ROLE, WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE], true],
+            'base and manage archive, no manage_options' => [[WP_QUICKTASKER_ADMIN_ROLE, WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE], false],
+            'manage_options and base, no manage archive' => [['manage_options', WP_QUICKTASKER_ADMIN_ROLE], false],
+            'manage_options and manage archive, no base' => [['manage_options', WP_QUICKTASKER_ADMIN_ROLE_MANAGE_ARCHIVE], false],
+            'no capabilities' => [[], false],
+        ];
+    }
+
+    /**
+     * @dataProvider archiveCleanupProvider
+     */
+    public function test_hasRequiredPermissionsForArchiveCleanup($caps, $expected) {
+        $GLOBALS['wpqt_test_current_user_caps'] = $caps;
+
+        $this->assertSame($expected, \WPQT\Permission\PermissionService::hasRequiredPermissionsForArchiveCleanup());
+    }
+
     protected function tearDown(): void {
         unset($GLOBALS['wpqt_test_current_user_caps']);
         parent::tearDown();

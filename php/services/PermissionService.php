@@ -99,6 +99,19 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         }
 
         /**
+         * Checks if the current user can remove archived tasks whose board has been deleted.
+         *
+         * Limited to WordPress administrators because those tasks have no board, so
+         * other users cannot see them in the archive.
+         *
+         * @return bool True if the user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredPermissionsForArchiveCleanup()
+        {
+            return current_user_can('manage_options') && self::hasRequiredPermissionsForPrivateAPIArchiveEndpoints();
+        }
+
+        /**
          * Checks if the current user has the required permissions to access the user page app.
          *
          * This function verifies if the current user has the capability defined by the constant
