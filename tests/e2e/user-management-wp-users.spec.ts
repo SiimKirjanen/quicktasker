@@ -446,6 +446,35 @@ test.describe('WordPress Users Tab – Boards', () => {
     }
   });
 
+  test('API tokens and webhooks kept after their creator was deleted show that they do not work', async ({ page, browser, request }) => {
+    const boardName = generateUniqueName('WUB-Deleted-Creator');
+    const board = await createBoardViaApi(request, boardName);
+    const userLogin = uniqueLogin('wpdeletedcreator');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    await addWPUserToBoards(request, userId, [boardName]);
+    await createIntegrationsAsUser(browser, userLogin, board.boardId);
+
+    try {
+      // Deletes the user without QuickTasker noticing, like while the plugin is inactive, so their integrations are kept.
+      runWpCli(
+        `eval "remove_all_actions('deleted_user'); require_once ABSPATH . 'wp-admin/includes/user.php'; wp_delete_user(${userId}, 1);"`,
+      );
+      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
+
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
+      await expect(page.getByTestId('api-token-created-by')).toHaveText('Deleted user', { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('api-token-not-working')).toBeVisible();
+      await expect(page.getByTestId('api-token-creator-no-board-access')).toHaveText('No access to this board');
+
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/webhooks`);
+      await expect(page.getByTestId('webhook-created-by')).toHaveText('Deleted user', { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('webhook-not-sending')).toBeVisible();
+    } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
   test("a board deleted elsewhere does not stop changing a user's boards", async ({ page, request }) => {
     const deletedBoardName = generateUniqueName('WUB-Deleted');
     const keptBoardName = generateUniqueName('WUB-Kept');

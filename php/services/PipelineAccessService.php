@@ -257,10 +257,11 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         /**
          * Adds whether each item's creator can still use the item's board. See canCreatorUseBoard().
          *
-         * Sets created_by_has_board_access to true or false, or to null when the creator is unknown
-         * or their WordPress user has been deleted.
+         * Sets created_by_has_board_access to true or false, or to null when the creator is unknown.
+         * A deleted creator has no access, so their API tokens and webhooks that were not deleted with them,
+         * like when the plugin was inactive, are shown as not working.
          *
-         * @param array $items Objects with pipeline_id, created_by and created_by_name properties.
+         * @param array $items Objects with pipeline_id and created_by properties.
          * @return array The same objects.
          */
         public function addCreatorBoardAccess($items)
@@ -268,7 +269,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
             $accessByCreatorAndPipeline = [];
 
             foreach ($items as $item) {
-                if (empty($item->created_by) || null === $item->created_by_name) {
+                if (empty($item->created_by)) {
                     $item->created_by_has_board_access = null;
                     continue;
                 }

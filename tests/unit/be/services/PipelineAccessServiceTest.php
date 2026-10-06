@@ -333,7 +333,8 @@ class PipelineAccessServiceTest extends TestCase
     public function test_adds_whether_each_creator_can_still_access_the_board()
     {
         $this->userBoardIds = [self::LIMITED_USER_ID => [1], 4 => [2]];
-        $this->usersWithoutQuickTasker = [4];
+        // User 9 has been deleted, and deleted users have no capabilities.
+        $this->usersWithoutQuickTasker = [4, 9];
         $items = [
             (object) ['pipeline_id' => '3', 'created_by' => (string) self::ADMIN_USER_ID, 'created_by_name' => 'Admin'],
             (object) ['pipeline_id' => '1', 'created_by' => (string) self::LIMITED_USER_ID, 'created_by_name' => 'Anna'],
@@ -345,6 +346,6 @@ class PipelineAccessServiceTest extends TestCase
 
         $this->service->addCreatorBoardAccess($items);
 
-        $this->assertSame([true, true, false, null, null, false], array_column($items, 'created_by_has_board_access'));
+        $this->assertSame([true, true, false, null, false, false], array_column($items, 'created_by_has_board_access'));
     }
 }

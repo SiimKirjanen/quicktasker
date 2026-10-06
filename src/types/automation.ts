@@ -85,7 +85,7 @@ type BaseAutomation = {
   created_by: string | null;
   // Null when the user has been deleted.
   created_by_name: string | null;
-  // Whether the creator can still access the automation's board. Null when the creator is unknown or deleted.
+  // Whether the creator can still access the automation's board. False when they have been deleted, null when unknown.
   created_by_has_board_access?: boolean | null;
 };
 
