@@ -224,15 +224,15 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
-         * Checks if the creator of an API token, webhook or automation can still use its board.
+         * Checks if the creator of an API token, webhook or automation could still create it on its board.
          *
-         * API tokens and webhooks only work while this is true, so they stop when the creator loses access
-         * in any way, like being removed from the board, losing the QuickTasker capability or a role change.
-         * Items created before creators were recorded have no creator and are allowed.
+         * API tokens and webhooks only work while this is true, so they stop when the creator is removed from
+         * the board, loses the QuickTasker or manage settings capability, for example through a role change,
+         * or is deleted. Items created before creators were recorded have no creator and are allowed.
          *
          * @param int|null $createdBy The ID of the WordPress user who created the item.
          * @param int|null $pipelineId The ID of the item's board.
-         * @return bool True if the creator is unknown, or can use QuickTasker and access the board.
+         * @return bool True if the creator is unknown, or can manage integrations and access the board.
          */
         public function canCreatorUseBoard($createdBy, $pipelineId)
         {
@@ -243,7 +243,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
             $creatorId = (int) $createdBy;
             $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
 
-            if (!$pipelineAccessRepo->canUseQuickTasker($creatorId)) {
+            if (!$pipelineAccessRepo->canManageIntegrations($creatorId)) {
                 return false;
             }
 

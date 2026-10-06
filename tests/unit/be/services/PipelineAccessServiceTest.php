@@ -42,15 +42,15 @@ class PipelineAccessServiceTest extends TestCase
     /** @var int Number of entity lookups made through the repository. */
     private $entityLookups;
 
-    /** @var int[] IDs of the WordPress users without the base QuickTasker capability. */
-    private $usersWithoutQuickTasker;
+    /** @var int[] IDs of the WordPress users without the QuickTasker or manage settings capability. */
+    private $usersWhoCannotManageIntegrations;
 
     protected function setUp(): void
     {
         $this->existingBoardIds = [1, 2, 3];
         $this->userBoardIds = [];
         $this->entityLookups = 0;
-        $this->usersWithoutQuickTasker = [];
+        $this->usersWhoCannotManageIntegrations = [];
         $this->entityBoards = [
             'task:10'  => 1,
             'task:20'  => 2,
@@ -71,7 +71,7 @@ class PipelineAccessServiceTest extends TestCase
         });
 
         $pipelineAccessRepoMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['canAccessAllPipelines', 'canUseQuickTasker', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds'])
+            ->addMethods(['canAccessAllPipelines', 'canManageIntegrations', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds'])
             ->getMock();
         $pipelineAccessRepoMock->method('getPipelineIdOfEntity')->willReturnCallback(function ($entityType, $entityId) {
             $this->entityLookups++;
@@ -86,8 +86,8 @@ class PipelineAccessServiceTest extends TestCase
 
             return $this->attachedEntities[$ownerType . ':' . $ownerId] ?? null;
         });
-        $pipelineAccessRepoMock->method('canUseQuickTasker')->willReturnCallback(function ($userId) {
-            return !in_array($userId, $this->usersWithoutQuickTasker, true);
+        $pipelineAccessRepoMock->method('canManageIntegrations')->willReturnCallback(function ($userId) {
+            return !in_array($userId, $this->usersWhoCannotManageIntegrations, true);
         });
         $pipelineAccessRepoMock->method('canAccessAllPipelines')->willReturnCallback(function ($userId) {
             return self::ADMIN_USER_ID === $userId;
@@ -309,10 +309,10 @@ class PipelineAccessServiceTest extends TestCase
         $this->assertFalse($this->service->canCreatorUseBoard((string) self::LIMITED_USER_ID, '2'));
     }
 
-    public function test_a_creator_without_quicktasker_access_cannot_use_any_board()
+    public function test_a_creator_who_cannot_manage_integrations_cannot_use_any_board()
     {
         $this->userBoardIds = [self::LIMITED_USER_ID => [1]];
-        $this->usersWithoutQuickTasker = [self::LIMITED_USER_ID];
+        $this->usersWhoCannotManageIntegrations = [self::LIMITED_USER_ID];
 
         $this->assertFalse($this->service->canCreatorUseBoard((string) self::LIMITED_USER_ID, '1'));
     }
@@ -334,7 +334,7 @@ class PipelineAccessServiceTest extends TestCase
     {
         $this->userBoardIds = [self::LIMITED_USER_ID => [1], 4 => [2]];
         // User 9 has been deleted, and deleted users have no capabilities.
-        $this->usersWithoutQuickTasker = [4, 9];
+        $this->usersWhoCannotManageIntegrations = [4, 9];
         $items = [
             (object) ['pipeline_id' => '3', 'created_by' => (string) self::ADMIN_USER_ID, 'created_by_name' => 'Admin'],
             (object) ['pipeline_id' => '1', 'created_by' => (string) self::LIMITED_USER_ID, 'created_by_name' => 'Anna'],

@@ -3792,7 +3792,7 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
       }),
       request({
         name: "The outsider's webhook is skipped and the skip is logged",
-        url: "/global-logs?order=DESC&numberOfLogs=200&search=its%20creator%20has%20no%20access",
+        url: "/global-logs?order=DESC&numberOfLogs=200&search=its%20creator%20lost%20access",
         tests: [
           status(200),
           `pm.test('the skipped webhook is logged on board E', () => pm.expect(pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);`,
@@ -3815,6 +3815,66 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
       }),
       request({
         name: "The outsider's API token works again with QuickTasker access",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(200)],
+      }),
+      request({
+        name: "Turn off only the outsider's permission to manage settings",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: true,
+          quicktasker_admin_role_manage_users: false,
+          quicktasker_admin_role_manage_settings: false,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "The outsider's API token stops working without the permission to manage settings",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(403), wpErrorCode("token_creator_no_access")],
+      }),
+      request({
+        name: "Board E marks the outsider's API token while they cannot manage settings",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        tests: [
+          status(200),
+          `const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));
+pm.test('the token creator lost access', () => pm.expect(token && token.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "Board E marks the outsider's webhook while they cannot manage settings",
+        url: "/pipelines/{{boardEId}}/webhooks",
+        tests: [
+          status(200),
+          `const webhook = pm.response.json().data.webhooks.find((w) => String(w.created_by) === pm.collectionVariables.get('outsiderWpUserId'));
+pm.test('the webhook creator lost access', () => pm.expect(webhook && webhook.created_by_has_board_access).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "Turn the outsider's permission to manage settings back on",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: true,
+          quicktasker_admin_role_manage_users: false,
+          quicktasker_admin_role_manage_settings: true,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "The outsider's API token works again with the permission to manage settings",
         url: "/token/board",
         auth: bearer("outsiderToken"),
         tests: [status(200)],

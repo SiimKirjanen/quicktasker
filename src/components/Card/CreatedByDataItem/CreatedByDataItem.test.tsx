@@ -20,25 +20,21 @@ describe("CreatedByDataItem", () => {
     expect(screen.getByTestId("api-token-created-by")).toHaveTextContent(
       "Anna",
     );
-    expect(
-      screen.queryByTestId("api-token-creator-no-board-access"),
-    ).toBeNull();
+    expect(screen.queryByTestId("api-token-creator-lost-access")).toBeNull();
   });
 
-  it("warns when the creator no longer has access to the board", () => {
+  it("warns when the creator lost access", () => {
     renderItem({ hasBoardAccess: false });
 
     expect(
-      screen.getByTestId("api-token-creator-no-board-access"),
-    ).toHaveTextContent("No access to this board");
+      screen.getByTestId("api-token-creator-lost-access"),
+    ).toHaveTextContent("Lost access");
   });
 
   it("does not warn when the creator's access is unknown", () => {
     renderItem({ hasBoardAccess: null });
 
-    expect(
-      screen.queryByTestId("api-token-creator-no-board-access"),
-    ).toBeNull();
+    expect(screen.queryByTestId("api-token-creator-lost-access")).toBeNull();
   });
 
   it("names a deleted creator", () => {

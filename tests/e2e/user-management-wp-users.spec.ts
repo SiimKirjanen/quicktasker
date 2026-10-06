@@ -340,13 +340,13 @@ test.describe('WordPress Users Tab – Boards', () => {
     try {
       await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/automations`);
       await expect(page.getByTestId('automation-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
-      await expect(page.getByTestId('automation-creator-no-board-access')).toHaveCount(0);
+      await expect(page.getByTestId('automation-creator-lost-access')).toHaveCount(0);
 
       await addWPUserToBoards(request, userId, []);
       await page.reload();
 
       await expect(page.getByTestId('automation-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
-      await expect(page.getByTestId('automation-creator-no-board-access')).toHaveText('No access to this board');
+      await expect(page.getByTestId('automation-creator-lost-access')).toHaveText('Lost access');
     } finally {
       await deleteBoardViaApi(request, boardName);
     }
@@ -388,7 +388,7 @@ test.describe('WordPress Users Tab – Boards', () => {
     }
   });
 
-  test('API tokens and webhooks show when their creator has lost QuickTasker access', async ({ page, browser, request }) => {
+  test('API tokens and webhooks show when their creator has lost the permission to manage settings', async ({ page, browser, request }) => {
     const boardName = generateUniqueName('WUB-Revoked-Creator');
     const board = await createBoardViaApi(request, boardName);
     const userLogin = uniqueLogin('wprevoked');
@@ -402,22 +402,22 @@ test.describe('WordPress Users Tab – Boards', () => {
       await expect(page.getByTestId('api-token-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
       await expect(page.getByTestId('api-token-not-working')).toHaveCount(0);
 
-      // The user stays on the board but can no longer use QuickTasker.
-      await grantWPUserCaps(request, userId, []);
+      // The user stays on the board and keeps QuickTasker, but can no longer manage settings.
+      await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
 
       await page.reload();
       await expect(page.getByTestId('api-token-not-working')).toHaveText(
-        "This token doesn't work: its creator has no access to this board.",
+        "This token doesn't work: its creator lost access to this board or the permission to manage settings.",
         { timeout: TIMEOUTS.NAVIGATION },
       );
-      await expect(page.getByTestId('api-token-creator-no-board-access')).toHaveText('No access to this board');
+      await expect(page.getByTestId('api-token-creator-lost-access')).toHaveText('Lost access');
 
       await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/webhooks`);
       await expect(page.getByTestId('webhook-not-sending')).toHaveText(
-        'Not sending: its creator has no access to this board',
+        'Not sending: its creator lost access to this board or the permission to manage settings',
         { timeout: TIMEOUTS.NAVIGATION },
       );
-      await expect(page.getByTestId('webhook-creator-no-board-access')).toHaveText('No access to this board');
+      await expect(page.getByTestId('webhook-creator-lost-access')).toHaveText('Lost access');
     } finally {
       await deleteBoardViaApi(request, boardName);
     }
@@ -465,7 +465,7 @@ test.describe('WordPress Users Tab – Boards', () => {
       await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
       await expect(page.getByTestId('api-token-created-by')).toHaveText('Deleted user', { timeout: TIMEOUTS.NAVIGATION });
       await expect(page.getByTestId('api-token-not-working')).toBeVisible();
-      await expect(page.getByTestId('api-token-creator-no-board-access')).toHaveText('No access to this board');
+      await expect(page.getByTestId('api-token-creator-lost-access')).toHaveText('Lost access');
 
       await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/webhooks`);
       await expect(page.getByTestId('webhook-created-by')).toHaveText('Deleted user', { timeout: TIMEOUTS.NAVIGATION });

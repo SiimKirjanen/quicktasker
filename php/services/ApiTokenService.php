@@ -113,9 +113,9 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                 return new WP_Error('invalid_token', 'Invalid authorization token: associated pipeline not found.', ['status' => 401]);
             }
 
-            // The token stops working when its creator loses access to the board, in any way.
+            // The token stops working when its creator loses access to the board or the permission to manage settings.
             if (!ServiceLocator::get('PipelineAccessService')->canCreatorUseBoard($savedToken->created_by ?? null, $savedToken->pipeline_id)) {
-                return new WP_Error('token_creator_no_access', 'The user who created this token no longer has access to the board.', ['status' => 403]);
+                return new WP_Error('token_creator_no_access', 'The user who created this token lost access to the board or the permission to manage settings.', ['status' => 403]);
             }
 
             if (!empty($requiredPermissions) && !self::checkTokenPermissions($savedToken, $requiredPermissions)) {

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-06T17:43:49+00:00\n"
+"POT-Creation-Date: 2026-10-06T18:31:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -738,7 +738,7 @@ msgid "Deleted user"
 msgstr ""
 
 #: build/app.js:1
-msgid "No access to this board"
+msgid "Lost access"
 msgstr ""
 
 #: build/app.js:1
@@ -762,7 +762,7 @@ msgid "Delete token"
 msgstr ""
 
 #: build/app.js:1
-msgid "This token doesn't work: its creator has no access to this board."
+msgid "This token doesn't work: its creator lost access to this board or the permission to manage settings."
 msgstr ""
 
 #: build/app.js:1
@@ -1330,6 +1330,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "WordPress users need the \"Access to plugin admin area\" permission and must be added to the board to be assignable."
+msgstr ""
+
+#: build/app.js:1
+msgid "No access to this board"
 msgstr ""
 
 #: build/app.js:1
@@ -2760,7 +2764,7 @@ msgid "URL"
 msgstr ""
 
 #: build/app.js:1
-msgid "Not sending: its creator has no access to this board"
+msgid "Not sending: its creator lost access to this board or the permission to manage settings"
 msgstr ""
 
 #: build/app.js:1

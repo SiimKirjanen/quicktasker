@@ -135,10 +135,10 @@ if (!class_exists('WPQT\Webhooks\WebhookService')) {
                         continue;
                     }
 
-                    // The webhook stops sending board data when its creator loses access to the board, in any way.
+                    // The webhook stops sending board data when its creator loses access to the board or the permission to manage settings.
                     if (!ServiceLocator::get('PipelineAccessService')->canCreatorUseBoard($webhook->created_by ?? null, $webhook->pipeline_id)) {
                         if ($shouldLog) {
-                            $logService->log('Webhook ' . $webHookName . ' skipped (its creator has no access to the board)', array_merge($baseLog, [
+                            $logService->log('Webhook ' . $webHookName . ' skipped (its creator lost access to the board or the permission to manage settings)', array_merge($baseLog, [
                               'log_status' => WP_QT_LOG_STATUS_ERROR
                             ]));
                         }

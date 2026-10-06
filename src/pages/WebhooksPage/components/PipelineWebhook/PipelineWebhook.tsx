@@ -123,7 +123,7 @@ function PipelineWebhook({ webhook }: Props) {
             >
               <span className="wpqt-h-2 wpqt-w-2 wpqt-rounded-full wpqt-bg-yellow-500" />
               {__(
-                "Not sending: its creator has no access to this board",
+                "Not sending: its creator lost access to this board or the permission to manage settings",
                 "quicktasker",
               )}
             </span>

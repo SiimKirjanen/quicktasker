@@ -25,14 +25,14 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
         }
 
         /**
-         * Checks if a WordPress user can use QuickTasker's admin app and API.
+         * Checks if a WordPress user can manage API tokens, webhooks and automations.
          *
          * @param int $wpUserId The WordPress user ID.
-         * @return bool True if the user exists and has the base QuickTasker capability.
+         * @return bool True if the user exists and has the base QuickTasker and the manage settings capabilities.
          */
-        public function canUseQuickTasker($wpUserId)
+        public function canManageIntegrations($wpUserId)
         {
-            return user_can($wpUserId, WP_QUICKTASKER_ADMIN_ROLE);
+            return user_can($wpUserId, WP_QUICKTASKER_ADMIN_ROLE) && user_can($wpUserId, WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS);
         }
 
         /**

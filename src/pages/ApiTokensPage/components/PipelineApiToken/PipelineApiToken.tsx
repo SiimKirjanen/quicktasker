@@ -57,7 +57,7 @@ function PipelineApiToken({ apiToken }: Props) {
         <div className="wpqt-mb-3" data-testid="api-token-not-working">
           <Alert type="warning" className="!wpqt-flex wpqt-w-full">
             {__(
-              "This token doesn't work: its creator has no access to this board.",
+              "This token doesn't work: its creator lost access to this board or the permission to manage settings.",
               "quicktasker",
             )}
           </Alert>
