@@ -3674,6 +3674,30 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
           }),
         ),
     ),
+    folder("A missing board or task is reported as missing, not as refused", [
+      request({
+        name: "Missing board",
+        url: "/pipelines/999999999",
+        auth: outsiderAuth,
+        tests: [
+          status(400),
+          success(false),
+          `pm.test('reported as a missing board', () => pm.expect(pm.response.json().messages).to.include('PIPELINE_NOT_FOUND'));`,
+        ],
+      }),
+      request({
+        name: "Missing task",
+        method: "PATCH",
+        url: "/tasks/999999999/done",
+        body: { done: true },
+        auth: outsiderAuth,
+        tests: [
+          status(400),
+          success(false),
+          `pm.test('reported as a missing task', () => pm.expect(pm.response.json().messages).to.include('TASK_NOT_FOUND'));`,
+        ],
+      }),
+    ]),
     folder("Lists leave out board E for a user not added to it", [
       request({
         name: "Board list",
@@ -3874,6 +3898,12 @@ const adminCleanup = folder("Cleanup", [
     name: "Deleted board is gone",
     url: "/pipelines/{{boardCId}}",
     tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Task of the deleted board is refused, not reported as missing, to a user who is not a WordPress administrator",
+    url: "/tasks/{{orphanTaskId}}/logs",
+    auth: outsiderAuth,
+    tests: [status(403), wpErrorCode("rest_forbidden")],
   }),
   request({
     name: "Archive cleanup is refused to a user who is not a WordPress administrator",

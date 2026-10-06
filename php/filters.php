@@ -7,6 +7,8 @@ if (!defined('ABSPATH')) {
 use WPQT\Export\JSONExportService;
 use WPQT\Export\PDFExportService;
 use WPQT\Location\LocationService;
+use WPQT\Permission\PermissionService;
+use WPQT\Response\ApiResponse;
 use WPQT\Services\ServiceLocator;
 
 /**
@@ -132,5 +134,37 @@ if (!function_exists('quicktasker_custom_pages')) {
                 }
             }
         }
+    }
+}
+
+/**
+ * Answers a refused admin API request about a board, stage or task that does not exist the same
+ * way as the route does for administrators, so the app can say it was deleted.
+ *
+ * Users who have not been added to every board are refused before the route runs, because a missing
+ * entity's board cannot be checked. Without this they would be told they have not been added to the board.
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response The response so far.
+ * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed The response.
+ */
+add_filter('rest_request_after_callbacks', 'wpqt_missing_board_entity_response');
+if (!function_exists('wpqt_missing_board_entity_response')) {
+    function wpqt_missing_board_entity_response($response)
+    {
+        $missingEntityType = PermissionService::takeMissingBoardEntityType();
+        $exceptionCodes = [
+            'pipeline' => WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND,
+            'stage'    => WP_QUICKTASKER_EXCEPTION_STAGE_NOT_FOUND,
+            'task'     => WP_QUICKTASKER_EXCEPTION_TASK_NOT_FOUND,
+        ];
+
+        if (null === $missingEntityType
+            || !isset($exceptionCodes[$missingEntityType])
+            || !is_wp_error($response)
+            || 'rest_forbidden' !== $response->get_error_code()) {
+            return $response;
+        }
+
+        return new WP_REST_Response((new ApiResponse(false, [$exceptionCodes[$missingEntityType]]))->toArray(), 400);
     }
 }

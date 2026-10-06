@@ -104,22 +104,30 @@ function makeWPUser(pipelineIds?: number[]): WPUser {
 const mockUserDispatch = jest.fn();
 
 function renderAccess(user: WPUser, boards: Pipeline[] = pipelines) {
-  return render(
+  const tree = (currentUser: WPUser) => (
     <PipelinesContext.Provider
       value={{ state: { pipelines: boards }, pipelinesDispatch: jest.fn() }}
     >
       <UserContext.Provider
         value={{
-          state: { users: [], wpUsers: [user], usersSearchValue: "" },
+          state: { users: [], wpUsers: [currentUser], usersSearchValue: "" },
           userDispatch: mockUserDispatch,
           updateUsers: jest.fn(),
           updateWPUsers: jest.fn(),
         }}
       >
-        <WPUserPipelineAccess user={user} />
+        <WPUserPipelineAccess user={currentUser} />
       </UserContext.Provider>
-    </PipelinesContext.Provider>,
+    </PipelinesContext.Provider>
   );
+  const result = render(tree(user));
+
+  return {
+    ...result,
+    // Renders the card again with the user's boards as loaded on refresh.
+    rerenderWithUser: (updatedUser: WPUser) =>
+      result.rerender(tree(updatedUser)),
+  };
 }
 
 function respondWith(update: WPUserPipelinesUpdate) {
@@ -359,6 +367,41 @@ describe("WPUserPipelineAccess", () => {
     await release();
   });
 
+  describe("boards loaded again", () => {
+    it("shows the boards loaded when User management is refreshed", () => {
+      const { rerenderWithUser } = renderAccess(makeWPUser([1]));
+
+      rerenderWithUser(makeWPUser([1, 2]));
+
+      expect(screen.getByTestId("wp-user-boards-summary")).toHaveTextContent(
+        "Board 1, Board 2",
+      );
+    });
+
+    it("starts the selector from the boards loaded again", () => {
+      const { rerenderWithUser } = renderAccess(makeWPUser([1]));
+      rerenderWithUser(makeWPUser([1, 2]));
+      openSelector();
+
+      expect(screen.getByTestId("selected")).toHaveTextContent("1,2");
+    });
+
+    it("keeps the selection being saved", async () => {
+      const release = holdSaves();
+      const { rerenderWithUser } = renderAccess(makeWPUser([1]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("only board 2"));
+      });
+      rerenderWithUser(makeWPUser([1, 2]));
+
+      expect(screen.getByTestId("selected")).toHaveTextContent(/^2$/);
+      await release();
+      expect(screen.getByTestId("selected")).toHaveTextContent(/^2$/);
+    });
+  });
+
   describe("deleted boards", () => {
     const boardMissing = {
       messages: [WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND],
@@ -386,9 +429,9 @@ describe("WPUserPipelineAccess", () => {
       );
     }
 
-    it("leaves out a board deleted since the boards were loaded", async () => {
+    it("keeps a board missing from the board list, as it may have been created since", async () => {
       respondWith({
-        pipeline_ids: [2],
+        pipeline_ids: [2, 9],
         removed_pipelines_with_assigned_tasks: [],
       });
       renderAccess(makeWPUser([9]));
@@ -399,7 +442,7 @@ describe("WPUserPipelineAccess", () => {
       });
 
       expect(mockUpdateWPUserPipelines.mock.calls.map((c) => c[1])).toEqual([
-        ["2"],
+        ["2", "9"],
       ]);
       expect(toast.error).not.toHaveBeenCalled();
     });

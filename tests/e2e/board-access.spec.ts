@@ -387,6 +387,35 @@ test.describe('Board access', () => {
     }
   });
 
+  test('a user viewing a board that is deleted is told it no longer exists', async ({ browser, request }) => {
+    const deletedBoardName = generateUniqueName('BA-Deleted');
+    const deletedBoard = await createBoardViaApi(request, deletedBoardName);
+    const userLogin = uniqueLogin('wpdeleted');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    await addWPUserToBoards(request, userId, [deletedBoardName]);
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const userPage = await context.newPage();
+      await userPage.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${deletedBoard.boardId}`);
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(deletedBoardName, {
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+
+      // An administrator deletes the board while it is open.
+      await deleteBoardViaApi(request, deletedBoardName);
+      await userPage.getByTestId('refresh-icon').click();
+
+      await expect(
+        userPage.getByText('This board no longer exists. Please refresh the page to view your available boards.'),
+      ).toBeVisible();
+      await expect(userPage.getByText('You have not been added to this board.', { exact: false })).toHaveCount(0);
+    } finally {
+      await context.close();
+    }
+  });
+
   test('a board page the user lacks the permission for is not mistaken for missing board access', async ({ browser, request }) => {
     const boardName = generateUniqueName('BA-NoPerm');
     const board = await createBoardViaApi(request, boardName);

@@ -72,6 +72,18 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
+         * Checks if a board, or something that belongs to a board, exists.
+         *
+         * @param string $entityType See canAccessEntity().
+         * @param int|null $entityId The entity ID.
+         * @return bool True if the entity exists, or if it is not something that belongs to a board.
+         */
+        public function entityExists($entityType, $entityId)
+        {
+            return ServiceLocator::get('PipelineAccessRepository')->entityExists($entityType, $entityId);
+        }
+
+        /**
          * Retrieves the IDs of the boards a WordPress user can access.
          *
          * @param int $wpUserId The WordPress user ID.

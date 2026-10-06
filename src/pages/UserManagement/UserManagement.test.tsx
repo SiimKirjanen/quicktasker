@@ -57,6 +57,11 @@ jest.mock("./RegularWPUserSection/ReqularWPUsersSection", () => ({
   RegularWPUsersSection: () => null,
 }));
 
+const mockRefreshPipelines = jest.fn().mockResolvedValue([]);
+jest.mock("../../hooks/usePipelines", () => ({
+  usePipelines: () => ({ refreshPipelines: mockRefreshPipelines }),
+}));
+
 import { UserManagement } from "./UserManagement";
 
 type CtxOverrides = {
@@ -109,6 +114,10 @@ function renderPage({
 }
 
 describe("UserManagement", () => {
+  beforeEach(() => {
+    mockRefreshPipelines.mockClear();
+  });
+
   it("fetches both user lists on mount with a full-page loader", async () => {
     let updateUsers!: jest.Mock;
     let updateWPUsers!: jest.Mock;
@@ -145,6 +154,20 @@ describe("UserManagement", () => {
 
     expect(updateUsers).toHaveBeenCalledTimes(2);
     expect(updateWPUsers).toHaveBeenCalledTimes(2);
+  });
+
+  it("reloads the boards with the WordPress users, on mount and on refresh", async () => {
+    await act(async () => {
+      renderPage();
+    });
+
+    expect(mockRefreshPipelines).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("refresh-icon"));
+    });
+
+    expect(mockRefreshPipelines).toHaveBeenCalledTimes(2);
   });
 
   it("shows the loading oval while refreshing and restores the icon after", async () => {
@@ -227,6 +250,7 @@ describe("UserManagement", () => {
 
       expect(updateUsers).toHaveBeenCalledTimes(2);
       expect(updateWPUsers).not.toHaveBeenCalled();
+      expect(mockRefreshPipelines).not.toHaveBeenCalled();
     });
   });
 });

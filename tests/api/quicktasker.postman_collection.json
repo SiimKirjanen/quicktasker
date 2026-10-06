@@ -24232,6 +24232,97 @@
               ]
             },
             {
+              "name": "A missing board or task is reported as missing, not as refused",
+              "item": [
+                {
+                  "name": "Missing board",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/999999999",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                          "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                          "pm.test('reported as a missing board', () => pm.expect(pm.response.json().messages).to.include('PIPELINE_NOT_FOUND'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Missing task",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/999999999/done",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"done\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                          "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                          "pm.test('reported as a missing task', () => pm.expect(pm.response.json().messages).to.include('TASK_NOT_FOUND'));"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "name": "Lists leave out board E for a user not added to it",
               "item": [
                 {
@@ -24986,6 +25077,41 @@
                     "exec": [
                       "pm.test('status is 400', () => pm.response.to.have.status(400));",
                       "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Task of the deleted board is refused, not reported as missing, to a user who is not a WordPress administrator",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks/{{orphanTaskId}}/logs",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{outsiderUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{outsiderAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                      "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
                     ]
                   }
                 }

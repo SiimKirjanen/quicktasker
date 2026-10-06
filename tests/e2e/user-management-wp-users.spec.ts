@@ -159,6 +159,66 @@ test.describe('WordPress Users Tab – Boards', () => {
     }
   });
 
+  test("a board another administrator added the user to is kept when changing the user's boards", async ({ page, request }) => {
+    const knownBoardName = generateUniqueName('WUB-Known');
+    await createBoardViaApi(request, knownBoardName);
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+
+    // The app is loaded before another administrator creates a board and adds the user to it.
+    await navigateToBoardsPage(page);
+    const newBoardName = generateUniqueName('WUB-New');
+    await createBoardViaApi(request, newBoardName);
+    await addWPUserToBoards(request, userId, [newBoardName]);
+
+    try {
+      await page.evaluate(() => {
+        window.location.hash = '#/user-management';
+      });
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText(newBoardName, { timeout: TIMEOUTS.NAVIGATION });
+
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: knownBoardName }).click();
+      await page.keyboard.press('Escape');
+      await expect(card.getByTestId('wp-user-boards-saving')).toHaveCount(0);
+
+      await navigateToWPUsersTab(page);
+      await expect(boardsSummary).toContainText(newBoardName, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(boardsSummary).toContainText(knownBoardName);
+    } finally {
+      await deleteBoardViaApi(request, knownBoardName);
+      await deleteBoardViaApi(request, newBoardName);
+    }
+  });
+
+  test("refreshing User management shows boards changed by another administrator", async ({ page, request }) => {
+    const firstBoardName = generateUniqueName('WUB-First');
+    const secondBoardName = generateUniqueName('WUB-Second');
+    await createBoardViaApi(request, firstBoardName);
+    await createBoardViaApi(request, secondBoardName);
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await addWPUserToBoards(request, userId, [firstBoardName]);
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText(firstBoardName, { timeout: TIMEOUTS.NAVIGATION });
+
+      await addWPUserToBoards(request, userId, [firstBoardName, secondBoardName]);
+      await page.getByTestId('refresh-icon').click();
+
+      await expect(boardsSummary).toContainText(secondBoardName);
+      await expect(boardsSummary).toContainText(firstBoardName);
+    } finally {
+      await deleteBoardViaApi(request, firstBoardName);
+      await deleteBoardViaApi(request, secondBoardName);
+    }
+  });
+
   test("a board deleted elsewhere does not stop changing a user's boards", async ({ page, request }) => {
     const deletedBoardName = generateUniqueName('WUB-Deleted');
     const keptBoardName = generateUniqueName('WUB-Kept');

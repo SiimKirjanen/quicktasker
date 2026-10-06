@@ -8,6 +8,10 @@ if (!defined('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES')) {
     define('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES', 'wp_quicktasker_wp_user_pipelines');
 }
 
+if (!defined('TABLE_WP_QUICKTASKER_PIPELINES')) {
+    define('TABLE_WP_QUICKTASKER_PIPELINES', 'wp_quicktasker_pipelines');
+}
+
 if (!defined('TABLE_WP_QUICKTASKER_PIPELINE_STAGES')) {
     define('TABLE_WP_QUICKTASKER_PIPELINE_STAGES', 'wp_quicktasker_pipeline_stages');
 }
@@ -233,5 +237,32 @@ class PipelineAccessRepositoryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->repository->getEntityOf('task', 3);
+    }
+
+    public function test_entityExists_finds_an_existing_board()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('get_var')
+            ->with('SELECT id FROM wp_quicktasker_pipelines WHERE id = 5')
+            ->willReturn('5');
+
+        $this->assertTrue($this->repository->entityExists('pipeline', 5));
+    }
+
+    public function test_entityExists_is_false_for_a_deleted_task()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('get_var')
+            ->with('SELECT id FROM wp_quicktasker_tasks WHERE id = 8')
+            ->willReturn(null);
+
+        $this->assertFalse($this->repository->entityExists('task', 8));
+    }
+
+    public function test_entityExists_treats_types_without_a_table_as_existing()
+    {
+        $this->wpdbMock->expects($this->never())->method('get_var');
+
+        $this->assertTrue($this->repository->entityExists('quicktasker', 8));
     }
 }

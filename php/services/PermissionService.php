@@ -12,6 +12,13 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
     class PermissionService
     {
         /**
+         * The type of the entity a board check last refused because it does not exist, or null.
+         *
+         * @var string|null
+         */
+        private static $missingBoardEntityType = null;
+
+        /**
          * Checks if the current user has the required permissions to access the private API.
          *
          * @return bool Returns true if the current user has the required permissions, false otherwise.
@@ -151,6 +158,7 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
          * Checks if the current WordPress user can access every given entity through the board it belongs to.
          *
          * WordPress administrators can access every board. Other users only the boards they have been added to.
+         * When an entity is refused because it does not exist, its type is kept for takeMissingBoardEntityType().
          *
          * @param array $entities Pairs of [entity type, entity ID]. See PipelineAccessService::canAccessEntity().
          * @return bool True if the user can access all of the entities.
@@ -159,14 +167,32 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         {
             $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
             $userId = get_current_user_id();
+            self::$missingBoardEntityType = null;
 
             foreach ($entities as $entity) {
                 if (!$pipelineAccessService->canAccessEntity($userId, $entity[0], $entity[1])) {
+                    if (!$pipelineAccessService->entityExists($entity[0], $entity[1])) {
+                        self::$missingBoardEntityType = $entity[0];
+                    }
+
                     return false;
                 }
             }
 
             return true;
+        }
+
+        /**
+         * Returns the type of the entity the last board check refused because it does not exist, and forgets it.
+         *
+         * @return string|null The entity type, or null if the last refusal was not about a missing entity.
+         */
+        public static function takeMissingBoardEntityType()
+        {
+            $entityType = self::$missingBoardEntityType;
+            self::$missingBoardEntityType = null;
+
+            return $entityType;
         }
 
         /**

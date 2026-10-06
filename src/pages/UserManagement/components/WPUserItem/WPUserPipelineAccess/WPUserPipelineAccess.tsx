@@ -34,6 +34,20 @@ function WPUserPipelineAccess({ user }: Props) {
   const wasEditing = useRef(false);
   const { updateWPUserPipelines } = useWPUserPipelineActions();
   const selectId = `wp-user-boards-${user.id}`;
+  const userPipelineIdsKey = (user.pipeline_ids ?? []).join(",");
+
+  // The user's boards are loaded again when User management is refreshed, and
+  // may have been changed by another administrator. They are shown unless a
+  // selection is being saved.
+  useEffect(() => {
+    if (saving.current) {
+      return;
+    }
+    const pipelineIds = (user.pipeline_ids ?? []).map(String);
+    savedPipelineIds.current = pipelineIds;
+    setSavedIds(pipelineIds);
+    setSelectedPipelineIds(pipelineIds);
+  }, [userPipelineIdsKey]);
 
   useEffect(() => {
     if (wasEditing.current && !editing) {
@@ -145,13 +159,11 @@ function WPUserPipelineAccess({ user }: Props) {
     setUpdating(false);
   };
 
+  // Boards not in the board list are kept, as they may have been created since
+  // it was loaded. Deleted ones are left out when the save is refused.
   const onSelectionChange = (selectedIds: string[]) => {
-    // Boards deleted since the user's boards were loaded are left out.
-    const pipelineIds = selectedIds.filter((id) =>
-      pipelines.some((pipeline) => pipeline.id === id),
-    );
-    setSelectedPipelineIds(pipelineIds);
-    pendingPipelineIds.current = pipelineIds;
+    setSelectedPipelineIds(selectedIds);
+    pendingPipelineIds.current = selectedIds;
     if (!saving.current) {
       savePendingSelections();
     }

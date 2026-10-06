@@ -136,6 +136,40 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
         }
 
         /**
+         * Checks if a board, or something that belongs to a board, exists.
+         *
+         * @param string $entityType 'pipeline', a board entity type or an attached entity type.
+         *                           See PipelineAccessService::canAccessEntity().
+         * @param int $entityId The entity ID.
+         * @return bool True if the entity exists, or if the entity type has no table to look it up in.
+         */
+        public function entityExists($entityType, $entityId)
+        {
+            global $wpdb;
+
+            $tables = [
+                'pipeline'     => TABLE_WP_QUICKTASKER_PIPELINES,
+                'stage'        => TABLE_WP_QUICKTASKER_PIPELINE_STAGES,
+                'task'         => TABLE_WP_QUICKTASKER_TASKS,
+                'label'        => TABLE_WP_QUICKTASKER_LABELS,
+                'automation'   => TABLE_WP_QUICKTASKER_AUTOMATIONS,
+                'webhook'      => TABLE_WP_QUICKTASKER_WEBHOOKS,
+                'api_token'    => TABLE_WP_QUICKTASKER_API_TOKENS,
+                'custom_field' => TABLE_WP_QUICKTASKER_CUSTOM_FIELDS,
+                'upload'       => TABLE_WP_QUICKTASKER_UPLOADS,
+            ];
+
+            if (!isset($tables[$entityType])) {
+                return true;
+            }
+
+            return null !== $wpdb->get_var($wpdb->prepare(
+                'SELECT id FROM ' . $tables[$entityType] . ' WHERE id = %d',
+                $entityId
+            ));
+        }
+
+        /**
          * Adds a WordPress user to a board. Does nothing if the user is already added.
          *
          * @param int $wpUserId The WordPress user ID.
