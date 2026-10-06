@@ -2,6 +2,7 @@ import { createContext, useEffect, useReducer } from "@wordpress/element";
 import {
   RESET_MISSING_CONTENT,
   SET_PIPELINE_MISSING,
+  SET_PIPELINE_NO_ACCESS,
   SET_STAGE_MISSING,
   SET_TASK_MISSING,
 } from "../constants";
@@ -9,18 +10,22 @@ import { reducer } from "../reducers/missing-content-reducer";
 
 const initialState = {
   pipelineMissing: false,
+  pipelineNoAccess: false,
   stageMissing: false,
   taskMissing: false,
 };
 
 type State = {
   pipelineMissing: boolean;
+  // The user has not been added to the board they tried to open.
+  pipelineNoAccess: boolean;
   stageMissing: boolean;
   taskMissing: boolean;
 };
 
 type Action =
   | { type: typeof SET_PIPELINE_MISSING; payload: boolean }
+  | { type: typeof SET_PIPELINE_NO_ACCESS; payload: boolean }
   | { type: typeof RESET_MISSING_CONTENT }
   | { type: typeof SET_STAGE_MISSING; payload: boolean }
   | { type: typeof SET_TASK_MISSING; payload: boolean };

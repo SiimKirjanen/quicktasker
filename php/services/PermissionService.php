@@ -12,6 +12,13 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
     class PermissionService
     {
         /**
+         * The type of the entity a board check last refused because it does not exist, or null.
+         *
+         * @var string|null
+         */
+        private static $missingBoardEntityType = null;
+
+        /**
          * Checks if the current user has the required permissions to access the private API.
          *
          * @return bool Returns true if the current user has the required permissions, false otherwise.
@@ -99,6 +106,19 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         }
 
         /**
+         * Checks if the current user can remove archived tasks whose board has been deleted.
+         *
+         * Limited to WordPress administrators because those tasks have no board, so
+         * other users cannot see them in the archive.
+         *
+         * @return bool True if the user has the required permissions, false otherwise.
+         */
+        public static function hasRequiredPermissionsForArchiveCleanup()
+        {
+            return current_user_can('manage_options') && self::hasRequiredPermissionsForPrivateAPIArchiveEndpoints();
+        }
+
+        /**
          * Checks if the current user has the required permissions to access the user page app.
          *
          * This function verifies if the current user has the capability defined by the constant
@@ -135,7 +155,50 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         }
 
         /**
+         * Checks if the current WordPress user can access every given entity through the board it belongs to.
+         *
+         * WordPress administrators can access every board. Other users only the boards they have been added to.
+         * When an entity is refused because it does not exist, its type is kept for takeMissingBoardEntityType().
+         *
+         * @param array $entities Pairs of [entity type, entity ID]. See PipelineAccessService::canAccessEntity().
+         * @return bool True if the user can access all of the entities.
+         */
+        public static function canAccessBoardEntities($entities)
+        {
+            $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+            $userId = get_current_user_id();
+            self::$missingBoardEntityType = null;
+
+            foreach ($entities as $entity) {
+                if (!$pipelineAccessService->canAccessEntity($userId, $entity[0], $entity[1])) {
+                    if (!$pipelineAccessService->entityExists($entity[0], $entity[1])) {
+                        self::$missingBoardEntityType = $entity[0];
+                    }
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /**
+         * Returns the type of the entity the last board check refused because it does not exist, and forgets it.
+         *
+         * @return string|null The entity type, or null if the last refusal was not about a missing entity.
+         */
+        public static function takeMissingBoardEntityType()
+        {
+            $entityType = self::$missingBoardEntityType;
+            self::$missingBoardEntityType = null;
+
+            return $entityType;
+        }
+
+        /**
          * Checks if a user is allowed to view a task.
+         *
+         * WordPress users must also have been added to the task's board.
          *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
@@ -145,6 +208,10 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         public function checkIfUserIsAllowedToViewTask($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE)
         {
             global $wpdb;
+
+            if (!ServiceLocator::get('PipelineAccessService')->canUserAccessEntity($userId, $userType, 'task', $taskId)) {
+                return false;
+            }
 
             $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
 
@@ -234,6 +301,8 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         /**
          * Check if a user page user is allowed to edit a task.
          *
+         * WordPress users must also have been added to the task's board.
+         *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
          * @param string $userType The type of user (default is WP_QT_QUICKTASKER_USER_TYPE).
@@ -242,6 +311,10 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         public function checkIfUserIsAllowedToEditTask($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE)
         {
             global $wpdb;
+
+            if (!ServiceLocator::get('PipelineAccessService')->canUserAccessEntity($userId, $userType, 'task', $taskId)) {
+                return false;
+            }
 
             $task = ServiceLocator::get('TaskRepository')->getTaskById($taskId);
 

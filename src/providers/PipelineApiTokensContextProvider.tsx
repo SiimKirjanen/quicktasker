@@ -74,7 +74,8 @@ const PipelineApiTokensContextProvider = ({
   pipelineId: string;
 }) => {
   const [state, pipelineApiTokensDispatch] = useReducer(reducer, initialState);
-  const { detectMissingResources } = useMissingResourceDetection();
+  const { detectMissingResources, detectPipelineNoAccess } =
+    useMissingResourceDetection();
 
   async function fetchPipelineApiTokens() {
     pipelineApiTokensDispatch({
@@ -90,6 +91,9 @@ const PipelineApiTokensContextProvider = ({
       });
     } catch (error) {
       console.error(error);
+      if (await detectPipelineNoAccess(error, pipelineId)) {
+        return;
+      }
       toast.error(__("Failed to fetch board API tokens.", "quicktasker"));
 
       detectMissingResources(error);

@@ -121,6 +121,7 @@ function AutomationCreator({ pipelineId }: props) {
               <AutomationActionTarget
                 actionTargetId={automation.automationActionTargetId}
                 actionTargetType={automation.automationActionTargetType}
+                pipelineId={pipelineId}
               />
             )}
             {hasMeta && <div>{automation.metaData}</div>}
@@ -128,6 +129,7 @@ function AutomationCreator({ pipelineId }: props) {
         </WPQTCard>
       </div>
       <AutomationCreationSteps
+        pipelineId={pipelineId}
         automation={automation}
         automationDispatch={automationDispatch}
         createAutomation={onCreateAutomation}

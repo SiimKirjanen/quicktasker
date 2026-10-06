@@ -5,6 +5,7 @@ import { SiProbot } from "react-icons/si";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
+import { NoBoardAccessInfo } from "../../components/Info/NoBoardAccessInfo";
 import { LoadingOval } from "../../components/Loading/Loading";
 import { ApiTokenLogsModal } from "../../components/Modal/ApiTokenLogsModal/ApiTokenLogsModal";
 import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
@@ -29,8 +30,12 @@ type ApiTokensPageProps = {
 };
 
 function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
   const { apiTokens } = useApiTokens();
+
+  if (pipelineNoAccess) {
+    return <NoBoardAccessInfo />;
+  }
 
   if (pipelineMissing) {
     return (
@@ -94,7 +99,7 @@ function ApiTokensPageContent({ pipelineId }: ApiTokensPageContentProps) {
 function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
   const { pipelines } = usePipelines();
   const { navigatePageWithoutHistory } = useNavigation();
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
   const {
     state: { pluginURL },
   } = useApp();
@@ -104,7 +109,7 @@ function ApiTokensPage({ pipelineId }: ApiTokensPageProps) {
   return (
     <PipelineApiTokensContextProvider pipelineId={pipelineId}>
       <Page>
-        {!pipelineMissing && (
+        {!pipelineMissing && !pipelineNoAccess && (
           <WPQTPageHeader
             description={__(
               "Manage the API tokens for this board. You can create, view, and delete tokens that allow external applications to access this board's data.",

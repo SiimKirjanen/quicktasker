@@ -601,4 +601,54 @@ class UserRepositoryTest extends TestCase
 
         $this->assertSame($expectedUsers, $result);
     }
+
+    public function test_getUsers_counts_only_tasks_on_the_given_boards()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->stringContains('d.pipeline_id IN (%d, %d)'), [3, 5])
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with('PREPARED_SQL')
+            ->willReturn([]);
+
+        $this->repository->getUsers([3, 5]);
+    }
+
+    public function test_getUsers_counts_no_tasks_when_no_board_is_given()
+    {
+        $this->wpdbMock->expects($this->never())->method('prepare');
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with($this->stringContains(' AND 1 = 0'))
+            ->willReturn([]);
+
+        $this->repository->getUsers([]);
+    }
+
+    public function test_getUsers_counts_tasks_on_every_board_by_default()
+    {
+        $this->wpdbMock->expects($this->never())->method('prepare');
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with($this->logicalNot($this->stringContains('d.pipeline_id')))
+            ->willReturn([]);
+
+        $this->repository->getUsers();
+    }
+
+    public function test_getQuicktaskerUserById_counts_only_tasks_on_the_given_boards()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->stringContains('d.pipeline_id IN (%d)'), [3, 42])
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->expects($this->once())
+            ->method('get_row')
+            ->with('PREPARED_SQL')
+            ->willReturn(null);
+
+        $this->repository->getQuicktaskerUserById(42, [3]);
+    }
 }

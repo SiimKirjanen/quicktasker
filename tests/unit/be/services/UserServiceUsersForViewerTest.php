@@ -18,6 +18,12 @@ if (!function_exists('current_user_can')) {
     }
 }
 
+if (!function_exists('get_current_user_id')) {
+    function get_current_user_id() {
+        return 1;
+    }
+}
+
 require_once __DIR__ . '/../../../../php/services/ServiceLocator.php';
 require_once __DIR__ . '/../../../../php/services/PermissionService.php';
 require_once __DIR__ . '/../../../../php/services/UserService.php';
@@ -29,10 +35,11 @@ use WPQT\User\UserService;
 class UserServiceUsersForViewerTest extends TestCase
 {
     private $service;
+    private $userRepoMock;
 
     protected function setUp(): void
     {
-        $userRepoMock = $this->getMockBuilder(stdClass::class)
+        $this->userRepoMock = $userRepoMock = $this->getMockBuilder(stdClass::class)
             ->addMethods(['getUsers'])
             ->getMock();
         $userRepoMock->method('getUsers')->willReturnCallback(function () {
@@ -43,6 +50,12 @@ class UserServiceUsersForViewerTest extends TestCase
         });
 
         ServiceLocator::register('UserRepository', $userRepoMock);
+
+        $pipelineAccessServiceMock = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['getAccessiblePipelineIds'])
+            ->getMock();
+        $pipelineAccessServiceMock->method('getAccessiblePipelineIds')->willReturn([3]);
+        ServiceLocator::register('PipelineAccessService', $pipelineAccessServiceMock);
 
         $this->service = new UserService();
     }
@@ -72,5 +85,13 @@ class UserServiceUsersForViewerTest extends TestCase
             $this->assertFalse(property_exists($user, 'page_hash'));
         }
         $this->assertSame(['First', 'Second'], array_column($users, 'name'));
+    }
+
+    public function test_getUsersForCurrentViewer_counts_assigned_tasks_on_the_viewers_boards_only()
+    {
+        $GLOBALS['wpqt_test_current_user_caps'] = [WP_QUICKTASKER_ADMIN_ROLE];
+        $this->userRepoMock->expects($this->once())->method('getUsers')->with([3]);
+
+        $this->service->getUsersForCurrentViewer();
     }
 }

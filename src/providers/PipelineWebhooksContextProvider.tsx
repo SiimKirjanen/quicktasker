@@ -77,7 +77,8 @@ const PipelineWebhooksContextProvider = ({
   pipelineId: string;
 }) => {
   const [state, pipelineWebhooksDispatch] = useReducer(reducer, initialState);
-  const { detectMissingResources } = useMissingResourceDetection();
+  const { detectMissingResources, detectPipelineNoAccess } =
+    useMissingResourceDetection();
 
   const loadWebhooks = async () => {
     try {
@@ -95,6 +96,9 @@ const PipelineWebhooksContextProvider = ({
       });
     } catch (error) {
       console.error(error);
+      if (await detectPipelineNoAccess(error, pipelineId)) {
+        return;
+      }
       toast.error(__("Failed to load board webhooks", "quicktasker"));
 
       detectMissingResources(error);

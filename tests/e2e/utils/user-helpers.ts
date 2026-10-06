@@ -60,6 +60,77 @@ export async function grantWPUserCaps(
   if (!response.ok()) throw new Error(`Failed to grant WP user caps: ${await response.text()}`);
 }
 
+/**
+ * Add a WordPress user to boards via the plugin REST API.
+ * Replaces the boards the user was added to before.
+ */
+export async function addWPUserToBoards(
+  request: APIRequestContext,
+  userId: number,
+  boardNames: string[],
+): Promise<void> {
+  const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
+  const list = await request.get('/wp-json/wpqt/v1/pipelines', { headers });
+  if (!list.ok()) throw new Error(`Failed to list boards: ${await list.text()}`);
+  const boards: { id: string; name: string }[] = (await list.json()).data;
+  const boardIds = boardNames.map((name) => {
+    const board = boards.find((b) => b.name === name);
+    if (!board) throw new Error(`Board not found: ${name}`);
+    return board.id;
+  });
+  const response = await request.patch(`/wp-json/wpqt/v1/wp-users/${userId}/pipelines`, {
+    headers,
+    data: { pipeline_ids: boardIds },
+  });
+  if (!response.ok()) throw new Error(`Failed to add WP user to boards: ${await response.text()}`);
+}
+
+
+/**
+ * Create a QuickTasker user via the plugin REST API, as the admin.
+ * Returns the new user's ID.
+ */
+export async function createQuickTaskerUserViaApi(
+  request: APIRequestContext,
+  name: string,
+): Promise<string> {
+  const response = await request.post('/wp-json/wpqt/v1/users', {
+    headers: { 'X-WP-Nonce': await getAdminNonce(request) },
+    data: { name, description: '' },
+  });
+  if (!response.ok()) throw new Error(`Failed to create QuickTasker: ${await response.text()}`);
+  return String((await response.json()).data.id);
+}
+
+/**
+ * Assign a QuickTasker user to a task via the plugin REST API, as the admin.
+ */
+export async function assignQuickTaskerToTaskViaApi(
+  request: APIRequestContext,
+  userId: string,
+  taskId: string,
+): Promise<void> {
+  const response = await request.post(`/wp-json/wpqt/v1/users/${userId}/tasks/${taskId}`, {
+    headers: { 'X-WP-Nonce': await getAdminNonce(request) },
+    data: { user_type: 'quicktasker' },
+  });
+  if (!response.ok()) throw new Error(`Failed to assign QuickTasker: ${await response.text()}`);
+}
+
+/**
+ * Assign a WordPress user to a task via the plugin REST API, as the admin.
+ */
+export async function assignWPUserToTaskViaApi(
+  request: APIRequestContext,
+  userId: number,
+  taskId: string,
+): Promise<void> {
+  const response = await request.post(`/wp-json/wpqt/v1/users/${userId}/tasks/${taskId}`, {
+    headers: { 'X-WP-Nonce': await getAdminNonce(request) },
+    data: { user_type: 'wp-user' },
+  });
+  if (!response.ok()) throw new Error(`Failed to assign WP user: ${await response.text()}`);
+}
 
 /**
  * Navigate to the WordPress users tab in User Management (the default tab).

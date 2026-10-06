@@ -1,5 +1,12 @@
 import { renderHook } from "@testing-library/react";
 import React from "react";
+
+const mockGetPipelinesRequest = jest.fn();
+jest.mock("../api/api", () => ({
+  getPipelinesRequest: () => mockGetPipelinesRequest(),
+}));
+
+import { PIPELINES_SET } from "../constants";
 import { PipelinesContext, State } from "../providers/PipelinesContextProvider";
 import { Pipeline } from "../types/pipeline";
 import { usePipelines } from "./usePipelines";
@@ -8,8 +15,8 @@ function makePipeline(name: string, id = "p1"): Pipeline {
   return { id, name, is_primary: false };
 }
 
-function wrapper(pipelines: Pipeline[]) {
-  const ctx = { state: { pipelines } as State, pipelinesDispatch: jest.fn() };
+function wrapper(pipelines: Pipeline[], pipelinesDispatch = jest.fn()) {
+  const ctx = { state: { pipelines } as State, pipelinesDispatch };
   const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <PipelinesContext.Provider value={ctx}>
       {children}
@@ -56,6 +63,41 @@ describe("usePipelines", () => {
         wrapper: wrapper([]),
       });
       expect(result.current.checkIfPipelineNameExists("Alpha")).toBe(false);
+    });
+  });
+
+  describe("refreshPipelines", () => {
+    it("stores the reloaded boards and returns their IDs", async () => {
+      const boards = [
+        { id: 3, name: "Gamma" },
+        { id: "4", name: "Delta" },
+      ];
+      mockGetPipelinesRequest.mockResolvedValue({ data: boards });
+      const pipelinesDispatch = jest.fn();
+      const { result } = renderHook(() => usePipelines(), {
+        wrapper: wrapper([], pipelinesDispatch),
+      });
+
+      await expect(result.current.refreshPipelines()).resolves.toEqual([
+        "3",
+        "4",
+      ]);
+      expect(pipelinesDispatch).toHaveBeenCalledWith({
+        type: PIPELINES_SET,
+        payload: boards,
+      });
+    });
+
+    it("returns null when the boards cannot be loaded", async () => {
+      mockGetPipelinesRequest.mockRejectedValue(new Error("Network error"));
+      jest.spyOn(console, "error").mockImplementation(() => {});
+      const pipelinesDispatch = jest.fn();
+      const { result } = renderHook(() => usePipelines(), {
+        wrapper: wrapper([], pipelinesDispatch),
+      });
+
+      await expect(result.current.refreshPipelines()).resolves.toBeNull();
+      expect(pipelinesDispatch).not.toHaveBeenCalled();
     });
   });
 });

@@ -14,6 +14,7 @@ type State = {
   isUserAllowedToManageUsers: boolean;
   isUserAllowedToDeleteUsers: boolean;
   isUserAllowedToManageWPUsers: boolean;
+  isUserAllowedToCleanArchive: boolean;
   userPageCustomStyles: string;
   taskUploadsURL: string;
 };
@@ -30,6 +31,7 @@ const initialState: State = {
   isUserAllowedToManageUsers: false,
   isUserAllowedToDeleteUsers: false,
   isUserAllowedToManageWPUsers: false,
+  isUserAllowedToCleanArchive: false,
   userPageCustomStyles: "",
   taskUploadsURL: "",
 };
@@ -65,6 +67,7 @@ const getInitialStateFromWindow = (state: State): State => ({
   isUserAllowedToDeleteUsers: window.wpqt.isUserAllowedToDeleteUsers === "1",
   isUserAllowedToManageWPUsers:
     window.wpqt.isUserAllowedToManageWPUsers === "1",
+  isUserAllowedToCleanArchive: window.wpqt.isUserAllowedToCleanArchive === "1",
   userPageCustomStyles: window.wpqt.userPageCustomStyles,
   pluginURL: window.wpqt.pluginURL,
   taskUploadsURL: window.wpqt.taskUploadsURL,

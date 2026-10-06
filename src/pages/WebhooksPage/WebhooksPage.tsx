@@ -5,6 +5,7 @@ import { SiProbot } from "react-icons/si";
 import { WPQTPageHeader } from "../../components/common/Header/Header";
 import { PipelineSelectionDropdown } from "../../components/Dropdown/PipelineSelectionDropdown/PipelineSelectionDropdown";
 import { Info } from "../../components/Info/Info";
+import { NoBoardAccessInfo } from "../../components/Info/NoBoardAccessInfo";
 import { LoadingOval } from "../../components/Loading/Loading";
 import { NotificationsModal } from "../../components/Modal/NotificationsModal/NotificationsModal";
 import { WebhookLogsModal } from "../../components/Modal/WebhookLogsModal/WebhookLogsModal";
@@ -25,8 +26,12 @@ type Props = {
 };
 
 function WebhooksPageContent({ pipelineId }: Props) {
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
   const { webhooks } = useWebhooks();
+
+  if (pipelineNoAccess) {
+    return <NoBoardAccessInfo />;
+  }
 
   if (pipelineMissing) {
     return (
@@ -90,7 +95,7 @@ function WebhooksPageContent({ pipelineId }: Props) {
 function WebhooksPage({ pipelineId }: Props) {
   const { pipelines } = usePipelines();
   const { navigatePageWithoutHistory } = useNavigation();
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
   const {
     state: { pluginURL },
   } = useApp();
@@ -100,7 +105,7 @@ function WebhooksPage({ pipelineId }: Props) {
   return (
     <PipelineWebhooksContextProvider pipelineId={pipelineId}>
       <Page>
-        {!pipelineMissing && (
+        {!pipelineMissing && !pipelineNoAccess && (
           <WPQTPageHeader
             description={__(
               "Send real-time board event data to external services using webhooks.",

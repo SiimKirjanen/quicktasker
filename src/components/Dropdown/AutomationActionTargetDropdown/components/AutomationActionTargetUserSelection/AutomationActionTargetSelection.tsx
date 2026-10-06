@@ -3,13 +3,16 @@ import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { isWPUser } from "../../../../../guards/user-guard";
 import { User, UserTypes, WPUser } from "../../../../../types/user";
+import { canWPUserAccessPipeline } from "../../../../../utils/user";
+import { WPQTInput } from "../../../../common/Input/Input";
 import { QuickTaskerIcon } from "../../../../Icon/QuickTaskerIcon/QuickTaskerIcon";
 import { WordPressIcon } from "../../../../Icon/WordPressIcon/WordPressIcon";
-import { WPQTInput } from "../../../../common/Input/Input";
 
 type Props = {
   quickTaskerUsers: User[];
   wpUsers: WPUser[];
+  // WordPress users who have not been added to this board cannot be picked.
+  pipelineId?: string;
   assignUser: (target: User | WPUser) => void;
 };
 
@@ -18,6 +21,7 @@ type TypeFilter = "all" | UserTypes.QUICKTASKER | UserTypes.WP_USER;
 function AutomationActionTargetUserSelection({
   quickTaskerUsers,
   wpUsers,
+  pipelineId,
   assignUser,
 }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,10 +34,18 @@ function AutomationActionTargetUserSelection({
   const matchesTypeFilter = (user: User | WPUser) =>
     typeFilter === "all" || user.user_type === typeFilter;
 
+  const hasBoardAccess = (user: User | WPUser) =>
+    !pipelineId || !isWPUser(user) || canWPUserAccessPipeline(user, pipelineId);
+
   const combinedUsers: (User | WPUser)[] = [...wpUsers, ...quickTaskerUsers];
-  const filteredUsers = combinedUsers
+  const matchingUsers = combinedUsers
     .filter(matchesTypeFilter)
     .filter(matchesSearch);
+  // Users who cannot be picked are listed last.
+  const filteredUsers = [
+    ...matchingUsers.filter(hasBoardAccess),
+    ...matchingUsers.filter((user) => !hasBoardAccess(user)),
+  ];
 
   const filterPills: {
     value: TypeFilter;
@@ -91,34 +103,54 @@ function AutomationActionTargetUserSelection({
         })}
       </div>
       <div data-testid="automation-target-list">
-        {filteredUsers.map((user) => (
-          <div
-            key={`${user.user_type}-${user.id}`}
-            data-testid="automation-target-row"
-            onClick={(e) => {
-              e.stopPropagation();
-              assignUser(user);
-            }}
-            className="wpqt-flex wpqt-cursor-pointer wpqt-items-center wpqt-gap-2 wpqt-px-2 wpqt-py-1 hover:wpqt-bg-gray-100"
-          >
-            <span className="wpqt-shrink-0">
-              {user.user_type === UserTypes.WP_USER ? (
-                <WordPressIcon size={20} />
-              ) : (
-                <QuickTaskerIcon />
-              )}
-            </span>
-            <div className="wpqt-flex wpqt-flex-col">
-              <div>{user.name}</div>
-              {user.description && (
-                <div className="wpqt-italic">{user.description}</div>
-              )}
-              {isWPUser(user) && user.roles?.length > 0 && (
-                <div>{user.roles.join(",")}</div>
-              )}
+        {filteredUsers.map((user) => {
+          const boardAccess = hasBoardAccess(user);
+
+          return (
+            <div
+              key={`${user.user_type}-${user.id}`}
+              data-testid={
+                boardAccess
+                  ? "automation-target-row"
+                  : "automation-target-row-no-board-access"
+              }
+              aria-disabled={!boardAccess}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (boardAccess) {
+                  assignUser(user);
+                }
+              }}
+              className={`wpqt-flex wpqt-items-center wpqt-gap-2 wpqt-px-2 wpqt-py-1 ${
+                boardAccess
+                  ? "wpqt-cursor-pointer hover:wpqt-bg-gray-100"
+                  : "wpqt-cursor-not-allowed wpqt-opacity-60"
+              }`}
+            >
+              <span className="wpqt-shrink-0">
+                {user.user_type === UserTypes.WP_USER ? (
+                  <WordPressIcon size={20} />
+                ) : (
+                  <QuickTaskerIcon />
+                )}
+              </span>
+              <div className="wpqt-flex wpqt-flex-col">
+                <div>{user.name}</div>
+                {user.description && (
+                  <div className="wpqt-italic">{user.description}</div>
+                )}
+                {isWPUser(user) && user.roles?.length > 0 && (
+                  <div>{user.roles.join(",")}</div>
+                )}
+                {!boardAccess && (
+                  <div className="wpqt-text-yellow-700">
+                    {__("Not added to this board", "quicktasker")}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {filteredUsers.length === 0 && (
           <div className="wpqt-px-2 wpqt-py-1">
             {__("No users found", "quicktasker")}

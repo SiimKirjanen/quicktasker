@@ -94,6 +94,7 @@ function PipelineAutomation({ automation }: Props) {
               <AutomationActionTarget
                 actionTargetId={automation.automation_action_target_id}
                 actionTargetType={automation.automation_action_target_type}
+                pipelineId={automation.pipeline_id}
               />
             )}
             {hasMeta && (

@@ -1,7 +1,17 @@
 import { test, expect } from '@playwright/test';
-import { navigateToUserManagement } from './utils/navigation';
+import { navigateToBoardsPage, navigateToUserManagement } from './utils/navigation';
 import {
+  createBoardViaApi,
+  createTaskViaApi,
+  deleteBoardViaApi,
+  generateUniqueName,
+} from './utils/board-helpers';
+import { loginToWordPressViaApi } from './utils/auth';
+import {
+  addWPUserToBoards,
+  assignWPUserToTaskViaApi,
   createWPUser,
+  grantWPUserCaps,
   navigateToWPUsersTab,
   uniqueLogin,
 } from './utils/user-helpers';
@@ -52,3 +62,190 @@ test.describe('WordPress Users Tab – User Card', () => {
   });
 });
 
+
+test.describe('WordPress Users Tab – Boards', () => {
+  test('admin adds a user to a board and the user opens it', async ({ page, browser, request }) => {
+    const boardName = generateUniqueName('WUB-Board');
+    await createBoardViaApi(request, boardName);
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+
+    await navigateToWPUsersTab(page);
+    const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+    const boardsSummary = card.getByTestId('wp-user-boards-summary');
+    await expect(boardsSummary).toHaveText('No boards', { timeout: TIMEOUTS.NAVIGATION });
+
+    await card.getByTestId('wp-user-boards-change').click();
+    await page.getByRole('option', { name: boardName }).click();
+    await page.keyboard.press('Escape');
+    await expect(boardsSummary).toHaveText(boardName);
+    await expect(card.getByTestId('wp-user-boards-change')).toBeFocused();
+
+    // The selection is saved in the background, so reload until it is shown.
+    await expect(async () => {
+      await navigateToWPUsersTab(page);
+      await expect(boardsSummary).toHaveText(boardName, { timeout: 1000 });
+    }).toPass({ timeout: TIMEOUTS.NAVIGATION });
+
+    const userContext = await loginToWordPressViaApi(browser, userLogin);
+    try {
+      const userPage = await userContext.newPage();
+      await navigateToBoardsPage(userPage);
+      await expect(userPage.getByTestId('active-pipeline-name')).toHaveText(boardName);
+    } finally {
+      await userContext.close();
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test('boards ticked one after another are all saved', async ({ page, request }) => {
+    const boardAName = generateUniqueName('WUB-Board-A');
+    const boardBName = generateUniqueName('WUB-Board-B');
+    await createBoardViaApi(request, boardAName);
+    await createBoardViaApi(request, boardBName);
+    const userLogin = uniqueLogin('wpboards');
+    await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText('No boards', { timeout: TIMEOUTS.NAVIGATION });
+
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: boardAName }).click();
+      await page.getByRole('option', { name: boardBName }).click();
+      await page.keyboard.press('Escape');
+      await expect(card.getByTestId('wp-user-boards-saving')).toHaveCount(0);
+
+      await navigateToWPUsersTab(page);
+      await expect(boardsSummary).toContainText(boardAName, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(boardsSummary).toContainText(boardBName);
+    } finally {
+      await deleteBoardViaApi(request, boardAName);
+      await deleteBoardViaApi(request, boardBName);
+    }
+  });
+
+  test('removing a user from a board warns about their tasks there', async ({ page, request }) => {
+    const boardName = generateUniqueName('WUB-Tasks-Board');
+    const board = await createBoardViaApi(request, boardName, generateUniqueName('WUB-Tasks-Stage'));
+    const task = await createTaskViaApi(request, board.boardId, board.stageId!, generateUniqueName('WUB-Task'));
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await addWPUserToBoards(request, userId, [boardName]);
+    await assignWPUserToTaskViaApi(request, userId, task.id);
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      await expect(card.getByTestId('wp-user-boards-summary')).toHaveText(boardName, {
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: boardName }).click();
+      await page.keyboard.press('Escape');
+
+      await expect(
+        page.getByText(
+          `${userLogin} is still assigned to 1 task on ${boardName}, but can't see it until added back to the board.`,
+        ),
+      ).toBeVisible();
+      await expect(card.getByTestId('wp-user-boards-summary')).toHaveText('No boards');
+    } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test("a board another administrator added the user to is kept when changing the user's boards", async ({ page, request }) => {
+    const knownBoardName = generateUniqueName('WUB-Known');
+    await createBoardViaApi(request, knownBoardName);
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+
+    // The app is loaded before another administrator creates a board and adds the user to it.
+    await navigateToBoardsPage(page);
+    const newBoardName = generateUniqueName('WUB-New');
+    await createBoardViaApi(request, newBoardName);
+    await addWPUserToBoards(request, userId, [newBoardName]);
+
+    try {
+      await page.evaluate(() => {
+        window.location.hash = '#/user-management';
+      });
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText(newBoardName, { timeout: TIMEOUTS.NAVIGATION });
+
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: knownBoardName }).click();
+      await page.keyboard.press('Escape');
+      await expect(card.getByTestId('wp-user-boards-saving')).toHaveCount(0);
+
+      await navigateToWPUsersTab(page);
+      await expect(boardsSummary).toContainText(newBoardName, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(boardsSummary).toContainText(knownBoardName);
+    } finally {
+      await deleteBoardViaApi(request, knownBoardName);
+      await deleteBoardViaApi(request, newBoardName);
+    }
+  });
+
+  test("refreshing User management shows boards changed by another administrator", async ({ page, request }) => {
+    const firstBoardName = generateUniqueName('WUB-First');
+    const secondBoardName = generateUniqueName('WUB-Second');
+    await createBoardViaApi(request, firstBoardName);
+    await createBoardViaApi(request, secondBoardName);
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await addWPUserToBoards(request, userId, [firstBoardName]);
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText(firstBoardName, { timeout: TIMEOUTS.NAVIGATION });
+
+      await addWPUserToBoards(request, userId, [firstBoardName, secondBoardName]);
+      await page.getByTestId('refresh-icon').click();
+
+      await expect(boardsSummary).toContainText(secondBoardName);
+      await expect(boardsSummary).toContainText(firstBoardName);
+    } finally {
+      await deleteBoardViaApi(request, firstBoardName);
+      await deleteBoardViaApi(request, secondBoardName);
+    }
+  });
+
+  test("a board deleted elsewhere does not stop changing a user's boards", async ({ page, request }) => {
+    const deletedBoardName = generateUniqueName('WUB-Deleted');
+    const keptBoardName = generateUniqueName('WUB-Kept');
+    await createBoardViaApi(request, deletedBoardName);
+    await createBoardViaApi(request, keptBoardName);
+    const userLogin = uniqueLogin('wpboards');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await addWPUserToBoards(request, userId, [deletedBoardName]);
+
+    try {
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const boardsSummary = card.getByTestId('wp-user-boards-summary');
+      await expect(boardsSummary).toHaveText(deletedBoardName, { timeout: TIMEOUTS.NAVIGATION });
+
+      // Another administrator deletes the board after this page loaded.
+      await deleteBoardViaApi(request, deletedBoardName);
+      await card.getByTestId('wp-user-boards-change').click();
+      await page.getByRole('option', { name: keptBoardName }).click();
+      await page.keyboard.press('Escape');
+      await expect(boardsSummary).toHaveText(keptBoardName);
+      await expect(page.getByText("Failed to update the user's boards")).toHaveCount(0);
+
+      await navigateToWPUsersTab(page);
+      await expect(boardsSummary).toHaveText(keptBoardName, { timeout: TIMEOUTS.NAVIGATION });
+    } finally {
+      await deleteBoardViaApi(request, keptBoardName);
+    }
+  });
+});

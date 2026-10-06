@@ -118,6 +118,7 @@ describe("PipelineHeader", () => {
       isUserAllowedToManageUsers: false,
       isUserAllowedToDeleteUsers: false,
       isUserAllowedToManageWPUsers: false,
+      isUserAllowedToCleanArchive: false,
       ...appOverrides,
     };
     jest.spyOn(useAppModule, "useApp").mockReturnValue({
@@ -127,6 +128,7 @@ describe("PipelineHeader", () => {
 
     const defaultMissingContentState = {
       pipelineMissing: false,
+      pipelineNoAccess: false,
       dispatch: jest.fn(),
       ...missingContentOverrides,
     };
@@ -258,6 +260,16 @@ describe("PipelineHeader", () => {
       {},
       {},
       { pipelineMissing: true },
+    );
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("returns null if the user has not been added to the board", () => {
+    const { container } = renderWithProviders(
+      {},
+      {},
+      {},
+      { pipelineNoAccess: true },
     );
     expect(container.firstChild).toBeNull();
   });

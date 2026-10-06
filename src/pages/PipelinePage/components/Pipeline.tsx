@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { moveTaskRequest } from "../../../api/api";
 import { WPQTIconButton } from "../../../components/common/Button/WPQTIconButton/WPQTIconButton";
 import { Info } from "../../../components/Info/Info";
+import { NoBoardAccessInfo } from "../../../components/Info/NoBoardAccessInfo";
 import { StageModal } from "../../../components/Modal/StageModal/StageModal";
 import { TaskColorModal } from "../../../components/Modal/TaskColorModal/TaskColorModal";
 import { TaskLogsModal } from "../../../components/Modal/TaskLogsModal/TaskLogsModal";
@@ -39,9 +40,9 @@ const Pipeline = () => {
   const { isTabVisible } = useTabVisibility();
   const { modalDispatch } = useContext(ModalContext);
   const { fetchNotifications } = useContext(NotificationsContext);
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
   const {
-    state: { isUserAllowedToManageSettings },
+    state: { isUserAllowedToManageSettings, isUserAllowedToManageWPUsers },
   } = useApp();
 
   useEffect(() => {
@@ -49,14 +50,25 @@ const Pipeline = () => {
       activePipeline?.settings?.pipeline_refresh_interval ||
       REFETCH_ACTIVE_PIPELINE_INTERVAL;
     const refetchDataInterval = setInterval(() => {
-      if (activePipeline && isTabVisible && !pipelineMissing) {
+      if (
+        activePipeline &&
+        isTabVisible &&
+        !pipelineMissing &&
+        !pipelineNoAccess
+      ) {
         fetchAndSetPipelineData(activePipeline.id);
         fetchNotifications();
       }
     }, refreshInterval * 1000);
 
     return () => clearInterval(refetchDataInterval);
-  }, [activePipeline, isTabVisible, pipelineMissing, fetchNotifications]);
+  }, [
+    activePipeline,
+    isTabVisible,
+    pipelineMissing,
+    pipelineNoAccess,
+    fetchNotifications,
+  ]);
 
   const dispatchMove = (
     source: DraggableLocation,
@@ -124,14 +136,32 @@ const Pipeline = () => {
     );
   }
 
-  if (!activePipeline) {
+  if (pipelineNoAccess) {
     return (
-      <Info
-        infoDescription={__(
+      <NoBoardAccessInfo
+        onOpenBoard={(pipelineId) => fetchAndSetPipelineData(pipelineId)}
+      />
+    );
+  }
+
+  if (!activePipeline) {
+    // WordPress administrators see every board, so for them no board means there are none.
+    const noBoardsText = isUserAllowedToManageWPUsers
+      ? __(
           "No boards found. Start by creating a board to organize and manage your tasks effectively.",
           "quicktasker",
-        )}
-      >
+        )
+      : __(
+          "You have not been added to any boards yet. Ask a WordPress administrator to add you to a board.",
+          "quicktasker",
+        );
+
+    if (!isUserAllowedToManageSettings) {
+      return <Info infoDescription={noBoardsText} />;
+    }
+
+    return (
+      <Info infoDescription={noBoardsText}>
         <div className="wpqt-flex wpqt-flex-col wpqt-gap-2 wpqt-items-center">
           <WPQTIconButton
             text={__("Create a new board", "quicktasker")}

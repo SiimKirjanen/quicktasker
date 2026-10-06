@@ -49,6 +49,7 @@ describe("AutomationCreationSteps", () => {
   it("renders TargetSelection when automationTarget is null", () => {
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={{ ...baseAutomation, automationTarget: null }}
         automationDispatch={jest.fn()}
         createAutomation={jest.fn()}
@@ -61,6 +62,7 @@ describe("AutomationCreationSteps", () => {
   it("renders TriggerSelection when automationTrigger is null", () => {
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={{ ...baseAutomation, automationTrigger: null }}
         automationDispatch={jest.fn()}
         createAutomation={jest.fn()}
@@ -72,6 +74,7 @@ describe("AutomationCreationSteps", () => {
   it("renders ActionSelection when automationAction is null", () => {
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={{ ...baseAutomation, automationAction: null }}
         automationDispatch={jest.fn()}
         createAutomation={jest.fn()}
@@ -83,6 +86,7 @@ describe("AutomationCreationSteps", () => {
   it("renders ActionTargetSelection when action requires target and type", () => {
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={{
           ...baseAutomation,
           automationAction: {
@@ -104,6 +108,7 @@ describe("AutomationCreationSteps", () => {
   it("renders MetaSelection when action requires metaData", () => {
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={{
           ...baseAutomation,
           automationAction: {
@@ -123,6 +128,7 @@ describe("AutomationCreationSteps", () => {
   it("disables Create automation button if not ready", () => {
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={{ ...baseAutomation, automationTarget: null }}
         automationDispatch={jest.fn()}
         createAutomation={jest.fn()}
@@ -135,6 +141,7 @@ describe("AutomationCreationSteps", () => {
   it("enables Create automation button if ready", () => {
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={baseAutomation}
         automationDispatch={jest.fn()}
         createAutomation={jest.fn()}
@@ -148,6 +155,7 @@ describe("AutomationCreationSteps", () => {
     const createAutomation = jest.fn().mockResolvedValue(undefined);
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={baseAutomation}
         automationDispatch={jest.fn()}
         createAutomation={createAutomation}
@@ -163,6 +171,7 @@ describe("AutomationCreationSteps", () => {
     const createAutomation = jest.fn();
     render(
       <AutomationCreationSteps
+        pipelineId="1"
         automation={{ ...baseAutomation, automationTarget: null }}
         automationDispatch={jest.fn()}
         createAutomation={createAutomation}

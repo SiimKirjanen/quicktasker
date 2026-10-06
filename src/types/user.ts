@@ -53,6 +53,16 @@ type WPUser = {
   roles: string[];
   user_type: UserTypes.WP_USER;
   profile_picture: string;
+  pipeline_ids?: number[];
+  can_access_all_pipelines?: boolean;
+};
+
+type WPUserPipelinesUpdate = {
+  pipeline_ids: number[];
+  removed_pipelines_with_assigned_tasks: {
+    pipeline_id: number;
+    task_count: number;
+  }[];
 };
 
 type UserEditData = {
@@ -74,4 +84,5 @@ export type {
   UserEditData,
   UserFilter,
   WPUser,
+  WPUserPipelinesUpdate,
 };

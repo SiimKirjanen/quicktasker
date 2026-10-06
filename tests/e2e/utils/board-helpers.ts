@@ -19,6 +19,58 @@ export function generateUniqueName(prefix: string): string {
 }
 
 /**
+ * Create a board via the admin REST API, optionally with one stage.
+ * For tests that need a board but don't test creating one.
+ */
+export async function createBoardViaApi(
+  request: APIRequestContext,
+  boardName: string,
+  stageName?: string,
+): Promise<{ boardId: string; stageId: string | null }> {
+  const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
+  const board = await request.post('/wp-json/wpqt/v1/pipelines', {
+    headers,
+    data: { name: boardName, description: '' },
+  });
+  if (!board.ok()) throw new Error(`Failed to create board: ${await board.text()}`);
+  const boardId = String((await board.json()).data.id);
+  if (!stageName) return { boardId, stageId: null };
+  const stage = await request.post(`/wp-json/wpqt/v1/pipelines/${boardId}/stages`, {
+    headers,
+    data: { name: stageName, description: '' },
+  });
+  if (!stage.ok()) throw new Error(`Failed to create stage: ${await stage.text()}`);
+  return { boardId, stageId: String((await stage.json()).data.id) };
+}
+
+/**
+ * Create a task via the admin REST API, optionally free for anyone to take.
+ */
+export async function createTaskViaApi(
+  request: APIRequestContext,
+  boardId: string,
+  stageId: string,
+  taskName: string,
+  { freeForAll = false } = {},
+): Promise<{ id: string; taskHash: string }> {
+  const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
+  const response = await request.post('/wp-json/wpqt/v1/tasks', {
+    headers,
+    data: { name: taskName, stageId, pipelineId: boardId },
+  });
+  if (!response.ok()) throw new Error(`Failed to create task: ${await response.text()}`);
+  const task = (await response.json()).data.newTask;
+  if (freeForAll) {
+    const update = await request.patch(`/wp-json/wpqt/v1/tasks/${task.id}`, {
+      headers,
+      data: { free_for_all: true },
+    });
+    if (!update.ok()) throw new Error(`Failed to make task free for all: ${await update.text()}`);
+  }
+  return { id: String(task.id), taskHash: task.task_hash };
+}
+
+/**
  * Delete a board and its tasks by name via the admin REST API. For test
  * cleanup: does nothing if no board has that name.
  */

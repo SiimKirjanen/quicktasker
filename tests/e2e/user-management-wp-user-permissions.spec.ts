@@ -1,5 +1,6 @@
 import { test, expect, Browser, BrowserContext, Page } from '@playwright/test';
 import {
+  addWPUserToBoards,
   createQuickTaskerUser,
   createWPUser,
   disableQuickTaskerUser,
@@ -14,7 +15,7 @@ import {
   getQuickTaskerUserPageUrl,
   openAnonymousPage,
 } from './utils/tasks-app-helpers';
-import { generateUniqueName } from './utils/board-helpers';
+import { createBoardViaApi, generateUniqueName } from './utils/board-helpers';
 import { navigateToUserManagement } from './utils/navigation';
 import { loginToWordPress } from './utils/auth';
 import { TIMEOUTS } from './utils/timeouts';
@@ -23,7 +24,9 @@ import { TIMEOUTS } from './utils/timeouts';
  * Tests verifying that WordPress user capabilities control access to QuickTasker plugin features.
  *
  * Each test creates a fresh WP user via the WP REST API, grants specific capabilities, then opens a
- * separate browser context to log in as that user and check what's accessible.
+ * separate browser context to log in as that user and check what's accessible. Tests that open the
+ * boards page also create a board and add the user to it, since non-administrators only see boards
+ * they have been added to.
  */
 
 async function loginAsWPUser(
@@ -79,6 +82,9 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     const userLogin = uniqueLogin('wpadmin');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -91,6 +97,9 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     const userLogin = uniqueLogin('wpadmin');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     // Navigate to boards page so the QuickTasker menu is expanded in the sidebar
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
@@ -120,6 +129,9 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     const userLogin = uniqueLogin('wpadmin');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -135,6 +147,9 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     const userLogin = uniqueLogin('wpadmin');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -150,6 +165,9 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     const userLogin = uniqueLogin('wpadmin');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -163,6 +181,9 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     const userLogin = uniqueLogin('wpadmin');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -176,6 +197,9 @@ test.describe('WP User Capabilities – Plugin Admin Role', () => {
     const userLogin = uniqueLogin('wpadmin');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -191,6 +215,9 @@ test.describe('WP User Capabilities – Manage Users', () => {
     const userLogin = uniqueLogin('wpusermgmt');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -353,6 +380,9 @@ test.describe('WP User Capabilities – Manage Archive', () => {
     const userLogin = uniqueLogin('wparch');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_archive']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -388,6 +418,9 @@ test.describe('WP User Capabilities – Tasks App', () => {
     const userLogin = uniqueLogin('wptasks');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_access_user_page_app']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -405,6 +438,9 @@ test.describe('WP User Capabilities – Manage Settings', () => {
     const userLogin = uniqueLogin('wpsettings');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -419,6 +455,9 @@ test.describe('WP User Capabilities – Manage Settings', () => {
     const userLogin = uniqueLogin('wpsettings');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -432,6 +471,9 @@ test.describe('WP User Capabilities – Manage Settings', () => {
     const userLogin = uniqueLogin('wpsettings');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -445,6 +487,9 @@ test.describe('WP User Capabilities – Manage Settings', () => {
     const userLogin = uniqueLogin('wpsettings');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName, generateUniqueName('WPC-Stage'));
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -462,6 +507,9 @@ test.describe('WP User Capabilities – View My Tasks', () => {
     const userLogin = uniqueLogin('wpnomytasks');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName);
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({
@@ -547,6 +595,9 @@ test.describe('WP User Capabilities – Allow Delete', () => {
     const userLogin = uniqueLogin('wpdelete');
     const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings', 'quicktasker_admin_role_allow_delete']);
+    const boardName = generateUniqueName('WPC-Board');
+    await createBoardViaApi(request, boardName, generateUniqueName('WPC-Stage'));
+    await addWPUserToBoards(request, userId, [boardName]);
     const { context, page } = await loginAsWPUser(browser, userLogin);
     await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
     await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible({

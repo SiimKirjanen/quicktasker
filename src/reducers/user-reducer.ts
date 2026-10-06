@@ -1,5 +1,6 @@
 import {
   ADD_USER,
+  ADD_WP_USER_PIPELINE_ID,
   CHANGE_USER_STATUS,
   DELETE_USER,
   EDIT_USER,
@@ -7,6 +8,7 @@ import {
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
   SET_WP_USERS,
+  SET_WP_USER_PIPELINE_IDS,
 } from "../constants";
 import { Action, State } from "../providers/UserContextProvider";
 import { ServerUser, User, WPUser } from "../types/user";
@@ -32,6 +34,34 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         wpUsers,
+      };
+    }
+    case SET_WP_USER_PIPELINE_IDS: {
+      const { userId, pipelineIds } = action.payload;
+
+      return {
+        ...state,
+        wpUsers: state.wpUsers.map((wpUser) =>
+          wpUser.id === userId
+            ? { ...wpUser, pipeline_ids: pipelineIds }
+            : wpUser,
+        ),
+      };
+    }
+    case ADD_WP_USER_PIPELINE_ID: {
+      const { userId, pipelineId } = action.payload;
+
+      return {
+        ...state,
+        wpUsers: state.wpUsers.map((wpUser) =>
+          wpUser.id === userId &&
+          !(wpUser.pipeline_ids ?? []).includes(pipelineId)
+            ? {
+                ...wpUser,
+                pipeline_ids: [...(wpUser.pipeline_ids ?? []), pipelineId],
+              }
+            : wpUser,
+        ),
       };
     }
     case ADD_USER: {

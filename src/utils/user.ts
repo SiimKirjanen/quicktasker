@@ -44,12 +44,21 @@ const mapActionTargetTypeToUserType = (
   }
 };
 
+/**
+ * Whether a WordPress user can access a board. Administrators can access every
+ * board, other users only the boards they have been added to.
+ */
+const canWPUserAccessPipeline = (user: WPUser, pipelineId: string) =>
+  Boolean(user.can_access_all_pipelines) ||
+  (user.pipeline_ids ?? []).includes(Number(pipelineId));
+
 const userTypeStrings = {
   [UserTypes.QUICKTASKER]: "Quicktasker",
   [UserTypes.WP_USER]: "WordPress User",
 };
 
 export {
+  canWPUserAccessPipeline,
   convertExtendedUserFromServer,
   convertUserFromServer,
   convertUserPageUserFromServer,

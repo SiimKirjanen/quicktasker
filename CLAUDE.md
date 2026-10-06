@@ -43,6 +43,16 @@ composer test:unit:be -- --filter "ClassName::methodName" # single test
 composer cs:fix                                           # fix PHP code style
 ```
 
+### Translations template
+Regenerate `languages/quicktasker.pot` after adding or changing user-facing strings. It scans `build/`, so run `npm run build` first. The command is also in `README.md`:
+```bash
+wp i18n make-pot . languages/quicktasker.pot --exclude=node_modules,src --include="*.php,php/**/*.php,build/*.js,build/**/*.js"
+```
+Without a local WP-CLI, run it in wp-env. It needs more PHP memory for the built JS, and `MSYS_NO_PATHCONV=1` stops Git Bash rewriting the container path:
+```bash
+MSYS_NO_PATHCONV=1 npx wp-env run cli --env-cwd=wp-content/plugins/quicktasker php -d memory_limit=2048M /usr/local/bin/wp i18n make-pot . languages/quicktasker.pot --exclude=node_modules,src --include="*.php,php/**/*.php,build/*.js,build/**/*.js"
+```
+
 ### wp-env
 ```bash
 npm run wp-env:start   # start local WordPress on port 8889

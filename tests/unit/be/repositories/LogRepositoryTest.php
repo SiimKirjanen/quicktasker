@@ -21,6 +21,10 @@ if (!defined('WP_QT_LOG_TYPE_API_TOKEN')) {
     define('WP_QT_LOG_TYPE_API_TOKEN', 'api_token');
 }
 
+if (!defined('WP_QT_BOARD_LOG_TYPES')) {
+    define('WP_QT_BOARD_LOG_TYPES', ['task', 'pipeline', 'stage', 'webhook', 'automation', 'api_token']);
+}
+
 require_once __DIR__ . '/../../../../php/repositories/LogRepository.php';
 
 use PHPUnit\Framework\TestCase;
@@ -577,5 +581,60 @@ class LogRepositoryTest extends TestCase
         $this->assertEquals('Admin User', $result[0]->author_name);
         $this->assertEquals('QT User', $result[1]->author_name);
         $this->assertEquals('system', $result[2]->author_name);
+    }
+
+    public function test_getGlobalLogs_keeps_logs_of_the_given_boards_and_logs_without_a_board()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->stringContains('((logs.pipeline_id IS NULL AND logs.type NOT IN (%s, %s, %s, %s, %s, %s)) OR logs.pipeline_id IN (%d, %d)) ORDER BY'),
+                'task', 'pipeline', 'stage', 'webhook', 'automation', 'api_token', 3, 5, 100
+            )
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getGlobalLogs(null, null, null, 100, 'DESC', null, null, null, [3, 5]);
+    }
+
+    public function test_getGlobalLogs_keeps_only_logs_without_a_board_when_no_board_is_accessible()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->logicalAnd(
+                    $this->stringContains('WHERE (logs.pipeline_id IS NULL AND logs.type NOT IN (%s, %s, %s, %s, %s, %s)) ORDER BY'),
+                    $this->logicalNot($this->stringContains('logs.pipeline_id IN'))
+                )
+            )
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getGlobalLogs(null, null, null, null, 'DESC', null, null, null, []);
+    }
+
+    public function test_getGlobalLogs_does_not_filter_boards_without_board_ids()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->logicalNot($this->stringContains('logs.pipeline_id IS NULL')))
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getGlobalLogs(null, 10, null, null, 'DESC', null, null, null);
+    }
+
+    public function test_getLogs_filters_by_board_after_the_type()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->matchesRegularExpression('/WHERE logs\.type_id = %d AND logs\.type = %s\s+AND \(\(logs\.pipeline_id IS NULL/'),
+                7, 'quicktasker_user', 'task', 'pipeline', 'stage', 'webhook', 'automation', 'api_token', 2
+            )
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getLogs(7, 'quicktasker_user', [2]);
     }
 }

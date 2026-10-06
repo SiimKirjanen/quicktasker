@@ -32,8 +32,11 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
         $pipelines = $pipelineRepo->getPipelines();
         $activePipeline = $pipelineService->getPrimaryPipelineForUser(get_current_user_id(), $pipelines);
         $pipelineService->markPrimaryPipeline($pipelines, $activePipeline);
+        $pipelines = ServiceLocator::get('PipelineAccessService')->filterAccessiblePipelines(get_current_user_id(), $pipelines);
         $users = ServiceLocator::get('UserService')->getUsersForCurrentViewer();
-        $wpUsers = $userRepo->getWPUsersWithCapabilities([WP_QUICKTASKER_ADMIN_ROLE]);
+        $wpUsers = ServiceLocator::get('PipelineAccessService')->addPipelineAccessToWPUsers(
+            $userRepo->getWPUsersWithCapabilities([WP_QUICKTASKER_ADMIN_ROLE])
+        );
         $notificationPreferences = ServiceLocator::get('NotificationService')->getPreferences(
             get_current_user_id(),
             WP_QT_WORDPRESS_USER_TYPE
@@ -64,6 +67,7 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
             'isUserAllowedToManageUsers'     => PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints() ? '1' : '0',
             'isUserAllowedToDeleteUsers'     => PermissionService::hasRequiredPermissionsForDeletingQuickTaskerUsers() ? '1' : '0',
             'isUserAllowedToManageWPUsers'   => PermissionService::hasRequiredPermissionsForManagingWPUserCapabilities() ? '1' : '0',
+            'isUserAllowedToCleanArchive'    => PermissionService::hasRequiredPermissionsForArchiveCleanup() ? '1' : '0',
             'userPageCustomStyles'           => SettingRepository::getUserPageCustomStyles(),
             'taskUploadsURL'                 => WP_QUICKTASKER_TASK_UPLOAD_FOLDER_URL,
             'initialNotificationPreferences' => $notificationPreferences,

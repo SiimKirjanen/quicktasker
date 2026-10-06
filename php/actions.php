@@ -38,6 +38,64 @@ if (!function_exists('wpqt_db_migrations')) {
     }
 }
 
+/**
+ * Removes a deleted WordPress user from every board.
+ *
+ * @param int $userId The ID of the deleted WordPress user.
+ * @return void
+ */
+add_action('deleted_user', 'wpqt_delete_wp_user_pipeline_access');
+if (!function_exists('wpqt_delete_wp_user_pipeline_access')) {
+    function wpqt_delete_wp_user_pipeline_access($userId)
+    {
+        ServiceLocator::get('PipelineAccessRepository')->deleteWPUserAccess($userId);
+    }
+}
+
+/**
+ * Tells administrators after updating that WordPress users who are not administrators
+ * only see the boards they have been added to.
+ *
+ * @return void
+ */
+add_action('admin_notices', 'wpqt_board_access_notice');
+if (!function_exists('wpqt_board_access_notice')) {
+    function wpqt_board_access_notice()
+    {
+        if ('1' !== get_option(WP_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION) || !current_user_can('manage_options')) {
+            return;
+        }
+
+        $userManagementUrl = admin_url('admin.php?page=wp-quicktasker#/user-management');
+        $dismissUrl = wp_nonce_url(add_query_arg('wpqt_dismiss_board_access_notice', '1'), 'wpqt_dismiss_board_access_notice');
+
+        echo '<div class="notice notice-warning" data-testid="wpqt-board-access-notice"><p><strong>QuickTasker:</strong> '
+            . esc_html__('WordPress users who are not administrators now only see the boards they have been added to. Until you add them to boards, they see no boards, and automations that assign them to tasks do nothing.', 'quicktasker')
+            . '</p><p><a href="' . esc_url($userManagementUrl) . '">' . esc_html__('Add users to boards', 'quicktasker') . '</a> | '
+            . '<a href="' . esc_url($dismissUrl) . '">' . esc_html__('Dismiss', 'quicktasker') . '</a></p></div>';
+    }
+}
+
+/**
+ * Hides the board access notice for every administrator once one dismisses it.
+ *
+ * @return void
+ */
+add_action('admin_init', 'wpqt_dismiss_board_access_notice');
+if (!function_exists('wpqt_dismiss_board_access_notice')) {
+    function wpqt_dismiss_board_access_notice()
+    {
+        if (!isset($_GET['wpqt_dismiss_board_access_notice']) || !current_user_can('manage_options')) {
+            return;
+        }
+
+        check_admin_referer('wpqt_dismiss_board_access_notice');
+        delete_option(WP_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION);
+        wp_safe_redirect(remove_query_arg(['wpqt_dismiss_board_access_notice', '_wpnonce']));
+        exit;
+    }
+}
+
 add_action('template_redirect', 'wpqt_custom_http_status_code');
 if (!function_exists('wpqt_custom_http_status_code')) {
     function wpqt_custom_http_status_code()

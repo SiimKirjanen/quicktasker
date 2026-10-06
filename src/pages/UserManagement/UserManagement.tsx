@@ -11,6 +11,7 @@ import {
   CHANGE_USER_SETTINGS_MODAL_OPEN,
   SET_FULL_PAGE_LOADING,
 } from "../../constants";
+import { usePipelines } from "../../hooks/usePipelines";
 import { AppContext } from "../../providers/AppContextProvider";
 import { LoadingContext } from "../../providers/LoadingContextProvider";
 import { ModalContext } from "../../providers/ModalContextProvider";
@@ -24,6 +25,7 @@ function UserManagement() {
     state: { isUserAllowedToManageWPUsers },
   } = useContext(AppContext);
   const { updateUsers, updateWPUsers } = useContext(UserContext);
+  const { refreshPipelines } = usePipelines();
   const { loadingDispatch } = useContext(LoadingContext);
   const { modalDispatch } = useContext(ModalContext);
   const [refreshing, setRefreshing] = useState(false);
@@ -48,7 +50,11 @@ function UserManagement() {
   const fetchUsers = () =>
     Promise.all([
       updateUsers(),
-      ...(isUserAllowedToManageWPUsers ? [updateWPUsers()] : []),
+      // The boards are reloaded with the WordPress users, so boards created
+      // since the page loaded are shown and kept when changing a user's boards.
+      ...(isUserAllowedToManageWPUsers
+        ? [updateWPUsers(), refreshPipelines()]
+        : []),
     ]);
 
   useEffect(() => {

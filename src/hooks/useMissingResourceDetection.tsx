@@ -1,7 +1,9 @@
+import { useRef } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { toast } from "react-toastify";
 import {
   SET_PIPELINE_MISSING,
+  SET_PIPELINE_NO_ACCESS,
   SET_STAGE_MISSING,
   SET_TASK_MISSING,
   WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND,
@@ -9,9 +11,15 @@ import {
   WP_QUICKTASKER_EXCEPTION_TASK_NOT_FOUND,
 } from "../constants";
 import { useMissingContent } from "./useMissingContent";
+import { usePipelines } from "./usePipelines";
 
 function useMissingResourceDetection() {
   const { dispatch } = useMissingContent();
+  const { pipelines, refreshPipelines } = usePipelines();
+  // Requests start before the boards are loaded into state, so the check reads
+  // the boards when the request fails, not when it started.
+  const pipelinesRef = useRef(pipelines);
+  pipelinesRef.current = pipelines;
 
   function hasExceptionCode(e: unknown, exceptionCode: string): boolean {
     return (
@@ -33,6 +41,40 @@ function useMissingResourceDetection() {
 
   function detectMissingTaskResponse(e: unknown): boolean {
     return hasExceptionCode(e, WP_QUICKTASKER_EXCEPTION_TASK_NOT_FOUND);
+  }
+
+  // A refused request can also mean a missing capability, so it only counts as
+  // missing board access when the board is not among the user's boards. A board
+  // that is still listed may have been taken away since the page loaded, so the
+  // boards are then reloaded to check.
+  async function detectPipelineNoAccess(
+    e: unknown,
+    pipelineId: string,
+  ): Promise<boolean> {
+    const refused =
+      typeof e === "object" &&
+      e !== null &&
+      "data" in e &&
+      typeof e.data === "object" &&
+      e.data !== null &&
+      "status" in e.data &&
+      e.data.status === 403;
+
+    if (!refused) {
+      return false;
+    }
+
+    if (pipelinesRef.current.some((pipeline) => pipeline.id === pipelineId)) {
+      const pipelineIds = await refreshPipelines();
+
+      if (pipelineIds === null || pipelineIds.includes(pipelineId)) {
+        return false;
+      }
+    }
+
+    dispatch({ type: SET_PIPELINE_NO_ACCESS, payload: true });
+
+    return true;
   }
 
   function detectMissingResources(e: unknown): {
@@ -86,6 +128,7 @@ function useMissingResourceDetection() {
     detectMissingPipelineResponse,
     detectMissingStageResponse,
     detectMissingResources,
+    detectPipelineNoAccess,
   };
 }
 

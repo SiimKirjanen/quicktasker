@@ -64,7 +64,8 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
          *
          * @param bool $addAssignedUsers. Whether to include assigned users for each task. Default false.
          * @param bool $addAssignedLabels Whether to include assigned labels for each task. Default false.
-         * @param array $args Optional. An array of arguments to modify the query.
+         * @param array $args Optional. An array of arguments to modify the query. 'pipelineIds' limits the tasks
+         *                    to these boards, which also leaves out tasks without a board.
          *
          * @return array An array of archived tasks. Each task may include assigned users if $addAssignedUsers is true.
          */
@@ -73,11 +74,12 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
             global $wpdb;
 
             $defaults = [
-                'limit'      => null,
-                'search'     => null,
-                'pipelineId' => null,
-                'status'     => null,
-                'order'      => 'DESC',
+                'limit'       => null,
+                'search'      => null,
+                'pipelineId'  => null,
+                'pipelineIds' => null,
+                'status'      => null,
+                'order'       => 'DESC',
             ];
             $args = wp_parse_args($args, $defaults);
             $query_args = [];
@@ -98,6 +100,15 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
             if (null !== $args['pipelineId']) {
                 $sql .= ' AND a.pipeline_id = %d';
                 $query_args[] = $args['pipelineId'];
+            }
+
+            if (null !== $args['pipelineIds']) {
+                if (empty($args['pipelineIds'])) {
+                    $sql .= ' AND 1 = 0';
+                } else {
+                    $sql .= ' AND a.pipeline_id IN (' . implode(', ', array_fill(0, count($args['pipelineIds']), '%d')) . ')';
+                    $query_args = array_merge($query_args, array_map('intval', $args['pipelineIds']));
+                }
             }
 
             if (null !== $args['status']) {
@@ -364,6 +375,41 @@ if (!class_exists('WPQT\Task\TaskRepository')) {
             }
 
             return $tasks;
+        }
+
+        /**
+         * Counts the tasks assigned to a WordPress user on each of the given boards. Archived tasks are not counted.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[] $pipelineIds The board IDs.
+         * @return array<int, int> Task counts keyed by board ID. Boards without assigned tasks are left out.
+         */
+        public function countTasksAssignedToWPUserByPipeline($wpUserId, $pipelineIds)
+        {
+            global $wpdb;
+
+            if (empty($pipelineIds)) {
+                return [];
+            }
+
+            $placeholders = implode(',', array_fill(0, count($pipelineIds), '%d'));
+            $rows = $wpdb->get_results($wpdb->prepare(
+                'SELECT b.pipeline_id, COUNT(*) AS task_count FROM ' . TABLE_WP_QUICKTASKER_USER_TASK . ' AS a
+                INNER JOIN ' . TABLE_WP_QUICKTASKER_TASKS . " AS b ON a.task_id = b.id
+                WHERE a.user_id = %d
+                AND a.user_type = 'wp-user'
+                AND b.is_archived = 0
+                AND b.pipeline_id IN ($placeholders)
+                GROUP BY b.pipeline_id",
+                array_merge([$wpUserId], array_values($pipelineIds))
+            ));
+            $taskCounts = [];
+
+            foreach ($rows as $row) {
+                $taskCounts[(int) $row->pipeline_id] = (int) $row->task_count;
+            }
+
+            return $taskCounts;
         }
 
         /**

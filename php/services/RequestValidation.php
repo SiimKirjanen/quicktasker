@@ -579,6 +579,37 @@ if (!class_exists('WPQT\RequestValidation')) {
         }
 
         /**
+         * Validates that the given parameter is an array of numeric IDs.
+         *
+         * @param mixed $param The parameter to validate.
+         * @return bool True if the parameter is an array of numeric values, false otherwise.
+         */
+        public static function validateNumericArray($param)
+        {
+            if (!is_array($param)) {
+                return false;
+            }
+            foreach ($param as $item) {
+                if (!is_numeric($item)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /**
+         * Sanitizes every value of an array to an absolute integer.
+         *
+         * @param array $param The array to sanitize.
+         * @return int[] The sanitized values, re-indexed.
+         */
+        public static function sanitizeAbsintArray($param)
+        {
+            return array_values(array_map('absint', $param));
+        }
+
+        /**
          * Validates the webhook target action parameter.
          *
          * This method checks if the provided parameter is a valid webhook target action.

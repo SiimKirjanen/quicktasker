@@ -16,7 +16,8 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
          * Creates a new pipeline with the given name.
          *
          * This method inserts a new pipeline into the database and sets it as the primary pipeline
-         * if there is no active pipeline. It also creates the corresponding pipeline settings.
+         * if there is no active pipeline. It also creates the corresponding pipeline settings
+         * and adds the logged-in WordPress user to the pipeline.
          *
          * @param string $name The name of the pipeline to be created.
          * @param array $args Optional arguments for the pipeline.
@@ -49,6 +50,12 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
             $pipelineId = $wpdb->insert_id;
 
             ServiceLocator::get('SettingService')->insertSettingsColumnForPipeline($pipelineId);
+
+            $creatorId = get_current_user_id();
+
+            if ($creatorId) {
+                ServiceLocator::get('PipelineAccessService')->addWPUserToPipeline($creatorId, $pipelineId);
+            }
 
             return ServiceLocator::get('PipelineRepository')->getPipelineById($pipelineId);
         }
@@ -120,47 +127,45 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
         }
 
         /**
-         * Resolves the primary board of a WordPress user.
+         * Resolves the primary board of a WordPress user among the boards the user can access.
          *
-         * The user's own choice wins while that board exists. Otherwise the
-         * site-wide primary board is used.
+         * The user's own choice wins. Otherwise the site-wide primary board is used,
+         * and if the user cannot access that either, the accessible board with the lowest ID.
          *
          * @param int $userId The WordPress user ID.
          * @param array|null $allPipelines Every board as stored, when the caller has already loaded them.
-         *                                 The primary board is then looked up in this list instead of the database,
+         *                                 The primary board is then looked up in this list instead of loading the boards,
          *                                 so it must still hold the site-wide is_primary values.
-         * @return object|null The primary board, or null if there are no boards.
+         * @return object|null The primary board, or null if the user cannot access any board.
          */
         public function getPrimaryPipelineForUser($userId, $allPipelines = null)
         {
             $pipelineRepo = ServiceLocator::get('PipelineRepository');
+
+            if (null === $allPipelines) {
+                $allPipelines = $pipelineRepo->getPipelines();
+            }
+
             $chosenPipelineId = $pipelineRepo->getUserPrimaryPipelineId($userId);
+            $accessiblePipelines = ServiceLocator::get('PipelineAccessService')->filterAccessiblePipelines($userId, $allPipelines);
+            $sitePrimaryPipeline = null;
+            $firstPipeline = null;
 
-            if (null !== $allPipelines) {
-                $sitePrimaryPipeline = null;
-
-                foreach ($allPipelines as $pipeline) {
-                    if ((int) $pipeline->id === $chosenPipelineId) {
-                        return $pipeline;
-                    }
-
-                    if ('1' === (string) $pipeline->is_primary) {
-                        $sitePrimaryPipeline = $pipeline;
-                    }
+            foreach ($accessiblePipelines as $pipeline) {
+                if ((int) $pipeline->id === $chosenPipelineId) {
+                    return $pipeline;
                 }
 
-                return $sitePrimaryPipeline;
-            }
+                if ('1' === (string) $pipeline->is_primary) {
+                    $sitePrimaryPipeline = $pipeline;
+                }
 
-            if (null !== $chosenPipelineId) {
-                $chosenPipeline = $pipelineRepo->getPipelineById($chosenPipelineId);
-
-                if ($chosenPipeline) {
-                    return $chosenPipeline;
+                if (null === $firstPipeline || (int) $pipeline->id < (int) $firstPipeline->id) {
+                    $firstPipeline = $pipeline;
                 }
             }
 
-            return $pipelineRepo->getActivePipeline();
+            return $sitePrimaryPipeline ?: $firstPipeline;
         }
 
         /**
@@ -169,13 +174,14 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
          * @param int $userId The WordPress user ID.
          * @param int $pipelineId The ID of the board to make primary.
          * @return void
-         * @throws PipelineMissingException If the board does not exist.
+         * @throws PipelineMissingException If the board does not exist or the user cannot access it.
          */
         public function setPrimaryPipelineForUser($userId, $pipelineId)
         {
             $pipelineRepo = ServiceLocator::get('PipelineRepository');
 
-            if (!$pipelineRepo->checkIfPipelineExists($pipelineId)) {
+            if (!$pipelineRepo->checkIfPipelineExists($pipelineId)
+                || !ServiceLocator::get('PipelineAccessService')->canAccessPipeline($userId, $pipelineId)) {
                 throw new PipelineMissingException('No pipeline found with id ' . $pipelineId);
             }
 
@@ -248,6 +254,7 @@ if (!class_exists('WPQT\Pipeline\PipelineService')) {
             ServiceLocator::get('TaskService')->deleteTasksByTaskIds($tasksToDelteIds);
             ServiceLocator::get('CommentService')->deleteTasksComments($tasksToDelteIds);
             ServiceLocator::get('PipelineRepository')->deleteUserPrimaryPipelineReferences($pipelineId);
+            ServiceLocator::get('PipelineAccessRepository')->deletePipelineAccess($pipelineId);
 
             // If the pipeline was the site-wide primary pipeline, mark another pipeline as primary
             if ($pipeline->is_primary) {

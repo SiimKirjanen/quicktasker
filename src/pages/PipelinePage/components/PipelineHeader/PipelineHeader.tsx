@@ -14,14 +14,14 @@ function PipelineHeader() {
     fetchAndSetPipelineData,
   } = useContext(ActivePipelineContext);
   const { fetchNotifications } = useContext(NotificationsContext);
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
 
   const handleRefresh = (pipelineId: string) => {
     fetchAndSetPipelineData(pipelineId);
     fetchNotifications();
   };
 
-  if (!activePipeline || pipelineMissing) {
+  if (!activePipeline || pipelineMissing || pipelineNoAccess) {
     return null;
   }
 

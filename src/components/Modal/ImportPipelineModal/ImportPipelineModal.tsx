@@ -13,6 +13,7 @@ import {
   PIPELINE_ADD_PIPELINE,
 } from "../../../constants";
 import { useImportActions } from "../../../hooks/actions/useImportActions";
+import { useWPUserPipelineActions } from "../../../hooks/actions/useWPUserPipelineActions";
 import { usePipelines } from "../../../hooks/usePipelines";
 import { ActivePipelineContext } from "../../../providers/ActivePipelineContextProvider";
 import { ModalContext } from "../../../providers/ModalContextProvider";
@@ -54,6 +55,7 @@ function ImportPipelineModal() {
   } = useContext(ModalContext);
   const { pipelinesDispatch, checkIfPipelineNameExists } = usePipelines();
   const { fetchAndSetPipelineData } = useContext(ActivePipelineContext);
+  const { addCurrentUserToPipeline } = useWPUserPipelineActions();
   const [selectedImportSource, setSelectedImportSource] = useState(
     PipelineImportSource.TRELLO,
   );
@@ -184,6 +186,7 @@ function ImportPipelineModal() {
         type: PIPELINE_ADD_PIPELINE,
         payload: data.pipeline,
       });
+      addCurrentUserToPipeline(data.pipeline.id);
       await fetchAndSetPipelineData(data.pipeline.id);
       resetState();
       modalDispatch({ type: CLOSE_PIPELINE_IMPORT_MODAL });

@@ -1,5 +1,6 @@
 import { __ } from "@wordpress/i18n";
 import { Info } from "../../../../components/Info/Info";
+import { NoBoardAccessInfo } from "../../../../components/Info/NoBoardAccessInfo";
 import { useMissingContent } from "../../../../hooks/useMissingContent";
 import { PipelineOverviewResponse } from "../../../../types/requestResponse/pipeline-overview-response";
 import { PipelineOverviewContent } from "./components/PipelineOverviewContent";
@@ -8,7 +9,11 @@ type Props = {
   pipelineOverviewData: PipelineOverviewResponse | null;
 };
 function PipelineOverview({ pipelineOverviewData }: Props) {
-  const { pipelineMissing } = useMissingContent();
+  const { pipelineMissing, pipelineNoAccess } = useMissingContent();
+
+  if (pipelineNoAccess) {
+    return <NoBoardAccessInfo />;
+  }
 
   if (pipelineMissing) {
     return (

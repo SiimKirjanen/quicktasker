@@ -38,10 +38,11 @@ if (!class_exists('WPQT\Log\LogRepository')) {
          *
          * @param int $typeId The ID of the log type to filter by.
          * @param string $type The type of the log to filter by.
+         * @param int[]|null $pipelineIds Only return logs of these boards, or null for logs of every board.
          * @global wpdb $wpdb WordPress database abstraction object.
          * @return array An array of log objects containing log details and author names.
          */
-        public function getLogs($typeId, $type)
+        public function getLogs($typeId, $type, $pipelineIds = null)
         {
             global $wpdb;
 
@@ -70,10 +71,15 @@ if (!class_exists('WPQT\Log\LogRepository')) {
                 LEFT JOIN $table_users AS wp_users ON logs.created_by IN ('admin', 'wp_user') AND logs.user_id = wp_users.ID
                 LEFT JOIN $table_quicktasker_users AS quicktasker_users ON logs.created_by = 'quicktasker_user' AND logs.user_id = quicktasker_users.id
                 WHERE logs.type_id = %d AND logs.type = %s
-                ORDER BY logs.created_at DESC
             ";
+            $queryParams = [$typeId, $type];
 
-            $results = $wpdb->get_results($wpdb->prepare($sql, $typeId, $type));
+            if (null !== $pipelineIds) {
+                $sql .= ' AND ' . $this->getPipelineCondition($pipelineIds, $queryParams);
+            }
+
+            $sql .= ' ORDER BY logs.created_at DESC';
+            $results = $wpdb->get_results($wpdb->prepare($sql, ...$queryParams));
 
             return $results;
         }
@@ -89,9 +95,10 @@ if (!class_exists('WPQT\Log\LogRepository')) {
          * @param string|null $logStatus The status of the log to filter by. If null, no filtering by status is applied.
          * @param string|null $logSearch A search term to filter logs by text.
          * @param string|null $logCreatedById The ID of the creator to filter by.
+         * @param int[]|null $pipelineIds Only return logs of these boards, or null for logs of every board.
          * @return array The retrieved logs from the database.
          */
-        public function getGlobalLogs($logType, $typeId, $logCreatedBy, $numberOfLogs, $logOrder, $logStatus, $logSearch, $logCreatedById)
+        public function getGlobalLogs($logType, $typeId, $logCreatedBy, $numberOfLogs, $logOrder, $logStatus, $logSearch, $logCreatedById, $pipelineIds = null)
         {
             global $wpdb;
 
@@ -163,6 +170,10 @@ if (!class_exists('WPQT\Log\LogRepository')) {
                 $queryParams[] = '%' . $wpdb->esc_like($logSearch) . '%';
             }
 
+            if (null !== $pipelineIds) {
+                $whereClauses[] = $this->getPipelineCondition($pipelineIds, $queryParams);
+            }
+
             if (!empty($whereClauses)) {
                 $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
             }
@@ -179,6 +190,32 @@ if (!class_exists('WPQT\Log\LogRepository')) {
                 : $wpdb->get_results($wpdb->prepare($sql, ...$queryParams));
 
             return $results;
+        }
+
+        /**
+         * Builds the SQL condition that keeps only the logs of the given boards.
+         *
+         * Logs without a board are kept unless their type is about something on a board,
+         * since those may belong to a board that is not accessible.
+         *
+         * @param int[] $pipelineIds The board IDs.
+         * @param array $queryParams The query parameters, extended with the condition's values.
+         * @return string The SQL condition.
+         */
+        private function getPipelineCondition($pipelineIds, &$queryParams)
+        {
+            $boardLogTypePlaceholders = implode(', ', array_fill(0, count(WP_QT_BOARD_LOG_TYPES), '%s'));
+            $condition = "(logs.pipeline_id IS NULL AND logs.type NOT IN ($boardLogTypePlaceholders))";
+            $queryParams = array_merge($queryParams, WP_QT_BOARD_LOG_TYPES);
+
+            if (empty($pipelineIds)) {
+                return $condition;
+            }
+
+            $pipelinePlaceholders = implode(', ', array_fill(0, count($pipelineIds), '%d'));
+            $queryParams = array_merge($queryParams, array_map('intval', $pipelineIds));
+
+            return "($condition OR logs.pipeline_id IN ($pipelinePlaceholders))";
         }
     }
 }

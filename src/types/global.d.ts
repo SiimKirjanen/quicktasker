@@ -21,6 +21,7 @@ declare global {
       isUserAllowedToManageUsers: "1" | "0";
       isUserAllowedToDeleteUsers: "1" | "0";
       isUserAllowedToManageWPUsers: "1" | "0";
+      isUserAllowedToCleanArchive: "1" | "0";
       userPageCustomStyles: string;
       taskUploadsURL: string;
       initialNotificationPreferences: {

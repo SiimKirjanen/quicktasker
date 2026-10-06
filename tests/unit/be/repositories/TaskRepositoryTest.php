@@ -569,6 +569,27 @@ class TaskRepositoryTest extends TestCase
         $this->assertSame($expectedTasks, $result);
     }
 
+    public function test_getArchivedTasks_keeps_only_tasks_of_the_given_boards()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->stringContains('AND a.pipeline_id IN (%d, %d)'), [3, 5, 10])
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getArchivedTasks(false, false, ['pipelineIds' => ['3', 5], 'limit' => 10]);
+    }
+
+    public function test_getArchivedTasks_returns_nothing_without_accessible_boards()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with($this->stringContains('AND 1 = 0'))
+            ->willReturn([]);
+
+        $this->assertSame([], $this->repository->getArchivedTasks(false, false, ['pipelineIds' => []]));
+    }
+
     public function test_getArchivedTasks_includes_assigned_users_when_requested()
     {
         $expectedTasks = [
@@ -745,5 +766,32 @@ class TaskRepositoryTest extends TestCase
         $result = $this->repository->getPublicTasksByHashes(['abc', 'xyz']);
 
         $this->assertSame($expectedTasks, $result);
+    }
+
+    public function test_countTasksAssignedToWPUserByPipeline_returns_counts_keyed_by_board()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with(
+                $this->logicalAnd(
+                    $this->stringContains("a.user_type = 'wp-user'"),
+                    $this->stringContains('b.is_archived = 0'),
+                    $this->stringContains('b.pipeline_id IN (%d,%d)')
+                ),
+                [7, 3, 5]
+            )
+            ->willReturn('PREPARED');
+        $this->wpdbMock->method('get_results')->willReturn([
+            (object) ['pipeline_id' => '3', 'task_count' => '2'],
+        ]);
+
+        $this->assertSame([3 => 2], $this->repository->countTasksAssignedToWPUserByPipeline(7, [3, 5]));
+    }
+
+    public function test_countTasksAssignedToWPUserByPipeline_skips_the_query_without_boards()
+    {
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $this->assertSame([], $this->repository->countTasksAssignedToWPUserByPipeline(7, []));
     }
 }
