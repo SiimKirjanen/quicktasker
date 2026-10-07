@@ -15,7 +15,12 @@ describe("useCapabilityActions", () => {
   it("invokes callback on success with the update", async () => {
     const update = {
       stopped_integrations: [
-        { pipeline_id: 1, api_token_count: 1, webhook_count: 0 },
+        {
+          pipeline_id: 1,
+          api_token_count: 1,
+          webhook_count: 0,
+          automation_count: 0,
+        },
       ],
       stopped_token_deletes: [],
     };

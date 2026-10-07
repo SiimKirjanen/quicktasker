@@ -52,7 +52,7 @@ function WPUserItem({ user }: Props) {
       showStoppedIntegrationsWarning(
         integration,
         sprintf(
-          // translators: 1: user name, 2: number of API tokens and webhooks, 3: board name
+          // translators: 1: user name, 2: numbers of API tokens, webhooks and automations, like "1 API token and 2 automations", 3: board name
           __(
             "%2$s by %1$s on %3$s won't work without access to manage settings.",
             "quicktasker",

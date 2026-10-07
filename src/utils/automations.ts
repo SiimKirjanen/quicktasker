@@ -261,6 +261,20 @@ const availableAutomations = {
   [TargetType.SEATREG_BOOKING]: seatregBookingAutomations,
 };
 
+// Actions that send board data out of the site, by email or to Slack. Like webhooks, automations with these
+// actions stop while their creator can't use the board. Matches WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS in PHP.
+const sendingAutomationActions: AutomationAction[] = [
+  AutomationAction.NEW_ENTITY_EMAIL,
+  AutomationAction.DELETED_ENTITY_EMAIL,
+  AutomationAction.TASK_ASSIGNED_EMAIL,
+  AutomationAction.TASK_UNASSIGNED_EMAIL,
+  AutomationAction.TASK_PUBLIC_COMMENT_ADDED_EMAIL,
+  AutomationAction.TASK_PRIVATE_COMMENT_ADDED_EMAIL,
+  AutomationAction.TASK_FILE_UPLOADED_EMAIL,
+  AutomationAction.TASK_FILE_DELETED_EMAIL,
+  AutomationAction.SEND_SLACK_MESSAGE,
+];
+
 const convertAutomationsFromServer = (
   automations: AutomationFromServer[],
 ): Automation[] => {
@@ -277,5 +291,6 @@ export {
   automationTriggerStrings,
   availableAutomations,
   convertAutomationsFromServer,
+  sendingAutomationActions,
   woocommerceOrderAutomationTriggerStrings,
 };

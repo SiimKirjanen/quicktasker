@@ -3706,6 +3706,22 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
         ],
       }),
       request({
+        name: "Outsider creates an automation on board E that sends board data out",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/automations",
+        body: {
+          automationTarget: "task",
+          automationTrigger: "task-created",
+          automationAction: "new-entity-email",
+          automationMetadata: "qt-outsider-{{runId}}@example.com",
+        },
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          save("outsiderSendingAutomationId", "pm.response.json().data.id"),
+        ],
+      }),
+      request({
         name: "Board E API tokens show who created them",
         url: "/pipelines/{{boardEId}}/api-tokens",
         tests: [
@@ -3747,7 +3763,7 @@ pm.test('the creator is named', () => pm.expect(webhook && webhook.created_by_na
         tests: [
           status(200),
           success(true),
-          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+          `pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));`,
           `pm.test('the API token that stopped deleting is not reported on top', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.be.empty);`,
         ],
       }),
@@ -3804,6 +3820,14 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
         ],
       }),
       request({
+        name: "The outsider's automation that sends board data out is skipped and the skip is logged",
+        url: "/global-logs?order=DESC&numberOfLogs=200&search=Automation%20skipped",
+        tests: [
+          status(200),
+          `pm.test('the skipped automation is logged on board E', () => pm.expect(pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);`,
+        ],
+      }),
+      request({
         name: "Turn the outsider's QuickTasker access back on",
         method: "PATCH",
         url: "/wp-users/{{outsiderWpUserId}}/capabilities",
@@ -3844,7 +3868,7 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
         tests: [
           status(200),
           success(true),
-          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+          `pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));`,
         ],
       }),
       request({
@@ -3961,7 +3985,7 @@ if ((!Array.isArray(captured) || captured.length === 0) && attempts < 20) {
           status(200),
           success(true),
           `pm.test('the API token and webhook keep working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
-          `pm.test('the API token that stopped deleting is reported', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 0 }]));`,
+          `pm.test('the API token that stopped deleting is reported', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 0, automation_count: 0 }]));`,
         ],
       }),
       request({
@@ -4104,7 +4128,7 @@ pm.test('the token creator can delete', () => pm.expect(token && token.created_b
         tests: [
           status(200),
           success(true),
-          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+          `pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));`,
         ],
       }),
       request({
@@ -4113,8 +4137,11 @@ pm.test('the token creator can delete', () => pm.expect(token && token.created_b
         tests: [
           status(200),
           `const automation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('outsiderAutomationId'));
+const sendingAutomation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('outsiderSendingAutomationId'));
 pm.test('the automation is kept', () => pm.expect(automation).to.be.an('object'));
-pm.test('the creator has no access to the board', () => pm.expect(automation && automation.created_by_has_board_access).to.eql(false));`,
+pm.test('the creator has no access to the board', () => pm.expect(automation && automation.created_by_has_board_access).to.eql(false));
+pm.test('the automation that sends board data out is kept', () => pm.expect(sendingAutomation).to.be.an('object'));
+pm.test('its creator has no access to the board', () => pm.expect(sendingAutomation && sendingAutomation.created_by_has_board_access).to.eql(false));`,
         ],
       }),
       request({
@@ -4166,7 +4193,7 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
         body: { pipeline_ids: [] },
         tests: [
           status(200),
-          `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+          `pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));`,
         ],
       }),
     ]),

@@ -31,6 +31,7 @@ import {
   automationActionStrings,
   automationTargetStrings,
   automationTriggerStrings,
+  sendingAutomationActions,
 } from "../../../../utils/automations";
 import { convertToTimezone } from "../../../../utils/timezone";
 import { AutomationActionTarget } from "../AutomationActionTarget/AutomationActionTarget";
@@ -50,6 +51,11 @@ function PipelineAutomation({ automation }: Props) {
     automation.automation_action_target_id !== null &&
     automation.automation_action_target_type !== null;
   const hasMeta = automation.metadata !== null;
+  // Like webhooks, automations that send board data out stop when their creator can't use the board.
+  const notSending =
+    automation.active &&
+    automation.created_by_has_board_access === false &&
+    sendingAutomationActions.includes(automation.automation_action);
 
   const triggerLabel = automationTriggerStrings[automation.automation_trigger];
   const actionLabel = automationActionStrings[automation.automation_action];
@@ -109,7 +115,18 @@ function PipelineAutomation({ automation }: Props) {
       <WPQTCardDataItem
         label={__("Status", "quicktasker")}
         value={
-          automation.active ? (
+          notSending ? (
+            <span
+              className="wpqt-inline-flex wpqt-items-center wpqt-gap-1 wpqt-text-yellow-700"
+              data-testid="automation-not-sending"
+            >
+              <span className="wpqt-h-2 wpqt-w-2 wpqt-rounded-full wpqt-bg-yellow-500" />
+              {__(
+                "Not sending: its creator lost access to this board or the permission to manage settings",
+                "quicktasker",
+              )}
+            </span>
+          ) : automation.active ? (
             <span className="wpqt-inline-flex wpqt-items-center wpqt-gap-1 wpqt-text-green-700">
               <span className="wpqt-h-2 wpqt-w-2 wpqt-rounded-full wpqt-bg-green-500" />
               {__("Active", "quicktasker")}

@@ -226,9 +226,10 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         /**
          * Checks if the creator of an API token, webhook or automation could still create it on its board.
          *
-         * API tokens and webhooks only work while this is true, so they stop when the creator is removed from
-         * the board, loses the QuickTasker or manage settings capability, for example through a role change,
-         * or is deleted. Items created before creators were recorded have no creator and are allowed.
+         * API tokens, webhooks and automations that send board data out only work while this is true, so they
+         * stop when the creator is removed from the board, loses the QuickTasker or manage settings capability,
+         * for example through a role change, or is deleted. Automations that act inside the board keep running.
+         * Items created before creators were recorded have no creator and are allowed.
          *
          * @param int|null $createdBy The ID of the WordPress user who created the item.
          * @param int|null $pipelineId The ID of the item's board.
@@ -326,17 +327,19 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
-         * Counts the API tokens and webhooks a WordPress user created on each of the given boards.
+         * Counts the API tokens, webhooks and automations that send board data out a WordPress user created on each
+         * of the given boards. These stop working while the user can't use the board, see canCreatorUseBoard().
          *
          * @param int $wpUserId The WordPress user ID.
          * @param int[]|null $pipelineIds The board IDs, or null for every board.
-         * @return array Arrays with pipeline_id, api_token_count and webhook_count, for the boards that have any.
+         * @return array Arrays with pipeline_id, api_token_count, webhook_count and automation_count, for the boards that have any.
          */
         public function countIntegrationsCreatedByWPUser($wpUserId, $pipelineIds)
         {
             return $this->countIntegrationsByPipeline(
                 ServiceLocator::get('ApiTokenRepository')->getTokensCreatedByWPUser($wpUserId, $pipelineIds),
-                ServiceLocator::get('WebhookRepository')->getWebhooksCreatedByWPUser($wpUserId, $pipelineIds)
+                ServiceLocator::get('WebhookRepository')->getWebhooksCreatedByWPUser($wpUserId, $pipelineIds),
+                ServiceLocator::get('AutomationRepository')->getSendingAutomationsCreatedByWPUser($wpUserId, $pipelineIds)
             );
         }
 
@@ -347,7 +350,8 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          *
          * @param int $wpUserId The WordPress user ID.
          * @param int[]|null $pipelineIds The board IDs, or null for every board.
-         * @return array Arrays with pipeline_id, api_token_count and webhook_count (always 0), for the boards that have any.
+         * @return array Arrays with pipeline_id and api_token_count, plus webhook_count and automation_count (always 0),
+         *               for the boards that have any.
          */
         public function countDeletingTokensCreatedByWPUser($wpUserId, $pipelineIds)
         {
@@ -364,25 +368,27 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
                 }
             );
 
-            return $this->countIntegrationsByPipeline($tokens, []);
+            return $this->countIntegrationsByPipeline($tokens, [], []);
         }
 
         /**
-         * Deletes the API tokens and webhooks a WordPress user created, and logs each deletion.
+         * Deletes the API tokens, webhooks and automations that send board data out a WordPress user created,
+         * and logs each deletion.
          *
          * Used when the user is deleted, as they can never get access back. While a user only lacks access,
-         * their API tokens and webhooks are kept but stop working, see canCreatorUseBoard().
+         * these are kept but stop working, see canCreatorUseBoard(). Automations that act inside the board are kept.
          *
          * @param int $wpUserId The WordPress user ID.
          * @param int[]|null $pipelineIds Only on these boards, or null for every board.
          * @param string $reason Ends the log entries, like "Anna was removed from the board".
-         * @return array The deleted API tokens and webhooks, counted as in countIntegrationsCreatedByWPUser().
-         * @throws \Exception If an API token or webhook could not be deleted.
+         * @return array The deleted items, counted as in countIntegrationsCreatedByWPUser().
+         * @throws \Exception If an API token, webhook or automation could not be deleted.
          */
         public function deleteIntegrationsCreatedByWPUser($wpUserId, $pipelineIds, $reason)
         {
             $tokens = ServiceLocator::get('ApiTokenRepository')->getTokensCreatedByWPUser($wpUserId, $pipelineIds);
             $webhooks = ServiceLocator::get('WebhookRepository')->getWebhooksCreatedByWPUser($wpUserId, $pipelineIds);
+            $automations = ServiceLocator::get('AutomationRepository')->getSendingAutomationsCreatedByWPUser($wpUserId, $pipelineIds);
             $logService = ServiceLocator::get('LogService');
             $currentUserId = get_current_user_id();
 
@@ -410,27 +416,43 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
                 ]);
             }
 
-            return $this->countIntegrationsByPipeline($tokens, $webhooks);
+            $automationService = ServiceLocator::get('AutomationService');
+
+            foreach ($automations as $automation) {
+                $automationService->deleteAutomation($automation->id);
+                $logService->log('Automation ' . $automationService->getAutomationDescription($automation) . ' deleted because ' . $reason, [
+                    'type'          => WP_QT_LOG_TYPE_AUTOMATION,
+                    'type_id'       => $automation->id,
+                    'user_id'       => $currentUserId,
+                    'created_by'    => WP_QT_LOG_CREATED_BY_ADMIN,
+                    'created_by_id' => $currentUserId,
+                    'pipeline_id'   => $automation->pipeline_id,
+                ]);
+            }
+
+            return $this->countIntegrationsByPipeline($tokens, $webhooks, $automations);
         }
 
         /**
-         * Counts API tokens and webhooks per board.
+         * Counts API tokens, webhooks and automations per board.
          *
          * @param array $tokens Objects with a pipeline_id property.
          * @param array $webhooks Objects with a pipeline_id property.
-         * @return array Arrays with pipeline_id, api_token_count and webhook_count, ordered by board ID.
+         * @param array $automations Objects with a pipeline_id property.
+         * @return array Arrays with pipeline_id, api_token_count, webhook_count and automation_count, ordered by board ID.
          */
-        private function countIntegrationsByPipeline($tokens, $webhooks)
+        private function countIntegrationsByPipeline($tokens, $webhooks, $automations)
         {
             $counts = [];
 
-            foreach (['api_token_count' => $tokens, 'webhook_count' => $webhooks] as $countKey => $items) {
+            foreach (['api_token_count' => $tokens, 'webhook_count' => $webhooks, 'automation_count' => $automations] as $countKey => $items) {
                 foreach ($items as $item) {
                     $pipelineId = (int) $item->pipeline_id;
                     $counts[$pipelineId] = $counts[$pipelineId] ?? [
-                        'pipeline_id'     => $pipelineId,
-                        'api_token_count' => 0,
-                        'webhook_count'   => 0,
+                        'pipeline_id'      => $pipelineId,
+                        'api_token_count'  => 0,
+                        'webhook_count'    => 0,
+                        'automation_count' => 0,
                     ];
                     ++$counts[$pipelineId][$countKey];
                 }

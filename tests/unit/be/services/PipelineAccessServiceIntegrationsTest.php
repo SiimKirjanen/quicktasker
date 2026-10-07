@@ -10,6 +10,9 @@ if (!defined('WP_QT_LOG_TYPE_API_TOKEN')) {
 if (!defined('WP_QT_LOG_TYPE_WEBHOOK')) {
     define('WP_QT_LOG_TYPE_WEBHOOK', 'webhook');
 }
+if (!defined('WP_QT_LOG_TYPE_AUTOMATION')) {
+    define('WP_QT_LOG_TYPE_AUTOMATION', 'automation');
+}
 if (!defined('WP_QT_LOG_CREATED_BY_ADMIN')) {
     define('WP_QT_LOG_CREATED_BY_ADMIN', 'admin');
 }
@@ -32,7 +35,8 @@ use WPQT\Pipeline\PipelineAccessService;
 use WPQT\Services\ServiceLocator;
 
 /**
- * API tokens and webhooks a WordPress user created, which are deleted when the user loses access.
+ * API tokens, webhooks and automations that send board data out a WordPress user created, which stop working
+ * when the user loses access and are deleted when the user is deleted.
  */
 class PipelineAccessServiceIntegrationsTest extends TestCase
 {
@@ -46,12 +50,16 @@ class PipelineAccessServiceIntegrationsTest extends TestCase
     /** @var array Webhooks the user created. */
     private $webhooks;
 
-    /** @var array<int, int[]|null> The board filter of each token and webhook lookup. */
+    /** @var array Automations that send board data out the user created. */
+    private $automations;
+
+    /** @var array<int, int[]|null> The board filter of each token, webhook and automation lookup. */
     private $lookups;
 
-    /** @var array Deleted tokens as [board ID, token ID], and webhooks as webhook IDs. */
+    /** @var array Deleted tokens as [board ID, token ID], and webhooks and automations as their IDs. */
     private $deletedTokens;
     private $deletedWebhooks;
+    private $deletedAutomations;
 
     /** @var array Messages and data of the log entries. */
     private $logs;
@@ -66,9 +74,13 @@ class PipelineAccessServiceIntegrationsTest extends TestCase
         $this->webhooks = [
             (object) ['id' => '8', 'pipeline_id' => '3', 'target_type' => 'task', 'target_action' => 'created', 'webhook_url' => 'https://example.com'],
         ];
+        $this->automations = [
+            (object) ['id' => '9', 'pipeline_id' => '2', 'automation_trigger' => 'task-created', 'automation_action' => 'new-entity-email'],
+        ];
         $this->lookups = [];
         $this->deletedTokens = [];
         $this->deletedWebhooks = [];
+        $this->deletedAutomations = [];
         $this->logs = [];
 
         $tokenRepo = $this->getMockBuilder(stdClass::class)->addMethods(['getTokensCreatedByWPUser'])->getMock();
@@ -89,6 +101,23 @@ class PipelineAccessServiceIntegrationsTest extends TestCase
             return $webhook->target_type . '.' . $webhook->target_action;
         });
         ServiceLocator::register('WebhookRepository', $webhookRepo);
+
+        $automationRepo = $this->getMockBuilder(stdClass::class)->addMethods(['getSendingAutomationsCreatedByWPUser'])->getMock();
+        $automationRepo->method('getSendingAutomationsCreatedByWPUser')->willReturnCallback(function ($userId, $pipelineIds) {
+            $this->lookups[] = $pipelineIds;
+
+            return self::USER_ID === $userId ? $this->automations : [];
+        });
+        ServiceLocator::register('AutomationRepository', $automationRepo);
+
+        $automationService = $this->getMockBuilder(stdClass::class)->addMethods(['deleteAutomation', 'getAutomationDescription'])->getMock();
+        $automationService->method('deleteAutomation')->willReturnCallback(function ($automationId) {
+            $this->deletedAutomations[] = $automationId;
+        });
+        $automationService->method('getAutomationDescription')->willReturnCallback(function ($automation) {
+            return $automation->automation_trigger . ' → ' . $automation->automation_action;
+        });
+        ServiceLocator::register('AutomationService', $automationService);
 
         $tokenService = $this->getMockBuilder(stdClass::class)->addMethods(['deleteApiToken'])->getMock();
         $tokenService->method('deleteApiToken')->willReturnCallback(function ($pipelineId, $tokenId) {
@@ -115,19 +144,19 @@ class PipelineAccessServiceIntegrationsTest extends TestCase
         $this->service = new PipelineAccessService();
     }
 
-    public function test_counts_tokens_and_webhooks_per_board()
+    public function test_counts_tokens_webhooks_and_automations_per_board()
     {
         $this->assertSame([
-            ['pipeline_id' => 2, 'api_token_count' => 1, 'webhook_count' => 0],
-            ['pipeline_id' => 3, 'api_token_count' => 2, 'webhook_count' => 1],
+            ['pipeline_id' => 2, 'api_token_count' => 1, 'webhook_count' => 0, 'automation_count' => 1],
+            ['pipeline_id' => 3, 'api_token_count' => 2, 'webhook_count' => 1, 'automation_count' => 0],
         ], $this->service->countIntegrationsCreatedByWPUser(self::USER_ID, [2, 3]));
-        $this->assertSame([[2, 3], [2, 3]], $this->lookups);
+        $this->assertSame([[2, 3], [2, 3], [2, 3]], $this->lookups);
     }
 
     public function test_counts_only_tokens_with_a_delete_permission_per_board()
     {
         $this->assertSame([
-            ['pipeline_id' => 3, 'api_token_count' => 2, 'webhook_count' => 0],
+            ['pipeline_id' => 3, 'api_token_count' => 2, 'webhook_count' => 0, 'automation_count' => 0],
         ], $this->service->countDeletingTokensCreatedByWPUser(self::USER_ID, [2, 3]));
         $this->assertSame([[2, 3]], $this->lookups);
     }
@@ -142,25 +171,31 @@ class PipelineAccessServiceIntegrationsTest extends TestCase
         $this->assertSame([], $this->service->countIntegrationsCreatedByWPUser(99, [2, 3]));
     }
 
-    public function test_deletes_and_logs_each_token_and_webhook()
+    public function test_deletes_and_logs_each_token_webhook_and_automation()
     {
-        $deleted = $this->service->deleteIntegrationsCreatedByWPUser(self::USER_ID, [2, 3], 'Anna was removed from the board');
+        $deleted = $this->service->deleteIntegrationsCreatedByWPUser(self::USER_ID, [2, 3], 'Anna was deleted');
 
         $this->assertSame([['2', '4'], ['3', '5'], ['3', '6']], $this->deletedTokens);
         $this->assertSame(['8'], $this->deletedWebhooks);
+        $this->assertSame(['9'], $this->deletedAutomations);
         $this->assertSame([
-            'API token Zapier deleted because Anna was removed from the board',
-            'API token CRM deleted because Anna was removed from the board',
-            'API token Backup deleted because Anna was removed from the board',
-            'Webhook task.created deleted because Anna was removed from the board',
+            'API token Zapier deleted because Anna was deleted',
+            'API token CRM deleted because Anna was deleted',
+            'API token Backup deleted because Anna was deleted',
+            'Webhook task.created deleted because Anna was deleted',
+            'Automation task-created → new-entity-email deleted because Anna was deleted',
         ], array_column($this->logs, 0));
         $this->assertSame(
             ['type' => 'webhook', 'type_id' => '8', 'user_id' => 1, 'created_by' => 'admin', 'created_by_id' => 1, 'pipeline_id' => '3'],
             $this->logs[3][1]
         );
+        $this->assertSame(
+            ['type' => 'automation', 'type_id' => '9', 'user_id' => 1, 'created_by' => 'admin', 'created_by_id' => 1, 'pipeline_id' => '2'],
+            $this->logs[4][1]
+        );
         $this->assertSame([
-            ['pipeline_id' => 2, 'api_token_count' => 1, 'webhook_count' => 0],
-            ['pipeline_id' => 3, 'api_token_count' => 2, 'webhook_count' => 1],
+            ['pipeline_id' => 2, 'api_token_count' => 1, 'webhook_count' => 0, 'automation_count' => 1],
+            ['pipeline_id' => 3, 'api_token_count' => 2, 'webhook_count' => 1, 'automation_count' => 0],
         ], $deleted);
     }
 
@@ -168,6 +203,6 @@ class PipelineAccessServiceIntegrationsTest extends TestCase
     {
         $this->service->deleteIntegrationsCreatedByWPUser(self::USER_ID, null, 'Anna was deleted');
 
-        $this->assertSame([null, null], $this->lookups);
+        $this->assertSame([null, null, null], $this->lookups);
     }
 }
