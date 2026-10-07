@@ -99,6 +99,26 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
 
             if (!empty($relatedAutomations)) {
                 foreach ($relatedAutomations as $automation) {
+                    // Like webhooks, automations stop sending board data out when their creator loses access to the board
+                    // or the permission to manage settings. Automations that act inside the board keep running.
+                    if (
+                        $this->sendsBoardData($automation) &&
+                        !ServiceLocator::get('PipelineAccessService')->canCreatorUseBoard($automation->created_by ?? null, $automation->pipeline_id)
+                    ) {
+                        if ($shouldLog) {
+                            $logService->log('Automation skipped on ' . $this->getAutomationDescription($automation) . ' (its creator lost access to the board or the permission to manage settings)', [
+                                'type'          => $targetType,
+                                'type_id'       => $targetId,
+                                'log_status'    => WP_QT_LOG_STATUS_ERROR,
+                                'created_by'    => WP_QT_LOG_CREATED_BY_AUTOMATION,
+                                'created_by_id' => $automation->id,
+                                'pipeline_id'   => $boardId,
+                            ]);
+                        }
+
+                        continue;
+                    }
+
                     try {
                         $result = $this->executeAutomation($automation, $targetId, $data);
 
@@ -568,6 +588,17 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
          * @param object $automation The automation object containing action and target type.
          * @return bool Returns true if the automation action is to archive a task and the target type is task, otherwise false.
          */
+        /**
+         * Checks if an automation sends board data out of the site, by email or to Slack.
+         *
+         * @param object $automation The automation, with an automation_action property.
+         * @return bool True if the action is one of WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS.
+         */
+        public function sendsBoardData($automation)
+        {
+            return in_array($automation->automation_action, WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS, true);
+        }
+
         private function isArchiveTaskAction($automation)
         {
             return WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK === $automation->automation_action && WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK === $automation->target_type;

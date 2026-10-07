@@ -298,7 +298,7 @@ describe("WPUserPipelineAccess", () => {
     );
   });
 
-  describe("API tokens and webhooks the user created", () => {
+  describe("API tokens, webhooks and automations the user created", () => {
     function respondWithStopped(
       stopped: WPUserPipelinesUpdate["stopped_integrations"],
     ) {
@@ -318,7 +318,12 @@ describe("WPUserPipelineAccess", () => {
 
     it("warns that they don't work without board access", async () => {
       respondWithStopped([
-        { pipeline_id: 1, api_token_count: 2, webhook_count: 1 },
+        {
+          pipeline_id: 1,
+          api_token_count: 2,
+          webhook_count: 1,
+          automation_count: 1,
+        },
       ]);
       renderAccess(makeWPUser([1]));
       openSelector();
@@ -335,7 +340,7 @@ describe("WPUserPipelineAccess", () => {
       expect(
         screen.getByTestId("stopped-integrations-warning"),
       ).toHaveTextContent(
-        "2 API tokens and 1 webhook by Bob on Board 1 won't work without board access.",
+        "2 API tokens, 1 webhook and 1 automation by Bob on Board 1 won't work without board access.",
       );
       expect(screen.getByText("Open API tokens")).toHaveAttribute(
         "href",
@@ -345,11 +350,20 @@ describe("WPUserPipelineAccess", () => {
         "href",
         "#/board/1/webhooks",
       );
+      expect(screen.getByText("Open automations")).toHaveAttribute(
+        "href",
+        "#/board/1/automations",
+      );
     });
 
     it("only links to the kind of integration the user created", async () => {
       respondWithStopped([
-        { pipeline_id: 1, api_token_count: 0, webhook_count: 1 },
+        {
+          pipeline_id: 1,
+          api_token_count: 0,
+          webhook_count: 1,
+          automation_count: 0,
+        },
       ]);
       renderAccess(makeWPUser([1]));
       openSelector();
@@ -364,6 +378,7 @@ describe("WPUserPipelineAccess", () => {
       ).toHaveTextContent("1 webhook by Bob on Board 1 won't work");
       expect(screen.queryByText("Open API tokens")).toBeNull();
       expect(screen.getByText("Open webhooks")).toBeInTheDocument();
+      expect(screen.queryByText("Open automations")).toBeNull();
     });
 
     it("does not warn when nothing stopped working", async () => {

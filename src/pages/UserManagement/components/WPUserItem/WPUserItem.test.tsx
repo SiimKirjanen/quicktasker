@@ -269,7 +269,12 @@ describe("WPUserItem", () => {
 
     it("warns when turning off a permission stops them", async () => {
       respondWithStopped([
-        { pipeline_id: 1, api_token_count: 1, webhook_count: 2 },
+        {
+          pipeline_id: 1,
+          api_token_count: 1,
+          webhook_count: 2,
+          automation_count: 0,
+        },
       ]);
       renderWithBoards(
         makeWPUser({
@@ -304,7 +309,14 @@ describe("WPUserItem", () => {
     it("warns when turning off the permission to delete stops API tokens deleting", async () => {
       respondWithStopped(
         [],
-        [{ pipeline_id: 1, api_token_count: 2, webhook_count: 0 }],
+        [
+          {
+            pipeline_id: 1,
+            api_token_count: 2,
+            webhook_count: 0,
+            automation_count: 0,
+          },
+        ],
       );
       renderWithBoards(
         makeWPUser({

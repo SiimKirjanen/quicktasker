@@ -110,11 +110,33 @@ if (!defined('TABLE_WP_QUICKTASKER_AUTOMATIONS')) {
     define('TABLE_WP_QUICKTASKER_AUTOMATIONS', 'wp_quicktasker_automations');
 }
 
+// Automation actions that send board data out of the site
+if (!defined('WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS')) {
+    define('WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS', [WP_QUICKTASKER_AUTOMATION_ACTION_NEW_ENTITY, WP_QUICKTASKER_AUTOMATION_ACTION_SEND_SLACK_MESSAGE]);
+}
+
+// Define log constants
+if (!defined('WP_QT_LOG_STATUS_ERROR')) {
+    define('WP_QT_LOG_STATUS_ERROR', 'error');
+}
+if (!defined('WP_QT_LOG_CREATED_BY_AUTOMATION')) {
+    define('WP_QT_LOG_CREATED_BY_AUTOMATION', 'automation');
+}
+
+if (!function_exists('get_current_user_id')) {
+    function get_current_user_id()
+    {
+        return 1;
+    }
+}
+
 require_once __DIR__ . '/../../../../php/services/ServiceLocator.php';
+require_once __DIR__ . '/../../../../php/services/LogService.php';
 require_once __DIR__ . '/../../../../php/services/AutomationService.php';
 
 use PHPUnit\Framework\TestCase;
 use WPQT\Automation\AutomationService;
+use WPQT\Services\ServiceLocator;
 
 class AutomationServiceTest extends TestCase
 {
@@ -358,5 +380,107 @@ class AutomationServiceTest extends TestCase
         $this->assertIsBool($this->service->isAssignUserAction($automation));
         $this->assertIsBool($this->service->isTaskCreateAction($automation));
         $this->assertIsBool($this->service->isTaskDoneTrigger($automation));
+    }
+
+    /**
+     * Runs processAutomations() with one automation, a creator who can or can't use the board, and logging on or off.
+     *
+     * The automation's trigger matches no action, so it never runs, and only the creator check is tested.
+     *
+     * @return array The result, the creators that were checked as [created_by, pipeline_id], and the log messages.
+     */
+    private function processAutomation($automationAction, $createdBy, $creatorCanUseBoard, $shouldLog = true)
+    {
+        $automation = (object) [
+            'id'                 => '9',
+            'pipeline_id'        => '2',
+            'automation_trigger' => 'test-trigger',
+            'automation_action'  => $automationAction,
+            'created_by'         => $createdBy,
+        ];
+        $creatorChecks = [];
+        $logs = [];
+
+        $automationRepo = $this->getMockBuilder(stdClass::class)->addMethods(['getActiveAutomations'])->getMock();
+        $automationRepo->method('getActiveAutomations')->willReturn([$automation]);
+        ServiceLocator::register('AutomationRepository', $automationRepo);
+
+        $logService = $this->getMockBuilder(stdClass::class)->addMethods(['shouldLog', 'log'])->getMock();
+        $logService->method('shouldLog')->willReturn($shouldLog);
+        $logService->method('log')->willReturnCallback(function ($message, $data) use (&$logs) {
+            $logs[] = [$message, $data];
+        });
+        ServiceLocator::register('LogService', $logService);
+
+        $pipelineAccessService = $this->getMockBuilder(stdClass::class)->addMethods(['canCreatorUseBoard'])->getMock();
+        $pipelineAccessService->method('canCreatorUseBoard')->willReturnCallback(
+            function ($creator, $pipelineId) use (&$creatorChecks, $creatorCanUseBoard) {
+                $creatorChecks[] = [$creator, $pipelineId];
+
+                return $creatorCanUseBoard;
+            }
+        );
+        ServiceLocator::register('PipelineAccessService', $pipelineAccessService);
+
+        $result = $this->service->processAutomations(2, 5, 'task', 'test-trigger');
+
+        return [$result, $creatorChecks, $logs];
+    }
+
+    public function test_sendsBoardData_is_true_only_for_email_and_slack_actions()
+    {
+        $this->assertTrue($this->service->sendsBoardData((object) ['automation_action' => WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS[0]]));
+        $this->assertFalse($this->service->sendsBoardData((object) ['automation_action' => WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK]));
+    }
+
+    public function test_processAutomations_skips_and_logs_a_sending_automation_whose_creator_cannot_use_the_board()
+    {
+        [$result, $creatorChecks, $logs] = $this->processAutomation(WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS[0], '7', false);
+
+        $this->assertSame([['7', '2']], $creatorChecks);
+        $this->assertCount(1, $logs);
+        $this->assertStringStartsWith('Automation skipped on ', $logs[0][0]);
+        $this->assertStringEndsWith(' (its creator lost access to the board or the permission to manage settings)', $logs[0][0]);
+        $this->assertSame([
+            'type'          => 'task',
+            'type_id'       => 5,
+            'log_status'    => WP_QT_LOG_STATUS_ERROR,
+            'created_by'    => WP_QT_LOG_CREATED_BY_AUTOMATION,
+            'created_by_id' => '9',
+            'pipeline_id'   => 2,
+        ], $logs[0][1]);
+        $this->assertSame([], $result->executedAutomations);
+        $this->assertSame([], $result->failedAutomations);
+    }
+
+    public function test_processAutomations_skips_without_logging_when_logging_is_off()
+    {
+        [, $creatorChecks, $logs] = $this->processAutomation(WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS[0], '7', false, false);
+
+        $this->assertSame([['7', '2']], $creatorChecks);
+        $this->assertSame([], $logs);
+    }
+
+    public function test_processAutomations_runs_a_sending_automation_whose_creator_can_use_the_board()
+    {
+        [, $creatorChecks, $logs] = $this->processAutomation(WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS[0], '7', true);
+
+        $this->assertSame([['7', '2']], $creatorChecks);
+        $this->assertSame([], $logs);
+    }
+
+    public function test_processAutomations_checks_a_sending_automation_without_a_creator_as_an_unknown_creator()
+    {
+        [, $creatorChecks] = $this->processAutomation(WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS[0], null, true);
+
+        $this->assertSame([[null, '2']], $creatorChecks);
+    }
+
+    public function test_processAutomations_runs_an_automation_that_acts_inside_the_board_whatever_its_creator_can_do()
+    {
+        [, $creatorChecks, $logs] = $this->processAutomation(WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK, '7', false);
+
+        $this->assertSame([], $creatorChecks);
+        $this->assertSame([], $logs);
     }
 }

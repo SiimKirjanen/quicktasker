@@ -48,7 +48,7 @@ if (!class_exists('WPQT\Automation\AutomationRepository')) {
             global $wpdb;
 
             $query = $wpdb->prepare(
-                'SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at, active FROM ' . TABLE_WP_QUICKTASKER_AUTOMATIONS . ' WHERE pipeline_id = %d AND target_type = %s AND automation_trigger = %s',
+                'SELECT id, pipeline_id, target_id, target_type, automation_trigger, automation_action, automation_action_target_id, automation_action_target_type, metadata, created_at, updated_at, active, created_by FROM ' . TABLE_WP_QUICKTASKER_AUTOMATIONS . ' WHERE pipeline_id = %d AND target_type = %s AND automation_trigger = %s',
                 $boardId,
                 $targetType,
                 $automationTrigger
@@ -125,6 +125,35 @@ if (!class_exists('WPQT\Automation\AutomationRepository')) {
             $results = $wpdb->get_results($query);
 
             return $this->decryptSensitiveMetadata($results);
+        }
+
+        /**
+         * Retrieves the automations a WordPress user created that send board data out of the site.
+         *
+         * See WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[]|null $pipelineIds Only automations on these boards, or null for automations on every board.
+         * @return array Automation objects with id, pipeline_id, automation_trigger and automation_action.
+         */
+        public function getSendingAutomationsCreatedByWPUser($wpUserId, $pipelineIds = null)
+        {
+            global $wpdb;
+
+            if (null !== $pipelineIds && empty($pipelineIds)) {
+                return [];
+            }
+
+            $sql = 'SELECT id, pipeline_id, automation_trigger, automation_action FROM ' . TABLE_WP_QUICKTASKER_AUTOMATIONS . '
+                WHERE created_by = %d AND automation_action IN (' . implode(',', array_fill(0, count(WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS), '%s')) . ')';
+            $params = array_merge([$wpUserId], WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS);
+
+            if (null !== $pipelineIds) {
+                $sql .= ' AND pipeline_id IN (' . implode(',', array_fill(0, count($pipelineIds), '%d')) . ')';
+                $params = array_merge($params, array_values($pipelineIds));
+            }
+
+            return $wpdb->get_results($wpdb->prepare($sql . ' ORDER BY id ASC', $params));
         }
 
         /**

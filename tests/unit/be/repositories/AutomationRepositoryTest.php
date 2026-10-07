@@ -18,6 +18,10 @@ if (!defined('WP_QUICKTASKER_AUTOMATIONS_WITH_SENSITIVE_META')) {
     ]);
 }
 
+if (!defined('WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS')) {
+    define('WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS', ['new-entity-email', 'send-slack-message']);
+}
+
 require_once __DIR__ . '/../../../../php/services/ServiceLocator.php';
 require_once __DIR__ . '/../../../../php/repositories/AutomationRepository.php';
 
@@ -504,5 +508,65 @@ class AutomationRepositoryTest extends TestCase
         $this->wpdbMock->method('get_results')->willReturn([]);
 
         $this->repository->getPipelineAutomations(4);
+    }
+
+    public function test_getAutomations_selects_the_creator()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->stringContains('active, created_by FROM wp_quicktasker_automations'))
+            ->willReturn('PREPARED_SQL');
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->repository->getAutomations(1, null, 'task', 'task-created');
+    }
+
+    /**
+     * The SQL a prepare() call received, with whitespace collapsed.
+     */
+    private function captureQuery(&$query, &$params)
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->willReturnCallback(function ($sql, $args) use (&$query, &$params) {
+                $query = preg_replace('/\s+/', ' ', $sql);
+                $params = $args;
+
+                return 'PREPARED_SQL';
+            });
+    }
+
+    public function test_getSendingAutomationsCreatedByWPUser_on_some_boards()
+    {
+        $automations = [(object) ['id' => '9', 'pipeline_id' => '2', 'automation_trigger' => 'task-created', 'automation_action' => 'new-entity-email']];
+        $this->captureQuery($query, $params);
+        $this->wpdbMock->method('get_results')->with('PREPARED_SQL')->willReturn($automations);
+
+        $this->assertSame($automations, $this->repository->getSendingAutomationsCreatedByWPUser(7, [2, 3]));
+        $this->assertSame(
+            'SELECT id, pipeline_id, automation_trigger, automation_action FROM wp_quicktasker_automations WHERE created_by = %d AND automation_action IN (%s,%s) AND pipeline_id IN (%d,%d) ORDER BY id ASC',
+            $query
+        );
+        $this->assertSame([7, 'new-entity-email', 'send-slack-message', 2, 3], $params);
+    }
+
+    public function test_getSendingAutomationsCreatedByWPUser_on_every_board()
+    {
+        $this->captureQuery($query, $params);
+        $this->wpdbMock->method('get_results')->willReturn([]);
+
+        $this->assertSame([], $this->repository->getSendingAutomationsCreatedByWPUser(7));
+        $this->assertSame(
+            'SELECT id, pipeline_id, automation_trigger, automation_action FROM wp_quicktasker_automations WHERE created_by = %d AND automation_action IN (%s,%s) ORDER BY id ASC',
+            $query
+        );
+        $this->assertSame([7, 'new-entity-email', 'send-slack-message'], $params);
+    }
+
+    public function test_getSendingAutomationsCreatedByWPUser_skips_the_query_for_no_boards()
+    {
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $this->assertSame([], $this->repository->getSendingAutomationsCreatedByWPUser(7, []));
     }
 }

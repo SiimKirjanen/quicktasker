@@ -19,8 +19,8 @@ import { TIMEOUTS } from './utils/timeouts';
 import { runWpCli } from './utils/wp-cli';
 
 /**
- * Logs in as the user and creates an API token and a webhook on the board.
- * The token can GET the board, plus the given permissions.
+ * Logs in as the user and creates an API token, a webhook and two automations on the board: one that sends
+ * board data out by email, and one that acts inside the board. The token can GET the board, plus the given permissions.
  */
 async function createIntegrationsAsUser(
   browser: Browser,
@@ -60,20 +60,43 @@ async function createIntegrationsAsUser(
       },
     });
     expect(webhookResponse.ok()).toBe(true);
+    const sendingAutomationResponse = await userContext.request.post(`/wp-json/wpqt/v1/pipelines/${boardId}/automations`, {
+      headers,
+      data: {
+        automationTarget: 'task',
+        automationTrigger: 'task-created',
+        automationAction: 'new-entity-email',
+        automationMetadata: 'integration@example.com',
+      },
+    });
+    expect(sendingAutomationResponse.ok()).toBe(true);
+    const insideAutomationResponse = await userContext.request.post(`/wp-json/wpqt/v1/pipelines/${boardId}/automations`, {
+      headers,
+      data: { automationTarget: 'task', automationTrigger: 'task-done', automationAction: 'archive-task' },
+    });
+    expect(insideAutomationResponse.ok()).toBe(true);
   } finally {
     await userContext.close();
   }
 }
 
 /**
- * Counts the board's API tokens and webhooks, as the admin.
+ * Counts the board's API tokens, webhooks and automations, as the admin.
  */
-async function countIntegrations(request: APIRequestContext, boardId: string): Promise<{ tokens: number; webhooks: number }> {
+async function countIntegrations(
+  request: APIRequestContext,
+  boardId: string,
+): Promise<{ tokens: number; webhooks: number; automations: number }> {
   const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
   const tokens = await (await request.get(`/wp-json/wpqt/v1/pipelines/${boardId}/api-tokens`, { headers })).json();
   const webhooks = await (await request.get(`/wp-json/wpqt/v1/pipelines/${boardId}/webhooks`, { headers })).json();
+  const automations = await (await request.get(`/wp-json/wpqt/v1/pipelines/${boardId}/automations`, { headers })).json();
 
-  return { tokens: tokens.data.length, webhooks: webhooks.data.webhooks.length };
+  return {
+    tokens: tokens.data.length,
+    webhooks: webhooks.data.webhooks.length,
+    automations: automations.data.automations.length,
+  };
 }
 
 // ── Test suites ───────────────────────────────────────────────────────────────
@@ -280,7 +303,7 @@ test.describe('WordPress Users Tab – Boards', () => {
     }
   });
 
-  test('removing a user from a board stops the API tokens and webhooks they created there until they are added back', async ({ page, browser, request }) => {
+  test('removing a user from a board stops the API tokens, webhooks and sending automations they created there until they are added back', async ({ page, browser, request }) => {
     const boardName = generateUniqueName('WUB-Integrations');
     const board = await createBoardViaApi(request, boardName);
     const userLogin = uniqueLogin('wpintegrations');
@@ -301,12 +324,15 @@ test.describe('WordPress Users Tab – Boards', () => {
 
       const warning = page.getByTestId('stopped-integrations-warning');
       await expect(warning).toContainText(
-        `1 API token and 1 webhook by ${userLogin} on ${boardName} won't work without board access.`,
+        `1 API token, 1 webhook and 1 automation by ${userLogin} on ${boardName} won't work without board access.`,
       );
       await expect(boardsSummary).toHaveText('No boards');
-      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
+      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1, automations: 2 });
 
-      await warning.getByRole('link', { name: 'Open API tokens' }).click();
+      await warning.getByRole('link', { name: 'Open automations' }).click();
+      // Only the automation that sends board data out stops.
+      await expect(page.getByTestId('automation-not-sending')).toHaveCount(1, { timeout: TIMEOUTS.NAVIGATION });
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
       await expect(page.getByTestId('api-token-not-working')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
       await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/webhooks`);
       await expect(page.getByTestId('webhook-not-sending')).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
@@ -316,6 +342,9 @@ test.describe('WordPress Users Tab – Boards', () => {
       await page.reload();
       await expect(page.getByTestId('webhook-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
       await expect(page.getByTestId('webhook-not-sending')).toHaveCount(0);
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/automations`);
+      await expect(page.getByTestId('automation-created-by')).toHaveCount(2, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('automation-not-sending')).toHaveCount(0);
       await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
       await expect(page.getByTestId('api-token-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
       await expect(page.getByTestId('api-token-not-working')).toHaveCount(0);
@@ -389,7 +418,7 @@ test.describe('WordPress Users Tab – Boards', () => {
       await expect(page.getByText(`${userLogin} was removed from ${boardName}.`)).toBeVisible();
       await expect(boardsSummary).toHaveText('No boards');
       await expect(page.getByTestId('stopped-integrations-warning')).toHaveCount(0);
-      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
+      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1, automations: 2 });
     } finally {
       await deleteBoardViaApi(request, boardName);
     }
@@ -418,7 +447,7 @@ test.describe('WordPress Users Tab – Boards', () => {
 
       const warning = page.getByTestId('stopped-integrations-warning');
       await expect(warning).toContainText(
-        `1 API token and 1 webhook by ${userLogin} on ${boardName} won't work without access to manage settings.`,
+        `1 API token, 1 webhook and 1 automation by ${userLogin} on ${boardName} won't work without access to manage settings.`,
       );
       await expect(manageSettingsToggle).not.toBeChecked();
 
@@ -509,7 +538,7 @@ test.describe('WordPress Users Tab – Boards', () => {
     }
   });
 
-  test('deleting a WordPress user deletes the API tokens and webhooks they created', async ({ browser, request }) => {
+  test('deleting a WordPress user deletes the API tokens, webhooks and sending automations they created', async ({ browser, request }) => {
     const boardName = generateUniqueName('WUB-Deleted-User');
     const board = await createBoardViaApi(request, boardName);
     const userLogin = uniqueLogin('wpdeleteduser');
@@ -519,20 +548,21 @@ test.describe('WordPress Users Tab – Boards', () => {
     await createIntegrationsAsUser(browser, userLogin, board.boardId);
 
     try {
-      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
+      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1, automations: 2 });
 
       const response = await request.delete(`/wp-json/wp/v2/users/${userId}?force=true&reassign=1`, {
         headers: { 'X-WP-Nonce': await getAdminNonce(request) },
       });
       expect(response.ok()).toBe(true);
 
-      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 0, webhooks: 0 });
+      // The automation that acts inside the board is kept.
+      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 0, webhooks: 0, automations: 1 });
     } finally {
       await deleteBoardViaApi(request, boardName);
     }
   });
 
-  test('API tokens and webhooks kept after their creator was deleted show that they do not work', async ({ page, browser, request }) => {
+  test('API tokens, webhooks and sending automations kept after their creator was deleted show that they do not work', async ({ page, browser, request }) => {
     const boardName = generateUniqueName('WUB-Deleted-Creator');
     const board = await createBoardViaApi(request, boardName);
     const userLogin = uniqueLogin('wpdeletedcreator');
@@ -546,7 +576,7 @@ test.describe('WordPress Users Tab – Boards', () => {
       runWpCli(
         `eval "remove_all_actions('deleted_user'); require_once ABSPATH . 'wp-admin/includes/user.php'; wp_delete_user(${userId}, 1);"`,
       );
-      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1 });
+      expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1, automations: 2 });
 
       await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
       await expect(page.getByTestId('api-token-created-by')).toHaveText('Deleted user', { timeout: TIMEOUTS.NAVIGATION });
@@ -556,6 +586,12 @@ test.describe('WordPress Users Tab – Boards', () => {
       await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/webhooks`);
       await expect(page.getByTestId('webhook-created-by')).toHaveText('Deleted user', { timeout: TIMEOUTS.NAVIGATION });
       await expect(page.getByTestId('webhook-not-sending')).toBeVisible();
+
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/automations`);
+      await expect(page.getByTestId('automation-created-by')).toHaveText(['Deleted user', 'Deleted user'], {
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+      await expect(page.getByTestId('automation-not-sending')).toHaveCount(1);
     } finally {
       await deleteBoardViaApi(request, boardName);
     }

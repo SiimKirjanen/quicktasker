@@ -39,7 +39,8 @@ if (!function_exists('wpqt_db_migrations')) {
 }
 
 /**
- * Removes a deleted WordPress user from every board, and deletes the API tokens and webhooks they created.
+ * Removes a deleted WordPress user from every board, and deletes the API tokens, webhooks and automations that
+ * send board data out they created.
  *
  * @param int $userId The ID of the deleted WordPress user.
  * @param int|null $reassign The ID of the user the content was given to, if any.
@@ -57,7 +58,7 @@ if (!function_exists('wpqt_delete_wp_user_pipeline_access')) {
         try {
             ServiceLocator::get('PipelineAccessService')->deleteIntegrationsCreatedByWPUser($userId, null, $userName . ' was deleted');
         } catch (Throwable $e) {
-            error_log('QuickTasker failed to delete the API tokens and webhooks of a deleted user: ' . $e->getMessage());
+            error_log('QuickTasker failed to delete the API tokens, webhooks and automations of a deleted user: ' . $e->getMessage());
         }
     }
 }

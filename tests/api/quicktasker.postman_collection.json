@@ -22131,6 +22131,55 @@
                   ]
                 },
                 {
+                  "name": "Outsider creates an automation on board E that sends board data out",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/automations",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"automationTarget\": \"task\",\n  \"automationTrigger\": \"task-created\",\n  \"automationAction\": \"new-entity-email\",\n  \"automationMetadata\": \"qt-outsider-{{runId}}@example.com\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('outsiderSendingAutomationId', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "Board E API tokens show who created them",
                   "request": {
                     "method": "GET",
@@ -22273,7 +22322,7 @@
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
                           "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
-                          "pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));",
+                          "pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));",
                           "pm.test('the API token that stopped deleting is not reported on top', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.be.empty);"
                         ]
                       }
@@ -22500,6 +22549,41 @@
                   ]
                 },
                 {
+                  "name": "The outsider's automation that sends board data out is skipped and the skip is logged",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/global-logs?order=DESC&numberOfLogs=200&search=Automation%20skipped",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('the skipped automation is logged on board E', () => pm.expect(pm.response.json().data.filter((l) => String(l.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "Turn the outsider's QuickTasker access back on",
                   "request": {
                     "method": "PATCH",
@@ -22622,7 +22706,7 @@
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
                           "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
-                          "pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));"
+                          "pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));"
                         ]
                       }
                     }
@@ -22980,7 +23064,7 @@
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
                           "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
                           "pm.test('the API token and webhook keep working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);",
-                          "pm.test('the API token that stopped deleting is reported', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 0 }]));"
+                          "pm.test('the API token that stopped deleting is reported', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 0, automation_count: 0 }]));"
                         ]
                       }
                     }
@@ -23491,7 +23575,7 @@
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
                           "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
-                          "pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));"
+                          "pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));"
                         ]
                       }
                     }
@@ -23526,7 +23610,7 @@
                         "type": "text/javascript",
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                          "const automation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('outsiderAutomationId'));\npm.test('the automation is kept', () => pm.expect(automation).to.be.an('object'));\npm.test('the creator has no access to the board', () => pm.expect(automation && automation.created_by_has_board_access).to.eql(false));"
+                          "const automation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('outsiderAutomationId'));\nconst sendingAutomation = pm.response.json().data.automations.find((a) => String(a.id) === pm.collectionVariables.get('outsiderSendingAutomationId'));\npm.test('the automation is kept', () => pm.expect(automation).to.be.an('object'));\npm.test('the creator has no access to the board', () => pm.expect(automation && automation.created_by_has_board_access).to.eql(false));\npm.test('the automation that sends board data out is kept', () => pm.expect(sendingAutomation).to.be.an('object'));\npm.test('its creator has no access to the board', () => pm.expect(sendingAutomation && sendingAutomation.created_by_has_board_access).to.eql(false));"
                         ]
                       }
                     }
@@ -23753,7 +23837,7 @@
                         "type": "text/javascript",
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                          "pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));"
+                          "pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));"
                         ]
                       }
                     }

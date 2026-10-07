@@ -58,10 +58,12 @@ type WPUser = {
 };
 
 // API tokens and webhooks a WordPress user created on a board.
+// API tokens, webhooks and automations that send board data out, on one board.
 type PipelineIntegrationCount = {
   pipeline_id: number;
   api_token_count: number;
   webhook_count: number;
+  automation_count: number;
 };
 
 type WPUserPipelinesUpdate = {
@@ -77,7 +79,7 @@ type WPUserPipelinesUpdate = {
 type WPUserCapabilitiesUpdate = {
   // API tokens and webhooks the user created, which don't work now that they can no longer manage settings.
   stopped_integrations: PipelineIntegrationCount[];
-  // API tokens with a DELETE permission the user created, which can't delete now that the user can't. No webhooks.
+  // API tokens with a DELETE permission the user created, which can't delete now that the user can't. No webhooks or automations.
   stopped_token_deletes: PipelineIntegrationCount[];
 };
 
