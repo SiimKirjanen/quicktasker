@@ -348,6 +348,25 @@ function WPUserPipelineAccess({ user }: Props) {
   const changeClassName =
     "wpqt-shrink-0 wpqt-cursor-pointer wpqt-border-0 wpqt-bg-transparent wpqt-p-0 wpqt-blue-text hover:wpqt-text-qtBlueHover";
 
+  // Users who can manage the site, like ones with a custom role that has the
+  // manage_options capability, see every board whatever boards they were added
+  // to, so there is nothing to change.
+  if (user.can_access_all_pipelines) {
+    return (
+      <div className="wpqt-mt-6 wpqt-mb-2" data-testid="wp-user-boards">
+        <div className="wpqt-mb-2 wpqt-text-base wpqt-font-semibold">
+          {__("Board access", "quicktasker")}
+        </div>
+        <div data-testid="wp-user-boards-summary">
+          {__("All boards", "quicktasker")}
+        </div>
+        <div className="wpqt-mt-1 wpqt-text-sm wpqt-text-gray-500">
+          {__("Can manage this site, so sees every board.", "quicktasker")}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="wpqt-mt-6 wpqt-mb-2" data-testid="wp-user-boards">
       <div className="wpqt-mb-2 wpqt-text-base wpqt-font-semibold">

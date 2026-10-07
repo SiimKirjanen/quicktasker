@@ -256,6 +256,27 @@ describe("WPUserPipelineAccess", () => {
     expect(summary).toHaveClass("wpqt-text-yellow-700");
   });
 
+  it("shows every board without Change for a user who can manage the site", () => {
+    renderAccess({ ...makeWPUser(), can_access_all_pipelines: true });
+
+    const summary = screen.getByTestId("wp-user-boards-summary");
+    expect(summary).toHaveTextContent(/^All boards$/);
+    expect(summary).not.toHaveClass("wpqt-text-yellow-700");
+    expect(
+      screen.getByText("Can manage this site, so sees every board."),
+    ).toBeInTheDocument();
+    expect(screen.queryByTestId("wp-user-boards-change")).toBeNull();
+  });
+
+  it("offers Change for a user who cannot manage the site", () => {
+    renderAccess({ ...makeWPUser([1]), can_access_all_pipelines: false });
+
+    expect(screen.getByTestId("wp-user-boards-summary")).toHaveTextContent(
+      "Board 1",
+    );
+    expect(screen.getByTestId("wp-user-boards-change")).toBeInTheDocument();
+  });
+
   it("lists five boards and counts the rest", () => {
     renderAccess(makeWPUser([1, 2, 3, 4, 5, 6, 7]), manyPipelines);
 
