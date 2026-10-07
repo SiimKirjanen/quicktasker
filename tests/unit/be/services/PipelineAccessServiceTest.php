@@ -371,19 +371,22 @@ class PipelineAccessServiceTest extends TestCase
         $this->assertTrue($this->service->canCreatorDelete(null));
     }
 
-    public function test_adds_whether_each_token_creator_can_still_delete()
+    public function test_adds_whether_each_token_creator_can_still_access_the_board_and_delete()
     {
+        $this->userBoardIds = [self::LIMITED_USER_ID => [1]];
         // User 9 has been deleted, and deleted users have no capabilities.
+        $this->usersWhoCannotManageIntegrations = [9];
         $this->usersWhoCannotDelete = [self::LIMITED_USER_ID, 9];
         $tokens = [
-            (object) ['created_by' => (string) self::ADMIN_USER_ID],
-            (object) ['created_by' => (string) self::LIMITED_USER_ID],
-            (object) ['created_by' => null],
-            (object) ['created_by' => '9'],
+            (object) ['pipeline_id' => '1', 'created_by' => (string) self::ADMIN_USER_ID],
+            (object) ['pipeline_id' => '1', 'created_by' => (string) self::LIMITED_USER_ID],
+            (object) ['pipeline_id' => '2', 'created_by' => (string) self::LIMITED_USER_ID],
+            (object) ['pipeline_id' => '1', 'created_by' => null],
+            (object) ['pipeline_id' => '1', 'created_by' => '9'],
         ];
 
-        $this->service->addCreatorDeletePermission($tokens);
-
-        $this->assertSame([true, false, null, false], array_column($tokens, 'created_by_can_delete'));
+        $this->assertSame($tokens, $this->service->addTokenCreatorStatus($tokens));
+        $this->assertSame([true, true, false, null, false], array_column($tokens, 'created_by_has_board_access'));
+        $this->assertSame([true, false, false, null, false], array_column($tokens, 'created_by_can_delete'));
     }
 }

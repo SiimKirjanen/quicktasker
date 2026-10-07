@@ -463,10 +463,16 @@ test.describe('WordPress Users Tab – Boards', () => {
       const allowDeleteToggle = card.getByTestId('wp-user-allow-delete-toggle');
       await expect(allowDeleteToggle).toBeChecked({ timeout: TIMEOUTS.NAVIGATION });
       await allowDeleteToggle.locator('xpath=..').locator('.react-switch-bg').click();
+
+      // The warning shows once the change is saved.
+      const warning = page.getByTestId('stopped-integrations-warning');
+      await expect(warning).toContainText(
+        `1 API token by ${userLogin} on ${boardName} can't delete without access to delete resources.`,
+      );
       await expect(allowDeleteToggle).not.toBeChecked();
 
       // Only DELETE stops, so the rest of the token keeps working.
-      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
+      await warning.getByRole('link', { name: 'Open API tokens' }).click();
       await expect(page.getByTestId('api-token-delete-not-working')).toHaveText(
         "DELETE requests don't work: the token's creator can't delete resources.",
         { timeout: TIMEOUTS.NAVIGATION },

@@ -111,7 +111,7 @@ if (!class_exists('WPQT\Token\ApiTokenRepository')) {
                 return [];
             }
 
-            $sql = 'SELECT id, pipeline_id, name FROM ' . TABLE_WP_QUICKTASKER_API_TOKENS . ' WHERE created_by = %d';
+            $sql = 'SELECT id, pipeline_id, name, delete_pipeline_stages, delete_pipeline_tasks FROM ' . TABLE_WP_QUICKTASKER_API_TOKENS . ' WHERE created_by = %d';
             $params = [$wpUserId];
 
             if (null !== $pipelineIds) {

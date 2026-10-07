@@ -56,9 +56,9 @@ class PipelineAccessServiceIntegrationsTest extends TestCase
     protected function setUp(): void
     {
         $this->tokens = [
-            (object) ['id' => '4', 'pipeline_id' => '2', 'name' => 'Zapier'],
-            (object) ['id' => '5', 'pipeline_id' => '3', 'name' => 'CRM'],
-            (object) ['id' => '6', 'pipeline_id' => '3', 'name' => 'Backup'],
+            (object) ['id' => '4', 'pipeline_id' => '2', 'name' => 'Zapier', 'delete_pipeline_stages' => '0', 'delete_pipeline_tasks' => '0'],
+            (object) ['id' => '5', 'pipeline_id' => '3', 'name' => 'CRM', 'delete_pipeline_stages' => '0', 'delete_pipeline_tasks' => '1'],
+            (object) ['id' => '6', 'pipeline_id' => '3', 'name' => 'Backup', 'delete_pipeline_stages' => '1', 'delete_pipeline_tasks' => '0'],
         ];
         $this->webhooks = [
             (object) ['id' => '8', 'pipeline_id' => '3', 'target_type' => 'task', 'target_action' => 'created', 'webhook_url' => 'https://example.com'],
@@ -119,6 +119,19 @@ class PipelineAccessServiceIntegrationsTest extends TestCase
             ['pipeline_id' => 3, 'api_token_count' => 2, 'webhook_count' => 1],
         ], $this->service->countIntegrationsCreatedByWPUser(self::USER_ID, [2, 3]));
         $this->assertSame([[2, 3], [2, 3]], $this->lookups);
+    }
+
+    public function test_counts_only_tokens_with_a_delete_permission_per_board()
+    {
+        $this->assertSame([
+            ['pipeline_id' => 3, 'api_token_count' => 2, 'webhook_count' => 0],
+        ], $this->service->countDeletingTokensCreatedByWPUser(self::USER_ID, [2, 3]));
+        $this->assertSame([[2, 3]], $this->lookups);
+    }
+
+    public function test_counts_no_deleting_tokens_for_a_user_without_them()
+    {
+        $this->assertSame([], $this->service->countDeletingTokensCreatedByWPUser(99, null));
     }
 
     public function test_counts_nothing_for_a_user_without_tokens_or_webhooks()

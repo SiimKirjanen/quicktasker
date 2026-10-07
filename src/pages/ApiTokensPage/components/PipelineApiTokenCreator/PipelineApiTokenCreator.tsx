@@ -76,9 +76,10 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
   const {
     state: { isUserAllowedToDelete },
   } = useContext(AppContext);
-  const grantableKeys = isUserAllowedToDelete
-    ? allPermissionKeys
-    : allPermissionKeys.filter((key) => !deleteKeys.includes(key));
+  const disabledKeys = isUserAllowedToDelete ? [] : deleteKeys;
+  const grantableKeys = allPermissionKeys.filter(
+    (key) => !disabledKeys.includes(key),
+  );
 
   const handleCreateApiToken = async () => {
     setSaving(true);
@@ -156,6 +157,7 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
             { label: __("GET board", "quicktasker"), key: "get_pipeline" },
             { label: __("PATCH board", "quicktasker"), key: "patch_pipeline" },
           ]}
+          disabledKeys={disabledKeys}
           newApiToken={newApiToken}
           setNewApiToken={setNewApiToken}
         />
@@ -179,6 +181,7 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
               key: "delete_pipeline_stages",
             },
           ]}
+          disabledKeys={disabledKeys}
           newApiToken={newApiToken}
           setNewApiToken={setNewApiToken}
         />
@@ -202,6 +205,7 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
               key: "delete_pipeline_tasks",
             },
           ]}
+          disabledKeys={disabledKeys}
           newApiToken={newApiToken}
           setNewApiToken={setNewApiToken}
         />
@@ -241,6 +245,8 @@ type PermissionItem = {
 type PermissionGroupProps = {
   title: string;
   items: PermissionItem[];
+  // Permissions the current user can't give a token.
+  disabledKeys: PermissionKey[];
   newApiToken: NewApiToken;
   setNewApiToken: React.Dispatch<React.SetStateAction<NewApiToken>>;
 };
@@ -248,13 +254,10 @@ type PermissionGroupProps = {
 function PermissionGroup({
   title,
   items,
+  disabledKeys,
   newApiToken,
   setNewApiToken,
 }: PermissionGroupProps) {
-  const {
-    state: { isUserAllowedToDelete },
-  } = useContext(AppContext);
-
   return (
     <div>
       <WPQTLabel className="wpqt-block wpqt-font-semibold wpqt-mb-2">
@@ -266,7 +269,7 @@ function PermissionGroup({
             key={item.key}
             label={item.label}
             permissionKey={item.key}
-            disabled={!isUserAllowedToDelete && deleteKeys.includes(item.key)}
+            disabled={disabledKeys.includes(item.key)}
             newApiToken={newApiToken}
             setNewApiToken={setNewApiToken}
           />

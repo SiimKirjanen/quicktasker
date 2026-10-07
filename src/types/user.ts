@@ -77,6 +77,8 @@ type WPUserPipelinesUpdate = {
 type WPUserCapabilitiesUpdate = {
   // API tokens and webhooks the user created, which don't work now that they can no longer manage settings.
   stopped_integrations: PipelineIntegrationCount[];
+  // API tokens with a DELETE permission the user created, which can't delete now that the user can't. No webhooks.
+  stopped_token_deletes: PipelineIntegrationCount[];
 };
 
 type UserEditData = {

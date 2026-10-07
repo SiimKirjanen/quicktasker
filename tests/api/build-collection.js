@@ -3748,6 +3748,7 @@ pm.test('the creator is named', () => pm.expect(webhook && webhook.created_by_na
           status(200),
           success(true),
           `pm.test('the API token and webhook that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1 }]));`,
+          `pm.test('the API token that stopped deleting is not reported on top', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.be.empty);`,
         ],
       }),
       request({
@@ -3960,6 +3961,7 @@ if ((!Array.isArray(captured) || captured.length === 0) && attempts < 20) {
           status(200),
           success(true),
           `pm.test('the API token and webhook keep working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+          `pm.test('the API token that stopped deleting is reported', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 0 }]));`,
         ],
       }),
       request({
@@ -4068,6 +4070,7 @@ pm.test('the token creator cannot delete', () => pm.expect(token && token.create
           status(200),
           success(true),
           `pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+          `pm.test('no API token stopped deleting', () => pm.expect(pm.response.json().data.stopped_token_deletes).to.be.empty);`,
         ],
       }),
       request({
