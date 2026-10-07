@@ -287,6 +287,53 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
+         * Checks if the creator of an API token can still delete.
+         *
+         * API tokens can only delete stages and tasks while this is true, so their DELETE requests stop
+         * when the creator loses the allow delete capability or is deleted. Tokens created before creators
+         * were recorded have no creator and are allowed.
+         *
+         * @param int|null $createdBy The ID of the WordPress user who created the token.
+         * @return bool True if the creator is unknown or can delete.
+         */
+        public function canCreatorDelete($createdBy)
+        {
+            if (empty($createdBy)) {
+                return true;
+            }
+
+            return ServiceLocator::get('PipelineAccessRepository')->canDelete((int) $createdBy);
+        }
+
+        /**
+         * Adds whether each API token's creator can still delete. See canCreatorDelete().
+         *
+         * Sets created_by_can_delete to true or false, or to null when the creator is unknown.
+         *
+         * @param array $tokens Objects with a created_by property.
+         * @return array The same objects.
+         */
+        public function addCreatorDeletePermission($tokens)
+        {
+            $canDeleteByCreator = [];
+
+            foreach ($tokens as $token) {
+                if (empty($token->created_by)) {
+                    $token->created_by_can_delete = null;
+                    continue;
+                }
+
+                if (!array_key_exists($token->created_by, $canDeleteByCreator)) {
+                    $canDeleteByCreator[$token->created_by] = $this->canCreatorDelete($token->created_by);
+                }
+
+                $token->created_by_can_delete = $canDeleteByCreator[$token->created_by];
+            }
+
+            return $tokens;
+        }
+
+        /**
          * Counts the API tokens and webhooks a WordPress user created on each of the given boards.
          *
          * @param int $wpUserId The WordPress user ID.

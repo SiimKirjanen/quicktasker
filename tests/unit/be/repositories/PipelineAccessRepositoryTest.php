@@ -52,6 +52,10 @@ if (!defined('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS')) {
     define('WP_QUICKTASKER_ADMIN_ROLE_MANAGE_SETTINGS', 'quicktasker_admin_role_manage_settings');
 }
 
+if (!defined('WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE')) {
+    define('WP_QUICKTASKER_ADMIN_ROLE_ALLOW_DELETE', 'quicktasker_admin_role_allow_delete');
+}
+
 if (!function_exists('user_can')) {
     function user_can($userId, $capability)
     {
@@ -94,6 +98,8 @@ class PipelineAccessRepositoryTest extends TestCase
             2 => ['quicktasker_admin_role'],
             3 => ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings'],
             4 => ['quicktasker_admin_role_manage_settings'],
+            5 => ['quicktasker_admin_role', 'quicktasker_admin_role_allow_delete'],
+            6 => ['quicktasker_admin_role_allow_delete'],
         ];
 
         $timeRepo = $this->getMockBuilder(stdClass::class)
@@ -123,6 +129,14 @@ class PipelineAccessRepositoryTest extends TestCase
         $this->assertFalse($this->repository->canManageIntegrations(2));
         $this->assertFalse($this->repository->canManageIntegrations(4));
         $this->assertFalse($this->repository->canManageIntegrations(99));
+    }
+
+    public function test_only_users_with_quicktasker_and_allow_delete_can_delete()
+    {
+        $this->assertTrue($this->repository->canDelete(5));
+        $this->assertFalse($this->repository->canDelete(2));
+        $this->assertFalse($this->repository->canDelete(6));
+        $this->assertFalse($this->repository->canDelete(99));
     }
 
     public function test_getPipelineIdsByWPUserId_returns_integer_ids_of_the_user()

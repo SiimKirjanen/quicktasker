@@ -188,6 +188,7 @@ function WPUserItem({ user }: Props) {
             <Toggle
               checked={capabilitySettings.quicktasker_admin_role_allow_delete}
               disabled={adminSubTogglesDisabled}
+              dataTestId="wp-user-allow-delete-toggle"
               handleChange={(checked: boolean) => {
                 onToggleChange(checked, "quicktasker_admin_role_allow_delete");
               }}

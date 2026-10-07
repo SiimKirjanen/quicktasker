@@ -22935,6 +22935,516 @@
                   ]
                 },
                 {
+                  "name": "Turn off only the outsider's permission to delete",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/capabilities",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"quicktasker_admin_role\": true,\n  \"quicktasker_admin_role_allow_delete\": false,\n  \"quicktasker_admin_role_manage_users\": false,\n  \"quicktasker_admin_role_manage_settings\": true,\n  \"quicktasker_admin_role_manage_archive\": true,\n  \"quicktasker_access_user_page_app\": false,\n  \"quicktasker_view_my_tasks\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                          "pm.test('the API token and webhook keep working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create a task on board E for the outsider's API token to delete",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/tasks",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Token delete task {{runId}}\",\n  \"stageId\": \"{{stageE1Id}}\",\n  \"pipelineId\": \"{{boardEId}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('tokenDeleteTaskId', String(pm.response.json().data.newTask.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider's API token cannot delete without the permission to delete",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/token/board/tasks/{{tokenDeleteTaskId}}",
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{outsiderToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is token_creator_cannot_delete', () => pm.expect(pm.response.json().code).to.eql('token_creator_cannot_delete'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider's API token can still read without the permission to delete",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/token/board",
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{outsiderToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Board E marks the outsider's API token as created by someone who cannot delete",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));\npm.test('the token creator still has access', () => pm.expect(token && token.created_by_has_board_access).to.eql(true));\npm.test('the token creator cannot delete', () => pm.expect(token && token.created_by_can_delete).to.eql(false));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider cannot create an API token that deletes tasks",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Outsider delete tasks {{runId}}\",\n  \"get_pipeline\": true,\n  \"patch_pipeline\": false,\n  \"get_pipeline_stages\": false,\n  \"post_pipeline_stages\": false,\n  \"patch_pipeline_stages\": false,\n  \"delete_pipeline_stages\": false,\n  \"get_pipeline_tasks\": false,\n  \"post_pipeline_tasks\": false,\n  \"patch_pipeline_tasks\": false,\n  \"delete_pipeline_tasks\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider cannot create an API token that deletes stages",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Outsider delete stages {{runId}}\",\n  \"get_pipeline\": true,\n  \"patch_pipeline\": false,\n  \"get_pipeline_stages\": false,\n  \"post_pipeline_stages\": false,\n  \"patch_pipeline_stages\": false,\n  \"delete_pipeline_stages\": true,\n  \"get_pipeline_tasks\": false,\n  \"post_pipeline_tasks\": false,\n  \"patch_pipeline_tasks\": false,\n  \"delete_pipeline_tasks\": false\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider can create an API token that does not delete",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Outsider no delete {{runId}}\",\n  \"get_pipeline\": true,\n  \"patch_pipeline\": false,\n  \"get_pipeline_stages\": false,\n  \"post_pipeline_stages\": false,\n  \"patch_pipeline_stages\": false,\n  \"delete_pipeline_stages\": false,\n  \"get_pipeline_tasks\": false,\n  \"post_pipeline_tasks\": false,\n  \"patch_pipeline_tasks\": true,\n  \"delete_pipeline_tasks\": false\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('the token creator cannot delete', () => pm.expect(pm.response.json().data.created_by_can_delete).to.eql(false));",
+                          "pm.collectionVariables.set('outsiderNoDeleteTokenId', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Delete the outsider's API token that does not delete",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens/{{outsiderNoDeleteTokenId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Turn the outsider's permission to delete back on",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/capabilities",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"quicktasker_admin_role\": true,\n  \"quicktasker_admin_role_allow_delete\": true,\n  \"quicktasker_admin_role_manage_users\": false,\n  \"quicktasker_admin_role_manage_settings\": true,\n  \"quicktasker_admin_role_manage_archive\": true,\n  \"quicktasker_access_user_page_app\": false,\n  \"quicktasker_view_my_tasks\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                          "pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "The outsider's API token can delete again with the permission to delete",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/token/board/tasks/{{tokenDeleteTaskId}}",
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{outsiderToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Board E marks the outsider's API token as created by someone who can delete",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/pipelines/{{boardEId}}/api-tokens",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));\npm.test('the token creator can delete', () => pm.expect(token && token.created_by_can_delete).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Clear the outsider's webhook for the task the API token deleted",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/qt-test/v1/captured/qt-outsider-{{runId}}",
+                    "auth": {
+                      "type": "noauth"
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "Remove outsider from board E",
                   "request": {
                     "method": "PATCH",

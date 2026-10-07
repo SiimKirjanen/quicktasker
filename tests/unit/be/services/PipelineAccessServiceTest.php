@@ -45,12 +45,16 @@ class PipelineAccessServiceTest extends TestCase
     /** @var int[] IDs of the WordPress users without the QuickTasker or manage settings capability. */
     private $usersWhoCannotManageIntegrations;
 
+    /** @var int[] IDs of the WordPress users without the QuickTasker or allow delete capability. */
+    private $usersWhoCannotDelete;
+
     protected function setUp(): void
     {
         $this->existingBoardIds = [1, 2, 3];
         $this->userBoardIds = [];
         $this->entityLookups = 0;
         $this->usersWhoCannotManageIntegrations = [];
+        $this->usersWhoCannotDelete = [];
         $this->entityBoards = [
             'task:10'  => 1,
             'task:20'  => 2,
@@ -71,7 +75,7 @@ class PipelineAccessServiceTest extends TestCase
         });
 
         $pipelineAccessRepoMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['canAccessAllPipelines', 'canManageIntegrations', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds'])
+            ->addMethods(['canAccessAllPipelines', 'canManageIntegrations', 'canDelete', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds'])
             ->getMock();
         $pipelineAccessRepoMock->method('getPipelineIdOfEntity')->willReturnCallback(function ($entityType, $entityId) {
             $this->entityLookups++;
@@ -88,6 +92,9 @@ class PipelineAccessServiceTest extends TestCase
         });
         $pipelineAccessRepoMock->method('canManageIntegrations')->willReturnCallback(function ($userId) {
             return !in_array($userId, $this->usersWhoCannotManageIntegrations, true);
+        });
+        $pipelineAccessRepoMock->method('canDelete')->willReturnCallback(function ($userId) {
+            return !in_array($userId, $this->usersWhoCannotDelete, true);
         });
         $pipelineAccessRepoMock->method('canAccessAllPipelines')->willReturnCallback(function ($userId) {
             return self::ADMIN_USER_ID === $userId;
@@ -347,5 +354,36 @@ class PipelineAccessServiceTest extends TestCase
         $this->service->addCreatorBoardAccess($items);
 
         $this->assertSame([true, true, false, null, false, false], array_column($items, 'created_by_has_board_access'));
+    }
+
+    public function test_a_creator_can_delete_only_with_the_permission_to_delete()
+    {
+        $this->usersWhoCannotDelete = [self::LIMITED_USER_ID];
+
+        $this->assertTrue($this->service->canCreatorDelete((string) self::ADMIN_USER_ID));
+        $this->assertFalse($this->service->canCreatorDelete((string) self::LIMITED_USER_ID));
+    }
+
+    public function test_an_unknown_creator_can_delete()
+    {
+        $this->usersWhoCannotDelete = [self::LIMITED_USER_ID];
+
+        $this->assertTrue($this->service->canCreatorDelete(null));
+    }
+
+    public function test_adds_whether_each_token_creator_can_still_delete()
+    {
+        // User 9 has been deleted, and deleted users have no capabilities.
+        $this->usersWhoCannotDelete = [self::LIMITED_USER_ID, 9];
+        $tokens = [
+            (object) ['created_by' => (string) self::ADMIN_USER_ID],
+            (object) ['created_by' => (string) self::LIMITED_USER_ID],
+            (object) ['created_by' => null],
+            (object) ['created_by' => '9'],
+        ];
+
+        $this->service->addCreatorDeletePermission($tokens);
+
+        $this->assertSame([true, false, null, false], array_column($tokens, 'created_by_can_delete'));
     }
 }

@@ -71,6 +71,8 @@ module.exports = [
   {
     method: "POST",
     path: "/pipelines/{id}/api-tokens",
+    // Tokens with DELETE permissions also need the delete capability. Covered
+    // by dedicated requests.
     permission: "settings",
     params: {
       name: "x",

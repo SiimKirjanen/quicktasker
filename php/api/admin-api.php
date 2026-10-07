@@ -336,9 +336,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                             throw new PipelineMissingException('No pipeline found with id ' . $data['id']);
                         }
 
-                        $tokens = ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess(
+                        $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                        $tokens = $pipelineAccessService->addCreatorDeletePermission($pipelineAccessService->addCreatorBoardAccess(
                             $tokenRepo->getPipelineTokensForFrontend($data['id'])
-                        );
+                        ));
 
                         return new WP_REST_Response((new ApiResponse(true, [], $tokens))->toArray(), 200);
                     } catch (PipelineMissingException $e) {
@@ -387,7 +388,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'delete_pipeline_tasks'  => $data['delete_pipeline_tasks'],
                         ]);
 
-                        ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess([$apiTokenData['db_token']]);
+                        $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                        $pipelineAccessService->addCreatorDeletePermission($pipelineAccessService->addCreatorBoardAccess([$apiTokenData['db_token']]));
                         $dbToken = (array) $apiTokenData['db_token'];
                         $dbToken['token'] = $apiTokenData['token'];
 
@@ -409,7 +411,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
                         && PermissionService::canAccessBoardEntities([
                             ['pipeline', $request['id']],
-                        ]);
+                        ])
+                        // Only users who can delete can create a token that deletes.
+                        && (
+                            (!$request['delete_pipeline_stages'] && !$request['delete_pipeline_tasks'])
+                            || PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints()
+                        );
                 },
                 'args' => [
                     'id' => [

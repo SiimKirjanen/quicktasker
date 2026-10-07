@@ -20,8 +20,14 @@ import { runWpCli } from './utils/wp-cli';
 
 /**
  * Logs in as the user and creates an API token and a webhook on the board.
+ * The token can GET the board, plus the given permissions.
  */
-async function createIntegrationsAsUser(browser: Browser, userLogin: string, boardId: string): Promise<void> {
+async function createIntegrationsAsUser(
+  browser: Browser,
+  userLogin: string,
+  boardId: string,
+  tokenPermissions: Record<string, boolean> = {},
+): Promise<void> {
   const userContext = await loginToWordPressViaApi(browser, userLogin);
   try {
     const nonceResponse = await userContext.request.get('/wp-admin/admin-ajax.php?action=rest-nonce');
@@ -40,6 +46,7 @@ async function createIntegrationsAsUser(browser: Browser, userLogin: string, boa
         post_pipeline_tasks: false,
         patch_pipeline_tasks: false,
         delete_pipeline_tasks: false,
+        ...tokenPermissions,
       },
     });
     expect(tokenResponse.ok()).toBe(true);
@@ -429,6 +436,69 @@ test.describe('WordPress Users Tab – Boards', () => {
       );
       await expect(page.getByTestId('webhook-creator-lost-access')).toHaveText('Lost access');
     } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test("API tokens show that DELETE doesn't work when their creator lost the permission to delete", async ({ page, browser, request }) => {
+    const boardName = generateUniqueName('WUB-No-Delete-Creator');
+    const board = await createBoardViaApi(request, boardName);
+    const userLogin = uniqueLogin('wpnodelete');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, [
+      'quicktasker_admin_role',
+      'quicktasker_admin_role_manage_settings',
+      'quicktasker_admin_role_allow_delete',
+    ]);
+    await addWPUserToBoards(request, userId, [boardName]);
+    await createIntegrationsAsUser(browser, userLogin, board.boardId, { delete_pipeline_tasks: true });
+
+    try {
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
+      await expect(page.getByTestId('api-token-created-by')).toHaveText(userLogin, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(page.getByTestId('api-token-delete-not-working')).toHaveCount(0);
+
+      await navigateToWPUsersTab(page);
+      const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
+      const allowDeleteToggle = card.getByTestId('wp-user-allow-delete-toggle');
+      await expect(allowDeleteToggle).toBeChecked({ timeout: TIMEOUTS.NAVIGATION });
+      await allowDeleteToggle.locator('xpath=..').locator('.react-switch-bg').click();
+      await expect(allowDeleteToggle).not.toBeChecked();
+
+      // Only DELETE stops, so the rest of the token keeps working.
+      await page.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
+      await expect(page.getByTestId('api-token-delete-not-working')).toHaveText(
+        "DELETE requests don't work: the token's creator can't delete resources.",
+        { timeout: TIMEOUTS.NAVIGATION },
+      );
+      await expect(page.getByTestId('api-token-not-working')).toHaveCount(0);
+      await expect(page.getByTestId('api-token-creator-lost-access')).toHaveCount(0);
+    } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test("a user without the permission to delete can't give an API token DELETE permissions", async ({ browser, request }) => {
+    const boardName = generateUniqueName('WUB-No-Delete-Form');
+    const board = await createBoardViaApi(request, boardName);
+    const userLogin = uniqueLogin('wpnodeleteform');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_settings']);
+    await addWPUserToBoards(request, userId, [boardName]);
+    const userContext = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const userPage = await userContext.newPage();
+      await userPage.goto(`/wp-admin/admin.php?page=wp-quicktasker#/board/${board.boardId}/api-tokens`);
+      await expect(userPage.getByTestId('api-token-delete-permission-note')).toHaveText(
+        'DELETE needs the permission to delete resources.',
+        { timeout: TIMEOUTS.NAVIGATION },
+      );
+      await expect(userPage.locator('#api-token-permission-delete_pipeline_stages')).toBeDisabled();
+      await expect(userPage.locator('#api-token-permission-delete_pipeline_tasks')).toBeDisabled();
+      await expect(userPage.locator('#api-token-permission-patch_pipeline_tasks')).toBeEnabled();
+    } finally {
+      await userContext.close();
       await deleteBoardViaApi(request, boardName);
     }
   });

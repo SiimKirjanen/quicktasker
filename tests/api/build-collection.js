@@ -3944,6 +3944,156 @@ if ((!Array.isArray(captured) || captured.length === 0) && attempts < 20) {
         tests: [status(200)],
       }),
       request({
+        name: "Turn off only the outsider's permission to delete",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: false,
+          quicktasker_admin_role_manage_users: false,
+          quicktasker_admin_role_manage_settings: true,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('the API token and webhook keep working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+        ],
+      }),
+      request({
+        name: "Create a task on board E for the outsider's API token to delete",
+        method: "POST",
+        url: "/tasks",
+        body: {
+          name: "Token delete task {{runId}}",
+          stageId: "{{stageE1Id}}",
+          pipelineId: "{{boardEId}}",
+        },
+        tests: [
+          status(200),
+          save("tokenDeleteTaskId", "pm.response.json().data.newTask.id"),
+        ],
+      }),
+      request({
+        name: "The outsider's API token cannot delete without the permission to delete",
+        method: "DELETE",
+        url: "/token/board/tasks/{{tokenDeleteTaskId}}",
+        auth: bearer("outsiderToken"),
+        tests: [status(403), wpErrorCode("token_creator_cannot_delete")],
+      }),
+      request({
+        name: "The outsider's API token can still read without the permission to delete",
+        url: "/token/board",
+        auth: bearer("outsiderToken"),
+        tests: [status(200)],
+      }),
+      request({
+        name: "Board E marks the outsider's API token as created by someone who cannot delete",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        tests: [
+          status(200),
+          `const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));
+pm.test('the token creator still has access', () => pm.expect(token && token.created_by_has_board_access).to.eql(true));
+pm.test('the token creator cannot delete', () => pm.expect(token && token.created_by_can_delete).to.eql(false));`,
+        ],
+      }),
+      request({
+        name: "The outsider cannot create an API token that deletes tasks",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        body: {
+          name: "Outsider delete tasks {{runId}}",
+          ...tokenPermissions({
+            get_pipeline: true,
+            delete_pipeline_tasks: true,
+          }),
+        },
+        auth: outsiderAuth,
+        tests: [status(403)],
+      }),
+      request({
+        name: "The outsider cannot create an API token that deletes stages",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        body: {
+          name: "Outsider delete stages {{runId}}",
+          ...tokenPermissions({
+            get_pipeline: true,
+            delete_pipeline_stages: true,
+          }),
+        },
+        auth: outsiderAuth,
+        tests: [status(403)],
+      }),
+      request({
+        name: "The outsider can create an API token that does not delete",
+        method: "POST",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        body: {
+          name: "Outsider no delete {{runId}}",
+          ...tokenPermissions({
+            get_pipeline: true,
+            patch_pipeline_tasks: true,
+          }),
+        },
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `pm.test('the token creator cannot delete', () => pm.expect(pm.response.json().data.created_by_can_delete).to.eql(false));`,
+          save("outsiderNoDeleteTokenId", "pm.response.json().data.id"),
+        ],
+      }),
+      request({
+        name: "Delete the outsider's API token that does not delete",
+        method: "DELETE",
+        url: "/pipelines/{{boardEId}}/api-tokens/{{outsiderNoDeleteTokenId}}",
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "Turn the outsider's permission to delete back on",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: true,
+          quicktasker_admin_role_manage_users: false,
+          quicktasker_admin_role_manage_settings: true,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [
+          status(200),
+          success(true),
+          `pm.test('nothing stopped working', () => pm.expect(pm.response.json().data.stopped_integrations).to.be.empty);`,
+        ],
+      }),
+      request({
+        name: "The outsider's API token can delete again with the permission to delete",
+        method: "DELETE",
+        url: "/token/board/tasks/{{tokenDeleteTaskId}}",
+        auth: bearer("outsiderToken"),
+        tests: [status(200)],
+      }),
+      request({
+        name: "Board E marks the outsider's API token as created by someone who can delete",
+        url: "/pipelines/{{boardEId}}/api-tokens",
+        tests: [
+          status(200),
+          `const token = pm.response.json().data.find((t) => String(t.id) === pm.collectionVariables.get('outsiderTokenId'));
+pm.test('the token creator can delete', () => pm.expect(token && token.created_by_can_delete).to.eql(true));`,
+        ],
+      }),
+      request({
+        name: "Clear the outsider's webhook for the task the API token deleted",
+        method: "DELETE",
+        rawUrl: `${WEBHOOK_RECEIVER}/captured/qt-outsider-{{runId}}`,
+        auth: noAuth,
+        tests: [status(200)],
+      }),
+      request({
         name: "Remove outsider from board E",
         method: "PATCH",
         url: "/wp-users/{{outsiderWpUserId}}/pipelines",

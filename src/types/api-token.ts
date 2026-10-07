@@ -11,6 +11,8 @@ type BaseApiToken = {
   created_by_name: string | null;
   // Whether the creator can still access the board and manage settings. The token only works while they can.
   created_by_has_board_access?: boolean | null;
+  // Whether the creator can still delete. DELETE requests with the token only work while they can.
+  created_by_can_delete?: boolean | null;
   token?: string;
 };
 
@@ -48,6 +50,7 @@ type NewApiToken = Omit<
   | "created_by"
   | "created_by_name"
   | "created_by_has_board_access"
+  | "created_by_can_delete"
 >;
 
 export type { ApiToken, ApiTokenFromServer, NewApiToken };

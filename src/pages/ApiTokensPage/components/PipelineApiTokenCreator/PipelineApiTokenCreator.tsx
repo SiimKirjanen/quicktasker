@@ -1,4 +1,4 @@
-import { useState } from "@wordpress/element";
+import { useContext, useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { LuKeySquare } from "react-icons/lu";
 import {
@@ -12,6 +12,7 @@ import { Toggle } from "../../../../components/common/Toggle/Toggle";
 import { ADD_PIPELINE_API_TOKEN } from "../../../../constants";
 import { useApiTokenActions } from "../../../../hooks/actions/useApiTokenActions";
 import { useApiTokens } from "../../../../hooks/useApiTokens";
+import { AppContext } from "../../../../providers/AppContextProvider";
 import { NewApiToken } from "../../../../types/api-token";
 import { converApiTokenFromServer } from "../../../../utils/api-token";
 
@@ -52,6 +53,12 @@ const allPermissionKeys: PermissionKey[] = [
   "delete_pipeline_tasks",
 ];
 
+// Only users who can delete can give a token these.
+const deleteKeys: PermissionKey[] = [
+  "delete_pipeline_stages",
+  "delete_pipeline_tasks",
+];
+
 const readOnlyKeys: PermissionKey[] = [
   "get_pipeline",
   "get_pipeline_stages",
@@ -66,6 +73,12 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
   const [saving, setSaving] = useState<boolean>(false);
   const { createApiToken } = useApiTokenActions();
   const { pipelineApiTokensDispatch } = useApiTokens();
+  const {
+    state: { isUserAllowedToDelete },
+  } = useContext(AppContext);
+  const grantableKeys = isUserAllowedToDelete
+    ? allPermissionKeys
+    : allPermissionKeys.filter((key) => !deleteKeys.includes(key));
 
   const handleCreateApiToken = async () => {
     setSaving(true);
@@ -127,7 +140,7 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
         <WPQTButton
           btnText={__("Full access", "quicktasker")}
           buttonStyleType={ButtonStyleType.SECONDARY}
-          onClick={() => applyPreset(allPermissionKeys)}
+          onClick={() => applyPreset(grantableKeys)}
         />
         <WPQTButton
           btnText={__("Clear", "quicktasker")}
@@ -192,6 +205,17 @@ function PipelineApiTokenCreator({ pipelineId }: Props) {
           newApiToken={newApiToken}
           setNewApiToken={setNewApiToken}
         />
+        {!isUserAllowedToDelete && (
+          <p
+            className="wpqt-m-0 wpqt-text-sm wpqt-text-gray-600"
+            data-testid="api-token-delete-permission-note"
+          >
+            {__(
+              "DELETE needs the permission to delete resources.",
+              "quicktasker",
+            )}
+          </p>
+        )}
       </div>
 
       <WPQTButton
@@ -227,6 +251,10 @@ function PermissionGroup({
   newApiToken,
   setNewApiToken,
 }: PermissionGroupProps) {
+  const {
+    state: { isUserAllowedToDelete },
+  } = useContext(AppContext);
+
   return (
     <div>
       <WPQTLabel className="wpqt-block wpqt-font-semibold wpqt-mb-2">
@@ -238,6 +266,7 @@ function PermissionGroup({
             key={item.key}
             label={item.label}
             permissionKey={item.key}
+            disabled={!isUserAllowedToDelete && deleteKeys.includes(item.key)}
             newApiToken={newApiToken}
             setNewApiToken={setNewApiToken}
           />
@@ -250,12 +279,14 @@ function PermissionGroup({
 type PermissionsCheckboxProps = {
   label: string;
   permissionKey: PermissionKey;
+  disabled: boolean;
   newApiToken: NewApiToken;
   setNewApiToken: React.Dispatch<React.SetStateAction<NewApiToken>>;
 };
 function PermissionsCheckbox({
   label,
   permissionKey,
+  disabled,
   newApiToken,
   setNewApiToken,
 }: PermissionsCheckboxProps) {
@@ -267,6 +298,7 @@ function PermissionsCheckbox({
       <Toggle
         id={`api-token-permission-${permissionKey}`}
         checked={!!newApiToken[permissionKey]}
+        disabled={disabled}
         handleChange={(checked) =>
           setNewApiToken({ ...newApiToken, [permissionKey]: checked })
         }
