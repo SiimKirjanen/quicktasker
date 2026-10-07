@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use WPQT\Pipeline\PipelineAccessService;
 use WPQT\PipelineMissingException;
 use WPQT\Services\ServiceLocator;
+use WPQT\WPQTException;
 
 class PipelineAccessServiceTest extends TestCase
 {
@@ -177,10 +178,10 @@ class PipelineAccessServiceTest extends TestCase
     {
         $this->userBoardIds[self::LIMITED_USER_ID] = [1, 2];
 
-        $removedPipelineIds = $this->service->setWPUserPipelines(self::LIMITED_USER_ID, [2, '3', 3]);
+        $changedPipelineIds = $this->service->setWPUserPipelines(self::LIMITED_USER_ID, [2, '3', 3]);
 
         $this->assertSame([2, 3], $this->service->getAccessiblePipelineIds(self::LIMITED_USER_ID));
-        $this->assertSame([1], $removedPipelineIds);
+        $this->assertSame(['added' => [3], 'removed' => [1]], $changedPipelineIds);
     }
 
     public function test_setting_no_boards_removes_every_board()
@@ -200,6 +201,54 @@ class PipelineAccessServiceTest extends TestCase
             $this->service->setWPUserPipelines(self::LIMITED_USER_ID, [2, 999]);
             $this->fail('Expected PipelineMissingException');
         } catch (PipelineMissingException $e) {
+            // Expected.
+        }
+
+        $this->assertSame([1], $this->service->getAccessiblePipelineIds(self::LIMITED_USER_ID));
+    }
+
+    public function test_changing_boards_keeps_boards_that_are_not_mentioned()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1, 2];
+
+        $changedPipelineIds = $this->service->changeWPUserPipelines(self::LIMITED_USER_ID, ['3', 3], [1]);
+
+        $this->assertSame([2, 3], $this->service->getAccessiblePipelineIds(self::LIMITED_USER_ID));
+        $this->assertSame(['added' => [3], 'removed' => [1]], $changedPipelineIds);
+    }
+
+    public function test_changing_boards_reports_only_boards_that_changed()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+
+        $changedPipelineIds = $this->service->changeWPUserPipelines(self::LIMITED_USER_ID, [1], [2, 999]);
+
+        $this->assertSame([1], $this->service->getAccessiblePipelineIds(self::LIMITED_USER_ID));
+        $this->assertSame(['added' => [], 'removed' => []], $changedPipelineIds);
+    }
+
+    public function test_changing_boards_to_add_a_missing_board_throws_and_changes_nothing()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+
+        try {
+            $this->service->changeWPUserPipelines(self::LIMITED_USER_ID, [2, 999], [1]);
+            $this->fail('Expected PipelineMissingException');
+        } catch (PipelineMissingException $e) {
+            // Expected.
+        }
+
+        $this->assertSame([1], $this->service->getAccessiblePipelineIds(self::LIMITED_USER_ID));
+    }
+
+    public function test_adding_and_removing_the_same_board_throws_and_changes_nothing()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+
+        try {
+            $this->service->changeWPUserPipelines(self::LIMITED_USER_ID, [2], ['2', 1]);
+            $this->fail('Expected WPQTException');
+        } catch (WPQTException $e) {
             // Expected.
         }
 

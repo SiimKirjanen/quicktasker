@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) {
 
 use WPQT\PipelineMissingException;
 use WPQT\Services\ServiceLocator;
+use WPQT\WPQTException;
 
 if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
     /**
@@ -468,34 +469,71 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          *
          * @param int $wpUserId The WordPress user ID.
          * @param int[] $pipelineIds The board IDs.
-         * @return int[] The IDs of the boards the user was removed from.
+         * @return array{added: int[], removed: int[]} The IDs of the boards the user was added to and removed from.
          * @throws PipelineMissingException If one of the boards does not exist. No changes are made.
          * @throws \Exception If the boards could not be saved.
          */
         public function setWPUserPipelines($wpUserId, $pipelineIds)
         {
+            $pipelineIds = array_values(array_unique(array_map('intval', $pipelineIds)));
+            $currentPipelineIds = ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($wpUserId);
+
+            return $this->changeWPUserPipelines(
+                $wpUserId,
+                array_diff($pipelineIds, $currentPipelineIds),
+                array_diff($currentPipelineIds, $pipelineIds)
+            );
+        }
+
+        /**
+         * Adds a WordPress user to some boards and removes them from others, keeping their other boards.
+         *
+         * Unlike setWPUserPipelines(), boards the caller does not know about are kept, like ones another
+         * administrator added the user to after the caller loaded the user's boards.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[] $addPipelineIds The IDs of the boards to add the user to.
+         * @param int[] $removePipelineIds The IDs of the boards to remove the user from.
+         * @return array{added: int[], removed: int[]} The IDs of the boards the user was added to and removed from,
+         *                                             leaving out the ones they were already on or not on.
+         * @throws PipelineMissingException If one of the boards to add does not exist. No changes are made.
+         * @throws WPQTException If a board is both added and removed. No changes are made.
+         * @throws \Exception If the boards could not be saved.
+         */
+        public function changeWPUserPipelines($wpUserId, $addPipelineIds, $removePipelineIds)
+        {
             $pipelineRepo = ServiceLocator::get('PipelineRepository');
             $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
-            $pipelineIds = array_values(array_unique(array_map('intval', $pipelineIds)));
+            $addPipelineIds = array_values(array_unique(array_map('intval', $addPipelineIds)));
+            $removePipelineIds = array_values(array_unique(array_map('intval', $removePipelineIds)));
 
-            foreach ($pipelineIds as $pipelineId) {
+            if (array_intersect($addPipelineIds, $removePipelineIds)) {
+                throw new WPQTException('A board cannot be both added and removed', true);
+            }
+
+            foreach ($addPipelineIds as $pipelineId) {
                 if (!$pipelineRepo->checkIfPipelineExists($pipelineId)) {
                     throw new PipelineMissingException('No pipeline found with id ' . $pipelineId);
                 }
             }
 
             $currentPipelineIds = $pipelineAccessRepo->getPipelineIdsByWPUserId($wpUserId);
-            $removedPipelineIds = array_values(array_diff($currentPipelineIds, $pipelineIds));
+            $removedPipelineIds = array_values(array_intersect($currentPipelineIds, $removePipelineIds));
+            $addedPipelineIds = array_values(array_diff($addPipelineIds, $currentPipelineIds));
+            sort($addedPipelineIds);
 
             foreach ($removedPipelineIds as $pipelineId) {
                 $pipelineAccessRepo->removeWPUserFromPipeline($wpUserId, $pipelineId);
             }
 
-            foreach (array_diff($pipelineIds, $currentPipelineIds) as $pipelineId) {
+            foreach ($addedPipelineIds as $pipelineId) {
                 $pipelineAccessRepo->addWPUserToPipeline($wpUserId, $pipelineId);
             }
 
-            return $removedPipelineIds;
+            return [
+                'added'   => $addedPipelineIds,
+                'removed' => $removedPipelineIds,
+            ];
         }
     }
 }

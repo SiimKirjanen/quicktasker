@@ -112,9 +112,65 @@ function makeWPUser(pipelineIds?: number[]): WPUser {
   };
 }
 
+type UpdateExtras = Partial<
+  Pick<
+    WPUserPipelinesUpdate,
+    "stopped_integrations" | "removed_pipelines_with_assigned_tasks"
+  >
+>;
+
+// The user's boards on the server, which may include boards another
+// administrator added the user to since the card was rendered.
+let serverPipelineIds: number[] = [];
+
+// Adds and removes boards like the server does.
+function saveOnServer(
+  add: string[],
+  remove: string[],
+  extras: UpdateExtras = {},
+): WPUserPipelinesUpdate {
+  const added = add
+    .map(Number)
+    .filter((id) => !serverPipelineIds.includes(id))
+    .sort((a, b) => a - b);
+  const removed = remove
+    .map(Number)
+    .filter((id) => serverPipelineIds.includes(id));
+  serverPipelineIds = [
+    ...serverPipelineIds.filter((id) => !removed.includes(id)),
+    ...added,
+  ].sort((a, b) => a - b);
+
+  return {
+    pipeline_ids: serverPipelineIds,
+    added_pipeline_ids: added,
+    removed_pipeline_ids: removed,
+    stopped_integrations: [],
+    removed_pipelines_with_assigned_tasks: [],
+    ...extras,
+  };
+}
+
+function respondWith(extras: UpdateExtras) {
+  mockUpdateWPUserPipelines.mockImplementation(
+    async (
+      _userId: string,
+      add: string[],
+      remove: string[],
+      callback: (u: WPUserPipelinesUpdate) => void,
+    ) => callback(saveOnServer(add, remove, extras)),
+  );
+}
+
+// The added and removed boards of each save.
+function savedChanges() {
+  return mockUpdateWPUserPipelines.mock.calls.map((c) => [c[1], c[2]]);
+}
+
 const mockUserDispatch = jest.fn();
 
 function renderAccess(user: WPUser, boards: Pipeline[] = pipelines) {
+  serverPipelineIds = [...(user.pipeline_ids ?? [])];
   const tree = (currentUser: WPUser) => (
     <PipelinesContext.Provider
       value={{ state: { pipelines: boards }, pipelinesDispatch: jest.fn() }}
@@ -141,16 +197,6 @@ function renderAccess(user: WPUser, boards: Pipeline[] = pipelines) {
   };
 }
 
-function respondWith(update: WPUserPipelinesUpdate) {
-  mockUpdateWPUserPipelines.mockImplementation(
-    async (
-      _userId: string,
-      _pipelineIds: string[],
-      callback: (u: WPUserPipelinesUpdate) => void,
-    ) => callback(update),
-  );
-}
-
 // Holds each save until release() is called, then saves what was sent.
 function holdSaves(
   removed: WPUserPipelinesUpdate["removed_pipelines_with_assigned_tasks"] = [],
@@ -159,16 +205,17 @@ function holdSaves(
   mockUpdateWPUserPipelines.mockImplementation(
     (
       _userId: string,
-      pipelineIds: string[],
+      add: string[],
+      remove: string[],
       callback: (u: WPUserPipelinesUpdate) => void,
     ) =>
       new Promise<void>((resolve) => {
         releases.push(() => {
-          callback({
-            pipeline_ids: pipelineIds.map(Number),
-            stopped_integrations: [],
-            removed_pipelines_with_assigned_tasks: removed,
-          });
+          callback(
+            saveOnServer(add, remove, {
+              removed_pipelines_with_assigned_tasks: removed,
+            }),
+          );
           resolve();
         });
       }),
@@ -185,7 +232,11 @@ function openSelector() {
   fireEvent.click(screen.getByTestId("wp-user-boards-change"));
 }
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  respondWith({});
+  mockGetPipelinesRequest.mockResolvedValue({ data: pipelines });
+});
 
 describe("WPUserPipelineAccess", () => {
   it("lists the user's boards without creating the selector", () => {
@@ -250,12 +301,7 @@ describe("WPUserPipelineAccess", () => {
     expect(screen.getByTestId("selected")).toBeEmptyDOMElement();
   });
 
-  it("saves the new selection and shows the saved boards", async () => {
-    respondWith({
-      pipeline_ids: [2],
-      stopped_integrations: [],
-      removed_pipelines_with_assigned_tasks: [],
-    });
+  it("saves the added and removed boards and shows the saved boards", async () => {
     renderAccess(makeWPUser([1]));
     openSelector();
 
@@ -266,6 +312,7 @@ describe("WPUserPipelineAccess", () => {
     expect(mockUpdateWPUserPipelines).toHaveBeenCalledWith(
       "wp1",
       ["2"],
+      ["1"],
       expect.any(Function),
       expect.any(Function),
     );
@@ -277,10 +324,19 @@ describe("WPUserPipelineAccess", () => {
     expect(toast.warning).not.toHaveBeenCalled();
   });
 
+  it("does not save when the selection did not change", async () => {
+    renderAccess(makeWPUser([1, 2]));
+    openSelector();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("boards 1 and 2"));
+    });
+
+    expect(mockUpdateWPUserPipelines).not.toHaveBeenCalled();
+  });
+
   it("warns about tasks still assigned on removed boards", async () => {
     respondWith({
-      pipeline_ids: [2],
-      stopped_integrations: [],
       removed_pipelines_with_assigned_tasks: [
         { pipeline_id: 1, task_count: 3 },
       ],
@@ -299,32 +355,17 @@ describe("WPUserPipelineAccess", () => {
   });
 
   describe("API tokens, webhooks and automations the user created", () => {
-    function respondWithStopped(
-      stopped: WPUserPipelinesUpdate["stopped_integrations"],
-    ) {
-      mockUpdateWPUserPipelines.mockImplementation(
-        async (
-          _userId: string,
-          pipelineIds: string[],
-          callback: (u: WPUserPipelinesUpdate) => void,
-        ) =>
-          callback({
-            pipeline_ids: pipelineIds.map(Number),
-            stopped_integrations: stopped,
-            removed_pipelines_with_assigned_tasks: [],
-          }),
-      );
-    }
-
     it("warns that they don't work without board access", async () => {
-      respondWithStopped([
-        {
-          pipeline_id: 1,
-          api_token_count: 2,
-          webhook_count: 1,
-          automation_count: 1,
-        },
-      ]);
+      respondWith({
+        stopped_integrations: [
+          {
+            pipeline_id: 1,
+            api_token_count: 2,
+            webhook_count: 1,
+            automation_count: 1,
+          },
+        ],
+      });
       renderAccess(makeWPUser([1]));
       openSelector();
 
@@ -357,14 +398,16 @@ describe("WPUserPipelineAccess", () => {
     });
 
     it("only links to the kind of integration the user created", async () => {
-      respondWithStopped([
-        {
-          pipeline_id: 1,
-          api_token_count: 0,
-          webhook_count: 1,
-          automation_count: 0,
-        },
-      ]);
+      respondWith({
+        stopped_integrations: [
+          {
+            pipeline_id: 1,
+            api_token_count: 0,
+            webhook_count: 1,
+            automation_count: 0,
+          },
+        ],
+      });
       renderAccess(makeWPUser([1]));
       openSelector();
 
@@ -382,7 +425,6 @@ describe("WPUserPipelineAccess", () => {
     });
 
     it("does not warn when nothing stopped working", async () => {
-      respondWithStopped([]);
       renderAccess(makeWPUser([1]));
       openSelector();
 
@@ -395,21 +437,6 @@ describe("WPUserPipelineAccess", () => {
   });
 
   describe("added and removed boards", () => {
-    beforeEach(() => {
-      mockUpdateWPUserPipelines.mockImplementation(
-        async (
-          _userId: string,
-          pipelineIds: string[],
-          callback: (u: WPUserPipelinesUpdate) => void,
-        ) =>
-          callback({
-            pipeline_ids: pipelineIds.map(Number),
-            stopped_integrations: [],
-            removed_pipelines_with_assigned_tasks: [],
-          }),
-      );
-    });
-
     it("tells the admin which boards the user was added to", async () => {
       renderAccess(makeWPUser([]));
       openSelector();
@@ -501,7 +528,8 @@ describe("WPUserPipelineAccess", () => {
     mockUpdateWPUserPipelines.mockImplementation(
       async (
         _userId: string,
-        _pipelineIds: string[],
+        _add: string[],
+        _remove: string[],
         _callback: () => void,
         onFailure: (e: unknown) => void,
       ) => onFailure(new Error("x")),
@@ -537,7 +565,7 @@ describe("WPUserPipelineAccess", () => {
     expect(screen.queryByTestId("wp-user-boards-saving")).toBeNull();
   });
 
-  it("saves the newest selection made during a save after it", async () => {
+  it("saves the changes made during a save together after it", async () => {
     const release = holdSaves();
     renderAccess(makeWPUser([1]));
     openSelector();
@@ -548,7 +576,7 @@ describe("WPUserPipelineAccess", () => {
     expect(screen.getByTestId("selected")).toBeEmptyDOMElement();
 
     await release();
-    // The first save finishing does not undo the newer selection.
+    // The first save finishing does not undo the newer changes.
     expect(screen.getByTestId("selected")).toBeEmptyDOMElement();
     // Board 2 was saved by the first save and is removed by the next one.
     expect(screen.getByTestId("wp-user-boards-wp1")).toHaveAttribute(
@@ -557,9 +585,10 @@ describe("WPUserPipelineAccess", () => {
     );
 
     await release();
-    expect(mockUpdateWPUserPipelines.mock.calls.map((c) => c[1])).toEqual([
-      ["2"],
-      [],
+    // Adding board 1 back is replaced by removing it again.
+    expect(savedChanges()).toEqual([
+      [["2"], ["1"]],
+      [[], ["2", "1"]],
     ]);
     expect(screen.getByTestId("selected")).toBeEmptyDOMElement();
     expect(screen.getByTestId("wp-user-boards-wp1")).toHaveAttribute(
@@ -568,7 +597,7 @@ describe("WPUserPipelineAccess", () => {
     );
   });
 
-  it("does not warn about a board that a waiting selection adds back", async () => {
+  it("does not warn about a board that a waiting change adds back", async () => {
     const release = holdSaves([{ pipeline_id: 1, task_count: 3 }]);
     renderAccess(makeWPUser([1]));
     openSelector();
@@ -579,6 +608,55 @@ describe("WPUserPipelineAccess", () => {
 
     expect(toast.warning).not.toHaveBeenCalled();
     await release();
+  });
+
+  describe("boards changed by another administrator", () => {
+    it("keeps boards the user was added to since their boards were loaded", async () => {
+      renderAccess(makeWPUser([1]));
+      // Another administrator added the user to board 9, which is not in the
+      // board list either.
+      serverPipelineIds = [1, 9];
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("boards 1 and 2"));
+      });
+
+      expect(savedChanges()).toEqual([[["2"], []]]);
+      expect(screen.getByTestId("selected")).toHaveTextContent("1,2,9");
+      expect(mockUserDispatch).toHaveBeenCalledWith({
+        type: SET_WP_USER_PIPELINE_IDS,
+        payload: { userId: "wp1", pipelineIds: [1, 2, 9] },
+      });
+      expect((toast.success as jest.Mock).mock.calls).toEqual([
+        ["Bob was added to Board 2."],
+      ]);
+    });
+
+    it("loads the board list again when the user is on a board missing from it", async () => {
+      mockGetPipelinesRequest.mockResolvedValue({ data: [] });
+      renderAccess(makeWPUser([1]));
+      serverPipelineIds = [1, 9];
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("boards 1 and 2"));
+      });
+
+      expect(mockGetPipelinesRequest).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not remove a board missing from the board list when the others are unticked", async () => {
+      renderAccess(makeWPUser([1, 9]));
+      openSelector();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("no boards"));
+      });
+
+      expect(savedChanges()).toEqual([[[], ["1"]]]);
+      expect(screen.getByTestId("selected")).toHaveTextContent(/^9$/);
+    });
   });
 
   describe("boards loaded again", () => {
@@ -626,7 +704,8 @@ describe("WPUserPipelineAccess", () => {
       mockUpdateWPUserPipelines.mockImplementation(
         async (
           _userId: string,
-          pipelineIds: string[],
+          add: string[],
+          remove: string[],
           callback: (u: WPUserPipelinesUpdate) => void,
           onFailure: (e: unknown) => void,
         ) => {
@@ -635,21 +714,12 @@ describe("WPUserPipelineAccess", () => {
             onFailure(boardMissing);
             return;
           }
-          callback({
-            pipeline_ids: pipelineIds.map(Number),
-            stopped_integrations: [],
-            removed_pipelines_with_assigned_tasks: [],
-          });
+          callback(saveOnServer(add, remove));
         },
       );
     }
 
     it("keeps a board missing from the board list, as it may have been created since", async () => {
-      respondWith({
-        pipeline_ids: [2, 9],
-        stopped_integrations: [],
-        removed_pipelines_with_assigned_tasks: [],
-      });
       renderAccess(makeWPUser([9]));
       openSelector();
 
@@ -657,9 +727,7 @@ describe("WPUserPipelineAccess", () => {
         fireEvent.click(screen.getByText("board 2 and deleted board 9"));
       });
 
-      expect(mockUpdateWPUserPipelines.mock.calls.map((c) => c[1])).toEqual([
-        ["2", "9"],
-      ]);
+      expect(savedChanges()).toEqual([[["2"], []]]);
       expect(toast.error).not.toHaveBeenCalled();
     });
 
@@ -667,18 +735,18 @@ describe("WPUserPipelineAccess", () => {
       // Board 1 was deleted elsewhere, so the server no longer lists it.
       mockGetPipelinesRequest.mockResolvedValue({ data: [pipelines[1]] });
       failThenSave(1);
-      renderAccess(makeWPUser([1]));
+      renderAccess(makeWPUser([]));
       openSelector();
 
       await act(async () => {
         fireEvent.click(screen.getByText("boards 1 and 2"));
       });
 
-      expect(mockUpdateWPUserPipelines.mock.calls.map((c) => c[1])).toEqual([
-        ["1", "2"],
-        ["2"],
+      expect(savedChanges()).toEqual([
+        [["1", "2"], []],
+        [["2"], []],
       ]);
-      expect(screen.getByTestId("selected")).toHaveTextContent("2");
+      expect(screen.getByTestId("selected")).toHaveTextContent(/^2$/);
       expect(toast.error).not.toHaveBeenCalled();
     });
 
@@ -689,7 +757,7 @@ describe("WPUserPipelineAccess", () => {
       openSelector();
 
       await act(async () => {
-        fireEvent.click(screen.getByText("boards 1 and 2"));
+        fireEvent.click(screen.getByText("only board 2"));
       });
 
       expect(mockUpdateWPUserPipelines).toHaveBeenCalledTimes(2);

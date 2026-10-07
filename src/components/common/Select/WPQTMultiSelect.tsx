@@ -110,8 +110,11 @@ function WPQTMultiSelect({
     }
   }, []);
 
+  // Values that are not options, like ones for boards created since the options
+  // were loaded, do not count.
   const allSelected =
-    options.length > 0 && selectedValues.length === options.length;
+    options.length > 0 &&
+    options.every((option) => selectedValues.includes(option.value));
 
   const triggerLabel = (() => {
     if (allSelected) {

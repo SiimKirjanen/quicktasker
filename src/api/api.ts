@@ -675,14 +675,20 @@ function updateWPUserPermissionsRequest(
   });
 }
 
+// Adds and removes boards instead of sending the whole list, so boards added by
+// someone else since the user's boards were loaded are kept.
 function updateWPUserPipelinesRequest(
   userId: string,
-  pipelineIds: string[],
+  addPipelineIds: string[],
+  removePipelineIds: string[],
 ): Promise<WPQTResponse<WPUserPipelinesUpdate>> {
   return apiFetch({
     path: `/wpqt/v1/wp-users/${userId}/pipelines`,
     method: "PATCH",
-    data: { pipeline_ids: pipelineIds },
+    data: {
+      add_pipeline_ids: addPipelineIds,
+      remove_pipeline_ids: removePipelineIds,
+    },
     headers: getCommonHeaders(),
   });
 }
