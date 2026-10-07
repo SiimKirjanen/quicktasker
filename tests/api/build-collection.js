@@ -4434,6 +4434,16 @@ pm.test('self-assign log belongs to board A', () => pm.expect(String(selfAssignL
         ],
       }),
       request({
+        name: "Admin sees the tasks app comment log with its board",
+        url: "/global-logs?order=DESC&numberOfLogs=200&search=posted%20a%20comment",
+        tests: [
+          status(200),
+          `const commentLog = pm.response.json().data.find((l) => l.text === 'User posted a comment on Assigned task ' + pm.collectionVariables.get('runId') + ' task');
+pm.test('comment log is listed', () => pm.expect(commentLog).to.be.an('object'));
+pm.test('comment log belongs to board A', () => pm.expect(String(commentLog && commentLog.pipeline_id)).to.eql(pm.collectionVariables.get('boardAId')));`,
+        ],
+      }),
+      request({
         name: "Outsider does not see the self-assign log of a board A task",
         url: "/global-logs?order=DESC&numberOfLogs=200&search=Self-assigned",
         auth: outsiderAuth,
