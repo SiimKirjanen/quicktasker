@@ -63,8 +63,10 @@ QuickTasker is an open source kanban-style task management plugin for WordPress.
 == Changelog ==
 
 = 1.60.0 =
-* New: Board access. Non-admin WordPress users only see boards they're added to.
-* Important: after updating, add these users to their boards in User management.
+* Choose which boards each WordPress user can access.
+* Each user can choose their own primary board.
+* API tokens, webhooks and some automations stop working when the person who created them loses access.
+* API tokens can only delete while the person who created them has access to delete.
 * Security improvements and bug fixes.
 
 = 1.59.1 =
