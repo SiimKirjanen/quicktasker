@@ -154,5 +154,20 @@ describe("WPQTMultiSelect", () => {
         "false",
       );
     });
+
+    it("does not count selected values that are not options", async () => {
+      // As many values as options, but option 2 is not selected.
+      const onSelectionChange = await renderOpen(["1", "9"]);
+
+      expect(screen.getByTestId("multi-select-reset")).toHaveAttribute(
+        "aria-disabled",
+        "false",
+      );
+      expect(
+        screen.getByRole("button", { expanded: true }),
+      ).not.toHaveTextContent("All");
+      fireEvent.mouseDown(screen.getByTestId("multi-select-reset"));
+      expect(onSelectionChange).toHaveBeenLastCalledWith(["1", "2"]);
+    });
   });
 });

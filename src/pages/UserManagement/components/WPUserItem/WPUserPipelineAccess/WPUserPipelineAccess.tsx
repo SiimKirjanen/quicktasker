@@ -22,6 +22,43 @@ type Props = {
   user: WPUser;
 };
 
+// Boards to add the user to and remove them from.
+type PipelineChanges = {
+  add: string[];
+  remove: string[];
+};
+
+const applyChanges = (
+  pipelineIds: string[],
+  changes: PipelineChanges | null,
+): string[] =>
+  changes
+    ? [
+        ...pipelineIds.filter((id) => !changes.remove.includes(id)),
+        ...changes.add.filter((id) => !pipelineIds.includes(id)),
+      ]
+    : pipelineIds;
+
+// A newer change to a board replaces an older one.
+const mergeChanges = (
+  older: PipelineChanges | null,
+  newer: PipelineChanges,
+): PipelineChanges => {
+  const isChangedByNewer = (id: string) =>
+    newer.add.includes(id) || newer.remove.includes(id);
+
+  return {
+    add: [
+      ...(older?.add ?? []).filter((id) => !isChangedByNewer(id)),
+      ...newer.add,
+    ],
+    remove: [
+      ...(older?.remove ?? []).filter((id) => !isChangedByNewer(id)),
+      ...newer.remove,
+    ],
+  };
+};
+
 function WPUserPipelineAccess({ user }: Props) {
   const { pipelines, refreshPipelines } = usePipelines();
   const { detectMissingPipelineResponse } = useMissingResourceDetection();
@@ -33,7 +70,8 @@ function WPUserPipelineAccess({ user }: Props) {
   const savedPipelineIds = useRef(selectedPipelineIds);
   // Kept in state as well, so boards that are not saved yet can show a spinner.
   const [savedIds, setSavedIds] = useState(selectedPipelineIds);
-  const pendingPipelineIds = useRef<string[] | null>(null);
+  // Changes made while another change is being saved, saved after it.
+  const pendingChanges = useRef<PipelineChanges | null>(null);
   const saving = useRef(false);
   const [editing, setEditing] = useState(false);
   const changeButtonRef = useRef<HTMLButtonElement>(null);
@@ -80,8 +118,8 @@ function WPUserPipelineAccess({ user }: Props) {
   const warnAboutAssignedTasks = (update: WPUserPipelinesUpdate) => {
     update.removed_pipelines_with_assigned_tasks.forEach(
       ({ pipeline_id, task_count }) => {
-        // The board is added back by a selection that is still waiting to be saved.
-        if (pendingPipelineIds.current?.includes(String(pipeline_id))) {
+        // The board is added back by a change that is still waiting to be saved.
+        if (pendingChanges.current?.add.includes(String(pipeline_id))) {
           return;
         }
         const pipeline = pipelines.find((p) => p.id === String(pipeline_id));
@@ -168,9 +206,9 @@ function WPUserPipelineAccess({ user }: Props) {
 
   const warnAboutStoppedIntegrations = (update: WPUserPipelinesUpdate) => {
     update.stopped_integrations.forEach((integration) => {
-      // The board is added back by a selection that is still waiting to be saved.
+      // The board is added back by a change that is still waiting to be saved.
       if (
-        pendingPipelineIds.current?.includes(String(integration.pipeline_id))
+        pendingChanges.current?.add.includes(String(integration.pipeline_id))
       ) {
         return;
       }
@@ -194,31 +232,29 @@ function WPUserPipelineAccess({ user }: Props) {
     });
   };
 
-  // Saves one selection at a time. A selection made during a save is saved
-  // after it, and only the newest one is sent.
-  const savePendingSelections = async () => {
+  // Saves one change at a time. Changes made during a save are saved together
+  // after it.
+  const savePendingChanges = async () => {
     saving.current = true;
     setUpdating(true);
     let retried = false;
 
-    while (pendingPipelineIds.current) {
-      const pipelineIds = pendingPipelineIds.current;
-      pendingPipelineIds.current = null;
+    while (pendingChanges.current) {
+      const changes = pendingChanges.current;
+      pendingChanges.current = null;
       const result: { error: unknown } = { error: null };
 
       await updateWPUserPipelines(
         user.id,
-        pipelineIds,
+        changes.add,
+        changes.remove,
         (update) => {
-          const previousPipelineIds = savedPipelineIds.current;
+          // Includes boards another administrator added the user to since
+          // they were loaded.
           savedPipelineIds.current = update.pipeline_ids.map(String);
           reportChangedPipelines(
-            savedPipelineIds.current.filter(
-              (id) => !previousPipelineIds.includes(id),
-            ),
-            previousPipelineIds.filter(
-              (id) => !savedPipelineIds.current.includes(id),
-            ),
+            update.added_pipeline_ids.map(String),
+            update.removed_pipeline_ids.map(String),
           );
           setSavedIds(savedPipelineIds.current);
           userDispatch({
@@ -227,8 +263,17 @@ function WPUserPipelineAccess({ user }: Props) {
           });
           warnAboutAssignedTasks(update);
           warnAboutStoppedIntegrations(update);
-          if (!pendingPipelineIds.current) {
-            setSelectedPipelineIds(savedPipelineIds.current);
+          setSelectedPipelineIds(
+            applyChanges(savedPipelineIds.current, pendingChanges.current),
+          );
+          // Boards created since the board list was loaded are loaded, so
+          // they can be shown.
+          if (
+            savedPipelineIds.current.some(
+              (id) => !pipelines.some((pipeline) => pipeline.id === id),
+            )
+          ) {
+            refreshPipelines();
           }
         },
         (error) => {
@@ -242,22 +287,27 @@ function WPUserPipelineAccess({ user }: Props) {
       }
 
       // A board was deleted since the boards were loaded, for example by another
-      // administrator. It is left out and the selection saved again, once.
+      // administrator. It is left out and the change saved again, once.
       if (!retried && detectMissingPipelineResponse(error)) {
         retried = true;
         const existingPipelineIds = await refreshPipelines();
 
         if (existingPipelineIds !== null) {
-          const retryPipelineIds = (
-            pendingPipelineIds.current ?? pipelineIds
-          ).filter((id) => existingPipelineIds.includes(id));
-          pendingPipelineIds.current = retryPipelineIds;
-          setSelectedPipelineIds(retryPipelineIds);
+          pendingChanges.current = mergeChanges(
+            {
+              add: changes.add.filter((id) => existingPipelineIds.includes(id)),
+              remove: changes.remove,
+            },
+            pendingChanges.current ?? { add: [], remove: [] },
+          );
+          setSelectedPipelineIds(
+            applyChanges(savedPipelineIds.current, pendingChanges.current),
+          );
           continue;
         }
       }
 
-      pendingPipelineIds.current = null;
+      pendingChanges.current = null;
       setSelectedPipelineIds(savedPipelineIds.current);
       toast.error(__("Failed to update the user's boards", "quicktasker"));
     }
@@ -266,13 +316,26 @@ function WPUserPipelineAccess({ user }: Props) {
     setUpdating(false);
   };
 
-  // Boards not in the board list are kept, as they may have been created since
-  // it was loaded. Deleted ones are left out when the save is refused.
+  // Only the boards that were ticked or unticked are saved, so boards not in
+  // the board list, like ones created since it was loaded, are kept.
   const onSelectionChange = (selectedIds: string[]) => {
-    setSelectedPipelineIds(selectedIds);
-    pendingPipelineIds.current = selectedIds;
+    const changes = {
+      add: selectedIds.filter((id) => !selectedPipelineIds.includes(id)),
+      remove: selectedPipelineIds.filter(
+        (id) =>
+          !selectedIds.includes(id) &&
+          boardOptions.some((option) => option.value === id),
+      ),
+    };
+
+    if (changes.add.length === 0 && changes.remove.length === 0) {
+      return;
+    }
+
+    setSelectedPipelineIds(applyChanges(selectedPipelineIds, changes));
+    pendingChanges.current = mergeChanges(pendingChanges.current, changes);
     if (!saving.current) {
-      savePendingSelections();
+      savePendingChanges();
     }
   };
 

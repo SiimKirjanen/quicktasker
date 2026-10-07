@@ -18209,6 +18209,8 @@
                       "pm.test('status is 200', () => pm.response.to.have.status(200));",
                       "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
                       "pm.test('boards are saved in ID order', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));",
+                      "pm.test('only board C is reported as added', () => pm.expect(pm.response.json().data.added_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId'))]));",
+                      "pm.test('no boards are reported as removed', () => pm.expect(pm.response.json().data.removed_pipeline_ids).to.eql([]));",
                       "pm.test('no tasks are reported without removed boards', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([]));"
                     ]
                   }
@@ -18445,6 +18447,543 @@
                       "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
                       "pm.test('limited user has no boards', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([]));",
                       "pm.test('no tasks are reported', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Adding limited user to board C",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"add_pipeline_ids\": [\n    \"{{boardCId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('limited user has board C', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId'))]));",
+                      "pm.test('board C is reported as added', () => pm.expect(pm.response.json().data.added_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId'))]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Adding limited user to board D keeps board C",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"add_pipeline_ids\": [\n    \"{{boardDId}}\"\n  ],\n  \"remove_pipeline_ids\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('limited user has boards C and D', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));",
+                      "pm.test('only board D is reported as added', () => pm.expect(pm.response.json().data.added_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardDId'))]));",
+                      "pm.test('no boards are reported as removed', () => pm.expect(pm.response.json().data.removed_pipeline_ids).to.eql([]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Removing limited user from board C keeps board D",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remove_pipeline_ids\": [\n    \"{{boardCId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('limited user has board D', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardDId'))]));",
+                      "pm.test('board C is reported as removed', () => pm.expect(pm.response.json().data.removed_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId'))]));",
+                      "pm.test('their task on board C is reported', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardCId')), task_count: 1 }]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Adding and removing boards the user is already on or off changes nothing",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"add_pipeline_ids\": [\n    \"{{boardDId}}\"\n  ],\n  \"remove_pipeline_ids\": [\n    \"{{boardCId}}\",\n    999999999\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('limited user still has board D', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardDId'))]));",
+                      "pm.test('no boards are reported as added', () => pm.expect(pm.response.json().data.added_pipeline_ids).to.eql([]));",
+                      "pm.test('no boards are reported as removed', () => pm.expect(pm.response.json().data.removed_pipeline_ids).to.eql([]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Adding a user to a missing board fails without changes",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"add_pipeline_ids\": [\n    \"{{boardCId}}\",\n    999999999\n  ],\n  \"remove_pipeline_ids\": [\n    \"{{boardDId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "A board cannot be both added and removed",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"add_pipeline_ids\": [\n    \"{{boardCId}}\"\n  ],\n  \"remove_pipeline_ids\": [\n    \"{{boardCId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Boards cannot be replaced and changed at once",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pipeline_ids\": [\n    \"{{boardCId}}\"\n  ],\n  \"add_pipeline_ids\": [\n    \"{{boardDId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Changing boards needs boards to change",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Added board IDs must be numeric",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"add_pipeline_ids\": [\n    \"x\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('error code is rest_invalid_param', () => pm.expect(pm.response.json().code).to.eql('rest_invalid_param'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Failed changes keep the limited user's boards",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users?type=all",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "const limited = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('limitedWpUserId'));\npm.test('limited user still has board D only', () => pm.expect(limited.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardDId'))]));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Removing limited user from board D",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{limitedWpUserId}}/pipelines",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remove_pipeline_ids\": [\n    \"{{boardDId}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));",
+                      "pm.test('limited user has no boards', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([]));"
                     ]
                   }
                 }

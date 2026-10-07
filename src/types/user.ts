@@ -66,7 +66,10 @@ type PipelineIntegrationCount = {
 };
 
 type WPUserPipelinesUpdate = {
+  // All the boards the user is on after the update, including ones the request did not mention.
   pipeline_ids: number[];
+  added_pipeline_ids: number[];
+  removed_pipeline_ids: number[];
   removed_pipelines_with_assigned_tasks: {
     pipeline_id: number;
     task_count: number;

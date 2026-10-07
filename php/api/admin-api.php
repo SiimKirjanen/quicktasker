@@ -2666,11 +2666,23 @@ if (!function_exists('wpqt_register_api_routes')) {
                             throw new WPQTException('User not found', true);
                         }
 
+                        $isReplace = null !== $data['pipeline_ids'];
+                        $isChange = null !== $data['add_pipeline_ids'] || null !== $data['remove_pipeline_ids'];
+
+                        if ($isReplace === $isChange) {
+                            throw new WPQTException('Send either pipeline_ids, or add_pipeline_ids and remove_pipeline_ids', true);
+                        }
+
                         $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
 
                         $wpdb->query('START TRANSACTION');
-                        $removedPipelineIds = $pipelineAccessService->setWPUserPipelines($data['id'], $data['pipeline_ids']);
+                        // Adding and removing keeps boards the admin app has not loaded yet, like ones another administrator
+                        // added the user to since, which replacing the boards would remove.
+                        $changedPipelineIds = $isReplace
+                            ? $pipelineAccessService->setWPUserPipelines($data['id'], $data['pipeline_ids'])
+                            : $pipelineAccessService->changeWPUserPipelines($data['id'], $data['add_pipeline_ids'] ?? [], $data['remove_pipeline_ids'] ?? []);
                         $wpdb->query('COMMIT');
+                        $removedPipelineIds = $changedPipelineIds['removed'];
 
                         // Users who can access every board, like administrators, keep access to boards they are removed
                         // from, so their API tokens, webhooks and automations keep working and their tasks stay visible to them.
@@ -2693,6 +2705,8 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         return new WP_REST_Response((new ApiResponse(true, [], [
                             'pipeline_ids'                          => ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($data['id']),
+                            'added_pipeline_ids'                    => $changedPipelineIds['added'],
+                            'removed_pipeline_ids'                  => $removedPipelineIds,
                             'removed_pipelines_with_assigned_tasks' => $removedPipelinesWithAssignedTasks,
                             'stopped_integrations'                  => $stoppedIntegrations,
                         ]))->toArray(), 200);
@@ -2715,8 +2729,20 @@ if (!function_exists('wpqt_register_api_routes')) {
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
                     ],
+                    // Replaces the user's boards.
                     'pipeline_ids' => [
-                        'required'          => true,
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericArray'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsintArray'],
+                    ],
+                    // Add the user to and remove them from boards, keeping their other boards.
+                    'add_pipeline_ids' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericArray'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsintArray'],
+                    ],
+                    'remove_pipeline_ids' => [
+                        'required'          => false,
                         'validate_callback' => ['WPQT\RequestValidation', 'validateNumericArray'],
                         'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsintArray'],
                     ],

@@ -22,6 +22,8 @@ describe("useWPUserPipelineActions", () => {
   it("passes the saved boards to the callback on success", async () => {
     const update = {
       pipeline_ids: [2],
+      added_pipeline_ids: [2],
+      removed_pipeline_ids: [3],
       stopped_integrations: [],
       removed_pipelines_with_assigned_tasks: [],
     };
@@ -34,11 +36,19 @@ describe("useWPUserPipelineActions", () => {
     const failure = jest.fn();
     const { result } = renderHook(() => useWPUserPipelineActions());
 
-    await result.current.updateWPUserPipelines("u1", ["2"], success, failure);
+    await result.current.updateWPUserPipelines(
+      "u1",
+      ["2"],
+      ["3"],
+      success,
+      failure,
+    );
 
-    expect(mockedApi.updateWPUserPipelinesRequest).toHaveBeenCalledWith("u1", [
-      "2",
-    ]);
+    expect(mockedApi.updateWPUserPipelinesRequest).toHaveBeenCalledWith(
+      "u1",
+      ["2"],
+      ["3"],
+    );
     expect(success).toHaveBeenCalledWith(update);
     expect(failure).not.toHaveBeenCalled();
   });
@@ -50,7 +60,13 @@ describe("useWPUserPipelineActions", () => {
     const failure = jest.fn();
     const { result } = renderHook(() => useWPUserPipelineActions());
 
-    await result.current.updateWPUserPipelines("u1", [], success, failure);
+    await result.current.updateWPUserPipelines(
+      "u1",
+      [],
+      ["2"],
+      success,
+      failure,
+    );
 
     expect(failure).toHaveBeenCalledWith(err);
     expect(success).not.toHaveBeenCalled();
