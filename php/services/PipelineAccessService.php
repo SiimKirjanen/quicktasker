@@ -354,7 +354,13 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
             $tokens = array_filter(
                 ServiceLocator::get('ApiTokenRepository')->getTokensCreatedByWPUser($wpUserId, $pipelineIds),
                 function ($token) {
-                    return '1' === (string) $token->delete_pipeline_stages || '1' === (string) $token->delete_pipeline_tasks;
+                    foreach (WP_QUICKTASKER_API_DELETE_PERMISSIONS as $permission) {
+                        if ('1' === (string) $token->$permission) {
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
             );
 

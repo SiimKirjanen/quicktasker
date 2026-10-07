@@ -1059,6 +1059,14 @@ if (!defined('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION')) {
     define('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION', 'delete_pipeline_tasks');
 }
 
+// API token permissions that delete. A token only deletes while its creator can delete resources.
+if (!defined('WP_QUICKTASKER_API_DELETE_PERMISSIONS')) {
+    define('WP_QUICKTASKER_API_DELETE_PERMISSIONS', [
+        WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION,
+        WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION,
+    ]);
+}
+
 /*
 ==================================================================================================================================================================================================================
 Exception constants

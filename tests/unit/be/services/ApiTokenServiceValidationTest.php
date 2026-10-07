@@ -13,11 +13,8 @@ if (!defined('WP_QUICKTASKER_CACHED_API_TOKEN_HASHED')) {
 if (!defined('WP_QUICKTASKER_CACHED_API_DB_TOKEN')) {
     define('WP_QUICKTASKER_CACHED_API_DB_TOKEN', 'db_token');
 }
-if (!defined('WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION')) {
-    define('WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION', 'delete_pipeline_stages');
-}
-if (!defined('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION')) {
-    define('WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION', 'delete_pipeline_tasks');
+if (!defined('WP_QUICKTASKER_API_DELETE_PERMISSIONS')) {
+    define('WP_QUICKTASKER_API_DELETE_PERMISSIONS', ['delete_pipeline_stages', 'delete_pipeline_tasks']);
 }
 
 if (!class_exists('WP_Error')) {

@@ -123,9 +123,8 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
             }
 
             // Deleting with the token stops working when its creator loses the permission to delete.
-            $deletePermissions = [WP_QUICKTASKER_API_DELETE_PIPELINE_STAGES_PERMISSION, WP_QUICKTASKER_API_DELETE_PIPELINE_TASKS_PERMISSION];
             if (
-                !empty(array_intersect($requiredPermissions, $deletePermissions)) &&
+                !empty(array_intersect($requiredPermissions, WP_QUICKTASKER_API_DELETE_PERMISSIONS)) &&
                 !ServiceLocator::get('PipelineAccessService')->canCreatorDelete($savedToken->created_by ?? null)
             ) {
                 return new WP_Error('token_creator_cannot_delete', 'The user who created this token lost the permission to delete.', ['status' => 403]);

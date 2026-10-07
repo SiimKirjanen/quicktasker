@@ -101,7 +101,8 @@ if (!class_exists('WPQT\Token\ApiTokenRepository')) {
          *
          * @param int $wpUserId The WordPress user ID.
          * @param int[]|null $pipelineIds Only tokens on these boards, or null for tokens on every board.
-         * @return array Token objects with id, pipeline_id and name.
+         * @return array Token objects with id, pipeline_id, name and the delete permissions
+         *               (WP_QUICKTASKER_API_DELETE_PERMISSIONS), see PipelineAccessService::countDeletingTokensCreatedByWPUser().
          */
         public function getTokensCreatedByWPUser($wpUserId, $pipelineIds = null)
         {
@@ -111,7 +112,7 @@ if (!class_exists('WPQT\Token\ApiTokenRepository')) {
                 return [];
             }
 
-            $sql = 'SELECT id, pipeline_id, name, delete_pipeline_stages, delete_pipeline_tasks FROM ' . TABLE_WP_QUICKTASKER_API_TOKENS . ' WHERE created_by = %d';
+            $sql = 'SELECT id, pipeline_id, name, ' . implode(', ', WP_QUICKTASKER_API_DELETE_PERMISSIONS) . ' FROM ' . TABLE_WP_QUICKTASKER_API_TOKENS . ' WHERE created_by = %d';
             $params = [$wpUserId];
 
             if (null !== $pipelineIds) {

@@ -13,6 +13,9 @@ if (!defined('WP_QT_LOG_TYPE_WEBHOOK')) {
 if (!defined('WP_QT_LOG_CREATED_BY_ADMIN')) {
     define('WP_QT_LOG_CREATED_BY_ADMIN', 'admin');
 }
+if (!defined('WP_QUICKTASKER_API_DELETE_PERMISSIONS')) {
+    define('WP_QUICKTASKER_API_DELETE_PERMISSIONS', ['delete_pipeline_stages', 'delete_pipeline_tasks']);
+}
 
 if (!function_exists('get_current_user_id')) {
     function get_current_user_id() {

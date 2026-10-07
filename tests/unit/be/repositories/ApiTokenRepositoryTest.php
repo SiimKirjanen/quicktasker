@@ -5,6 +5,10 @@ if (!defined('ABSPATH')) {
 }
 
 // Define table constants
+if (!defined('WP_QUICKTASKER_API_DELETE_PERMISSIONS')) {
+    define('WP_QUICKTASKER_API_DELETE_PERMISSIONS', ['delete_pipeline_stages', 'delete_pipeline_tasks']);
+}
+
 if (!defined('TABLE_WP_QUICKTASKER_API_TOKENS')) {
     define('TABLE_WP_QUICKTASKER_API_TOKENS', 'wp_quicktasker_api_tokens');
 }
