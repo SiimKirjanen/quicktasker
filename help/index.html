@@ -281,6 +281,8 @@
 			</li>
 		</ul>
 
+		<p><strong>DELETE permissions:</strong> Only users who can delete resources can give a token the DELETE stages or DELETE tasks permission. A token's DELETE requests only work while its creator can still delete resources. If their <em>Allow to delete resources</em> permission is turned off, the token keeps working for everything else, and its card says that DELETE requests don't work. Turning the permission off in the WordPress users tab tells you which of their tokens can't delete.</p>
+
 		<p><strong>Using API Tokens:</strong> Once created, the token will be displayed only once. Copy and store it securely, as you won't be able to view it again. To authenticate API requests, include the token in the Authorization header:</p>
 
 		<pre>Authorization: Bearer YOUR_TOKEN_HERE</pre>

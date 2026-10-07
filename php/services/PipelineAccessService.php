@@ -287,6 +287,45 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
+         * Checks if the creator of an API token can still delete.
+         *
+         * API tokens can only delete stages and tasks while this is true, so their DELETE requests stop
+         * when the creator loses the allow delete capability or is deleted. Tokens created before creators
+         * were recorded have no creator and are allowed.
+         *
+         * @param int|null $createdBy The ID of the WordPress user who created the token.
+         * @return bool True if the creator is unknown or can delete.
+         */
+        public function canCreatorDelete($createdBy)
+        {
+            if (empty($createdBy)) {
+                return true;
+            }
+
+            return ServiceLocator::get('PipelineAccessRepository')->canDelete((int) $createdBy);
+        }
+
+        /**
+         * Adds what each API token's creator can still do, so the API tokens page can show which tokens don't work.
+         *
+         * Sets created_by_has_board_access, see addCreatorBoardAccess(), and created_by_can_delete, see
+         * canCreatorDelete(). Both are null when the creator is unknown.
+         *
+         * @param array $tokens Objects with pipeline_id and created_by properties.
+         * @return array The same objects.
+         */
+        public function addTokenCreatorStatus($tokens)
+        {
+            $this->addCreatorBoardAccess($tokens);
+
+            foreach ($tokens as $token) {
+                $token->created_by_can_delete = empty($token->created_by) ? null : $this->canCreatorDelete($token->created_by);
+            }
+
+            return $tokens;
+        }
+
+        /**
          * Counts the API tokens and webhooks a WordPress user created on each of the given boards.
          *
          * @param int $wpUserId The WordPress user ID.
@@ -299,6 +338,33 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
                 ServiceLocator::get('ApiTokenRepository')->getTokensCreatedByWPUser($wpUserId, $pipelineIds),
                 ServiceLocator::get('WebhookRepository')->getWebhooksCreatedByWPUser($wpUserId, $pipelineIds)
             );
+        }
+
+        /**
+         * Counts the API tokens with a DELETE permission a WordPress user created on each of the given boards.
+         *
+         * Their DELETE requests only work while the user can delete, see canCreatorDelete().
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int[]|null $pipelineIds The board IDs, or null for every board.
+         * @return array Arrays with pipeline_id, api_token_count and webhook_count (always 0), for the boards that have any.
+         */
+        public function countDeletingTokensCreatedByWPUser($wpUserId, $pipelineIds)
+        {
+            $tokens = array_filter(
+                ServiceLocator::get('ApiTokenRepository')->getTokensCreatedByWPUser($wpUserId, $pipelineIds),
+                function ($token) {
+                    foreach (WP_QUICKTASKER_API_DELETE_PERMISSIONS as $permission) {
+                        if ('1' === (string) $token->$permission) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            );
+
+            return $this->countIntegrationsByPipeline($tokens, []);
         }
 
         /**

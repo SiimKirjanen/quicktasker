@@ -43,15 +43,18 @@ jest.mock("../../../../components/common/Toggle/Toggle", () => ({
     checked,
     handleChange,
     disabled,
+    dataTestId,
   }: {
     checked: boolean;
     handleChange: (v: boolean) => void;
     disabled?: boolean;
+    dataTestId?: string;
   }) => (
     <input
       type="checkbox"
       checked={checked}
       disabled={disabled}
+      data-testid={dataTestId}
       onChange={(e) => handleChange(e.target.checked)}
     />
   ),
@@ -234,13 +237,18 @@ describe("WPUserItem", () => {
   describe("API tokens and webhooks that stop working", () => {
     function respondWithStopped(
       stopped: WPUserCapabilitiesUpdate["stopped_integrations"],
+      stoppedTokenDeletes: WPUserCapabilitiesUpdate["stopped_token_deletes"] = [],
     ) {
       mockUpdateWPUserCapabilities.mockImplementation(
         async (
           _id: string,
           _settings: unknown,
           onSuccess: (update: WPUserCapabilitiesUpdate) => void,
-        ) => onSuccess({ stopped_integrations: stopped }),
+        ) =>
+          onSuccess({
+            stopped_integrations: stopped,
+            stopped_token_deletes: stoppedTokenDeletes,
+          }),
       );
     }
 
@@ -291,6 +299,36 @@ describe("WPUserItem", () => {
         "href",
         "#/board/1/webhooks",
       );
+    });
+
+    it("warns when turning off the permission to delete stops API tokens deleting", async () => {
+      respondWithStopped(
+        [],
+        [{ pipeline_id: 1, api_token_count: 2, webhook_count: 0 }],
+      );
+      renderWithBoards(
+        makeWPUser({
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: true,
+        }),
+      );
+
+      await act(async () => {
+        fireEvent.click(screen.getByTestId("wp-user-allow-delete-toggle"));
+      });
+
+      expect(toast.warning).toHaveBeenCalledTimes(1);
+      render((toast.warning as jest.Mock).mock.calls[0][0]);
+      expect(
+        screen.getByTestId("stopped-integrations-warning"),
+      ).toHaveTextContent(
+        "2 API tokens by Bob on Board 1 can't delete without access to delete resources.",
+      );
+      expect(screen.getByText("Open API tokens")).toHaveAttribute(
+        "href",
+        "#/board/1/api-tokens",
+      );
+      expect(screen.queryByText("Open webhooks")).toBeNull();
     });
 
     it("does not warn when nothing stopped working", async () => {

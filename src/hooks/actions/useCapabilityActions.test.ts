@@ -17,6 +17,7 @@ describe("useCapabilityActions", () => {
       stopped_integrations: [
         { pipeline_id: 1, api_token_count: 1, webhook_count: 0 },
       ],
+      stopped_token_deletes: [],
     };
     mockedApi.updateWPUserPermissionsRequest.mockResolvedValue({
       data: update,

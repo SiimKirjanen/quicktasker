@@ -336,7 +336,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             throw new PipelineMissingException('No pipeline found with id ' . $data['id']);
                         }
 
-                        $tokens = ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess(
+                        $tokens = ServiceLocator::get('PipelineAccessService')->addTokenCreatorStatus(
                             $tokenRepo->getPipelineTokensForFrontend($data['id'])
                         );
 
@@ -387,7 +387,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                             'delete_pipeline_tasks'  => $data['delete_pipeline_tasks'],
                         ]);
 
-                        ServiceLocator::get('PipelineAccessService')->addCreatorBoardAccess([$apiTokenData['db_token']]);
+                        ServiceLocator::get('PipelineAccessService')->addTokenCreatorStatus([$apiTokenData['db_token']]);
                         $dbToken = (array) $apiTokenData['db_token'];
                         $dbToken['token'] = $apiTokenData['token'];
 
@@ -409,7 +409,12 @@ if (!function_exists('wpqt_register_api_routes')) {
                     return PermissionService::hasRequiredPermissionsForPrivateAPISettingsEndpoints()
                         && PermissionService::canAccessBoardEntities([
                             ['pipeline', $request['id']],
-                        ]);
+                        ])
+                        // Only users who can delete can create a token that deletes.
+                        && (
+                            (!$request['delete_pipeline_stages'] && !$request['delete_pipeline_tasks'])
+                            || PermissionService::hasRequiredPermissionsForPrivateAPIDeleteEndpoints()
+                        );
                 },
                 'args' => [
                     'id' => [
@@ -2568,23 +2573,36 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
                         $couldManageIntegrations = $pipelineAccessRepo->canManageIntegrations($data['id']);
+                        $couldDelete = $pipelineAccessRepo->canDelete($data['id']);
 
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
 
-                        // API tokens and webhooks only work while their creator can manage integrations, so the admin
-                        // is told about the ones on the user's boards that stopped working.
+                        // API tokens and webhooks only work while their creator can manage integrations, and API tokens
+                        // only delete while their creator can delete, so the admin is told about the ones on the user's
+                        // boards that stopped working.
+                        $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                        $canManageIntegrations = $pipelineAccessRepo->canManageIntegrations($data['id']);
                         $stoppedIntegrations = [];
+                        $stoppedTokenDeletes = [];
 
-                        if ($couldManageIntegrations && !$pipelineAccessRepo->canManageIntegrations($data['id'])) {
-                            $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+                        if ($couldManageIntegrations && !$canManageIntegrations) {
                             $stoppedIntegrations = $pipelineAccessService->countIntegrationsCreatedByWPUser(
                                 $data['id'],
                                 $pipelineAccessService->getAccessiblePipelineIds($data['id'])
                             );
                         }
 
+                        // Not reported when the tokens don't work at all.
+                        if ($canManageIntegrations && $couldDelete && !$pipelineAccessRepo->canDelete($data['id'])) {
+                            $stoppedTokenDeletes = $pipelineAccessService->countDeletingTokensCreatedByWPUser(
+                                $data['id'],
+                                $pipelineAccessService->getAccessiblePipelineIds($data['id'])
+                            );
+                        }
+
                         return new WP_REST_Response((new ApiResponse(true, [], [
-                            'stopped_integrations' => $stoppedIntegrations,
+                            'stopped_integrations'  => $stoppedIntegrations,
+                            'stopped_token_deletes' => $stoppedTokenDeletes,
                         ]))->toArray(), 200);
                     } catch (Throwable $e) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);

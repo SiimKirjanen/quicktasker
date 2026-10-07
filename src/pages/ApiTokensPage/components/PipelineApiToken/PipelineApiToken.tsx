@@ -41,6 +41,12 @@ function PipelineApiToken({ apiToken }: Props) {
   if (apiToken.patch_pipeline_tasks) taskMethods.push("PATCH");
   if (apiToken.delete_pipeline_tasks) taskMethods.push("DELETE");
 
+  // Only DELETE stops working, and only while the rest of the token works.
+  const deleteNotWorking =
+    apiToken.created_by_has_board_access !== false &&
+    apiToken.created_by_can_delete === false &&
+    (apiToken.delete_pipeline_stages || apiToken.delete_pipeline_tasks);
+
   const noPermissions =
     boardMethods.length === 0 &&
     stageMethods.length === 0 &&
@@ -58,6 +64,17 @@ function PipelineApiToken({ apiToken }: Props) {
           <Alert type="warning" className="!wpqt-flex wpqt-w-full">
             {__(
               "This token doesn't work: its creator lost access to this board or the permission to manage settings.",
+              "quicktasker",
+            )}
+          </Alert>
+        </div>
+      )}
+
+      {deleteNotWorking && (
+        <div className="wpqt-mb-3" data-testid="api-token-delete-not-working">
+          <Alert type="warning" className="!wpqt-flex wpqt-w-full">
+            {__(
+              "DELETE requests don't work: the token's creator can't delete resources.",
               "quicktasker",
             )}
           </Alert>

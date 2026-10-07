@@ -122,12 +122,12 @@ if (!class_exists('WPQT\Token\ApiTokenService')) {
                 return new WP_Error('insufficient_permissions', 'The token does not have the required permissions.', ['status' => 403]);
             }
 
-            if (!$savedToken) {
-                return new WP_Error('invalid_token', 'Invalid authorization token.', ['status' => 401]);
-            }
-
-            if (!empty($requiredPermissions) && !self::checkTokenPermissions($savedToken, $requiredPermissions)) {
-                return new WP_Error('insufficient_permissions', 'The token does not have the required permissions.', ['status' => 403]);
+            // Deleting with the token stops working when its creator loses the permission to delete.
+            if (
+                !empty(array_intersect($requiredPermissions, WP_QUICKTASKER_API_DELETE_PERMISSIONS)) &&
+                !ServiceLocator::get('PipelineAccessService')->canCreatorDelete($savedToken->created_by ?? null)
+            ) {
+                return new WP_Error('token_creator_cannot_delete', 'The user who created this token lost the permission to delete.', ['status' => 403]);
             }
 
             // Cache token data for this request

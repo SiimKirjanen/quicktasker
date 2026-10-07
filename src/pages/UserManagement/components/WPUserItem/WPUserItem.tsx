@@ -44,12 +44,11 @@ function WPUserItem({ user }: Props) {
   const adminSubTogglesDisabled =
     isOwnUser || !capabilitySettings.quicktasker_admin_role;
 
+  const getPipelineName = (pipelineId: number) =>
+    pipelines.find((p) => p.id === String(pipelineId))?.name ?? "";
+
   const warnAboutStoppedIntegrations = (update: WPUserCapabilitiesUpdate) => {
     update.stopped_integrations.forEach((integration) => {
-      const pipeline = pipelines.find(
-        (p) => p.id === String(integration.pipeline_id),
-      );
-
       showStoppedIntegrationsWarning(
         integration,
         sprintf(
@@ -60,7 +59,22 @@ function WPUserItem({ user }: Props) {
           ),
           user.name,
           formatIntegrationCount(integration),
-          pipeline ? pipeline.name : "",
+          getPipelineName(integration.pipeline_id),
+        ),
+      );
+    });
+    update.stopped_token_deletes.forEach((integration) => {
+      showStoppedIntegrationsWarning(
+        integration,
+        sprintf(
+          // translators: 1: user name, 2: number of API tokens, 3: board name
+          __(
+            "%2$s by %1$s on %3$s can't delete without access to delete resources.",
+            "quicktasker",
+          ),
+          user.name,
+          formatIntegrationCount(integration),
+          getPipelineName(integration.pipeline_id),
         ),
       );
     });
@@ -188,6 +202,7 @@ function WPUserItem({ user }: Props) {
             <Toggle
               checked={capabilitySettings.quicktasker_admin_role_allow_delete}
               disabled={adminSubTogglesDisabled}
+              dataTestId="wp-user-allow-delete-toggle"
               handleChange={(checked: boolean) => {
                 onToggleChange(checked, "quicktasker_admin_role_allow_delete");
               }}

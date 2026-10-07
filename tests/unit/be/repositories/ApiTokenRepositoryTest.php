@@ -5,6 +5,10 @@ if (!defined('ABSPATH')) {
 }
 
 // Define table constants
+if (!defined('WP_QUICKTASKER_API_DELETE_PERMISSIONS')) {
+    define('WP_QUICKTASKER_API_DELETE_PERMISSIONS', ['delete_pipeline_stages', 'delete_pipeline_tasks']);
+}
+
 if (!defined('TABLE_WP_QUICKTASKER_API_TOKENS')) {
     define('TABLE_WP_QUICKTASKER_API_TOKENS', 'wp_quicktasker_api_tokens');
 }
@@ -545,7 +549,7 @@ class ApiTokenRepositoryTest extends TestCase
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
             ->with(
-                'SELECT id, pipeline_id, name FROM wp_quicktasker_api_tokens WHERE created_by = %d AND pipeline_id IN (%d,%d) ORDER BY id ASC',
+                'SELECT id, pipeline_id, name, delete_pipeline_stages, delete_pipeline_tasks FROM wp_quicktasker_api_tokens WHERE created_by = %d AND pipeline_id IN (%d,%d) ORDER BY id ASC',
                 [7, 2, 3]
             )
             ->willReturn('PREPARED_SQL');
@@ -558,7 +562,7 @@ class ApiTokenRepositoryTest extends TestCase
     {
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
-            ->with('SELECT id, pipeline_id, name FROM wp_quicktasker_api_tokens WHERE created_by = %d ORDER BY id ASC', [7])
+            ->with('SELECT id, pipeline_id, name, delete_pipeline_stages, delete_pipeline_tasks FROM wp_quicktasker_api_tokens WHERE created_by = %d ORDER BY id ASC', [7])
             ->willReturn('PREPARED_SQL');
         $this->wpdbMock->method('get_results')->willReturn([]);
 
