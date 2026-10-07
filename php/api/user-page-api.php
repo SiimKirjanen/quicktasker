@@ -402,10 +402,11 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     ]);
 
                     $logService->log('User posted a comment on ' . $task->name . ' task', [
-                        'type'       => WP_QT_LOG_TYPE_TASK,
-                        'type_id'    => $task->id,
-                        'created_by' => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN,
-                        'user_id'    => $requestData['session']->user_id
+                        'type'        => WP_QT_LOG_TYPE_TASK,
+                        'type_id'     => $task->id,
+                        'created_by'  => $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN,
+                        'user_id'     => $requestData['session']->user_id,
+                        'pipeline_id' => $task->pipeline_id
                     ]);
 
                     $comments = $commentRepository->getComments($task->id, 'task', false);

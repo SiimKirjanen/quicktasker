@@ -26962,6 +26962,41 @@
                   ]
                 },
                 {
+                  "name": "Admin sees the tasks app comment log with its board",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/global-logs?order=DESC&numberOfLogs=200&search=posted%20a%20comment",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const commentLog = pm.response.json().data.find((l) => l.text === 'User posted a comment on Assigned task ' + pm.collectionVariables.get('runId') + ' task');\npm.test('comment log is listed', () => pm.expect(commentLog).to.be.an('object'));\npm.test('comment log belongs to board A', () => pm.expect(String(commentLog && commentLog.pipeline_id)).to.eql(pm.collectionVariables.get('boardAId')));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "Outsider does not see the self-assign log of a board A task",
                   "request": {
                     "method": "GET",
