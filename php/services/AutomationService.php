@@ -583,12 +583,6 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
         }
 
         /**
-         * Checks if the given automation action is to archive a task.
-         *
-         * @param object $automation The automation object containing action and target type.
-         * @return bool Returns true if the automation action is to archive a task and the target type is task, otherwise false.
-         */
-        /**
          * Checks if an automation sends board data out of the site, by email or to Slack.
          *
          * @param object $automation The automation, with an automation_action property.
@@ -599,6 +593,12 @@ if (!class_exists('WPQT\Automation\AutomationService')) {
             return in_array($automation->automation_action, WP_QUICKTASKER_AUTOMATION_SENDING_ACTIONS, true);
         }
 
+        /**
+         * Checks if the given automation action is to archive a task.
+         *
+         * @param object $automation The automation object containing action and target type.
+         * @return bool Returns true if the automation action is to archive a task and the target type is task, otherwise false.
+         */
         private function isArchiveTaskAction($automation)
         {
             return WP_QUICKTASKER_AUTOMATION_ACTION_ARCHIVE_TASK === $automation->automation_action && WP_QUICKTASKER_AUTOMATION_TARGET_TYPE_TASK === $automation->target_type;

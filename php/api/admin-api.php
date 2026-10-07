@@ -2577,9 +2577,9 @@ if (!function_exists('wpqt_register_api_routes')) {
 
                         $capabilityService->updateWPUserCapabilities($data['id'], $capabilities);
 
-                        // API tokens and webhooks only work while their creator can manage integrations, and API tokens
-                        // only delete while their creator can delete, so the admin is told about the ones on the user's
-                        // boards that stopped working.
+                        // API tokens, webhooks and automations that send board data out only work while their creator can
+                        // manage integrations, and API tokens only delete while their creator can delete, so the admin is
+                        // told about the ones on the user's boards that stopped working.
                         $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
                         $canManageIntegrations = $pipelineAccessRepo->canManageIntegrations($data['id']);
                         $stoppedIntegrations = [];
@@ -2673,11 +2673,11 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $wpdb->query('COMMIT');
 
                         // Users who can access every board, like administrators, keep access to boards they are removed
-                        // from, so their API tokens and webhooks keep working and their tasks stay visible to them.
+                        // from, so their API tokens, webhooks and automations keep working and their tasks stay visible to them.
                         $keepsAccess = ServiceLocator::get('PipelineAccessRepository')->canAccessAllPipelines($data['id']);
 
-                        // API tokens and webhooks the user created on removed boards stop working until the user is added back,
-                        // so the admin is told about them.
+                        // API tokens, webhooks and automations that send board data out the user created on removed boards stop
+                        // working until the user is added back, so the admin is told about them.
                         $stoppedIntegrations = $keepsAccess ? [] : $pipelineAccessService->countIntegrationsCreatedByWPUser($data['id'], $removedPipelineIds);
 
                         // Tasks on removed boards stay assigned but are hidden from the user, so the admin is told about them.
