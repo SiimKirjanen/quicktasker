@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-07T11:22:56+00:00\n"
+"POT-Creation-Date: 2026-10-07T15:40:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -102,7 +102,7 @@ msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:692
-#: php/api/user-page-api.php:1044
+#: php/api/user-page-api.php:1045
 #, php-format
 msgid "Stage was changed for task \"%s\""
 msgstr ""
@@ -133,14 +133,14 @@ msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:1356
-#: php/api/user-page-api.php:1152
+#: php/api/user-page-api.php:1153
 #, php-format
 msgid "Task \"%s\" was marked done"
 msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:1358
-#: php/api/user-page-api.php:1154
+#: php/api/user-page-api.php:1155
 #, php-format
 msgid "Task \"%s\" was marked not done"
 msgstr ""
@@ -157,25 +157,25 @@ msgstr ""
 msgid "%1$s unassigned you from task \"%2$s\""
 msgstr ""
 
-#: php/api/admin-api.php:3505
+#: php/api/admin-api.php:3531
 msgid "No valid settings provided"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:450
+#: php/api/user-page-api.php:451
 #: php/services/CommentService.php:115
 #, php-format
 msgid "A public comment was added to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:819
+#: php/api/user-page-api.php:820
 #, php-format
 msgid "A user was assigned to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:932
+#: php/api/user-page-api.php:933
 #, php-format
 msgid "A user was unassigned from task \"%s\""
 msgstr ""
@@ -2596,6 +2596,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Board access"
+msgstr ""
+
+#: build/app.js:1
+msgid "Can manage this site, so sees every board."
 msgstr ""
 
 #: build/app.js:1

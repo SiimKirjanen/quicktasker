@@ -388,7 +388,7 @@ test.describe('WordPress Users Tab – Boards', () => {
     }
   });
 
-  test('a user who can manage options keeps their API tokens and webhooks when removed from a board', async ({ page, browser, request }) => {
+  test('a user who can manage options sees every board and keeps their API tokens and webhooks when removed from one', async ({ page, browser, request }) => {
     // A custom role with manage_options can access every board, but is listed with the users who are not administrators.
     try {
       runWpCli('role create qt_e2e_site_manager "Site Manager" --clone=editor');
@@ -407,17 +407,22 @@ test.describe('WordPress Users Tab – Boards', () => {
 
     try {
       await navigateToWPUsersTab(page);
+      // The boards they were added to make no difference, so they cannot be changed.
       const card = page.getByTestId('wpqt-card').filter({ hasText: userLogin });
-      const boardsSummary = card.getByTestId('wp-user-boards-summary');
-      await expect(boardsSummary).toHaveText(boardName, { timeout: TIMEOUTS.NAVIGATION });
+      await expect(card.getByTestId('wp-user-boards-summary')).toHaveText('All boards', {
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+      await expect(card.getByText('Can manage this site, so sees every board.')).toBeVisible();
+      await expect(card.getByTestId('wp-user-boards-change')).toHaveCount(0);
 
-      await card.getByTestId('wp-user-boards-change').click();
-      await page.getByRole('option', { name: boardName }).click();
-      await page.keyboard.press('Escape');
-
-      await expect(page.getByText(`${userLogin} was removed from ${boardName}.`)).toBeVisible();
-      await expect(boardsSummary).toHaveText('No boards');
-      await expect(page.getByTestId('stopped-integrations-warning')).toHaveCount(0);
+      const response = await request.patch(`/wp-json/wpqt/v1/wp-users/${userId}/pipelines`, {
+        headers: { 'X-WP-Nonce': await getAdminNonce(request) },
+        data: { remove_pipeline_ids: [board.boardId] },
+      });
+      expect(response.ok()).toBe(true);
+      const update = (await response.json()).data;
+      expect(update.removed_pipeline_ids).toEqual([Number(board.boardId)]);
+      expect(update.stopped_integrations).toEqual([]);
       expect(await countIntegrations(request, board.boardId)).toEqual({ tokens: 1, webhooks: 1, automations: 2 });
     } finally {
       await deleteBoardViaApi(request, boardName);
