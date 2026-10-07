@@ -257,10 +257,12 @@ describe("WPUserPipelineAccess", () => {
   });
 
   it("shows every board without Change for a user who can manage the site", () => {
-    renderAccess({ ...makeWPUser(), can_access_all_pipelines: true });
+    // The boards they were added to are not listed, as they make no difference.
+    renderAccess({ ...makeWPUser([1, 2]), can_access_all_pipelines: true });
 
     const summary = screen.getByTestId("wp-user-boards-summary");
     expect(summary).toHaveTextContent(/^All boards$/);
+    expect(screen.queryByText(/Board 1/)).toBeNull();
     expect(summary).not.toHaveClass("wpqt-text-yellow-700");
     expect(
       screen.getByText("Can manage this site, so sees every board."),
