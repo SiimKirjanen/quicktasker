@@ -649,6 +649,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $stageRepo = ServiceLocator::get('StageRepository');
 
                         $taskService->validateTaskAndPipeline($data['id'], $data['pipelineId']);
+                        // A stage on another board would show the task there while it stays on its own board.
+                        ServiceLocator::get('StageService')->validateStageAndPipeline($data['stageId'], $data['pipelineId']);
 
                         $moveInfo = $taskService->moveTask($data['id'], $data['stageId'], $data['order']);
                         $stage = $stageRepo->getStageById($data['stageId']);
@@ -719,6 +721,10 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $wpdb->query('ROLLBACK');
 
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_TASK_NOT_FOUND);
+                    } catch (StageMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_STAGE_NOT_FOUND);
                     } catch (Throwable $e) {
                         $wpdb->query('ROLLBACK');
 

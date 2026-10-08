@@ -874,6 +874,12 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                     }
 
                     $taskId = $task->id;
+
+                    // WordPress users removed from the board stay assigned, but can no longer change the task.
+                    if (!ServiceLocator::get('PipelineAccessService')->canUserAccessEntity($requestData['session']->user_id, $requestData['userType'], 'task', $taskId)) {
+                        throw new WPQTException('Not allowed to unassign from the task', true);
+                    }
+
                     $user = ServiceLocator::get('UserRepository')->getUserByIdAndType($requestData['session']->user_id, $requestData['userType']);
                     $createdBy = $requestData['isQuicktaskerUser'] ? WP_QT_LOG_CREATED_BY_QUICKTASKER_USER : WP_QT_LOG_CREATED_BY_ADMIN;
 

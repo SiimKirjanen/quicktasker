@@ -2155,6 +2155,24 @@ const adminTasks = folder("Tasks", [
     ],
   }),
   request({
+    name: "Cannot move task to a stage on another board",
+    method: "PATCH",
+    url: "/pipelines/{{boardCId}}/tasks/{{taskCId}}/move",
+    body: { stageId: "{{stageA1Id}}", order: 0 },
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Task is still in stage C2",
+    url: "/pipelines/{{boardCId}}",
+    tests: [
+      status(200),
+      `pm.test('stage C2 still holds the task', () => {
+  const stage = pm.response.json().data.pipeline.stages.find((s) => String(s.id) === pm.collectionVariables.get('stageC2Id'));
+  pm.expect(stage.tasks.map((t) => String(t.id))).to.include(pm.collectionVariables.get('taskCId'));
+});`,
+    ],
+  }),
+  request({
     name: "Create task to archive with its stage",
     method: "POST",
     url: "/tasks",
