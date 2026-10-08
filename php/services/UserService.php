@@ -18,14 +18,19 @@ if (!class_exists('WPQT\User\UserService')) {
          *
          * A QuickTasker's page hash lets anyone set the password of a user who has
          * none yet, so it is only included for users allowed to manage QuickTaskers.
+         * Each user's boards are included as pipeline_ids, so the admin app can tell
+         * which boards they can be assigned on.
          *
          * @return array List of QuickTasker users.
          */
         public function getUsersForCurrentViewer()
         {
+            $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
             // Assigned tasks are only counted on boards the viewer can access.
-            $users = ServiceLocator::get('UserRepository')->getUsers(
-                ServiceLocator::get('PipelineAccessService')->getAccessiblePipelineIds(get_current_user_id())
+            $users = $pipelineAccessService->addPipelineAccessToQuicktaskerUsers(
+                ServiceLocator::get('UserRepository')->getUsers(
+                    $pipelineAccessService->getAccessiblePipelineIds(get_current_user_id())
+                )
             );
 
             if (PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints()) {
@@ -290,7 +295,7 @@ if (!class_exists('WPQT\User\UserService')) {
          * Deletes a user.
          *
          * Soft-deletes and deactivates the user, revokes all their sessions and
-         * removes their task assignments so the deleted user loses all access.
+         * removes their boards and task assignments so the deleted user loses all access.
          * Unassigning from non-archived tasks runs the same logs, automations
          * and webhooks as an admin unassigning the user by hand.
          *
@@ -332,6 +337,7 @@ if (!class_exists('WPQT\User\UserService')) {
             }
 
             ServiceLocator::get('SessionService')->deleteUserSessions($userId);
+            ServiceLocator::get('PipelineAccessRepository')->deleteQuicktaskerUserAccess($userId);
 
             // Only archived-task assignments remain at this point.
             $assignmentsDeleted = $wpdb->delete(
@@ -384,7 +390,7 @@ if (!class_exists('WPQT\User\UserService')) {
          * @param int $taskId The ID of the task being assigned to the user.
          * @param string $userType The type of user being assigned the task. (quicktasker or wp-user)
          * @return mixed The task details retrieved from the task repository.
-         * @throws WPQTException If a WordPress user has not been added to the task's board.
+         * @throws WPQTException If the user has not been added to the task's board.
          * @throws \Exception If the task assignment fails.
          */
         public function assignTaskToUser($userId, $taskId, $userType = WP_QT_QUICKTASKER_USER_TYPE)
@@ -397,8 +403,7 @@ if (!class_exists('WPQT\User\UserService')) {
                 throw new \Exception('Assignable user not found');
             }
 
-            if (WP_QT_WORDPRESS_USER_TYPE === $userType
-                && !ServiceLocator::get('PipelineAccessService')->canAccessEntity($userId, 'task', $taskId)) {
+            if (!ServiceLocator::get('PipelineAccessService')->canUserAccessEntity($userId, $userType, 'task', $taskId)) {
                 throw new WPQTException('The user has not been added to the board of this task', true);
             }
 

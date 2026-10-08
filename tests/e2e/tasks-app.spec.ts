@@ -10,6 +10,7 @@ import {
 } from './utils/board-helpers';
 import { addComment } from './utils/comment-helpers';
 import {
+  addQuickTaskerToBoardsByName,
   assignQuickTaskerToTask,
   assignWordPressUserToTask,
   createQuickTaskerUser,
@@ -206,16 +207,18 @@ test.describe('Tasks App – Assignable Tasks', () => {
     const boardName = generateUniqueName('TA-SA-Board');
     const stageName = generateUniqueName('TA-SA-Stage');
     const taskName = generateUniqueName('TA-SA-Task');
+    const userName = generateUniqueName('TA-SA-User');
 
     const { context, userPage, userPageUrl } = await createLoggedInQuickTasker(
       page,
       browser,
-      generateUniqueName('TA-SA-User'),
+      userName,
       'qt-pass-123',
     );
     try {
       await setupBoardWithTask(page, boardName, stageName, taskName);
       await makeTaskFreeForAll(page, taskName);
+      await addQuickTaskerToBoardsByName(request, userName, [boardName]);
 
       await userPage.goto(`${userPageUrl}#/assignable-tasks`);
       const assignableCard = getTasksAppTaskCard(userPage, taskName);
@@ -543,7 +546,7 @@ test.describe('Tasks App – QuickTasker User First Login Flow', () => {
 });
 
 test.describe('Tasks App – Revoked QuickTasker Access', () => {
-  test('deleting an active user revokes their session and blocks logging in again', async ({ page, browser }) => {
+  test('deleting an active user revokes their session and blocks logging in again', async ({ page, browser, request }) => {
     test.setTimeout(TIMEOUTS.LONG_TEST);
     const userName = generateUniqueName('TA-DEL-User');
     const boardName = generateUniqueName('TA-DEL-Board');
@@ -553,6 +556,7 @@ test.describe('Tasks App – Revoked QuickTasker Access', () => {
 
     const { context, userPage, userPageUrl } = await createLoggedInQuickTasker(page, browser, userName, password);
     await setupBoardWithTask(page, boardName, stageName, taskName);
+    await addQuickTaskerToBoardsByName(request, userName, [boardName]);
     await assignQuickTaskerToTask(page, taskName, userName);
 
     // The logged-in QuickTasker user sees their assigned task

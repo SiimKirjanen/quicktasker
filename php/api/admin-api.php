@@ -2451,6 +2451,103 @@ if (!function_exists('wpqt_register_api_routes')) {
 
         register_rest_route(
             'wpqt/v1',
+            'users/(?P<id>\d+)/pipelines',
+            [
+                'methods'  => 'PATCH',
+                'callback' => function ($data) {
+                    global $wpdb;
+
+                    try {
+                        if (!ServiceLocator::get('UserRepository')->getQuicktaskerUserById($data['id'])) {
+                            throw new WPQTException('User not found', true);
+                        }
+
+                        $isReplace = null !== $data['pipeline_ids'];
+                        $isChange = null !== $data['add_pipeline_ids'] || null !== $data['remove_pipeline_ids'];
+
+                        if ($isReplace === $isChange) {
+                            throw new WPQTException('Send either pipeline_ids, or add_pipeline_ids and remove_pipeline_ids', true);
+                        }
+
+                        $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
+
+                        $wpdb->query('START TRANSACTION');
+                        // Adding and removing keeps boards the admin app has not loaded yet, like ones another administrator
+                        // added the user to since, which replacing the boards would remove.
+                        $changedPipelineIds = $isReplace
+                            ? $pipelineAccessService->setUserPipelines($data['id'], WP_QT_QUICKTASKER_USER_TYPE, $data['pipeline_ids'])
+                            : $pipelineAccessService->changeUserPipelines(
+                                $data['id'],
+                                WP_QT_QUICKTASKER_USER_TYPE,
+                                $data['add_pipeline_ids'] ?? [],
+                                $data['remove_pipeline_ids'] ?? []
+                            );
+                        $wpdb->query('COMMIT');
+
+                        // Tasks on removed boards stay assigned but are hidden from the user, so the admin is told about them.
+                        $assignedTaskCounts = ServiceLocator::get('TaskRepository')->countTasksAssignedToUserByPipeline(
+                            $data['id'],
+                            WP_QT_QUICKTASKER_USER_TYPE,
+                            $changedPipelineIds['removed']
+                        );
+                        $removedPipelinesWithAssignedTasks = [];
+
+                        foreach ($assignedTaskCounts as $pipelineId => $taskCount) {
+                            $removedPipelinesWithAssignedTasks[] = [
+                                'pipeline_id' => $pipelineId,
+                                'task_count'  => $taskCount,
+                            ];
+                        }
+
+                        return new WP_REST_Response((new ApiResponse(true, [], [
+                            'pipeline_ids'                          => $pipelineAccessService->getUserPipelineIds($data['id'], WP_QT_QUICKTASKER_USER_TYPE),
+                            'added_pipeline_ids'                    => $changedPipelineIds['added'],
+                            'removed_pipeline_ids'                  => $changedPipelineIds['removed'],
+                            'removed_pipelines_with_assigned_tasks' => $removedPipelinesWithAssignedTasks,
+                        ]))->toArray(), 200);
+                    } catch (PipelineMissingException $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e, WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND);
+                    } catch (Throwable $e) {
+                        $wpdb->query('ROLLBACK');
+
+                        return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
+                    }
+                },
+                // Only administrators can change boards, as with WordPress users.
+                'permission_callback' => function () {
+                    return PermissionService::hasRequiredPermissionsForManagingWPUserCapabilities();
+                },
+                'args' => [
+                    'id' => [
+                        'required'          => true,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericParam'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsint'],
+                    ],
+                    // Replaces the user's boards.
+                    'pipeline_ids' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericArray'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsintArray'],
+                    ],
+                    // Add the user to and remove them from boards, keeping their other boards.
+                    'add_pipeline_ids' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericArray'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsintArray'],
+                    ],
+                    'remove_pipeline_ids' => [
+                        'required'          => false,
+                        'validate_callback' => ['WPQT\RequestValidation', 'validateNumericArray'],
+                        'sanitize_callback' => ['WPQT\RequestValidation', 'sanitizeAbsintArray'],
+                    ],
+                ],
+            ],
+        );
+
+        register_rest_route(
+            'wpqt/v1',
             'users/(?P<id>\d+)',
             [
                 'methods'  => 'DELETE',
@@ -2699,7 +2796,7 @@ if (!function_exists('wpqt_register_api_routes')) {
                         $stoppedIntegrations = $keepsAccess ? [] : $pipelineAccessService->countIntegrationsCreatedByWPUser($data['id'], $removedPipelineIds);
 
                         // Tasks on removed boards stay assigned but are hidden from the user, so the admin is told about them.
-                        $assignedTaskCounts = $keepsAccess ? [] : ServiceLocator::get('TaskRepository')->countTasksAssignedToWPUserByPipeline($data['id'], $removedPipelineIds);
+                        $assignedTaskCounts = $keepsAccess ? [] : ServiceLocator::get('TaskRepository')->countTasksAssignedToUserByPipeline($data['id'], WP_QT_WORDPRESS_USER_TYPE, $removedPipelineIds);
                         $removedPipelinesWithAssignedTasks = [];
 
                         foreach ($assignedTaskCounts as $pipelineId => $taskCount) {
@@ -3742,10 +3839,18 @@ if (!function_exists('wpqt_register_api_routes')) {
                 'methods'  => 'POST',
                 'callback' => function ($data) {
                     try {
-                        // The automation could never assign a WordPress user who has not been added to the board.
-                        if (WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER === $data['automationActionTargetType']
+                        // The automation could never assign a user who has not been added to the board.
+                        $assignedUserTypes = [
+                            WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_WP_USER     => WP_QT_WORDPRESS_USER_TYPE,
+                            WP_QUICKTASKER_AUTOMATION_ACTION_TARGET_TYPE_QUICKTASKER => WP_QT_QUICKTASKER_USER_TYPE,
+                        ];
+                        if (isset($assignedUserTypes[$data['automationActionTargetType']])
                             && null !== $data['automationActionTargetId']
-                            && !ServiceLocator::get('PipelineAccessService')->canAccessPipeline((int) $data['automationActionTargetId'], $data['id'])) {
+                            && !ServiceLocator::get('PipelineAccessService')->canUserAccessPipeline(
+                                (int) $data['automationActionTargetId'],
+                                $assignedUserTypes[$data['automationActionTargetType']],
+                                $data['id']
+                            )) {
                             throw new WPQTException('The user has not been added to this board', true);
                         }
 

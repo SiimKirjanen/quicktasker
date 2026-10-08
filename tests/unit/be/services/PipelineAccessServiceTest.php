@@ -34,6 +34,9 @@ class PipelineAccessServiceTest extends TestCase
     /** @var array<int, int[]> Board IDs per WordPress user ID that the user has been added to. */
     private $userBoardIds;
 
+    /** @var array<int, int[]> Board IDs per QuickTasker user ID that the user has been added to. */
+    private $quicktaskerBoardIds;
+
     /** @var array<string, int|null> Board ID per "entity type:entity ID". */
     private $entityBoards;
 
@@ -53,6 +56,7 @@ class PipelineAccessServiceTest extends TestCase
     {
         $this->existingBoardIds = [1, 2, 3];
         $this->userBoardIds = [];
+        $this->quicktaskerBoardIds = [];
         $this->entityLookups = 0;
         $this->usersWhoCannotManageIntegrations = [];
         $this->usersWhoCannotDelete = [];
@@ -76,8 +80,25 @@ class PipelineAccessServiceTest extends TestCase
         });
 
         $pipelineAccessRepoMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['canAccessAllPipelines', 'canManageIntegrations', 'canDelete', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds'])
+            ->addMethods(['canAccessAllPipelines', 'canManageIntegrations', 'canDelete', 'getPipelineIdsByWPUserId', 'addWPUserToPipeline', 'removeWPUserFromPipeline', 'getPipelineIdOfEntity', 'getEntityOf', 'getPipelineIdsByWPUserIds', 'getPipelineIdsByQuicktaskerUserId', 'getPipelineIdsByQuicktaskerUserIds', 'addQuicktaskerUserToPipeline', 'removeQuicktaskerUserFromPipeline'])
             ->getMock();
+        $pipelineAccessRepoMock->method('getPipelineIdsByQuicktaskerUserId')->willReturnCallback(function ($userId) {
+            $pipelineIds = $this->quicktaskerBoardIds[$userId] ?? [];
+            sort($pipelineIds);
+
+            return $pipelineIds;
+        });
+        $pipelineAccessRepoMock->method('getPipelineIdsByQuicktaskerUserIds')->willReturnCallback(function ($userIds) {
+            return array_intersect_key($this->quicktaskerBoardIds, array_flip($userIds));
+        });
+        $pipelineAccessRepoMock->method('addQuicktaskerUserToPipeline')->willReturnCallback(function ($userId, $pipelineId) {
+            if (!in_array($pipelineId, $this->quicktaskerBoardIds[$userId] ?? [], true)) {
+                $this->quicktaskerBoardIds[$userId][] = $pipelineId;
+            }
+        });
+        $pipelineAccessRepoMock->method('removeQuicktaskerUserFromPipeline')->willReturnCallback(function ($userId, $pipelineId) {
+            $this->quicktaskerBoardIds[$userId] = array_values(array_diff($this->quicktaskerBoardIds[$userId] ?? [], [$pipelineId]));
+        });
         $pipelineAccessRepoMock->method('getPipelineIdOfEntity')->willReturnCallback(function ($entityType, $entityId) {
             $this->entityLookups++;
 
@@ -338,22 +359,103 @@ class PipelineAccessServiceTest extends TestCase
         $this->assertSame([[], [2, 3], []], array_column($users, 'pipeline_ids'));
     }
 
-    public function test_tasks_app_users_are_limited_by_boards_only_for_wordpress_users()
+    public function test_tasks_app_users_of_both_types_are_limited_by_their_own_boards()
     {
         $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+        $this->quicktaskerBoardIds[self::LIMITED_USER_ID] = [2];
 
         $this->assertTrue($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_WORDPRESS_USER_TYPE, 'task', 10));
         $this->assertFalse($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_WORDPRESS_USER_TYPE, 'task', 20));
+        $this->assertFalse($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'task', 10));
         $this->assertTrue($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'task', 20));
     }
 
-    public function test_tasks_app_lists_are_filtered_only_for_wordpress_users()
+    public function test_tasks_app_lists_are_filtered_by_each_user_types_boards()
     {
         $this->userBoardIds[self::LIMITED_USER_ID] = [1];
-        $items = [(object) ['id' => 'a', 'pipeline_id' => '1'], (object) ['id' => 'b', 'pipeline_id' => '2']];
+        $this->quicktaskerBoardIds[self::LIMITED_USER_ID] = [2];
+        $items = [(object) ['id' => 'a', 'pipeline_id' => '1'], (object) ['id' => 'b', 'pipeline_id' => '2'], (object) ['id' => 'c', 'pipeline_id' => null]];
 
         $this->assertSame(['a'], array_column($this->service->filterItemsForUser(self::LIMITED_USER_ID, WP_QT_WORDPRESS_USER_TYPE, $items), 'id'));
-        $this->assertSame(['a', 'b'], array_column($this->service->filterItemsForUser(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, $items), 'id'));
+        $this->assertSame(['b'], array_column($this->service->filterItemsForUser(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, $items), 'id'));
+    }
+
+    public function test_quicktasker_user_with_an_administrators_id_is_not_given_every_board()
+    {
+        $this->assertSame([], $this->service->getUserAccessiblePipelineIds(self::ADMIN_USER_ID, WP_QT_QUICKTASKER_USER_TYPE));
+        $this->assertFalse($this->service->canUserAccessEntity(self::ADMIN_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'task', 10));
+        $this->assertFalse($this->service->canUserAccessEntity(self::ADMIN_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'task', 30));
+        $this->assertSame([], $this->service->filterItemsForUser(self::ADMIN_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, [(object) ['pipeline_id' => '1']]));
+    }
+
+    public function test_quicktasker_user_follows_custom_fields_and_uploads_to_their_board()
+    {
+        $this->quicktaskerBoardIds[self::LIMITED_USER_ID] = [1];
+
+        $this->assertTrue($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'custom_field', 5));
+        $this->assertFalse($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'upload', 7));
+        $this->assertTrue($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'pipeline', 1));
+        $this->assertFalse($this->service->canUserAccessEntity(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, 'pipeline', 2));
+    }
+
+    public function test_unknown_user_types_get_no_boards()
+    {
+        $this->assertSame([], $this->service->getUserAccessiblePipelineIds(self::ADMIN_USER_ID, 'robot'));
+        $this->assertFalse($this->service->canUserAccessEntity(self::ADMIN_USER_ID, 'robot', 'task', 10));
+    }
+
+    public function test_adds_boards_to_quicktasker_users()
+    {
+        $this->quicktaskerBoardIds[self::LIMITED_USER_ID] = [1, 3];
+        $users = [(object) ['id' => (string) self::LIMITED_USER_ID], (object) ['id' => '9']];
+
+        $users = $this->service->addPipelineAccessToQuicktaskerUsers($users);
+
+        $this->assertSame([[1, 3], []], array_column($users, 'pipeline_ids'));
+        $this->assertFalse(property_exists($users[0], 'can_access_all_pipelines'));
+    }
+
+    public function test_changing_a_quicktasker_users_boards_leaves_the_wordpress_user_with_the_same_id_alone()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+        $this->quicktaskerBoardIds[self::LIMITED_USER_ID] = [1, 2];
+
+        $changedPipelineIds = $this->service->changeUserPipelines(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, [3], [1]);
+
+        $this->assertSame(['added' => [3], 'removed' => [1]], $changedPipelineIds);
+        $this->assertSame([2, 3], $this->service->getUserPipelineIds(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE));
+        $this->assertSame([1], $this->service->getUserPipelineIds(self::LIMITED_USER_ID, WP_QT_WORDPRESS_USER_TYPE));
+    }
+
+    public function test_setting_a_quicktasker_users_boards_replaces_them()
+    {
+        $this->quicktaskerBoardIds[self::LIMITED_USER_ID] = [1, 2];
+
+        $changedPipelineIds = $this->service->setUserPipelines(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, [2, 3]);
+
+        $this->assertSame(['added' => [3], 'removed' => [1]], $changedPipelineIds);
+        $this->assertSame([2, 3], $this->service->getUserPipelineIds(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE));
+    }
+
+    public function test_setting_a_missing_board_for_a_quicktasker_user_throws_and_changes_nothing()
+    {
+        $this->quicktaskerBoardIds[self::LIMITED_USER_ID] = [1];
+
+        try {
+            $this->service->setUserPipelines(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE, [2, 999]);
+            $this->fail('Expected PipelineMissingException');
+        } catch (PipelineMissingException $e) {
+            // Expected.
+        }
+
+        $this->assertSame([1], $this->service->getUserPipelineIds(self::LIMITED_USER_ID, WP_QT_QUICKTASKER_USER_TYPE));
+    }
+
+    public function test_changing_boards_of_an_unknown_user_type_throws()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->service->changeUserPipelines(self::LIMITED_USER_ID, 'robot', [1], []);
     }
 
     public function test_a_creator_can_use_a_board_they_can_access()

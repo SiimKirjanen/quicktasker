@@ -34,16 +34,23 @@ class PermissionServiceTaskAccessTest extends TestCase
     /** @var int[] Boards the WordPress user has been added to. */
     private $userBoardIds;
 
+    /** @var int[] Boards the QuickTasker user has been added to. */
+    private $quicktaskerBoardIds;
+
     protected function setUp(): void
     {
         $this->userBoardIds = [];
+        $this->quicktaskerBoardIds = [];
 
         $pipelineAccessRepo = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['canAccessAllPipelines', 'getPipelineIdsByWPUserId', 'getPipelineIdOfEntity'])
+            ->addMethods(['canAccessAllPipelines', 'getPipelineIdsByWPUserId', 'getPipelineIdsByQuicktaskerUserId', 'getPipelineIdOfEntity'])
             ->getMock();
         $pipelineAccessRepo->method('canAccessAllPipelines')->willReturn(false);
         $pipelineAccessRepo->method('getPipelineIdsByWPUserId')->willReturnCallback(function () {
             return $this->userBoardIds;
+        });
+        $pipelineAccessRepo->method('getPipelineIdsByQuicktaskerUserId')->willReturnCallback(function () {
+            return $this->quicktaskerBoardIds;
         });
         $pipelineAccessRepo->method('getPipelineIdOfEntity')->willReturn(1);
 
@@ -87,9 +94,20 @@ class PermissionServiceTaskAccessTest extends TestCase
         $this->assertFalse($this->service->checkIfUserIsAllowedToEditTask(self::USER_ID, self::TASK_ID, WP_QT_WORDPRESS_USER_TYPE));
     }
 
-    public function test_assigned_quicktasker_is_not_limited_by_boards()
+    public function test_assigned_quicktasker_added_to_the_board_can_view_and_edit_the_task()
     {
+        $this->quicktaskerBoardIds = [1];
+
         $this->assertTrue($this->service->checkIfUserIsAllowedToViewTask(self::USER_ID, self::TASK_ID, WP_QT_QUICKTASKER_USER_TYPE));
         $this->assertTrue($this->service->checkIfUserIsAllowedToEditTask(self::USER_ID, self::TASK_ID, WP_QT_QUICKTASKER_USER_TYPE));
+    }
+
+    public function test_assigned_quicktasker_not_added_to_the_board_cannot_view_or_edit_the_task()
+    {
+        // Adding the WordPress user with the same ID does not give the QuickTasker access.
+        $this->userBoardIds = [1];
+
+        $this->assertFalse($this->service->checkIfUserIsAllowedToViewTask(self::USER_ID, self::TASK_ID, WP_QT_QUICKTASKER_USER_TYPE));
+        $this->assertFalse($this->service->checkIfUserIsAllowedToEditTask(self::USER_ID, self::TASK_ID, WP_QT_QUICKTASKER_USER_TYPE));
     }
 }

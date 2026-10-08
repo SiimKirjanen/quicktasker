@@ -54,16 +54,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
          */
         public function getPipelineIdsByWPUserId($wpUserId)
         {
-            global $wpdb;
-
-            $pipelineIds = $wpdb->get_col($wpdb->prepare(
-                'SELECT pipeline_id FROM ' . TABLE_WP_QUICKTASKER_WP_USER_PIPELINES . '
-                WHERE wp_user_id = %d
-                ORDER BY pipeline_id ASC',
-                $wpUserId
-            ));
-
-            return array_map('intval', $pipelineIds);
+            return $this->getPipelineIdsByUserId(TABLE_WP_QUICKTASKER_WP_USER_PIPELINES, 'wp_user_id', $wpUserId);
         }
 
         /**
@@ -75,26 +66,30 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
          */
         public function getPipelineIdsByWPUserIds($wpUserIds)
         {
-            global $wpdb;
+            return $this->getPipelineIdsByUserIds(TABLE_WP_QUICKTASKER_WP_USER_PIPELINES, 'wp_user_id', $wpUserIds);
+        }
 
-            if (empty($wpUserIds)) {
-                return [];
-            }
+        /**
+         * Retrieves the IDs of the boards a QuickTasker user has been added to.
+         *
+         * @param int $userId The QuickTasker user ID.
+         * @return int[] The board IDs, in ascending order.
+         */
+        public function getPipelineIdsByQuicktaskerUserId($userId)
+        {
+            return $this->getPipelineIdsByUserId(TABLE_WP_QUICKTASKER_USER_PIPELINES, 'user_id', $userId);
+        }
 
-            $placeholders = implode(',', array_fill(0, count($wpUserIds), '%d'));
-            $rows = $wpdb->get_results($wpdb->prepare(
-                'SELECT wp_user_id, pipeline_id FROM ' . TABLE_WP_QUICKTASKER_WP_USER_PIPELINES . "
-                WHERE wp_user_id IN ($placeholders)
-                ORDER BY pipeline_id ASC",
-                $wpUserIds
-            ));
-            $pipelineIdsByWPUserId = [];
-
-            foreach ($rows as $row) {
-                $pipelineIdsByWPUserId[(int) $row->wp_user_id][] = (int) $row->pipeline_id;
-            }
-
-            return $pipelineIdsByWPUserId;
+        /**
+         * Retrieves the IDs of the boards each of the given QuickTasker users has been added to.
+         *
+         * @param int[] $userIds The QuickTasker user IDs.
+         * @return array<int, int[]> Board IDs in ascending order, keyed by QuickTasker user ID.
+         *                           Users without boards are left out.
+         */
+        public function getPipelineIdsByQuicktaskerUserIds($userIds)
+        {
+            return $this->getPipelineIdsByUserIds(TABLE_WP_QUICKTASKER_USER_PIPELINES, 'user_id', $userIds);
         }
 
         /**
@@ -201,20 +196,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
          */
         public function addWPUserToPipeline($wpUserId, $pipelineId)
         {
-            global $wpdb;
-
-            $result = $wpdb->query($wpdb->prepare(
-                'INSERT IGNORE INTO ' . TABLE_WP_QUICKTASKER_WP_USER_PIPELINES . '
-                (wp_user_id, pipeline_id, created_at)
-                VALUES (%d, %d, %s)',
-                $wpUserId,
-                $pipelineId,
-                ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
-            ));
-
-            if (false === $result) {
-                throw new \Exception('Failed to add the user to the board');
-            }
+            $this->addUserToPipeline(TABLE_WP_QUICKTASKER_WP_USER_PIPELINES, 'wp_user_id', $wpUserId, $pipelineId);
         }
 
         /**
@@ -227,20 +209,37 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
          */
         public function removeWPUserFromPipeline($wpUserId, $pipelineId)
         {
-            global $wpdb;
-
-            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_WP_USER_PIPELINES, [
-                'wp_user_id'  => $wpUserId,
-                'pipeline_id' => $pipelineId,
-            ], ['%d', '%d']);
-
-            if (false === $result) {
-                throw new \Exception('Failed to remove the user from the board');
-            }
+            $this->removeUserFromPipeline(TABLE_WP_QUICKTASKER_WP_USER_PIPELINES, 'wp_user_id', $wpUserId, $pipelineId);
         }
 
         /**
-         * Removes every WordPress user from a board.
+         * Adds a QuickTasker user to a board. Does nothing if the user is already added.
+         *
+         * @param int $userId The QuickTasker user ID.
+         * @param int $pipelineId The board ID.
+         * @return void
+         * @throws \Exception If the user could not be added.
+         */
+        public function addQuicktaskerUserToPipeline($userId, $pipelineId)
+        {
+            $this->addUserToPipeline(TABLE_WP_QUICKTASKER_USER_PIPELINES, 'user_id', $userId, $pipelineId);
+        }
+
+        /**
+         * Removes a QuickTasker user from a board.
+         *
+         * @param int $userId The QuickTasker user ID.
+         * @param int $pipelineId The board ID.
+         * @return void
+         * @throws \Exception If the user could not be removed.
+         */
+        public function removeQuicktaskerUserFromPipeline($userId, $pipelineId)
+        {
+            $this->removeUserFromPipeline(TABLE_WP_QUICKTASKER_USER_PIPELINES, 'user_id', $userId, $pipelineId);
+        }
+
+        /**
+         * Removes every WordPress user and QuickTasker user from a board.
          *
          * @param int $pipelineId The board ID.
          * @return void
@@ -249,9 +248,11 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
         {
             global $wpdb;
 
-            $wpdb->delete(TABLE_WP_QUICKTASKER_WP_USER_PIPELINES, [
-                'pipeline_id' => $pipelineId,
-            ], ['%d']);
+            foreach ([TABLE_WP_QUICKTASKER_WP_USER_PIPELINES, TABLE_WP_QUICKTASKER_USER_PIPELINES] as $table) {
+                $wpdb->delete($table, [
+                    'pipeline_id' => $pipelineId,
+                ], ['%d']);
+            }
         }
 
         /**
@@ -267,6 +268,132 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessRepository')) {
             $wpdb->delete(TABLE_WP_QUICKTASKER_WP_USER_PIPELINES, [
                 'wp_user_id' => $wpUserId,
             ], ['%d']);
+        }
+
+        /**
+         * Removes a QuickTasker user from every board.
+         *
+         * @param int $userId The QuickTasker user ID.
+         * @return void
+         * @throws \Exception If the user could not be removed.
+         */
+        public function deleteQuicktaskerUserAccess($userId)
+        {
+            global $wpdb;
+
+            $result = $wpdb->delete(TABLE_WP_QUICKTASKER_USER_PIPELINES, [
+                'user_id' => $userId,
+            ], ['%d']);
+
+            if (false === $result) {
+                throw new \Exception('Failed to remove the user from their boards');
+            }
+        }
+
+        /**
+         * Retrieves the IDs of the boards a user has been added to.
+         *
+         * @param string $table The table holding the boards of the user's type.
+         * @param string $userColumn The table's user ID column.
+         * @param int $userId The user ID.
+         * @return int[] The board IDs, in ascending order.
+         */
+        private function getPipelineIdsByUserId($table, $userColumn, $userId)
+        {
+            global $wpdb;
+
+            $pipelineIds = $wpdb->get_col($wpdb->prepare(
+                'SELECT pipeline_id FROM ' . $table . '
+                WHERE ' . $userColumn . ' = %d
+                ORDER BY pipeline_id ASC',
+                $userId
+            ));
+
+            return array_map('intval', $pipelineIds);
+        }
+
+        /**
+         * Retrieves the IDs of the boards each of the given users has been added to.
+         *
+         * @param string $table The table holding the boards of the users' type.
+         * @param string $userColumn The table's user ID column.
+         * @param int[] $userIds The user IDs.
+         * @return array<int, int[]> Board IDs in ascending order, keyed by user ID. Users without boards are left out.
+         */
+        private function getPipelineIdsByUserIds($table, $userColumn, $userIds)
+        {
+            global $wpdb;
+
+            if (empty($userIds)) {
+                return [];
+            }
+
+            $placeholders = implode(',', array_fill(0, count($userIds), '%d'));
+            $rows = $wpdb->get_results($wpdb->prepare(
+                'SELECT ' . $userColumn . ' AS user_id, pipeline_id FROM ' . $table . '
+                WHERE ' . $userColumn . " IN ($placeholders)
+                ORDER BY pipeline_id ASC",
+                $userIds
+            ));
+            $pipelineIdsByUserId = [];
+
+            foreach ($rows as $row) {
+                $pipelineIdsByUserId[(int) $row->user_id][] = (int) $row->pipeline_id;
+            }
+
+            return $pipelineIdsByUserId;
+        }
+
+        /**
+         * Adds a user to a board. Does nothing if the user is already added.
+         *
+         * @param string $table The table holding the boards of the user's type.
+         * @param string $userColumn The table's user ID column.
+         * @param int $userId The user ID.
+         * @param int $pipelineId The board ID.
+         * @return void
+         * @throws \Exception If the user could not be added.
+         */
+        private function addUserToPipeline($table, $userColumn, $userId, $pipelineId)
+        {
+            global $wpdb;
+
+            $result = $wpdb->query($wpdb->prepare(
+                'INSERT IGNORE INTO ' . $table . '
+                (' . $userColumn . ', pipeline_id, created_at)
+                VALUES (%d, %d, %s)',
+                $userId,
+                $pipelineId,
+                ServiceLocator::get('TimeRepository')->getCurrentUTCTime()
+            ));
+
+            if (false === $result) {
+                throw new \Exception('Failed to add the user to the board');
+            }
+        }
+
+        /**
+         * Removes a user from a board.
+         *
+         * @param string $table The table holding the boards of the user's type.
+         * @param string $userColumn The table's user ID column.
+         * @param int $userId The user ID.
+         * @param int $pipelineId The board ID.
+         * @return void
+         * @throws \Exception If the user could not be removed.
+         */
+        private function removeUserFromPipeline($table, $userColumn, $userId, $pipelineId)
+        {
+            global $wpdb;
+
+            $result = $wpdb->delete($table, [
+                $userColumn   => $userId,
+                'pipeline_id' => $pipelineId,
+            ], ['%d', '%d']);
+
+            if (false === $result) {
+                throw new \Exception('Failed to remove the user from the board');
+            }
         }
     }
 }

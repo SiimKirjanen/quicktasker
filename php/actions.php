@@ -107,6 +107,49 @@ if (!function_exists('wpqt_dismiss_board_access_notice')) {
     }
 }
 
+/**
+ * Tells administrators after updating that QuickTasker users only see the boards they have been added to.
+ *
+ * @return void
+ */
+add_action('admin_notices', 'wpqt_quicktasker_board_access_notice');
+if (!function_exists('wpqt_quicktasker_board_access_notice')) {
+    function wpqt_quicktasker_board_access_notice()
+    {
+        if ('1' !== get_option(WP_QUICKTASKER_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION) || !current_user_can('manage_options')) {
+            return;
+        }
+
+        $userManagementUrl = admin_url('admin.php?page=wp-quicktasker#/user-management');
+        $dismissUrl = wp_nonce_url(add_query_arg('wpqt_dismiss_quicktasker_board_access_notice', '1'), 'wpqt_dismiss_quicktasker_board_access_notice');
+
+        echo '<div class="notice notice-warning" data-testid="wpqt-quicktasker-board-access-notice"><p><strong>QuickTasker:</strong> '
+            . esc_html__('QuickTasker users now only see tasks on the boards they have been added to. Until you add them to boards, they see no tasks in the tasks app, and automations that assign them to tasks do nothing.', 'quicktasker')
+            . '</p><p><a href="' . esc_url($userManagementUrl) . '">' . esc_html__('Add users to boards', 'quicktasker') . '</a> | '
+            . '<a href="' . esc_url($dismissUrl) . '">' . esc_html__('Dismiss', 'quicktasker') . '</a></p></div>';
+    }
+}
+
+/**
+ * Hides the QuickTasker user board access notice for every administrator once one dismisses it.
+ *
+ * @return void
+ */
+add_action('admin_init', 'wpqt_dismiss_quicktasker_board_access_notice');
+if (!function_exists('wpqt_dismiss_quicktasker_board_access_notice')) {
+    function wpqt_dismiss_quicktasker_board_access_notice()
+    {
+        if (!isset($_GET['wpqt_dismiss_quicktasker_board_access_notice']) || !current_user_can('manage_options')) {
+            return;
+        }
+
+        check_admin_referer('wpqt_dismiss_quicktasker_board_access_notice');
+        delete_option(WP_QUICKTASKER_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION);
+        wp_safe_redirect(remove_query_arg(['wpqt_dismiss_quicktasker_board_access_notice', '_wpnonce']));
+        exit;
+    }
+}
+
 add_action('template_redirect', 'wpqt_custom_http_status_code');
 if (!function_exists('wpqt_custom_http_status_code')) {
     function wpqt_custom_http_status_code()

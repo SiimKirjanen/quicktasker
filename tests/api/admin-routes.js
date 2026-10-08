@@ -299,6 +299,13 @@ module.exports = [
     board: "none",
   },
   {
+    method: "PATCH",
+    path: "/users/{id}/pipelines",
+    permission: "wpAdmin",
+    params: { pipeline_ids: [] },
+    board: "none",
+  },
+  {
     method: "GET",
     path: "/logs",
     permission: "base",

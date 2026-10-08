@@ -13,6 +13,7 @@ import {
 } from './utils/board-helpers';
 import { loginToWordPressViaApi } from './utils/auth';
 import {
+  addQuickTaskerToBoards,
   addWPUserToBoards,
   assignQuickTaskerToTaskViaApi,
   assignWordPressUserToTask,
@@ -262,6 +263,7 @@ test.describe('Board access', () => {
     const addedTask = await createTaskViaApi(request, addedBoard.boardId, addedBoard.stageId!, generateUniqueName('BA-Count-TaskA'));
     const otherTask = await createTaskViaApi(request, otherBoard.boardId, otherBoard.stageId!, generateUniqueName('BA-Count-TaskB'));
     const quickTaskerId = await createQuickTaskerUserViaApi(request, generateUniqueName('BA-Count-QT'));
+    await addQuickTaskerToBoards(request, quickTaskerId, [addedBoardName, otherBoardName]);
     await assignQuickTaskerToTaskViaApi(request, quickTaskerId, addedTask.id);
     await assignQuickTaskerToTaskViaApi(request, quickTaskerId, otherTask.id);
     const userLogin = uniqueLogin('wpcount');
@@ -541,6 +543,42 @@ test.describe('Board access notice after updating', () => {
     } finally {
       await context.close();
       runWpCli('option delete quicktasker_show_board_access_notice');
+    }
+  });
+
+  test('administrators see the QuickTasker user notice until one of them dismisses it', async ({ page, browser, request }) => {
+    const userLogin = uniqueLogin('wpqtnotice');
+    const userId = await createWPUser(request, userLogin, `${userLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, userId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    // Set by the update from a version without board access for QuickTasker users.
+    runWpCli('option update quicktasker_show_quicktasker_board_access_notice 1');
+    const context = await loginToWordPressViaApi(browser, userLogin);
+
+    try {
+      const notice = page.getByTestId('wpqt-quicktasker-board-access-notice');
+      await page.goto('/wp-admin/');
+      await expect(notice).toBeVisible();
+      await expect(notice).toContainText('QuickTasker users now only see tasks on the boards they have been added to.');
+      await expect(notice.getByRole('link', { name: 'Add users to boards' })).toHaveAttribute(
+        'href',
+        /page=wp-quicktasker#\/user-management$/,
+      );
+
+      // Only administrators can add QuickTasker users to boards, so others are not told.
+      const userPage = await context.newPage();
+      await userPage.goto('/wp-admin/');
+      await expect(userPage.locator('#wpbody')).toBeVisible();
+      await expect(userPage.getByTestId('wpqt-quicktasker-board-access-notice')).toHaveCount(0);
+
+      await notice.getByRole('link', { name: 'Dismiss' }).click();
+      await expect(notice).toHaveCount(0);
+      await expect(page).not.toHaveURL(/wpqt_dismiss_quicktasker_board_access_notice/);
+      await page.reload();
+      await expect(page.locator('#wpbody')).toBeVisible();
+      await expect(notice).toHaveCount(0);
+    } finally {
+      await context.close();
+      runWpCli('option delete quicktasker_show_quicktasker_board_access_notice');
     }
   });
 });

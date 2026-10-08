@@ -995,6 +995,53 @@ pm.collectionVariables.set('userApiNonce', match ? match[1] : '');`,
     tests: [status(200), success(true)],
   }),
   request({
+    name: 'Create "Free on board B" task',
+    method: "POST",
+    url: "/tasks",
+    body: {
+      name: "Free on board B task {{runId}}",
+      stageId: "{{stageB1Id}}",
+      pipelineId: "{{boardBId}}",
+    },
+    tests: [
+      status(200),
+      save("upFreeBTaskId", "pm.response.json().data.newTask.id"),
+      save("upFreeBTaskHash", "pm.response.json().data.newTask.task_hash"),
+    ],
+  }),
+  request({
+    name: 'Make "Free on board B" task assignable',
+    method: "PATCH",
+    url: "/tasks/{{upFreeBTaskId}}",
+    body: { free_for_all: true },
+    tests: [status(200), success(true)],
+  }),
+  request({
+    name: "User cannot be assigned before being added to board A",
+    method: "POST",
+    url: "/users/{{qtUserId}}/tasks/{{upAssignedTaskId}}",
+    body: { user_type: "quicktasker" },
+    tests: failsWith("not been added to the board"),
+  }),
+  request({
+    name: "Add user to board A",
+    method: "PATCH",
+    url: "/users/{{qtUserId}}/pipelines",
+    body: { pipeline_ids: ["{{boardAId}}"] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('user has board A', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardAId'))]));`,
+    ],
+  }),
+  request({
+    name: "Add second user to board A",
+    method: "PATCH",
+    url: "/users/{{qtUser2Id}}/pipelines",
+    body: { pipeline_ids: ["{{boardAId}}"] },
+    tests: [status(200), success(true)],
+  }),
+  request({
     name: 'Assign user to "Assigned" task',
     method: "POST",
     url: "/users/{{qtUserId}}/tasks/{{upAssignedTaskId}}",
@@ -1347,6 +1394,105 @@ const userPageTasks = folder("Tasks", [
   }),
 ]);
 
+// The user was added to board A only in the setup.
+const userPageBoardAccess = folder("Board access", [
+  userPageRequest({
+    name: "Assignable tasks leave out boards the user is not on",
+    url: "/user-page/assignable-tasks",
+    tests: [
+      status(200),
+      `pm.test('lists the board A free task but not the board B one', () => {
+  const hashes = ${hashesIn("pm.response.json().data")};
+  pm.expect(hashes).to.include(pm.collectionVariables.get('upFreeTaskHash'));
+  pm.expect(hashes).to.not.include(pm.collectionVariables.get('upFreeBTaskHash'));
+});`,
+    ],
+  }),
+  userPageRequest({
+    name: "Cannot view a free task on a board the user is not on",
+    url: "/user-page/tasks/{{upFreeBTaskHash}}",
+    tests: failsWith("Not allowed to view"),
+  }),
+  userPageRequest({
+    name: "Cannot self-assign to a free task on a board the user is not on",
+    method: "POST",
+    url: "/user-page/tasks/{{upFreeBTaskHash}}/users",
+    tests: failsWith("not been added to the board"),
+  }),
+  request({
+    name: "Removing the user from board A reports their task there",
+    method: "PATCH",
+    url: "/users/{{qtUserId}}/pipelines",
+    body: { remove_pipeline_ids: ["{{boardAId}}"] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('user has no boards', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([]));`,
+      `pm.test('board A is reported as removed', () => pm.expect(pm.response.json().data.removed_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardAId'))]));`,
+      `pm.test('their task on board A is reported', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardAId')), task_count: 1 }]));`,
+    ],
+  }),
+  userPageRequest({
+    name: "Without boards the overview counts no tasks",
+    url: "/user-page/overview",
+    tests: [
+      status(200),
+      `pm.test('no assigned or assignable tasks', () => {
+  const data = pm.response.json().data;
+  pm.expect(data.assignedTasksCount).to.eql(0);
+  pm.expect(data.assignableTaskCount).to.eql(0);
+});`,
+    ],
+  }),
+  userPageRequest({
+    name: "Assigned tasks hide tasks on boards the user was removed from",
+    url: "/user-page/assigned-tasks",
+    tests: [
+      status(200),
+      `pm.test('no tasks are listed', () => pm.expect(pm.response.json().data).to.eql([]));`,
+    ],
+  }),
+  userPageRequest({
+    name: "Cannot view an assigned task after being removed from its board",
+    url: "/user-page/tasks/{{upAssignedTaskHash}}",
+    tests: failsWith("Not allowed to view"),
+  }),
+  userPageRequest({
+    name: "Cannot mark an assigned task done after being removed from its board",
+    method: "PATCH",
+    url: "/user-page/tasks/{{upAssignedTaskHash}}/done",
+    body: { done: true },
+    tests: failsWith("Not allowed to edit"),
+  }),
+  request({
+    name: "The user stays assigned after being removed from the board",
+    url: "/users/{{qtUserId}}/tasks",
+    tests: [
+      status(200),
+      `pm.test('task is still assigned', () => pm.expect(pm.response.json().data.map((x) => String(x.id))).to.include(pm.collectionVariables.get('upAssignedTaskId')));`,
+    ],
+  }),
+  request({
+    name: "Add the user back to board A",
+    method: "PATCH",
+    url: "/users/{{qtUserId}}/pipelines",
+    body: { add_pipeline_ids: ["{{boardAId}}"] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('board A is reported as added', () => pm.expect(pm.response.json().data.added_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardAId'))]));`,
+    ],
+  }),
+  userPageRequest({
+    name: "Assigned tasks list the task again",
+    url: "/user-page/assigned-tasks",
+    tests: [
+      status(200),
+      `pm.test('the assigned task is back', () => pm.expect(${hashesIn("pm.response.json().data")}).to.eql([pm.collectionVariables.get('upAssignedTaskHash')]));`,
+    ],
+  }),
+]);
+
 const userPageProfile = folder("Profile, comments and notifications", [
   userPageRequest({
     name: "Get own user",
@@ -1579,6 +1725,7 @@ const userPageApi = folder(
     userPageSetup,
     userPageAuth,
     userPageTasks,
+    userPageBoardAccess,
     userPageProfile,
     userPageAccountState,
   ],
@@ -2489,12 +2636,79 @@ const adminUsers = folder("Users", [
     ],
   }),
   request({
-    name: "List users includes the new user",
+    name: "List users includes the new user without boards",
     url: "/users",
     tests: [
       status(200),
       includesId("user is listed", "pm.response.json().data", "admQtUserId"),
+      `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('admQtUserId'));
+pm.test('new user has no boards', () => pm.expect(user.pipeline_ids).to.eql([]));`,
     ],
+  }),
+  request({
+    name: "User cannot be assigned before being added to board C",
+    method: "POST",
+    url: "/users/{{admQtUserId}}/tasks/{{taskCId}}",
+    body: { user_type: "quicktasker" },
+    tests: failsWith("not been added to the board"),
+  }),
+  request({
+    name: "User cannot be the target of an assign automation before being added to board C",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/automations",
+    body: {
+      automationTarget: "task",
+      automationTrigger: "task-created",
+      automationAction: "assign-user",
+      automationActionTargetId: "{{admQtUserId}}",
+      automationActionTargetType: "quicktasker",
+    },
+    tests: failsWith("not been added to this board"),
+  }),
+  request({
+    name: "Add user to boards C and D",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: { pipeline_ids: ["{{boardDId}}", "{{boardCId}}"] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('boards are saved in ID order', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));`,
+      `pm.test('both boards are reported as added', () => pm.expect(pm.response.json().data.added_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));`,
+      `pm.test('no boards are reported as removed', () => pm.expect(pm.response.json().data.removed_pipeline_ids).to.eql([]));`,
+    ],
+  }),
+  request({
+    name: "List users shows the user's boards",
+    url: "/users",
+    tests: [
+      status(200),
+      `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('admQtUserId'));
+pm.test('user has boards C and D', () => pm.expect(user.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));`,
+    ],
+  }),
+  request({
+    name: "User can be the target of an assign automation after being added to board C",
+    method: "POST",
+    url: "/pipelines/{{boardCId}}/automations",
+    body: {
+      automationTarget: "task",
+      automationTrigger: "task-created",
+      automationAction: "assign-user",
+      automationActionTargetId: "{{admQtUserId}}",
+      automationActionTargetType: "quicktasker",
+    },
+    tests: [
+      status(200),
+      success(true),
+      save("automationAssignAdmQtUserId", "pm.response.json().data.id"),
+    ],
+  }),
+  request({
+    name: "Delete the assign automation so later tasks on board C are not assigned",
+    method: "DELETE",
+    url: "/pipelines/{{boardCId}}/automations/{{automationAssignAdmQtUserId}}",
+    tests: [status(200), success(true)],
   }),
   request({
     name: "Get extended user",
@@ -2527,6 +2741,92 @@ const adminUsers = folder("Users", [
     tests: [
       status(200),
       includesId("task is assigned", "pm.response.json().data", "taskCId"),
+    ],
+  }),
+  request({
+    name: "Removing user from board C reports their task there",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: { remove_pipeline_ids: ["{{boardCId}}"] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('user keeps board D', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardDId'))]));`,
+      `pm.test('board C is reported as removed', () => pm.expect(pm.response.json().data.removed_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId'))]));`,
+      `pm.test('one assigned task on board C is reported', () => pm.expect(pm.response.json().data.removed_pipelines_with_assigned_tasks).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardCId')), task_count: 1 }]));`,
+      `pm.test('no integrations are reported for QuickTasker users', () => pm.expect(pm.response.json().data).to.not.have.property('stopped_integrations'));`,
+    ],
+  }),
+  request({
+    name: "Adding user back to board C keeps board D",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: { add_pipeline_ids: ["{{boardCId}}"], remove_pipeline_ids: [] },
+    tests: [
+      status(200),
+      success(true),
+      `pm.test('user has boards C and D', () => pm.expect(pm.response.json().data.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));`,
+      `pm.test('only board C is reported as added', () => pm.expect(pm.response.json().data.added_pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId'))]));`,
+    ],
+  }),
+  request({
+    name: "Adding user to a missing board fails without changes",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: {
+      add_pipeline_ids: [999999999],
+      remove_pipeline_ids: ["{{boardDId}}"],
+    },
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "A board cannot be both added to and removed from a user",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: {
+      add_pipeline_ids: ["{{boardCId}}"],
+      remove_pipeline_ids: ["{{boardCId}}"],
+    },
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "A user's boards cannot be replaced and changed at once",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: {
+      pipeline_ids: ["{{boardCId}}"],
+      add_pipeline_ids: ["{{boardDId}}"],
+    },
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "Changing a user's boards needs boards to change",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: {},
+    tests: [status(400), success(false)],
+  }),
+  request({
+    name: "A user's board IDs must be numeric",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: { add_pipeline_ids: ["x"] },
+    tests: [status(400), wpErrorCode("rest_invalid_param")],
+  }),
+  request({
+    name: "Changing the boards of a missing user fails",
+    method: "PATCH",
+    url: "/users/999999999/pipelines",
+    body: { pipeline_ids: [] },
+    tests: failsWith("User not found"),
+  }),
+  request({
+    name: "Failed changes keep the user's boards",
+    url: "/users",
+    tests: [
+      status(200),
+      `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('admQtUserId'));
+pm.test('user still has boards C and D', () => pm.expect(user.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardCId')), Number(pm.collectionVariables.get('boardDId'))]));`,
     ],
   }),
   request({
@@ -2675,6 +2975,13 @@ const adminUsers = folder("Users", [
       status(200),
       excludesId("user is gone", "pm.response.json().data", "admQtUserId"),
     ],
+  }),
+  request({
+    name: "Deleted user's boards cannot be changed",
+    method: "PATCH",
+    url: "/users/{{admQtUserId}}/pipelines",
+    body: { pipeline_ids: ["{{boardCId}}"] },
+    tests: failsWith("User not found"),
   }),
   request({
     name: "Deleting the user logs the task unassignment",
@@ -3676,6 +3983,13 @@ const adminBoardAccess = folder(
           status(200),
           save("uploadE1Id", "pm.response.json().data.upload.id"),
         ],
+      }),
+      request({
+        name: "Add QuickTasker to board E",
+        method: "PATCH",
+        url: "/users/{{qtUserId}}/pipelines",
+        body: { add_pipeline_ids: ["{{boardEId}}"] },
+        tests: [status(200), success(true)],
       }),
       request({
         name: "Assign QuickTasker to task E1",
@@ -4722,6 +5036,8 @@ const runtimeVariables = [
   "upAssignedTaskHash",
   "upFreeTaskId",
   "upFreeTaskHash",
+  "upFreeBTaskId",
+  "upFreeBTaskHash",
   "upOtherTaskId",
   "upOtherTaskHash",
   "upPrivateTaskId",

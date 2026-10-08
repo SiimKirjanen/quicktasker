@@ -52,9 +52,16 @@ class UserServiceUsersForViewerTest extends TestCase
         ServiceLocator::register('UserRepository', $userRepoMock);
 
         $pipelineAccessServiceMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['getAccessiblePipelineIds'])
+            ->addMethods(['getAccessiblePipelineIds', 'addPipelineAccessToQuicktaskerUsers'])
             ->getMock();
         $pipelineAccessServiceMock->method('getAccessiblePipelineIds')->willReturn([3]);
+        $pipelineAccessServiceMock->method('addPipelineAccessToQuicktaskerUsers')->willReturnCallback(function ($users) {
+            foreach ($users as $user) {
+                $user->pipeline_ids = '1' === $user->id ? [3] : [];
+            }
+
+            return $users;
+        });
         ServiceLocator::register('PipelineAccessService', $pipelineAccessServiceMock);
 
         $this->service = new UserService();
@@ -93,5 +100,14 @@ class UserServiceUsersForViewerTest extends TestCase
         $this->userRepoMock->expects($this->once())->method('getUsers')->with([3]);
 
         $this->service->getUsersForCurrentViewer();
+    }
+
+    public function test_getUsersForCurrentViewer_includes_each_users_boards()
+    {
+        $GLOBALS['wpqt_test_current_user_caps'] = [WP_QUICKTASKER_ADMIN_ROLE];
+
+        $users = $this->service->getUsersForCurrentViewer();
+
+        $this->assertSame([[3], []], array_column($users, 'pipeline_ids'));
     }
 }

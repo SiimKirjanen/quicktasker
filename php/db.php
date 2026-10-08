@@ -426,10 +426,28 @@ if (!function_exists('wpqt_set_up_db')) {
 
             dbDelta($sql23);
 
+            $sql24 = 'CREATE TABLE ' . TABLE_WP_QUICKTASKER_USER_PIPELINES . " (
+				id int(11) NOT NULL AUTO_INCREMENT,
+				user_id int(11) NOT NULL,
+				pipeline_id int(11) NOT NULL,
+				created_at datetime NOT NULL COMMENT 'UTC',
+				PRIMARY KEY  (id),
+				UNIQUE KEY user_pipeline (user_id, pipeline_id),
+				INDEX pipeline_id (pipeline_id)
+			) $charset_collate;";
+
+            dbDelta($sql24);
+
             // Non-administrators lose their boards when updating to board access, so administrators are told.
             if ($wp_quicktasker_db_current_version
                 && version_compare($wp_quicktasker_db_current_version, WP_QUICKTASKER_BOARD_ACCESS_DB_VERSION, '<')) {
                 update_option(WP_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION, '1');
+            }
+
+            // QuickTasker users lose their boards when updating to board access for them, so administrators are told.
+            if ($wp_quicktasker_db_current_version
+                && version_compare($wp_quicktasker_db_current_version, WP_QUICKTASKER_QUICKTASKER_BOARD_ACCESS_DB_VERSION, '<')) {
+                update_option(WP_QUICKTASKER_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION, '1');
             }
 
             update_option('wp_quicktasker_db_current_version', WP_QUICKTASKER_DB_VERSION);
