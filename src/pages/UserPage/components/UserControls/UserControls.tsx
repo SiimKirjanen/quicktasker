@@ -11,6 +11,7 @@ import { DELETE_USER, EDIT_USER } from "../../../../constants";
 import { useUserActions } from "../../../../hooks/actions/useUserActions";
 import { useDeleteUserPermission } from "../../../../hooks/useDeleteUserPermission";
 import { useLoadingStates } from "../../../../hooks/useLoadingStates";
+import { useManageQuicktaskerPermission } from "../../../../hooks/useManageQuicktaskerPermission";
 import { UserContext } from "../../../../providers/UserContextProvider";
 import { ExtendedUser } from "../../../../types/user";
 
@@ -29,6 +30,8 @@ function UserControls({
   const { changeUserStatus, deleteUser, resetUserPassword } = useUserActions();
   const { isUserAllowedToDeleteUsers, deleteUserDisabledReason } =
     useDeleteUserPermission();
+  const { canManageQuicktasker, manageQuicktaskerDisabledReason } =
+    useManageQuicktaskerPermission(data);
   const { userDispatch } = useContext(UserContext);
   const {
     loading1: isResetPWLoading,
@@ -55,6 +58,9 @@ function UserControls({
         <WPQTIconButton
           icon={<PowerIcon className="wpqt-icon-green wpqt-size-5" />}
           text={__("Activate user", "quicktasker")}
+          disabled={!canManageQuicktasker}
+          tooltipId="user-controls-activate"
+          tooltipText={manageQuicktaskerDisabledReason}
           loading={isActivateLoading}
           onClick={async () => {
             setIsActivateLoading(true);
@@ -73,6 +79,9 @@ function UserControls({
         <WPQTIconButton
           icon={<PowerIcon className="wpqt-icon-red wpqt-size-5" />}
           text={__("Disable user", "quicktasker")}
+          disabled={!canManageQuicktasker}
+          tooltipId="user-controls-disable"
+          tooltipText={manageQuicktaskerDisabledReason}
           loading={isActivateLoading}
           onClick={async () => {
             setIsActivateLoading(true);
@@ -92,6 +101,9 @@ function UserControls({
           icon={<KeyIcon className="wpqt-icon-red wpqt-size-5" />}
           loading={isResetPWLoading}
           text={__("Reset password", "quicktasker")}
+          disabled={!canManageQuicktasker}
+          tooltipId="user-controls-reset-password"
+          tooltipText={manageQuicktaskerDisabledReason}
           onClick={async () => {
             setIsResetPWLoading(true);
             await resetUserPassword(data.id, () => {
@@ -106,9 +118,11 @@ function UserControls({
         icon={<TrashIcon className="wpqt-icon-red wpqt-size-5" />}
         loading={isDeleteLoading}
         text={__("Delete user", "quicktasker")}
-        disabled={!isUserAllowedToDeleteUsers}
+        disabled={!isUserAllowedToDeleteUsers || !canManageQuicktasker}
         tooltipId="user-controls-delete"
-        tooltipText={deleteUserDisabledReason}
+        tooltipText={
+          deleteUserDisabledReason ?? manageQuicktaskerDisabledReason
+        }
         onClick={async () => {
           setIsDeleteLoading(true);
           await deleteUser(data.id, (userId) => {

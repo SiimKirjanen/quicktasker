@@ -20,7 +20,7 @@ import { ActivePipelineContext } from "../../../../../providers/ActivePipelineCo
 import { UserContext } from "../../../../../providers/UserContextProvider";
 import { Task } from "../../../../../types/task";
 import { User, UserTypes, WPUser } from "../../../../../types/user";
-import { canWPUserAccessPipeline } from "../../../../../utils/user";
+import { canUserAccessPipeline } from "../../../../../utils/user";
 import { QuickTaskerIcon } from "../../../../Icon/QuickTaskerIcon/QuickTaskerIcon";
 import { WordPressIcon } from "../../../../Icon/WordPressIcon/WordPressIcon";
 import { LoadingOval } from "../../../../Loading/Loading";
@@ -66,7 +66,7 @@ function UserAssignementSelection({
   };
 
   const hasBoardAccess = (user: User | WPUser) =>
-    !isWPUser(user) || canWPUserAccessPipeline(user, task.pipeline_id);
+    canUserAccessPipeline(user, task.pipeline_id);
 
   const combinedUsers: (User | WPUser)[] = [...wpUsers, ...users];
   const filteredUsers = combinedUsers
@@ -165,7 +165,7 @@ function UserAssignementSelection({
         <div className="wpqt-text-lg">{__("Assign users", "quicktasker")}</div>
         <div className="wpqt-max-w-sm">
           {__(
-            'WordPress users need the "Access to plugin admin area" permission and must be added to the board to be assignable.',
+            'Users must be added to the board to be assignable. WordPress users also need the "Access to plugin admin area" permission.',
             "quicktasker",
           )}
         </div>

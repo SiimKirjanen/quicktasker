@@ -5,10 +5,12 @@ import { WPQTCard } from "../../../../../components/Card/Card";
 import { WPQTCardDataItem } from "../../../../../components/Card/WPQTCardDataItem/WPQTCardDataItem";
 import { UserDropdown } from "../../../../../components/Dropdown/UserDropdown/UserDropdown";
 import { OPEN_EDIT_USER_MODAL } from "../../../../../constants";
+import { useApp } from "../../../../../hooks/useApp";
 import { useNavigation } from "../../../../../hooks/useNavigation";
 import { usePageLinks } from "../../../../../hooks/usePageLinks";
 import { ModalContext } from "../../../../../providers/ModalContextProvider";
 import { User } from "../../../../../types/user";
+import { UserPipelineAccess } from "../../../components/UserPipelineAccess/UserPipelineAccess";
 
 type Props = {
   user: User;
@@ -18,6 +20,9 @@ function UserListItem({ user }: Props) {
   const { userPage } = usePageLinks();
   const { navigatePage } = useNavigation();
   const { modalDispatch } = useContext(ModalContext);
+  const {
+    state: { isUserAllowedToManageWPUsers },
+  } = useApp();
 
   const userIsActive = user.is_active;
   const userPageLink = userPage + "&code=" + user.page_hash;
@@ -35,15 +40,18 @@ function UserListItem({ user }: Props) {
       }}
       className="wpqt-cursor-pointer"
     >
-      <WPQTCardDataItem
-        className="hover:wpqt-underline wpqt-self-start"
-        label={__("Open tasks app", "quicktasker")}
-        icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
-        onClick={(e) => {
-          e.stopPropagation();
-          window.open(userPageLink, "_blank");
-        }}
-      />
+      {/* The link is left out for QuickTaskers the viewer can't manage. */}
+      {user.page_hash && (
+        <WPQTCardDataItem
+          className="hover:wpqt-underline wpqt-self-start"
+          label={__("Open tasks app", "quicktasker")}
+          icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(userPageLink, "_blank");
+          }}
+        />
+      )}
 
       <WPQTCardDataItem
         className="hover:wpqt-underline wpqt-self-start"
@@ -81,6 +89,14 @@ function UserListItem({ user }: Props) {
           valueClassName="wpqt-text-qtTextRed wpqt-font-bold"
           icon={<NoSymbolIcon className="wpqt-size-5 wpqt-icon-red" />}
         />
+      )}
+
+      {/* Only administrators can change boards. Clicks here do not open the
+          edit modal, which clicking the card does. */}
+      {isUserAllowedToManageWPUsers && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <UserPipelineAccess user={user} />
+        </div>
       )}
     </WPQTCard>
   );

@@ -218,20 +218,21 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
 
                     $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
                     $userId = $requestData['session']->user_id;
-                    $assignedTasks = $pipelineAccessService->filterItemsForUser(
-                        $userId,
-                        $requestData['userType'],
-                        $taskRepository->getTasksAssignedToUser($userId, false, $requestData['userType'])
+                    // Null means every board.
+                    $accessiblePipelineIds = $pipelineAccessService->getUserAccessiblePipelineIds($userId, $requestData['userType']);
+                    $assignedTasks = $pipelineAccessService->filterItemsOnPipelines(
+                        $taskRepository->getTasksAssignedToUser($userId, false, $requestData['userType']),
+                        $accessiblePipelineIds
                     );
-                    $assignableTasks = $pipelineAccessService->filterItemsForUser(
-                        $userId,
-                        $requestData['userType'],
-                        $taskRepository->getTasksAssignableToUser()
+                    $assignableTasks = $pipelineAccessService->filterItemsOnPipelines(
+                        $taskRepository->getTasksAssignableToUser(),
+                        $accessiblePipelineIds
                     );
 
                     $overviewData = (object) [
                         'assignedTasksCount'  => count($assignedTasks),
-                        'assignableTaskCount' => count($assignableTasks)
+                        'assignableTaskCount' => count($assignableTasks),
+                        'hasBoards'           => null === $accessiblePipelineIds || count($accessiblePipelineIds) > 0,
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, [], $overviewData))->toArray(), 200);
@@ -875,7 +876,7 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
 
                     $taskId = $task->id;
 
-                    // WordPress users removed from the board stay assigned, but can no longer change the task.
+                    // Users removed from the board stay assigned, but can no longer change the task.
                     if (!ServiceLocator::get('PipelineAccessService')->canUserAccessEntity($requestData['session']->user_id, $requestData['userType'], 'task', $taskId)) {
                         throw new WPQTException('Not allowed to unassign from the task', true);
                     }

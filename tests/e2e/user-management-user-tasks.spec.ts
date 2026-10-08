@@ -1,11 +1,12 @@
-import { test, expect, Page } from '@playwright/test';
-import { generateUniqueName, createBoard, createStage, createTask } from './utils/board-helpers';
+import { test, expect, APIRequestContext, Page } from '@playwright/test';
+import { generateUniqueName, createBoard, createStage, createTask, reloadBoard } from './utils/board-helpers';
 import { navigateToBoardsPage } from './utils/navigation';
 import {
   navigateToQuickTaskersTab,
   createQuickTaskerUser,
   navigateToUserTasksPage,
   assignQuickTaskerToTask,
+  addQuickTaskerToBoardsByName,
 } from './utils/user-helpers';
 import { TIMEOUTS } from './utils/timeouts';
 
@@ -13,6 +14,7 @@ import { TIMEOUTS } from './utils/timeouts';
 
 async function setupUserWithTask(
   page: Page,
+  request: APIRequestContext,
 ): Promise<{ userName: string; taskName: string }> {
   const userName = generateUniqueName('UT-User');
   const boardName = generateUniqueName('UT-Board');
@@ -28,6 +30,8 @@ async function setupUserWithTask(
   await createBoard(page, boardName);
   await createStage(page, stageName);
   await createTask(page, stageName, taskName);
+  await addQuickTaskerToBoardsByName(request, userName, [boardName]);
+  await reloadBoard(page, boardName);
   await assignQuickTaskerToTask(page, taskName, userName);
 
   // Navigate back to the QuickTaskers tab ready for the test
@@ -65,8 +69,8 @@ test.describe('User Tasks – Task List', () => {
   let userName: string;
   let taskName: string;
 
-  test.beforeEach(async ({ page }) => {
-    ({ userName, taskName } = await setupUserWithTask(page));
+  test.beforeEach(async ({ page, request }) => {
+    ({ userName, taskName } = await setupUserWithTask(page, request));
     await navigateToUserTasksPage(page, userName);
   });
 
@@ -100,8 +104,8 @@ test.describe('User Tasks – Unassign', () => {
   let userName: string;
   let taskName: string;
 
-  test.beforeEach(async ({ page }) => {
-    ({ userName, taskName } = await setupUserWithTask(page));
+  test.beforeEach(async ({ page, request }) => {
+    ({ userName, taskName } = await setupUserWithTask(page, request));
     await navigateToUserTasksPage(page, userName);
     await expect(page.getByTestId('wpqt-card').filter({ hasText: taskName })).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
   });

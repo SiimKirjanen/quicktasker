@@ -34,8 +34,10 @@ if (!function_exists('wpqt_enqueue_app_assets')) {
         $pipelineService->markPrimaryPipeline($pipelines, $activePipeline);
         $pipelines = ServiceLocator::get('PipelineAccessService')->filterAccessiblePipelines(get_current_user_id(), $pipelines);
         $users = ServiceLocator::get('UserService')->getUsersForCurrentViewer();
+        // Only the boards the viewer can access are listed for each user.
         $wpUsers = ServiceLocator::get('PipelineAccessService')->addPipelineAccessToWPUsers(
-            $userRepo->getWPUsersWithCapabilities([WP_QUICKTASKER_ADMIN_ROLE])
+            $userRepo->getWPUsersWithCapabilities([WP_QUICKTASKER_ADMIN_ROLE]),
+            ServiceLocator::get('PipelineAccessService')->getAccessiblePipelineIds(get_current_user_id())
         );
         $notificationPreferences = ServiceLocator::get('NotificationService')->getPreferences(
             get_current_user_id(),

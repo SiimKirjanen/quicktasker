@@ -7,6 +7,7 @@ import {
   RESET_PASSWORD,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
+  SET_USER_PIPELINE_IDS,
   SET_WP_USERS,
   SET_WP_USER_PIPELINE_IDS,
 } from "../constants";
@@ -45,6 +46,16 @@ const reducer = (state: State, action: Action): State => {
           wpUser.id === userId
             ? { ...wpUser, pipeline_ids: pipelineIds }
             : wpUser,
+        ),
+      };
+    }
+    case SET_USER_PIPELINE_IDS: {
+      const { userId, pipelineIds } = action.payload;
+
+      return {
+        ...state,
+        users: state.users.map((user) =>
+          user.id === userId ? { ...user, pipeline_ids: pipelineIds } : user,
         ),
       };
     }

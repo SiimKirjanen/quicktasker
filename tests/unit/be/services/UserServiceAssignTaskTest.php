@@ -32,6 +32,9 @@ class UserServiceAssignTaskTest extends TestCase
     /** @var bool Whether the assigned user can access the task's board. */
     private $canAccessBoard;
 
+    /** @var array|null The arguments of the last board access check. */
+    private $accessCheck;
+
     protected function setUp(): void
     {
         global $wpdb;
@@ -59,9 +62,11 @@ class UserServiceAssignTaskTest extends TestCase
         $timeRepo->method('getCurrentUTCTime')->willReturn('2026-01-01 00:00:00');
 
         $pipelineAccessService = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['canAccessEntity'])
+            ->addMethods(['canUserAccessEntity'])
             ->getMock();
-        $pipelineAccessService->method('canAccessEntity')->willReturnCallback(function () {
+        $pipelineAccessService->method('canUserAccessEntity')->willReturnCallback(function ($userId, $userType, $entityType, $entityId) {
+            $this->accessCheck = [$userId, $userType, $entityType, $entityId];
+
             return $this->canAccessBoard;
         });
 
@@ -98,10 +103,22 @@ class UserServiceAssignTaskTest extends TestCase
         $this->service->assignTaskToUser(7, 3, 'wp-user');
     }
 
-    public function test_quicktasker_user_is_assigned_regardless_of_boards()
+    public function test_quicktasker_user_added_to_the_board_is_assigned()
+    {
+        $this->wpdbMock->expects($this->once())->method('insert')->willReturn(1);
+
+        $this->service->assignTaskToUser(7, 3, 'quicktasker');
+
+        $this->assertSame([7, 'quicktasker', 'task', 3], $this->accessCheck);
+    }
+
+    public function test_quicktasker_user_not_added_to_the_board_is_not_assigned()
     {
         $this->canAccessBoard = false;
-        $this->wpdbMock->expects($this->once())->method('insert')->willReturn(1);
+        $this->wpdbMock->expects($this->never())->method('insert');
+
+        $this->expectException(WPQTException::class);
+        $this->expectExceptionMessage('The user has not been added to the board of this task');
 
         $this->service->assignTaskToUser(7, 3, 'quicktasker');
     }

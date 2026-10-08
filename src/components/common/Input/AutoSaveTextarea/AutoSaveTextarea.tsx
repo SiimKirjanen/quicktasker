@@ -7,12 +7,14 @@ type AutoSaveTextareaProps = {
   onChange: (value: string) => Promise<void>;
   debounceTimeout?: number;
   className?: string;
+  disabled?: boolean;
 };
 function AutoSaveTextarea({
   value,
   onChange,
   debounceTimeout = TEXT_ENTER_DEBOUNCE_TIMEOUT,
   className,
+  disabled = false,
 }: AutoSaveTextareaProps) {
   const [inputValue, setInputValue] = useState(value);
   const [loading, setLoading] = useState(false);
@@ -45,7 +47,7 @@ function AutoSaveTextarea({
       value={inputValue}
       className={className}
       onChange={handleChange}
-      disabled={loading}
+      disabled={disabled || loading}
       loading={loading}
     />
   );

@@ -34,7 +34,10 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
 
         /**
          * Creates a new notification for the given recipient on a pipeline,
-         * unless the recipient has disabled this notification type.
+         * unless the recipient has disabled this notification type or can't access the board.
+         *
+         * Users removed from a board stay assigned to its tasks, so without the board check
+         * they would keep being told about those tasks.
          *
          * @param string|null $entityType Optional entity kind (e.g. NotificationRepository::ENTITY_TYPE_TASK)
          *                                this notification relates to. Used for click-through linking.
@@ -44,6 +47,10 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
         public function createNotification($pipelineId, $userId, $userType, $text, $type, $entityType = null, $entityId = null)
         {
             if (!$this->isTypeEnabled((int) $userId, $userType, $type)) {
+                return null;
+            }
+
+            if (!ServiceLocator::get('PipelineAccessService')->canUserAccessPipeline((int) $userId, $userType, (int) $pipelineId)) {
                 return null;
             }
 
@@ -179,7 +186,11 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
         }
 
         /**
-         * Marks a notification as read after verifying it belongs to the given viewer.
+         * Marks a notification as read after verifying it belongs to the given viewer
+         * and is on a board they can access.
+         *
+         * The notification is returned, so one on a board the viewer can no longer access is
+         * refused, as the notification lists leave it out.
          */
         public function markAsRead($notificationId, $userId, $userType)
         {
@@ -192,6 +203,10 @@ if (!class_exists('WPQT\Notification\NotificationService')) {
 
             if ((int) $notification->user_id !== (int) $userId || $notification->user_type !== $userType) {
                 throw new \Exception('Notification does not belong to the current user');
+            }
+
+            if (!ServiceLocator::get('PipelineAccessService')->canUserAccessPipeline((int) $userId, $userType, (int) $notification->pipeline_id)) {
+                throw new \Exception('Notification is on a board the current user cannot access');
             }
 
             return $repo->markAsRead((int) $notificationId);

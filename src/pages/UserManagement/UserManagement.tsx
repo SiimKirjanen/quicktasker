@@ -20,7 +20,12 @@ import { Page } from "../Page/Page";
 import { QuickTaskersSection } from "./QuickTaskersSection/QuickTaskersSection";
 import { RegularWPUsersSection } from "./RegularWPUserSection/ReqularWPUsersSection";
 
-function UserManagement() {
+type Props = {
+  // Opens the QuickTaskers tab instead of the WordPress users tab.
+  showQuickTaskers?: boolean;
+};
+
+function UserManagement({ showQuickTaskers = false }: Props) {
   const {
     state: { isUserAllowedToManageWPUsers },
   } = useContext(AppContext);
@@ -122,6 +127,9 @@ function UserManagement() {
       <WPQTTabs
         tabs={tabDefinitions}
         tabsContent={tabContent}
+        defaultIndex={
+          showQuickTaskers ? tabDefinitions.indexOf(quickTaskersTab) : 0
+        }
         tabListClassName="wpqt-gap-5"
         tabClassName="wpqt-flex-none"
       />

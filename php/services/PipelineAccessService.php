@@ -12,10 +12,10 @@ use WPQT\WPQTException;
 
 if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
     /**
-     * Decides which boards a WordPress user can access.
+     * Decides which boards a WordPress user or a QuickTasker user can access.
      *
-     * WordPress administrators can access every board. Other WordPress users can only access the
-     * boards they have been added to. QuickTasker users are not affected.
+     * WordPress administrators can access every board. Other WordPress users and QuickTasker users
+     * can only access the boards they have been added to.
      */
     class PipelineAccessService
     {
@@ -43,33 +43,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          */
         public function canAccessEntity($wpUserId, $entityType, $entityId)
         {
-            $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
-
-            if ($pipelineAccessRepo->canAccessAllPipelines($wpUserId)) {
-                return true;
-            }
-
-            if (in_array($entityType, self::USER_ENTITY_TYPES, true)) {
-                return true;
-            }
-
-            if ('pipeline' === $entityType) {
-                return $this->canAccessPipeline($wpUserId, $entityId);
-            }
-
-            if (in_array($entityType, self::ATTACHED_ENTITY_TYPES, true)) {
-                $entity = $pipelineAccessRepo->getEntityOf($entityType, $entityId);
-
-                return null !== $entity && $this->canAccessEntity($wpUserId, $entity->entity_type, $entity->entity_id);
-            }
-
-            if (!in_array($entityType, self::BOARD_ENTITY_TYPES, true)) {
-                return false;
-            }
-
-            $pipelineId = $pipelineAccessRepo->getPipelineIdOfEntity($entityType, $entityId);
-
-            return null !== $pipelineId && $this->canAccessPipeline($wpUserId, $pipelineId);
+            return $this->canUserAccessEntity($wpUserId, WP_QT_WORDPRESS_USER_TYPE, $entityType, $entityId);
         }
 
         /**
@@ -110,9 +84,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          */
         public function canAccessPipeline($wpUserId, $pipelineId)
         {
-            $accessiblePipelineIds = $this->getAccessiblePipelineIds($wpUserId);
-
-            return null === $accessiblePipelineIds || in_array((int) $pipelineId, $accessiblePipelineIds, true);
+            return $this->canUserAccessPipeline($wpUserId, WP_QT_WORDPRESS_USER_TYPE, $pipelineId);
         }
 
         /**
@@ -146,8 +118,113 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          */
         public function filterItemsOnAccessiblePipelines($wpUserId, $items)
         {
-            $accessiblePipelineIds = $this->getAccessiblePipelineIds($wpUserId);
+            return $this->filterItemsForUser($wpUserId, WP_QT_WORDPRESS_USER_TYPE, $items);
+        }
 
+        /**
+         * Retrieves the IDs of the boards a user of either type can access.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @return int[]|null The board IDs, or null if the user can access every board. Unknown user types get no boards.
+         */
+        public function getUserAccessiblePipelineIds($userId, $userType)
+        {
+            if (WP_QT_WORDPRESS_USER_TYPE === $userType) {
+                return $this->getAccessiblePipelineIds($userId);
+            }
+
+            if (WP_QT_QUICKTASKER_USER_TYPE === $userType) {
+                return ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByQuicktaskerUserId($userId);
+            }
+
+            return [];
+        }
+
+        /**
+         * Checks if a user of either type can access a board.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @param int $pipelineId The board ID.
+         * @return bool True if the user can access the board.
+         */
+        public function canUserAccessPipeline($userId, $userType, $pipelineId)
+        {
+            $accessiblePipelineIds = $this->getUserAccessiblePipelineIds($userId, $userType);
+
+            return null === $accessiblePipelineIds || in_array((int) $pipelineId, $accessiblePipelineIds, true);
+        }
+
+        /**
+         * Checks if a user of either type can access an entity through the board it belongs to.
+         *
+         * Entities without a board, like tasks archived from a deleted board, can only be
+         * accessed by users who can access every board.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @param string $entityType See canAccessEntity().
+         * @param int|null $entityId The entity ID.
+         * @return bool True if the user can access the entity.
+         */
+        public function canUserAccessEntity($userId, $userType, $entityType, $entityId)
+        {
+            $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
+
+            if (WP_QT_WORDPRESS_USER_TYPE === $userType && $pipelineAccessRepo->canAccessAllPipelines($userId)) {
+                return true;
+            }
+
+            if (in_array($entityType, self::USER_ENTITY_TYPES, true)) {
+                return true;
+            }
+
+            if ('pipeline' === $entityType) {
+                return $this->canUserAccessPipeline($userId, $userType, $entityId);
+            }
+
+            if (in_array($entityType, self::ATTACHED_ENTITY_TYPES, true)) {
+                $entity = $pipelineAccessRepo->getEntityOf($entityType, $entityId);
+
+                return null !== $entity && $this->canUserAccessEntity($userId, $userType, $entity->entity_type, $entity->entity_id);
+            }
+
+            if (!in_array($entityType, self::BOARD_ENTITY_TYPES, true)) {
+                return false;
+            }
+
+            $pipelineId = $pipelineAccessRepo->getPipelineIdOfEntity($entityType, $entityId);
+
+            return null !== $pipelineId && $this->canUserAccessPipeline($userId, $userType, $pipelineId);
+        }
+
+        /**
+         * Keeps only the items, like tasks, that belong to a board a user of either type can access.
+         *
+         * Items without a board are kept only for users who can access every board.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @param array $items Objects with a pipeline_id property.
+         * @return array The accessible items, re-indexed.
+         */
+        public function filterItemsForUser($userId, $userType, $items)
+        {
+            return $this->filterItemsOnPipelines($items, $this->getUserAccessiblePipelineIds($userId, $userType));
+        }
+
+        /**
+         * Keeps only the items, like tasks, that belong to one of the given boards.
+         *
+         * For filtering several lists with boards looked up once, see getUserAccessiblePipelineIds().
+         *
+         * @param array $items Objects with a pipeline_id property.
+         * @param int[]|null $accessiblePipelineIds The board IDs, or null to keep every item, including items without a board.
+         * @return array The kept items, re-indexed.
+         */
+        public function filterItemsOnPipelines($items, $accessiblePipelineIds)
+        {
             if (null === $accessiblePipelineIds) {
                 return array_values($items);
             }
@@ -158,45 +235,16 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
-         * Checks if a user of either type can access an entity. QuickTasker users are not limited by boards.
-         *
-         * @param int $userId The user ID.
-         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
-         * @param string $entityType See canAccessEntity().
-         * @param int|null $entityId The entity ID.
-         * @return bool True if the user can access the entity.
-         */
-        public function canUserAccessEntity($userId, $userType, $entityType, $entityId)
-        {
-            return WP_QT_WORDPRESS_USER_TYPE !== $userType || $this->canAccessEntity($userId, $entityType, $entityId);
-        }
-
-        /**
-         * Keeps only the items a user of either type can access. QuickTasker users are not limited by boards.
-         *
-         * @param int $userId The user ID.
-         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
-         * @param array $items Objects with a pipeline_id property.
-         * @return array The accessible items, re-indexed.
-         */
-        public function filterItemsForUser($userId, $userType, $items)
-        {
-            if (WP_QT_WORDPRESS_USER_TYPE !== $userType) {
-                return array_values($items);
-            }
-
-            return $this->filterItemsOnAccessiblePipelines($userId, $items);
-        }
-
-        /**
          * Adds each WordPress user's board access to the user objects.
          *
          * Sets can_access_all_pipelines, and pipeline_ids with the boards the user has been added to.
          *
          * @param array $wpUsers WordPress user objects with an id property.
+         * @param int[]|null $visiblePipelineIds Only list these boards, like the boards the viewer can access,
+         *                                       so other boards are not revealed. Null lists every board.
          * @return array The same user objects.
          */
-        public function addPipelineAccessToWPUsers($wpUsers)
+        public function addPipelineAccessToWPUsers($wpUsers, $visiblePipelineIds = null)
         {
             $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
             $pipelineIdsByWPUserId = $pipelineAccessRepo->getPipelineIdsByWPUserIds(
@@ -205,10 +253,107 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
 
             foreach ($wpUsers as $wpUser) {
                 $wpUser->can_access_all_pipelines = $pipelineAccessRepo->canAccessAllPipelines((int) $wpUser->id);
-                $wpUser->pipeline_ids = $pipelineIdsByWPUserId[(int) $wpUser->id] ?? [];
+                $wpUser->pipeline_ids = $this->keepVisiblePipelineIds(
+                    $pipelineIdsByWPUserId[(int) $wpUser->id] ?? [],
+                    $visiblePipelineIds
+                );
             }
 
             return $wpUsers;
+        }
+
+        /**
+         * Adds the boards each QuickTasker user has been added to, as pipeline_ids, to the user objects.
+         *
+         * @param array $users QuickTasker user objects with an id property.
+         * @param int[]|null $visiblePipelineIds Only list these boards, like the boards the viewer can access,
+         *                                       so other boards are not revealed. Null lists every board.
+         * @return array The same user objects.
+         */
+        public function addPipelineAccessToQuicktaskerUsers($users, $visiblePipelineIds = null)
+        {
+            $pipelineIdsByUserId = ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByQuicktaskerUserIds(
+                array_map('intval', array_column($users, 'id'))
+            );
+
+            foreach ($users as $user) {
+                $user->pipeline_ids = $this->keepVisiblePipelineIds(
+                    $pipelineIdsByUserId[(int) $user->id] ?? [],
+                    $visiblePipelineIds
+                );
+            }
+
+            return $users;
+        }
+
+        /**
+         * Checks if a WordPress user's board access lets them manage a QuickTasker user, like resetting their password
+         * or opening their tasks app link.
+         *
+         * Managing a QuickTasker user gives access to their tasks app, and so to their boards. Users who can't access
+         * every board can only manage QuickTasker users whose boards they can all access. Capabilities are not checked.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int $quicktaskerUserId The QuickTasker user ID.
+         * @return bool True if the WordPress user can access every board the QuickTasker user has been added to.
+         */
+        public function canAccessQuicktaskerUserPipelines($wpUserId, $quicktaskerUserId)
+        {
+            return $this->containsAllPipelineIds(
+                $this->getAccessiblePipelineIds($wpUserId),
+                ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByQuicktaskerUserId($quicktaskerUserId)
+            );
+        }
+
+        /**
+         * Adds whether a WordPress user's board access lets them manage each QuickTasker user, as can_manage.
+         *
+         * See canAccessQuicktaskerUserPipelines(). Capabilities are not checked.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param array $users QuickTasker user objects with an id property.
+         * @return array The same user objects.
+         */
+        public function addQuicktaskerUserManageability($wpUserId, $users)
+        {
+            $accessiblePipelineIds = $this->getAccessiblePipelineIds($wpUserId);
+            $pipelineIdsByUserId = null === $accessiblePipelineIds ? [] : ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByQuicktaskerUserIds(
+                array_map('intval', array_column($users, 'id'))
+            );
+
+            foreach ($users as $user) {
+                $user->can_manage = $this->containsAllPipelineIds($accessiblePipelineIds, $pipelineIdsByUserId[(int) $user->id] ?? []);
+            }
+
+            return $users;
+        }
+
+        /**
+         * Checks if some boards are all among the given boards.
+         *
+         * @param int[]|null $pipelineIds The board IDs, or null for every board.
+         * @param int[] $requiredPipelineIds The board IDs that must be included.
+         * @return bool True if every required board is included.
+         */
+        private function containsAllPipelineIds($pipelineIds, $requiredPipelineIds)
+        {
+            return null === $pipelineIds || empty(array_diff($requiredPipelineIds, $pipelineIds));
+        }
+
+        /**
+         * Keeps only the visible boards of a user's boards.
+         *
+         * @param int[] $pipelineIds The user's board IDs.
+         * @param int[]|null $visiblePipelineIds The visible board IDs, or null if every board is visible.
+         * @return int[] The visible board IDs, in the same order.
+         */
+        private function keepVisiblePipelineIds($pipelineIds, $visiblePipelineIds)
+        {
+            if (null === $visiblePipelineIds) {
+                return $pipelineIds;
+            }
+
+            return array_values(array_intersect($pipelineIds, $visiblePipelineIds));
         }
 
         /**
@@ -475,14 +620,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          */
         public function setWPUserPipelines($wpUserId, $pipelineIds)
         {
-            $pipelineIds = array_values(array_unique(array_map('intval', $pipelineIds)));
-            $currentPipelineIds = ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByWPUserId($wpUserId);
-
-            return $this->changeWPUserPipelines(
-                $wpUserId,
-                array_diff($pipelineIds, $currentPipelineIds),
-                array_diff($currentPipelineIds, $pipelineIds)
-            );
+            return $this->setUserPipelines($wpUserId, WP_QT_WORDPRESS_USER_TYPE, $pipelineIds);
         }
 
         /**
@@ -502,6 +640,77 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          */
         public function changeWPUserPipelines($wpUserId, $addPipelineIds, $removePipelineIds)
         {
+            return $this->changeUserPipelines($wpUserId, WP_QT_WORDPRESS_USER_TYPE, $addPipelineIds, $removePipelineIds);
+        }
+
+        /**
+         * Retrieves the IDs of the boards a user of either type has been added to.
+         *
+         * Unlike getUserAccessiblePipelineIds(), boards an administrator can access without being added are left out.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @return int[] The board IDs, in ascending order.
+         * @throws \InvalidArgumentException If the user type is unknown.
+         */
+        public function getUserPipelineIds($userId, $userType)
+        {
+            $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
+
+            if (WP_QT_WORDPRESS_USER_TYPE === $userType) {
+                return $pipelineAccessRepo->getPipelineIdsByWPUserId($userId);
+            }
+
+            if (WP_QT_QUICKTASKER_USER_TYPE === $userType) {
+                return $pipelineAccessRepo->getPipelineIdsByQuicktaskerUserId($userId);
+            }
+
+            throw new \InvalidArgumentException('Unknown user type ' . $userType);
+        }
+
+        /**
+         * Sets the boards a user of either type has been added to, replacing the previous ones.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @param int[] $pipelineIds The board IDs.
+         * @return array{added: int[], removed: int[]} The IDs of the boards the user was added to and removed from.
+         * @throws PipelineMissingException If one of the boards does not exist. No changes are made.
+         * @throws \InvalidArgumentException If the user type is unknown.
+         * @throws \Exception If the boards could not be saved.
+         */
+        public function setUserPipelines($userId, $userType, $pipelineIds)
+        {
+            $pipelineIds = array_values(array_unique(array_map('intval', $pipelineIds)));
+            $currentPipelineIds = $this->getUserPipelineIds($userId, $userType);
+
+            return $this->changeUserPipelines(
+                $userId,
+                $userType,
+                array_diff($pipelineIds, $currentPipelineIds),
+                array_diff($currentPipelineIds, $pipelineIds)
+            );
+        }
+
+        /**
+         * Adds a user of either type to some boards and removes them from others, keeping their other boards.
+         *
+         * Unlike setUserPipelines(), boards the caller does not know about are kept, like ones another
+         * administrator added the user to after the caller loaded the user's boards.
+         *
+         * @param int $userId The user ID.
+         * @param string $userType WP_QT_WORDPRESS_USER_TYPE or WP_QT_QUICKTASKER_USER_TYPE.
+         * @param int[] $addPipelineIds The IDs of the boards to add the user to.
+         * @param int[] $removePipelineIds The IDs of the boards to remove the user from.
+         * @return array{added: int[], removed: int[]} The IDs of the boards the user was added to and removed from,
+         *                                             leaving out the ones they were already on or not on.
+         * @throws PipelineMissingException If one of the boards to add does not exist. No changes are made.
+         * @throws WPQTException If a board is both added and removed. No changes are made.
+         * @throws \InvalidArgumentException If the user type is unknown.
+         * @throws \Exception If the boards could not be saved.
+         */
+        public function changeUserPipelines($userId, $userType, $addPipelineIds, $removePipelineIds)
+        {
             $pipelineRepo = ServiceLocator::get('PipelineRepository');
             $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
             $addPipelineIds = array_values(array_unique(array_map('intval', $addPipelineIds)));
@@ -517,17 +726,26 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
                 }
             }
 
-            $currentPipelineIds = $pipelineAccessRepo->getPipelineIdsByWPUserId($wpUserId);
+            $currentPipelineIds = $this->getUserPipelineIds($userId, $userType);
             $removedPipelineIds = array_values(array_intersect($currentPipelineIds, $removePipelineIds));
             $addedPipelineIds = array_values(array_diff($addPipelineIds, $currentPipelineIds));
             sort($addedPipelineIds);
+            $isWPUser = WP_QT_WORDPRESS_USER_TYPE === $userType;
 
             foreach ($removedPipelineIds as $pipelineId) {
-                $pipelineAccessRepo->removeWPUserFromPipeline($wpUserId, $pipelineId);
+                if ($isWPUser) {
+                    $pipelineAccessRepo->removeWPUserFromPipeline($userId, $pipelineId);
+                } else {
+                    $pipelineAccessRepo->removeQuicktaskerUserFromPipeline($userId, $pipelineId);
+                }
             }
 
             foreach ($addedPipelineIds as $pipelineId) {
-                $pipelineAccessRepo->addWPUserToPipeline($wpUserId, $pipelineId);
+                if ($isWPUser) {
+                    $pipelineAccessRepo->addWPUserToPipeline($userId, $pipelineId);
+                } else {
+                    $pipelineAccessRepo->addQuicktaskerUserToPipeline($userId, $pipelineId);
+                }
             }
 
             return [

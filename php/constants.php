@@ -60,7 +60,7 @@ DB constants
 */
 
 if (!defined('WP_QUICKTASKER_DB_VERSION')) {
-    define('WP_QUICKTASKER_DB_VERSION', '1.72.0');
+    define('WP_QUICKTASKER_DB_VERSION', '1.73.0');
 }
 
 if (!defined('TABLE_WP_QUICKTASKER_USERS')) {
@@ -153,6 +153,10 @@ if (!defined('TABLE_WP_QUICKTASKER_USER_NOTIFICATION_PREFERENCES')) {
 
 if (!defined('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES')) {
     define('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES', $wpdb->prefix . 'quicktasker_wp_user_pipelines'); // Boards a WordPress user has been added to
+}
+
+if (!defined('TABLE_WP_QUICKTASKER_USER_PIPELINES')) {
+    define('TABLE_WP_QUICKTASKER_USER_PIPELINES', $wpdb->prefix . 'quicktasker_user_pipelines'); // Boards a QuickTasker user has been added to
 }
 
 /*
@@ -520,6 +524,14 @@ if (!defined('WP_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION')) {
 
 if (!defined('WP_QUICKTASKER_BOARD_ACCESS_DB_VERSION')) {
     define('WP_QUICKTASKER_BOARD_ACCESS_DB_VERSION', '1.70.0'); // DB version that introduced board access for WordPress users
+}
+
+if (!defined('WP_QUICKTASKER_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION')) {
+    define('WP_QUICKTASKER_QUICKTASKER_BOARD_ACCESS_NOTICE_OPTION', 'quicktasker_show_quicktasker_board_access_notice'); // Set when updating to board access for QuickTasker users, until an administrator dismisses the notice
+}
+
+if (!defined('WP_QUICKTASKER_QUICKTASKER_BOARD_ACCESS_DB_VERSION')) {
+    define('WP_QUICKTASKER_QUICKTASKER_BOARD_ACCESS_DB_VERSION', '1.73.0'); // DB version that introduced board access for QuickTasker users
 }
 
 /*

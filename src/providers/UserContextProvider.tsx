@@ -11,6 +11,7 @@ import {
   RESET_PASSWORD,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
+  SET_USER_PIPELINE_IDS,
   SET_WP_USERS,
   SET_WP_USER_PIPELINE_IDS,
 } from "../constants";
@@ -40,6 +41,10 @@ type Action =
   | {
       type: typeof ADD_WP_USER_PIPELINE_ID;
       payload: { userId: string; pipelineId: number };
+    }
+  | {
+      type: typeof SET_USER_PIPELINE_IDS;
+      payload: { userId: string; pipelineIds: number[] };
     }
   | { type: typeof ADD_USER; payload: ServerUser }
   | { type: typeof EDIT_USER; payload: ServerUser }
